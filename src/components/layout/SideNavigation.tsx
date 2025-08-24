@@ -15,7 +15,6 @@ interface SideNavigationProps {
 }
 
 export const SideNavigation: React.FC<SideNavigationProps> = ({ 
-  isOpen, 
   onClose, 
   className = "" 
 }) => {

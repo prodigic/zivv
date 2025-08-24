@@ -9,6 +9,7 @@ import { useAppStore } from "@/stores/appStore.ts";
 import { CompactDarkModeToggle } from "@/components/ui/DarkModeToggle.tsx";
 import { UpcomingToggle } from "@/components/ui/UpcomingToggle";
 import { FreeShowsToggle } from "@/components/ui/FreeShowsToggle";
+import type { Event } from "@/types/events";
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -20,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
   const { searchQuery, setSearchQuery, hasActiveFilters } = useFilterStore();
   const { searchEvents, loading } = useAppStore();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Event[]>([]);
 
   // Handle search input
   const handleSearchChange = async (query: string) => {

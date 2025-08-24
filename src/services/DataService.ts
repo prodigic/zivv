@@ -19,7 +19,6 @@ import type {
 import type {
   DataServiceConfig,
   LoadChunkOptions,
-  AsyncState,
   DataError,
   ChunkMetadata,
   ChunkLoadMetrics,
@@ -323,7 +322,6 @@ export class DataService {
     }
 
     // Find which chunk contains this event
-    const indexes = await this.loadIndexes();
     const chunkId = this.findChunkForEvent(eventId);
     
     if (!chunkId) {
@@ -522,7 +520,7 @@ export class DataService {
     return Array.from(chunks);
   }
 
-  private findChunkForEvent(eventId: EventId): string | null {
+  private findChunkForEvent(_eventId: EventId): string | null {
     // This would need to be implemented based on the manifest
     // For now, return null - would need to enhance manifest with event->chunk mapping
     return null;

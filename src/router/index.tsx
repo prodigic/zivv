@@ -3,10 +3,10 @@
  */
 
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { AppShell } from "@/components/layout/AppShell.tsx";
-import { ErrorBoundary, RouterErrorBoundary } from "@/components/error/ErrorBoundary.tsx";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner.tsx";
+import { RouterErrorBoundary } from "@/components/error/ErrorBoundary.tsx";
+import { PageWrapper } from "@/components/layout/PageWrapper.tsx";
 
 // Lazy load page components for code splitting
 const HomePage = lazy(() => import("@/pages/HomePage.tsx"));
@@ -18,14 +18,7 @@ const VenueDetailPage = lazy(() => import("@/pages/VenueDetailPage.tsx"));
 const EventDetailPage = lazy(() => import("@/pages/EventDetailPage.tsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.tsx"));
 
-// Wrapper component for lazy-loaded pages with error boundary
-const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ErrorBoundary>
-    <Suspense fallback={<LoadingSpinner />}>
-      {children}
-    </Suspense>
-  </ErrorBoundary>
-);
+// PageWrapper now imported from components/layout/PageWrapper.tsx
 
 // Router configuration
 export const router = createBrowserRouter(

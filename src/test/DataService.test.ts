@@ -17,7 +17,7 @@ const mockIndexedDB = {
   deleteDatabase: vi.fn(),
 };
 
-// @ts-ignore
+// @ts-expect-error
 global.indexedDB = mockIndexedDB;
 
 describe("DataService", () => {
@@ -25,7 +25,6 @@ describe("DataService", () => {
   let mockManifest: DataManifest;
   let mockArtists: Artist[];
   let mockVenues: Venue[];
-  let mockEvents: Event[];
 
   beforeEach(() => {
     vi.clearAllMocks();

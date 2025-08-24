@@ -280,8 +280,8 @@ export class ETLProcessor {
     events: Event[],
     artists: Artist[],
     venues: Venue[],
-    chunkInfos: any[],
-    sourceFiles: any
+    chunkInfos: ChunkInfo[],
+    sourceFiles: { events: SourceFileInfo; venues: SourceFileInfo }
   ): DataManifest {
     const eventDates = events.map((e) => e.dateEpochMs).sort((a, b) => a - b);
     const startEpochMs = eventDates[0] || Date.now();
@@ -312,7 +312,7 @@ export class ETLProcessor {
     };
   }
 
-  private createFileInfo(filename: string, data: any): FileInfo {
+  private createFileInfo(filename: string, data: unknown): FileInfo {
     const serialized = JSON.stringify(data);
     return {
       filename,
@@ -322,7 +322,7 @@ export class ETLProcessor {
     };
   }
 
-  private writeJSON(filename: string, data: any): void {
+  private writeJSON(filename: string, data: unknown): void {
     const filepath = join(this.outputDir, filename);
     writeFileSync(filepath, JSON.stringify(data, null, 2), "utf-8");
   }
@@ -337,7 +337,7 @@ export class ETLProcessor {
     return `sha256-${Math.abs(hash).toString(16)}`;
   }
 
-  private toProcessingError(error: any): ProcessingError {
+  private toProcessingError(error: unknown): ProcessingError {
     return {
       type: error.type === "validation" ? "validation" : "data",
       message: error.message,
@@ -347,7 +347,7 @@ export class ETLProcessor {
     };
   }
 
-  private toProcessingWarning(warning: any): ProcessingWarning {
+  private toProcessingWarning(warning: unknown): ProcessingWarning {
     return {
       type: "data-quality",
       message: warning.message,

@@ -215,12 +215,5 @@ export const RouterErrorBoundary: React.FC = () => {
   );
 };
 
-// Hook for using error boundary programmatically
-export const useErrorHandler = () => {
-  return (error: Error, context?: Record<string, unknown>) => {
-    globalErrorHandler.handleError(error, context);
-    
-    // Re-throw to trigger error boundary
-    throw error;
-  };
-};
+// Export the hook from its own file to avoid React refresh issues
+export { useErrorHandler } from "@/hooks/useErrorHandler";

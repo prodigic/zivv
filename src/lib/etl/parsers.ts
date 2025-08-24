@@ -330,7 +330,7 @@ export class EventParser {
 
   private static parseArtistNames(artistLine: string): string[] {
     // Split by commas, handling some edge cases
-    let artists = artistLine
+    const artists = artistLine
       .split(",")
       .map((name) => name.trim())
       .filter((name) => name.length > 0);
@@ -401,8 +401,8 @@ export class EventParser {
    */
   private static detectHeadliner(
     artistNames: string[], 
-    venueInfo: any, 
-    rawEvent: any
+    venueInfo: { name: string; city: string; ageRestriction?: string }, 
+    rawEvent: RawEventData
   ): string {
     if (artistNames.length === 1) {
       return artistNames[0];

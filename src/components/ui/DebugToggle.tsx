@@ -31,7 +31,7 @@ export const DebugToggle: React.FC = () => {
     if (!isDebugVisible) {
       body.classList.add('hide-debug');
     }
-  }, []);
+  }, [isDebugVisible]);
 
   const toggleDebug = () => {
     setIsDebugVisible(!isDebugVisible);

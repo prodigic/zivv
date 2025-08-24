@@ -7,6 +7,7 @@ import { ContentArea } from "@/components/layout/AppShell.tsx";
 import { useAppStore } from "@/stores/appStore.ts";
 import { useFilterStore } from "@/stores/filterStore.ts";
 import { EventCardSkeleton, ListSkeleton } from "@/components/ui/LoadingSpinner.tsx";
+import type { Event, Artist, ArtistId } from "@/types/events";
 
 const HomePage: React.FC = () => {
   const getAllEvents = useAppStore(state => state.getAllEvents);
@@ -213,7 +214,7 @@ const HomePage: React.FC = () => {
 };
 
 // Event Card Component
-const EventCard: React.FC<{ event: any }> = ({ event }) => {
+const EventCard: React.FC<{ event: Event }> = ({ event }) => {
   const getArtist = useAppStore(state => state.getArtist);
   const getVenue = useAppStore(state => state.getVenue);
 
@@ -240,7 +241,7 @@ const EventCard: React.FC<{ event: any }> = ({ event }) => {
   
   // Get artist details
   const artists = event.artistIds 
-    ? event.artistIds.map((id: any) => getArtist(id)).filter((artist: any) => artist !== null && artist !== undefined)
+    ? event.artistIds.map((id: ArtistId) => getArtist(id)).filter((artist: Artist | null) => artist !== null && artist !== undefined)
     : [];
   const headlinerArtist = event.headlinerArtistId ? getArtist(event.headlinerArtistId) : null;
 
@@ -311,7 +312,7 @@ const EventCard: React.FC<{ event: any }> = ({ event }) => {
                 <div className="flex items-start">
                   <span className="font-bold w-12">WITH:</span>
                   <span className="font-mono text-xs">
-                    {artists.slice(1).map((artist: any) => artist?.name).filter(Boolean).join(', ')}
+                    {artists.slice(1).map((artist: Artist) => artist?.name).filter(Boolean).join(', ')}
                   </span>
                 </div>
               )}
