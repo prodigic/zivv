@@ -57,7 +57,7 @@ const mockIndexedDB = {
   }),
 };
 
-// @ts-expect-error
+// @ts-expect-error - Mock IndexedDB for testing environment
 global.indexedDB = mockIndexedDB;
 
 describe("Phase 4: Application Shell & Routing", () => {

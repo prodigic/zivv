@@ -17,7 +17,7 @@ const mockIndexedDB = {
   deleteDatabase: vi.fn(),
 };
 
-// @ts-expect-error
+// @ts-expect-error - Mock IndexedDB for testing environment
 global.indexedDB = mockIndexedDB;
 
 describe("DataService", () => {

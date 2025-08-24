@@ -215,5 +215,3 @@ export const RouterErrorBoundary: React.FC = () => {
   );
 };
 
-// Export the hook from its own file to avoid React refresh issues
-export { useErrorHandler } from "@/hooks/useErrorHandler";
