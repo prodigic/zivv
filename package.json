@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:etl && vite build",
+    "build": "vite build",
+    "build:full": "tsc -b && vite build",
     "build:etl": "tsc --project tsconfig.build.json",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
