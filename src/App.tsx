@@ -1,34 +1,30 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+/**
+ * Main App component with router and global providers
+ */
+
+import { useEffect } from "react";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/index.tsx";
+import { globalErrorHandler } from "./utils/errorHandling.ts";
 
 function App() {
-  const [count, setCount] = useState(0);
+  // Initialize global error handling
+  useEffect(() => {
+    globalErrorHandler.initialize();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <RouterProvider 
+      router={router}
+      fallbackElement={
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading Zivv...</p>
+          </div>
+        </div>
+      }
+    />
   );
 }
 

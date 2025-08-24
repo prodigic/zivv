@@ -1,0 +1,73 @@
+{
+  "chunkId": "2026-03",
+  "dateRange": {
+    "startEpochMs": 1772524800000,
+    "endEpochMs": 1773730800000
+  },
+  "events": [
+    {
+      "id": 1007551569,
+      "slug": "2026-03-03-loyle-carner-the-regency-ballroom",
+      "date": "2026-03-03",
+      "dateEpochMs": 1772524800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1625078923,
+      "artistIds": [
+        1625078923
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1756003860584,
+      "updatedAtEpochMs": 1756003860584,
+      "sourceLineNumber": 2468
+    },
+    {
+      "id": 901154563,
+      "slug": "2026-03-13-noize-mc-the-uc-theater",
+      "date": "2026-03-13",
+      "dateEpochMs": 1773385200000,
+      "startTimeEpochMs": 1773626400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1414462390,
+      "artistIds": [
+        1414462390
+      ],
+      "venueId": 2093769319,
+      "priceMin": 67.5,
+      "priceMax": 67.5,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1756003860584,
+      "updatedAtEpochMs": 1756003860584,
+      "sourceLineNumber": 2469
+    },
+    {
+      "id": 1919782864,
+      "slug": "2026-03-17-music-from-final-fantasy-by-sf-symphony-and-chorus-davies-symphony-hall",
+      "date": "2026-03-17",
+      "dateEpochMs": 1773730800000,
+      "startTimeEpochMs": 1773802800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 415110372,
+      "artistIds": [
+        415110372
+      ],
+      "venueId": 664752640,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1756003860584,
+      "updatedAtEpochMs": 1756003860584,
+      "sourceLineNumber": 2470
+    }
+  ]
+}

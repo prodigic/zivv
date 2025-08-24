@@ -1,3 +1,189 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* CSS Custom Properties for theme switching */
+:root {
+  --bg-primary: 249 250 251; /* gray-50 */
+  --bg-secondary: 255 255 255; /* white */
+  --bg-tertiary: 243 244 246; /* gray-100 */
+  --text-primary: 17 24 39; /* gray-900 */
+  --text-secondary: 75 85 99; /* gray-600 */
+  --text-tertiary: 107 114 128; /* gray-500 */
+  --border-primary: 209 213 219; /* gray-300 */
+  --border-secondary: 229 231 235; /* gray-200 */
+}
+
+:root.dark {
+  --bg-primary: 17 24 39; /* gray-900 */
+  --bg-secondary: 31 41 55; /* gray-800 */
+  --bg-tertiary: 55 65 81; /* gray-700 */
+  --text-primary: 243 244 246; /* gray-100 */
+  --text-secondary: 209 213 219; /* gray-300 */
+  --text-tertiary: 156 163 175; /* gray-400 */
+  --border-primary: 75 85 99; /* gray-600 */
+  --border-secondary: 55 65 81; /* gray-700 */
+}
+
+/* Basic reset and body styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(var(--bg-primary));
+  color: rgb(var(--text-primary));
+}
+
+/* Selective transitions for better performance */
+.transition-colors {
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Add transitions only to interactive elements */
+button, a, .hover\\:shadow-md {
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* Upcoming filter CSS classes for performance */
+.event-card {
+  display: block;
+}
+
+.event-card.past-event {
+  display: block;
+}
+
+/* When show-upcoming-only is active, hide past events */
+.show-upcoming-only .event-card.past-event {
+  display: none;
+}
+
+.artist-card {
+  display: block;
+}
+
+.artist-card.no-upcoming {
+  display: block;
+}
+
+/* When show-upcoming-only is active, hide artists with no upcoming shows */
+.show-upcoming-only .artist-card.no-upcoming {
+  display: none;
+}
+
+.venue-card {
+  display: block;
+}
+
+.venue-card.no-upcoming {
+  display: block;
+}
+
+/* When show-upcoming-only is active, hide venues with no upcoming shows */
+.show-upcoming-only .venue-card.no-upcoming {
+  display: none;
+}
+
+/* Utility classes for improved UX */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+/* Animation improvements */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Debug Info Toggle System */
+.debug-info {
+  display: block;
+}
+
+.hide-debug .debug-info {
+  display: none !important;
+}
+
+/* Debug info styling */
+.debug-info {
+  @apply text-xs font-mono bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 p-2 rounded border border-gray-200 dark:border-gray-700;
+}
+
+.debug-info .debug-label {
+  @apply font-semibold text-gray-700 dark:text-gray-300;
+}
+
+.debug-info .debug-id {
+  @apply font-mono;
+}
+
+.debug-info .debug-id.event-id {
+  @apply text-blue-600 dark:text-blue-400;
+}
+
+.debug-info .debug-id.artist-id {
+  @apply text-purple-600 dark:text-purple-400;
+}
+
+.debug-info .debug-id.venue-id {
+  @apply text-green-600 dark:text-green-400;
+}

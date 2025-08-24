@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-    darkMode: "class", // or 'media'
+    darkMode: "class",
     theme: {
         extend: {
             colors: {
@@ -57,5 +57,5 @@ export default {
             },
         },
     },
-    plugins: [require("@tailwindcss/forms")],
+    plugins: [],
 };

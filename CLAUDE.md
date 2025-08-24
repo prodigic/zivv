@@ -25,6 +25,7 @@ Zivv is a Bay Area Punk Show Finder - a modern, responsive web application for d
 - `npm run test` - Run Vitest in watch mode
 - `npm run test:run` - Run all tests once
 - `npm run test:coverage` - Run tests with coverage report
+- `npm run test -- src/test/DataService.test.ts` - Run single test file
 
 ### ETL Data Processing
 - `npm run etl` - Process raw data files and generate JSON outputs
@@ -74,7 +75,7 @@ The codebase uses strict TypeScript with branded types for type safety:
 - Vitest + Testing Library for testing
 
 **Key Configuration**:
-- Path aliases: `@/` maps to `src/`
+- Path aliases: `@/` maps to `src/`, plus specific aliases for `@/components/*`, `@/utils/*`, `@/types/*`, `@/hooks/*`, `@/stores/*`, `@/pages/*`
 - Base path for GitHub Pages: `/zivv/` in production
 - ESLint + Prettier with TypeScript integration
 

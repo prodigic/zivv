@@ -1,0 +1,51 @@
+{
+  "chunkId": "2026-04",
+  "dateRange": {
+    "startEpochMs": 1775199600000,
+    "endEpochMs": 1776495600000
+  },
+  "events": [
+    {
+      "id": 352100304,
+      "slug": "2026-04-03-eliza-mclamb-the-independent",
+      "date": "2026-04-03",
+      "dateEpochMs": 1775199600000,
+      "startTimeEpochMs": 1775275200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1256249750,
+      "artistIds": [
+        1256249750
+      ],
+      "venueId": 515101024,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1756003860584,
+      "updatedAtEpochMs": 1756003860584,
+      "sourceLineNumber": 2472
+    },
+    {
+      "id": 1526629688,
+      "slug": "2026-04-18-lebanon-hanover-the-regency-ballroom",
+      "date": "2026-04-18",
+      "dateEpochMs": 1776495600000,
+      "startTimeEpochMs": 1776567600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 653139477,
+      "artistIds": [
+        653139477
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1756003860584,
+      "updatedAtEpochMs": 1756003860584,
+      "sourceLineNumber": 2473
+    }
+  ]
+}

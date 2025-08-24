@@ -1,0 +1,51 @@
+{
+  "chunkId": "2026-07",
+  "dateRange": {
+    "startEpochMs": 1784358000000,
+    "endEpochMs": 1784444400000
+  },
+  "events": [
+    {
+      "id": 454113390,
+      "slug": "2026-07-18-mosswood-meltown-mosswood-park",
+      "date": "2026-07-18",
+      "dateEpochMs": 1784358000000,
+      "startTimeEpochMs": 1784487600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1105492040,
+      "artistIds": [
+        1105492040
+      ],
+      "venueId": 1259562638,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1756003860584,
+      "updatedAtEpochMs": 1756003860584,
+      "sourceLineNumber": 2475
+    },
+    {
+      "id": 1555990451,
+      "slug": "2026-07-19-mosswood-meltown-mosswood-park",
+      "date": "2026-07-19",
+      "dateEpochMs": 1784444400000,
+      "startTimeEpochMs": 1784574000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1105492040,
+      "artistIds": [
+        1105492040
+      ],
+      "venueId": 1259562638,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1756003860584,
+      "updatedAtEpochMs": 1756003860584,
+      "sourceLineNumber": 2476
+    }
+  ]
+}
