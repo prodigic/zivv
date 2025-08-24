@@ -1,0 +1,218 @@
+name: ETL Data Processing
+
+on:
+  push:
+    paths:
+      - "data/**"
+      - "src/lib/etl/**"
+      - ".github/workflows/etl.yml"
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  process-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for data changes
+        id: data-check
+        run: |
+          # Check if data files have changed
+          if git diff --name-only HEAD~1 HEAD | grep -E '^data/(events|venues)\.txt$'; then
+            echo "data_changed=true" >> $GITHUB_OUTPUT
+            echo "📊 Data files have changed, processing needed"
+          else
+            echo "data_changed=false" >> $GITHUB_OUTPUT
+            echo "📊 No data file changes detected"
+          fi
+
+      - name: Build TypeScript
+        if: steps.data-check.outputs.data_changed == 'true' || github.event_name == 'workflow_dispatch'
+        run: npm run build
+
+      - name: Run ETL Processing
+        if: steps.data-check.outputs.data_changed == 'true' || github.event_name == 'workflow_dispatch'
+        id: etl
+        run: |
+          echo "🚀 Starting ETL processing..."
+
+          # Create a Node.js script to run the ETL processor
+          cat > run-etl.mjs << 'EOF'
+          import { ETLProcessor } from './dist/lib/etl/processor.js';
+          import { fileURLToPath } from 'url';
+          import { dirname, join } from 'path';
+
+          const __filename = fileURLToPath(import.meta.url);
+          const __dirname = dirname(__filename);
+
+          const processor = new ETLProcessor(__dirname);
+
+          try {
+            const result = await processor.processData();
+            
+            if (result.success) {
+              console.log('✅ ETL processing completed successfully');
+              console.log(`📊 Stats: ${result.stats.parsedEvents} events, ${result.stats.parsedArtists} artists, ${result.stats.parsedVenues} venues`);
+              console.log(`⚠️  ${result.errors.length} errors, ${result.warnings.length} warnings`);
+              
+              // Write summary for GitHub
+              const summary = {
+                success: true,
+                stats: result.stats,
+                errorCount: result.errors.length,
+                warningCount: result.warnings.length,
+                manifest: result.manifest
+              };
+              
+              await import('fs').then(fs => 
+                fs.promises.writeFile('etl-summary.json', JSON.stringify(summary, null, 2))
+              );
+              
+              process.exit(0);
+            } else {
+              console.error('❌ ETL processing failed');
+              result.errors.forEach(error => {
+                console.error(`Error: ${error.message} (${error.sourceFile}:${error.lineNumber})`);
+              });
+              process.exit(1);
+            }
+          } catch (error) {
+            console.error('💥 ETL processing crashed:', error);
+            process.exit(1);
+          }
+          EOF
+
+          node run-etl.mjs
+
+      - name: Read ETL Summary
+        if: steps.etl.outcome == 'success'
+        id: summary
+        run: |
+          if [ -f etl-summary.json ]; then
+            echo "Reading ETL processing summary..."
+            EVENTS=$(cat etl-summary.json | jq -r '.stats.parsedEvents')
+            ARTISTS=$(cat etl-summary.json | jq -r '.stats.parsedArtists')
+            VENUES=$(cat etl-summary.json | jq -r '.stats.parsedVenues')
+            ERRORS=$(cat etl-summary.json | jq -r '.errorCount')
+            WARNINGS=$(cat etl-summary.json | jq -r '.warningCount')
+            
+            echo "events=$EVENTS" >> $GITHUB_OUTPUT
+            echo "artists=$ARTISTS" >> $GITHUB_OUTPUT
+            echo "venues=$VENUES" >> $GITHUB_OUTPUT
+            echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+            echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
+            
+            echo "📊 Processed: $EVENTS events, $ARTISTS artists, $VENUES venues"
+            echo "⚠️  Issues: $ERRORS errors, $WARNINGS warnings"
+          fi
+
+      - name: Check for processed data changes
+        if: steps.etl.outcome == 'success'
+        id: output-check
+        run: |
+          if [ -n "$(git status --porcelain public/data/)" ]; then
+            echo "output_changed=true" >> $GITHUB_OUTPUT
+            echo "📦 Processed data has changed"
+          else
+            echo "output_changed=false" >> $GITHUB_OUTPUT
+            echo "📦 No changes to processed data"
+          fi
+
+      - name: Configure Git
+        if: steps.output-check.outputs.output_changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Create Pull Request
+        if: steps.output-check.outputs.output_changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            🤖 Update processed data from ETL pipeline
+
+            - Events: ${{ steps.summary.outputs.events }}
+            - Artists: ${{ steps.summary.outputs.artists }}
+            - Venues: ${{ steps.summary.outputs.venues }}
+            - Errors: ${{ steps.summary.outputs.errors }}
+            - Warnings: ${{ steps.summary.outputs.warnings }}
+          title: "🤖 ETL Data Update"
+          body: |
+            ## 🚀 Automated ETL Processing Results
+
+            This pull request contains updated processed data from the ETL pipeline.
+
+            ### 📊 Processing Summary
+            - **Events**: ${{ steps.summary.outputs.events }}
+            - **Artists**: ${{ steps.summary.outputs.artists }}
+            - **Venues**: ${{ steps.summary.outputs.venues }}
+            - **Errors**: ${{ steps.summary.outputs.errors }}
+            - **Warnings**: ${{ steps.summary.outputs.warnings }}
+
+            ### 📁 Changed Files
+            The following processed data files have been updated:
+            - `public/data/manifest.json`
+            - `public/data/events-*.json` (monthly chunks)
+            - `public/data/artists.json`
+            - `public/data/venues.json`
+            - `public/data/indexes.json`
+            - `public/data/search-*.json`
+
+            ### 🔄 Triggered by
+            Changes to source data files in the `data/` directory.
+
+            ---
+            *This PR was automatically created by the ETL processing workflow.*
+          branch: etl-data-update
+          delete-branch: true
+
+      - name: Auto-merge if no errors
+        if: steps.output-check.outputs.output_changed == 'true' && steps.summary.outputs.errors == '0'
+        run: |
+          echo "🎯 No errors detected, considering auto-merge"
+          # In a production setup, you might want to auto-merge here
+          # For safety, we'll leave it as a manual review for now
+          echo "PR created successfully - manual review recommended"
+
+  # Optional: Deploy preview for testing
+  deploy-preview:
+    needs: process-data
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Deploy to preview environment
+        run: |
+          echo "🚀 Would deploy to preview environment here"
+          echo "Preview URL: https://preview-branch.github.io/zivv/"

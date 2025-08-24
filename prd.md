@@ -43,7 +43,6 @@ Bay Area punk and alternative music fans struggle to discover live shows across 
 **Epic 1: Show Discovery**
 
 - **US1.1**: As Sam, I want to see upcoming shows in a scrollable feed so I can quickly browse tonight/this week's options
-
   - AC1: Infinite scroll list loads 20 shows initially, 20 more on scroll
   - AC2: Each card shows date, headliner, venue, city, price, age restriction
   - AC3: List defaults to next 30 days, sorted by date ascending
@@ -66,7 +65,6 @@ Bay Area punk and alternative music fans struggle to discover live shows across 
 **Epic 3: Artist & Venue Exploration**
 
 - **US3.1**: As Taylor, I want to browse artists alphabetically so I can discover new bands
-
   - AC1: Artist directory with A-Z navigation and search
   - AC2: Each artist shows upcoming show count and next show date
   - AC3: Artist detail page lists all upcoming shows for that artist
@@ -81,7 +79,6 @@ Bay Area punk and alternative music fans struggle to discover live shows across 
 **Epic 4: Search & Filters**
 
 - **US4.1**: As both personas, I want to search for specific artists or venues
-
   - AC1: Real-time search with results appearing as user types
   - AC2: Search covers artist names, venue names, and event descriptions
   - AC3: Search results highlight matching terms
@@ -382,7 +379,17 @@ interface SearchIndexEntry {
   "definitions": {
     "Event": {
       "type": "object",
-      "required": ["id", "slug", "dateEpochMs", "headlinerArtistId", "artistIds", "venueId", "city", "isFree", "ageRestriction"],
+      "required": [
+        "id",
+        "slug",
+        "dateEpochMs",
+        "headlinerArtistId",
+        "artistIds",
+        "venueId",
+        "city",
+        "isFree",
+        "ageRestriction"
+      ],
       "properties": {
         "id": { "type": "integer" },
         "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
@@ -397,7 +404,10 @@ interface SearchIndexEntry {
         "priceMin": { "type": "number", "minimum": 0 },
         "priceMax": { "type": "number", "minimum": 0 },
         "isFree": { "type": "boolean" },
-        "ageRestriction": { "type": "string", "enum": ["All Ages", "18+", "21+", "16+", "12+", "8+", "5+"] },
+        "ageRestriction": {
+          "type": "string",
+          "enum": ["All Ages", "18+", "21+", "16+", "12+", "8+", "5+"]
+        },
         "tags": { "type": "array", "items": { "type": "string" } }
       }
     }
@@ -412,14 +422,12 @@ interface SearchIndexEntry {
 **Webhook → Serverless → GitHub Actions Flow**
 
 1. **Webhook Endpoint** (Cloudflare Workers recommended)
-
    - Receives Friday data update webhook from provider
    - Validates payload and authenticates source
    - Triggers GitHub Actions via repository_dispatch API
    - Includes data URLs and version identifier in payload
 
 2. **GitHub Actions ETL Workflow**
-
    - Triggered by repository_dispatch or manual workflow_dispatch
    - Downloads provider data using credentials from GitHub Secrets
    - Runs normalization, deduplication, and validation
@@ -679,5 +687,3 @@ aug 15 fri L *Roneous & Gennessee, Bayokyo, Jay Stone, Persuadero, Know Morals
 ---
 
 _This PRD serves as the foundation for the implementation plan and development work. All features and requirements should be validated against these specifications during development._
-
-
