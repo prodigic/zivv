@@ -52,7 +52,12 @@ jobs:
         continue-on-error: true
 
       - name: Build
-        run: npm run build
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            npm run build
+          else
+            npm run build:full
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
