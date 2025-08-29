@@ -120,6 +120,7 @@ The codebase uses strict TypeScript with branded types for type safety:
 - Lazy-loaded pages with code splitting
 - Error boundaries and loading states
 - Calendar routes: `/calendar` → `/calendar/month`, `/calendar/week`, `/calendar/agenda`
+- About page route: `/about` with project information and live statistics
 
 **Components**: `src/components/`
 - `layout/AppShell.tsx` - Main application shell with responsive layout
@@ -136,6 +137,7 @@ The codebase uses strict TypeScript with branded types for type safety:
 - **Search Bar**: Live search with dropdown results and loading indicators
 - **Toggle Controls**: Upcoming events, free shows, and list/calendar view toggles
 - **Language Dropdown**: Multi-language support with flag icons and click-outside dismiss
+- **About Page Link**: Desktop navigation entry point for project information
 - **Dark Mode Toggle**: Positioned at end of header row for easy access
 - **Filter Indicator**: Shows active filter state with clear functionality
 - **Responsive Design**: Mobile-optimized with collapsible elements
@@ -149,6 +151,7 @@ The codebase uses strict TypeScript with branded types for type safety:
 - `HomePage.tsx` - Event list with infinite scroll and debug information
 - `CalendarPage.tsx` - Calendar views (month/week/agenda) 
 - `ArtistsPage.tsx`, `VenuesPage.tsx` - Directory pages
+- `AboutPage.tsx` - Project information and real-time statistics
 - `*DetailPage.tsx` - Individual entity detail pages
 
 **Event Display Features**:
@@ -156,6 +159,14 @@ The codebase uses strict TypeScript with branded types for type safety:
 - **Sold Out Stamps**: Visual overlay using `soldout-transparent.png` for sold-out events
 - **Debug Information**: Comprehensive event data display with high-contrast accessibility
 - **Responsive Tickets**: Mobile-first design with background patterns and gradients
+
+**About Page Features**:
+- **Project Information**: Mission, features overview, and technology stack
+- **Stats for Geeks**: Real-time statistics with live data from app store
+- **Community Links**: GitHub repository and feedback channels
+- **Navigation Integration**: Available from both desktop header and mobile sidebar
+- **Real-time Data**: Shows current counts for events, artists, venues with calculated averages
+- **Visual Design**: Purple gradient theme with glassmorphism effects
 
 ### File Structure Conventions
 ```
@@ -241,7 +252,7 @@ The application includes comprehensive debug information for development and tro
 ## Multilingual Support (Phase 7 Implementation Plan)
 
 ### Language Infrastructure
-**Target Languages**: English (EN), Spanish (ES), French (FR), German (DE)
+**Target Languages**: English (EN), Spanish (ES), Tagalog (TL), Mandarin (ZH-CN), Cantonese (ZH-HK), Vietnamese (VI), French (FR), German (DE)
 
 **Implementation Strategy**:
 - **React i18n Library**: Integration with `react-i18next` for dynamic translations
@@ -340,7 +351,7 @@ const useTranslation = (namespace?: string) => {
 // Translation automation script
 interface TranslationConfig {
   sourceLanguage: 'en';
-  targetLanguages: ['es', 'fr', 'de'];
+  targetLanguages: ['es', 'tl', 'zh-cn', 'zh-hk', 'vi', 'fr', 'de'];
   translationService: 'openai' | 'google' | 'azure';
   apiKey: string;
   reviewRequired: boolean;
@@ -364,6 +375,171 @@ npm run translate:review    # Mark translations for human review
 - **Community Translation**: GitHub-based contribution workflow for refinements
 - **Professional Translation**: For critical UI elements and marketing content
 - **Human Review**: Quality assurance for AI-generated translations
+
+## Venue Digital Signage (Phase 10 Implementation Plan)
+
+### Digital Signage Overview
+**Target Users**: Venue owners, bartenders, staff members
+**Display Formats**: TV screens, tablets, digital displays at venues
+**Content Focus**: Upcoming shows, promotional materials, venue-specific branding
+
+### Core Signage System
+**Signage Application Architecture**:
+```
+/signage/
+├── displays/
+│   ├── VenueDisplayApp.tsx    # Main signage display component
+│   ├── RotationController.tsx # Content rotation management
+│   └── OfflineMode.tsx        # Offline fallback content
+├── admin/
+│   ├── SignageAdmin.tsx       # Venue admin configuration
+│   ├── ContentManager.tsx     # Upload and manage custom content
+│   └── ScheduleManager.tsx    # Rotation timing configuration
+└── ingestion/
+    ├── WebScraper.ts          # Automated poster extraction
+    ├── ContentProcessor.ts    # Image optimization and validation
+    └── FallbackGenerator.ts   # AI-generated backup content
+```
+
+**Rotation Timing System**:
+- **Daily Rotation**: 24-hour cycle showing today's and tomorrow's events
+- **Weekly Rotation**: 7-day overview with weekend focus
+- **Monthly Rotation**: Full month calendar with highlighted peak periods
+- **Custom Intervals**: Venue-configurable timing (15 min, 30 min, 1 hour cycles)
+
+### Content Ingestion Pipeline
+**Automated Poster Extraction**:
+```typescript
+interface PosterIngestionConfig {
+  venueId: VenueId;
+  websiteUrl: string;
+  scrapingStrategy: 'social-media' | 'calendar-page' | 'event-listings';
+  updateFrequency: 'hourly' | 'daily' | 'weekly';
+  fallbackBehavior: 'ai-generate' | 'template' | 'skip';
+}
+
+// Web scraping targets
+const scrapingSources = {
+  facebook: 'Facebook events and photo posts',
+  instagram: 'Instagram posts with event hashtags',
+  bandsintown: 'Bandsintown venue listings',
+  venueWebsite: 'Venue calendar and event pages',
+  ticketingSites: 'Eventbrite, TicketMaster integration'
+};
+```
+
+**Content Processing Workflow**:
+1. **Web Scraping**: Automated extraction from venue websites and social media
+2. **Image Recognition**: AI-powered detection of event posters vs. promotional content
+3. **Content Validation**: Quality checks for image resolution, readability, appropriate content
+4. **Metadata Extraction**: OCR and AI to extract dates, artist names, venue info from posters
+5. **Content Optimization**: Resize and format for display screens
+6. **Fallback Generation**: AI-created posters when originals unavailable
+
+### Display Modes and Layouts
+**Signage Display Options**:
+- **Today's Shows**: Current day focus with large event cards
+- **This Week**: 7-day grid layout with thumbnail posters
+- **Monthly Calendar**: Full calendar with event density indicators
+- **Featured Events**: Highlighted shows with promotional emphasis
+- **Venue Branding**: Custom logos, messages, and promotional content
+
+**Layout Templates**:
+```typescript
+interface SignageTemplate {
+  id: string;
+  name: string;
+  orientation: 'landscape' | 'portrait';
+  resolution: '1920x1080' | '1080x1920' | '1366x768';
+  layout: {
+    header: VenueBrandingSection;
+    main: EventDisplaySection;
+    sidebar: PromotionalContent;
+    footer: VenueInfoSection;
+  };
+}
+```
+
+### Venue Admin Interface
+**Configuration Dashboard**:
+- **Display Settings**: Screen orientation, resolution, rotation timing
+- **Content Management**: Upload custom graphics, logos, promotional messages
+- **Scheduling**: Configure rotation patterns and display priorities
+- **Content Filtering**: Show only specific genres, age restrictions, or event types
+- **Branding**: Venue colors, fonts, and visual identity integration
+
+**Real-time Management**:
+- **Live Preview**: See current signage display remotely
+- **Emergency Override**: Instantly push important announcements
+- **Performance Analytics**: Track display uptime and content effectiveness
+- **Remote Updates**: Push new content without physical access
+
+### Technical Implementation
+**Offline-First Architecture**:
+- **Progressive Web App**: Installable on tablets and display devices
+- **Local Caching**: Store content locally for offline operation
+- **Sync Strategy**: Background updates when network available
+- **Fallback Content**: Local backup content when sync fails
+
+**Display Hardware Support**:
+```typescript
+interface DisplayDevice {
+  deviceType: 'tablet' | 'smart-tv' | 'raspberry-pi' | 'computer';
+  capabilities: {
+    touchscreen: boolean;
+    networkConnected: boolean;
+    storageCapacity: number;
+    displayResolution: string;
+  };
+  installMethod: 'browser-app' | 'kiosk-mode' | 'native-app';
+}
+```
+
+### Content AI and Automation
+**AI-Powered Features**:
+- **Smart Poster Detection**: Machine learning to identify event posters vs. other content
+- **Text Extraction**: OCR to read event details from poster images
+- **Content Generation**: AI-created posters when venue content unavailable
+- **Layout Optimization**: Auto-adjust content for different screen sizes
+- **Trend Analysis**: Suggest optimal rotation timing based on venue traffic
+
+**Automated Workflows**:
+```typescript
+// Daily content update pipeline
+async function updateVenueSignage(venueId: VenueId) {
+  const config = await getVenueConfig(venueId);
+  const scrapedContent = await scrapeVenueContent(config);
+  const processedPosters = await processPosters(scrapedContent);
+  const fallbackContent = await generateFallbacks(processedPosters);
+  const signageContent = await createSignageRotation(processedPosters, fallbackContent);
+  
+  await deployToVenueDisplay(venueId, signageContent);
+}
+```
+
+### Integration with Existing System
+**Data Sources**:
+- **Zivv Event Database**: Primary source for event information
+- **Venue Websites**: Scraped poster and promotional content
+- **Social Media APIs**: Facebook, Instagram event content
+- **Ticketing Platforms**: Official event graphics and details
+
+**API Extensions**:
+```typescript
+// New signage-specific API endpoints
+GET /api/venues/{id}/signage/config     // Get display configuration
+POST /api/venues/{id}/signage/content   // Upload custom content
+GET /api/venues/{id}/signage/rotation   // Current rotation schedule
+PUT /api/venues/{id}/signage/override   // Emergency content override
+```
+
+### Deployment and Access
+**Free and Open Deployment**:
+- **Completely Free**: All signage features available at no cost to venues
+- **Open Source**: Community-driven development and transparent operation
+- **Anonymous Access**: No user registration or tracking required
+- **Self-Hosted Options**: Venues can deploy their own instances if preferred
+- **Community Support**: Volunteer-based help and documentation
 
 ## Common Development Tasks
 
@@ -449,6 +625,7 @@ loadingManager.setSuccess('events');
 - ✅ **Debug Information System**: Comprehensive development debugging tools
 - ✅ **Accessibility Improvements**: WCAG 2.1 AA compliant contrast and navigation
 - ✅ **Mobile-First Design**: Responsive ticket cards and header controls
+- ✅ **About Page**: Project information with real-time statistics and community links
 
 **Next Phase Development**:
 - **Phase 5**: Event List & Filtering - Virtualized infinite scroll, advanced filters
@@ -456,6 +633,7 @@ loadingManager.setSuccess('events');
 - **Phase 7**: Multilingual Support - Complete i18n implementation with content localization
 - **Phase 8**: Artist & Venue Directories - Searchable directories with detail pages
 - **Phase 9**: Event Details & Interactions - Modal/page views with full event information
+- **Phase 10**: Venue Digital Signage - Automated signage system with content rotation and poster ingestion
 
 **Frontend Architecture**:
 - Components use Tailwind CSS with mobile-first responsive design

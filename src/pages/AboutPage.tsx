@@ -32,12 +32,114 @@ const AboutPage: React.FC = () => {
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
             Our Mission
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-            Zivv exists to connect the Bay Area's vibrant punk and alternative music community. 
-            We believe that discovering great live music shouldn't be a challenge - it should be 
-            an adventure. Our platform helps you find the shows you'll love, discover new venues, 
-            and never miss out on the underground scene that makes the Bay Area special.
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+            Zivv exists to connect the Bay Area's vibrant punk and alternative music community 
+            without barriers, tracking, or costs. We believe that discovering great live music 
+            shouldn't be a challenge - it should be an adventure that's accessible to everyone.
           </p>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+            Our platform helps you find the shows you'll love, discover new venues, and never 
+            miss out on the underground scene that makes the Bay Area special. No registration, 
+            no tracking, no fees - just music discovery the way it should be.
+          </p>
+        </div>
+
+        {/* Core Values */}
+        <div className="bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg shadow-sm border border-green-200 dark:border-green-700 p-6">
+          <div className="flex items-center mb-4">
+            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              Our Values
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg p-4 border border-white/20 dark:border-gray-600/20">
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2">Completely Free</h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    No registration fees, no subscription costs, no premium tiers. 
+                    Zivv is and will always be completely free for everyone - 
+                    music fans, venues, artists, and promoters.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg p-4 border border-white/20 dark:border-gray-600/20">
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clipRule="evenodd" />
+                    <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2">Anonymous Access</h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    No accounts required, no personal data collected, no tracking cookies. 
+                    Browse shows, discover music, and explore venues without leaving 
+                    any digital footprint.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg p-4 border border-white/20 dark:border-gray-600/20">
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2">Open Source</h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Built transparently by the community, for the community. 
+                    All code is open source, auditable, and available for 
+                    contributions on GitHub.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg p-4 border border-white/20 dark:border-gray-600/20">
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2">Community First</h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Decisions driven by what's best for the music community, 
+                    not corporate interests. Features requested by users, 
+                    built by volunteers who love live music.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-white/50 dark:bg-gray-800/50 rounded-lg border border-white/30 dark:border-gray-600/30">
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Privacy Promise</h4>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              We don't collect emails, we don't use analytics that track users, and we don't sell data 
+              because we don't have any. Your music taste, show attendance, and browsing habits are 
+              yours alone. Zivv works entirely in your browser with no server-side user tracking.
+            </p>
+          </div>
         </div>
 
         {/* Features */}

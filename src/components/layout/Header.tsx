@@ -67,6 +67,10 @@ const LanguageDropdown: React.FC = () => {
   const languages = [
     { code: 'EN', name: 'English', flag: '🇺🇸' },
     { code: 'ES', name: 'Español', flag: '🇪🇸' },
+    { code: 'TL', name: 'Tagalog', flag: '🇵🇭' },
+    { code: 'ZH-CN', name: 'Mandarin', flag: '🇨🇳' },
+    { code: 'ZH-HK', name: 'Cantonese', flag: '🇭🇰' },
+    { code: 'VI', name: 'Tiếng Việt', flag: '🇻🇳' },
     { code: 'FR', name: 'Français', flag: '🇫🇷' },
     { code: 'DE', name: 'Deutsch', flag: '🇩🇪' },
   ];
@@ -103,7 +107,7 @@ const LanguageDropdown: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-50">
+        <div className="absolute right-0 mt-1 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-50">
           <div className="py-1">
             {languages.map((lang) => (
               <button
