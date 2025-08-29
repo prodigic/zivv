@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useFilterStore } from "@/stores/filterStore.ts";
 import { useAppStore } from "@/stores/appStore.ts";
 import { CompactDarkModeToggle } from "@/components/ui/DarkModeToggle.tsx";
@@ -16,10 +16,127 @@ interface HeaderProps {
   className?: string;
 }
 
+// View Toggle Component
+const ViewToggle: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const isCalendarView = location.pathname.startsWith('/calendar');
+  
+  const toggleView = () => {
+    if (isCalendarView) {
+      navigate('/');
+    } else {
+      navigate('/calendar');
+    }
+  };
+  
+  return (
+    <div className="hidden md:flex items-center space-x-2">
+      <span className="text-sm text-gray-600 dark:text-gray-300 w-16 text-right">
+        {isCalendarView ? "Calendar" : "List"}
+      </span>
+      <button
+        onClick={toggleView}
+        className="relative inline-flex h-5 w-9 items-center rounded-full border-2 border-gray-300 dark:border-gray-500 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800"
+        aria-label={isCalendarView ? "Switch to list view" : "Switch to calendar view"}
+        role="switch"
+        aria-checked={isCalendarView}
+      >
+        <span
+          className={`
+            inline-block h-4 w-4 transform rounded-full shadow-lg border-2
+            transition-all duration-200 ease-in-out
+            ${isCalendarView 
+              ? "translate-x-4 bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400" 
+              : "translate-x-0 bg-white border-gray-300 dark:border-gray-500"
+            }
+          `}
+        />
+      </button>
+    </div>
+  );
+};
+
+// Language Dropdown Component
+const LanguageDropdown: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState('EN');
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  
+  const languages = [
+    { code: 'EN', name: 'English', flag: '🇺🇸' },
+    { code: 'ES', name: 'Español', flag: '🇪🇸' },
+    { code: 'FR', name: 'Français', flag: '🇫🇷' },
+    { code: 'DE', name: 'Deutsch', flag: '🇩🇪' },
+  ];
+
+  // Handle click outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center space-x-1 px-2 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+        aria-label="Select language"
+      >
+        <span className="text-base">🌐</span>
+        <span className="hidden sm:inline">{currentLang}</span>
+        <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-50">
+          <div className="py-1">
+            {languages.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => {
+                  setCurrentLang(lang.code);
+                  setIsOpen(false);
+                }}
+                className={`w-full text-left px-3 py-2 text-sm flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                  currentLang === lang.code 
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
+                    : 'text-gray-700 dark:text-gray-300'
+                }`}
+              >
+                <span>{lang.flag}</span>
+                <span>{lang.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) => {
   const navigate = useNavigate();
-  const { searchQuery, setSearchQuery, hasActiveFilters } = useFilterStore();
-  const { searchEvents, loading } = useAppStore();
+  const { searchQuery, setSearchQuery, hasActiveFilters, clearFilters } = useFilterStore();
+  const { searchEvents, loading, showUpcomingOnly, toggleUpcomingOnly } = useAppStore();
+  
+  // Check for any active filters (including app-level filters)
+  const hasAnyActiveFilters = hasActiveFilters || searchQuery.trim() !== '' || showUpcomingOnly;
+  
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchResults, setSearchResults] = useState<Event[]>([]);
 
@@ -140,8 +257,8 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
             )}
           </div>
 
-          {/* Right: Upcoming + Dark Mode + Filter Button + Actions */}
-          <div className="flex items-center space-x-4">
+          {/* Right: Toggles + Filter + View + Language + Dark Mode */}
+          <div className="flex items-center space-x-3">
             
             {/* Upcoming Only Toggle */}
             <div className="hidden sm:block">
@@ -152,42 +269,53 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
             <div className="hidden sm:block">
               <FreeShowsToggle />
             </div>
+
+            {/* Filter Toggle */}
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                clearFilters();
+                setSearchResults([]);
+                if (showUpcomingOnly) {
+                  toggleUpcomingOnly(); // Reset to show all (default)
+                }
+              }}
+              className={`p-1.5 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
+                hasAnyActiveFilters
+                  ? "text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300" 
+                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              }`}
+              aria-label={hasAnyActiveFilters ? "Clear active filters" : "No active filters"}
+              title={hasAnyActiveFilters ? "Clear active filters" : "No active filters"}
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  fill={hasAnyActiveFilters ? "currentColor" : "none"}
+                />
+              </svg>
+            </button>
+
+            {/* View Toggle - Desktop only */}
+            <ViewToggle />
+
+            {/* About Link - Desktop only */}
+            <div className="hidden md:block">
+              <Link
+                to="/about"
+                className="px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                About
+              </Link>
+            </div>
+
+            {/* Language Dropdown */}
+            <LanguageDropdown />
             
             {/* Dark Mode Toggle */}
             <CompactDarkModeToggle />
-
-            {/* Clear Search/Filters */}
-            {(searchQuery || hasActiveFilters) && (
-              <button
-                onClick={() => {
-                  setSearchQuery("");
-                  // Clear filters would be handled by filter store
-                  navigate("/");
-                }}
-                className="text-gray-500 hover:text-gray-700 p-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                aria-label="Clear search and filters"
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            )}
-
-            {/* View Toggle - Desktop only */}
-            <div className="hidden md:flex items-center space-x-1 bg-gray-100 rounded-md p-1">
-              <Link
-                to="/"
-                className="px-2 py-1 text-sm rounded transition-colors hover:bg-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                List
-              </Link>
-              <Link
-                to="/calendar"
-                className="px-2 py-1 text-sm rounded transition-colors hover:bg-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Calendar
-              </Link>
-            </div>
           </div>
         </div>
       </div>

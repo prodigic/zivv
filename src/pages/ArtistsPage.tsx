@@ -181,8 +181,8 @@ const ArtistsPage: React.FC = () => {
                         <div className="text-sm">
                           <span className="font-semibold text-green-600 dark:text-green-400">
                             {nextEvent.isFree ? 'FREE' : 
-                             nextEvent.priceMin === nextEvent.priceMax ? `$${nextEvent.priceMin}` :
-                             `$${nextEvent.priceMin}-${nextEvent.priceMax}`}
+                             nextEvent.priceMin === nextEvent.priceMax ? `$${Math.ceil(nextEvent.priceMin || 0)}` :
+                             `$${Math.ceil(nextEvent.priceMin || 0)}-${Math.ceil(nextEvent.priceMax || 0)}`}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100 ml-2">
                             {nextEvent.startTimeEpochMs ? 

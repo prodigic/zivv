@@ -119,14 +119,26 @@ The codebase uses strict TypeScript with branded types for type safety:
 - `index.tsx` - React Router configuration with GitHub Pages support
 - Lazy-loaded pages with code splitting
 - Error boundaries and loading states
+- Calendar routes: `/calendar` → `/calendar/month`, `/calendar/week`, `/calendar/agenda`
 
 **Components**: `src/components/`
 - `layout/AppShell.tsx` - Main application shell with responsive layout
-- `layout/Header.tsx` - Header with search, filters, and navigation
+- `layout/Header.tsx` - Enhanced header with search, toggles, language selector, and dark mode
 - `layout/BottomNavigation.tsx` - Mobile bottom navigation
 - `layout/SideNavigation.tsx` - Desktop sidebar navigation
 - `error/ErrorBoundary.tsx` - Error boundary with user-friendly messages
 - `ui/LoadingSpinner.tsx` - Loading states and skeleton components
+- `ui/DarkModeToggle.tsx` - Compact dark mode toggle component
+- `ui/UpcomingToggle.tsx` - Toggle for upcoming vs all events
+- `ui/FreeShowsToggle.tsx` - Toggle for free vs paid events
+
+**Enhanced Header Features**:
+- **Search Bar**: Live search with dropdown results and loading indicators
+- **Toggle Controls**: Upcoming events, free shows, and list/calendar view toggles
+- **Language Dropdown**: Multi-language support with flag icons and click-outside dismiss
+- **Dark Mode Toggle**: Positioned at end of header row for easy access
+- **Filter Indicator**: Shows active filter state with clear functionality
+- **Responsive Design**: Mobile-optimized with collapsible elements
 
 **State Management**: `src/stores/`
 - `appStore.ts` - Main app state with Zustand (data, loading, errors)
@@ -134,10 +146,16 @@ The codebase uses strict TypeScript with branded types for type safety:
 - Persistent UI state, URL parameter sync
 
 **Pages**: `src/pages/`
-- `HomePage.tsx` - Event list with infinite scroll
+- `HomePage.tsx` - Event list with infinite scroll and debug information
 - `CalendarPage.tsx` - Calendar views (month/week/agenda) 
 - `ArtistsPage.tsx`, `VenuesPage.tsx` - Directory pages
 - `*DetailPage.tsx` - Individual entity detail pages
+
+**Event Display Features**:
+- **Punk Rock Ticket Design**: Colorful ticket-style cards with perforated edges
+- **Sold Out Stamps**: Visual overlay using `soldout-transparent.png` for sold-out events
+- **Debug Information**: Comprehensive event data display with high-contrast accessibility
+- **Responsive Tickets**: Mobile-first design with background patterns and gradients
 
 ### File Structure Conventions
 ```
@@ -178,6 +196,174 @@ src/
 - Memory-conscious chunk processing
 - Efficient data structures and algorithms
 - Bundle size monitoring and optimization
+
+## Debug and Development Features
+
+### Debug Information Display
+The application includes comprehensive debug information for development and troubleshooting:
+
+**HomePage Debug Panel**:
+- Events and artists loading counts
+- Loading states for all data services
+- Error states and messages
+- Active search queries and filter states
+- Filter details in JSON format
+
+**Event Card Debug Information**:
+- Complete event data display below each ticket
+- Shows all properties not visible on the ticket design:
+  - Event ID, slug, status, venue type
+  - Age restrictions, timezone information
+  - Descriptions, notes, ticket URLs
+  - Tags, source line numbers, creation dates
+- High-contrast accessibility design for readability
+
+**Debug Styling**:
+- **Light/Dark Mode Adaptive**: `bg-gray-100/dark:bg-gray-900` backgrounds
+- **High Contrast Labels**: `text-blue-700/dark:text-blue-300` for WCAG compliance
+- **Responsive Grid**: Two-column layout with proper spacing
+- **Accessibility**: Excellent contrast ratios and readable fonts
+
+### Asset Management
+**Sold Out Indicators**:
+- Uses `src/assets/soldout-transparent.png` for visual overlays
+- Automatically applied when `event.status === "sold-out"` or `event.tags.includes("sold-out")`
+- Positioned with CSS transforms and proper z-indexing
+
+### Accessibility Features
+- **WCAG 2.1 AA Compliance**: Target standard for all UI components
+- **High Contrast Mode**: Debug information uses optimized color schemes
+- **Keyboard Navigation**: All interactive elements support tab navigation
+- **Screen Reader Support**: Proper ARIA labels and semantic HTML
+- **Focus Management**: Clear focus indicators on all controls
+- **Responsive Design**: Mobile-first approach with touch-friendly targets
+
+## Multilingual Support (Phase 7 Implementation Plan)
+
+### Language Infrastructure
+**Target Languages**: English (EN), Spanish (ES), French (FR), German (DE)
+
+**Implementation Strategy**:
+- **React i18n Library**: Integration with `react-i18next` for dynamic translations
+- **Language State Management**: Zustand store for current language preference
+- **Browser Integration**: Automatic detection of user's preferred language
+- **Persistent Storage**: localStorage to remember user's language choice
+
+### Translation Architecture
+**Translation Files Structure**:
+```
+public/locales/
+├── en/
+│   ├── common.json      # Header, navigation, common UI
+│   ├── events.json      # Event-related translations
+│   ├── venues.json      # Venue-related translations
+│   └── calendar.json    # Calendar view translations
+├── es/
+│   ├── common.json
+│   ├── events.json
+│   ├── venues.json
+│   └── calendar.json
+└── [fr, de]/...
+```
+
+**Translation Keys Strategy**:
+- **Nested JSON Structure**: Organized by feature/component
+- **Pluralization Support**: Handle singular/plural forms
+- **Variable Interpolation**: Dynamic content insertion
+- **Fallback System**: English as default for missing translations
+
+### Content Localization
+**Static Content Translation**:
+- UI labels, buttons, navigation elements
+- Form validation messages and error states
+- Loading states and empty state messages
+- Accessibility labels and descriptions
+
+**Dynamic Content Handling**:
+- Event titles and descriptions (where available)
+- Venue names and addresses (standardized format)
+- Date and time formatting (locale-specific)
+- Currency formatting for ticket prices
+
+### Technical Implementation
+**Language Context**:
+```typescript
+// Language store with Zustand
+interface LanguageStore {
+  currentLanguage: string;
+  setLanguage: (lang: string) => void;
+  isLoading: boolean;
+}
+
+// Translation hook
+const useTranslation = (namespace?: string) => {
+  const { t, i18n } = useTranslation(namespace);
+  return { t, changeLanguage: i18n.changeLanguage };
+};
+```
+
+**Component Integration**:
+- **Header Language Dropdown**: Already implemented UI component
+- **Automatic RTL Support**: CSS adjustments for Arabic/Hebrew (future)
+- **Number/Date Formatting**: Locale-aware formatting utilities
+- **Search Localization**: Multi-language search term handling
+
+### SEO and URL Structure
+**URL Localization Options**:
+- **Subdirectory**: `/en/`, `/es/`, `/fr/`, `/de/` 
+- **Query Parameters**: `?lang=es` (simpler implementation)
+- **Domain Strategy**: Future consideration for `es.zivv.com`
+
+**Meta Data Translation**:
+- Page titles, descriptions, and OpenGraph tags
+- Language-specific sitemap generation
+- `hreflang` attributes for SEO
+
+### Translation Workflow
+**Development Process**:
+1. **Key Extraction**: Automated scanning for translation keys
+2. **AI Translation Pipeline**: Automated translation during build/CI workflow
+3. **Translation Management**: Integration with translation services
+4. **Quality Assurance**: Review process for translation accuracy
+5. **Automated Testing**: i18n-specific test coverage
+
+**AI Translation Workflow**:
+- **Build Integration**: Automatic translation updates during `npm run build`
+- **CI/CD Pipeline**: GitHub Actions workflow for translation automation
+- **Translation Service**: Integration with OpenAI API or Google Translate API
+- **Incremental Updates**: Only translate new/changed keys to optimize costs
+- **Version Control**: Git-tracked translation files with change detection
+- **Fallback Strategy**: AI translations as base with human review flags
+
+**AI Translation Implementation**:
+```typescript
+// Translation automation script
+interface TranslationConfig {
+  sourceLanguage: 'en';
+  targetLanguages: ['es', 'fr', 'de'];
+  translationService: 'openai' | 'google' | 'azure';
+  apiKey: string;
+  reviewRequired: boolean;
+}
+
+// Build-time translation update
+npm run translate:update    # Update all translations
+npm run translate:verify    # Verify translation completeness
+npm run translate:review    # Mark translations for human review
+```
+
+**Automation Features**:
+- **Smart Detection**: Identify new/modified translation keys
+- **Context Preservation**: Maintain formatting and interpolation variables
+- **Quality Scoring**: AI confidence levels for translation accuracy
+- **Batch Processing**: Efficient API usage with rate limiting
+- **Rollback Support**: Version control for translation updates
+
+**Content Sources**:
+- **AI Translation**: Primary source for initial translations and updates
+- **Community Translation**: GitHub-based contribution workflow for refinements
+- **Professional Translation**: For critical UI elements and marketing content
+- **Human Review**: Quality assurance for AI-generated translations
 
 ## Common Development Tasks
 
@@ -256,24 +442,45 @@ loadingManager.setLoading('events');
 loadingManager.setSuccess('events');
 ```
 
-### Frontend Development (Next Phases)
+### Current Development Status (Phase 4+ Enhancements)
+**Completed Phase 4 Features**:
+- ✅ **Enhanced Event Display**: Punk rock ticket design with sold-out overlays
+- ✅ **Advanced Header Controls**: Search, toggles, language selector, dark mode
+- ✅ **Debug Information System**: Comprehensive development debugging tools
+- ✅ **Accessibility Improvements**: WCAG 2.1 AA compliant contrast and navigation
+- ✅ **Mobile-First Design**: Responsive ticket cards and header controls
+
+**Next Phase Development**:
 - **Phase 5**: Event List & Filtering - Virtualized infinite scroll, advanced filters
 - **Phase 6**: Calendar Views - FullCalendar integration with month/week/agenda views  
-- **Phase 7**: Artist & Venue Directories - Searchable directories with detail pages
-- **Phase 8**: Event Details & Interactions - Modal/page views with full event information
+- **Phase 7**: Multilingual Support - Complete i18n implementation with content localization
+- **Phase 8**: Artist & Venue Directories - Searchable directories with detail pages
+- **Phase 9**: Event Details & Interactions - Modal/page views with full event information
+
+**Frontend Architecture**:
 - Components use Tailwind CSS with mobile-first responsive design
 - State management with Zustand stores and URL synchronization
 - Error boundaries provide graceful degradation and recovery
+- Comprehensive debug tooling for development workflow
 
 ## Project Context
 
-This project has completed Phase 2 (ETL Pipeline), Phase 3 (Core Data Layer), and Phase 4 (Application Shell & Routing). The architecture processes Bay Area punk show data into optimized JSON and provides a complete React application foundation. Current capabilities include:
+This project has completed Phase 2 (ETL Pipeline), Phase 3 (Core Data Layer), and Phase 4 (Application Shell & Routing) with significant enhancements. The architecture processes Bay Area punk show data into optimized JSON and provides a complete React application foundation with production-ready UI components.
 
-- Mobile-first responsive design (planned)
-- Advanced filtering and search capabilities 
-- Calendar views (month, week, agenda)
-- Artist and venue directories
-- High performance with large datasets
-- Accessibility compliance (WCAG 2.1 AA target)
+**Current Capabilities**:
+- ✅ **Mobile-First Responsive Design**: Touch-friendly punk rock ticket interface
+- ✅ **Advanced Filtering & Search**: Real-time search with dropdown results  
+- ✅ **Multi-View Support**: List/Calendar toggle with routing integration
+- ✅ **Accessibility Compliance**: WCAG 2.1 AA standard with high contrast modes
+- ✅ **Debug & Development Tools**: Comprehensive data inspection capabilities
+- ✅ **Performance Optimized**: Chunked loading, caching, and Web Worker processing
+- ✅ **Internationalization Ready**: Language selector and multi-locale support
+- ✅ **Dark/Light Mode**: System preference detection with manual toggle
 
-The current implementation provides a solid foundation for rapid frontend development with pre-processed, optimized data structures and comprehensive type safety.
+**Technical Foundation**:
+- **High Performance**: Web Workers, IndexedDB caching, chunked data loading
+- **Type Safety**: Strict TypeScript with branded types and runtime validation  
+- **Modern Stack**: React 19, Vite, Tailwind CSS, Zustand state management
+- **Production Ready**: Error boundaries, loading states, offline capabilities
+
+The current implementation provides a solid foundation for rapid frontend development with pre-processed, optimized data structures, comprehensive type safety, and a polished user interface that's ready for production deployment.

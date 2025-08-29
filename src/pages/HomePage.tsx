@@ -16,6 +16,7 @@ const HomePage: React.FC = () => {
   const loadChunk = useAppStore(state => state.loadChunk);
   const initialize = useAppStore(state => state.initialize);
   const artists = useAppStore(state => state.artists);
+  const showUpcomingOnly = useAppStore(state => state.showUpcomingOnly);
   
   const { 
     filters, 
@@ -28,6 +29,14 @@ const HomePage: React.FC = () => {
   // Apply filters from filter store
   const allEvents = React.useMemo(() => {
     let filteredEvents = allEventsRaw;
+    
+    // Apply upcoming filter
+    if (showUpcomingOnly) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Start of today
+      const todayMs = today.getTime();
+      filteredEvents = filteredEvents.filter(event => event.dateEpochMs >= todayMs);
+    }
     
     // Apply price filter (for free shows toggle)
     if (filters.priceRange && filters.priceRange.max !== undefined) {
@@ -47,7 +56,7 @@ const HomePage: React.FC = () => {
     
     // Apply display limit for pagination
     return filteredEvents.slice(0, displayLimit);
-  }, [allEventsRaw, filters.priceRange, displayLimit]);
+  }, [allEventsRaw, showUpcomingOnly, filters.priceRange, displayLimit]);
 
   useEffect(() => {
     const initializeAndLoadEvents = async () => {
@@ -128,15 +137,15 @@ const HomePage: React.FC = () => {
         </div>
 
         {/* Debug info */}
-        <div className="debug-info mb-4 space-y-1">
-          <div className="debug-label">HomePage Debug Info:</div>
-          <div>Events loaded: {allEvents.length}</div>
-          <div>Artists loaded: {artists.size}</div>
-          <div>Loading states: artists={loading.artists}, events={loading.events}</div>
-          <div>Errors: artists={errors.artists}, events={errors.events}</div>
-          <div>Search query: "{searchQuery}"</div>
-          <div>Active city filters: {Object.keys(filters.cities || {}).length}</div>
-          <div>Filter details: {JSON.stringify(filters)}</div>
+        <div className="debug-info mb-4 space-y-1 p-3 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-mono text-xs border-2 border-gray-300 dark:border-gray-600 rounded">
+          <div className="debug-label text-blue-700 dark:text-blue-300 font-bold">HomePage Debug Info:</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Events loaded:</span> {allEvents.length}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Artists loaded:</span> {artists.size}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Loading states:</span> artists={loading.artists}, events={loading.events}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Errors:</span> artists={errors.artists}, events={errors.events}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Search query:</span> "{searchQuery}"</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Active city filters:</span> {Object.keys(filters.cities || {}).length}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Filter details:</span> {JSON.stringify({...filters, showUpcomingOnly})}</div>
         </div>
 
         {/* Event List */}
@@ -261,14 +270,43 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
   const colorIndex = Math.abs(event.id) % colorVariants.length;
   const colors = colorVariants[colorIndex];
 
+  // Create background text pattern
+  const backgroundText = `${headlinerArtist?.name || 'PUNK SHOW'} • ${venue?.name || 'VENUE'} • `;
+  
   return (
-    <div className="relative border-2 border-dashed rounded-none mb-6 shadow-lg transform hover:scale-105 transition-transform duration-200" style={{
-      background: colors.bg,
-      borderLeft: `8px solid ${colors.border}`,
-      borderRight: `8px solid ${colors.border}`,
-      borderColor: colors.border,
-      fontFamily: 'monospace'
-    }}>
+    <div className="mb-8">
+      <div className="relative border-2 border-dashed rounded-none shadow-lg transform hover:scale-105 transition-transform duration-200 overflow-hidden" style={{
+        background: colors.bg,
+        borderLeft: `8px solid ${colors.border}`,
+        borderRight: `8px solid ${colors.border}`,
+        borderColor: colors.border,
+        fontFamily: 'monospace'
+      }}>
+      
+      {/* Background Pattern */}
+      <div 
+        className="absolute inset-0 pointer-events-none select-none"
+        style={{
+          fontSize: '2rem',
+          fontWeight: 'bold',
+          color: 'rgba(0,0,0,0.05)',
+          transform: 'rotate(25deg) translateX(-20%) translateY(-20%)',
+          lineHeight: '2.5rem',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5rem',
+          width: '200%',
+          height: '200%',
+        }}
+      >
+        {Array.from({ length: 15 }, (_, i) => (
+          <div key={i} style={{ transform: `translateX(${(i % 2) * -50}px)` }}>
+            {backgroundText.repeat(10)}
+          </div>
+        ))}
+      </div>
       
       {/* Ticket Header */}
       <div className="text-white text-center py-2 text-xs font-bold tracking-wider border-b-2 border-dashed" style={{
@@ -328,8 +366,8 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
             {(event.priceMin || event.priceMax || event.isFree) && (
               <div className="bg-red-600 text-white px-3 py-2 rounded font-bold text-lg shadow-inner">
                 {event.isFree ? 'FREE' : 
-                 event.priceMin === event.priceMax ? `$${event.priceMin}` :
-                 `$${event.priceMin}-$${event.priceMax}`}
+                 event.priceMin === event.priceMax ? `$${Math.ceil(event.priceMin || 0)}` :
+                 `$${Math.ceil(event.priceMin || 0)}-$${Math.ceil(event.priceMax || 0)}`}
               </div>
             )}
             
@@ -353,11 +391,18 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
         </div>
       </div>
       
-      {/* Debug ID Information */}
-      <div className="debug-info absolute -bottom-6 left-0 text-xs text-gray-400 font-mono">
-        Event: {event.id} | Venue: {event.venueId} | Headliner: {event.headlinerArtistId}
-      </div>
       
+      {/* SOLD OUT Stamp */}
+      {(event.status === "sold-out" || event.tags.includes("sold-out")) && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+          <img 
+            src="/src/assets/soldout-transparent.png" 
+            alt="SOLD OUT" 
+            className="transform rotate-12 w-64 h-auto drop-shadow-2xl"
+          />
+        </div>
+      )}
+
       {/* Perforated Edge Effects */}
       <div className="absolute -left-2 top-0 bottom-0 w-4 bg-white opacity-60 pointer-events-none"
         style={{
@@ -370,6 +415,25 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
           backgroundImage: 'radial-gradient(circle, transparent 2px, white 2px)',
           backgroundSize: '8px 8px'
         }}>
+      </div>
+    </div>
+      
+      {/* Debug Information - All Event Data */}
+      <div className="debug-info mt-2 text-xs bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-mono p-3 rounded border-2 border-gray-300 dark:border-gray-600">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">ID:</span> {event.id}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Slug:</span> {event.slug}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Status:</span> {event.status}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">VenueType:</span> {event.venueType}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">AgeRestrict:</span> {event.ageRestriction}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Timezone:</span> {event.timezone}</div>
+          {event.description && <div className="col-span-2"><span className="text-blue-700 dark:text-blue-300 font-bold">Desc:</span> {event.description}</div>}
+          {event.notes && <div className="col-span-2"><span className="text-blue-700 dark:text-blue-300 font-bold">Notes:</span> {event.notes}</div>}
+          {event.ticketUrl && <div className="col-span-2"><span className="text-blue-700 dark:text-blue-300 font-bold">Tix:</span> {event.ticketUrl}</div>}
+          {event.tags.length > 0 && <div className="col-span-2"><span className="text-blue-700 dark:text-blue-300 font-bold">Tags:</span> {event.tags.join(', ')}</div>}
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">SrcLine:</span> {event.sourceLineNumber}</div>
+          <div><span className="text-blue-700 dark:text-blue-300 font-bold">Created:</span> {new Date(event.createdAtEpochMs).toLocaleDateString()}</div>
+        </div>
       </div>
     </div>
   );
