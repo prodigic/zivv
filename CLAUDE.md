@@ -208,18 +208,6 @@ src/
 - Efficient data structures and algorithms
 - Bundle size monitoring and optimization
 
-## Debug and Development Features
-
-### Debug Information Display
-The application includes comprehensive debug information for development and troubleshooting:
-
-**HomePage Debug Panel**:
-- Events and artists loading counts
-- Loading states for all data services
-- Error states and messages
-- Active search queries and filter states
-- Filter details in JSON format
-
 ## Conventional Commit Guidelines
 
 To maintain a clear and consistent commit history, all commits MUST adhere to the Conventional Commits specification with the following rules:
@@ -256,6 +244,20 @@ Resolves an issue where the pagination logic was incorrectly
 calculating the last page, leading to missing items. The fix
 adjusts the boundary condition in the `calculatePage` function.
 ```
+
+## Debug and Development Features
+
+### Debug Information Display
+The application includes comprehensive debug information for development and troubleshooting:
+
+**HomePage Debug Panel**:
+- Events and artists loading counts
+- Loading states for all data services
+- Error states and messages
+- Active search queries and filter states
+- Filter details in JSON format
+
+
 
 **Event Card Debug Information**:
 - Complete event data display below each ticket
