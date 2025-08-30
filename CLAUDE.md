@@ -220,6 +220,43 @@ The application includes comprehensive debug information for development and tro
 - Active search queries and filter states
 - Filter details in JSON format
 
+## Conventional Commit Guidelines
+
+To maintain a clear and consistent commit history, all commits MUST adhere to the Conventional Commits specification with the following rules:
+
+### Subject Line
+- The subject line should be concise and descriptive, with **no more than 50 characters**.
+- It should use the imperative mood (e.g., "feat: add user authentication", not "feat: added user authentication").
+
+### Body
+- The subject line is separated from the body by a **blank line**.
+- The body provides a more detailed explanation of the changes and their impact.
+- Each line of the body **MUST be kept within 72 characters** for readability in various Git tools.
+- Use bullet points or paragraphs to clearly articulate the changes, reasons, and any potential side effects.
+
+### Examples
+```
+feat: add user authentication module
+
+This commit introduces the new user authentication module.
+It includes:
+- User registration and login
+- Session management
+- JWT token generation
+
+The module uses bcrypt for password hashing and ensures secure
+user data handling. It also updates the API routes to require
+authentication for certain endpoints.
+```
+
+```
+fix: correct off-by-one error in pagination
+
+Resolves an issue where the pagination logic was incorrectly
+calculating the last page, leading to missing items. The fix
+adjusts the boundary condition in the `calculatePage` function.
+```
+
 **Event Card Debug Information**:
 - Complete event data display below each ticket
 - Shows all properties not visible on the ticket design:
