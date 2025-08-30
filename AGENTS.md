@@ -106,20 +106,20 @@ src/
 - **Testing**: Unit tests for ETL, integration tests for pipelines, component tests with Testing Library. Test files in `src/test/`.
 - **Performance**: ETL optimized for large datasets, memory-conscious processing, efficient data structures.
 
-## 5. Debug and Development Features
+## 6. Debug and Development Features
 
 - **HomePage Debug Panel**: Displays loading counts, states, errors, search queries, filter states.
 - **Event Card Debug Information**: Complete event data below each ticket (ID, slug, status, age, timezone, etc.).
 - **Debug Styling**: Light/Dark Mode adaptive, high contrast labels, responsive grid.
 - **Asset Management**: `src/assets/soldout-transparent.png` for sold-out overlays.
 
-## 6. Multilingual Support (Phase 7 Implementation Plan)
+## 7. Multilingual Support (Phase 7 Implementation Plan)
 
 ### Language Infrastructure
 - **React i18n Library**: Integration with `react-i18next` for dynamic translations.
 - **Language State Management**: Zustand store for current language preference.
-- **Browser Integration**: Automatic detection of user's preferred language.
-- **Persistent Storage**: `localStorage` to remember user's language choice.
+- **Browser Integration**: Automatic detection of user\'s preferred language.
+- **Persistent Storage**: `localStorage` to remember user\'s language choice.
 
 ### Translation Architecture
 
@@ -137,19 +137,18 @@ public/locales/
 - **Variable Interpolation**: Dynamic content insertion.
 - **Fallback System**: English as default for missing translations.
 
-## 7. Documentation Guidelines (for Agents)
+## 8. Documentation Guidelines (for Agents)
 
 - The `docs` directory is the central location for all project documentation (planning, activity tracking, general docs, technical specs).
 - When asked to understand project goals, architecture, or features, consult the `docs` directory first.
 - When creating new documentation or plans, place them in the `docs` directory.
 - Always consider the contents of the `docs` directory for context.
 
-## 8. Key Files for Context
+## 9. Key Files for Context
 
-- `CLAUDE.md`: Your primary instructions.
+- `AGENTS.md`: Your primary instructions for AI agents.
+- `CLAUDE.md`: General project overview and development guidance (if present).
 - `README.md`: General project overview and setup.
-- `data/CLAUDE.md`: Describes raw data format for ETL.
-- `docs/CLAUDE.md`: Guidelines for the `docs` directory.
 - `docs/implementation-plan.md`: Detailed project roadmap and status.
 - `docs/prd.md`: Product requirements, user stories, data model, architecture.
 - `docs/step-1.1-repository-setup-todo.md`: Detailed setup checklist.
