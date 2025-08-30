@@ -264,17 +264,9 @@ The application includes comprehensive debug information for development and tro
 **Translation Files Structure**:
 ```
 public/locales/
-├── en/
-│   ├── common.json      # Header, navigation, common UI
-│   ├── events.json      # Event-related translations
-│   ├── venues.json      # Venue-related translations
-│   └── calendar.json    # Calendar view translations
-├── es/
-│   ├── common.json
-│   ├── events.json
-│   ├── venues.json
-│   └── calendar.json
-└── [fr, de]/...
+├── en.json      # English translations
+├── es.json      # Spanish translations
+└── [fr, de]/... # Other languages
 ```
 
 **Translation Keys Strategy**:
