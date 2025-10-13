@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* CSS Custom Properties for theme switching */
 :root {
   --bg-primary: 249 250 251; /* gray-50 */
@@ -40,16 +39,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(var(--bg-primary));
   color: rgb(var(--text-primary));
+  text-wrap: balance;
 }
 
 /* Selective transitions for better performance */
 .transition-colors {
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 }
 
 /* Add transitions only to interactive elements */
-button, a, .hover\\:shadow-md {
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+button,
+a,
+.hover\\:shadow-md {
+  transition:
+    background-color 0.15s ease-in-out,
+    color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 /* Upcoming filter CSS classes for performance */
@@ -119,13 +127,23 @@ html {
 
 /* Animation improvements */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideIn {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .animate-fade-in {
