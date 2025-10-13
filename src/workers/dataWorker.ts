@@ -3,13 +3,7 @@
  * Handles JSON parsing, filtering, sorting, and search index building off the main thread
  */
 
-import type {
-  Event,
-  Artist,
-  Venue,
-  EventFilters,
-  EventId,
-} from "@/types/events.js";
+import type { Event, Artist, Venue } from "@/types/events.js";
 import type {
   WorkerMessage,
   WorkerResponse,
@@ -157,7 +151,7 @@ function handleFilterEvents(id: string, payload: FilterEventsPayload) {
 
         return filters.cities!.some((selectedCity) => {
           const normalizedCity = cityMapping[selectedCity] || selectedCity;
-          return getVenueCity(event.venueId!) === normalizedCity;
+          return getVenueCity() === normalizedCity;
         });
       });
     }
@@ -242,11 +236,8 @@ function handleFilterEvents(id: string, payload: FilterEventsPayload) {
     if (searchQuery && searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       filteredEvents = filteredEvents.filter((event) => {
-        // Search in artist names (would need artist data)
-        // For now, search in available event data
-        const searchableText = [
-          // Would add artist names here if available
-        ]
+        // Search in event description and notes
+        const searchableText = [event.description || "", event.notes || ""]
           .join(" ")
           .toLowerCase();
 
@@ -408,8 +399,7 @@ function handleCalculateStats(id: string, payload: { events: Event[] }) {
     const upcomingEvents = events.filter((event) => event.dateEpochMs > now);
     const pastEvents = events.filter((event) => event.dateEpochMs <= now);
 
-    // City statistics
-    const cityCounts = new Map<string, number>();
+    // Unique entities
     const venueIds = new Set<number>();
     const artistIds = new Set<number>();
 
@@ -482,7 +472,7 @@ function calculateMedian(numbers: number[]): number {
     : sorted[mid];
 }
 
-function getVenueCity(venueId: number): string {
+function getVenueCity(): string {
   // This would need venue data to be passed to the worker
   // For now, return empty string
   return "";
@@ -503,16 +493,6 @@ function sendError(id: string, error: string): void {
     id,
     success: false,
     error,
-  };
-
-  self.postMessage(response);
-}
-
-function sendProgress(id: string, progress: number): void {
-  const response: WorkerResponse = {
-    id,
-    success: true,
-    progress,
   };
 
   self.postMessage(response);
