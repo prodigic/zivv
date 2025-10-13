@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
   const allEventsRaw = getAllEvents(Infinity); // Get all loaded events
   
   // Performance monitoring
-  const { metrics, warnings, isMemoryHigh } = usePerformanceMonitor();
+  const { warnings, isMemoryHigh } = usePerformanceMonitor();
 
   // Utility to efficiently find venue ID by name
   const findVenueIdByName = React.useCallback((venueName: string) => {
@@ -249,24 +249,20 @@ const HomePage: React.FC = () => {
           const yearMonth = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}`;
           neededChunks.add(yearMonth);
         } else {
-          // If event not loaded, check which chunk it would be in based on manifest
-          manifest.chunks.events.forEach(chunkInfo => {
-            // We'd need to check if this event ID would be in this chunk
-            // For now, we'll be conservative and load chunks based on current date range
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1;
+          // If event not loaded, we'll be conservative and load chunks based on current date range
+          const currentDate = new Date();
+          const currentYear = currentDate.getFullYear();
+          const currentMonth = currentDate.getMonth() + 1;
+          
+          // Load current month and next few months for venue events
+          for (let monthOffset = -2; monthOffset <= 6; monthOffset++) {
+            const targetDate = new Date(currentYear, currentMonth - 1 + monthOffset, 1);
+            const chunkId = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}`;
             
-            // Load current month and next few months for venue events
-            for (let monthOffset = -2; monthOffset <= 6; monthOffset++) {
-              const targetDate = new Date(currentYear, currentMonth - 1 + monthOffset, 1);
-              const chunkId = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}`;
-              
-              if (manifest.chunks.events.some(chunk => chunk.chunkId === chunkId)) {
-                neededChunks.add(chunkId);
-              }
+            if (manifest.chunks.events.some(chunk => chunk.chunkId === chunkId)) {
+              neededChunks.add(chunkId);
             }
-          });
+          }
         }
       });
 

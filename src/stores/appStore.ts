@@ -524,7 +524,7 @@ export const useAppStore = create<AppStore>()(
         
         // Memory management
         evictOldChunks(maxChunks = 6) {
-          const { loadedChunks, chunkLoadOrder, chunkMetadata, events } = get();
+          const { loadedChunks, chunkLoadOrder, events } = get();
           
           if (loadedChunks.size <= maxChunks) return;
           
