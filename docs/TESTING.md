@@ -7,34 +7,39 @@ This document provides comprehensive guidance on testing in the Zivv project, co
 The Zivv testing strategy follows a multi-layered approach:
 
 - **Unit Tests**: Individual functions and components (Vitest + React Testing Library)
-- **Integration Tests**: ETL pipeline and service interactions (Vitest)  
+- **Integration Tests**: ETL pipeline and service interactions (Vitest)
 - **E2E Tests**: Full user journeys and browser testing (Playwright)
 - **Performance Tests**: Core Web Vitals and optimization (Playwright + Lighthouse)
 
 ## Test Coverage
 
 ### Phase 1: ETL Pipeline Testing ✅
+
 - **EventParser.test.ts**: Event parsing, normalization, artist extraction
 - **VenueParser.test.ts**: Venue parsing, address normalization, deduplication
 - **ETLIntegration.test.ts**: Full pipeline integration testing
 
 ### Phase 2: Data Loading & Services Testing ✅
+
 - **DataService.test.ts**: Chunk loading, cache invalidation, error handling
 - **CacheService.test.ts**: IndexedDB operations, LRU eviction, version management
 - **WorkerService.test.ts**: Web Worker communication, fallback behavior
 
 ### Phase 3: Core App Functionality ✅
+
 - **filterStore.test.ts**: State management, URL synchronization, filter combinations
 - **appStore.test.ts**: Data loading, UI state, error handling, cache management
 - **DatePagination.test.tsx**: Date filtering UI, keyboard navigation, responsive design
 - **CityPagination.test.tsx**: City filtering UI, selection logic, accessibility
 
 ### Phase 4: E2E Testing ✅
+
 - **smoke.spec.ts**: Application smoke tests, basic functionality, accessibility
-- **event-filtering.spec.ts**: Filter interactions, view toggles, state persistence  
+- **event-filtering.spec.ts**: Filter interactions, view toggles, state persistence
 - **search-functionality.spec.ts**: Search features, autocomplete, keyboard access
 
 ### Phase 5: Performance Testing ✅
+
 - **performance.spec.ts**: Core Web Vitals, load times, mobile performance
 - **lighthouse.spec.ts**: Lighthouse audits, SEO, PWA compliance
 
@@ -46,7 +51,7 @@ The Zivv testing strategy follows a multi-layered approach:
 # Watch mode (development)
 npm run test
 
-# Run once  
+# Run once
 npm run test:run
 
 # With coverage
@@ -139,11 +144,11 @@ test('should handle date selection', () => {
   });
 
   render(<DatePagination />);
-  
+
   fireEvent.click(screen.getByText('Today'));
-  
+
   expect(mockUpdateFilter).toHaveBeenCalledWith(
-    'dates', 
+    'dates',
     expect.arrayContaining([expect.any(String)])
   );
 });
@@ -153,20 +158,22 @@ test('should handle date selection', () => {
 
 ```typescript
 // E2E test example
-test('should filter events by city', async ({ page }) => {
-  await page.goto('/');
-  await page.waitForLoadState('networkidle');
-  
+test("should filter events by city", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+
   const cityFilter = page.locator('[data-testid="city-filter"]').first();
   await cityFilter.click();
-  
+
   await page.waitForTimeout(500);
-  
+
   const isActive = await cityFilter.evaluate((el) => {
-    return el.classList.contains('active') || 
-           el.getAttribute('aria-pressed') === 'true';
+    return (
+      el.classList.contains("active") ||
+      el.getAttribute("aria-pressed") === "true"
+    );
   });
-  
+
   expect(isActive).toBeTruthy();
 });
 ```
@@ -181,7 +188,7 @@ test('should filter events by city', async ({ page }) => {
 ### Mocking Strategy
 
 - **Service mocks**: Mock external dependencies (DataService, CacheService)
-- **Store mocks**: Mock Zustand stores with factory pattern  
+- **Store mocks**: Mock Zustand stores with factory pattern
 - **Browser APIs**: Mock IndexedDB, Worker, ResizeObserver in setup
 - **Time-based**: Use `vi.useFakeTimers()` for date-dependent tests
 
@@ -209,7 +216,7 @@ The project includes comprehensive CI testing:
 ```yaml
 # .github/workflows/test.yml
 - Unit tests with coverage
-- E2E tests across multiple browsers  
+- E2E tests across multiple browsers
 - Performance regression testing
 - Test result artifacts and reports
 ```
@@ -238,7 +245,7 @@ npm run test -- --no-coverage src/test/DataService.test.ts
 screen.debug(); // In test code
 ```
 
-### E2E Test Debugging  
+### E2E Test Debugging
 
 ```bash
 # Step through test
@@ -266,7 +273,7 @@ npm run test:performance -- --headed
 ### Regular Maintenance Tasks
 
 1. **Update test data**: Keep fixtures current with real data patterns
-2. **Review coverage**: Address gaps in critical code paths  
+2. **Review coverage**: Address gaps in critical code paths
 3. **Performance baselines**: Update thresholds as app evolves
 4. **Flaky test fixes**: Address intermittent failures promptly
 5. **Dependency updates**: Keep testing libraries current
@@ -285,6 +292,7 @@ When adding new features:
 ### Common Issues
 
 **IndexedDB tests timing out**:
+
 ```typescript
 // Use proper async/await with setTimeout for mock responses
 setTimeout(() => {
@@ -293,22 +301,27 @@ setTimeout(() => {
 ```
 
 **Component tests failing with store errors**:
+
 ```typescript
 // Use factory pattern for store mocks
-const createMockStore = () => ({ /* fresh mock */ });
+const createMockStore = () => ({
+  /* fresh mock */
+});
 beforeEach(() => {
   vi.mocked(useFilterStore).mockImplementation(createMockStore);
 });
 ```
 
 **E2E tests flaky on CI**:
+
 ```typescript
 // Add proper wait conditions
-await page.waitForLoadState('networkidle');
+await page.waitForLoadState("networkidle");
 await page.waitForSelector('[data-testid="content"]');
 ```
 
 **Performance tests inconsistent**:
+
 ```typescript
 // Use multiple measurements and averages
 const times = [];
@@ -321,11 +334,13 @@ const avgTime = times.reduce((a, b) => a + b) / times.length;
 ## Test Results and Reporting
 
 ### Local Development
-- Unit tests: Console output + `./test-results/unit-tests.html`  
+
+- Unit tests: Console output + `./test-results/unit-tests.html`
 - E2E tests: `./playwright-report/index.html`
 - Coverage: `./coverage/index.html`
 
 ### CI/CD Integration
+
 - JUnit XML: `./test-results/e2e-results.xml`
 - JSON: `./test-results/e2e-results.json`
 - Artifacts: Uploaded to GitHub Actions for failed tests
@@ -336,7 +351,7 @@ const avgTime = times.reduce((a, b) => a + b) / times.length;
 
 - **Load Time**: < 3 seconds (homepage)
 - **First Contentful Paint**: < 1.8 seconds
-- **Largest Contentful Paint**: < 2.5 seconds  
+- **Largest Contentful Paint**: < 2.5 seconds
 - **Cumulative Layout Shift**: < 0.1
 - **Bundle Size**: JS < 2MB, CSS < 500KB
 
