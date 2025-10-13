@@ -14,7 +14,6 @@ import { DatePagination } from "@/components/ui/DatePagination.tsx";
 import { CityPagination } from "@/components/ui/CityPagination.tsx";
 import { VenueFilter } from "@/components/ui/VenueFilter.tsx";
 import { PageSizeSelector } from "@/components/ui/PageSizeSelector.tsx";
-import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import type { Event, Artist, ArtistId } from "@/types/events";
 
 // City display name mapping
@@ -42,10 +41,6 @@ const HomePage: React.FC = () => {
   const loadChunk = useAppStore((state) => state.loadChunk);
   const initialize = useAppStore((state) => state.initialize);
   const artists = useAppStore((state) => state.artists);
-  const manifest = useAppStore((state) => state.manifest);
-  const indexes = useAppStore((state) => state.indexes);
-  const loadedChunks = useAppStore((state) => state.loadedChunks);
-  const getMemoryStats = useAppStore((state) => state.getMemoryStats);
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
 
   const { filters, searchQuery } = useFilterStore();
@@ -53,22 +48,6 @@ const HomePage: React.FC = () => {
   const [pageSize, setPageSize] = React.useState(25);
   const [viewMode, setViewMode] = React.useState<"wide" | "narrow">("wide");
   const allEventsRaw = getAllEvents(Infinity); // Get all loaded events
-  
-  // Performance monitoring
-  const { warnings, isMemoryHigh } = usePerformanceMonitor();
-
-  // Utility to efficiently find venue ID by name
-  const findVenueIdByName = React.useCallback((venueName: string) => {
-    if (!venues || !indexes) return null;
-    
-    // Direct lookup is faster than iterating
-    for (const venue of venues.values()) {
-      if (venue.name === venueName) {
-        return venue.id;
-      }
-    }
-    return null;
-  }, [venues, indexes]);
 
   // Apply filters from filter store
   const { allFilteredEvents, allEvents } = React.useMemo(() => {
@@ -132,8 +111,19 @@ const HomePage: React.FC = () => {
         const venue = event.venueId ? getVenue(event.venueId) : null;
         if (!venue) return false;
 
+        // Map full city names to normalized names for venue matching
+        const cityMapping: Record<string, string> = {
+          "San Francisco": "S.f",
+          Oakland: "Oakland",
+          Berkeley: "Berkeley",
+          "Santa Cruz": "Santa",
+        };
+
         // Check if venue city matches any selected cities
-        return filters.cities!.includes(venue.city);
+        return filters.cities!.some((selectedCity) => {
+          const normalizedCity = cityMapping[selectedCity] || selectedCity;
+          return venue.city === normalizedCity;
+        });
       });
     }
 
@@ -163,7 +153,6 @@ const HomePage: React.FC = () => {
     filters.venues,
     pageSize,
     getVenue,
-    loadedChunks, // Re-run filtering when new chunks are loaded
   ]);
 
   useEffect(() => {
@@ -208,84 +197,6 @@ const HomePage: React.FC = () => {
     loadChunk,
     initialize,
   ]);
-
-  // Smart chunk loading based on venue filters
-  useEffect(() => {
-    const loadRelevantChunks = async () => {
-      if (!manifest || !indexes || !filters.venues || filters.venues.length === 0) {
-        return;
-      }
-
-      // Find venue IDs for selected venue names
-      const selectedVenueIds: Set<string> = new Set();
-      filters.venues.forEach(venueName => {
-        const venueId = findVenueIdByName(venueName);
-        if (venueId) {
-          selectedVenueIds.add(String(venueId));
-        }
-      });
-
-      if (selectedVenueIds.size === 0) {
-        console.warn("No venue IDs found for selected venues:", filters.venues);
-        return;
-      }
-
-      // Find all events for selected venues
-      const relevantEventIds: Set<string> = new Set();
-      selectedVenueIds.forEach(venueId => {
-        const venueEvents = indexes.eventsByVenue[venueId] || [];
-        venueEvents.forEach(eventId => relevantEventIds.add(String(eventId)));
-      });
-
-      // Determine which chunks contain these events
-      const neededChunks: Set<string> = new Set();
-      
-      // Check each event to see which chunk it belongs to
-      relevantEventIds.forEach(eventId => {
-        // Find chunk by checking event dates against chunk date ranges
-        const event = events.get(Number(eventId));
-        if (event) {
-          const eventDate = new Date(event.dateEpochMs);
-          const yearMonth = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}`;
-          neededChunks.add(yearMonth);
-        } else {
-          // If event not loaded, we'll be conservative and load chunks based on current date range
-          const currentDate = new Date();
-          const currentYear = currentDate.getFullYear();
-          const currentMonth = currentDate.getMonth() + 1;
-          
-          // Load current month and next few months for venue events
-          for (let monthOffset = -2; monthOffset <= 6; monthOffset++) {
-            const targetDate = new Date(currentYear, currentMonth - 1 + monthOffset, 1);
-            const chunkId = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}`;
-            
-            if (manifest.chunks.events.some(chunk => chunk.chunkId === chunkId)) {
-              neededChunks.add(chunkId);
-            }
-          }
-        }
-      });
-
-      // Only load chunks we don't already have
-      const chunksToLoad = Array.from(neededChunks).filter(
-        chunkId => !loadedChunks.has(chunkId)
-      );
-
-      if (chunksToLoad.length > 0) {
-        console.log(
-          `Smart loading ${chunksToLoad.length} chunks for ${filters.venues.length} venue(s):`,
-          chunksToLoad
-        );
-        try {
-          await Promise.all(chunksToLoad.map(chunkId => loadChunk(chunkId)));
-        } catch (error) {
-          console.error("Failed to load venue-specific chunks:", error);
-        }
-      }
-    };
-
-    loadRelevantChunks();
-  }, [filters.venues, manifest, indexes, venues, events, loadedChunks, loadChunk, findVenueIdByName]);
 
   if (loading.events === "loading" && allEvents.length === 0) {
     return (
@@ -459,22 +370,6 @@ const HomePage: React.FC = () => {
             </span>{" "}
             {allFilteredEvents.length}/{allEvents.length}
           </div>
-          <div>
-            <span className="text-blue-700 dark:text-blue-300 font-bold">
-              Memory usage:
-            </span>{" "}
-            <span className={isMemoryHigh ? "text-red-500 font-bold" : ""}>
-              {getMemoryStats().loadedChunks} chunks, {getMemoryStats().estimatedMemoryMB}MB
-            </span>
-          </div>
-          {warnings.length > 0 && (
-            <div>
-              <span className="text-red-600 dark:text-red-400 font-bold">
-                ⚠️ Performance warnings:
-              </span>{" "}
-              {warnings.join(", ")}
-            </div>
-          )}
           <div>
             <span className="text-blue-700 dark:text-blue-300 font-bold">
               Artists loaded:
@@ -705,8 +600,8 @@ const EventCard: React.FC<{
   // Create background text pattern
   const backgroundText = `${headlinerArtist?.name || "PUNK SHOW"} • ${venue?.name || "VENUE"} • `;
 
-  // Generate random rotation between -10 and 10 degrees
-  const randomRotation = (Math.random() - 0.5) * 4; // -2 to +2 degrees
+  // Generate random rotation between -1 and 1 degrees
+  const randomRotation = (Math.random() - 0.5) * 2; // -1 to +1 degrees
 
   return (
     <div
