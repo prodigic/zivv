@@ -151,6 +151,8 @@ export interface EventChunk {
 // Search and filtering types
 export interface EventFilters {
   cities?: string[];
+  dates?: string[]; // ISO dates for multi-select date filtering
+  venues?: string[]; // Venue names for multi-select venue filtering
   ageRestrictions?: AgeRestriction[];
   priceRange?: {
     min?: number;
