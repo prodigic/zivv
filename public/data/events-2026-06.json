@@ -1,0 +1,183 @@
+{
+  "chunkId": "2026-06",
+  "dateRange": {
+    "startEpochMs": 1780729200000,
+    "endEpochMs": 1782284400000
+  },
+  "events": [
+    {
+      "id": 547721810,
+      "slug": "2026-06-06-ariana-grande-the-arena",
+      "date": "2026-06-06",
+      "dateEpochMs": 1780729200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1924822518,
+      "artistIds": [
+        1924822518
+      ],
+      "venueId": 1887679738,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374652,
+      "updatedAtEpochMs": 1760169374652,
+      "sourceLineNumber": 3521
+    },
+    {
+      "id": 69725180,
+      "slug": "2026-06-06-louis-tomlinson-the-civic-auditorium",
+      "date": "2026-06-06",
+      "dateEpochMs": 1780729200000,
+      "startTimeEpochMs": 1780797600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 974851108,
+      "artistIds": [
+        974851108
+      ],
+      "venueId": 1648637995,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374700,
+      "updatedAtEpochMs": 1760169374700,
+      "sourceLineNumber": 5449
+    },
+    {
+      "id": 1181774549,
+      "slug": "2026-06-09-ariana-grande-the-arena",
+      "date": "2026-06-09",
+      "dateEpochMs": 1780988400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1924822518,
+      "artistIds": [
+        1924822518
+      ],
+      "venueId": 1887679738,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374652,
+      "updatedAtEpochMs": 1760169374652,
+      "sourceLineNumber": 3522
+    },
+    {
+      "id": 1227684088,
+      "slug": "2026-06-09-the-church-august-hall",
+      "date": "2026-06-09",
+      "dateEpochMs": 1780988400000,
+      "startTimeEpochMs": 1781049600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 833529542,
+      "artistIds": [
+        833529542
+      ],
+      "venueId": 811075932,
+      "priceMin": 55.67,
+      "priceMax": 209.8,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374652,
+      "updatedAtEpochMs": 1760169374652,
+      "sourceLineNumber": 3523
+    },
+    {
+      "id": 169625227,
+      "slug": "2026-06-10-belle-sebastian-the-masonic",
+      "date": "2026-06-10",
+      "dateEpochMs": 1781074800000,
+      "startTimeEpochMs": 1781146800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1250165607,
+      "artistIds": [
+        1250165607
+      ],
+      "venueId": 374573122,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374652,
+      "updatedAtEpochMs": 1760169374652,
+      "sourceLineNumber": 3524
+    },
+    {
+      "id": 1131239244,
+      "slug": "2026-06-11-belle-sebastian-the-masonic",
+      "date": "2026-06-11",
+      "dateEpochMs": 1781161200000,
+      "startTimeEpochMs": 1781233200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1250165607,
+      "artistIds": [
+        1250165607
+      ],
+      "venueId": 374573122,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374652,
+      "updatedAtEpochMs": 1760169374652,
+      "sourceLineNumber": 3525
+    },
+    {
+      "id": 604145498,
+      "slug": "2026-06-23-kings-kaleidoscove-august-hall",
+      "date": "2026-06-23",
+      "dateEpochMs": 1782198000000,
+      "startTimeEpochMs": 1782259200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 598703136,
+      "artistIds": [
+        598703136,
+        684192337
+      ],
+      "venueId": 811075932,
+      "priceMin": 39.23,
+      "priceMax": 39.23,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374700,
+      "updatedAtEpochMs": 1760169374700,
+      "sourceLineNumber": 5450
+    },
+    {
+      "id": 1680717957,
+      "slug": "2026-06-24-kings-kaleidoscove-august-hall",
+      "date": "2026-06-24",
+      "dateEpochMs": 1782284400000,
+      "startTimeEpochMs": 1782345600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 598703136,
+      "artistIds": [
+        598703136,
+        684192337
+      ],
+      "venueId": 811075932,
+      "priceMin": 39.23,
+      "priceMax": 39.23,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374652,
+      "updatedAtEpochMs": 1760169374652,
+      "sourceLineNumber": 3526
+    }
+  ]
+}

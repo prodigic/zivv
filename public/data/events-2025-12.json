@@ -1,10 +1,31 @@
 {
   "chunkId": "2025-12",
   "dateRange": {
-    "startEpochMs": 1764662400000,
-    "endEpochMs": 1766822400000
+    "startEpochMs": 1764576000000,
+    "endEpochMs": 1767168000000
   },
   "events": [
+    {
+      "id": 34883773,
+      "slug": "2025-12-01-audrey-hobert-the-independent",
+      "date": "2025-12-01",
+      "dateEpochMs": 1764576000000,
+      "startTimeEpochMs": 1764648000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2097329091,
+      "artistIds": [
+        2097329091
+      ],
+      "venueId": 515101024,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374686,
+      "updatedAtEpochMs": 1760169374686,
+      "sourceLineNumber": 5045
+    },
     {
       "id": 620530142,
       "slug": "2025-12-02-splean-the-uc-theater",
@@ -24,8 +45,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374593,
+      "updatedAtEpochMs": 1760169374593,
       "sourceLineNumber": 2326
     },
     {
@@ -46,9 +67,56 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374593,
+      "updatedAtEpochMs": 1760169374593,
       "sourceLineNumber": 2327
+    },
+    {
+      "id": 1981267396,
+      "slug": "2025-12-02-silvana-estrada-the-fillmore",
+      "date": "2025-12-02",
+      "dateEpochMs": 1764662400000,
+      "startTimeEpochMs": 1764846000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1026801299,
+      "artistIds": [
+        1026801299,
+        1537714988
+      ],
+      "venueId": 1136597428,
+      "priceMin": 51.5,
+      "priceMax": 51.5,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374646,
+      "updatedAtEpochMs": 1760169374646,
+      "sourceLineNumber": 3398
+    },
+    {
+      "id": 828660411,
+      "slug": "2025-12-02-save-ferris-the-great-american-music-hall",
+      "date": "2025-12-02",
+      "dateEpochMs": 1764662400000,
+      "startTimeEpochMs": 1764774000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 691063559,
+      "artistIds": [
+        691063559
+      ],
+      "venueId": 463728167,
+      "priceMin": 30,
+      "priceMax": 31.96,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374646,
+      "updatedAtEpochMs": 1760169374646,
+      "sourceLineNumber": 3399
     },
     {
       "id": 1176333206,
@@ -67,8 +135,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374593,
+      "updatedAtEpochMs": 1760169374593,
       "sourceLineNumber": 2329
     },
     {
@@ -92,9 +160,57 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374593,
+      "updatedAtEpochMs": 1760169374593,
       "sourceLineNumber": 2330
+    },
+    {
+      "id": 1441203758,
+      "slug": "2025-12-03-the-gilmour-project-great-american-music-hall",
+      "date": "2025-12-03",
+      "dateEpochMs": 1764748800000,
+      "startTimeEpochMs": 1764946800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1331635633,
+      "artistIds": [
+        1331635633
+      ],
+      "venueId": 463728167,
+      "priceMin": 55,
+      "priceMax": 65,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$99.50 balcony",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374686,
+      "updatedAtEpochMs": 1760169374686,
+      "sourceLineNumber": 5050
+    },
+    {
+      "id": 1741554534,
+      "slug": "2025-12-03-public-service-broadcasting-the-fillmore",
+      "date": "2025-12-03",
+      "dateEpochMs": 1764748800000,
+      "startTimeEpochMs": 1764921600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 421328560,
+      "artistIds": [
+        421328560,
+        501612006
+      ],
+      "venueId": 1136597428,
+      "priceMin": 48,
+      "priceMax": 48,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374686,
+      "updatedAtEpochMs": 1760169374686,
+      "sourceLineNumber": 5052
     },
     {
       "id": 1195950827,
@@ -114,8 +230,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374593,
+      "updatedAtEpochMs": 1760169374593,
       "sourceLineNumber": 2332
     },
     {
@@ -137,8 +253,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374593,
+      "updatedAtEpochMs": 1760169374593,
       "sourceLineNumber": 2333
     },
     {
@@ -158,8 +274,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374593,
+      "updatedAtEpochMs": 1760169374593,
       "sourceLineNumber": 2334
     },
     {
@@ -181,8 +297,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2336
     },
     {
@@ -205,8 +321,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2337
     },
     {
@@ -230,9 +346,80 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2339
+    },
+    {
+      "id": 566248913,
+      "slug": "2025-12-04-season-to-risk-the-bottom-of-the-hill",
+      "date": "2025-12-04",
+      "dateEpochMs": 1764835200000,
+      "startTimeEpochMs": 1764910800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1034383786,
+      "artistIds": [
+        1034383786,
+        1272389020,
+        1477694465
+      ],
+      "venueId": 1016385760,
+      "priceMin": 18,
+      "priceMax": 20,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374646,
+      "updatedAtEpochMs": 1760169374646,
+      "sourceLineNumber": 3402
+    },
+    {
+      "id": 859359719,
+      "slug": "2025-12-04-thursday-the-ritz",
+      "date": "2025-12-04",
+      "dateEpochMs": 1764835200000,
+      "startTimeEpochMs": 1764901800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1700475053,
+      "artistIds": [
+        1700475053,
+        796421701
+      ],
+      "venueId": 1253820046,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374646,
+      "updatedAtEpochMs": 1760169374646,
+      "sourceLineNumber": 3404
+    },
+    {
+      "id": 1732487993,
+      "slug": "2025-12-04-matt-rogers-comedian-the-fillmore",
+      "date": "2025-12-04",
+      "dateEpochMs": 1764835200000,
+      "startTimeEpochMs": 1765047600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 795357674,
+      "artistIds": [
+        795357674,
+        574579667
+      ],
+      "venueId": 1136597428,
+      "priceMin": 59,
+      "priceMax": 59,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374686,
+      "updatedAtEpochMs": 1760169374686,
+      "sourceLineNumber": 5056
     },
     {
       "id": 1461564366,
@@ -253,8 +440,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2341
     },
     {
@@ -275,8 +462,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860578,
-      "updatedAtEpochMs": 1756003860578,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2342
     },
     {
@@ -299,8 +486,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2346
     },
     {
@@ -323,8 +510,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2348
     },
     {
@@ -345,8 +532,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2350
     },
     {
@@ -368,8 +555,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2352
     },
     {
@@ -393,9 +580,126 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2353
+    },
+    {
+      "id": 946022859,
+      "slug": "2025-12-05-the-polish-ambassador-the-independent",
+      "date": "2025-12-05",
+      "dateEpochMs": 1764921600000,
+      "startTimeEpochMs": 1764997200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1070858189,
+      "artistIds": [
+        1070858189
+      ],
+      "venueId": 515101024,
+      "priceMin": 43.28,
+      "priceMax": 43.28,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374646,
+      "updatedAtEpochMs": 1760169374646,
+      "sourceLineNumber": 3405
+    },
+    {
+      "id": 1597136811,
+      "slug": "2025-12-05-living-legends-the-uc-theater",
+      "date": "2025-12-05",
+      "dateEpochMs": 1764921600000,
+      "startTimeEpochMs": 1765116000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 457277406,
+      "artistIds": [
+        457277406,
+        311999428,
+        274887714
+      ],
+      "venueId": 2093769319,
+      "priceMin": 54.33,
+      "priceMax": 54.33,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5067
+    },
+    {
+      "id": 414435468,
+      "slug": "2025-12-05-katseye-the-civic-auditorium",
+      "date": "2025-12-05",
+      "dateEpochMs": 1764921600000,
+      "startTimeEpochMs": 1764993600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1760812407,
+      "artistIds": [
+        1760812407
+      ],
+      "venueId": 1648637995,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "sold out",
+      "status": "sold-out",
+      "tags": [
+        "sold-out"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5073
+    },
+    {
+      "id": 155908754,
+      "slug": "2025-12-05-willy-porter-hopmonk-tavern",
+      "date": "2025-12-05",
+      "dateEpochMs": 1764921600000,
+      "startTimeEpochMs": 1764997200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 83085722,
+      "artistIds": [
+        83085722,
+        2009946129
+      ],
+      "venueId": 833273350,
+      "priceMin": 42,
+      "priceMax": 53,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5076
+    },
+    {
+      "id": 334810927,
+      "slug": "2025-12-05-brainstorm-the-ritz",
+      "date": "2025-12-05",
+      "dateEpochMs": 1764921600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 393754054,
+      "artistIds": [
+        393754054,
+        1279377722
+      ],
+      "venueId": 1253820046,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5080
     },
     {
       "id": 27616542,
@@ -418,8 +722,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2355
     },
     {
@@ -438,8 +742,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2357
     },
     {
@@ -458,8 +762,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2358
     },
     {
@@ -479,8 +783,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374594,
+      "updatedAtEpochMs": 1760169374594,
       "sourceLineNumber": 2359
     },
     {
@@ -503,8 +807,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2360
     },
     {
@@ -525,8 +829,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2361
     },
     {
@@ -549,9 +853,142 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2363
+    },
+    {
+      "id": 1050535157,
+      "slug": "2025-12-06-pink-martini-all-stars-the-masonic",
+      "date": "2025-12-06",
+      "dateEpochMs": 1765008000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1520994740,
+      "artistIds": [
+        1520994740
+      ],
+      "venueId": 374573122,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374646,
+      "updatedAtEpochMs": 1760169374646,
+      "sourceLineNumber": 3408
+    },
+    {
+      "id": 1532676175,
+      "slug": "2025-12-06-umi-the-warfield",
+      "date": "2025-12-06",
+      "dateEpochMs": 1765008000000,
+      "startTimeEpochMs": 1765080000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 629147166,
+      "artistIds": [
+        629147166
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374646,
+      "updatedAtEpochMs": 1760169374646,
+      "sourceLineNumber": 3410
+    },
+    {
+      "id": 957643818,
+      "slug": "2025-12-06-dragon-smoke-the-independent",
+      "date": "2025-12-06",
+      "dateEpochMs": 1765008000000,
+      "startTimeEpochMs": 1765083600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 782408075,
+      "artistIds": [
+        782408075,
+        2029746239,
+        160503686
+      ],
+      "venueId": 515101024,
+      "priceMin": 8,
+      "priceMax": 8,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374647,
+      "updatedAtEpochMs": 1760169374647,
+      "sourceLineNumber": 3411
+    },
+    {
+      "id": 601773610,
+      "slug": "2025-12-06-zepparella-guild-theater",
+      "date": "2025-12-06",
+      "dateEpochMs": 1765008000000,
+      "startTimeEpochMs": 1765080000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 384141237,
+      "artistIds": [
+        384141237
+      ],
+      "venueId": 112130441,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 18 with parent",
+      "status": "confirmed",
+      "tags": [
+        "outdoor"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374647,
+      "updatedAtEpochMs": 1760169374647,
+      "sourceLineNumber": 3414
+    },
+    {
+      "id": 1549082388,
+      "slug": "2025-12-06-ne-obliviscaris-the-ritz",
+      "date": "2025-12-06",
+      "dateEpochMs": 1765008000000,
+      "startTimeEpochMs": 1765083600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 160542716,
+      "artistIds": [
+        160542716,
+        1783746125
+      ],
+      "venueId": 1253820046,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374647,
+      "updatedAtEpochMs": 1760169374647,
+      "sourceLineNumber": 3416
+    },
+    {
+      "id": 1177902311,
+      "slug": "2025-12-06-membership-meeting-924-gilman-street",
+      "date": "2025-12-06",
+      "dateEpochMs": 1765008000000,
+      "startTimeEpochMs": 1765069200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 803302652,
+      "artistIds": [
+        803302652
+      ],
+      "venueId": 888749966,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5083
     },
     {
       "id": 1082051172,
@@ -574,8 +1011,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2364
     },
     {
@@ -598,8 +1035,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2366
     },
     {
@@ -622,8 +1059,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2368
     },
     {
@@ -644,9 +1081,204 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2370
+    },
+    {
+      "id": 530251498,
+      "slug": "2025-12-07-aterciopelados-the-fillmore",
+      "date": "2025-12-07",
+      "dateEpochMs": 1765094400000,
+      "startTimeEpochMs": 1765281600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1261325656,
+      "artistIds": [
+        1261325656
+      ],
+      "venueId": 1136597428,
+      "priceMin": 52.5,
+      "priceMax": 52.5,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374647,
+      "updatedAtEpochMs": 1760169374647,
+      "sourceLineNumber": 3417
+    },
+    {
+      "id": 1272495609,
+      "slug": "2025-12-07-electric-guest-the-regency-ballroom",
+      "date": "2025-12-07",
+      "dateEpochMs": 1765094400000,
+      "startTimeEpochMs": 1765166400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 383858264,
+      "artistIds": [
+        383858264
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374647,
+      "updatedAtEpochMs": 1760169374647,
+      "sourceLineNumber": 3418
+    },
+    {
+      "id": 909826584,
+      "slug": "2025-12-07-nat-keefe-the-independent",
+      "date": "2025-12-07",
+      "dateEpochMs": 1765094400000,
+      "startTimeEpochMs": 1765170000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 872691736,
+      "artistIds": [
+        872691736,
+        1971550247,
+        1836079585,
+        90300297
+      ],
+      "venueId": 515101024,
+      "priceMin": 27.32,
+      "priceMax": 27.32,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "notes": "$48.95 seated",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374647,
+      "updatedAtEpochMs": 1760169374647,
+      "sourceLineNumber": 3419
+    },
+    {
+      "id": 1191685810,
+      "slug": "2025-12-07-erin-mckeown-the-ivy-room",
+      "date": "2025-12-07",
+      "dateEpochMs": 1765094400000,
+      "startTimeEpochMs": 1765170000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1212752421,
+      "artistIds": [
+        1212752421
+      ],
+      "venueId": 1689618485,
+      "priceMin": 22,
+      "priceMax": 22,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5092
+    },
+    {
+      "id": 2016639609,
+      "slug": "2025-12-07-heartless-folk-thrillhouse-records",
+      "date": "2025-12-07",
+      "dateEpochMs": 1765094400000,
+      "startTimeEpochMs": 1765152000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1656376636,
+      "artistIds": [
+        1656376636,
+        1455475166,
+        1375198389,
+        2067628536
+      ],
+      "venueId": 735357859,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5093
+    },
+    {
+      "id": 1244731555,
+      "slug": "2025-12-07-brainstory-the-chapel",
+      "date": "2025-12-07",
+      "dateEpochMs": 1765094400000,
+      "startTimeEpochMs": 1765191600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 393754066,
+      "artistIds": [
+        393754066,
+        1279377722,
+        703358007
+      ],
+      "venueId": 680116887,
+      "priceMin": 27.22,
+      "priceMax": 27.22,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5099
+    },
+    {
+      "id": 1825494947,
+      "slug": "2025-12-07-dragon-smoke-hopmonk",
+      "date": "2025-12-07",
+      "dateEpochMs": 1765094400000,
+      "startTimeEpochMs": 1765144800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 782408075,
+      "artistIds": [
+        782408075,
+        697087614,
+        420442219
+      ],
+      "venueId": 1375149348,
+      "priceMin": 54.4,
+      "priceMax": 142.48,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5107
+    },
+    {
+      "id": 1385915406,
+      "slug": "2025-12-08-mario-august-hall",
+      "date": "2025-12-08",
+      "dateEpochMs": 1765180800000,
+      "startTimeEpochMs": 1765242000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 987695855,
+      "artistIds": [
+        987695855
+      ],
+      "venueId": 811075932,
+      "priceMin": 47.55,
+      "priceMax": 47.55,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5109
     },
     {
       "id": 596415752,
@@ -667,8 +1299,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860579,
-      "updatedAtEpochMs": 1756003860579,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2372
     },
     {
@@ -689,9 +1321,58 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2373
+    },
+    {
+      "id": 1369137113,
+      "slug": "2025-12-09-violent-vickie-the-knockout",
+      "date": "2025-12-09",
+      "dateEpochMs": 1765267200000,
+      "startTimeEpochMs": 1765342800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 908837359,
+      "artistIds": [
+        908837359,
+        519950527,
+        713063281,
+        1463334013
+      ],
+      "venueId": 793956182,
+      "priceMin": 17,
+      "priceMax": 17,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374647,
+      "updatedAtEpochMs": 1760169374647,
+      "sourceLineNumber": 3421
+    },
+    {
+      "id": 1760213006,
+      "slug": "2025-12-09-mike-campbell-the-dirty-knobs-the-palace-of-fine-arts",
+      "date": "2025-12-09",
+      "dateEpochMs": 1765267200000,
+      "startTimeEpochMs": 1765584000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 310991391,
+      "artistIds": [
+        310991391
+      ],
+      "venueId": 390079947,
+      "priceMin": 88.45,
+      "priceMax": 88.45,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374687,
+      "updatedAtEpochMs": 1760169374687,
+      "sourceLineNumber": 5112
     },
     {
       "id": 1846552161,
@@ -711,8 +1392,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2376
     },
     {
@@ -734,8 +1415,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2377
     },
     {
@@ -755,8 +1436,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2378
     },
     {
@@ -776,9 +1457,57 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2379
+    },
+    {
+      "id": 763066674,
+      "slug": "2025-12-10-glare-rickshaw-stop",
+      "date": "2025-12-10",
+      "dateEpochMs": 1765353600000,
+      "startTimeEpochMs": 1765432800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 992925348,
+      "artistIds": [
+        992925348,
+        715670512,
+        150457956
+      ],
+      "venueId": 31041890,
+      "priceMin": 22,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374688,
+      "updatedAtEpochMs": 1760169374688,
+      "sourceLineNumber": 5120
+    },
+    {
+      "id": 949184406,
+      "slug": "2025-12-10-jonathan-richman-the-crepe-place",
+      "date": "2025-12-10",
+      "dateEpochMs": 1765353600000,
+      "startTimeEpochMs": 1765494000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1027341046,
+      "artistIds": [
+        1027341046
+      ],
+      "venueId": 135768954,
+      "priceMin": 39.05,
+      "priceMax": 39.05,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374688,
+      "updatedAtEpochMs": 1760169374688,
+      "sourceLineNumber": 5123
     },
     {
       "id": 780815302,
@@ -802,8 +1531,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374595,
+      "updatedAtEpochMs": 1760169374595,
       "sourceLineNumber": 2381
     },
     {
@@ -826,8 +1555,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2383
     },
     {
@@ -848,9 +1577,102 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2384
+    },
+    {
+      "id": 473868076,
+      "slug": "2025-12-11-sad-snack-the-bottom-of-the-hill",
+      "date": "2025-12-11",
+      "dateEpochMs": 1765440000000,
+      "startTimeEpochMs": 1765486800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 882150639,
+      "artistIds": [
+        882150639,
+        248232275,
+        1509846795
+      ],
+      "venueId": 1016385760,
+      "priceMin": 13,
+      "priceMax": 15,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "diy",
+      "createdAtEpochMs": 1760169374647,
+      "updatedAtEpochMs": 1760169374647,
+      "sourceLineNumber": 3426
+    },
+    {
+      "id": 1504037170,
+      "slug": "2025-12-11-annie-the-caldwells-the-freight",
+      "date": "2025-12-11",
+      "dateEpochMs": 1765440000000,
+      "startTimeEpochMs": 1765580400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 895706640,
+      "artistIds": [
+        895706640
+      ],
+      "venueId": 1917914969,
+      "priceMin": 39,
+      "priceMax": 39,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374688,
+      "updatedAtEpochMs": 1760169374688,
+      "sourceLineNumber": 5128
+    },
+    {
+      "id": 1400087116,
+      "slug": "2025-12-11-young-gun-silver-fox-the-cornerstone",
+      "date": "2025-12-11",
+      "dateEpochMs": 1765440000000,
+      "startTimeEpochMs": 1765512000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1469709687,
+      "artistIds": [
+        1469709687
+      ],
+      "venueId": 1393740940,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374688,
+      "updatedAtEpochMs": 1760169374688,
+      "sourceLineNumber": 5129
+    },
+    {
+      "id": 664341557,
+      "slug": "2025-12-11-rose-city-band-the-new-parish",
+      "date": "2025-12-11",
+      "dateEpochMs": 1765440000000,
+      "startTimeEpochMs": 1765558800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1880937769,
+      "artistIds": [
+        1880937769
+      ],
+      "venueId": 635468146,
+      "priceMin": 33.22,
+      "priceMax": 33.22,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 21 plus $5",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374688,
+      "updatedAtEpochMs": 1760169374688,
+      "sourceLineNumber": 5130
     },
     {
       "id": 2094426340,
@@ -873,8 +1695,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2386
     },
     {
@@ -896,8 +1718,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2388
     },
     {
@@ -920,8 +1742,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2390
     },
     {
@@ -944,8 +1766,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2391
     },
     {
@@ -967,8 +1789,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860580,
-      "updatedAtEpochMs": 1756003860580,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2393
     },
     {
@@ -992,8 +1814,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2394
     },
     {
@@ -1015,9 +1837,80 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2396
+    },
+    {
+      "id": 1413321265,
+      "slug": "2025-12-12-tape-b-the-warfield",
+      "date": "2025-12-12",
+      "dateEpochMs": 1765526400000,
+      "startTimeEpochMs": 1765591200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 353462153,
+      "artistIds": [
+        353462153,
+        1749968926,
+        984716366,
+        92793798
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374648,
+      "updatedAtEpochMs": 1760169374648,
+      "sourceLineNumber": 3428
+    },
+    {
+      "id": 1790698189,
+      "slug": "2025-12-12-pete-escovedo-blue-note",
+      "date": "2025-12-12",
+      "dateEpochMs": 1765526400000,
+      "startTimeEpochMs": 1765598400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 331165477,
+      "artistIds": [
+        331165477,
+        1508291977,
+        1579951892
+      ],
+      "venueId": 515371631,
+      "priceMin": 48.89,
+      "priceMax": 48.89,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374648,
+      "updatedAtEpochMs": 1760169374648,
+      "sourceLineNumber": 3432
+    },
+    {
+      "id": 1671328965,
+      "slug": "2025-12-12-ranger-trucco-public-works",
+      "date": "2025-12-12",
+      "dateEpochMs": 1765526400000,
+      "startTimeEpochMs": 1765602000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1226908592,
+      "artistIds": [
+        1226908592
+      ],
+      "venueId": 1288539545,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374688,
+      "updatedAtEpochMs": 1760169374688,
+      "sourceLineNumber": 5144
     },
     {
       "id": 1086424503,
@@ -1035,8 +1928,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2397
     },
     {
@@ -1056,8 +1949,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2398
     },
     {
@@ -1077,8 +1970,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2399
     },
     {
@@ -1100,9 +1993,127 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2401
+    },
+    {
+      "id": 75807200,
+      "slug": "2025-12-13-osamason-the-uc-theater",
+      "date": "2025-12-13",
+      "dateEpochMs": 1765612800000,
+      "startTimeEpochMs": 1765756800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2123725452,
+      "artistIds": [
+        2123725452
+      ],
+      "venueId": 2093769319,
+      "priceMin": 40.5,
+      "priceMax": 40.5,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374648,
+      "updatedAtEpochMs": 1760169374648,
+      "sourceLineNumber": 3434
+    },
+    {
+      "id": 517361538,
+      "slug": "2025-12-13-the-blind-boys-of-alabama-the-uptown-theater",
+      "date": "2025-12-13",
+      "dateEpochMs": 1765612800000,
+      "startTimeEpochMs": 1765656000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 416611899,
+      "artistIds": [
+        416611899
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374648,
+      "updatedAtEpochMs": 1760169374648,
+      "sourceLineNumber": 3436
+    },
+    {
+      "id": 427059764,
+      "slug": "2025-12-13-pete-escovedo-blue-note",
+      "date": "2025-12-13",
+      "dateEpochMs": 1765612800000,
+      "startTimeEpochMs": 1765684800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 331165477,
+      "artistIds": [
+        331165477,
+        1508291977,
+        1579951892
+      ],
+      "venueId": 515371631,
+      "priceMin": 48.89,
+      "priceMax": 48.89,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374648,
+      "updatedAtEpochMs": 1760169374648,
+      "sourceLineNumber": 3438
+    },
+    {
+      "id": 486391350,
+      "slug": "2025-12-13-tape-b-the-san-jose-civic-center",
+      "date": "2025-12-13",
+      "dateEpochMs": 1765612800000,
+      "startTimeEpochMs": 1765677600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 353462153,
+      "artistIds": [
+        353462153,
+        121041660,
+        981584553,
+        1971357459
+      ],
+      "venueId": 561553329,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374648,
+      "updatedAtEpochMs": 1760169374648,
+      "sourceLineNumber": 3440
+    },
+    {
+      "id": 823683751,
+      "slug": "2025-12-13-marlon-funaki-the-rickshaw-stop",
+      "date": "2025-12-13",
+      "dateEpochMs": 1765612800000,
+      "startTimeEpochMs": 1765684800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 855712000,
+      "artistIds": [
+        855712000
+      ],
+      "venueId": 31041890,
+      "priceMin": 20,
+      "priceMax": 20,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374688,
+      "updatedAtEpochMs": 1760169374688,
+      "sourceLineNumber": 5151
     },
     {
       "id": 1001679069,
@@ -1123,8 +2134,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2402
     },
     {
@@ -1146,9 +2157,32 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374596,
+      "updatedAtEpochMs": 1760169374596,
       "sourceLineNumber": 2403
+    },
+    {
+      "id": 834371622,
+      "slug": "2025-12-14-the-dillinger-escape-plan-the-regency-ballroom",
+      "date": "2025-12-14",
+      "dateEpochMs": 1765699200000,
+      "startTimeEpochMs": 1765771200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 861422271,
+      "artistIds": [
+        861422271,
+        996219937,
+        852927261
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374688,
+      "updatedAtEpochMs": 1760169374688,
+      "sourceLineNumber": 5162
     },
     {
       "id": 1907542939,
@@ -1166,9 +2200,80 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2404
+    },
+    {
+      "id": 645779945,
+      "slug": "2025-12-17-nargiz-guild-theater",
+      "date": "2025-12-17",
+      "dateEpochMs": 1765958400000,
+      "startTimeEpochMs": 1766030400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 525173268,
+      "artistIds": [
+        525173268
+      ],
+      "venueId": 112130441,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 18 with parent",
+      "status": "confirmed",
+      "tags": [
+        "outdoor"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374648,
+      "updatedAtEpochMs": 1760169374648,
+      "sourceLineNumber": 3445
+    },
+    {
+      "id": 1931277106,
+      "slug": "2025-12-17-4-non-blonds-great-american-music-hall",
+      "date": "2025-12-17",
+      "dateEpochMs": 1765958400000,
+      "startTimeEpochMs": 1766127600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1562232982,
+      "artistIds": [
+        1562232982
+      ],
+      "venueId": 463728167,
+      "priceMin": 47.5,
+      "priceMax": 50,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "sold out",
+      "status": "sold-out",
+      "tags": [
+        "sold-out"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5166
+    },
+    {
+      "id": 1429310004,
+      "slug": "2025-12-17-gunna-the-civic-auditorium",
+      "date": "2025-12-17",
+      "dateEpochMs": 1765958400000,
+      "startTimeEpochMs": 1766030400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 992644864,
+      "artistIds": [
+        992644864
+      ],
+      "venueId": 1648637995,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5168
     },
     {
       "id": 879805078,
@@ -1187,9 +2292,55 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2406
+    },
+    {
+      "id": 902110191,
+      "slug": "2025-12-18-4-non-blonds-great-american-music-hall",
+      "date": "2025-12-18",
+      "dateEpochMs": 1766044800000,
+      "startTimeEpochMs": 1766214000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1562232982,
+      "artistIds": [
+        1562232982
+      ],
+      "venueId": 463728167,
+      "priceMin": 47.5,
+      "priceMax": 50,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5172
+    },
+    {
+      "id": 559813904,
+      "slug": "2025-12-18-death-angel-the-fillmore",
+      "date": "2025-12-18",
+      "dateEpochMs": 1766044800000,
+      "startTimeEpochMs": 1766250000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1144396706,
+      "artistIds": [
+        1144396706
+      ],
+      "venueId": 1136597428,
+      "priceMin": 57.24,
+      "priceMax": 57.24,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5174
     },
     {
       "id": 786935616,
@@ -1209,8 +2360,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2409
     },
     {
@@ -1232,8 +2383,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2410
     },
     {
@@ -1255,8 +2406,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860581,
-      "updatedAtEpochMs": 1756003860581,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2411
     },
     {
@@ -1281,8 +2432,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2412
     },
     {
@@ -1303,9 +2454,101 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2414
+    },
+    {
+      "id": 137634249,
+      "slug": "2025-12-19-donzii-the-independent",
+      "date": "2025-12-19",
+      "dateEpochMs": 1766131200000,
+      "startTimeEpochMs": 1766206800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 798636406,
+      "artistIds": [
+        798636406,
+        1543469636
+      ],
+      "venueId": 515101024,
+      "priceMin": 27.32,
+      "priceMax": 27.32,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374648,
+      "updatedAtEpochMs": 1760169374648,
+      "sourceLineNumber": 3448
+    },
+    {
+      "id": 1924223023,
+      "slug": "2025-12-19-tony-glaser-and-the-party-the-ivy-room",
+      "date": "2025-12-19",
+      "dateEpochMs": 1766131200000,
+      "startTimeEpochMs": 1766206800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1168591111,
+      "artistIds": [
+        1168591111,
+        386623562
+      ],
+      "venueId": 1689618485,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5179
+    },
+    {
+      "id": 1668209802,
+      "slug": "2025-12-19-the-mother-hips-the-great-american-music-hall",
+      "date": "2025-12-19",
+      "dateEpochMs": 1766131200000,
+      "startTimeEpochMs": 1766253600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 390658638,
+      "artistIds": [
+        390658638
+      ],
+      "venueId": 463728167,
+      "priceMin": 34,
+      "priceMax": 37,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5181
+    },
+    {
+      "id": 1587036032,
+      "slug": "2025-12-19-terrapin-family-band-sweetwater-music-hall",
+      "date": "2025-12-19",
+      "dateEpochMs": 1766131200000,
+      "startTimeEpochMs": 1766340000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1609219116,
+      "artistIds": [
+        1609219116
+      ],
+      "venueId": 647735412,
+      "priceMin": 58.2,
+      "priceMax": 65.41,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5185
     },
     {
       "id": 562763694,
@@ -1323,8 +2566,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2416
     },
     {
@@ -1349,8 +2592,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2417
     },
     {
@@ -1372,8 +2615,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2419
     },
     {
@@ -1398,8 +2641,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2420
     },
     {
@@ -1421,9 +2664,151 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2422
+    },
+    {
+      "id": 1879150756,
+      "slug": "2025-12-20-jew-driver-924-gilman-street",
+      "date": "2025-12-20",
+      "dateEpochMs": 1766217600000,
+      "startTimeEpochMs": 1766282400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 119956417,
+      "artistIds": [
+        119956417,
+        1391440091,
+        440677994,
+        805736616,
+        918276161
+      ],
+      "venueId": 888749966,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "Hanukkah show",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3449
+    },
+    {
+      "id": 2004046274,
+      "slug": "2025-12-20-greg-adams-and-east-bay-soul-blue-note",
+      "date": "2025-12-20",
+      "dateEpochMs": 1766217600000,
+      "startTimeEpochMs": 1766289600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1931010793,
+      "artistIds": [
+        1931010793
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3452
+    },
+    {
+      "id": 492412148,
+      "slug": "2025-12-20-the-mother-hips-the-great-american-music-hall",
+      "date": "2025-12-20",
+      "dateEpochMs": 1766217600000,
+      "startTimeEpochMs": 1766340000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 390658638,
+      "artistIds": [
+        390658638,
+        879778523
+      ],
+      "venueId": 463728167,
+      "priceMin": 34,
+      "priceMax": 37,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5194
+    },
+    {
+      "id": 1920311516,
+      "slug": "2025-12-20-berner-the-warfield",
+      "date": "2025-12-20",
+      "dateEpochMs": 1766217600000,
+      "startTimeEpochMs": 1766289600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 865022401,
+      "artistIds": [
+        865022401,
+        1521768464,
+        2145203365
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5196
+    },
+    {
+      "id": 1224023925,
+      "slug": "2025-12-20-crying-uncle-bluegrass-band-electric-band-hopmonk-tavern",
+      "date": "2025-12-20",
+      "dateEpochMs": 1766217600000,
+      "startTimeEpochMs": 1766293200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 664228020,
+      "artistIds": [
+        664228020
+      ],
+      "venueId": 833273350,
+      "priceMin": 30.57,
+      "priceMax": 41.97,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5200
+    },
+    {
+      "id": 310249715,
+      "slug": "2025-12-20-terrapin-family-band-guild-theater",
+      "date": "2025-12-20",
+      "dateEpochMs": 1766217600000,
+      "startTimeEpochMs": 1766289600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1609219116,
+      "artistIds": [
+        1609219116
+      ],
+      "venueId": 112130441,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 18 with parent",
+      "status": "confirmed",
+      "tags": [
+        "outdoor"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374689,
+      "updatedAtEpochMs": 1760169374689,
+      "sourceLineNumber": 5204
     },
     {
       "id": 1989467231,
@@ -1442,9 +2827,59 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2423
+    },
+    {
+      "id": 662772289,
+      "slug": "2025-12-21-the-mother-hips-acoustic-the-great-american-music-hall",
+      "date": "2025-12-21",
+      "dateEpochMs": 1766304000000,
+      "startTimeEpochMs": 1766426400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1083233872,
+      "artistIds": [
+        1083233872,
+        891478744,
+        1512373180
+      ],
+      "venueId": 463728167,
+      "priceMin": 34,
+      "priceMax": 37,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5208
+    },
+    {
+      "id": 40550222,
+      "slug": "2025-12-21-terrapin-family-band-guild-theater",
+      "date": "2025-12-21",
+      "dateEpochMs": 1766304000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1609219116,
+      "artistIds": [
+        1609219116
+      ],
+      "venueId": 112130441,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 18 with parent",
+      "status": "confirmed",
+      "tags": [
+        "outdoor"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5210
     },
     {
       "id": 1315737935,
@@ -1465,9 +2900,31 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2424
+    },
+    {
+      "id": 397812816,
+      "slug": "2025-12-26-anuhea-blue-note",
+      "date": "2025-12-26",
+      "dateEpochMs": 1766736000000,
+      "startTimeEpochMs": 1766808000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 885256273,
+      "artistIds": [
+        885256273
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3456
     },
     {
       "id": 1307978576,
@@ -1488,9 +2945,418 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860582,
-      "updatedAtEpochMs": 1756003860582,
+      "createdAtEpochMs": 1760169374597,
+      "updatedAtEpochMs": 1760169374597,
       "sourceLineNumber": 2426
+    },
+    {
+      "id": 1766001518,
+      "slug": "2025-12-27-karl-denson-the-fillmore",
+      "date": "2025-12-27",
+      "dateEpochMs": 1766822400000,
+      "startTimeEpochMs": 1766998800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1303077182,
+      "artistIds": [
+        1303077182
+      ],
+      "venueId": 1136597428,
+      "priceMin": 49,
+      "priceMax": 49,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3457
+    },
+    {
+      "id": 599259537,
+      "slug": "2025-12-27-anuhea-blue-note",
+      "date": "2025-12-27",
+      "dateEpochMs": 1766822400000,
+      "startTimeEpochMs": 1766894400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 885256273,
+      "artistIds": [
+        885256273
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3458
+    },
+    {
+      "id": 69408017,
+      "slug": "2025-12-27-goth-nite-924-gilman-street",
+      "date": "2025-12-27",
+      "dateEpochMs": 1766822400000,
+      "startTimeEpochMs": 1766883600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1261819197,
+      "artistIds": [
+        1261819197
+      ],
+      "venueId": 888749966,
+      "priceMin": 5,
+      "priceMax": 5,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "late-show"
+      ],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5214
+    },
+    {
+      "id": 1596331890,
+      "slug": "2025-12-28-anuhea-blue-note",
+      "date": "2025-12-28",
+      "dateEpochMs": 1766908800000,
+      "startTimeEpochMs": 1766980800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 885256273,
+      "artistIds": [
+        885256273
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3459
+    },
+    {
+      "id": 1323713872,
+      "slug": "2025-12-28-chuck-prophet-and-his-cumbia-shoes-moes-alley",
+      "date": "2025-12-28",
+      "dateEpochMs": 1766908800000,
+      "startTimeEpochMs": 1766984400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1830465467,
+      "artistIds": [
+        1830465467
+      ],
+      "venueId": 1002839764,
+      "priceMin": 30,
+      "priceMax": 31.8,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3460
+    },
+    {
+      "id": 2021893474,
+      "slug": "2025-12-28-yo-la-tengo-the-fillmore",
+      "date": "2025-12-28",
+      "dateEpochMs": 1766908800000,
+      "startTimeEpochMs": 1766980800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1339441807,
+      "artistIds": [
+        1339441807,
+        1971534513
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5217
+    },
+    {
+      "id": 1157986197,
+      "slug": "2025-12-29-frankie-and-the-witch-fingers-thee-stork-club",
+      "date": "2025-12-29",
+      "dateEpochMs": 1766995200000,
+      "startTimeEpochMs": 1767070800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 243947020,
+      "artistIds": [
+        243947020
+      ],
+      "venueId": 1444396954,
+      "priceMin": 19.59,
+      "priceMax": 19.59,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5220
+    },
+    {
+      "id": 16162815,
+      "slug": "2025-12-29-yo-la-tengo-the-fillmore",
+      "date": "2025-12-29",
+      "dateEpochMs": 1766995200000,
+      "startTimeEpochMs": 1767067200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1339441807,
+      "artistIds": [
+        1339441807,
+        1971534513
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5222
+    },
+    {
+      "id": 1095093218,
+      "slug": "2025-12-29-brian-culbertson-blue-note",
+      "date": "2025-12-29",
+      "dateEpochMs": 1766995200000,
+      "startTimeEpochMs": 1767067200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 991735200,
+      "artistIds": [
+        991735200
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5223
+    },
+    {
+      "id": 1198908665,
+      "slug": "2025-12-30-primus-the-fox-theater",
+      "date": "2025-12-30",
+      "dateEpochMs": 1767081600000,
+      "startTimeEpochMs": 1767153600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 452477097,
+      "artistIds": [
+        452477097
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3462
+    },
+    {
+      "id": 1568981291,
+      "slug": "2025-12-30-frankie-and-the-witch-fingers-thee-stork-club",
+      "date": "2025-12-30",
+      "dateEpochMs": 1767081600000,
+      "startTimeEpochMs": 1767157200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 243947020,
+      "artistIds": [
+        243947020
+      ],
+      "venueId": 1444396954,
+      "priceMin": 19.59,
+      "priceMax": 19.59,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5226
+    },
+    {
+      "id": 1890637384,
+      "slug": "2025-12-30-brian-culbertson-blue-note",
+      "date": "2025-12-30",
+      "dateEpochMs": 1767081600000,
+      "startTimeEpochMs": 1767153600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 991735200,
+      "artistIds": [
+        991735200
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5228
+    },
+    {
+      "id": 1607732890,
+      "slug": "2025-12-31-primus-the-fox-theater",
+      "date": "2025-12-31",
+      "dateEpochMs": 1767168000000,
+      "startTimeEpochMs": 1767243600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 452477097,
+      "artistIds": [
+        452477097,
+        866118280
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3463
+    },
+    {
+      "id": 303672122,
+      "slug": "2025-12-31-los-lobos-the-rio-theater",
+      "date": "2025-12-31",
+      "dateEpochMs": 1767168000000,
+      "startTimeEpochMs": 1767250800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2064110560,
+      "artistIds": [
+        2064110560,
+        1861061320,
+        1679385138
+      ],
+      "venueId": 2141325231,
+      "priceMin": 115.44,
+      "priceMax": 115.44,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374649,
+      "updatedAtEpochMs": 1760169374649,
+      "sourceLineNumber": 3464
+    },
+    {
+      "id": 2044597086,
+      "slug": "2025-12-31-mustache-harbor-the-cornerstone",
+      "date": "2025-12-31",
+      "dateEpochMs": 1767168000000,
+      "startTimeEpochMs": 1767247200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1731189585,
+      "artistIds": [
+        1731189585
+      ],
+      "venueId": 1393740940,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "late-show"
+      ],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5232
+    },
+    {
+      "id": 755046548,
+      "slug": "2025-12-31-frankie-and-the-witch-fingers-thee-stork-club",
+      "date": "2025-12-31",
+      "dateEpochMs": 1767168000000,
+      "startTimeEpochMs": 1767243600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 243947020,
+      "artistIds": [
+        243947020
+      ],
+      "venueId": 1444396954,
+      "priceMin": 37.11,
+      "priceMax": 37.11,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5233
+    },
+    {
+      "id": 353182794,
+      "slug": "2025-12-31-yo-la-tengo-the-fillmore",
+      "date": "2025-12-31",
+      "dateEpochMs": 1767168000000,
+      "startTimeEpochMs": 1767243600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1339441807,
+      "artistIds": [
+        1339441807,
+        1971534513
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5235
+    },
+    {
+      "id": 1635900839,
+      "slug": "2025-12-31-brian-culbertson-blue-note",
+      "date": "2025-12-31",
+      "dateEpochMs": 1767168000000,
+      "startTimeEpochMs": 1767240000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 991735200,
+      "artistIds": [
+        991735200
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374690,
+      "updatedAtEpochMs": 1760169374690,
+      "sourceLineNumber": 5236
     }
   ]
 }

@@ -2,7 +2,7 @@
   "chunkId": "2026-05",
   "dateRange": {
     "startEpochMs": 1777618800000,
-    "endEpochMs": 1777618800000
+    "endEpochMs": 1779260400000
   },
   "events": [
     {
@@ -24,9 +24,165 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860584,
-      "updatedAtEpochMs": 1756003860584,
+      "createdAtEpochMs": 1760169374600,
+      "updatedAtEpochMs": 1760169374600,
       "sourceLineNumber": 2474
+    },
+    {
+      "id": 1303780077,
+      "slug": "2026-05-03-bert-kreischer-the-warfield",
+      "date": "2026-05-03",
+      "dateEpochMs": 1777791600000,
+      "startTimeEpochMs": 1777863600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1561796946,
+      "artistIds": [
+        1561796946
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5440
+    },
+    {
+      "id": 1859447898,
+      "slug": "2026-05-04-mel-robbins-san-jose-civic-center",
+      "date": "2026-05-04",
+      "dateEpochMs": 1777878000000,
+      "startTimeEpochMs": 1777924800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1629767058,
+      "artistIds": [
+        1629767058
+      ],
+      "venueId": 561553329,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5441
+    },
+    {
+      "id": 726505638,
+      "slug": "2026-05-10-raye-the-civic-auditorium",
+      "date": "2026-05-10",
+      "dateEpochMs": 1778396400000,
+      "startTimeEpochMs": 1778468400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971374642,
+      "artistIds": [
+        1971374642,
+        1725216599,
+        1971869933
+      ],
+      "venueId": 1648637995,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5443
+    },
+    {
+      "id": 1331430384,
+      "slug": "2026-05-14-the-midnight-the-fox-theater",
+      "date": "2026-05-14",
+      "dateEpochMs": 1778742000000,
+      "startTimeEpochMs": 1778814000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1512443485,
+      "artistIds": [
+        1512443485
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5444
+    },
+    {
+      "id": 666466872,
+      "slug": "2026-05-15-joyce-manor-the-fillmore",
+      "date": "2026-05-15",
+      "dateEpochMs": 1778828400000,
+      "startTimeEpochMs": 1779008400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1361592416,
+      "artistIds": [
+        1361592416,
+        1158879541,
+        147205167,
+        827318649
+      ],
+      "venueId": 1136597428,
+      "priceMin": 50,
+      "priceMax": 50,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374700,
+      "updatedAtEpochMs": 1760169374700,
+      "sourceLineNumber": 5445
+    },
+    {
+      "id": 1351081859,
+      "slug": "2026-05-15-chelsea-handler-the-mountain-winery",
+      "date": "2026-05-15",
+      "dateEpochMs": 1778828400000,
+      "startTimeEpochMs": 1778900400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1278868218,
+      "artistIds": [
+        1278868218
+      ],
+      "venueId": 2021730900,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374700,
+      "updatedAtEpochMs": 1760169374700,
+      "sourceLineNumber": 5447
+    },
+    {
+      "id": 219354473,
+      "slug": "2026-05-20-melodys-echo-chamber-bimbos-365-club",
+      "date": "2026-05-20",
+      "dateEpochMs": 1779260400000,
+      "startTimeEpochMs": 1779336000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1159848500,
+      "artistIds": [
+        1159848500
+      ],
+      "venueId": 697962111,
+      "priceMin": 46.36,
+      "priceMax": 46.36,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374700,
+      "updatedAtEpochMs": 1760169374700,
+      "sourceLineNumber": 5448
     }
   ]
 }

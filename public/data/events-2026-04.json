@@ -2,7 +2,7 @@
   "chunkId": "2026-04",
   "dateRange": {
     "startEpochMs": 1775199600000,
-    "endEpochMs": 1776495600000
+    "endEpochMs": 1777100400000
   },
   "events": [
     {
@@ -22,9 +22,211 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1756003860584,
-      "updatedAtEpochMs": 1756003860584,
+      "createdAtEpochMs": 1760169374600,
+      "updatedAtEpochMs": 1760169374600,
       "sourceLineNumber": 2472
+    },
+    {
+      "id": 1543896679,
+      "slug": "2026-04-03-evan-honer-the-fillmore",
+      "date": "2026-04-03",
+      "dateEpochMs": 1775199600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 936501435,
+      "artistIds": [
+        936501435,
+        89638966
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374698,
+      "updatedAtEpochMs": 1760169374698,
+      "sourceLineNumber": 5425
+    },
+    {
+      "id": 64419103,
+      "slug": "2026-04-03-tokyo-tea-room-the-richshaw-stop",
+      "date": "2026-04-03",
+      "dateEpochMs": 1775199600000,
+      "startTimeEpochMs": 1775278800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 224932360,
+      "artistIds": [
+        224932360
+      ],
+      "venueId": 1485633985,
+      "priceMin": 22,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374698,
+      "updatedAtEpochMs": 1760169374698,
+      "sourceLineNumber": 5426
+    },
+    {
+      "id": 764383536,
+      "slug": "2026-04-04-ratboys-august-hall",
+      "date": "2026-04-04",
+      "dateEpochMs": 1775286000000,
+      "startTimeEpochMs": 1775347200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 156249241,
+      "artistIds": [
+        156249241,
+        179444711
+      ],
+      "venueId": 811075932,
+      "priceMin": 32.1,
+      "priceMax": 32.1,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5427
+    },
+    {
+      "id": 1140301448,
+      "slug": "2026-04-06-the-moss-the-independent",
+      "date": "2026-04-06",
+      "dateEpochMs": 1775458800000,
+      "startTimeEpochMs": 1775530800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971510315,
+      "artistIds": [
+        1971510315
+      ],
+      "venueId": 515101024,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5428
+    },
+    {
+      "id": 2065008593,
+      "slug": "2026-04-09-black-violin-the-uptown-theater",
+      "date": "2026-04-09",
+      "dateEpochMs": 1775718000000,
+      "startTimeEpochMs": 1775761200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 938072695,
+      "artistIds": [
+        938072695
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374651,
+      "updatedAtEpochMs": 1760169374651,
+      "sourceLineNumber": 3515
+    },
+    {
+      "id": 1007647190,
+      "slug": "2026-04-11-richard-shindell-hopmonk-tavern",
+      "date": "2026-04-11",
+      "dateEpochMs": 1775890800000,
+      "startTimeEpochMs": 1775966400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 295338199,
+      "artistIds": [
+        295338199
+      ],
+      "venueId": 833273350,
+      "priceMin": 41.97,
+      "priceMax": 53.37,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5431
+    },
+    {
+      "id": 938623379,
+      "slug": "2026-04-12-richard-shindell-hopmonk",
+      "date": "2026-04-12",
+      "dateEpochMs": 1775977200000,
+      "startTimeEpochMs": 1776052800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 295338199,
+      "artistIds": [
+        295338199
+      ],
+      "venueId": 1375149348,
+      "priceMin": 41.97,
+      "priceMax": 53.37,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5432
+    },
+    {
+      "id": 146810367,
+      "slug": "2026-04-15-newdad-the-independent",
+      "date": "2026-04-15",
+      "dateEpochMs": 1776236400000,
+      "startTimeEpochMs": 1776308400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 521333382,
+      "artistIds": [
+        521333382,
+        683660357
+      ],
+      "venueId": 515101024,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5433
+    },
+    {
+      "id": 759676898,
+      "slug": "2026-04-17-robbie-fulks-hopmonk",
+      "date": "2026-04-17",
+      "dateEpochMs": 1776409200000,
+      "startTimeEpochMs": 1776484800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1095164721,
+      "artistIds": [
+        1095164721
+      ],
+      "venueId": 1375149348,
+      "priceMin": 30.57,
+      "priceMax": 42.17,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5434
     },
     {
       "id": 1526629688,
@@ -43,9 +245,101 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1756003860584,
-      "updatedAtEpochMs": 1756003860584,
+      "createdAtEpochMs": 1760169374600,
+      "updatedAtEpochMs": 1760169374600,
       "sourceLineNumber": 2473
+    },
+    {
+      "id": 340490345,
+      "slug": "2026-04-18-robbie-fulks-hopmonk-tavern",
+      "date": "2026-04-18",
+      "dateEpochMs": 1776495600000,
+      "startTimeEpochMs": 1776571200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1095164721,
+      "artistIds": [
+        1095164721
+      ],
+      "venueId": 833273350,
+      "priceMin": 30.57,
+      "priceMax": 41.97,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5435
+    },
+    {
+      "id": 1597600882,
+      "slug": "2026-04-22-drew-ellie-honeycomb-the-rio-theater",
+      "date": "2026-04-22",
+      "dateEpochMs": 1776841200000,
+      "startTimeEpochMs": 1777068000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1680885526,
+      "artistIds": [
+        1680885526
+      ],
+      "venueId": 2141325231,
+      "priceMin": 63.68,
+      "priceMax": 63.68,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374652,
+      "updatedAtEpochMs": 1760169374652,
+      "sourceLineNumber": 3517
+    },
+    {
+      "id": 144335205,
+      "slug": "2026-04-24-ultra-sunn-the-chapel",
+      "date": "2026-04-24",
+      "dateEpochMs": 1777014000000,
+      "startTimeEpochMs": 1777129200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 912158121,
+      "artistIds": [
+        912158121
+      ],
+      "venueId": 680116887,
+      "priceMin": 32.16,
+      "priceMax": 32.16,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1760169374699,
+      "updatedAtEpochMs": 1760169374699,
+      "sourceLineNumber": 5437
+    },
+    {
+      "id": 1508441866,
+      "slug": "2026-04-25-patrick-watson-the-palace-of-fine-arts",
+      "date": "2026-04-25",
+      "dateEpochMs": 1777100400000,
+      "startTimeEpochMs": 1777284000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 414474023,
+      "artistIds": [
+        414474023
+      ],
+      "venueId": 390079947,
+      "priceMin": 51.73,
+      "priceMax": 51.73,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1760169374652,
+      "updatedAtEpochMs": 1760169374652,
+      "sourceLineNumber": 3519
     }
   ]
 }
