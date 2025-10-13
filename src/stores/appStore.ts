@@ -34,6 +34,8 @@ export interface AppState {
   venues: Map<VenueId, Venue>;
   indexes: DataIndexes | null;
   loadedChunks: Set<string>;
+  chunkLoadOrder: string[]; // Track load order for LRU eviction
+  chunkMetadata: Map<string, { loadedAt: number; eventCount: number; size: number }>;
   
   // Loading states
   loading: {
@@ -109,6 +111,10 @@ export interface AppActions {
   refresh: () => Promise<void>;
   getCacheStats: () => Promise<any>;
   
+  // Memory management
+  evictOldChunks: (maxChunks?: number) => void;
+  getMemoryStats: () => { totalEvents: number; loadedChunks: number; estimatedMemoryMB: number };
+  
   // Cleanup
   dispose: () => void;
 }
@@ -128,6 +134,8 @@ export const useAppStore = create<AppStore>()(
         venues: new Map(),
         indexes: null,
         loadedChunks: new Set(),
+        chunkLoadOrder: [],
+        chunkMetadata: new Map(),
         
         loading: {
           manifest: "idle",
@@ -321,12 +329,26 @@ export const useAppStore = create<AppStore>()(
               const newLoadedChunks = new Set(state.loadedChunks);
               newLoadedChunks.add(chunkId);
               
+              // Track chunk metadata for memory management
+              const newChunkLoadOrder = [...state.chunkLoadOrder, chunkId];
+              const newChunkMetadata = new Map(state.chunkMetadata);
+              newChunkMetadata.set(chunkId, {
+                loadedAt: Date.now(),
+                eventCount: eventsArray.length,
+                size: JSON.stringify(eventsArray).length, // Rough size estimate
+              });
+              
               return {
                 events: newEvents,
                 loadedChunks: newLoadedChunks,
+                chunkLoadOrder: newChunkLoadOrder,
+                chunkMetadata: newChunkMetadata,
                 loading: { ...state.loading, events: "success" },
               };
             });
+            
+            // Auto-evict if too many chunks loaded
+            get().evictOldChunks();
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Failed to load events chunk";
             set(state => ({
@@ -484,6 +506,8 @@ export const useAppStore = create<AppStore>()(
             venues: new Map(),
             indexes: null,
             loadedChunks: new Set(),
+            chunkLoadOrder: [],
+            chunkMetadata: new Map(),
           });
           
           // Refresh data service and reload
@@ -496,6 +520,65 @@ export const useAppStore = create<AppStore>()(
           if (!dataService) return null;
           
           return dataService.getCacheStats();
+        },
+        
+        // Memory management
+        evictOldChunks(maxChunks = 6) {
+          const { loadedChunks, chunkLoadOrder, chunkMetadata, events } = get();
+          
+          if (loadedChunks.size <= maxChunks) return;
+          
+          // Calculate how many chunks to evict
+          const chunksToEvict = loadedChunks.size - maxChunks;
+          const chunksToRemove = chunkLoadOrder.slice(0, chunksToEvict);
+          
+          console.log(`🧹 Evicting ${chunksToEvict} old chunks to free memory:`, chunksToRemove);
+          
+          set(state => {
+            const newEvents = new Map(state.events);
+            const newLoadedChunks = new Set(state.loadedChunks);
+            const newChunkLoadOrder = state.chunkLoadOrder.slice(chunksToEvict);
+            const newChunkMetadata = new Map(state.chunkMetadata);
+            
+            // Remove events from evicted chunks
+            chunksToRemove.forEach(chunkId => {
+              newLoadedChunks.delete(chunkId);
+              newChunkMetadata.delete(chunkId);
+              
+              // Remove events from this chunk (conservative approach - remove all events from this time period)
+              const [year, month] = chunkId.split('-').map(Number);
+              const chunkStart = new Date(year, month - 1, 1).getTime();
+              const chunkEnd = new Date(year, month, 0, 23, 59, 59, 999).getTime();
+              
+              Array.from(newEvents.values()).forEach(event => {
+                if (event.dateEpochMs >= chunkStart && event.dateEpochMs <= chunkEnd) {
+                  newEvents.delete(event.id);
+                }
+              });
+            });
+            
+            return {
+              events: newEvents,
+              loadedChunks: newLoadedChunks,
+              chunkLoadOrder: newChunkLoadOrder,
+              chunkMetadata: newChunkMetadata,
+            };
+          });
+        },
+        
+        getMemoryStats() {
+          const { events, loadedChunks, chunkMetadata } = get();
+          
+          let totalSize = 0;
+          chunkMetadata.forEach(metadata => {
+            totalSize += metadata.size;
+          });
+          
+          return {
+            totalEvents: events.size,
+            loadedChunks: loadedChunks.size,
+            estimatedMemoryMB: Math.round((totalSize / 1024 / 1024) * 100) / 100,
+          };
         },
         
         // Cleanup
