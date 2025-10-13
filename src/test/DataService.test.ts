@@ -28,7 +28,7 @@ describe("DataService", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     dataService = new DataService({
       baseUrl: "/test-data",
       cacheName: "test-cache",
@@ -71,7 +71,7 @@ describe("DataService", () => {
           recordCount: 5,
         },
         venues: {
-          filename: "venues.json", 
+          filename: "venues.json",
           size: 300,
           checksum: "ghi789",
           recordCount: 3,
@@ -116,7 +116,7 @@ describe("DataService", () => {
       },
       {
         id: 2 as any,
-        name: "Test Artist 2", 
+        name: "Test Artist 2",
         slug: "test-artist-2",
         normalizedName: "test artist 2",
         aliases: [],
@@ -170,7 +170,7 @@ describe("DataService", () => {
     // Mock successful IDB operations
     const mockTransaction = {
       objectStore: vi.fn().mockReturnValue({
-        get: vi.fn().mockReturnValue({ 
+        get: vi.fn().mockReturnValue({
           onsuccess: vi.fn(),
           onerror: vi.fn(),
           result: null,
@@ -189,7 +189,7 @@ describe("DataService", () => {
 
     mockIndexedDB.open.mockReturnValue({
       onsuccess: vi.fn(),
-      onerror: vi.fn(), 
+      onerror: vi.fn(),
       onupgradeneeded: vi.fn(),
       result: mockDB,
     });
@@ -207,9 +207,12 @@ describe("DataService", () => {
       });
 
       const result = await dataService.loadManifest();
-      
+
       expect(result).toEqual(mockManifest);
-      expect(mockFetch).toHaveBeenCalledWith("/test-data/manifest.json", expect.any(Object));
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/test-data/manifest.json",
+        expect.any(Object)
+      );
     });
 
     it("should throw error on network failure", async () => {
@@ -249,9 +252,12 @@ describe("DataService", () => {
       });
 
       const result = await dataService.loadArtists();
-      
+
       expect(result).toEqual(mockArtists);
-      expect(mockFetch).toHaveBeenCalledWith("/test-data/artists.json", expect.any(Object));
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/test-data/artists.json",
+        expect.any(Object)
+      );
     });
 
     it("should return cached artists on subsequent calls", async () => {
@@ -290,7 +296,7 @@ describe("DataService", () => {
         });
 
       await dataService.loadArtists();
-      
+
       const artist = dataService.getArtist(1 as any);
       expect(artist).toEqual(mockArtists[0]);
     });
@@ -309,7 +315,9 @@ describe("DataService", () => {
         statusText: "Not Found",
       });
 
-      await expect(dataService.loadManifest()).rejects.toThrow("HTTP 404: Not Found");
+      await expect(dataService.loadManifest()).rejects.toThrow(
+        "HTTP 404: Not Found"
+      );
     });
 
     it("should handle JSON parsing errors", async () => {
@@ -325,10 +333,10 @@ describe("DataService", () => {
   describe("memory management", () => {
     it("should provide memory statistics", async () => {
       const stats = dataService.getMemoryStats();
-      
+
       expect(stats).toHaveProperty("loadedChunks");
       expect(stats).toHaveProperty("eventsInMemory");
-      expect(stats).toHaveProperty("artistsInMemory"); 
+      expect(stats).toHaveProperty("artistsInMemory");
       expect(stats).toHaveProperty("venuesInMemory");
       expect(stats).toHaveProperty("estimatedSize");
     });
