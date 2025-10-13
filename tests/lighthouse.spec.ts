@@ -328,3 +328,4 @@ test.describe('Lighthouse Performance Audits', () => {
     console.log('Core Web Vitals:', webVitals);
   });
 });
+
