@@ -1,0 +1,146 @@
+{
+  "testManifest": {
+    "lastUpdated": "2024-01-15T00:00:00.000Z",
+    "version": "test-v1.0.0",
+    "totalEvents": 3,
+    "totalArtists": 3,
+    "totalVenues": 2,
+    "eventsByMonth": {
+      "2024-01": 2,
+      "2024-02": 1
+    },
+    "chunks": [
+      { "month": "2024-01", "events": 2, "size": 1024 },
+      { "month": "2024-02", "events": 1, "size": 512 }
+    ]
+  },
+  "testEvents": [
+    {
+      "id": 1,
+      "title": "Test Punk Show",
+      "slug": "test-punk-show",
+      "date": "2024-01-15",
+      "dateEpochMs": 1705363200000,
+      "artistIds": [1],
+      "venueId": 1,
+      "priceMin": 15,
+      "priceMax": 20,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "genres": ["punk"],
+      "tags": ["loud", "energetic"],
+      "status": "confirmed",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Free Metal Show",
+      "slug": "free-metal-show", 
+      "date": "2024-01-20",
+      "dateEpochMs": 1705795200000,
+      "artistIds": [2],
+      "venueId": 2,
+      "priceMin": 0,
+      "priceMax": 0,
+      "isFree": true,
+      "ageRestriction": "all-ages",
+      "genres": ["metal"],
+      "tags": ["free", "heavy"],
+      "status": "confirmed",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-20T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "Alternative Rock Night",
+      "slug": "alternative-rock-night",
+      "date": "2024-02-05",
+      "dateEpochMs": 1707177600000,
+      "artistIds": [3],
+      "venueId": 1,
+      "priceMin": 25,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "genres": ["alternative", "rock"],
+      "tags": ["indie", "mellow"],
+      "status": "confirmed",
+      "createdAt": "2024-01-01T00:00:00.000Z", 
+      "updatedAt": "2024-02-05T00:00:00.000Z"
+    }
+  ],
+  "testArtists": [
+    {
+      "id": 1,
+      "name": "Test Punk Band",
+      "slug": "test-punk-band",
+      "normalizedName": "test punk band",
+      "eventCount": 1,
+      "upcomingEventCount": 0,
+      "lastSeen": "2024-01-15",
+      "genres": ["punk"],
+      "relatedArtists": [],
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Heavy Metal Group",
+      "slug": "heavy-metal-group",
+      "normalizedName": "heavy metal group",
+      "eventCount": 1,
+      "upcomingEventCount": 0,
+      "lastSeen": "2024-01-20",
+      "genres": ["metal"],
+      "relatedArtists": [],
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-20T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Alternative Artists",
+      "slug": "alternative-artists",
+      "normalizedName": "alternative artists",
+      "eventCount": 1,
+      "upcomingEventCount": 0,
+      "lastSeen": "2024-02-05",
+      "genres": ["alternative"],
+      "relatedArtists": [],
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-02-05T00:00:00.000Z"
+    }
+  ],
+  "testVenues": [
+    {
+      "id": 1,
+      "name": "Test Venue",
+      "slug": "test-venue",
+      "normalizedName": "test venue",
+      "city": "San Francisco",
+      "address": "123 Test Street",
+      "capacity": 300,
+      "ageRestriction": "21+",
+      "eventCount": 2,
+      "upcomingEventCount": 0,
+      "lastEventDate": "2024-02-05",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-02-05T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Alternative Space",
+      "slug": "alternative-space",
+      "normalizedName": "alternative space", 
+      "city": "Oakland",
+      "address": "456 Alternative Ave",
+      "capacity": 150,
+      "ageRestriction": "all-ages",
+      "eventCount": 1,
+      "upcomingEventCount": 0,
+      "lastEventDate": "2024-01-20",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-20T00:00:00.000Z"
+    }
+  ]
+}
