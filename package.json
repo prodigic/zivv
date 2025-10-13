@@ -19,6 +19,8 @@
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
+    "test:performance": "playwright test tests/performance.spec.ts tests/lighthouse.spec.ts",
+    "test:lighthouse": "playwright test tests/lighthouse.spec.ts",
     "preetl": "node scripts/update-data.js data/latest.txt",
     "etl": "npm run build:etl && node scripts/run-etl.js",
     "etl:verbose": "npm run etl -- --verbose"
