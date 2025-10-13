@@ -1,9 +1,11 @@
 /**
  * Date pagination navigation for filtering events by specific days
  * Shows TODAY, TOMORROW, and next 5 days with punk rock styling
+ * Includes "This Week" and "This Month" options
  */
 
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
+import { format, parseISO } from "date-fns";
 import { useFilterStore } from "@/stores/filterStore";
 
 interface DatePaginationProps {
@@ -14,6 +16,48 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
   className = "",
 }) => {
   const { filters, updateFilter, clearFilter } = useFilterStore();
+
+  // Helper functions for date range calculations
+  const getThisWeekRange = useCallback(() => {
+    const today = new Date();
+    const startDate = today.toISOString().split("T")[0];
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + 6);
+    return {
+      type: "week" as const,
+      startDate,
+      endDate: endDate.toISOString().split("T")[0],
+    };
+  }, []);
+
+  const getThisMonthRange = useCallback(() => {
+    const today = new Date();
+    const startDate = today.toISOString().split("T")[0];
+    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    return {
+      type: "month" as const,
+      startDate,
+      endDate: endDate.toISOString().split("T")[0],
+    };
+  }, []);
+
+  // Generate array of date strings for a range
+  const getDateStringsInRange = useCallback(
+    (startDate: string, endDate: string): string[] => {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const dates: string[] = [];
+
+      const current = new Date(start);
+      while (current <= end) {
+        dates.push(current.toISOString().split("T")[0]);
+        current.setDate(current.getDate() + 1);
+      }
+
+      return dates;
+    },
+    []
+  );
 
   // Generate 7 consecutive days starting from today
   const days = useMemo(() => {
@@ -37,11 +81,11 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
       let shortLabel: string;
 
       if (i === 0) {
-        label = "TODAY";
-        shortLabel = "TOD";
+        label = "Today";
+        shortLabel = "Tod";
       } else if (i === 1) {
-        label = "TOMORROW";
-        shortLabel = "TOM";
+        label = "Tomorrow";
+        shortLabel = "Tom";
       } else {
         // Use abbreviated day names (SUN, MON, TUE, etc.)
         label = date
@@ -68,6 +112,36 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
     return filters.dates?.includes(dateString) || false;
   };
 
+  // Check if this week is currently selected (all week dates are in the filter)
+  const isThisWeekSelected = () => {
+    const weekRange = getThisWeekRange();
+    const weekDates = getDateStringsInRange(
+      weekRange.startDate,
+      weekRange.endDate
+    );
+    const currentDates = filters.dates || [];
+
+    return (
+      weekDates.length > 0 &&
+      weekDates.every((date) => currentDates.includes(date))
+    );
+  };
+
+  // Check if this month is currently selected (all month dates are in the filter)
+  const isThisMonthSelected = () => {
+    const monthRange = getThisMonthRange();
+    const monthDates = getDateStringsInRange(
+      monthRange.startDate,
+      monthRange.endDate
+    );
+    const currentDates = filters.dates || [];
+
+    return (
+      monthDates.length > 0 &&
+      monthDates.every((date) => currentDates.includes(date))
+    );
+  };
+
   // Handle day selection (toggle)
   const handleDayClick = (dateString: string) => {
     const currentDates = filters.dates || [];
@@ -86,6 +160,76 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
     }
   };
 
+  // Handle this week selection (toggle)
+  const handleThisWeekClick = () => {
+    const weekRange = getThisWeekRange();
+    const weekDates = getDateStringsInRange(
+      weekRange.startDate,
+      weekRange.endDate
+    );
+
+    if (isThisWeekSelected()) {
+      // Remove all week dates
+      const currentDates = filters.dates || [];
+      const updatedDates = currentDates.filter(
+        (date) => !weekDates.includes(date)
+      );
+      if (updatedDates.length === 0) {
+        clearFilter("dates");
+      } else {
+        updateFilter("dates", updatedDates);
+      }
+    } else {
+      // Add all week dates (merge with existing)
+      const currentDates = filters.dates || [];
+      const newDates = [...currentDates];
+      weekDates.forEach((date) => {
+        if (!newDates.includes(date)) {
+          newDates.push(date);
+        }
+      });
+      updateFilter("dates", newDates);
+    }
+  };
+
+  // Handle this month selection (toggle)
+  const handleThisMonthClick = () => {
+    const monthRange = getThisMonthRange();
+    const monthDates = getDateStringsInRange(
+      monthRange.startDate,
+      monthRange.endDate
+    );
+
+    if (isThisMonthSelected()) {
+      // Remove all month dates
+      const currentDates = filters.dates || [];
+      const updatedDates = currentDates.filter(
+        (date) => !monthDates.includes(date)
+      );
+      if (updatedDates.length === 0) {
+        clearFilter("dates");
+      } else {
+        updateFilter("dates", updatedDates);
+      }
+    } else {
+      // Add all month dates (merge with existing)
+      const currentDates = filters.dates || [];
+      const newDates = [...currentDates];
+      monthDates.forEach((date) => {
+        if (!newDates.includes(date)) {
+          newDates.push(date);
+        }
+      });
+      updateFilter("dates", newDates);
+    }
+  };
+
+  // Get display labels for dates
+  const getDateDisplayLabel = (dateString: string) => {
+    const day = days.find((d) => d.dateString === dateString);
+    return day ? day.shortLabel : dateString;
+  };
+
   // Clear all date filters
   const handleClearAll = () => {
     clearFilter("dates");
@@ -93,50 +237,90 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
 
   return (
     <div className={`date-pagination ${className}`}>
-      {/* Header with Clear All button */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-          Filter by Day
-        </div>
-        {filters.dates && filters.dates.length > 0 && (
-          <button
-            onClick={handleClearAll}
-            className="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-mono transition-colors"
+      {/* Header with icon and Clear All button */}
+      <div className="flex items-center gap-3">
+        {/* Calendar Icon */}
+        <div className="flex-shrink-0">
+          <svg
+            className="w-8 h-8 text-gray-600 dark:text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-label="Date Filter"
           >
-            CLEAR
-          </button>
-        )}
-      </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+          <span className="sr-only">Filter by Date</span>
+        </div>
 
-      {/* Day buttons - responsive wrapping */}
-      <div className="flex flex-wrap gap-1 sm:gap-2">
-        {days.map((day) => {
-          const selected = isSelected(day.dateString);
-
-          return (
+        <div className="flex-1">
+          {/* Single row of all date filter options */}
+          <div className="flex flex-wrap gap-1 items-center">
+            {/* Month Button */}
             <button
-              key={day.dateString}
-              onClick={() => handleDayClick(day.dateString)}
+              onClick={handleThisMonthClick}
               className={`
-                px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-mono text-xs font-bold
-                border-2 border-dashed transition-all duration-200
-                min-w-[48px] sm:min-w-[60px] text-center flex-1 sm:flex-initial
+                px-2 py-1 sm:px-3 sm:py-1.5 rounded font-mono text-xs font-bold
+                border border-dashed transition-all duration-200
                 ${
-                  selected
-                    ? "bg-red-600 text-white border-red-700 shadow-lg transform scale-105"
-                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-600"
+                  isThisMonthSelected()
+                    ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-300 dark:border-green-600"
+                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-green-50 dark:hover:bg-green-900/20"
                 }
-                ${!selected ? "hover:scale-102" : ""}
               `}
-              title={day.label}
             >
-              <div className="leading-tight text-[10px] sm:text-xs">
-                <span className="hidden sm:inline">{day.label}</span>
-                <span className="sm:hidden">{day.shortLabel}</span>
-              </div>
+              Month
             </button>
-          );
-        })}
+
+            {/* Week Button */}
+            <button
+              onClick={handleThisWeekClick}
+              className={`
+                px-2 py-1 sm:px-3 sm:py-1.5 rounded font-mono text-xs font-bold
+                border border-dashed transition-all duration-200
+                ${
+                  isThisWeekSelected()
+                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-600"
+                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                }
+              `}
+            >
+              Week
+            </button>
+
+            {/* Day buttons - Today and Tomorrow first, then the rest */}
+            {days.map((day) => {
+              const selected = isSelected(day.dateString);
+              return (
+                <button
+                  key={day.dateString}
+                  onClick={() => handleDayClick(day.dateString)}
+                  className={`
+                    px-2 py-1 sm:px-3 sm:py-1.5 rounded font-mono text-xs font-bold
+                    border border-dashed transition-all duration-200
+                    min-w-[40px] sm:min-w-[70px] text-center
+                    ${
+                      selected
+                        ? "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-300 dark:border-red-600"
+                        : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    }
+                  `}
+                  title={day.label}
+                >
+                  <span className="hidden sm:inline text-[10px]">
+                    {day.label}
+                  </span>
+                  <span className="sm:hidden text-[9px]">{day.shortLabel}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
