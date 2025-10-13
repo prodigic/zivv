@@ -38,10 +38,8 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
       // Check if any other cities are selected
       return otherCities.some((city) => currentCities.includes(city));
     } else {
-      // For main cities, check by normalized name
-      const actualCityName =
-        cities.find((c) => c.name === cityName)?.normalizedName || cityName;
-      return currentCities.includes(actualCityName);
+      // For main cities, check by full name
+      return currentCities.includes(cityName);
     }
   };
 
@@ -74,8 +72,7 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
       }
     } else {
       // Handle main cities normally
-      const actualCityName =
-        cities.find((c) => c.name === cityName)?.normalizedName || cityName;
+      const actualCityName = cityName; // Use the full city name, not normalized
 
       if (isSelected(actualCityName)) {
         // Remove the city from selection
@@ -99,50 +96,63 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
 
   return (
     <div className={`city-pagination ${className}`}>
-      {/* Header with Clear All button */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-          Filter by City
-        </div>
-        {filters.cities && filters.cities.length > 0 && (
-          <button
-            onClick={handleClearAll}
-            className="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-mono transition-colors"
+      {/* Header with icon and Clear All button */}
+      <div className="flex items-center gap-3">
+        {/* Cityscape Icon */}
+        <div className="flex-shrink-0">
+          <svg
+            className="w-8 h-8 text-gray-600 dark:text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-label="City Filter"
           >
-            CLEAR
-          </button>
-        )}
-      </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 21h4V9h2V5h6v4h2v8h4m-4-8V7m-2 0V5m-2 4h2m-2 4h2m-6-6h2m-2 4h2m8 8V11m-2 4h2m-2 4h2"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 21h18"
+            />
+          </svg>
+          <span className="sr-only">Filter by City</span>
+        </div>
 
-      {/* City buttons - responsive wrapping */}
-      <div className="flex flex-wrap gap-1 sm:gap-2">
-        {cities.map((city) => {
-          const selected = isSelected(city.name);
-
-          return (
-            <button
-              key={city.slug}
-              onClick={() => handleCityClick(city.name)}
-              className={`
-                px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-mono text-xs font-bold
-                border-2 border-dashed transition-all duration-200
-                min-w-[48px] sm:min-w-[60px] text-center flex-1 sm:flex-initial
-                ${
-                  selected
-                    ? "bg-red-600 text-white border-red-700 shadow-lg transform scale-105"
-                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-600"
-                }
-                ${!selected ? "hover:scale-102" : ""}
-              `}
-              title={city.name}
-            >
-              <div className="leading-tight text-[10px] sm:text-xs">
-                <span className="hidden sm:inline">{city.name}</span>
-                <span className="sm:hidden">{city.slug.toUpperCase()}</span>
-              </div>
-            </button>
-          );
-        })}
+        <div className="flex-1">
+          {/* Single row of city filter options */}
+          <div className="flex flex-wrap gap-1 items-center">
+            {cities.map((city) => {
+              const selected = isSelected(city.name);
+              return (
+                <button
+                  key={city.slug}
+                  onClick={() => handleCityClick(city.name)}
+                  className={`
+                    px-2 py-1 sm:px-3 sm:py-1.5 rounded font-mono text-xs font-bold
+                    border border-dashed transition-all duration-200
+                    min-w-[40px] sm:min-w-[50px] text-center
+                    ${
+                      selected
+                        ? "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-300 dark:border-red-600"
+                        : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    }
+                  `}
+                  title={city.name}
+                >
+                  <div className="leading-tight text-[10px] sm:text-xs">
+                    <span className="hidden sm:inline">{city.name}</span>
+                    <span className="sm:hidden">{city.slug.toUpperCase()}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
