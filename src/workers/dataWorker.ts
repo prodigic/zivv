@@ -29,7 +29,7 @@ import {
 /**
  * Main worker message handler
  */
-self.onmessage = function(e: MessageEvent<WorkerMessage>) {
+self.onmessage = function (e: MessageEvent<WorkerMessage>) {
   const { id, type, payload } = e.data;
 
   try {
@@ -37,23 +37,29 @@ self.onmessage = function(e: MessageEvent<WorkerMessage>) {
       case "PARSE_JSON":
         handleParseJson(id, payload as ParseJsonPayload);
         break;
-      
+
       case "FILTER_EVENTS":
         handleFilterEvents(id, payload as FilterEventsPayload);
         break;
-      
+
       case "SORT_EVENTS":
-        handleSortEvents(id, payload as { events: Event[]; sortField: string; sortOrder: string });
+        handleSortEvents(
+          id,
+          payload as { events: Event[]; sortField: string; sortOrder: string }
+        );
         break;
-      
+
       case "BUILD_SEARCH_INDEX":
-        handleBuildSearchIndex(id, payload as { events: Event[]; artists: Artist[]; venues: Venue[] });
+        handleBuildSearchIndex(
+          id,
+          payload as { events: Event[]; artists: Artist[]; venues: Venue[] }
+        );
         break;
-      
+
       case "CALCULATE_STATS":
         handleCalculateStats(id, payload as { events: Event[] });
         break;
-      
+
       default:
         sendError(id, `Unknown message type: ${type}`);
     }
@@ -67,14 +73,14 @@ self.onmessage = function(e: MessageEvent<WorkerMessage>) {
  */
 function handleParseJson(id: string, payload: ParseJsonPayload) {
   const { jsonString, expectedType } = payload;
-  
+
   try {
     // Parse JSON
     const rawData = JSON.parse(jsonString);
-    
+
     // Validate based on expected type
     let validationResult;
-    
+
     switch (expectedType) {
       case "events":
         if (Array.isArray(rawData)) {
@@ -84,32 +90,35 @@ function handleParseJson(id: string, payload: ParseJsonPayload) {
           validationResult = validateEventChunk(rawData);
         }
         break;
-      
+
       case "artists":
         validationResult = validateArtistArray(rawData);
         break;
-      
+
       case "venues":
         validationResult = validateVenueArray(rawData);
         break;
-      
+
       case "manifest":
         validationResult = validateManifest(rawData);
         break;
-      
+
       case "indexes":
         // For indexes, we'll do basic object validation
         validationResult = {
           isValid: typeof rawData === "object" && rawData !== null,
           data: rawData,
-          errors: typeof rawData === "object" && rawData !== null ? [] : ["Indexes must be an object"],
+          errors:
+            typeof rawData === "object" && rawData !== null
+              ? []
+              : ["Indexes must be an object"],
         };
         break;
-      
+
       default:
         throw new Error(`Unsupported data type: ${expectedType}`);
     }
-    
+
     if (validationResult.isValid) {
       sendSuccess(id, {
         data: validationResult.data,
@@ -119,7 +128,6 @@ function handleParseJson(id: string, payload: ParseJsonPayload) {
     } else {
       sendError(id, `Validation failed: ${validationResult.errors.join(", ")}`);
     }
-    
   } catch (error) {
     sendError(id, `JSON parsing failed: ${error}`);
   }
@@ -130,96 +138,127 @@ function handleParseJson(id: string, payload: ParseJsonPayload) {
  */
 function handleFilterEvents(id: string, payload: FilterEventsPayload) {
   const { events, filters, searchQuery } = payload;
-  
+
   try {
     let filteredEvents = [...events];
-    
+
     // Apply city filter
     if (filters.cities && filters.cities.length > 0) {
-      filteredEvents = filteredEvents.filter(event =>
-        filters.cities!.some(city => 
-          event.venueId && getVenueCity(event.venueId) === city
-        )
-      );
+      filteredEvents = filteredEvents.filter((event) => {
+        if (!event.venueId) return false;
+
+        // Map full city names to normalized names for venue matching
+        const cityMapping: Record<string, string> = {
+          "San Francisco": "S.f",
+          Oakland: "Oakland",
+          Berkeley: "Berkeley",
+          "Santa Cruz": "Santa",
+        };
+
+        return filters.cities!.some((selectedCity) => {
+          const normalizedCity = cityMapping[selectedCity] || selectedCity;
+          return getVenueCity(event.venueId!) === normalizedCity;
+        });
+      });
     }
-    
+
     // Apply date range filter
     if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
-      filteredEvents = filteredEvents.filter(event => {
-        const eventDate = new Date(event.dateEpochMs).toISOString().split('T')[0];
-        
-        if (filters.dateRange?.startDate && eventDate < filters.dateRange.startDate) {
+      filteredEvents = filteredEvents.filter((event) => {
+        const eventDate = new Date(event.dateEpochMs)
+          .toISOString()
+          .split("T")[0];
+
+        if (
+          filters.dateRange?.startDate &&
+          eventDate < filters.dateRange.startDate
+        ) {
           return false;
         }
-        
-        if (filters.dateRange?.endDate && eventDate > filters.dateRange.endDate) {
+
+        if (
+          filters.dateRange?.endDate &&
+          eventDate > filters.dateRange.endDate
+        ) {
           return false;
         }
-        
+
         return true;
       });
     }
-    
+
     // Apply price range filter
-    if (filters.priceRange?.min !== undefined || filters.priceRange?.max !== undefined) {
-      filteredEvents = filteredEvents.filter(event => {
+    if (
+      filters.priceRange?.min !== undefined ||
+      filters.priceRange?.max !== undefined
+    ) {
+      filteredEvents = filteredEvents.filter((event) => {
         if (event.isFree) {
-          return filters.priceRange?.min === undefined || filters.priceRange.min <= 0;
+          return (
+            filters.priceRange?.min === undefined || filters.priceRange.min <= 0
+          );
         }
-        
+
         const price = event.priceMin || 0;
-        
-        if (filters.priceRange?.min !== undefined && price < filters.priceRange.min) {
+
+        if (
+          filters.priceRange?.min !== undefined &&
+          price < filters.priceRange.min
+        ) {
           return false;
         }
-        
-        if (filters.priceRange?.max !== undefined && price > filters.priceRange.max) {
+
+        if (
+          filters.priceRange?.max !== undefined &&
+          price > filters.priceRange.max
+        ) {
           return false;
         }
-        
+
         return true;
       });
     }
-    
+
     // Apply free events filter
     if (filters.isFree === true) {
-      filteredEvents = filteredEvents.filter(event => event.isFree);
+      filteredEvents = filteredEvents.filter((event) => event.isFree);
     }
-    
+
     // Apply age restrictions filter
     if (filters.ageRestrictions && filters.ageRestrictions.length > 0) {
-      filteredEvents = filteredEvents.filter(event =>
+      filteredEvents = filteredEvents.filter((event) =>
         filters.ageRestrictions!.includes(event.ageRestriction)
       );
     }
-    
+
     // Apply tags filter
     if (filters.tags && filters.tags.length > 0) {
-      filteredEvents = filteredEvents.filter(event =>
-        filters.tags!.some(tag => event.tags?.includes(tag))
+      filteredEvents = filteredEvents.filter((event) =>
+        filters.tags!.some((tag) => event.tags?.includes(tag))
       );
     }
-    
+
     // Apply text search if provided
     if (searchQuery && searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
-      filteredEvents = filteredEvents.filter(event => {
+      filteredEvents = filteredEvents.filter((event) => {
         // Search in artist names (would need artist data)
         // For now, search in available event data
         const searchableText = [
           // Would add artist names here if available
-        ].join(" ").toLowerCase();
-        
+        ]
+          .join(" ")
+          .toLowerCase();
+
         return searchableText.includes(query);
       });
     }
-    
+
     sendSuccess(id, {
       events: filteredEvents,
       totalCount: filteredEvents.length,
       originalCount: events.length,
     });
-    
   } catch (error) {
     sendError(id, `Filtering failed: ${error}`);
   }
@@ -228,54 +267,56 @@ function handleFilterEvents(id: string, payload: FilterEventsPayload) {
 /**
  * Sort events by specified field and order
  */
-function handleSortEvents(id: string, payload: { events: Event[]; sortField: string; sortOrder: string }) {
+function handleSortEvents(
+  id: string,
+  payload: { events: Event[]; sortField: string; sortOrder: string }
+) {
   const { events, sortField, sortOrder } = payload;
-  
+
   try {
     const sortedEvents = [...events].sort((a, b) => {
       let aValue: string | number | Date;
       let bValue: string | number | Date;
-      
+
       switch (sortField) {
         case "date":
           aValue = a.dateEpochMs;
           bValue = b.dateEpochMs;
           break;
-        
+
         case "price":
-          aValue = a.isFree ? 0 : (a.priceMin || 0);
-          bValue = b.isFree ? 0 : (b.priceMin || 0);
+          aValue = a.isFree ? 0 : a.priceMin || 0;
+          bValue = b.isFree ? 0 : b.priceMin || 0;
           break;
-        
+
         case "artist":
           // Would need artist data to sort by artist name
           aValue = a.headlinerArtistId;
           bValue = b.headlinerArtistId;
           break;
-        
+
         case "venue":
           // Would need venue data to sort by venue name
           aValue = a.venueId;
           bValue = b.venueId;
           break;
-        
+
         default:
           throw new Error(`Unsupported sort field: ${sortField}`);
       }
-      
+
       let comparison = 0;
       if (aValue < bValue) comparison = -1;
       else if (aValue > bValue) comparison = 1;
-      
+
       return sortOrder === "desc" ? -comparison : comparison;
     });
-    
+
     sendSuccess(id, {
       events: sortedEvents,
       sortField,
       sortOrder,
     });
-    
   } catch (error) {
     sendError(id, `Sorting failed: ${error}`);
   }
@@ -284,9 +325,12 @@ function handleSortEvents(id: string, payload: { events: Event[]; sortField: str
 /**
  * Build search index from entities
  */
-function handleBuildSearchIndex(id: string, payload: { events: Event[]; artists: Artist[]; venues: Venue[] }) {
+function handleBuildSearchIndex(
+  id: string,
+  payload: { events: Event[]; artists: Artist[]; venues: Venue[] }
+) {
   const { events, artists, venues } = payload;
-  
+
   try {
     const searchDocuments: Array<{
       id: string;
@@ -295,9 +339,9 @@ function handleBuildSearchIndex(id: string, payload: { events: Event[]; artists:
       content: string;
       boost: number;
     }> = [];
-    
+
     // Index artists
-    artists.forEach(artist => {
+    artists.forEach((artist) => {
       const aliases = artist.aliases?.join(" ") || "";
       searchDocuments.push({
         id: `artist-${artist.id}`,
@@ -307,9 +351,9 @@ function handleBuildSearchIndex(id: string, payload: { events: Event[]; artists:
         boost: artist.upcomingEventCount > 0 ? 1.5 : 1.0,
       });
     });
-    
+
     // Index venues
-    venues.forEach(venue => {
+    venues.forEach((venue) => {
       searchDocuments.push({
         id: `venue-${venue.id}`,
         type: "venue",
@@ -318,9 +362,9 @@ function handleBuildSearchIndex(id: string, payload: { events: Event[]; artists:
         boost: venue.upcomingEventCount > 0 ? 1.3 : 1.0,
       });
     });
-    
+
     // Index events (basic - would be enhanced with artist/venue names)
-    events.forEach(event => {
+    events.forEach((event) => {
       searchDocuments.push({
         id: `event-${event.id}`,
         type: "event",
@@ -329,26 +373,25 @@ function handleBuildSearchIndex(id: string, payload: { events: Event[]; artists:
         boost: event.dateEpochMs > Date.now() ? 1.2 : 0.8, // Boost future events
       });
     });
-    
+
     // Extract search terms for autocomplete
     const terms = new Set<string>();
-    
-    searchDocuments.forEach(doc => {
+
+    searchDocuments.forEach((doc) => {
       const words = doc.content
         .toLowerCase()
         .replace(/[^\w\s]/g, " ")
         .split(/\s+/)
-        .filter(word => word.length > 2);
-      
-      words.forEach(word => terms.add(word));
+        .filter((word) => word.length > 2);
+
+      words.forEach((word) => terms.add(word));
     });
-    
+
     sendSuccess(id, {
       documents: searchDocuments,
       terms: Array.from(terms).sort(),
       totalDocuments: searchDocuments.length,
     });
-    
   } catch (error) {
     sendError(id, `Search index building failed: ${error}`);
   }
@@ -359,60 +402,68 @@ function handleBuildSearchIndex(id: string, payload: { events: Event[]; artists:
  */
 function handleCalculateStats(id: string, payload: { events: Event[] }) {
   const { events } = payload;
-  
+
   try {
     const now = Date.now();
-    const upcomingEvents = events.filter(event => event.dateEpochMs > now);
-    const pastEvents = events.filter(event => event.dateEpochMs <= now);
-    
+    const upcomingEvents = events.filter((event) => event.dateEpochMs > now);
+    const pastEvents = events.filter((event) => event.dateEpochMs <= now);
+
     // City statistics
     const cityCounts = new Map<string, number>();
     const venueIds = new Set<number>();
     const artistIds = new Set<number>();
-    
-    events.forEach(event => {
+
+    events.forEach((event) => {
       // Count venues and artists
       venueIds.add(event.venueId);
-      event.artistIds.forEach(artistId => artistIds.add(artistId));
+      event.artistIds.forEach((artistId) => artistIds.add(artistId));
     });
-    
+
     // Price statistics
-    const pricedEvents = events.filter(event => !event.isFree && event.priceMin);
-    const prices = pricedEvents.map(event => event.priceMin!);
-    
-    const priceStats = prices.length > 0 ? {
-      min: Math.min(...prices),
-      max: Math.max(...prices),
-      average: prices.reduce((sum, price) => sum + price, 0) / prices.length,
-      median: calculateMedian(prices),
-    } : null;
-    
+    const pricedEvents = events.filter(
+      (event) => !event.isFree && event.priceMin
+    );
+    const prices = pricedEvents.map((event) => event.priceMin!);
+
+    const priceStats =
+      prices.length > 0
+        ? {
+            min: Math.min(...prices),
+            max: Math.max(...prices),
+            average:
+              prices.reduce((sum, price) => sum + price, 0) / prices.length,
+            median: calculateMedian(prices),
+          }
+        : null;
+
     // Age restriction distribution
     const ageRestrictionCounts = new Map<string, number>();
-    events.forEach(event => {
+    events.forEach((event) => {
       const count = ageRestrictionCounts.get(event.ageRestriction) || 0;
       ageRestrictionCounts.set(event.ageRestriction, count + 1);
     });
-    
+
     // Date range
-    const eventDates = events.map(event => event.dateEpochMs).sort();
-    const dateRange = eventDates.length > 0 ? {
-      start: eventDates[0],
-      end: eventDates[eventDates.length - 1],
-    } : null;
-    
+    const eventDates = events.map((event) => event.dateEpochMs).sort();
+    const dateRange =
+      eventDates.length > 0
+        ? {
+            start: eventDates[0],
+            end: eventDates[eventDates.length - 1],
+          }
+        : null;
+
     sendSuccess(id, {
       totalEvents: events.length,
       upcomingEvents: upcomingEvents.length,
       pastEvents: pastEvents.length,
       uniqueVenues: venueIds.size,
       uniqueArtists: artistIds.size,
-      freeEvents: events.filter(event => event.isFree).length,
+      freeEvents: events.filter((event) => event.isFree).length,
       priceStats,
       ageRestrictionDistribution: Object.fromEntries(ageRestrictionCounts),
       dateRange,
     });
-    
   } catch (error) {
     sendError(id, `Statistics calculation failed: ${error}`);
   }
@@ -425,7 +476,7 @@ function handleCalculateStats(id: string, payload: { events: Event[] }) {
 function calculateMedian(numbers: number[]): number {
   const sorted = [...numbers].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
-  
+
   return sorted.length % 2 === 0
     ? (sorted[mid - 1] + sorted[mid]) / 2
     : sorted[mid];
@@ -443,7 +494,7 @@ function sendSuccess<T>(id: string, data: T): void {
     success: true,
     data,
   };
-  
+
   self.postMessage(response);
 }
 
@@ -453,7 +504,7 @@ function sendError(id: string, error: string): void {
     success: false,
     error,
   };
-  
+
   self.postMessage(response);
 }
 
@@ -463,7 +514,7 @@ function sendProgress(id: string, progress: number): void {
     success: true,
     progress,
   };
-  
+
   self.postMessage(response);
 }
 
