@@ -474,7 +474,7 @@ describe("AppStore", () => {
       // Should return an array of future events only
       expect(Array.isArray(events)).toBe(true);
       if (events.length > 0) {
-        events.forEach(event => {
+        events.forEach((event) => {
           expect(event.dateEpochMs).toBeGreaterThan(Date.now() - 86400000); // Some tolerance
         });
       }
