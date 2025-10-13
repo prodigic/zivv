@@ -15,6 +15,7 @@ import type {
   ProcessingWarning,
   FileInfo,
   SourceFileInfo,
+  ChunkInfo,
 } from "@/types/data.js";
 import { EventParser, VenueParser } from "./parsers.js";
 import { DataIndexer, DataChunker, SearchIndexBuilder } from "./indexer.js";
@@ -337,7 +338,7 @@ export class ETLProcessor {
     return `sha256-${Math.abs(hash).toString(16)}`;
   }
 
-  private toProcessingError(error: unknown): ProcessingError {
+  private toProcessingError(error: any): ProcessingError {
     return {
       type: error.type === "validation" ? "validation" : "data",
       message: error.message,
@@ -347,7 +348,7 @@ export class ETLProcessor {
     };
   }
 
-  private toProcessingWarning(warning: unknown): ProcessingWarning {
+  private toProcessingWarning(warning: any): ProcessingWarning {
     return {
       type: "data-quality",
       message: warning.message,

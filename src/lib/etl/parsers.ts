@@ -186,9 +186,18 @@ export class EventParser {
         }
 
         // Add validation warnings for suspicious artist names
-        this.validateArtistNames(artistNames, rawEvent.lineNumber, rawEvent.rawText, warnings);
+        this.validateArtistNames(
+          artistNames,
+          rawEvent.lineNumber,
+          rawEvent.rawText,
+          warnings
+        );
 
-        const headliner = this.detectHeadliner(artistNames, venueInfo, rawEvent);
+        const headliner = this.detectHeadliner(
+          artistNames,
+          venueInfo,
+          rawEvent
+        );
 
         // Check for duplicates
         const eventKey = DeduplicationUtils.generateEventKey(
@@ -217,7 +226,9 @@ export class EventParser {
           );
 
           if (!artist) {
-            const artistId = HashGenerator.generateArtistId(artistName) as ArtistId;
+            const artistId = HashGenerator.generateArtistId(
+              artistName
+            ) as ArtistId;
             artist = {
               id: artistId,
               name: artistName.trim(),
@@ -246,7 +257,10 @@ export class EventParser {
         );
 
         if (!venue) {
-          const venueId = HashGenerator.generateVenueId(venueInfo.venue, venueInfo.city) as VenueId;
+          const venueId = HashGenerator.generateVenueId(
+            venueInfo.venue,
+            venueInfo.city
+          ) as VenueId;
           venue = {
             id: venueId,
             name: venueInfo.venue.trim(),
@@ -284,7 +298,11 @@ export class EventParser {
 
         // Create event
         const event: Event = {
-          id: HashGenerator.generateEventId(parsedDate.date, headliner, venueInfo.venue) as EventId,
+          id: HashGenerator.generateEventId(
+            parsedDate.date,
+            headliner,
+            venueInfo.venue
+          ) as EventId,
           slug: StringNormalizer.createSlug(
             `${parsedDate.date}-${headliner}-${venueInfo.venue}`
           ),
@@ -360,15 +378,15 @@ export class EventParser {
     // Known concatenations that should be split
     const corrections: Record<string, string> = {
       // Obvious concatenations
-      "NateWantsToBattle": "Nate Wants To Battle",
-      "FeeFawfum": "Fee Faw Fum",
+      NateWantsToBattle: "Nate Wants To Battle",
+      FeeFawfum: "Fee Faw Fum",
       "3UpFront": "3 Up Front",
-      "SosMula": "Sos Mula",
-      "BabyTron": "Baby Tron",
-      "UlyssesCFM": "Ulysses CFM",
-      
+      SosMula: "Sos Mula",
+      BabyTron: "Baby Tron",
+      UlyssesCFM: "Ulysses CFM",
+
       // Common spacing fixes
-      "BadBadNotGood": "BADBADNOTGOOD", // This is actually the correct stylization
+      BadBadNotGood: "BADBADNOTGOOD", // This is actually the correct stylization
     };
 
     // Apply direct corrections
@@ -380,14 +398,26 @@ export class EventParser {
     // Look for patterns like "ArtistName" that should be "Artist Name"
     const camelCasePattern = /^([A-Z][a-z]+)([A-Z][a-z]+)$/;
     const camelMatch = name.match(camelCasePattern);
-    if (camelMatch && name.length > 8) { // Only apply to longer names to avoid false positives
+    if (camelMatch && name.length > 8) {
+      // Only apply to longer names to avoid false positives
       // Check if it's not a known legitimate camelCase name
       const legitimateNames = [
-        "McCollum", "McCain", "McRae", "DiRusso", "McCraven", "McCarthy",
-        "MacDonald", "McGuire", "O'Brien", "DeAngelo", "LaRue"
+        "McCollum",
+        "McCain",
+        "McRae",
+        "DiRusso",
+        "McCraven",
+        "McCarthy",
+        "MacDonald",
+        "McGuire",
+        "O'Brien",
+        "DeAngelo",
+        "LaRue",
       ];
-      
-      const hasLegitimatePrefix = legitimateNames.some(legit => name.includes(legit));
+
+      const hasLegitimatePrefix = legitimateNames.some((legit) =>
+        name.includes(legit)
+      );
       if (!hasLegitimatePrefix) {
         return `${camelMatch[1]} ${camelMatch[2]}`;
       }
@@ -400,8 +430,8 @@ export class EventParser {
    * Detect the actual headliner from the artist list using various heuristics
    */
   private static detectHeadliner(
-    artistNames: string[], 
-    venueInfo: { name: string; city: string; ageRestriction?: string }, 
+    artistNames: string[],
+    venueInfo: { venue: string; city: string; ageRestriction?: string },
     rawEvent: RawEventData
   ): string {
     if (artistNames.length === 1) {
@@ -410,25 +440,31 @@ export class EventParser {
 
     // Check for explicit headliner indicators in the venue or event info
     const eventText = rawEvent.artistLine.toLowerCase();
-    
+
     // Look for explicit headliner keywords
     const headlinerKeywords = [
-      'headlined by', 'headlines', 'starring', 'presents', 'with special guest'
+      "headlined by",
+      "headlines",
+      "starring",
+      "presents",
+      "with special guest",
     ];
-    
+
     for (const keyword of headlinerKeywords) {
       if (eventText.includes(keyword)) {
         // If we find "Artist headlines" or "presents Artist", that's likely the headliner
         const keywordIndex = eventText.indexOf(keyword);
         const beforeKeyword = eventText.substring(0, keywordIndex).trim();
-        const afterKeyword = eventText.substring(keywordIndex + keyword.length).trim();
-        
-        if (keyword === 'with special guest' && beforeKeyword) {
+        const afterKeyword = eventText
+          .substring(keywordIndex + keyword.length)
+          .trim();
+
+        if (keyword === "with special guest" && beforeKeyword) {
           // "Artist with special guest" - first artist is headliner
           return artistNames[0];
-        } else if (keyword === 'presents' && afterKeyword) {
+        } else if (keyword === "presents" && afterKeyword) {
           // "Venue presents Artist" - find the artist after "presents"
-          const presentedArtist = artistNames.find(artist => 
+          const presentedArtist = artistNames.find((artist) =>
             afterKeyword.toLowerCase().includes(artist.toLowerCase())
           );
           if (presentedArtist) return presentedArtist;
@@ -456,9 +492,10 @@ export class EventParser {
     }
 
     // Price-based heuristic - higher priced shows usually have clearer headliners
-    const hasHighPrice = rawEvent.fullText && 
-      /\$[3-9][0-9]|\$[1-9][0-9][0-9]/.test(rawEvent.fullText);
-    
+    const hasHighPrice =
+      rawEvent.rawText &&
+      /\$[3-9][0-9]|\$[1-9][0-9][0-9]/.test(rawEvent.rawText);
+
     if (hasHighPrice) {
       // For expensive shows, first artist is likely headliner
       return artistNames[0];
@@ -473,13 +510,21 @@ export class EventParser {
    */
   private static isLargeVenue(venueName: string): boolean {
     const largeVenues = [
-      'fox theater', 'warfield', 'fillmore', 'regency ballroom',
-      'great american music hall', 'independent', 'chapel',
-      'greek theatre', 'shoreline amphitheatre', 'chase center',
-      'oracle arena', 'bill graham civic auditorium'
+      "fox theater",
+      "warfield",
+      "fillmore",
+      "regency ballroom",
+      "great american music hall",
+      "independent",
+      "chapel",
+      "greek theatre",
+      "shoreline amphitheatre",
+      "chase center",
+      "oracle arena",
+      "bill graham civic auditorium",
     ];
-    
-    return largeVenues.some(venue => venueName.includes(venue));
+
+    return largeVenues.some((venue) => venueName.includes(venue));
   }
 
   /**
@@ -487,11 +532,16 @@ export class EventParser {
    */
   private static isSmallDIYVenue(venueName: string): boolean {
     const diyVenues = [
-      'gilman', 'secret gallery', 'backyard', 'house show', 
-      'diy space', 'warehouse', 'basement'
+      "gilman",
+      "secret gallery",
+      "backyard",
+      "house show",
+      "diy space",
+      "warehouse",
+      "basement",
     ];
-    
-    return diyVenues.some(venue => venueName.includes(venue));
+
+    return diyVenues.some((venue) => venueName.includes(venue));
   }
 
   /**
@@ -505,8 +555,8 @@ export class EventParser {
       /\(.*tribute.*\)/i, // Tribute bands often tour
     ];
 
-    return artistNames.filter(name => 
-      touringIndicators.some(pattern => pattern.test(name))
+    return artistNames.filter((name) =>
+      touringIndicators.some((pattern) => pattern.test(name))
     );
   }
 
@@ -514,9 +564,9 @@ export class EventParser {
    * Validate artist names and add warnings for suspicious patterns
    */
   private static validateArtistNames(
-    artistNames: string[], 
-    lineNumber: number, 
-    rawText: string, 
+    artistNames: string[],
+    lineNumber: number,
+    rawText: string,
     warnings: ParseWarning[]
   ): void {
     for (const artistName of artistNames) {
@@ -525,46 +575,55 @@ export class EventParser {
         // CamelCase that might be concatenated names
         {
           pattern: /^([A-Z][a-z]{3,})([A-Z][a-z]{3,})$/,
-          message: `Possible concatenated artist name: "${artistName}" - might be two separate names`
+          message: `Possible concatenated artist name: "${artistName}" - might be two separate names`,
         },
-        
+
         // Names with numbers that might be typos
         {
           pattern: /^[A-Za-z]+[0-9]+[A-Za-z]*$/,
-          message: `Artist name contains numbers: "${artistName}" - verify this is correct`
+          message: `Artist name contains numbers: "${artistName}" - verify this is correct`,
         },
-        
+
         // Very long single "words" that might be concatenated
         {
           pattern: /^[A-Za-z]{15,}$/,
-          message: `Unusually long single-word artist name: "${artistName}" - check for concatenation`
+          message: `Unusually long single-word artist name: "${artistName}" - check for concatenation`,
         },
-        
+
         // Names with mixed case in unusual patterns
         {
           pattern: /^[a-z]+[A-Z][a-z]*$/,
-          message: `Unusual capitalization in artist name: "${artistName}" - verify formatting`
-        }
+          message: `Unusual capitalization in artist name: "${artistName}" - verify formatting`,
+        },
       ];
 
       for (const { pattern, message } of suspiciousPatterns) {
         if (pattern.test(artistName)) {
           // Skip if it's a known legitimate name
           const legitimateExceptions = [
-            'McCollum', 'McCain', 'McRae', 'DiRusso', 'McCraven', 'McCarthy',
-            'BADBADNOTGOOD', '3UpFront', 'AC/DC', 'DJ', 'dj'
+            "McCollum",
+            "McCain",
+            "McRae",
+            "DiRusso",
+            "McCraven",
+            "McCarthy",
+            "BADBADNOTGOOD",
+            "3UpFront",
+            "AC/DC",
+            "DJ",
+            "dj",
           ];
-          
-          const isKnownLegitimate = legitimateExceptions.some(exception => 
+
+          const isKnownLegitimate = legitimateExceptions.some((exception) =>
             artistName.includes(exception)
           );
-          
+
           if (!isKnownLegitimate) {
             warnings.push({
               line: lineNumber,
               message,
               rawText,
-              type: "data-quality"
+              type: "data-quality",
             });
             break; // Only add one warning per artist name
           }
@@ -572,16 +631,18 @@ export class EventParser {
       }
 
       // Check for potential duplicate artists in the same event
-      const duplicateCount = artistNames.filter(name => 
-        StringNormalizer.normalizeName(name) === StringNormalizer.normalizeName(artistName)
+      const duplicateCount = artistNames.filter(
+        (name) =>
+          StringNormalizer.normalizeName(name) ===
+          StringNormalizer.normalizeName(artistName)
       ).length;
-      
+
       if (duplicateCount > 1) {
         warnings.push({
           line: lineNumber,
           message: `Potential duplicate artist in same event: "${artistName}"`,
           rawText,
-          type: "data-quality"
+          type: "data-quality",
         });
       }
     }
@@ -592,7 +653,7 @@ export class EventParser {
         line: lineNumber,
         message: `Event has ${artistNames.length} artists - verify parsing is correct`,
         rawText,
-        type: "data-quality"
+        type: "data-quality",
       });
     }
   }
