@@ -10,22 +10,24 @@ async function navigateToStory(page: Page, storyId: string) {
   await page.goto(storyUrl);
 
   // Wait for Storybook to load completely
-  await page.waitForLoadState('networkidle', { timeout: 15000 });
-  
+  await page.waitForLoadState("networkidle", { timeout: 15000 });
+
   // Wait for any iframe to load (Storybook uses different selectors in different versions)
   try {
-    await page.waitForSelector('iframe', { timeout: 10000 });
+    await page.waitForSelector("iframe", { timeout: 10000 });
   } catch (error) {
     // If no iframe, maybe it's embedded directly - that's ok for some stories
-    console.log(`No iframe found for story ${storyId}, checking for direct content`);
+    console.log(
+      `No iframe found for story ${storyId}, checking for direct content`
+    );
   }
 
   // Get the iframe containing the story - try multiple possible selectors
-  const iframeCount = await page.locator('iframe').count();
+  const iframeCount = await page.locator("iframe").count();
   if (iframeCount > 0) {
-    return page.frameLocator('iframe').first();
+    return page.frameLocator("iframe").first();
   }
-  
+
   // If no iframe, return the main page (some Storybook versions embed directly)
   return {
     locator: (selector: string) => page.locator(selector),
@@ -56,8 +58,8 @@ test.describe("Storybook Stories Verification", () => {
       await page.goto(STORYBOOK_URL);
       // Wait for any iframe or main content to load
       await Promise.race([
-        page.waitForSelector('iframe', { timeout: 5000 }),
-        page.waitForSelector('#storybook-preview-wrapper', { timeout: 5000 }),
+        page.waitForSelector("iframe", { timeout: 5000 }),
+        page.waitForSelector("#storybook-preview-wrapper", { timeout: 5000 }),
         page.waitForSelector('[id*="storybook"]', { timeout: 5000 }),
       ]);
     } catch (error) {
@@ -90,7 +92,7 @@ test.describe("Storybook Stories Verification", () => {
         // Check for any buttons or content - the key is the story loads without critical errors
         const buttonCount = await iframe.locator("button").count();
         const divCount = await iframe.locator("div").count();
-        
+
         // Story should have some interactive elements
         expect(buttonCount + divCount).toBeGreaterThan(0);
 
@@ -147,7 +149,8 @@ test.describe("Storybook Stories Verification", () => {
         await expect(iframe.locator("button").first()).toBeVisible();
 
         // Verify cities are visible (should contain text like "San Francisco", "Oakland", etc.)
-        await expect(iframe.locator("button")).toHaveCount({ atLeast: 3 });
+        const buttonCount = await iframe.locator("button").count();
+        expect(buttonCount).toBeGreaterThanOrEqual(3);
 
         await page.waitForTimeout(500);
       }
@@ -399,7 +402,8 @@ test.describe("Storybook Stories Verification", () => {
         await expect(iframe.locator("a").first()).toBeVisible();
 
         // Should have multiple navigation items
-        await expect(iframe.locator("a")).toHaveCount({ atLeast: 3 });
+        const linkCount = await iframe.locator("a").count();
+        expect(linkCount).toBeGreaterThanOrEqual(3);
 
         await page.waitForTimeout(500);
       }

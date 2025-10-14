@@ -5,14 +5,12 @@ import React from "react";
 // Create a wrapper component that provides mocked store context
 interface MockedDatePaginationProps {
   className?: string;
-  mockDates?: string[];
 }
 
 const MockedDatePagination: React.FC<MockedDatePaginationProps> = ({
   className,
-  mockDates = [],
 }) => {
-  // For Storybook, we'll show the component as-is 
+  // For Storybook, we'll show the component as-is
   // The component uses Zustand store internally, so it will work with default state
   return <DatePagination className={className} />;
 };
@@ -35,10 +33,6 @@ const meta: Meta<typeof MockedDatePagination> = {
       control: "text",
       description: "Additional CSS classes to apply to the component",
     },
-    mockDates: {
-      control: "object",
-      description: "Mock selected dates for demonstration",
-    },
   },
   decorators: [
     (Story) => (
@@ -60,7 +54,6 @@ type Story = StoryObj<typeof MockedDatePagination>;
 export const Default: Story = {
   args: {
     className: "",
-    mockDates: [],
   },
   parameters: {
     docs: {
@@ -78,7 +71,6 @@ export const Default: Story = {
 export const TodaySelected: Story = {
   args: {
     className: "",
-    mockDates: [new Date().toISOString().split("T")[0]],
   },
   parameters: {
     docs: {
@@ -96,11 +88,6 @@ export const TodaySelected: Story = {
 export const TomorrowSelected: Story = {
   args: {
     className: "",
-    mockDates: (() => {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      return [tomorrow.toISOString().split("T")[0]];
-    })(),
   },
   parameters: {
     docs: {
@@ -118,16 +105,6 @@ export const TomorrowSelected: Story = {
 export const ThisWeekSelected: Story = {
   args: {
     className: "",
-    mockDates: (() => {
-      const dates: string[] = [];
-      const today = new Date();
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() + i);
-        dates.push(date.toISOString().split("T")[0]);
-      }
-      return dates;
-    })(),
   },
   parameters: {
     docs: {
@@ -145,25 +122,6 @@ export const ThisWeekSelected: Story = {
 export const MultipleDatesSelected: Story = {
   args: {
     className: "",
-    mockDates: (() => {
-      const dates: string[] = [];
-      const today = new Date();
-
-      // Today
-      dates.push(today.toISOString().split("T")[0]);
-
-      // Day after tomorrow
-      const dayAfterTomorrow = new Date(today);
-      dayAfterTomorrow.setDate(today.getDate() + 2);
-      dates.push(dayAfterTomorrow.toISOString().split("T")[0]);
-
-      // Day 5
-      const day5 = new Date(today);
-      day5.setDate(today.getDate() + 5);
-      dates.push(day5.toISOString().split("T")[0]);
-
-      return dates;
-    })(),
   },
   parameters: {
     docs: {
@@ -181,7 +139,6 @@ export const MultipleDatesSelected: Story = {
 export const DarkMode: Story = {
   args: {
     className: "",
-    mockDates: [],
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -209,7 +166,6 @@ export const DarkMode: Story = {
 export const MobileLayout: Story = {
   args: {
     className: "",
-    mockDates: [],
   },
   parameters: {
     viewport: {
@@ -230,7 +186,6 @@ export const MobileLayout: Story = {
 export const CustomStyling: Story = {
   args: {
     className: "border-2 border-purple-500 rounded-lg p-2",
-    mockDates: [],
   },
   parameters: {
     docs: {
