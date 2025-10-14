@@ -70,3 +70,6 @@ pids
 *.sw?
 
 .ignore
+
+*storybook.log
+storybook-static

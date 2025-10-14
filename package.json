@@ -30,7 +30,13 @@
     "test:all:coverage": "npm run test:coverage && npm run test:e2e && npm run test:performance",
     "preetl": "node scripts/update-data.js data/latest.txt",
     "etl": "npm run build:etl && node scripts/run-etl.js",
-    "etl:verbose": "npm run etl -- --verbose"
+    "etl:verbose": "npm run etl -- --verbose",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "storybook:stop": "pkill -f storybook",
+    "storybook:test": "npx vitest --project=storybook",
+    "storybook:test:playwright": "playwright test --config=playwright.storybook.config.ts",
+    "storybook:test:ci": "npm run storybook & sleep 15 && npm run storybook:test:playwright && npm run storybook:stop"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -40,8 +46,14 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.1.1",
     "@eslint/js": "^9.33.0",
     "@playwright/test": "^1.56.0",
+    "@storybook/addon-a11y": "^9.1.10",
+    "@storybook/addon-docs": "^9.1.10",
+    "@storybook/addon-onboarding": "^9.1.10",
+    "@storybook/addon-vitest": "^9.1.10",
+    "@storybook/react-vite": "^9.1.10",
     "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^24.3.0",
@@ -55,14 +67,19 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-storybook": "^9.1.10",
     "globals": "^16.3.0",
     "jsdom": "^26.1.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
+    "storybook": "^9.1.10",
     "tailwindcss": "^3.4.16",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
     "vite": "^7.1.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "@vitest/browser": "3.2.4",
+    "playwright": "^1.56.0",
+    "@vitest/coverage-v8": "3.2.4"
   }
 }
