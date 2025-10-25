@@ -24,7 +24,7 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ view }) => {
     >
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
         <div className="text-center text-gray-600 dark:text-gray-300 mb-4">
-          Calendar view will be implemented in Phase 6
+          Calendar view will be implemented in Phase 8
         </div>
         <CalendarSkeleton />
       </div>

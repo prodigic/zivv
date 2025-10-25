@@ -13,7 +13,7 @@ const VenueDetailPage: React.FC = () => {
     <ContentArea title={`Venue: ${slug}`}>
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="text-center text-gray-600">
-          Venue detail page will be implemented in Phase 7
+          Venue detail page will be implemented in Phase 10
         </div>
       </div>
     </ContentArea>
