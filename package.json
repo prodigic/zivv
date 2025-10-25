@@ -36,6 +36,9 @@
     "storybook:stop": "pkill -f storybook",
     "storybook:test": "npx vitest --project=storybook",
     "storybook:test:playwright": "playwright test --config=playwright.storybook.config.ts",
+    "storybook:test:smoke": "playwright test tests/storybook-smoke.spec.ts --config=playwright.storybook.config.ts",
+    "storybook:test:smoke:watch": "playwright test tests/storybook-smoke.spec.ts --config=playwright.storybook.config.ts --ui",
+    "storybook:watch": "node scripts/storybook-watch.js",
     "storybook:test:ci": "npm run storybook & sleep 15 && npm run storybook:test:playwright && npm run storybook:stop"
   },
   "dependencies": {
@@ -62,6 +65,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.21",
+    "chokidar": "^4.0.2",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

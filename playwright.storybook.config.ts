@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests",
-  testMatch: "**/storybook.spec.ts",
+  testMatch: ["**/storybook.spec.ts", "**/storybook-smoke.spec.ts"],
 
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -67,23 +67,7 @@ export default defineConfig({
       },
     },
 
-    {
-      name: "firefox",
-      use: {
-        ...devices["Desktop Firefox"],
-        viewport: { width: 1280, height: 720 },
-      },
-    },
-
-    {
-      name: "webkit",
-      use: {
-        ...devices["Desktop Safari"],
-        viewport: { width: 1280, height: 720 },
-      },
-    },
-
-    /* Test mobile viewports for responsive stories */
+    /* Test mobile viewport for responsive stories */
     {
       name: "Mobile Chrome",
       use: {
@@ -91,12 +75,28 @@ export default defineConfig({
       },
     },
 
-    {
-      name: "Mobile Safari",
-      use: {
-        ...devices["iPhone 12"],
-      },
-    },
+    // Disabled until browsers are installed
+    // Uncomment after running: npx playwright install
+    // {
+    //   name: "firefox",
+    //   use: {
+    //     ...devices["Desktop Firefox"],
+    //     viewport: { width: 1280, height: 720 },
+    //   },
+    // },
+    // {
+    //   name: "webkit",
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //     viewport: { width: 1280, height: 720 },
+    //   },
+    // },
+    // {
+    //   name: "Mobile Safari",
+    //   use: {
+    //     ...devices["iPhone 12"],
+    //   },
+    // },
   ],
 
   /*
