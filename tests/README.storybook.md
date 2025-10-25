@@ -237,3 +237,4 @@ Add to your CI pipeline:
 - CI mode uses single worker to ensure stability
 
 This testing approach ensures comprehensive verification of all Storybook stories and provides confidence that component documentation and examples are always functional.
+

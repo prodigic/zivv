@@ -531,3 +531,4 @@ export const MobileLayout: Story = {
     </div>
   ),
 };
+
