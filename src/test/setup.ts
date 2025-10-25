@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { vi } from "vitest";
 
 // Setup for testing library
-global.ResizeObserver = class ResizeObserver {
+globalThis.ResizeObserver = class ResizeObserver {
   constructor() {
     // Mock implementation
   }
@@ -33,7 +33,7 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = class MockIntersectionObserver
+globalThis.IntersectionObserver = class MockIntersectionObserver
   implements IntersectionObserver
 {
   root: Element | null = null;

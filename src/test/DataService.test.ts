@@ -13,18 +13,52 @@ global.fetch = mockFetch;
 
 // Mock IndexedDB for CacheService
 const mockIndexedDB = {
-  open: vi.fn(),
+  open: vi.fn().mockReturnValue({
+    onsuccess: null,
+    onerror: null,
+    onupgradeneeded: null,
+    result: {
+      transaction: vi.fn().mockReturnValue({
+        objectStore: vi.fn().mockReturnValue({
+          add: vi.fn(),
+          get: vi.fn(),
+          put: vi.fn(),
+          delete: vi.fn(),
+          clear: vi.fn(),
+          createIndex: vi.fn(),
+        }),
+        oncomplete: null,
+        onerror: null,
+      }),
+      createObjectStore: vi.fn(),
+      close: vi.fn(),
+    },
+  }),
   deleteDatabase: vi.fn(),
 };
 
 // @ts-expect-error - Mock IndexedDB for testing environment
 global.indexedDB = mockIndexedDB;
 
+// Mock CacheService to avoid async initialization issues
+vi.mock("../services/CacheService.js", () => ({
+  CacheService: vi.fn().mockImplementation(() => ({
+    initialize: vi.fn().mockResolvedValue(undefined),
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue(undefined),
+    delete: vi.fn().mockResolvedValue(undefined),
+    clear: vi.fn().mockResolvedValue(undefined),
+    getStats: vi.fn().mockResolvedValue({ size: 0, entries: 0 }),
+    close: vi.fn().mockResolvedValue(undefined),
+  })),
+}));
+
 describe("DataService", () => {
   let dataService: DataService;
   let mockManifest: DataManifest;
   let mockArtists: Artist[];
   let mockVenues: Venue[];
+  let mockEvents: Event[];
 
   beforeEach(() => {
     vi.clearAllMocks();
