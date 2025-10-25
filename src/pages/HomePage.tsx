@@ -42,6 +42,7 @@ const HomePage: React.FC = () => {
   const initialize = useAppStore((state) => state.initialize);
   const artists = useAppStore((state) => state.artists);
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
+  const manifest = useAppStore((state) => state.manifest);
 
   const { filters, searchQuery } = useFilterStore();
 
@@ -167,12 +168,26 @@ const HomePage: React.FC = () => {
           await initialize();
         }
 
-        // Then load initial event chunks
-        await Promise.all([
-          loadChunk("2025-08"),
-          loadChunk("2025-09"),
-          loadChunk("2025-10"),
-        ]);
+        // Load event chunks dynamically based on available data
+        if (manifest?.chunks?.events) {
+          // Load first 6 months of available chunks for better initial experience
+          const availableChunks = manifest.chunks.events
+            .map(chunk => chunk.chunkId)
+            .slice(0, 6); // Load first 6 months
+          
+          console.log('Loading event chunks:', availableChunks);
+          await Promise.all(
+            availableChunks.map(chunkId => loadChunk(chunkId))
+          );
+        } else {
+          // Fallback to known working chunks if manifest not available
+          console.log('Manifest not available, using fallback chunks');
+          await Promise.all([
+            loadChunk("2025-09"),
+            loadChunk("2025-10"),
+            loadChunk("2025-11"),
+          ]);
+        }
       } catch (error) {
         console.error("Failed to initialize HomePage:", error);
       }
@@ -196,6 +211,7 @@ const HomePage: React.FC = () => {
     errors.artists,
     loadChunk,
     initialize,
+    manifest,
   ]);
 
   if (loading.events === "loading" && allEvents.length === 0) {

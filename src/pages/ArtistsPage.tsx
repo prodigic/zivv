@@ -18,6 +18,7 @@ const ArtistsPage: React.FC = () => {
   const loadChunk = useAppStore(state => state.loadChunk);
   const initialize = useAppStore(state => state.initialize);
   const showUpcomingOnly = useAppStore(state => state.showUpcomingOnly);
+  const manifest = useAppStore(state => state.manifest);
   
   const [artistsDisplayLimit, setArtistsDisplayLimit] = React.useState(25);
   
@@ -40,12 +41,27 @@ const ArtistsPage: React.FC = () => {
     const initializeApp = async () => {
       try {
         await initialize();
-        await Promise.all([
-          loadChunk('2025-08'),
-          loadChunk('2025-09'), 
-          loadChunk('2025-10'),
-          loadChunk('2025-11'),
-        ]);
+        // Load event chunks dynamically based on available data
+        if (manifest?.chunks?.events) {
+          // Load more chunks for artists page to show more comprehensive data
+          const availableChunks = manifest.chunks.events
+            .map(chunk => chunk.chunkId)
+            .slice(0, 8); // Load first 8 months for artists page
+          
+          console.log('Loading event chunks for artists:', availableChunks);
+          await Promise.all(
+            availableChunks.map(chunkId => loadChunk(chunkId))
+          );
+        } else {
+          // Fallback to known working chunks if manifest not available
+          console.log('Manifest not available, using fallback chunks');
+          await Promise.all([
+            loadChunk('2025-09'), 
+            loadChunk('2025-10'),
+            loadChunk('2025-11'),
+            loadChunk('2025-12'),
+          ]);
+        }
       } catch (error) {
         console.error('Failed to initialize ArtistsPage:', error);
       }
@@ -60,7 +76,7 @@ const ArtistsPage: React.FC = () => {
     if (needsArtists || needsEvents) {
       initializeApp();
     }
-  }, [artists.size, loading.artists, errors.artists, loading.events, errors.events, initialize, loadChunk, getUpcomingEvents]);
+  }, [artists.size, loading.artists, errors.artists, loading.events, errors.events, initialize, loadChunk, getUpcomingEvents, manifest]);
 
   // Helper function to get next event for an artist
   const getNextEventForArtist = (artistId: ArtistId) => {
