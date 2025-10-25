@@ -252,7 +252,11 @@ const HomePage: React.FC = () => {
           </h3>
           <p className="text-gray-600 mb-4">{errors.events}</p>
           <button
-            onClick={() => loadChunk("2025-08")}
+            onClick={() => {
+              // Try to reload the first available chunk or fallback
+              const firstChunk = manifest?.chunks?.events?.[0]?.chunkId || "2025-09";
+              loadChunk(firstChunk);
+            }}
             className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
             Try Again
