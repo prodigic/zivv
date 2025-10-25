@@ -63,7 +63,7 @@ async function getComponentStories(
     }
 
     return components;
-  } catch (error) {
+  } catch {
     // Fallback to known components
     return [
       {
@@ -107,32 +107,11 @@ async function navigateToStory(page: Page, storyId: string) {
   return iframe;
 }
 
-// Create a mock error component story for testing error detection
-async function createMockErrorStory(page: Page): Promise<void> {
-  // Inject a story that throws an error to test our error detection
-  await page.evaluate(() => {
-    // Add a mock error story to Storybook's story list
-    if ((window as any).__STORYBOOK_PREVIEW__) {
-      const mockErrorComponent = () => {
-        throw new Error("Mock component error for testing error detection");
-      };
-
-      // This would be how we'd add a story programmatically, but it's complex
-      // Instead, we'll simulate an error by injecting content
-      const errorDiv = document.createElement("div");
-      errorDiv.setAttribute("data-testid", "mock-error-story");
-      errorDiv.className = "error-boundary";
-      errorDiv.textContent =
-        "Error: Mock component error for testing error detection";
-      document.body.appendChild(errorDiv);
-    }
-  });
-}
-
 // Helper to check for error indicators
 async function checkForErrors(
-  iframe: any,
-  componentName: string
+  iframe: import("@playwright/test").FrameLocator,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _componentName: string
 ): Promise<string[]> {
   const errors: string[] = [];
 
@@ -209,8 +188,8 @@ async function checkForErrors(
         `JavaScript error: ${errorText?.slice(0, 100) || "JS error found"}`
       );
     }
-  } catch (error) {
-    errors.push(`Failed to check component: ${error}`);
+  } catch (err) {
+    errors.push(`Failed to check component: ${err}`);
   }
 
   return errors;
@@ -222,7 +201,7 @@ test.describe("Storybook Smoke Test - Error Detection", () => {
     try {
       await page.goto(STORYBOOK_URL, { timeout: 5000 });
       await page.waitForLoadState("networkidle", { timeout: 5000 });
-    } catch (error) {
+    } catch {
       throw new Error(
         `Storybook is not running on ${STORYBOOK_URL}. Please start it with 'npm run storybook'`
       );
@@ -250,7 +229,12 @@ test.describe("Storybook Smoke Test - Error Detection", () => {
 
     // Test components in batches to avoid overwhelming the browser
     const batchSize = 5; // Test 5 components at once
-    const allResults: any[] = [];
+    const allResults: PromiseSettledResult<{
+      name: string;
+      storyId: string;
+      errors: string[];
+      success: boolean;
+    }>[] = [];
 
     for (let i = 0; i < components.length; i += batchSize) {
       const batch = components.slice(i, i + batchSize);

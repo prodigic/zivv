@@ -15,7 +15,7 @@ async function navigateToStory(page: Page, storyId: string) {
   // Wait for any iframe to load (Storybook uses different selectors in different versions)
   try {
     await page.waitForSelector("iframe", { timeout: 10000 });
-  } catch (error) {
+  } catch {
     // If no iframe, maybe it's embedded directly - that's ok for some stories
     console.log(
       `No iframe found for story ${storyId}, checking for direct content`
@@ -31,7 +31,7 @@ async function navigateToStory(page: Page, storyId: string) {
   // If no iframe, return the main page (some Storybook versions embed directly)
   return {
     locator: (selector: string) => page.locator(selector),
-  } as any;
+  } as import("@playwright/test").FrameLocator;
 }
 
 // Helper function to check for console errors
@@ -62,7 +62,7 @@ test.describe("Storybook Stories Verification", () => {
         page.waitForSelector("#storybook-preview-wrapper", { timeout: 5000 }),
         page.waitForSelector('[id*="storybook"]', { timeout: 5000 }),
       ]);
-    } catch (error) {
+    } catch {
       throw new Error(
         `Storybook is not running on ${STORYBOOK_URL}. Please start Storybook first with 'npm run storybook'`
       );
@@ -173,10 +173,7 @@ test.describe("Storybook Stories Verification", () => {
       for (const storyId of stories) {
         const iframe = await navigateToStory(page, storyId);
 
-        // Check for component buttons (ignore Storybook control buttons)
-        const componentButtons = iframe.locator(
-          'button[role="switch"], button[aria-label*="dark"], button[aria-label*="mode"], button[class*="toggle"]'
-        );
+        // Check for component buttons
         const allButtons = iframe.locator("button");
 
         // Should have at least one component button among all buttons
