@@ -20,17 +20,17 @@ interface HeaderProps {
 const ViewToggle: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  
-  const isCalendarView = location.pathname.startsWith('/calendar');
-  
+
+  const isCalendarView = location.pathname.startsWith("/calendar");
+
   const toggleView = () => {
     if (isCalendarView) {
-      navigate('/');
+      navigate("/");
     } else {
-      navigate('/calendar');
+      navigate("/calendar");
     }
   };
-  
+
   return (
     <div className="hidden md:flex items-center space-x-2">
       <span className="text-sm text-gray-600 dark:text-gray-300 w-16 text-right">
@@ -39,7 +39,9 @@ const ViewToggle: React.FC = () => {
       <button
         onClick={toggleView}
         className="relative inline-flex h-5 w-9 items-center rounded-full border-2 border-gray-300 dark:border-gray-500 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800"
-        aria-label={isCalendarView ? "Switch to list view" : "Switch to calendar view"}
+        aria-label={
+          isCalendarView ? "Switch to list view" : "Switch to calendar view"
+        }
         role="switch"
         aria-checked={isCalendarView}
       >
@@ -47,9 +49,10 @@ const ViewToggle: React.FC = () => {
           className={`
             inline-block h-4 w-4 transform rounded-full shadow-lg border-2
             transition-all duration-200 ease-in-out
-            ${isCalendarView 
-              ? "translate-x-4 bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400" 
-              : "translate-x-0 bg-white border-gray-300 dark:border-gray-500"
+            ${
+              isCalendarView
+                ? "translate-x-4 bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400"
+                : "translate-x-0 bg-white border-gray-300 dark:border-gray-500"
             }
           `}
         />
@@ -61,34 +64,37 @@ const ViewToggle: React.FC = () => {
 // Language Dropdown Component
 const LanguageDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState('EN');
+  const [currentLang, setCurrentLang] = useState("EN");
   const dropdownRef = React.useRef<HTMLDivElement>(null);
-  
+
   const languages = [
-    { code: 'EN', name: 'English', flag: '🇺🇸' },
-    { code: 'ES', name: 'Español', flag: '🇪🇸' },
-    { code: 'TL', name: 'Tagalog', flag: '🇵🇭' },
-    { code: 'ZH-CN', name: 'Mandarin', flag: '🇨🇳' },
-    { code: 'ZH-HK', name: 'Cantonese', flag: '🇭🇰' },
-    { code: 'VI', name: 'Tiếng Việt', flag: '🇻🇳' },
-    { code: 'FR', name: 'Français', flag: '🇫🇷' },
-    { code: 'DE', name: 'Deutsch', flag: '🇩🇪' },
+    { code: "EN", name: "English", flag: "🇺🇸" },
+    { code: "ES", name: "Español", flag: "🇪🇸" },
+    { code: "TL", name: "Tagalog", flag: "🇵🇭" },
+    { code: "ZH-CN", name: "Mandarin", flag: "🇨🇳" },
+    { code: "ZH-HK", name: "Cantonese", flag: "🇭🇰" },
+    { code: "VI", name: "Tiếng Việt", flag: "🇻🇳" },
+    { code: "FR", name: "Français", flag: "🇫🇷" },
+    { code: "DE", name: "Deutsch", flag: "🇩🇪" },
   ];
 
   // Handle click outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
@@ -101,8 +107,18 @@ const LanguageDropdown: React.FC = () => {
       >
         <span className="text-base">🌐</span>
         <span className="hidden sm:inline">{currentLang}</span>
-        <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        <svg
+          className="w-3 h-3 ml-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
 
@@ -117,9 +133,9 @@ const LanguageDropdown: React.FC = () => {
                   setIsOpen(false);
                 }}
                 className={`w-full text-left px-3 py-2 text-sm flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                  currentLang === lang.code 
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
-                    : 'text-gray-700 dark:text-gray-300'
+                  currentLang === lang.code
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                    : "text-gray-700 dark:text-gray-300"
                 }`}
               >
                 <span>{lang.flag}</span>
@@ -133,21 +149,27 @@ const LanguageDropdown: React.FC = () => {
   );
 };
 
-export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) => {
+export const Header: React.FC<HeaderProps> = ({
+  onMenuToggle,
+  className = "",
+}) => {
   const navigate = useNavigate();
-  const { searchQuery, setSearchQuery, hasActiveFilters, clearFilters } = useFilterStore();
-  const { searchEvents, loading, showUpcomingOnly, toggleUpcomingOnly } = useAppStore();
-  
+  const { searchQuery, setSearchQuery, hasActiveFilters, clearFilters } =
+    useFilterStore();
+  const { searchEvents, loading, showUpcomingOnly, toggleUpcomingOnly } =
+    useAppStore();
+
   // Check for any active filters (including app-level filters)
-  const hasAnyActiveFilters = hasActiveFilters || searchQuery.trim() !== '' || showUpcomingOnly;
-  
+  const hasAnyActiveFilters =
+    hasActiveFilters || searchQuery.trim() !== "" || showUpcomingOnly;
+
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchResults, setSearchResults] = useState<Event[]>([]);
 
   // Handle search input
   const handleSearchChange = async (query: string) => {
     setSearchQuery(query);
-    
+
     if (query.trim().length > 2) {
       try {
         const results = await searchEvents(query);
@@ -172,10 +194,11 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
   };
 
   return (
-    <header className={`bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 ${className}`}>
+    <header
+      className={`bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 ${className}`}
+    >
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          
           {/* Left: Menu Button + Logo */}
           <div className="flex items-center">
             {/* Mobile menu button */}
@@ -184,16 +207,23 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
               className="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               aria-label="Open menu"
             >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
 
             {/* Logo */}
-            <Link 
-              to="/" 
-              className="ml-2 lg:ml-0 flex items-center"
-            >
+            <Link to="/" className="ml-2 lg:ml-0 flex items-center">
               <div className="text-xl font-bold text-gray-900 dark:text-white">
                 Zivv
               </div>
@@ -208,8 +238,18 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
             <form onSubmit={handleSearchSubmit}>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <svg
+                    className="h-5 w-5 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
                   </svg>
                 </div>
                 <input
@@ -217,8 +257,11 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setTimeout(() => setIsSearchFocused(false), 150)}
+                  onBlur={() =>
+                    setTimeout(() => setIsSearchFocused(false), 150)
+                  }
                   placeholder="Search artists, venues..."
+                  aria-label="Search artists, venues, and events"
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 sm:text-sm"
                 />
               </div>
@@ -253,9 +296,24 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
             {/* Loading indicator */}
             {loading.search === "loading" && (
               <div className="absolute right-3 top-2.5">
-                <svg className="animate-spin h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin h-4 w-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
               </div>
             )}
@@ -263,12 +321,11 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
 
           {/* Right: Toggles + Filter + View + Language + Dark Mode */}
           <div className="flex items-center space-x-3">
-            
             {/* Upcoming Only Toggle */}
             <div className="hidden sm:block">
               <UpcomingToggle />
             </div>
-            
+
             {/* Free Shows Only Toggle */}
             <div className="hidden sm:block">
               <FreeShowsToggle />
@@ -286,16 +343,29 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
               }}
               className={`p-1.5 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
                 hasAnyActiveFilters
-                  ? "text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300" 
+                  ? "text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                   : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
               }`}
-              aria-label={hasAnyActiveFilters ? "Clear active filters" : "No active filters"}
-              title={hasAnyActiveFilters ? "Clear active filters" : "No active filters"}
+              aria-label={
+                hasAnyActiveFilters
+                  ? "Clear active filters"
+                  : "No active filters"
+              }
+              title={
+                hasAnyActiveFilters
+                  ? "Clear active filters"
+                  : "No active filters"
+              }
             >
-              <svg className="h-4 w-4" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
+              <svg
+                className="h-4 w-4"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
                   fill={hasAnyActiveFilters ? "currentColor" : "none"}
                 />
@@ -317,13 +387,12 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, className = "" }) 
 
             {/* Language Dropdown */}
             <LanguageDropdown />
-            
+
             {/* Dark Mode Toggle */}
             <CompactDarkModeToggle />
           </div>
         </div>
       </div>
-
     </header>
   );
 };

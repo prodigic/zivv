@@ -185,6 +185,7 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
               onKeyDown={handleKeyDown}
               onFocus={() => setIsOpen(true)}
               placeholder="Search venues..."
+              aria-label="Search venues by name"
               className="w-full px-3 py-2 text-sm border border-dashed border-gray-300 dark:border-gray-600
                        rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300
                        focus:border-red-300 dark:focus:border-red-600 focus:outline-none transition-colors
