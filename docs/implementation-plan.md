@@ -113,7 +113,7 @@ Layout(Container, Stack, Grid);
 
 **Description**: Create webhook endpoint to receive provider updates and trigger data processing.
 
-### 2.2 ETL Pipeline Implementation ✅ **COMPLETED** 
+### 2.2 ETL Pipeline Implementation ✅ **COMPLETED**
 
 **Effort**: 16 hours | **Dependencies**: None (simplified approach)
 **Status**: ✅ **COMPLETED** with significant enhancements
@@ -121,6 +121,7 @@ Layout(Container, Stack, Grid);
 **Description**: Complete ETL pipeline that processes raw data into optimized JSON chunks.
 
 **Completed Features**:
+
 - ✅ Full ETL pipeline processing `events.txt` and `venues.txt` formats
 - ✅ Advanced parsing with robust error handling and validation
 - ✅ Sophisticated data normalization and artist/venue deduplication
@@ -133,6 +134,7 @@ Layout(Container, Stack, Grid);
 - ✅ TypeScript-based implementation with full type safety
 
 **Enhanced Implementation**:
+
 - **Hash-based IDs**: Artists, venues, and events use content-based hash IDs instead of sequential numbers for consistency across re-ingestion
 - **Advanced Normalization**: Sophisticated string normalization with fuzzy matching for duplicate detection
 - **Robust Parsing**: Handles complex date formats, venue parsing, and artist extraction with comprehensive error handling
@@ -188,6 +190,7 @@ Layout(Container, Stack, Grid);
 **Description**: Define complete TypeScript interfaces and JSON Schema validation.
 
 **Completed Features**:
+
 - ✅ Complete TypeScript interfaces for all entities (Event, Artist, Venue)
 - ✅ **Branded types for IDs** (EventId, ArtistId, VenueId) to prevent type mixing
 - ✅ Comprehensive runtime type guards with detailed validation
@@ -204,6 +207,7 @@ Layout(Container, Stack, Grid);
 **Description**: Implement efficient data loading with caching and memory management.
 
 **Completed Features**:
+
 - ✅ **DataService class** with comprehensive data operations
 - ✅ **Chunk-based loading** by month for performance optimization
 - ✅ **IndexedDB caching** with version-based cache invalidation
@@ -213,6 +217,7 @@ Layout(Container, Stack, Grid);
 - ✅ **Global error handler** with user-friendly error messaging
 
 **Enhanced Implementation**:
+
 - **Performance Optimized**: Chunked loading prevents memory bloat with large datasets
 - **Cache Strategy**: Intelligent caching with version checks for automatic invalidation
 - **Error Recovery**: Comprehensive error handling with actionable user guidance
@@ -226,6 +231,7 @@ Layout(Container, Stack, Grid);
 **Description**: Implement Web Worker for JSON parsing and search index building to keep UI responsive.
 
 **Completed Features**:
+
 - ✅ **Web Worker** for background JSON parsing and processing
 - ✅ **WorkerService** with message-based type-safe communication
 - ✅ Background search operations and data filtering
@@ -243,6 +249,7 @@ Layout(Container, Stack, Grid);
 **Description**: Build responsive app shell with navigation and layout components.
 
 **Completed Features**:
+
 - ✅ **Mobile-first responsive layout** with adaptive navigation
 - ✅ **Bottom navigation for mobile** with touch-optimized interface
 - ✅ **Side navigation for desktop** with proper accessibility
@@ -259,6 +266,7 @@ Layout(Container, Stack, Grid);
 **Description**: Configure client-side routing with GitHub Pages compatibility.
 
 **Completed Features**:
+
 - ✅ **React Router 6** with data router patterns
 - ✅ **Base path handling** configured for GitHub Pages deployment
 - ✅ **Route-based code splitting** with React.lazy for performance
@@ -267,6 +275,7 @@ Layout(Container, Stack, Grid);
 - ✅ **404 handling** with proper fallbacks
 
 **Implemented Routes**:
+
 - ✅ `/` - HomePage with event listings
 - ✅ `/calendar` - CalendarPage (placeholder)
 - ✅ `/artists` - ArtistsPage with full functionality
@@ -281,6 +290,7 @@ Layout(Container, Stack, Grid);
 **Description**: Implement Zustand-based state management with persistence.
 
 **Completed Features**:
+
 - ✅ **Main app store** (`useAppStore`) managing data, loading states, and errors
 - ✅ **Filter store** (`useFilterStore`) with URL parameter synchronization
 - ✅ **Persistence** with local storage for user preferences
@@ -289,6 +299,7 @@ Layout(Container, Stack, Grid);
 - ✅ **Optimistic updates** for responsive UI interactions
 
 **Advanced Implementation**:
+
 - **Data Integration**: Direct integration with DataService for seamless data loading
 - **Loading State Management**: Centralized loading states for all data operations
 - **Error Handling**: Comprehensive error state management with user-friendly messaging
@@ -296,7 +307,8 @@ Layout(Container, Stack, Grid);
 
 ## Additional Implementation (Beyond Phase 4) ✅ **COMPLETED**
 
-### Artist & Venue Directory Pages ✅ **COMPLETED** 
+### Artist & Venue Directory Pages ✅ **COMPLETED**
+
 **(Planned for Phase 7, implemented early)**
 
 **Description**: Complete artist and venue directory implementation with search and filtering.
@@ -304,6 +316,7 @@ Layout(Container, Stack, Grid);
 **Completed Features**:
 
 **Artists Directory (`/artists`)**:
+
 - ✅ **Full artist directory** with alphabetical listing
 - ✅ **Search functionality** across artist names with real-time filtering
 - ✅ **Upcoming show indicators** showing next event for each artist
@@ -312,6 +325,7 @@ Layout(Container, Stack, Grid);
 - ✅ **Mobile-responsive design** with touch-optimized interface
 
 **Venues Directory (`/venues`)**:
+
 - ✅ **Complete venue directory** grouped by city
 - ✅ **Venue cards** with detailed information (address, capacity, age restrictions)
 - ✅ **Next show previews** with mini calendar components
@@ -319,14 +333,15 @@ Layout(Container, Stack, Grid);
 - ✅ **Upcoming event counts** with visual indicators
 - ✅ **Map placeholder** integration for future maps functionality
 
-**HomePage Event Listing ✅ **COMPLETED**
+**HomePage Event Listing ✅ **COMPLETED\*\*
 **(Planned for Phase 5, implemented early)**
 
 **Description**: Event listing page with comprehensive event display.
 
 **Completed Features**:
+
 - ✅ **Event card components** with complete event information
-- ✅ **Artist and venue linking** with proper data relationships  
+- ✅ **Artist and venue linking** with proper data relationships
 - ✅ **Date and time formatting** with timezone awareness
 - ✅ **Price and age restriction** display with visual badges
 - ✅ **Supporting artist** lists with proper formatting
@@ -336,13 +351,15 @@ Layout(Container, Stack, Grid);
 ### Advanced Data Optimizations ✅ **COMPLETED**
 
 **Hash-based ID System**:
+
 - ✅ **Content-based IDs** replacing sequential numbering for consistency
 - ✅ **Re-ingest safety** ensuring stable IDs across data updates
 - ✅ **Artist ID hashing** based on normalized artist names
-- ✅ **Venue ID hashing** based on name + city combination  
+- ✅ **Venue ID hashing** based on name + city combination
 - ✅ **Event ID hashing** based on date + headliner + venue
 
 **Performance Enhancements**:
+
 - ✅ **Unlimited event search** for accurate "upcoming shows" counts
 - ✅ **Efficient data lookup** with hash-based indexing
 - ✅ **Memory optimization** with chunked data loading
@@ -353,6 +370,7 @@ Layout(Container, Stack, Grid);
 **Description**: Advanced development tooling and build optimization.
 
 **Completed Features**:
+
 - ✅ **TypeScript compilation** with strict type checking
 - ✅ **Import path resolution** fixes across multiple modules
 - ✅ **Error boundary implementation** with router-specific error handling
@@ -360,6 +378,7 @@ Layout(Container, Stack, Grid);
 - ✅ **Development environment** with hot reload and error tracking
 
 **Technical Debt Resolution**:
+
 - ✅ **Import errors resolved** for DataManifest, DataIndexes, and related types
 - ✅ **Branded type implementation** preventing ID type mixing
 - ✅ **JSX syntax fixes** for proper component rendering
@@ -371,6 +390,7 @@ Layout(Container, Stack, Grid);
 **Description**: Comprehensive performance testing infrastructure with Lighthouse audits and performance monitoring.
 
 **Completed Features**:
+
 - ✅ **Playwright Performance Tests**: Memory usage monitoring and search efficiency testing
 - ✅ **Lighthouse Integration**: Automated performance, accessibility, SEO, and PWA audits
 - ✅ **Bundle Size Monitoring**: JavaScript and CSS bundle size validation
@@ -379,6 +399,7 @@ Layout(Container, Stack, Grid);
 - ✅ **Cross-browser Testing**: Performance validation across different browsers
 
 **Technical Implementation**:
+
 - ✅ **Performance API Integration**: Browser performance metrics collection
 - ✅ **Memory Leak Detection**: Heap size monitoring during operations
 - ✅ **Search Performance**: Incremental search timing and efficiency tests
@@ -390,6 +411,7 @@ Layout(Container, Stack, Grid);
 **Description**: Robust testing infrastructure with comprehensive coverage for UI components and integration scenarios.
 
 **Completed Features**:
+
 - ✅ **Storybook Integration**: Complete component library with interactive documentation
 - ✅ **Playwright E2E Testing**: End-to-end testing across smoke, performance, and functionality
 - ✅ **Parallel Test Execution**: Optimized test runner with concurrent execution (5x performance improvement)
@@ -398,6 +420,7 @@ Layout(Container, Stack, Grid);
 - ✅ **Visual Testing**: Component appearance and interaction validation
 
 **Technical Infrastructure**:
+
 - ✅ **Test Configuration**: Vitest, Playwright, and Storybook configuration optimization
 - ✅ **Mock Services**: Comprehensive mocking for DataService, CacheService, and browser APIs
 - ✅ **Error Detection**: Robust error boundary and console error monitoring
@@ -405,6 +428,8 @@ Layout(Container, Stack, Grid);
 - ✅ **CI/CD Ready**: GitHub Actions compatible test configurations
 
 ## Phase 7: Event List & Filtering (Week 5-7) 🚧 **NEXT PHASE**
+
+**Key Architecture Change**: Migrate all page-specific filtering to a unified toolbar-based filtering system accessible from the Header filter icon, providing consistent filtering across Events, Artists, and Venues pages.
 
 ### 14.1 Event Card Component
 
@@ -452,14 +477,18 @@ Layout(Container, Stack, Grid);
 - <100ms response time for scroll events
 - Memory usage stable under 50MB for 6 months of data
 
-### 14.3 Advanced Filtering System
+### 14.3 Unified Toolbar Filtering System
 
-**Effort**: 18 hours | **Dependencies**: 5.2, 4.3
+**Effort**: 20 hours | **Dependencies**: 5.2, 4.3
 
-**Description**: Comprehensive filtering with real-time updates and URL persistence.
+**Description**: Centralized filtering system accessible from toolbar filter icon, used consistently across all listing pages (Events, Artists, Venues).
 
 **Acceptance Criteria**:
 
+- **Toolbar Integration**: Filter icon in main toolbar opens dropdown/panel
+- **Universal Application**: Same filtering UI for all listing pages (Events, Artists, Venues)
+- **Context-Aware Filters**: Filter options adapt based on current page content
+- **Consistent UX**: Identical behavior and appearance across all pages
 - City multi-select with show counts
 - Date range picker with preset options
 - Price range slider with free toggle
@@ -470,21 +499,75 @@ Layout(Container, Stack, Grid);
 - Filter clearing and reset functionality
 - Mobile-optimized filter panel/drawer
 
+**Toolbar Filter Dropdown Requirements**:
+
+- **Filter Icon**: Positioned in main toolbar (Header component)
+- **Badge Indicator**: Show count of active filters on filter icon
+- **Dropdown Panel**: Click opens filter options panel below toolbar
+- **Page Context**: Filters adapt based on current page (Events/Artists/Venues)
+- **Responsive Design**: Desktop dropdown, mobile slide-up panel
+- **State Persistence**: Filter state maintained when navigating between pages
+- **Clear Indication**: Visual feedback for applied filters
+
+**Page-Specific Filter Adaptations**:
+
+- **Events Page**: All filters (city, date, price, age, venue type)
+- **Artists Page**: City, upcoming shows only, alphabetical sorting
+- **Venues Page**: City, capacity range, age restrictions, venue type
+- **Cross-Page Consistency**: Same visual design and interaction patterns
+
 **Filter UI Components**:
 
 ```typescript
-FilterDrawer; // Mobile slide-up panel
-FilterBar; // Desktop horizontal bar
+ToolbarFilterDropdown; // Main dropdown triggered from toolbar
+FilterPanel; // Shared panel component for all pages
+UniversalFilterContainer; // Wrapper adapting filters to page context
 CityMultiSelect; // Checkbox list with search
 DateRangePicker; // Calendar-based picker
 PriceRangeSlider; // Dual-thumb slider
-ToggleFilters; // All-ages, free shows
-FilterChips; // Active filter display
+ToggleFilters; // All-ages, free shows, upcoming only
+FilterChips; // Active filter display with clear options
+FilterBadge; // Count indicator on toolbar filter icon
 ```
 
-### 14.4 Search Implementation
+### 14.4 Filter Migration & Consolidation
 
-**Effort**: 14 hours | **Dependencies**: 5.3, 3.3
+**Effort**: 8 hours | **Dependencies**: 14.3
+
+**Description**: Migrate existing page-specific filtering to unified toolbar system and remove redundant filter UI from individual pages.
+
+**Migration Tasks**:
+
+- **Remove Page-Level Filters**: Extract filtering UI from HomePage, ArtistsPage, VenuesPage
+- **Header Integration**: Add filter icon and dropdown to Header component
+- **State Consolidation**: Migrate filter state management to global filterStore
+- **Component Cleanup**: Remove DatePagination, CityPagination, VenueFilter from page layouts
+- **Routing Integration**: Ensure filter state persists across page navigation
+- **Legacy Cleanup**: Remove old filter components and unused code
+
+**Before/After Architecture**:
+
+```typescript
+// BEFORE: Page-specific filters
+HomePage -> DatePagination, CityPagination, VenueFilter
+ArtistsPage -> Custom artist filters
+VenuesPage -> Custom venue filters
+
+// AFTER: Centralized toolbar filtering
+Header -> ToolbarFilterDropdown -> UniversalFilterContainer
+HomePage/ArtistsPage/VenuesPage -> Pure listing components
+```
+
+**Implementation Strategy**:
+
+- **Phase 1**: Build new toolbar filter system alongside existing filters
+- **Phase 2**: Migrate filter state and logic to new system
+- **Phase 3**: Remove old filter components and update page layouts
+- **Phase 4**: Test cross-page navigation and state persistence
+
+### 14.5 Search Implementation
+
+**Effort**: 14 hours | **Dependencies**: 14.3, 3.3
 
 **Description**: Fast, responsive search across artists, venues, and events.
 
@@ -689,7 +772,7 @@ FilterChips; // Active filter display
 
 - React i18next integration with dynamic language switching
 - Language state management in Zustand store
-- Browser language detection and localStorage persistence  
+- Browser language detection and localStorage persistence
 - Comprehensive translation files for all UI text
 - Date/time localization for multiple regions
 - Right-to-left (RTL) language support preparation
@@ -1100,23 +1183,43 @@ FilterPanel.test.tsx;
 - **DoD**: 60fps scrolling, stable memory usage
 - **Estimate**: 6 hours
 
-**P5-5**: Filter Panel UI
+**P5-5**: Toolbar Filter Integration
 
-- Build mobile filter drawer
-- Create desktop filter bar
-- Implement all filter types (city, date, price, etc.)
-- **DoD**: All filters functional with good UX
-- **Estimate**: 12 hours
+- Add filter icon to Header component toolbar
+- Implement filter badge with active count indicator
+- Create dropdown/panel triggered from toolbar icon
+- Build responsive behavior (dropdown vs slide-up panel)
+- **DoD**: Toolbar filter access working across all pages
+- **Estimate**: 8 hours
 
-**P5-6**: Filter Logic Implementation
+**P5-6**: Universal Filter Panel System
+
+- Build UniversalFilterContainer component
+- Create page-context-aware filter adaptation
+- Implement all filter types (city, date, price, age, etc.)
+- Add FilterPanel component with consistent design
+- **DoD**: Same filter UI works for Events/Artists/Venues pages
+- **Estimate**: 14 hours
+
+**P5-7**: Filter Logic & State Management
 
 - Implement filter combination logic
-- Add real-time result updates
+- Add real-time result updates with debouncing
 - Create URL parameter synchronization
-- **DoD**: Filters work correctly and persist
+- Implement cross-page filter state persistence
+- **DoD**: Filters work correctly and persist across navigation
+- **Estimate**: 8 hours
+
+**P5-8**: Filter Migration & Cleanup
+
+- Remove existing DatePagination, CityPagination, VenueFilter components
+- Migrate filter state to centralized filterStore
+- Update HomePage, ArtistsPage, VenuesPage layouts
+- Clean up unused filter code and dependencies
+- **DoD**: All pages use unified toolbar filtering, old filters removed
 - **Estimate**: 6 hours
 
-**P5-7**: Search Integration
+**P5-9**: Search Integration
 
 - Integrate MiniSearch for fast search
 - Implement search within filtered results
@@ -1263,7 +1366,7 @@ FilterPanel.test.tsx;
 **P9-1**: Language Infrastructure Setup
 
 - Install and configure react-i18next
-- Set up language switching in Zustand store  
+- Set up language switching in Zustand store
 - Implement browser language detection
 - **DoD**: Language switching fully functional
 - **Estimate**: 8 hours
@@ -1273,7 +1376,7 @@ FilterPanel.test.tsx;
 - Create translation files for EN, ES, ZH languages
 - Implement pluralization and variable interpolation
 - Set up fallback system for missing translations
-- **DoD**: All UI text translatable and properly formatted  
+- **DoD**: All UI text translatable and properly formatted
 - **Estimate**: 10 hours
 
 **P9-3**: Date and Content Localization
@@ -1298,7 +1401,7 @@ FilterPanel.test.tsx;
 
 - Build automated poster generation from event data
 - Implement custom announcement insertion
-- Add template system for different venue styles  
+- Add template system for different venue styles
 - **DoD**: Content automatically updates with new events
 - **Estimate**: 10 hours
 
