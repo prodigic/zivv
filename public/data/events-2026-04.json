@@ -1,10 +1,32 @@
 {
   "chunkId": "2026-04",
   "dateRange": {
-    "startEpochMs": 1775199600000,
-    "endEpochMs": 1777100400000
+    "startEpochMs": 1775026800000,
+    "endEpochMs": 1777446000000
   },
   "events": [
+    {
+      "id": 1020683669,
+      "slug": "2026-04-01-st-paul-the-broken-bones-the-warfield",
+      "date": "2026-04-01",
+      "dateEpochMs": 1775026800000,
+      "startTimeEpochMs": 1775098800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2072772065,
+      "artistIds": [
+        2072772065,
+        2078740528
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6261
+    },
     {
       "id": 352100304,
       "slug": "2026-04-03-eliza-mclamb-the-independent",
@@ -22,8 +44,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374600,
-      "updatedAtEpochMs": 1760169374600,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2472
     },
     {
@@ -43,8 +65,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374698,
-      "updatedAtEpochMs": 1760169374698,
+      "createdAtEpochMs": 1761378167936,
+      "updatedAtEpochMs": 1761378167936,
       "sourceLineNumber": 5425
     },
     {
@@ -66,9 +88,79 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374698,
-      "updatedAtEpochMs": 1760169374698,
+      "createdAtEpochMs": 1761378167936,
+      "updatedAtEpochMs": 1761378167936,
       "sourceLineNumber": 5426
+    },
+    {
+      "id": 525121412,
+      "slug": "2026-04-03-tokyo-tea-room-the-rickshaw-stop",
+      "date": "2026-04-03",
+      "dateEpochMs": 1775199600000,
+      "startTimeEpochMs": 1775278800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 224932360,
+      "artistIds": [
+        224932360
+      ],
+      "venueId": 31041890,
+      "priceMin": 22,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6263
+    },
+    {
+      "id": 1585932210,
+      "slug": "2026-04-03-aj-lee-blue-summit-the-chapel",
+      "date": "2026-04-03",
+      "dateEpochMs": 1775199600000,
+      "startTimeEpochMs": 1775332800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1205990207,
+      "artistIds": [
+        1205990207,
+        1516769412
+      ],
+      "venueId": 680116887,
+      "priceMin": 37.11,
+      "priceMax": 37.11,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6264
+    },
+    {
+      "id": 286652614,
+      "slug": "2026-04-03-lany-the-civic-auditorium",
+      "date": "2026-04-03",
+      "dateEpochMs": 1775199600000,
+      "startTimeEpochMs": 1775480400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971553709,
+      "artistIds": [
+        1971553709
+      ],
+      "venueId": 1648637995,
+      "priceMin": 78,
+      "priceMax": 78,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6266
     },
     {
       "id": 764383536,
@@ -90,9 +182,57 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167936,
+      "updatedAtEpochMs": 1761378167936,
       "sourceLineNumber": 5427
+    },
+    {
+      "id": 1344483900,
+      "slug": "2026-04-04-westerman-the-rickshaw-stop",
+      "date": "2026-04-04",
+      "dateEpochMs": 1775286000000,
+      "startTimeEpochMs": 1775379600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1678976203,
+      "artistIds": [
+        1678976203,
+        2078440844
+      ],
+      "venueId": 31041890,
+      "priceMin": 26,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6267
+    },
+    {
+      "id": 892830513,
+      "slug": "2026-04-04-aj-lee-blue-summit-the-chapel",
+      "date": "2026-04-04",
+      "dateEpochMs": 1775286000000,
+      "startTimeEpochMs": 1775419200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1205990207,
+      "artistIds": [
+        1205990207,
+        455124586
+      ],
+      "venueId": 680116887,
+      "priceMin": 37.11,
+      "priceMax": 37.11,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6269
     },
     {
       "id": 1140301448,
@@ -111,9 +251,55 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167936,
+      "updatedAtEpochMs": 1761378167936,
       "sourceLineNumber": 5428
+    },
+    {
+      "id": 814971203,
+      "slug": "2026-04-07-cass-mccombs-the-mystic-theater",
+      "date": "2026-04-07",
+      "dateEpochMs": 1775545200000,
+      "startTimeEpochMs": 1775620800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 887885869,
+      "artistIds": [
+        887885869,
+        1062871323
+      ],
+      "venueId": 265264344,
+      "priceMin": 41.75,
+      "priceMax": 41.75,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6271
+    },
+    {
+      "id": 595828847,
+      "slug": "2026-04-07-gary-numan-the-uptown-theater",
+      "date": "2026-04-07",
+      "dateEpochMs": 1775545200000,
+      "startTimeEpochMs": 1775588400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1286361081,
+      "artistIds": [
+        1286361081
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6273
     },
     {
       "id": 2065008593,
@@ -133,9 +319,33 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374651,
-      "updatedAtEpochMs": 1760169374651,
+      "createdAtEpochMs": 1761378167892,
+      "updatedAtEpochMs": 1761378167892,
       "sourceLineNumber": 3515
+    },
+    {
+      "id": 281076801,
+      "slug": "2026-04-09-cass-mccombs-band-great-american-music-hall",
+      "date": "2026-04-09",
+      "dateEpochMs": 1775718000000,
+      "startTimeEpochMs": 1775826000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1440170760,
+      "artistIds": [
+        1440170760,
+        1780534941
+      ],
+      "venueId": 463728167,
+      "priceMin": 30,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6275
     },
     {
       "id": 1007647190,
@@ -156,9 +366,31 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167936,
+      "updatedAtEpochMs": 1761378167936,
       "sourceLineNumber": 5431
+    },
+    {
+      "id": 1881787900,
+      "slug": "2026-04-11-billy-gardell-comedian-the-uptown-theater",
+      "date": "2026-04-11",
+      "dateEpochMs": 1775890800000,
+      "startTimeEpochMs": 1775934000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 130426989,
+      "artistIds": [
+        130426989
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167970,
+      "updatedAtEpochMs": 1761378167970,
+      "sourceLineNumber": 6277
     },
     {
       "id": 938623379,
@@ -179,8 +411,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167936,
+      "updatedAtEpochMs": 1761378167936,
       "sourceLineNumber": 5432
     },
     {
@@ -201,9 +433,32 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5433
+    },
+    {
+      "id": 1690438201,
+      "slug": "2026-04-16-the-format-the-castro-theater",
+      "date": "2026-04-16",
+      "dateEpochMs": 1776322800000,
+      "startTimeEpochMs": 1776390600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 741271670,
+      "artistIds": [
+        741271670,
+        1109490018,
+        651247288
+      ],
+      "venueId": 881479351,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6279
     },
     {
       "id": 759676898,
@@ -224,8 +479,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5434
     },
     {
@@ -245,8 +500,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374600,
-      "updatedAtEpochMs": 1760169374600,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2473
     },
     {
@@ -268,8 +523,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5435
     },
     {
@@ -291,9 +546,32 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374652,
-      "updatedAtEpochMs": 1760169374652,
+      "createdAtEpochMs": 1761378167892,
+      "updatedAtEpochMs": 1761378167892,
       "sourceLineNumber": 3517
+    },
+    {
+      "id": 1841553382,
+      "slug": "2026-04-22-electric-cowboy-the-masonic",
+      "date": "2026-04-22",
+      "dateEpochMs": 1776841200000,
+      "startTimeEpochMs": 1776909600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 865757841,
+      "artistIds": [
+        865757841,
+        1225365579,
+        1493585635
+      ],
+      "venueId": 374573122,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6281
     },
     {
       "id": 144335205,
@@ -314,8 +592,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5437
     },
     {
@@ -337,9 +615,79 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374652,
-      "updatedAtEpochMs": 1760169374652,
+      "createdAtEpochMs": 1761378167892,
+      "updatedAtEpochMs": 1761378167892,
       "sourceLineNumber": 3519
+    },
+    {
+      "id": 1219304803,
+      "slug": "2026-04-26-vnv-nation-august-hall",
+      "date": "2026-04-26",
+      "dateEpochMs": 1777186800000,
+      "startTimeEpochMs": 1777248000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1257724668,
+      "artistIds": [
+        1257724668
+      ],
+      "venueId": 811075932,
+      "priceMin": 37.25,
+      "priceMax": 37.25,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6283
+    },
+    {
+      "id": 363638771,
+      "slug": "2026-04-29-moonchild-the-uc-theater",
+      "date": "2026-04-29",
+      "dateEpochMs": 1777446000000,
+      "startTimeEpochMs": 1777582800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 902052280,
+      "artistIds": [
+        902052280
+      ],
+      "venueId": 2093769319,
+      "priceMin": 38,
+      "priceMax": 38,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$136 vip",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6284
+    },
+    {
+      "id": 588327786,
+      "slug": "2026-04-29-la-dispute-august-hall",
+      "date": "2026-04-29",
+      "dateEpochMs": 1777446000000,
+      "startTimeEpochMs": 1777507200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1486208812,
+      "artistIds": [
+        1486208812
+      ],
+      "venueId": 811075932,
+      "priceMin": 39,
+      "priceMax": 39,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6285
     }
   ]
 }

@@ -24,8 +24,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374598,
-      "updatedAtEpochMs": 1760169374598,
+      "createdAtEpochMs": 1761378167838,
+      "updatedAtEpochMs": 1761378167838,
       "sourceLineNumber": 2450
     },
     {
@@ -47,8 +47,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5305
     },
     {
@@ -69,9 +69,33 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374598,
-      "updatedAtEpochMs": 1760169374598,
+      "createdAtEpochMs": 1761378167838,
+      "updatedAtEpochMs": 1761378167838,
       "sourceLineNumber": 2451
+    },
+    {
+      "id": 598576978,
+      "slug": "2026-02-02-tropical-fuck-storm-moes-alley",
+      "date": "2026-02-02",
+      "dateEpochMs": 1770019200000,
+      "startTimeEpochMs": 1770094800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1049063881,
+      "artistIds": [
+        1049063881,
+        1367419621
+      ],
+      "venueId": 1002839764,
+      "priceMin": 25,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167963,
+      "updatedAtEpochMs": 1761378167963,
+      "sourceLineNumber": 6134
     },
     {
       "id": 607587990,
@@ -90,8 +114,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374650,
-      "updatedAtEpochMs": 1760169374650,
+      "createdAtEpochMs": 1761378167891,
+      "updatedAtEpochMs": 1761378167891,
       "sourceLineNumber": 3487
     },
     {
@@ -114,8 +138,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5306
     },
     {
@@ -135,9 +159,31 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5308
+    },
+    {
+      "id": 1580080752,
+      "slug": "2026-02-03-tropical-fuck-storm-the-chapel",
+      "date": "2026-02-03",
+      "dateEpochMs": 1770105600000,
+      "startTimeEpochMs": 1770177600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1049063881,
+      "artistIds": [
+        1049063881,
+        1367419621
+      ],
+      "venueId": 680116887,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167963,
+      "updatedAtEpochMs": 1761378167963,
+      "sourceLineNumber": 6136
     },
     {
       "id": 1117892907,
@@ -156,8 +202,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374650,
-      "updatedAtEpochMs": 1760169374650,
+      "createdAtEpochMs": 1761378167891,
+      "updatedAtEpochMs": 1761378167891,
       "sourceLineNumber": 3488
     },
     {
@@ -178,8 +224,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5309
     },
     {
@@ -198,9 +244,32 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5311
+    },
+    {
+      "id": 1149561185,
+      "slug": "2026-02-05-the-rural-alberta-advantage-the-rickshaw-stop",
+      "date": "2026-02-05",
+      "dateEpochMs": 1770278400000,
+      "startTimeEpochMs": 1770368400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 158866915,
+      "artistIds": [
+        158866915
+      ],
+      "venueId": 31041890,
+      "priceMin": 25,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167963,
+      "updatedAtEpochMs": 1761378167963,
+      "sourceLineNumber": 6137
     },
     {
       "id": 1731702131,
@@ -219,9 +288,30 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5312
+    },
+    {
+      "id": 811265435,
+      "slug": "2026-02-06-dark-star-orchestra-the-fox-theater",
+      "date": "2026-02-06",
+      "dateEpochMs": 1770364800000,
+      "startTimeEpochMs": 1770435000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 308348566,
+      "artistIds": [
+        308348566
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167963,
+      "updatedAtEpochMs": 1761378167963,
+      "sourceLineNumber": 6140
     },
     {
       "id": 1508639789,
@@ -240,9 +330,52 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5315
+    },
+    {
+      "id": 1372411492,
+      "slug": "2026-02-07-dark-star-orchestra-the-fox-theater",
+      "date": "2026-02-07",
+      "dateEpochMs": 1770451200000,
+      "startTimeEpochMs": 1770521400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 308348566,
+      "artistIds": [
+        308348566
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167963,
+      "updatedAtEpochMs": 1761378167963,
+      "sourceLineNumber": 6143
+    },
+    {
+      "id": 1976505403,
+      "slug": "2026-02-07-chris-stapleton-the-civic-auditorium",
+      "date": "2026-02-07",
+      "dateEpochMs": 1770451200000,
+      "startTimeEpochMs": 1770519600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1545281426,
+      "artistIds": [
+        1545281426,
+        439098773
+      ],
+      "venueId": 1648637995,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167963,
+      "updatedAtEpochMs": 1761378167963,
+      "sourceLineNumber": 6144
     },
     {
       "id": 678844470,
@@ -265,8 +398,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1760169374598,
-      "updatedAtEpochMs": 1760169374598,
+      "createdAtEpochMs": 1761378167838,
+      "updatedAtEpochMs": 1761378167838,
       "sourceLineNumber": 2452
     },
     {
@@ -288,8 +421,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5318
     },
     {
@@ -309,8 +442,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374693,
-      "updatedAtEpochMs": 1760169374693,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5319
     },
     {
@@ -332,8 +465,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374598,
-      "updatedAtEpochMs": 1760169374598,
+      "createdAtEpochMs": 1761378167838,
+      "updatedAtEpochMs": 1761378167838,
       "sourceLineNumber": 2454
     },
     {
@@ -356,8 +489,8 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5320
     },
     {
@@ -379,8 +512,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374650,
-      "updatedAtEpochMs": 1760169374650,
+      "createdAtEpochMs": 1761378167891,
+      "updatedAtEpochMs": 1761378167891,
       "sourceLineNumber": 3490
     },
     {
@@ -403,9 +536,34 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5321
+    },
+    {
+      "id": 2032164450,
+      "slug": "2026-02-11-the-sadies-the-great-american-music-hall",
+      "date": "2026-02-11",
+      "dateEpochMs": 1770796800000,
+      "startTimeEpochMs": 1770897600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 382442796,
+      "artistIds": [
+        382442796,
+        1093493609,
+        981704698
+      ],
+      "venueId": 463728167,
+      "priceMin": 28,
+      "priceMax": 32,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167963,
+      "updatedAtEpochMs": 1761378167963,
+      "sourceLineNumber": 6146
     },
     {
       "id": 436779169,
@@ -427,8 +585,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167838,
+      "updatedAtEpochMs": 1761378167838,
       "sourceLineNumber": 2455
     },
     {
@@ -451,8 +609,8 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167931,
+      "updatedAtEpochMs": 1761378167931,
       "sourceLineNumber": 5324
     },
     {
@@ -472,8 +630,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5325
     },
     {
@@ -494,9 +652,34 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5326
+    },
+    {
+      "id": 381670464,
+      "slug": "2026-02-13-atmosphere-the-fox-theater",
+      "date": "2026-02-13",
+      "dateEpochMs": 1770969600000,
+      "startTimeEpochMs": 1771039800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1879276341,
+      "artistIds": [
+        1879276341,
+        939044589,
+        1066525423,
+        1196333961,
+        241086820
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6148
     },
     {
       "id": 1615584159,
@@ -518,8 +701,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2457
     },
     {
@@ -539,8 +722,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2459
     },
     {
@@ -563,8 +746,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374650,
-      "updatedAtEpochMs": 1760169374650,
+      "createdAtEpochMs": 1761378167891,
+      "updatedAtEpochMs": 1761378167891,
       "sourceLineNumber": 3493
     },
     {
@@ -584,8 +767,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374650,
-      "updatedAtEpochMs": 1760169374650,
+      "createdAtEpochMs": 1761378167891,
+      "updatedAtEpochMs": 1761378167891,
       "sourceLineNumber": 3495
     },
     {
@@ -608,9 +791,58 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5330
+    },
+    {
+      "id": 653334798,
+      "slug": "2026-02-15-julianna-barwick-the-great-american-music-hall",
+      "date": "2026-02-15",
+      "dateEpochMs": 1771142400000,
+      "startTimeEpochMs": 1771232400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 24980568,
+      "artistIds": [
+        24980568,
+        437593911
+      ],
+      "venueId": 463728167,
+      "priceMin": 25,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6150
+    },
+    {
+      "id": 504522315,
+      "slug": "2026-02-15-vs-self-august-hall",
+      "date": "2026-02-15",
+      "dateEpochMs": 1771142400000,
+      "startTimeEpochMs": 1771203600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 150457956,
+      "artistIds": [
+        150457956,
+        74898325,
+        1452557038
+      ],
+      "venueId": 811075932,
+      "priceMin": 34,
+      "priceMax": 34,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6152
     },
     {
       "id": 574768573,
@@ -631,8 +863,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2460
     },
     {
@@ -654,8 +886,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5332
     },
     {
@@ -675,8 +907,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5333
     },
     {
@@ -699,8 +931,8 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5334
     },
     {
@@ -723,9 +955,54 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5335
+    },
+    {
+      "id": 1607101614,
+      "slug": "2026-02-17-kitchen-dwellers-guild-theater",
+      "date": "2026-02-17",
+      "dateEpochMs": 1771315200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1799715267,
+      "artistIds": [
+        1799715267
+      ],
+      "venueId": 112130441,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "outdoor"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6154
+    },
+    {
+      "id": 646599422,
+      "slug": "2026-02-17-the-queers-the-ritz",
+      "date": "2026-02-17",
+      "dateEpochMs": 1771315200000,
+      "startTimeEpochMs": 1771372800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 421204328,
+      "artistIds": [
+        421204328
+      ],
+      "venueId": 1253820046,
+      "priceMin": 20,
+      "priceMax": 20,
+      "isFree": false,
+      "ageRestriction": "16+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "diy",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6156
     },
     {
       "id": 845507549,
@@ -746,8 +1023,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2461
     },
     {
@@ -770,8 +1047,8 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5336
     },
     {
@@ -791,9 +1068,33 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5337
+    },
+    {
+      "id": 1170400369,
+      "slug": "2026-02-18-dry-cleaning-the-fillmore",
+      "date": "2026-02-18",
+      "dateEpochMs": 1771401600000,
+      "startTimeEpochMs": 1771588800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 978599647,
+      "artistIds": [
+        978599647,
+        1804218691
+      ],
+      "venueId": 1136597428,
+      "priceMin": 52,
+      "priceMax": 52,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6157
     },
     {
       "id": 917509663,
@@ -816,9 +1117,100 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5338
+    },
+    {
+      "id": 1560370693,
+      "slug": "2026-02-19-hanumankind-the-regency-ballroom",
+      "date": "2026-02-19",
+      "dateEpochMs": 1771488000000,
+      "startTimeEpochMs": 1771560000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 773715899,
+      "artistIds": [
+        773715899
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6158
+    },
+    {
+      "id": 1419914169,
+      "slug": "2026-02-19-phil-manzanera-in-conversation-great-american-music-hall",
+      "date": "2026-02-19",
+      "dateEpochMs": 1771488000000,
+      "startTimeEpochMs": 1771581600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2065853197,
+      "artistIds": [
+        2065853197,
+        669247796
+      ],
+      "venueId": 463728167,
+      "priceMin": 26,
+      "priceMax": 69,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "seated",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6159
+    },
+    {
+      "id": 848454761,
+      "slug": "2026-02-19-albert-cummings-hopmonk-tavern",
+      "date": "2026-02-19",
+      "dateEpochMs": 1771488000000,
+      "startTimeEpochMs": 1771563600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 682397920,
+      "artistIds": [
+        682397920
+      ],
+      "venueId": 833273350,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6161
+    },
+    {
+      "id": 1669557570,
+      "slug": "2026-02-19-dry-cleaning-gundlach-bundschu-winery",
+      "date": "2026-02-19",
+      "dateEpochMs": 1771488000000,
+      "startTimeEpochMs": 1771772400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 978599647,
+      "artistIds": [
+        978599647,
+        1804218691
+      ],
+      "venueId": 1762929864,
+      "priceMin": 79.64,
+      "priceMax": 79.64,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6162
     },
     {
       "id": 1041606913,
@@ -839,8 +1231,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2462
     },
     {
@@ -862,8 +1254,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5340
     },
     {
@@ -885,8 +1277,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5341
     },
     {
@@ -909,9 +1301,126 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374694,
-      "updatedAtEpochMs": 1760169374694,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5342
+    },
+    {
+      "id": 348417433,
+      "slug": "2026-02-20-hudson-freeman-the-bottom-of-the-hill",
+      "date": "2026-02-20",
+      "dateEpochMs": 1771574400000,
+      "startTimeEpochMs": 1771664400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1397561828,
+      "artistIds": [
+        1397561828
+      ],
+      "venueId": 1016385760,
+      "priceMin": 25,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6164
+    },
+    {
+      "id": 80972532,
+      "slug": "2026-02-20-the-pains-of-being-pure-at-heart-the-rickshaw-stop",
+      "date": "2026-02-20",
+      "dateEpochMs": 1771574400000,
+      "startTimeEpochMs": 1771682400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 553263283,
+      "artistIds": [
+        553263283,
+        577276232,
+        1953470507
+      ],
+      "venueId": 31041890,
+      "priceMin": 30,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167964,
+      "updatedAtEpochMs": 1761378167964,
+      "sourceLineNumber": 6166
+    },
+    {
+      "id": 1709854185,
+      "slug": "2026-02-20-christopher-owens-swedish-american-hall",
+      "date": "2026-02-20",
+      "dateEpochMs": 1771574400000,
+      "startTimeEpochMs": 1771696800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 27892186,
+      "artistIds": [
+        27892186
+      ],
+      "venueId": 927889318,
+      "priceMin": 34.48,
+      "priceMax": 34.48,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6168
+    },
+    {
+      "id": 616119481,
+      "slug": "2026-02-20-kathleen-edwards-great-american-music-hall",
+      "date": "2026-02-20",
+      "dateEpochMs": 1771574400000,
+      "startTimeEpochMs": 1771682400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1461323497,
+      "artistIds": [
+        1461323497
+      ],
+      "venueId": 463728167,
+      "priceMin": 30,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "fully seated",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6169
+    },
+    {
+      "id": 1242636016,
+      "slug": "2026-02-20-the-man-in-black-tribute-the-uptown-theater",
+      "date": "2026-02-20",
+      "dateEpochMs": 1771574400000,
+      "startTimeEpochMs": 1771617600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 392045119,
+      "artistIds": [
+        392045119
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6171
     },
     {
       "id": 303333419,
@@ -932,8 +1441,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2463
     },
     {
@@ -956,8 +1465,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5343
     },
     {
@@ -980,9 +1489,171 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5345
+    },
+    {
+      "id": 424125371,
+      "slug": "2026-02-21-jesse-baez-the-independent",
+      "date": "2026-02-21",
+      "dateEpochMs": 1771660800000,
+      "startTimeEpochMs": 1771736400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2099770045,
+      "artistIds": [
+        2099770045
+      ],
+      "venueId": 515101024,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6173
+    },
+    {
+      "id": 1374271516,
+      "slug": "2026-02-21-mat-kerekes-the-chapel",
+      "date": "2026-02-21",
+      "dateEpochMs": 1771660800000,
+      "startTimeEpochMs": 1771794000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1347895367,
+      "artistIds": [
+        1347895367,
+        1936264475,
+        865404573
+      ],
+      "venueId": 680116887,
+      "priceMin": 37.52,
+      "priceMax": 37.52,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6174
+    },
+    {
+      "id": 702684726,
+      "slug": "2026-02-21-glitterer-cafe-du-nord",
+      "date": "2026-02-21",
+      "dateEpochMs": 1771660800000,
+      "startTimeEpochMs": 1771758000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 423384757,
+      "artistIds": [
+        423384757,
+        1718360894,
+        432296604
+      ],
+      "venueId": 1550837691,
+      "priceMin": 27.27,
+      "priceMax": 27.27,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6176
+    },
+    {
+      "id": 1880837156,
+      "slug": "2026-02-21-jeffrey-lwis-the-voltage-the-bottom-of-the-hill",
+      "date": "2026-02-21",
+      "dateEpochMs": 1771660800000,
+      "startTimeEpochMs": 1771736400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 248331374,
+      "artistIds": [
+        248331374
+      ],
+      "venueId": 1016385760,
+      "priceMin": 22,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6178
+    },
+    {
+      "id": 129875306,
+      "slug": "2026-02-21-devotchka-gray-area",
+      "date": "2026-02-21",
+      "dateEpochMs": 1771660800000,
+      "startTimeEpochMs": 1771736400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 101327934,
+      "artistIds": [
+        101327934
+      ],
+      "venueId": 619959440,
+      "priceMin": 51.5,
+      "priceMax": 51.5,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6180
+    },
+    {
+      "id": 392857422,
+      "slug": "2026-02-21-the-elovaters-the-uptown-theater",
+      "date": "2026-02-21",
+      "dateEpochMs": 1771660800000,
+      "startTimeEpochMs": 1771704000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 33242158,
+      "artistIds": [
+        33242158,
+        1246907378,
+        1971613170
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6181
+    },
+    {
+      "id": 1243122294,
+      "slug": "2026-02-21-cancelled-ottmar-liebert-blue-note",
+      "date": "2026-02-21",
+      "dateEpochMs": 1771660800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1712844160,
+      "artistIds": [
+        1712844160,
+        2029647278
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6183
     },
     {
       "id": 272313612,
@@ -1005,8 +1676,8 @@
         "matinee"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2465
     },
     {
@@ -1026,9 +1697,78 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167932,
+      "updatedAtEpochMs": 1761378167932,
       "sourceLineNumber": 5348
+    },
+    {
+      "id": 1801396616,
+      "slug": "2026-02-22-the-elovaters-the-catalyst",
+      "date": "2026-02-22",
+      "dateEpochMs": 1771747200000,
+      "startTimeEpochMs": 1771804800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 33242158,
+      "artistIds": [
+        33242158
+      ],
+      "venueId": 1715490423,
+      "priceMin": 45.95,
+      "priceMax": 45.95,
+      "isFree": false,
+      "ageRestriction": "16+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6184
+    },
+    {
+      "id": 1572888055,
+      "slug": "2026-02-22-cancelled-ottmar-liebert-blue-note",
+      "date": "2026-02-22",
+      "dateEpochMs": 1771747200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1712844160,
+      "artistIds": [
+        1712844160,
+        2029647278
+      ],
+      "venueId": 515371631,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167965,
+      "updatedAtEpochMs": 1761378167965,
+      "sourceLineNumber": 6185
+    },
+    {
+      "id": 1203019480,
+      "slug": "2026-02-23-the-joy-formidable-swedish-american-hall",
+      "date": "2026-02-23",
+      "dateEpochMs": 1771833600000,
+      "startTimeEpochMs": 1771909200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 612846824,
+      "artistIds": [
+        612846824,
+        993840707,
+        557523630
+      ],
+      "venueId": 927889318,
+      "priceMin": 43.75,
+      "priceMax": 43.75,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6186
     },
     {
       "id": 700193778,
@@ -1047,8 +1787,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374599,
-      "updatedAtEpochMs": 1760169374599,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2467
     },
     {
@@ -1071,9 +1811,55 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5351
+    },
+    {
+      "id": 633440198,
+      "slug": "2026-02-24-rumgold-rickshaw-stop",
+      "date": "2026-02-24",
+      "dateEpochMs": 1771920000000,
+      "startTimeEpochMs": 1772028000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 870288407,
+      "artistIds": [
+        870288407
+      ],
+      "venueId": 31041890,
+      "priceMin": 30.91,
+      "priceMax": 30.91,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6188
+    },
+    {
+      "id": 285144659,
+      "slug": "2026-02-24-playboy-manbaby-tribute-kilowatt",
+      "date": "2026-02-24",
+      "dateEpochMs": 1771920000000,
+      "startTimeEpochMs": 1771995600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1071180439,
+      "artistIds": [
+        1071180439
+      ],
+      "venueId": 1433810567,
+      "priceMin": 22.3,
+      "priceMax": 22.3,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6189
     },
     {
       "id": 289749764,
@@ -1095,9 +1881,77 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5352
+    },
+    {
+      "id": 1638882067,
+      "slug": "2026-02-25-yellow-days-great-american-music-hall",
+      "date": "2026-02-25",
+      "dateEpochMs": 1772006400000,
+      "startTimeEpochMs": 1772121600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1643591472,
+      "artistIds": [
+        1643591472
+      ],
+      "venueId": 463728167,
+      "priceMin": 32,
+      "priceMax": 36,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6190
+    },
+    {
+      "id": 927522420,
+      "slug": "2026-02-25-cleo-reed-two-shows-sf-jazz-center",
+      "date": "2026-02-25",
+      "dateEpochMs": 1772006400000,
+      "startTimeEpochMs": 1772082000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1543281413,
+      "artistIds": [
+        1543281413
+      ],
+      "venueId": 1655143123,
+      "priceMin": 34,
+      "priceMax": 34,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6191
+    },
+    {
+      "id": 2110865811,
+      "slug": "2026-02-25-zz-ward-the-uptown-theater",
+      "date": "2026-02-25",
+      "dateEpochMs": 1772006400000,
+      "startTimeEpochMs": 1772049600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 694890967,
+      "artistIds": [
+        694890967
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6192
     },
     {
       "id": 304123640,
@@ -1120,8 +1974,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5353
     },
     {
@@ -1143,8 +1997,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5355
     },
     {
@@ -1168,8 +2022,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5356
     },
     {
@@ -1193,9 +2047,99 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5358
+    },
+    {
+      "id": 1704519725,
+      "slug": "2026-02-26-the-fiery-furnaces-the-chapel",
+      "date": "2026-02-26",
+      "dateEpochMs": 1772092800000,
+      "startTimeEpochMs": 1772164800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 221326117,
+      "artistIds": [
+        221326117
+      ],
+      "venueId": 680116887,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6194
+    },
+    {
+      "id": 44776296,
+      "slug": "2026-02-26-christian-loffler-the-regency-ballroom",
+      "date": "2026-02-26",
+      "dateEpochMs": 1772092800000,
+      "startTimeEpochMs": 1772157600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 210167908,
+      "artistIds": [
+        210167908
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6195
+    },
+    {
+      "id": 2048350026,
+      "slug": "2026-02-26-shannon-shaw-friends-kqed-commons",
+      "date": "2026-02-26",
+      "dateEpochMs": 1772092800000,
+      "startTimeEpochMs": 1772186400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 692054798,
+      "artistIds": [
+        692054798
+      ],
+      "venueId": 988265223,
+      "priceMin": 52,
+      "priceMax": 94,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6196
+    },
+    {
+      "id": 18362976,
+      "slug": "2026-02-26-sml-two-shows-sf-jazz-center",
+      "date": "2026-02-26",
+      "dateEpochMs": 1772092800000,
+      "startTimeEpochMs": 1772168400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1265662030,
+      "artistIds": [
+        1265662030
+      ],
+      "venueId": 1655143123,
+      "priceMin": 39,
+      "priceMax": 39,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6198
     },
     {
       "id": 959248583,
@@ -1214,8 +2158,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374650,
-      "updatedAtEpochMs": 1760169374650,
+      "createdAtEpochMs": 1761378167891,
+      "updatedAtEpochMs": 1761378167891,
       "sourceLineNumber": 3496
     },
     {
@@ -1237,8 +2181,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5360
     },
     {
@@ -1261,8 +2205,8 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5361
     },
     {
@@ -1282,8 +2226,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374695,
-      "updatedAtEpochMs": 1760169374695,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5362
     },
     {
@@ -1307,8 +2251,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374696,
-      "updatedAtEpochMs": 1760169374696,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5363
     },
     {
@@ -1331,8 +2275,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374696,
-      "updatedAtEpochMs": 1760169374696,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5365
     },
     {
@@ -1353,8 +2297,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374696,
-      "updatedAtEpochMs": 1760169374696,
+      "createdAtEpochMs": 1761378167933,
+      "updatedAtEpochMs": 1761378167933,
       "sourceLineNumber": 5367
     },
     {
@@ -1378,9 +2322,79 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374696,
-      "updatedAtEpochMs": 1760169374696,
+      "createdAtEpochMs": 1761378167934,
+      "updatedAtEpochMs": 1761378167934,
       "sourceLineNumber": 5368
+    },
+    {
+      "id": 432258683,
+      "slug": "2026-02-27-tortoise-great-american-music-hall",
+      "date": "2026-02-27",
+      "dateEpochMs": 1772179200000,
+      "startTimeEpochMs": 1772305200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 761088004,
+      "artistIds": [
+        761088004
+      ],
+      "venueId": 463728167,
+      "priceMin": 35,
+      "priceMax": 40,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167966,
+      "updatedAtEpochMs": 1761378167966,
+      "sourceLineNumber": 6199
+    },
+    {
+      "id": 510794662,
+      "slug": "2026-02-27-jamie-fine-the-brick-and-mortar",
+      "date": "2026-02-27",
+      "dateEpochMs": 1772179200000,
+      "startTimeEpochMs": 1772258400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1412249221,
+      "artistIds": [
+        1412249221
+      ],
+      "venueId": 1719765223,
+      "priceMin": 22,
+      "priceMax": 26,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 21 plus $5",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167967,
+      "updatedAtEpochMs": 1761378167967,
+      "sourceLineNumber": 6200
+    },
+    {
+      "id": 2028466817,
+      "slug": "2026-02-27-sml-two-shows-sf-jazz-center",
+      "date": "2026-02-27",
+      "dateEpochMs": 1772179200000,
+      "startTimeEpochMs": 1772254800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1265662030,
+      "artistIds": [
+        1265662030
+      ],
+      "venueId": 1655143123,
+      "priceMin": 39,
+      "priceMax": 39,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167967,
+      "updatedAtEpochMs": 1761378167967,
+      "sourceLineNumber": 6202
     },
     {
       "id": 1080808539,
@@ -1399,8 +2413,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374650,
-      "updatedAtEpochMs": 1760169374650,
+      "createdAtEpochMs": 1761378167891,
+      "updatedAtEpochMs": 1761378167891,
       "sourceLineNumber": 3497
     },
     {
@@ -1420,8 +2434,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374650,
-      "updatedAtEpochMs": 1760169374650,
+      "createdAtEpochMs": 1761378167891,
+      "updatedAtEpochMs": 1761378167891,
       "sourceLineNumber": 3498
     },
     {
@@ -1444,8 +2458,8 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374696,
-      "updatedAtEpochMs": 1760169374696,
+      "createdAtEpochMs": 1761378167934,
+      "updatedAtEpochMs": 1761378167934,
       "sourceLineNumber": 5370
     },
     {
@@ -1469,8 +2483,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374696,
-      "updatedAtEpochMs": 1760169374696,
+      "createdAtEpochMs": 1761378167934,
+      "updatedAtEpochMs": 1761378167934,
       "sourceLineNumber": 5371
     },
     {
@@ -1491,9 +2505,101 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374696,
-      "updatedAtEpochMs": 1760169374696,
+      "createdAtEpochMs": 1761378167934,
+      "updatedAtEpochMs": 1761378167934,
       "sourceLineNumber": 5373
+    },
+    {
+      "id": 548458225,
+      "slug": "2026-02-28-beats-antique-the-uc-theater",
+      "date": "2026-02-28",
+      "dateEpochMs": 1772265600000,
+      "startTimeEpochMs": 1772431200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1849583735,
+      "artistIds": [
+        1849583735
+      ],
+      "venueId": 2093769319,
+      "priceMin": 46,
+      "priceMax": 46,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167967,
+      "updatedAtEpochMs": 1761378167967,
+      "sourceLineNumber": 6203
+    },
+    {
+      "id": 1518041572,
+      "slug": "2026-02-28-tortoise-great-american-music-hall",
+      "date": "2026-02-28",
+      "dateEpochMs": 1772265600000,
+      "startTimeEpochMs": 1772391600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 761088004,
+      "artistIds": [
+        761088004
+      ],
+      "venueId": 463728167,
+      "priceMin": 35,
+      "priceMax": 40,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167967,
+      "updatedAtEpochMs": 1761378167967,
+      "sourceLineNumber": 6205
+    },
+    {
+      "id": 1412685545,
+      "slug": "2026-02-28-the-family-crest-swedish-american-hall",
+      "date": "2026-02-28",
+      "dateEpochMs": 1772265600000,
+      "startTimeEpochMs": 1772341200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1494438834,
+      "artistIds": [
+        1494438834
+      ],
+      "venueId": 927889318,
+      "priceMin": 38.6,
+      "priceMax": 38.6,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167967,
+      "updatedAtEpochMs": 1761378167967,
+      "sourceLineNumber": 6206
+    },
+    {
+      "id": 1610544676,
+      "slug": "2026-02-28-hugo-de-la-lune-two-shows-sf-jazz",
+      "date": "2026-02-28",
+      "dateEpochMs": 1772265600000,
+      "startTimeEpochMs": 1772341200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1690522227,
+      "artistIds": [
+        1690522227
+      ],
+      "venueId": 2122875638,
+      "priceMin": 34,
+      "priceMax": 34,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167967,
+      "updatedAtEpochMs": 1761378167967,
+      "sourceLineNumber": 6207
     }
   ]
 }

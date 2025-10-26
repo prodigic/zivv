@@ -2,7 +2,7 @@
   "chunkId": "2026-05",
   "dateRange": {
     "startEpochMs": 1777618800000,
-    "endEpochMs": 1779260400000
+    "endEpochMs": 1779865200000
   },
   "events": [
     {
@@ -24,8 +24,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374600,
-      "updatedAtEpochMs": 1760169374600,
+      "createdAtEpochMs": 1761378167839,
+      "updatedAtEpochMs": 1761378167839,
       "sourceLineNumber": 2474
     },
     {
@@ -45,9 +45,31 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5440
+    },
+    {
+      "id": 1891595911,
+      "slug": "2026-05-03-lewis-capaldi-the-greek-theater",
+      "date": "2026-05-03",
+      "dateEpochMs": 1777791600000,
+      "startTimeEpochMs": 1777860000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2101298825,
+      "artistIds": [
+        2101298825,
+        1590923925
+      ],
+      "venueId": 474218142,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6286
     },
     {
       "id": 1859447898,
@@ -66,9 +88,52 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5441
+    },
+    {
+      "id": 78304163,
+      "slug": "2026-05-05-chet-faker-the-warfield",
+      "date": "2026-05-05",
+      "dateEpochMs": 1777964400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1599821180,
+      "artistIds": [
+        1599821180
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6288
+    },
+    {
+      "id": 845524781,
+      "slug": "2026-05-09-sports-the-independent",
+      "date": "2026-05-09",
+      "dateEpochMs": 1778310000000,
+      "startTimeEpochMs": 1778425200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 368253166,
+      "artistIds": [
+        368253166
+      ],
+      "venueId": 515101024,
+      "priceMin": 32.47,
+      "priceMax": 32.47,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6289
     },
     {
       "id": 726505638,
@@ -89,9 +154,31 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5443
+    },
+    {
+      "id": 977828277,
+      "slug": "2026-05-11-puscifer-golden-gate-theater",
+      "date": "2026-05-11",
+      "dateEpochMs": 1778482800000,
+      "startTimeEpochMs": 1778529600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1900407282,
+      "artistIds": [
+        1900407282,
+        1153648002
+      ],
+      "venueId": 648572129,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6290
     },
     {
       "id": 1331430384,
@@ -110,8 +197,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374699,
-      "updatedAtEpochMs": 1760169374699,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5444
     },
     {
@@ -136,8 +223,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1760169374700,
-      "updatedAtEpochMs": 1760169374700,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5445
     },
     {
@@ -157,9 +244,75 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374700,
-      "updatedAtEpochMs": 1760169374700,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5447
+    },
+    {
+      "id": 1947734695,
+      "slug": "2026-05-15-echo-the-bunnymen-the-masonic",
+      "date": "2026-05-15",
+      "dateEpochMs": 1778828400000,
+      "startTimeEpochMs": 1779058800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1293313599,
+      "artistIds": [
+        1293313599
+      ],
+      "venueId": 374573122,
+      "priceMin": 64,
+      "priceMax": 64,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6292
+    },
+    {
+      "id": 1693734728,
+      "slug": "2026-05-15-florence-the-machine-the-warriors-stadium",
+      "date": "2026-05-15",
+      "dateEpochMs": 1778828400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2029776138,
+      "artistIds": [
+        2029776138,
+        1708558971
+      ],
+      "venueId": 793025194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167971,
+      "updatedAtEpochMs": 1761378167971,
+      "sourceLineNumber": 6293
+    },
+    {
+      "id": 1611402418,
+      "slug": "2026-05-15-alan-doyle-hopmonk-tavern",
+      "date": "2026-05-15",
+      "dateEpochMs": 1778828400000,
+      "startTimeEpochMs": 1778904000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 740544722,
+      "artistIds": [
+        740544722,
+        1025107995
+      ],
+      "venueId": 833273350,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1761378167972,
+      "updatedAtEpochMs": 1761378167972,
+      "sourceLineNumber": 6295
     },
     {
       "id": 219354473,
@@ -180,9 +333,30 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1760169374700,
-      "updatedAtEpochMs": 1760169374700,
+      "createdAtEpochMs": 1761378167937,
+      "updatedAtEpochMs": 1761378167937,
       "sourceLineNumber": 5448
+    },
+    {
+      "id": 532014027,
+      "slug": "2026-05-27-the-last-dinner-part-the-fox-theater",
+      "date": "2026-05-27",
+      "dateEpochMs": 1779865200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2080477142,
+      "artistIds": [
+        2080477142,
+        1359709624
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1761378167972,
+      "updatedAtEpochMs": 1761378167972,
+      "sourceLineNumber": 6296
     }
   ]
 }
