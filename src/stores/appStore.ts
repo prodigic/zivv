@@ -517,6 +517,7 @@ export const useAppStore = create<AppStore>()(
         // Only persist UI state, not data or dark mode
         partialize: (state) => ({
           view: state.view,
+          showUpcomingOnly: state.showUpcomingOnly,
         }),
       }
     ),
