@@ -11,6 +11,7 @@ Zivv is a modern, responsive web application for discovering punk and alternativ
 The project has completed Phase 2 (ETL Pipeline), Phase 3 (Core Data Layer), Phase 4 (Application Shell & Routing), Phase 5 (Performance Testing & Lighthouse Integration), and Phase 6 (Test Infrastructure & Coverage Configuration) with significant enhancements. It provides a solid foundation with pre-processed, optimized data structures, comprehensive type safety, a polished user interface, and robust testing infrastructure.
 
 **Key Completed Features**:
+
 - Mobile-First Responsive Design (punk rock ticket interface)
 - Advanced Filtering & Search
 - Multi-View Support (List/Calendar toggle with routing)
@@ -21,6 +22,7 @@ The project has completed Phase 2 (ETL Pipeline), Phase 3 (Core Data Layer), Pha
 - Dark/Light Mode
 
 **Next Phases of Development**:
+
 - **Phase 7**: Event List & Filtering - Virtualized infinite scroll, advanced filters
 - **Phase 8**: Calendar Views - FullCalendar integration
 - **Phase 9**: Multilingual Support - Complete i18n implementation
@@ -33,23 +35,27 @@ The project has completed Phase 2 (ETL Pipeline), Phase 3 (Core Data Layer), Pha
 The project uses Node.js 18+ and npm/yarn.
 
 ### Core Development
+
 - `npm run dev`: Start development server with hot reload on `http://localhost:5173`
 - `npm run build`: Build for production (runs ETL, TypeScript, and Vite build)
 - `npm run preview`: Preview production build locally
 
 ### Code Quality
+
 - `npm run lint`: Run ESLint with TypeScript support
 - `npm run lint:fix`: Auto-fix ESLint errors
 - `npm run format`: Format code with Prettier
 - `npm run format:check`: Check code formatting without modifying files
 
 ### Testing
+
 - `npm run test`: Run Vitest in watch mode
 - `npm run test:run`: Run all tests once
 - `npm run test:coverage`: Run tests with coverage report
 - `npm run test -- src/test/DataService.test.ts`: Run single test file
 
 ### ETL Data Processing
+
 - `npm run etl`: Process raw data files and generate JSON outputs
 - `npm run etl:verbose`: Run ETL with verbose logging
 - `node scripts/run-etl.js`: Direct ETL script execution
@@ -59,20 +65,23 @@ The project uses Node.js 18+ and npm/yarn.
 ## 3. Architecture Overview
 
 ### Data Pipeline (ETL)
+
 - **Source Data**: `data/events.txt`, `data/venues.txt`, `data/radio-shows.txt`
 - **Processing**: `src/lib/etl/` (processor.ts, parsers.ts, indexer.ts, utils.ts)
-- **Output**: `public/data/` (manifest.json, events-YYYY-MM.json, artists.json, venues.json, indexes.json, search-*.json)
+- **Output**: `public/data/` (manifest.json, events-YYYY-MM.json, artists.json, venues.json, indexes.json, search-\*.json)
 - **Processing Order**: Events → Venues → Artists → Normalization → Indexing → Chunking
 - **Data Validation**: All output validated against JSON schemas.
 - **Error Handling**: Comprehensive error collection with line numbers and context.
 
 ### Type System
+
 - Strict TypeScript with branded types for safety (`src/types/`)
 - Branded types prevent ID mixing (EventId, ArtistId, VenueId)
 - Strict TypeScript configuration with no `any` types.
 - Runtime type guards for data validation.
 
 ### Frontend Architecture
+
 - React 19, TypeScript, Vite, Tailwind CSS, Zustand, Vitest + Testing Library.
 - **Path Aliases**: `@/` maps to `src/`, plus specific aliases for `@/components/*`, `@/utils/*`, `@/types/*`, `@/hooks/*`, `@/stores/*`, `@/pages/*`.
 - **Base Path for GitHub Pages**: `/zivv/` in production.
@@ -82,6 +91,7 @@ The project uses Node.js 18+ and npm/yarn.
 - **IndexedDB Caching**: Browser-based caching with version invalidation.
 
 ### File Structure Conventions
+
 ```
 src/
 ├── components/       # React components (layout, UI, error handling)
@@ -116,6 +126,7 @@ src/
 ## 7. Multilingual Support (Phase 9 Implementation Plan)
 
 ### Language Infrastructure
+
 - **React i18n Library**: Integration with `react-i18next` for dynamic translations.
 - **Language State Management**: Zustand store for current language preference.
 - **Browser Integration**: Automatic detection of user\'s preferred language.
@@ -124,6 +135,7 @@ src/
 ### Translation Architecture
 
 **Translation Files Structure**:
+
 ```
 public/locales/
 ├── en.json      # English translations
@@ -132,6 +144,7 @@ public/locales/
 ```
 
 **Translation Keys Strategy**:
+
 - **Nested JSON Structure**: Organized by feature/component.
 - **Pluralization Support**: Handle singular/plural forms.
 - **Variable Interpolation**: Dynamic content insertion.
