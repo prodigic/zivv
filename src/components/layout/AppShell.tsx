@@ -14,11 +14,11 @@ import { ErrorBoundary } from "@/components/error/ErrorBoundary.tsx";
 
 export const AppShell: React.FC = () => {
   const location = useLocation();
-  const initialize = useAppStore(state => state.initialize);
-  const loading = useAppStore(state => state.loading);
-  const errors = useAppStore(state => state.errors);
-  const dataService = useAppStore(state => state.dataService);
-  const showUpcomingOnly = useAppStore(state => state.showUpcomingOnly);
+  const initialize = useAppStore((state) => state.initialize);
+  const loading = useAppStore((state) => state.loading);
+  const errors = useAppStore((state) => state.errors);
+  const dataService = useAppStore((state) => state.dataService);
+  const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
   const { setDarkMode } = useDarkMode();
@@ -30,7 +30,8 @@ export const AppShell: React.FC = () => {
       if (saved !== null) {
         setDarkMode(saved === "true");
       } else {
-        const systemPrefers = window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
+        const systemPrefers =
+          window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
         setDarkMode(systemPrefers);
       }
     }
@@ -75,15 +76,26 @@ export const AppShell: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md mx-auto text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="text-red-600 mb-4">
-            <svg className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="h-12 w-12 mx-auto"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
           </div>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">
             Failed to Load Application
           </h2>
           <p className="text-gray-600 mb-4">
-            Unable to connect to the data service. Please check your internet connection and try again.
+            Unable to connect to the data service. Please check your internet
+            connection and try again.
           </p>
           <button
             onClick={() => window.location.reload()}
@@ -97,12 +109,11 @@ export const AppShell: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="h-full bg-gray-50 dark:bg-gray-900">
       {/* Mobile-first layout */}
-      <div className="flex flex-col min-h-screen lg:flex-row">
-        
+      <div className="flex flex-col h-full lg:flex-row">
         {/* Side Navigation - Desktop */}
-        <SideNavigation 
+        <SideNavigation
           isOpen={isSideNavOpen}
           onClose={() => setIsSideNavOpen(false)}
           className="hidden lg:block lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-64 lg:z-30"
@@ -112,13 +123,13 @@ export const AppShell: React.FC = () => {
         {isSideNavOpen && (
           <div className="lg:hidden">
             {/* Backdrop */}
-            <div 
+            <div
               className="fixed inset-0 bg-black bg-opacity-50 z-40"
               onClick={() => setIsSideNavOpen(false)}
             />
-            
+
             {/* Side Navigation */}
-            <SideNavigation 
+            <SideNavigation
               isOpen={isSideNavOpen}
               onClose={() => setIsSideNavOpen(false)}
               className="fixed inset-y-0 left-0 w-64 z-50"
@@ -127,16 +138,21 @@ export const AppShell: React.FC = () => {
         )}
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-h-screen lg:min-h-0 lg:ml-64">
-          
+        <div className="flex-1 flex flex-col h-full lg:ml-64">
           {/* Header */}
-          <Header 
+          <Header
             onMenuToggle={() => setIsSideNavOpen(!isSideNavOpen)}
             className="flex-shrink-0"
           />
 
           {/* Page Content */}
-          <main className="flex-1 pb-16 lg:pb-0 overflow-auto">
+          <main
+            className="flex-1 pb-16 lg:pb-0 overflow-auto [&::-webkit-scrollbar]:hidden"
+            style={{
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // IE/Edge
+            }}
+          >
             <ErrorBoundary>
               <Outlet />
             </ErrorBoundary>
@@ -181,7 +197,9 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   };
 
   return (
-    <div className={`mx-auto ${maxWidthClasses[maxWidth]} ${paddingClasses[padding]} ${className}`}>
+    <div
+      className={`mx-auto ${maxWidthClasses[maxWidth]} ${paddingClasses[padding]} ${className}`}
+    >
       {children}
     </div>
   );
@@ -214,16 +232,10 @@ export const ContentArea: React.FC<ContentAreaProps> = ({
               </h1>
             )}
             {subtitle && (
-              <p className="text-gray-600 dark:text-gray-300">
-                {subtitle}
-              </p>
+              <p className="text-gray-600 dark:text-gray-300">{subtitle}</p>
             )}
           </div>
-          {actions && (
-            <div className="ml-4 flex-shrink-0">
-              {actions}
-            </div>
-          )}
+          {actions && <div className="ml-4 flex-shrink-0">{actions}</div>}
         </div>
       </div>
     )}
@@ -245,7 +257,7 @@ export const TwoColumnLayout: React.FC<TwoColumnLayoutProps> = ({
 }) => {
   const sidebarWidthClasses = {
     narrow: "lg:w-64",
-    normal: "lg:w-80", 
+    normal: "lg:w-80",
     wide: "lg:w-96",
   };
 
@@ -253,14 +265,14 @@ export const TwoColumnLayout: React.FC<TwoColumnLayoutProps> = ({
     <PageLayout maxWidth="full" padding="md">
       <div className="lg:flex lg:gap-8">
         {/* Sidebar - Mobile: full width, Desktop: fixed width */}
-        <aside className={`${sidebarWidthClasses[sidebarWidth]} lg:flex-shrink-0 mb-8 lg:mb-0`}>
+        <aside
+          className={`${sidebarWidthClasses[sidebarWidth]} lg:flex-shrink-0 mb-8 lg:mb-0`}
+        >
           {sidebar}
         </aside>
-        
+
         {/* Main content */}
-        <main className="lg:flex-1 min-w-0">
-          {main}
-        </main>
+        <main className="lg:flex-1 min-w-0">{main}</main>
       </div>
     </PageLayout>
   );

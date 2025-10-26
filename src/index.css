@@ -32,6 +32,11 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-family: Inter, system-ui, sans-serif;
   line-height: 1.5;
@@ -40,6 +45,12 @@ body {
   background-color: rgb(var(--bg-primary));
   color: rgb(var(--text-primary));
   text-wrap: balance;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Selective transitions for better performance */
@@ -146,12 +157,25 @@ html {
   }
 }
 
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
 
 .animate-slide-in {
   animation: slideIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
 }
 
 /* Custom scrollbar */
