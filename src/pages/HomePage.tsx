@@ -3,6 +3,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.tsx";
 import { useAppStore } from "@/stores/appStore.ts";
 import { useFilterStore } from "@/stores/filterStore.ts";
@@ -43,11 +44,45 @@ const HomePage: React.FC = () => {
 
   const { filters, searchQuery } = useFilterStore();
   const getArtist = useAppStore((state) => state.getArtist);
+  const location = useLocation();
 
   const [viewMode, setViewMode] = useState<"wide" | "narrow">("narrow");
   const [displayLimit, setDisplayLimit] = useState(50); // Start with 50 events
   const pageSize = 50; // Load 50 events at a time for infinite scroll
   const allEventsRaw = getAllEvents(Infinity); // Get all loaded events
+
+  // Scroll position restoration - target the actual scrolling container (main element)
+  useEffect(() => {
+    const scrollKey = `scroll-position-home`;
+    const savedPosition = sessionStorage.getItem(scrollKey);
+    const mainElement = document.querySelector('main');
+    
+    if (savedPosition && mainElement) {
+      // Restore scroll position after content loads
+      const timeoutId = setTimeout(() => {
+        if (mainElement) {
+          mainElement.scrollTop = parseInt(savedPosition, 10);
+        }
+      }, 100);
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [location.key]);
+
+  // Save scroll position on unmount or navigation
+  useEffect(() => {
+    const scrollKey = `scroll-position-home`;
+    const mainElement = document.querySelector('main');
+    
+    return () => {
+      if (mainElement) {
+        sessionStorage.setItem(
+          scrollKey,
+          mainElement.scrollTop.toString()
+        );
+      }
+    };
+  }, []);
 
   // Apply filters from filter store
   const { allFilteredEvents, allEvents } = React.useMemo(() => {
