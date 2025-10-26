@@ -35,18 +35,9 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
           return true; // Show all venues if no cities selected
         }
 
-        // Map full city names back to normalized names for venue matching
-        const cityMapping: Record<string, string> = {
-          "San Francisco": "S.f",
-          Oakland: "Oakland",
-          Berkeley: "Berkeley",
-          "Santa Cruz": "Santa",
-        };
-
-        return selectedCities.some((selectedCity) => {
-          const normalizedCity = cityMapping[selectedCity] || selectedCity;
-          return venue.city === normalizedCity;
-        });
+        // City filter now stores normalized names (S.f, Oakland, etc.)
+        // so we can directly compare with venue.city
+        return selectedCities.includes(venue.city);
       })
       .sort((a, b) => a.name.localeCompare(b.name));
     return venueList;

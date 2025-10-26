@@ -31,23 +31,23 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
   );
 
   // Check if a city is currently selected
-  const isSelected = (cityName: string) => {
+  const isSelected = (normalizedName: string) => {
     const currentCities = filters.cities || [];
 
-    if (cityName === "Other") {
+    if (normalizedName === "Other") {
       // Check if any other cities are selected
       return otherCities.some((city) => currentCities.includes(city));
     } else {
-      // For main cities, check by full name
-      return currentCities.includes(cityName);
+      // For main cities, check by normalized name (the actual data city name)
+      return currentCities.includes(normalizedName);
     }
   };
 
   // Handle city selection (toggle)
-  const handleCityClick = (cityName: string) => {
+  const handleCityClick = (normalizedName: string) => {
     const currentCities = filters.cities || [];
 
-    if (cityName === "Other") {
+    if (normalizedName === "Other") {
       // Handle "Other" category - toggle all other cities
       const hasOtherCities = otherCities.some((city) =>
         currentCities.includes(city)
@@ -71,20 +71,18 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
         updateFilter("cities", [...currentCities, ...newOtherCities]);
       }
     } else {
-      // Handle main cities normally
-      const actualCityName = cityName; // Use the full city name, not normalized
-
-      if (isSelected(actualCityName)) {
+      // Handle main cities - store the normalized name (actual data city name)
+      if (isSelected(normalizedName)) {
         // Remove the city from selection
-        const updatedCities = currentCities.filter((c) => c !== actualCityName);
+        const updatedCities = currentCities.filter((c) => c !== normalizedName);
         if (updatedCities.length === 0) {
           clearFilter("cities");
         } else {
           updateFilter("cities", updatedCities);
         }
       } else {
-        // Add the city to selection
-        updateFilter("cities", [...currentCities, actualCityName]);
+        // Add the city to selection using normalized name
+        updateFilter("cities", [...currentCities, normalizedName]);
       }
     }
   };
@@ -127,11 +125,11 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
           {/* Single row of city filter options */}
           <div className="flex flex-wrap gap-1 items-center">
             {cities.map((city) => {
-              const selected = isSelected(city.name);
+              const selected = isSelected(city.normalizedName);
               return (
                 <button
                   key={city.slug}
-                  onClick={() => handleCityClick(city.name)}
+                  onClick={() => handleCityClick(city.normalizedName)}
                   className={`
                     px-2 py-1 sm:px-3 sm:py-1.5 rounded font-mono text-xs font-bold
                     border border-dashed transition-all duration-200

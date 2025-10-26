@@ -42,8 +42,9 @@ const HomePage: React.FC = () => {
   const manifest = useAppStore((state) => state.manifest);
 
   const { filters, searchQuery } = useFilterStore();
+  const getArtist = useAppStore((state) => state.getArtist);
 
-  const [viewMode, setViewMode] = useState<"wide" | "narrow">("wide");
+  const [viewMode, setViewMode] = useState<"wide" | "narrow">("narrow");
   const [displayLimit, setDisplayLimit] = useState(50); // Start with 50 events
   const pageSize = 50; // Load 50 events at a time for infinite scroll
   const allEventsRaw = getAllEvents(Infinity); // Get all loaded events
@@ -62,9 +63,147 @@ const HomePage: React.FC = () => {
       );
     }
 
-    // NOTE: Old pagination filter logic removed - was filtering events unnecessarily
-    // These filters (dates, dateRange, priceRange, cities, venues) will be re-integrated
-    // when the new unified toolbar filtering system is completed (Sub-Phase 2)
+    // Apply city filter
+    if (filters.cities && filters.cities.length > 0) {
+      filteredEvents = filteredEvents.filter((event) => {
+        const venue = getVenue(event.venueId);
+        return venue && filters.cities.includes(venue.city);
+      });
+    }
+
+    // Apply specific dates filter (multi-select dates)
+    if (filters.dates && filters.dates.length > 0) {
+      filteredEvents = filteredEvents.filter((event) => {
+        const eventDate = new Date(event.dateEpochMs)
+          .toISOString()
+          .split("T")[0];
+        return filters.dates.includes(eventDate);
+      });
+    }
+
+    // Apply date range filter
+    if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
+      filteredEvents = filteredEvents.filter((event) => {
+        const eventDate = new Date(event.dateEpochMs);
+        eventDate.setHours(0, 0, 0, 0);
+
+        if (filters.dateRange.startDate) {
+          const startDate = new Date(filters.dateRange.startDate);
+          startDate.setHours(0, 0, 0, 0);
+          if (eventDate < startDate) return false;
+        }
+
+        if (filters.dateRange.endDate) {
+          const endDate = new Date(filters.dateRange.endDate);
+          endDate.setHours(23, 59, 59, 999);
+          if (eventDate > endDate) return false;
+        }
+
+        return true;
+      });
+    }
+
+    // Apply venue filter
+    if (filters.venues && filters.venues.length > 0) {
+      filteredEvents = filteredEvents.filter((event) => {
+        const venue = getVenue(event.venueId);
+        return venue && filters.venues.includes(venue.name);
+      });
+    }
+
+    // Apply price range filter
+    if (filters.isFree) {
+      filteredEvents = filteredEvents.filter((event) => event.isFree === true);
+    } else if (
+      filters.priceRange?.min !== undefined ||
+      filters.priceRange?.max !== undefined
+    ) {
+      filteredEvents = filteredEvents.filter((event) => {
+        // Handle free events
+        if (event.isFree) {
+          return (
+            filters.priceRange.min === undefined || filters.priceRange.min === 0
+          );
+        }
+
+        const eventPrice = event.priceMin || 0;
+
+        if (
+          filters.priceRange.min !== undefined &&
+          eventPrice < filters.priceRange.min
+        ) {
+          return false;
+        }
+
+        if (
+          filters.priceRange.max !== undefined &&
+          eventPrice > filters.priceRange.max
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    // Apply age restriction filter
+    if (filters.ageRestrictions && filters.ageRestrictions.length > 0) {
+      filteredEvents = filteredEvents.filter((event) => {
+        return filters.ageRestrictions.some((restriction) => {
+          const eventAge = event.ageRestriction?.toLowerCase() || "";
+          const filterAge = restriction.toLowerCase();
+
+          // Handle "all-ages" variations
+          if (filterAge === "all-ages" || filterAge === "all ages") {
+            return (
+              eventAge.includes("all") ||
+              eventAge.includes("a/a") ||
+              eventAge === "all-ages"
+            );
+          }
+
+          // Handle specific age restrictions (18+, 21+, etc.)
+          return eventAge.includes(filterAge);
+        });
+      });
+    }
+
+    // Apply tags filter
+    if (filters.tags && filters.tags.length > 0) {
+      filteredEvents = filteredEvents.filter((event) => {
+        if (!event.tags || event.tags.length === 0) return false;
+        return filters.tags.some((tag) => event.tags?.includes(tag));
+      });
+    }
+
+    // Apply search query filter (search across artist names and venue names)
+    if (searchQuery && searchQuery.trim().length > 0) {
+      const searchLower = searchQuery.toLowerCase().trim();
+      filteredEvents = filteredEvents.filter((event) => {
+        // Search in headliner artist name
+        const headlinerArtist = getArtist(event.headlinerArtistId);
+        if (headlinerArtist?.name.toLowerCase().includes(searchLower)) {
+          return true;
+        }
+
+        // Search in supporting artist names
+        if (event.artistIds && event.artistIds.length > 0) {
+          const hasMatchingArtist = event.artistIds.some((artistId) => {
+            const artist = getArtist(artistId);
+            return artist?.name.toLowerCase().includes(searchLower);
+          });
+          if (hasMatchingArtist) return true;
+        }
+
+        // Search in venue name
+        const venue = getVenue(event.venueId);
+        if (venue?.name.toLowerCase().includes(searchLower)) {
+          return true;
+        }
+
+        return false;
+      });
+    }
 
     // Return both full filtered count and display-limited events
     return {
@@ -79,8 +218,13 @@ const HomePage: React.FC = () => {
     filters.priceRange,
     filters.cities,
     filters.venues,
+    filters.isFree,
+    filters.ageRestrictions,
+    filters.tags,
+    searchQuery,
     displayLimit,
     getVenue,
+    getArtist,
   ]);
 
   useEffect(() => {

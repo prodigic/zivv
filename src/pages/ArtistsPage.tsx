@@ -3,13 +3,14 @@
  */
 
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import {
   ArtistCardSkeleton,
   ListSkeleton,
 } from "@/components/ui/LoadingSpinner.js";
 import { useAppStore } from "@/stores/appStore.js";
+import { useFilterStore } from "@/stores/filterStore.js";
 import type { ArtistId } from "@/types/events.js";
 
 const ArtistsPage: React.FC = () => {
@@ -23,21 +24,143 @@ const ArtistsPage: React.FC = () => {
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
   const manifest = useAppStore((state) => state.manifest);
 
-  const [artistsDisplayLimit, setArtistsDisplayLimit] = React.useState(25);
+  const { filters, setSearchQuery, clearFilters, clearSearch } =
+    useFilterStore();
+  const navigate = useNavigate();
+  const [artistsDisplayLimit, setArtistsDisplayLimit] = React.useState(30);
+  const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
-  // Filter artists based on upcoming events flag
+  // Clear search query when returning to artists page
+  React.useEffect(() => {
+    clearSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount, intentionally ignoring dependencies
+
+  // Handle artist click - navigate to events page with search for this artist
+  const handleArtistClick = (artistName: string) => {
+    // Only set search query, keep other filters (cities, dates, etc.)
+    setSearchQuery(artistName);
+    // Navigate to home page (events list)
+    navigate("/");
+  };
+
+  // Filter artists based on upcoming events flag and toolbar filters
   const allArtistsArray = React.useMemo(() => {
-    const artistsArray = Array.from(artists.values());
+    let artistsArray = Array.from(artists.values());
 
+    // Filter by upcoming events
     if (showUpcomingOnly) {
-      // Only show artists with upcoming events
-      return artistsArray.filter((artist) => artist.upcomingEventCount > 0);
+      artistsArray = artistsArray.filter(
+        (artist) => artist.upcomingEventCount > 0
+      );
+    }
+
+    // Filter by cities - show artists who have events in selected cities
+    if (filters.cities && filters.cities.length > 0) {
+      artistsArray = artistsArray.filter((artist) => {
+        const allUpcomingEvents = getUpcomingEvents(Infinity);
+        const artistEvents = allUpcomingEvents.filter((event) => {
+          const isHeadliner = event.headlinerArtistId === artist.id;
+          const isSupporting =
+            event.artistIds && event.artistIds.includes(artist.id);
+          return isHeadliner || isSupporting;
+        });
+
+        // Check if any event is in a selected city
+        return artistEvents.some((event) => {
+          const venue = getVenue(event.venueId);
+          return venue && filters.cities.includes(venue.city);
+        });
+      });
+    }
+
+    // Filter by date range - show artists with events in the date range
+    if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
+      artistsArray = artistsArray.filter((artist) => {
+        const allUpcomingEvents = getUpcomingEvents(Infinity);
+        const artistEvents = allUpcomingEvents.filter((event) => {
+          const isHeadliner = event.headlinerArtistId === artist.id;
+          const isSupporting =
+            event.artistIds && event.artistIds.includes(artist.id);
+          return isHeadliner || isSupporting;
+        });
+
+        // Check if any event is in the date range
+        return artistEvents.some((event) => {
+          const eventDate = new Date(event.dateEpochMs);
+          eventDate.setHours(0, 0, 0, 0);
+
+          if (filters.dateRange.startDate) {
+            const startDate = new Date(filters.dateRange.startDate);
+            startDate.setHours(0, 0, 0, 0);
+            if (eventDate < startDate) return false;
+          }
+
+          if (filters.dateRange.endDate) {
+            const endDate = new Date(filters.dateRange.endDate);
+            endDate.setHours(23, 59, 59, 999);
+            if (eventDate > endDate) return false;
+          }
+
+          return true;
+        });
+      });
+    }
+
+    // Filter by specific dates
+    if (filters.dates && filters.dates.length > 0) {
+      artistsArray = artistsArray.filter((artist) => {
+        const allUpcomingEvents = getUpcomingEvents(Infinity);
+        const artistEvents = allUpcomingEvents.filter((event) => {
+          const isHeadliner = event.headlinerArtistId === artist.id;
+          const isSupporting =
+            event.artistIds && event.artistIds.includes(artist.id);
+          return isHeadliner || isSupporting;
+        });
+
+        // Check if any event is on a selected date
+        return artistEvents.some((event) => {
+          const eventDate = new Date(event.dateEpochMs)
+            .toISOString()
+            .split("T")[0];
+          return filters.dates.includes(eventDate);
+        });
+      });
     }
 
     return artistsArray;
-  }, [artists, showUpcomingOnly]);
+  }, [
+    artists,
+    showUpcomingOnly,
+    filters.cities,
+    filters.dateRange,
+    filters.dates,
+    getUpcomingEvents,
+    getVenue,
+  ]);
 
   const artistsArray = allArtistsArray.slice(0, artistsDisplayLimit);
+
+  // Infinite scroll with Intersection Observer
+  React.useEffect(() => {
+    const element = loadMoreRef.current;
+    if (!element || allArtistsArray.length <= artistsDisplayLimit) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setArtistsDisplayLimit((prev) => prev + 30);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [allArtistsArray.length, artistsDisplayLimit]);
 
   // Initialize app and load initial event chunks
   useEffect(() => {
@@ -177,6 +300,7 @@ const ArtistsPage: React.FC = () => {
             return (
               <div
                 key={artist.id}
+                onClick={() => handleArtistClick(artist.name)}
                 className={`artist-card ${artist.upcomingEventCount === 0 ? "no-upcoming" : ""} bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow cursor-pointer`}
               >
                 <div className="space-y-4">
@@ -213,6 +337,7 @@ const ArtistsPage: React.FC = () => {
                   {nextEvent && (
                     <Link
                       to={`/events/${nextEvent.id}`}
+                      onClick={(e) => e.stopPropagation()}
                       className="block bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                     >
                       <div className="flex items-start space-x-3">
@@ -305,16 +430,13 @@ const ArtistsPage: React.FC = () => {
             );
           })}
 
-          {/* Load More Artists Button */}
+          {/* Infinite scroll trigger */}
           {allArtistsArray.length > artistsDisplayLimit && (
-            <div className="text-center pt-6">
-              <button
-                onClick={() => setArtistsDisplayLimit((prev) => prev + 25)}
-                className="px-6 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
-                Load More Artists (
-                {allArtistsArray.length - artistsDisplayLimit} remaining)
-              </button>
+            <div ref={loadMoreRef} className="col-span-full text-center py-6">
+              <div className="inline-flex items-center space-x-2 text-gray-500 dark:text-gray-400">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-500"></div>
+                <span className="text-sm">Loading more artists...</span>
+              </div>
             </div>
           )}
         </div>
