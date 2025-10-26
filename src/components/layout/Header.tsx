@@ -7,8 +7,10 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useFilterStore } from "@/stores/filterStore.ts";
 import { useAppStore } from "@/stores/appStore.ts";
 import { CompactDarkModeToggle } from "@/components/ui/DarkModeToggle.tsx";
-import { UpcomingToggle } from "@/components/ui/UpcomingToggle";
-import { FreeShowsToggle } from "@/components/ui/FreeShowsToggle";
+import {
+  ToolbarFilterDropdown,
+  SearchFilterToolbar,
+} from "@/components/filters";
 import type { Event } from "@/types/events";
 
 interface HeaderProps {
@@ -154,14 +156,8 @@ export const Header: React.FC<HeaderProps> = ({
   className = "",
 }) => {
   const navigate = useNavigate();
-  const { searchQuery, setSearchQuery, hasActiveFilters, clearFilters } =
-    useFilterStore();
-  const { searchEvents, loading, showUpcomingOnly, toggleUpcomingOnly } =
-    useAppStore();
-
-  // Check for any active filters (including app-level filters)
-  const hasAnyActiveFilters =
-    hasActiveFilters || searchQuery.trim() !== "" || showUpcomingOnly;
+  const { searchQuery, setSearchQuery } = useFilterStore();
+  const { searchEvents, loading } = useAppStore();
 
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchResults, setSearchResults] = useState<Event[]>([]);
@@ -319,58 +315,12 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
 
-          {/* Right: Toggles + Filter + View + Language + Dark Mode */}
+          {/* Right: Filter + View + Language + Dark Mode */}
           <div className="flex items-center space-x-3">
-            {/* Upcoming Only Toggle */}
-            <div className="hidden sm:block">
-              <UpcomingToggle />
-            </div>
-
-            {/* Free Shows Only Toggle */}
-            <div className="hidden sm:block">
-              <FreeShowsToggle />
-            </div>
-
-            {/* Filter Toggle */}
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                clearFilters();
-                setSearchResults([]);
-                if (showUpcomingOnly) {
-                  toggleUpcomingOnly(); // Reset to show all (default)
-                }
-              }}
-              className={`p-1.5 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                hasAnyActiveFilters
-                  ? "text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-              }`}
-              aria-label={
-                hasAnyActiveFilters
-                  ? "Clear active filters"
-                  : "No active filters"
-              }
-              title={
-                hasAnyActiveFilters
-                  ? "Clear active filters"
-                  : "No active filters"
-              }
-            >
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                  fill={hasAnyActiveFilters ? "currentColor" : "none"}
-                />
-              </svg>
-            </button>
+            {/* Unified Filter Dropdown */}
+            <ToolbarFilterDropdown>
+              <SearchFilterToolbar />
+            </ToolbarFilterDropdown>
 
             {/* View Toggle - Desktop only */}
             <ViewToggle />
