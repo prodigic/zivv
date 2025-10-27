@@ -23,7 +23,21 @@ const VenuesPage: React.FC = () => {
   const { filters, updateFilter, clearFilters, clearFilter } = useFilterStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const [venuesDisplayLimit, setVenuesDisplayLimit] = React.useState(30);
+  
+  // Initialize display limit based on saved scroll position
+  const getInitialDisplayLimit = () => {
+    const scrollKey = `scroll-position-venues`;
+    const savedPosition = sessionStorage.getItem(scrollKey);
+    if (savedPosition) {
+      const targetScroll = parseInt(savedPosition, 10);
+      const estimatedItemHeight = 300;
+      const estimatedItemsNeeded = Math.ceil(targetScroll / estimatedItemHeight) + 30;
+      return Math.max(30, estimatedItemsNeeded);
+    }
+    return 30;
+  };
+  
+  const [venuesDisplayLimit, setVenuesDisplayLimit] = React.useState(getInitialDisplayLimit);
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
   // Clear venue filter when returning to venues page
@@ -34,21 +48,22 @@ const VenuesPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run on mount, intentionally ignoring dependencies
 
-  // Scroll position restoration with more reliable approach
+  // Scroll position restoration after content loads
   useEffect(() => {
     const scrollKey = `scroll-position-venues`;
     const mainElement = document.querySelector("main");
     
     if (!mainElement) return;
 
-    // Restore scroll position when component mounts
     const savedPosition = sessionStorage.getItem(scrollKey);
     if (savedPosition) {
-      const timeoutId = setTimeout(() => {
-        mainElement.scrollTop = parseInt(savedPosition, 10);
-      }, 150);
+      const targetScroll = parseInt(savedPosition, 10);
       
-      // Clear the timeout on unmount
+      // Restore scroll position after content loads
+      const timeoutId = setTimeout(() => {
+        mainElement.scrollTop = targetScroll;
+      }, 300);
+      
       return () => clearTimeout(timeoutId);
     }
   }, [location.pathname]);
@@ -57,7 +72,7 @@ const VenuesPage: React.FC = () => {
   useEffect(() => {
     const scrollKey = `scroll-position-venues`;
     const mainElement = document.querySelector("main");
-    
+
     if (!mainElement) return;
 
     let scrollTimeout: NodeJS.Timeout;

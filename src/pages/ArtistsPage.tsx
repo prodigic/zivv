@@ -28,7 +28,21 @@ const ArtistsPage: React.FC = () => {
     useFilterStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const [artistsDisplayLimit, setArtistsDisplayLimit] = React.useState(30);
+  
+  // Initialize display limit based on saved scroll position
+  const getInitialDisplayLimit = () => {
+    const scrollKey = `scroll-position-artists`;
+    const savedPosition = sessionStorage.getItem(scrollKey);
+    if (savedPosition) {
+      const targetScroll = parseInt(savedPosition, 10);
+      const estimatedItemHeight = 250;
+      const estimatedItemsNeeded = Math.ceil(targetScroll / estimatedItemHeight) + 30;
+      return Math.max(30, estimatedItemsNeeded);
+    }
+    return 30;
+  };
+  
+  const [artistsDisplayLimit, setArtistsDisplayLimit] = React.useState(getInitialDisplayLimit);
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
   // Clear search query when returning to artists page
@@ -37,21 +51,22 @@ const ArtistsPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run on mount, intentionally ignoring dependencies
 
-  // Scroll position restoration with more reliable approach
+  // Scroll position restoration after content loads
   useEffect(() => {
     const scrollKey = `scroll-position-artists`;
     const mainElement = document.querySelector("main");
     
     if (!mainElement) return;
 
-    // Restore scroll position when component mounts
     const savedPosition = sessionStorage.getItem(scrollKey);
     if (savedPosition) {
-      const timeoutId = setTimeout(() => {
-        mainElement.scrollTop = parseInt(savedPosition, 10);
-      }, 150);
+      const targetScroll = parseInt(savedPosition, 10);
       
-      // Clear the timeout on unmount
+      // Restore scroll position after content loads
+      const timeoutId = setTimeout(() => {
+        mainElement.scrollTop = targetScroll;
+      }, 300);
+      
       return () => clearTimeout(timeoutId);
     }
   }, [location.pathname]);
@@ -60,7 +75,7 @@ const ArtistsPage: React.FC = () => {
   useEffect(() => {
     const scrollKey = `scroll-position-artists`;
     const mainElement = document.querySelector("main");
-    
+
     if (!mainElement) return;
 
     let scrollTimeout: NodeJS.Timeout;

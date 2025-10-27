@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const scrollKey = `scroll-position-home`;
     const mainElement = document.querySelector("main");
-    
+
     if (!mainElement) return;
 
     // Restore scroll position when component mounts
@@ -64,7 +64,7 @@ const HomePage: React.FC = () => {
       const timeoutId = setTimeout(() => {
         mainElement.scrollTop = parseInt(savedPosition, 10);
       }, 150);
-      
+
       // Clear the timeout on unmount
       return () => clearTimeout(timeoutId);
     }
@@ -74,7 +74,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const scrollKey = `scroll-position-home`;
     const mainElement = document.querySelector("main");
-    
+
     if (!mainElement) return;
 
     let scrollTimeout: NodeJS.Timeout;

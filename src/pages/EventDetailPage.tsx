@@ -22,7 +22,10 @@ const EventDetailPage: React.FC = () => {
             This page will be implemented in Phase 11
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Event slug: <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{slug}</code>
+            Event slug:{" "}
+            <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+              {slug}
+            </code>
           </p>
           <div className="pt-4">
             <button

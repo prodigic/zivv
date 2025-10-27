@@ -10,6 +10,21 @@
       content="Discover punk and alternative music shows in the San Francisco Bay Area. Find concerts, venues, and artists with Zivv's comprehensive event listings."
     />
     <link rel="manifest" href="/manifest.json" />
+    <!-- Prevent dark mode flash - runs before page render -->
+    <script>
+      (function() {
+        try {
+          const darkMode = localStorage.getItem('darkMode');
+          const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          
+          if (darkMode === 'true' || (darkMode === null && systemPrefersDark)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {
+          // localStorage might not be available
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
