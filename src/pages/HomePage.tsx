@@ -51,36 +51,45 @@ const HomePage: React.FC = () => {
   const pageSize = 50; // Load 50 events at a time for infinite scroll
   const allEventsRaw = getAllEvents(Infinity); // Get all loaded events
 
-  // Scroll position restoration - target the actual scrolling container (main element)
+  // Scroll position restoration with more reliable approach
   useEffect(() => {
     const scrollKey = `scroll-position-home`;
-    const savedPosition = sessionStorage.getItem(scrollKey);
-    const mainElement = document.querySelector('main');
+    const mainElement = document.querySelector("main");
     
-    if (savedPosition && mainElement) {
-      // Restore scroll position after content loads
+    if (!mainElement) return;
+
+    // Restore scroll position when component mounts
+    const savedPosition = sessionStorage.getItem(scrollKey);
+    if (savedPosition) {
       const timeoutId = setTimeout(() => {
-        if (mainElement) {
-          mainElement.scrollTop = parseInt(savedPosition, 10);
-        }
-      }, 100);
+        mainElement.scrollTop = parseInt(savedPosition, 10);
+      }, 150);
       
+      // Clear the timeout on unmount
       return () => clearTimeout(timeoutId);
     }
-  }, [location.key]);
+  }, [location.pathname]);
 
-  // Save scroll position on unmount or navigation
+  // Save scroll position continuously as user scrolls
   useEffect(() => {
     const scrollKey = `scroll-position-home`;
-    const mainElement = document.querySelector('main');
+    const mainElement = document.querySelector("main");
     
+    if (!mainElement) return;
+
+    let scrollTimeout: NodeJS.Timeout;
+    const handleScroll = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        sessionStorage.setItem(scrollKey, mainElement.scrollTop.toString());
+      }, 100);
+    };
+
+    mainElement.addEventListener("scroll", handleScroll);
+
     return () => {
-      if (mainElement) {
-        sessionStorage.setItem(
-          scrollKey,
-          mainElement.scrollTop.toString()
-        );
-      }
+      mainElement.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
     };
   }, []);
 
