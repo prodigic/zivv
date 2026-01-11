@@ -11,7 +11,7 @@ import type { DevServerProcess } from './types.js';
 
 interface TUIState {
   servers: DevServerProcess[];
-  selectedIndex: number;
+  selectedServerIndex: number;  // Index into servers array, not list items
   lastUpdate: Date;
   stats: {
     total: number;
@@ -36,7 +36,7 @@ export class DevServerTUI {
     this.manager = manager;
     this.state = {
       servers: [],
-      selectedIndex: 0,
+      selectedServerIndex: 0,
       lastUpdate: new Date(),
       stats: { total: 0, running: 0, stopped: 0, ports: [] }
     };
@@ -203,8 +203,11 @@ export class DevServerTUI {
 
     // List selection
     this.serverList.on('select', (item, index) => {
-      this.state.selectedIndex = index;
-      this.updateInfoPanel();
+      const serverIndex = this.listIndexToServerIndex(index);
+      if (serverIndex >= 0) {
+        this.state.selectedServerIndex = serverIndex;
+        this.updateInfoPanel();
+      }
     });
   }
 
@@ -304,6 +307,29 @@ export class DevServerTUI {
   }
 
   /**
+   * Convert list item index to server array index
+   */
+  private listIndexToServerIndex(listIndex: number): number {
+    if (this.state.servers.length === 0) {
+      return -1; // No servers available
+    }
+    // Servers start at list index 2 (after header and empty line)
+    const serverIndex = listIndex - 2;
+    return serverIndex >= 0 && serverIndex < this.state.servers.length ? serverIndex : -1;
+  }
+
+  /**
+   * Convert server array index to list item index
+   */
+  private serverIndexToListIndex(serverIndex: number): number {
+    if (this.state.servers.length === 0 || serverIndex < 0) {
+      return -1;
+    }
+    // Servers start at list index 2 (after header and empty line)
+    return serverIndex + 2;
+  }
+
+  /**
    * Update server list display
    */
   private updateServerList(): void {
@@ -313,6 +339,7 @@ export class DevServerTUI {
       items.push('  No dev servers currently running');
       items.push('');
       items.push('  Press \'n\' to start a new server');
+      this.state.selectedServerIndex = -1; // No servers to select
     } else {
       items.push(`  ${this.state.servers.length} server${this.state.servers.length === 1 ? '' : 's'} running:`);
       items.push('');
@@ -325,17 +352,24 @@ export class DevServerTUI {
         const line = `  ${statusIcon} Port ${server.port} (PID ${server.pid}) - ${timeAgo} - ${memory}`;
         items.push(line);
       });
+
+      // Ensure selectedServerIndex is valid
+      if (this.state.selectedServerIndex >= this.state.servers.length) {
+        this.state.selectedServerIndex = Math.max(0, this.state.servers.length - 1);
+      }
+      if (this.state.selectedServerIndex < 0) {
+        this.state.selectedServerIndex = 0;
+      }
     }
 
     this.serverList.setItems(items);
 
-    // Maintain selection
-    if (this.state.selectedIndex >= items.length) {
-      this.state.selectedIndex = Math.max(0, items.length - 1);
-    }
-
-    if (items.length > 0 && this.state.selectedIndex < items.length) {
-      this.serverList.select(this.state.selectedIndex);
+    // Set selection to the correct server
+    if (this.state.servers.length > 0 && this.state.selectedServerIndex >= 0) {
+      const listIndex = this.serverIndexToListIndex(this.state.selectedServerIndex);
+      if (listIndex >= 0) {
+        this.serverList.select(listIndex);
+      }
     }
   }
 
@@ -453,10 +487,10 @@ export class DevServerTUI {
    * Get currently selected server
    */
   private getSelectedServer(): DevServerProcess | null {
-    if (this.state.selectedIndex < 0 || this.state.selectedIndex >= this.state.servers.length) {
+    if (this.state.selectedServerIndex < 0 || this.state.selectedServerIndex >= this.state.servers.length) {
       return null;
     }
-    return this.state.servers[this.state.selectedIndex];
+    return this.state.servers[this.state.selectedServerIndex];
   }
 
   /**
@@ -465,8 +499,11 @@ export class DevServerTUI {
   private selectPrevious(): void {
     if (this.state.servers.length === 0) return;
 
-    this.state.selectedIndex = Math.max(0, this.state.selectedIndex - 1);
-    this.serverList.select(this.state.selectedIndex);
+    this.state.selectedServerIndex = Math.max(0, this.state.selectedServerIndex - 1);
+    const listIndex = this.serverIndexToListIndex(this.state.selectedServerIndex);
+    if (listIndex >= 0) {
+      this.serverList.select(listIndex);
+    }
     this.updateInfoPanel();
     this.screen.render();
   }
@@ -477,8 +514,11 @@ export class DevServerTUI {
   private selectNext(): void {
     if (this.state.servers.length === 0) return;
 
-    this.state.selectedIndex = Math.min(this.state.servers.length - 1, this.state.selectedIndex + 1);
-    this.serverList.select(this.state.selectedIndex);
+    this.state.selectedServerIndex = Math.min(this.state.servers.length - 1, this.state.selectedServerIndex + 1);
+    const listIndex = this.serverIndexToListIndex(this.state.selectedServerIndex);
+    if (listIndex >= 0) {
+      this.serverList.select(listIndex);
+    }
     this.updateInfoPanel();
     this.screen.render();
   }
