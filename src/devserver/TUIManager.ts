@@ -598,7 +598,12 @@ export class DevServerTUI {
 
     try {
       this.showStatus(`Killing server on port ${server.port}...`);
-      await this.manager.stop(server.pid);
+
+      // Kill server with suppressed output to prevent TUI corruption
+      await this.suppressConsoleOutput(async () => {
+        return this.manager.stop(server.pid);
+      });
+
       this.showStatus(`Server on port ${server.port} killed successfully`);
       await this.refresh();
     } catch (error) {
@@ -615,11 +620,43 @@ export class DevServerTUI {
 
     try {
       this.showStatus(`Restarting server on port ${server.port}...`);
-      await this.manager.restart({ port: server.port });
+
+      // Restart server with suppressed output to prevent TUI corruption
+      await this.suppressConsoleOutput(async () => {
+        return this.manager.restart({ port: server.port });
+      });
+
       this.showStatus(`Server on port ${server.port} restarted successfully`);
       await this.refresh();
     } catch (error) {
       this.showError(`Failed to restart server: ${error}`);
+    }
+  }
+
+  /**
+   * Suppress stdout/stderr temporarily to prevent TUI corruption
+   */
+  private async suppressConsoleOutput<T>(operation: () => Promise<T>): Promise<T> {
+    // Save original stdout/stderr write functions
+    const originalStdoutWrite = process.stdout.write.bind(process.stdout);
+    const originalStderrWrite = process.stderr.write.bind(process.stderr);
+
+    try {
+      // Suppress console output during the operation
+      process.stdout.write = () => true;
+      process.stderr.write = () => true;
+
+      // Execute the operation
+      const result = await operation();
+
+      // Brief delay to ensure any async output is captured
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      return result;
+    } finally {
+      // Restore original stdout/stderr
+      process.stdout.write = originalStdoutWrite;
+      process.stderr.write = originalStderrWrite;
     }
   }
 
@@ -629,7 +666,12 @@ export class DevServerTUI {
   private async startNewServer(): Promise<void> {
     try {
       this.showStatus('Starting new dev server...');
-      await this.manager.start({ background: true });
+
+      // Start server with suppressed output to prevent TUI corruption
+      await this.suppressConsoleOutput(async () => {
+        return this.manager.start({ background: true });
+      });
+
       this.showStatus('New dev server started successfully');
       await this.refresh();
     } catch (error) {
@@ -643,7 +685,12 @@ export class DevServerTUI {
   private async cleanup(): Promise<void> {
     try {
       this.showStatus('Cleaning up orphaned processes...');
-      const cleaned = await this.manager.cleanup();
+
+      // Cleanup with suppressed output to prevent TUI corruption
+      const cleaned = await this.suppressConsoleOutput(async () => {
+        return this.manager.cleanup();
+      });
+
       this.showStatus(`Cleaned up ${cleaned} orphaned processes`);
       await this.refresh();
     } catch (error) {
