@@ -1,10 +1,239 @@
 {
   "chunkId": "2026-07",
   "dateRange": {
-    "startEpochMs": 1784358000000,
-    "endEpochMs": 1784444400000
+    "startEpochMs": 1782889200000,
+    "endEpochMs": 1784962800000
   },
   "events": [
+    {
+      "id": 20284909,
+      "slug": "2026-07-01-the-beach-boys-alameda-county-fair",
+      "date": "2026-07-01",
+      "dateEpochMs": 1782889200000,
+      "startTimeEpochMs": 1783051200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1136807639,
+      "artistIds": [
+        1136807639
+      ],
+      "venueId": 1800032510,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1768114938543,
+      "updatedAtEpochMs": 1768114938543,
+      "sourceLineNumber": 7947
+    },
+    {
+      "id": 2096219699,
+      "slug": "2026-07-06-rosalia-the-arena",
+      "date": "2026-07-06",
+      "dateEpochMs": 1783321200000,
+      "startTimeEpochMs": 1783395000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 556100646,
+      "artistIds": [
+        556100646
+      ],
+      "venueId": 1887679738,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938543,
+      "updatedAtEpochMs": 1768114938543,
+      "sourceLineNumber": 7949
+    },
+    {
+      "id": 261955795,
+      "slug": "2026-07-08-wolfmother-great-american-music-hall",
+      "date": "2026-07-08",
+      "dateEpochMs": 1783494000000,
+      "startTimeEpochMs": 1783656000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 985536936,
+      "artistIds": [
+        985536936
+      ],
+      "venueId": 463728167,
+      "priceMin": 45,
+      "priceMax": 50,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938543,
+      "updatedAtEpochMs": 1768114938543,
+      "sourceLineNumber": 7950
+    },
+    {
+      "id": 778411315,
+      "slug": "2026-07-08-flo-rida-alameda-county-fair",
+      "date": "2026-07-08",
+      "dateEpochMs": 1783494000000,
+      "startTimeEpochMs": 1783656000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2078453022,
+      "artistIds": [
+        2078453022
+      ],
+      "venueId": 1800032510,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1768114938543,
+      "updatedAtEpochMs": 1768114938543,
+      "sourceLineNumber": 7951
+    },
+    {
+      "id": 1030981328,
+      "slug": "2026-07-10-emm-the-chapel",
+      "date": "2026-07-10",
+      "dateEpochMs": 1783666800000,
+      "startTimeEpochMs": 1783774800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 629131794,
+      "artistIds": [
+        629131794
+      ],
+      "venueId": 680116887,
+      "priceMin": 30.93,
+      "priceMax": 30.93,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$95.26+ vip",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1768114938543,
+      "updatedAtEpochMs": 1768114938543,
+      "sourceLineNumber": 7953
+    },
+    {
+      "id": 1291063268,
+      "slug": "2026-07-10-olivia-dean-the-warriors-stadium",
+      "date": "2026-07-10",
+      "dateEpochMs": 1783666800000,
+      "startTimeEpochMs": 1783738800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1781162937,
+      "artistIds": [
+        1781162937
+      ],
+      "venueId": 793025194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938543,
+      "updatedAtEpochMs": 1768114938543,
+      "sourceLineNumber": 7954
+    },
+    {
+      "id": 1279747141,
+      "slug": "2026-07-11-olivia-dean-the-warriors-stadium",
+      "date": "2026-07-11",
+      "dateEpochMs": 1783753200000,
+      "startTimeEpochMs": 1783825200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1781162937,
+      "artistIds": [
+        1781162937
+      ],
+      "venueId": 793025194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938543,
+      "updatedAtEpochMs": 1768114938543,
+      "sourceLineNumber": 7955
+    },
+    {
+      "id": 306440672,
+      "slug": "2026-07-14-forrest-frank-the-arena",
+      "date": "2026-07-14",
+      "dateEpochMs": 1784012400000,
+      "startTimeEpochMs": 1784268000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1931897636,
+      "artistIds": [
+        1931897636,
+        399032892,
+        1455173018,
+        1971724990
+      ],
+      "venueId": 1887679738,
+      "priceMin": 71.28,
+      "priceMax": 71.28,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938544,
+      "updatedAtEpochMs": 1768114938544,
+      "sourceLineNumber": 7956
+    },
+    {
+      "id": 332594408,
+      "slug": "2026-07-17-pavement-mosswood-park",
+      "date": "2026-07-17",
+      "dateEpochMs": 1784271600000,
+      "startTimeEpochMs": 1784628000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1418055825,
+      "artistIds": [
+        1418055825,
+        1079569123,
+        1553690723,
+        1866539084
+      ],
+      "venueId": 1259562638,
+      "priceMin": 99,
+      "priceMax": 99,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$165 vip; Moswood pre-party",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "club",
+      "createdAtEpochMs": 1768114938544,
+      "updatedAtEpochMs": 1768114938544,
+      "sourceLineNumber": 7958
+    },
+    {
+      "id": 591422162,
+      "slug": "2026-07-17-bob-moses-greek-theater",
+      "date": "2026-07-17",
+      "dateEpochMs": 1784271600000,
+      "startTimeEpochMs": 1784341800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 923811041,
+      "artistIds": [
+        923811041,
+        276588061
+      ],
+      "venueId": 474218142,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938544,
+      "updatedAtEpochMs": 1768114938544,
+      "sourceLineNumber": 7960
+    },
     {
       "id": 454113390,
       "slug": "2026-07-18-mosswood-meltown-mosswood-park",
@@ -22,9 +251,33 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1761378167839,
-      "updatedAtEpochMs": 1761378167839,
+      "createdAtEpochMs": 1768114938314,
+      "updatedAtEpochMs": 1768114938314,
       "sourceLineNumber": 2475
+    },
+    {
+      "id": 821762167,
+      "slug": "2026-07-18-rainbow-kitten-surprise-the-greek-theater",
+      "date": "2026-07-18",
+      "dateEpochMs": 1784358000000,
+      "startTimeEpochMs": 1784642400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 414525381,
+      "artistIds": [
+        414525381,
+        1939393208
+      ],
+      "venueId": 474218142,
+      "priceMin": 79,
+      "priceMax": 79,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938545,
+      "updatedAtEpochMs": 1768114938545,
+      "sourceLineNumber": 7964
     },
     {
       "id": 1555990451,
@@ -43,9 +296,57 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1761378167839,
-      "updatedAtEpochMs": 1761378167839,
+      "createdAtEpochMs": 1768114938314,
+      "updatedAtEpochMs": 1768114938314,
       "sourceLineNumber": 2476
+    },
+    {
+      "id": 1510626140,
+      "slug": "2026-07-20-evanescence-shoreline-amphitheater",
+      "date": "2026-07-20",
+      "dateEpochMs": 1784530800000,
+      "startTimeEpochMs": 1784707200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1849950289,
+      "artistIds": [
+        1849950289,
+        1971286983,
+        660105130
+      ],
+      "venueId": 1931913617,
+      "priceMin": 49,
+      "priceMax": 49,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938545,
+      "updatedAtEpochMs": 1768114938545,
+      "sourceLineNumber": 7967
+    },
+    {
+      "id": 87483878,
+      "slug": "2026-07-25-chance-pena-the-fillmore",
+      "date": "2026-07-25",
+      "dateEpochMs": 1784962800000,
+      "startTimeEpochMs": 1785121200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2037197791,
+      "artistIds": [
+        2037197791
+      ],
+      "venueId": 1136597428,
+      "priceMin": 44.5,
+      "priceMax": 44.5,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1768114938545,
+      "updatedAtEpochMs": 1768114938545,
+      "sourceLineNumber": 7969
     }
   ]
 }
