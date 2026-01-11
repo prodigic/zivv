@@ -24,6 +24,12 @@ export interface DevServerProcess {
   /** Working directory where server was started */
   workingDir: string;
 
+  /** Git branch name (if in git repository) */
+  gitBranch?: string;
+
+  /** Project name (derived from working directory) */
+  projectName?: string;
+
   /** Memory usage in bytes (optional) */
   memoryUsage?: number;
 

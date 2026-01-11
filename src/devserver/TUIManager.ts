@@ -343,7 +343,10 @@ export class DevServerTUI {
         const timeAgo = this.formatTimeAgo(new Date(server.startTime));
         const memory = this.formatMemory(server.memoryUsage);
 
-        const line = `  ${statusIcon} Port ${server.port} (PID ${server.pid}) - ${timeAgo} - ${memory}`;
+        // Format project context (project name and git branch)
+        const projectInfo = this.formatProjectInfo(server);
+
+        const line = `  ${statusIcon} Port ${server.port} (PID ${server.pid}) ${projectInfo} - ${timeAgo} - ${memory}`;
         items.push(line);
       });
 
@@ -400,8 +403,12 @@ export class DevServerTUI {
   • Uptime: ${uptime}
   • Memory: ${memory}
   • URL: ${url}
+
+  Project Context:
+  • Project: ${selectedServer.projectName || 'Unknown'}
+  • Git Branch: ${selectedServer.gitBranch || 'Not a git repository'}
+  • Working Dir: ${selectedServer.workingDir}
   • Config: ${selectedServer.configFile}
-  • Working Dir: ${selectedServer.workingDir.split('/').pop()}
     `);
   }
 
@@ -467,6 +474,20 @@ export class DevServerTUI {
     if (!bytes) return 'N/A';
     const mb = Math.round(bytes / (1024 * 1024));
     return `${mb}MB`;
+  }
+
+  /**
+   * Format project information (name and git branch)
+   */
+  private formatProjectInfo(server: DevServerProcess): string {
+    const projectName = server.projectName || 'unknown';
+    const gitBranch = server.gitBranch;
+
+    if (gitBranch) {
+      return `[${projectName}:${gitBranch}]`;
+    } else {
+      return `[${projectName}]`;
+    }
   }
 
   /**

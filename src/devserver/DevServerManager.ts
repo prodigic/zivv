@@ -6,10 +6,14 @@
  */
 
 import { spawn, ChildProcess } from 'child_process';
-import { join } from 'path';
-import type { StartOptions, ServerInfo, DevServerProcess } from './types';
-import { DevServerProcessRegistry } from './ProcessRegistry';
-import { DevServerPortManager } from './PortManager';
+import { join, basename } from 'path';
+import { promisify } from 'util';
+import { exec } from 'child_process';
+import type { StartOptions, ServerInfo, DevServerProcess } from './types.js';
+import { DevServerProcessRegistry } from './ProcessRegistry.js';
+import { DevServerPortManager } from './PortManager.js';
+
+const execAsync = promisify(exec);
 
 export class DevServerManager {
   private registry: DevServerProcessRegistry;
@@ -27,6 +31,47 @@ export class DevServerManager {
    */
   async initialize(): Promise<void> {
     await this.registry.initialize();
+  }
+
+  /**
+   * Get current git branch for the working directory
+   */
+  private async getGitBranch(workingDir: string): Promise<string | undefined> {
+    try {
+      const { stdout } = await execAsync('git branch --show-current', {
+        cwd: workingDir,
+        timeout: 5000
+      });
+      const branch = stdout.trim();
+      return branch || undefined;
+    } catch (error) {
+      // Not a git repository or other git error
+      return undefined;
+    }
+  }
+
+  /**
+   * Get project name from working directory
+   */
+  private getProjectName(workingDir: string): string {
+    return basename(workingDir);
+  }
+
+  /**
+   * Gather project context information
+   */
+  private async getProjectContext(workingDir: string): Promise<{
+    gitBranch?: string;
+    projectName: string;
+  }> {
+    const [gitBranch] = await Promise.allSettled([
+      this.getGitBranch(workingDir)
+    ]);
+
+    return {
+      gitBranch: gitBranch.status === 'fulfilled' ? gitBranch.value : undefined,
+      projectName: this.getProjectName(workingDir)
+    };
   }
 
   /**
@@ -65,6 +110,9 @@ export class DevServerManager {
       console.log(`ℹ️  Using alternative port ${actualPort} (${config.port} was occupied)`);
     }
 
+    // Gather project context information
+    const projectContext = await this.getProjectContext(this.workingDir);
+
     // Start the Vite dev server process
     const serverProcess = await this.spawnDevServer({
       port: actualPort,
@@ -72,14 +120,16 @@ export class DevServerManager {
       configFile: config.config
     });
 
-    // Create process entry
+    // Create process entry with project context
     const processEntry: DevServerProcess = {
       pid: serverProcess.pid!,
       port: actualPort,
       startTime: new Date().toISOString(),
       status: 'starting',
       configFile: config.config,
-      workingDir: this.workingDir
+      workingDir: this.workingDir,
+      gitBranch: projectContext.gitBranch,
+      projectName: projectContext.projectName
     };
 
     // Add to registry
