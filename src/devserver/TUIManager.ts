@@ -79,7 +79,7 @@ export class DevServerTUI {
       left: 0,
       width: '70%',
       height: '70%',
-      keys: true,
+      keys: false,  // Disable built-in key handling
       mouse: true,
       style: {
         border: { fg: 'cyan' },
@@ -298,6 +298,11 @@ export class DevServerTUI {
       this.updateInfoPanel();
       this.updateStatusBar();
 
+      // Ensure we have a valid selection if servers are available
+      if (this.state.servers.length > 0) {
+        this.forceValidSelection();
+      }
+
       if (this.isRunning) {
         this.screen.render();
       }
@@ -366,10 +371,7 @@ export class DevServerTUI {
 
     // Set selection to the correct server
     if (this.state.servers.length > 0 && this.state.selectedServerIndex >= 0) {
-      const listIndex = this.serverIndexToListIndex(this.state.selectedServerIndex);
-      if (listIndex >= 0) {
-        this.serverList.select(listIndex);
-      }
+      this.forceValidSelection();
     }
   }
 
@@ -484,6 +486,28 @@ export class DevServerTUI {
   }
 
   /**
+   * Force selection to a valid server position
+   */
+  private forceValidSelection(): void {
+    if (this.state.servers.length === 0) {
+      return;
+    }
+
+    // Ensure selectedServerIndex is within bounds
+    if (this.state.selectedServerIndex < 0) {
+      this.state.selectedServerIndex = 0;
+    } else if (this.state.selectedServerIndex >= this.state.servers.length) {
+      this.state.selectedServerIndex = this.state.servers.length - 1;
+    }
+
+    // Calculate the correct list index and set selection
+    const listIndex = this.serverIndexToListIndex(this.state.selectedServerIndex);
+    if (listIndex >= 0) {
+      this.serverList.select(listIndex);
+    }
+  }
+
+  /**
    * Get currently selected server
    */
   private getSelectedServer(): DevServerProcess | null {
@@ -500,10 +524,7 @@ export class DevServerTUI {
     if (this.state.servers.length === 0) return;
 
     this.state.selectedServerIndex = Math.max(0, this.state.selectedServerIndex - 1);
-    const listIndex = this.serverIndexToListIndex(this.state.selectedServerIndex);
-    if (listIndex >= 0) {
-      this.serverList.select(listIndex);
-    }
+    this.forceValidSelection();
     this.updateInfoPanel();
     this.screen.render();
   }
@@ -515,10 +536,7 @@ export class DevServerTUI {
     if (this.state.servers.length === 0) return;
 
     this.state.selectedServerIndex = Math.min(this.state.servers.length - 1, this.state.selectedServerIndex + 1);
-    const listIndex = this.serverIndexToListIndex(this.state.selectedServerIndex);
-    if (listIndex >= 0) {
-      this.serverList.select(listIndex);
-    }
+    this.forceValidSelection();
     this.updateInfoPanel();
     this.screen.render();
   }
