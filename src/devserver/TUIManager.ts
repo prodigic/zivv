@@ -26,7 +26,7 @@ export class DevServerTUI {
   private screen: blessed.Widgets.Screen;
   private serverList: blessed.Widgets.ListElement;
   private infoPanel: blessed.Widgets.BoxElement;
-  private helpPanel: blessed.Widgets.BoxElement;
+  private hotkeyBar: blessed.Widgets.BoxElement;
   private statusBar: blessed.Widgets.BoxElement;
   private state: TUIState;
   private updateInterval: NodeJS.Timeout | null = null;
@@ -44,7 +44,7 @@ export class DevServerTUI {
     this.screen = this.createScreen();
     this.serverList = this.createServerList();
     this.infoPanel = this.createInfoPanel();
-    this.helpPanel = this.createHelpPanel();
+    this.hotkeyBar = this.createHotkeyBar();
     this.statusBar = this.createStatusBar();
 
     this.setupKeyHandlers();
@@ -78,7 +78,7 @@ export class DevServerTUI {
       top: 0,
       left: 0,
       width: '70%',
-      height: '70%',
+      height: '93%',
       keys: false,  // Disable built-in key handling
       mouse: true,
       style: {
@@ -104,7 +104,7 @@ export class DevServerTUI {
       top: 0,
       left: '70%',
       width: '30%',
-      height: '70%',
+      height: '93%',
       style: {
         border: { fg: 'yellow' },
         header: { fg: 'white', bold: true }
@@ -117,25 +117,23 @@ export class DevServerTUI {
   }
 
   /**
-   * Create the help panel widget
+   * Create the hotkey bar widget (single line like htop)
    */
-  private createHelpPanel(): blessed.Widgets.BoxElement {
-    const panel = blessed.box({
+  private createHotkeyBar(): blessed.Widgets.BoxElement {
+    const bar = blessed.box({
       parent: this.screen,
-      label: ' Controls ',
-      border: 'line',
-      top: '70%',
+      bottom: 1, // Above status bar
       left: 0,
       width: '100%',
-      height: '25%',
+      height: 1,
       style: {
-        border: { fg: 'green' },
-        header: { fg: 'white', bold: true }
+        bg: 'gray',
+        fg: 'white'
       },
-      content: this.getHelpText(),
+      content: this.getHotkeyText(),
     });
 
-    return panel;
+    return bar;
   }
 
   /**
@@ -217,24 +215,15 @@ export class DevServerTUI {
   private setupLayout(): void {
     this.screen.append(this.serverList);
     this.screen.append(this.infoPanel);
-    this.screen.append(this.helpPanel);
+    this.screen.append(this.hotkeyBar);
     this.screen.append(this.statusBar);
   }
 
   /**
-   * Get help text content
+   * Get hotkey bar text content (single line like htop)
    */
-  private getHelpText(): string {
-    return `
-  Navigation:        ↑↓ or j/k - Select server    Enter/Space - Server actions
-
-  Actions:           K - Kill server              r - Restart server
-                     n - Start new server        c - Cleanup orphans
-
-  Management:        F5/R - Refresh              q/Esc - Quit TUI
-
-  Live Updates:      Status refreshes every 2 seconds automatically
-    `;
+  private getHotkeyText(): string {
+    return ' F5 Refresh   K Kill   r Restart   n New   c Cleanup   ↑↓ Navigate   Enter Actions   q Quit';
   }
 
   /**
@@ -413,11 +402,6 @@ export class DevServerTUI {
   • URL: ${url}
   • Config: ${selectedServer.configFile}
   • Working Dir: ${selectedServer.workingDir.split('/').pop()}
-
-  Actions Available:
-  • K - Kill this server
-  • r - Restart this server
-  • Enter - Show action menu
     `);
   }
 
