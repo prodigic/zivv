@@ -7,7 +7,7 @@
  * Provides user-friendly commands for start, stop, status, cleanup, and TUI.
  */
 
-import { DevServerManager } from '../src/devserver/DevServerManager.js';
+import { DevServerManager } from '../dist/devserver/DevServerManager.js';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -85,20 +85,20 @@ class DevServerCLI {
 
       const serverInfo = await this.manager.start(startOptions);
 
-      console.log('\\n✅ Server started successfully!');
+      console.log('\n✅ Server started successfully!');
       console.log(`   URL: ${serverInfo.url}`);
       console.log(`   PID: ${serverInfo.pid}`);
       console.log(`   Port: ${serverInfo.port}`);
       console.log(`   Startup time: ${serverInfo.startupTime}ms`);
 
       if (!options.background) {
-        console.log('\\n💡 Use \\'npm run dev:status\\' to see running servers');
-        console.log('💡 Use \\'npm run dev:stop\\' to stop this server');
+        console.log('\n💡 Use \'npm run dev:status\' to see running servers');
+        console.log('💡 Use \'npm run dev:stop\' to stop this server');
       }
 
       process.exit(0);
     } catch (error) {
-      console.error(`\\n❌ Failed to start dev server: ${error.message}`);
+      console.error(`\n❌ Failed to start dev server: ${error.message}`);
       process.exit(1);
     }
   }
@@ -137,15 +137,15 @@ class DevServerCLI {
       const processes = await this.manager.status();
       const stats = await this.manager.getStats();
 
-      console.log('📊 Dev Server Status\\n');
+      console.log('📊 Dev Server Status\n');
 
       if (processes.length === 0) {
         console.log('ℹ️  No dev servers currently running');
-        console.log('\\n💡 Use \\'npm run dev:start\\' to start a new server');
+        console.log('\n💡 Use \'npm run dev:start\' to start a new server');
         process.exit(0);
       }
 
-      console.log(`${processes.length} server${processes.length === 1 ? '' : 's'} running:\\n`);
+      console.log(`${processes.length} server${processes.length === 1 ? '' : 's'} running:\n`);
 
       // Table header
       console.log('Port  PID      Status    Started     Memory   URL');
@@ -169,7 +169,7 @@ class DevServerCLI {
         console.log(`${proc.port.toString().padEnd(6)}${proc.pid.toString().padEnd(9)}${statusColor}${status}\\x1b[0m${status.padEnd(10 - status.length)}${timeAgo.padEnd(12)}${memory.padEnd(9)}${url}`);
       }
 
-      console.log('\\n📈 Statistics:');
+      console.log('\n📈 Statistics:');
       console.log(`   Total processes: ${stats.total}`);
       console.log(`   Running: ${stats.running}`);
       console.log(`   Stopped: ${stats.stopped}`);
@@ -179,7 +179,7 @@ class DevServerCLI {
         console.log(`   Active ports: ${stats.ports.join(', ')}`);
       }
 
-      console.log('\\n💡 Commands:');
+      console.log('\n💡 Commands:');
       console.log('   npm run dev:stop [port|pid] - Stop specific server');
       console.log('   npm run dev:cleanup         - Remove orphaned processes');
       console.log('   npm run dev:tui             - Interactive management');
@@ -198,7 +198,7 @@ class DevServerCLI {
     try {
       await this.manager.initialize();
 
-      console.log('🧹 Dev Server Cleanup\\n');
+      console.log('🧹 Dev Server Cleanup\n');
 
       const cleanedCount = await this.manager.cleanup();
 
@@ -208,7 +208,7 @@ class DevServerCLI {
         console.log(`✅ Cleaned up ${cleanedCount} orphaned process${cleanedCount === 1 ? '' : 'es'}`);
       }
 
-      console.log('\\n💡 Use \\'npm run dev:status\\' to see current state');
+      console.log('\n💡 Use \'npm run dev:status\' to see current state');
       process.exit(0);
     } catch (error) {
       console.error(`❌ Cleanup failed: ${error.message}`);
@@ -223,7 +223,7 @@ class DevServerCLI {
     try {
       await this.manager.initialize();
 
-      console.log('🛑 Killing all dev servers...\\n');
+      console.log('🛑 Killing all dev servers...\n');
 
       const killedCount = await this.manager.killAll();
 
@@ -247,7 +247,7 @@ class DevServerCLI {
     try {
       await this.manager.initialize();
 
-      console.log('🔄 Restarting dev server...\\n');
+      console.log('🔄 Restarting dev server...\n');
 
       const restartOptions = {
         port: options.port ? parseInt(options.port) : undefined,
@@ -274,19 +274,20 @@ class DevServerCLI {
    */
   async tuiCommand(options = {}, positional = []) {
     try {
-      // Dynamic import of TUI (will implement later)
-      console.log('🖥️  Interactive TUI Mode\\n');
-      console.log('⚠️  TUI implementation coming soon!');
-      console.log('\\n💡 Use \\'npm run dev:status\\' for current functionality');
+      await this.manager.initialize();
 
-      // TODO: Implement TUI with blessed library
-      // const { DevServerTUI } = await import('../src/devserver/TUIManager.js');
-      // const tui = new DevServerTUI(this.manager);
-      // await tui.start();
+      console.log('🖥️  Starting Interactive TUI Mode...\n');
 
-      process.exit(0);
+      // Dynamic import of TUI
+      const { DevServerTUI } = await import('../dist/devserver/TUIManager.js');
+      const tui = new DevServerTUI(this.manager);
+
+      // Start the TUI (this will take over the terminal)
+      await tui.start();
+
     } catch (error) {
       console.error(`❌ TUI failed: ${error.message}`);
+      console.error('\n💡 Try using \'npm run dev:status\' instead');
       process.exit(1);
     }
   }
@@ -377,7 +378,7 @@ CONFLICT RESOLUTION:
 
       if (!this.commands[command]) {
         console.error(`❌ Unknown command: ${command}`);
-        console.error('💡 Use \\'npm run dev help\\' for available commands');
+        console.error('💡 Use \'npm run dev help\' for available commands');
         process.exit(1);
       }
 
@@ -391,12 +392,12 @@ CONFLICT RESOLUTION:
 
 // Handle graceful shutdown
 process.on('SIGINT', async () => {
-  console.log('\\n🛑 Shutting down dev server manager...');
+  console.log('\n🛑 Shutting down dev server manager...');
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  console.log('\\n🛑 Shutting down dev server manager...');
+  console.log('\n🛑 Shutting down dev server manager...');
   process.exit(0);
 });
 

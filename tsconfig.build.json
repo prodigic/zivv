@@ -30,6 +30,6 @@
       "@/pages/*": ["./src/pages/*"]
     }
   },
-  "include": ["src/types/**/*", "src/lib/**/*"],
+  "include": ["src/types/**/*", "src/lib/**/*", "src/devserver/**/*"],
   "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/*.test.tsx"]
 }
