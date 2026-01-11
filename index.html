@@ -12,13 +12,15 @@
     <link rel="manifest" href="/manifest.json" />
     <!-- Prevent dark mode flash - runs before page render -->
     <script>
-      (function() {
+      (function () {
         try {
-          const darkMode = localStorage.getItem('darkMode');
-          const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          
-          if (darkMode === 'true' || (darkMode === null && systemPrefersDark)) {
-            document.documentElement.classList.add('dark');
+          const darkMode = localStorage.getItem("darkMode");
+          const systemPrefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+          if (darkMode === "true" || (darkMode === null && systemPrefersDark)) {
+            document.documentElement.classList.add("dark");
           }
         } catch (e) {
           // localStorage might not be available

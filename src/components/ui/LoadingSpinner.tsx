@@ -10,9 +10,9 @@ interface LoadingSpinnerProps {
   className?: string;
 }
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  size = "md", 
-  className = "" 
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  size = "md",
+  className = "",
 }) => {
   const sizeClasses = {
     sm: "h-4 w-4",
@@ -36,10 +36,10 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
 // Full page loading component
 export const PageLoading: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+  <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
     <div className="text-center">
       <LoadingSpinner size="xl" className="mb-4" />
-      <p className="text-gray-600">Loading...</p>
+      <p className="text-gray-600 dark:text-gray-300">Loading...</p>
     </div>
   </div>
 );
@@ -50,18 +50,20 @@ interface InlineLoadingProps {
   size?: "sm" | "md" | "lg";
 }
 
-export const InlineLoading: React.FC<InlineLoadingProps> = ({ 
-  message = "Loading...", 
-  size = "sm" 
+export const InlineLoading: React.FC<InlineLoadingProps> = ({
+  message = "Loading...",
+  size = "sm",
 }) => (
   <div className="flex items-center space-x-2">
     <LoadingSpinner size={size} />
-    <span className="text-gray-600 text-sm">{message}</span>
+    <span className="text-gray-600 dark:text-gray-300 text-sm">{message}</span>
   </div>
 );
 
 // Skeleton components for content placeholders
-export const Skeleton: React.FC<{ className?: string }> = ({ className = "" }) => (
+export const Skeleton: React.FC<{ className?: string }> = ({
+  className = "",
+}) => (
   <div
     className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded ${className}`}
     role="status"
@@ -77,19 +79,19 @@ export const EventCardSkeleton: React.FC = () => (
       <Skeleton className="h-4 w-20" />
       <Skeleton className="h-4 w-16" />
     </div>
-    
+
     {/* Title */}
     <Skeleton className="h-6 w-3/4" />
-    
+
     {/* Subtitle */}
     <Skeleton className="h-4 w-1/2" />
-    
+
     {/* Venue */}
     <div className="flex items-center space-x-2">
       <Skeleton className="h-4 w-4 rounded-full" />
       <Skeleton className="h-4 w-32" />
     </div>
-    
+
     {/* Footer */}
     <div className="flex items-center justify-between pt-2">
       <div className="flex space-x-2">
@@ -139,9 +141,9 @@ interface ListSkeletonProps {
   itemSkeleton: React.ComponentType;
 }
 
-export const ListSkeleton: React.FC<ListSkeletonProps> = ({ 
-  count = 5, 
-  itemSkeleton: ItemSkeleton 
+export const ListSkeleton: React.FC<ListSkeletonProps> = ({
+  count = 5,
+  itemSkeleton: ItemSkeleton,
 }) => (
   <div className="space-y-4">
     {Array.from({ length: count }, (_, index) => (
@@ -151,9 +153,9 @@ export const ListSkeleton: React.FC<ListSkeletonProps> = ({
 );
 
 // Table skeleton
-export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({ 
-  rows = 5, 
-  cols = 4 
+export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({
+  rows = 5,
+  cols = 4,
 }) => (
   <div className="overflow-hidden">
     {/* Header */}
@@ -164,7 +166,7 @@ export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({
         ))}
       </div>
     </div>
-    
+
     {/* Rows */}
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       {Array.from({ length: rows }, (_, rowIndex) => (
@@ -193,7 +195,7 @@ export const CalendarSkeleton: React.FC = () => (
         </div>
       </div>
     </div>
-    
+
     {/* Calendar grid */}
     <div className="p-6">
       {/* Day headers */}
@@ -202,7 +204,7 @@ export const CalendarSkeleton: React.FC = () => (
           <Skeleton key={index} className="h-6 w-full" />
         ))}
       </div>
-      
+
       {/* Calendar days */}
       <div className="grid grid-cols-7 gap-1">
         {Array.from({ length: 35 }, (_, index) => (
@@ -228,10 +230,13 @@ export const SearchSkeleton: React.FC = () => (
       <Skeleton className="h-4 w-32" />
       <Skeleton className="h-4 w-20" />
     </div>
-    
+
     <div className="space-y-3">
       {Array.from({ length: 3 }, (_, index) => (
-        <div key={index} className="border-l-2 border-blue-200 dark:border-blue-600 pl-4 py-2">
+        <div
+          key={index}
+          className="border-l-2 border-blue-200 dark:border-blue-600 pl-4 py-2"
+        >
           <Skeleton className="h-5 w-2/3 mb-2" />
           <Skeleton className="h-3 w-full mb-1" />
           <Skeleton className="h-3 w-3/4" />
@@ -270,15 +275,15 @@ interface LoadingOverlayProps {
 export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   isLoading,
   children,
-  message = "Loading..."
+  message = "Loading...",
 }) => (
   <div className="relative">
     {children}
     {isLoading && (
-      <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+      <div className="absolute inset-0 bg-white dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-75 flex items-center justify-center z-10">
         <div className="text-center">
           <LoadingSpinner size="lg" className="mb-2" />
-          <p className="text-gray-600 text-sm">{message}</p>
+          <p className="text-gray-600 dark:text-gray-300 text-sm">{message}</p>
         </div>
       </div>
     )}

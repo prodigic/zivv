@@ -23,7 +23,7 @@ const VenuesPage: React.FC = () => {
   const { filters, updateFilter, clearFilters, clearFilter } = useFilterStore();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Initialize display limit based on saved scroll position
   const getInitialDisplayLimit = () => {
     const scrollKey = `scroll-position-venues`;
@@ -31,13 +31,16 @@ const VenuesPage: React.FC = () => {
     if (savedPosition) {
       const targetScroll = parseInt(savedPosition, 10);
       const estimatedItemHeight = 300;
-      const estimatedItemsNeeded = Math.ceil(targetScroll / estimatedItemHeight) + 30;
+      const estimatedItemsNeeded =
+        Math.ceil(targetScroll / estimatedItemHeight) + 30;
       return Math.max(30, estimatedItemsNeeded);
     }
     return 30;
   };
-  
-  const [venuesDisplayLimit, setVenuesDisplayLimit] = React.useState(getInitialDisplayLimit);
+
+  const [venuesDisplayLimit, setVenuesDisplayLimit] = React.useState(
+    getInitialDisplayLimit
+  );
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
   // Clear venue filter when returning to venues page
@@ -52,18 +55,18 @@ const VenuesPage: React.FC = () => {
   useEffect(() => {
     const scrollKey = `scroll-position-venues`;
     const mainElement = document.querySelector("main");
-    
+
     if (!mainElement) return;
 
     const savedPosition = sessionStorage.getItem(scrollKey);
     if (savedPosition) {
       const targetScroll = parseInt(savedPosition, 10);
-      
+
       // Restore scroll position after content loads
       const timeoutId = setTimeout(() => {
         mainElement.scrollTop = targetScroll;
       }, 300);
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [location.pathname]);
@@ -254,10 +257,10 @@ const VenuesPage: React.FC = () => {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
             Unable to Load Venues
           </h3>
-          <p className="text-gray-600">{errors.venues}</p>
+          <p className="text-gray-600 dark:text-gray-300">{errors.venues}</p>
         </div>
       </ContentArea>
     );

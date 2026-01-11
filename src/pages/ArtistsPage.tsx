@@ -28,7 +28,7 @@ const ArtistsPage: React.FC = () => {
     useFilterStore();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Initialize display limit based on saved scroll position
   const getInitialDisplayLimit = () => {
     const scrollKey = `scroll-position-artists`;
@@ -36,13 +36,16 @@ const ArtistsPage: React.FC = () => {
     if (savedPosition) {
       const targetScroll = parseInt(savedPosition, 10);
       const estimatedItemHeight = 250;
-      const estimatedItemsNeeded = Math.ceil(targetScroll / estimatedItemHeight) + 30;
+      const estimatedItemsNeeded =
+        Math.ceil(targetScroll / estimatedItemHeight) + 30;
       return Math.max(30, estimatedItemsNeeded);
     }
     return 30;
   };
-  
-  const [artistsDisplayLimit, setArtistsDisplayLimit] = React.useState(getInitialDisplayLimit);
+
+  const [artistsDisplayLimit, setArtistsDisplayLimit] = React.useState(
+    getInitialDisplayLimit
+  );
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
   // Clear search query when returning to artists page
@@ -55,18 +58,18 @@ const ArtistsPage: React.FC = () => {
   useEffect(() => {
     const scrollKey = `scroll-position-artists`;
     const mainElement = document.querySelector("main");
-    
+
     if (!mainElement) return;
 
     const savedPosition = sessionStorage.getItem(scrollKey);
     if (savedPosition) {
       const targetScroll = parseInt(savedPosition, 10);
-      
+
       // Restore scroll position after content loads
       const timeoutId = setTimeout(() => {
         mainElement.scrollTop = targetScroll;
       }, 300);
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [location.pathname]);
@@ -313,10 +316,10 @@ const ArtistsPage: React.FC = () => {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
             Unable to Load Artists
           </h3>
-          <p className="text-gray-600">{errors.artists}</p>
+          <p className="text-gray-600 dark:text-gray-300">{errors.artists}</p>
         </div>
       </ContentArea>
     );
@@ -345,7 +348,7 @@ const ArtistsPage: React.FC = () => {
       {!hasEventsLoaded && artistsArray.length > 0 ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading events...</p>
+          <p className="text-gray-600 dark:text-gray-300">Loading events...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
