@@ -52,6 +52,9 @@ pids
 *.seed
 *.pid.lock
 
+# Dev server management runtime data
+.devserver/
+
 # Optional npm cache directory
 .npm
 
