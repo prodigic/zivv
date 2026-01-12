@@ -25,6 +25,9 @@ dist-ssr
 
 # Testing
 coverage/
+test-results/
+playwright-report/
+*.html
 
 # Editor directories and files
 .vscode/*
@@ -49,6 +52,9 @@ pids
 *.seed
 *.pid.lock
 
+# Dev server management runtime data
+.devserver/
+
 # Optional npm cache directory
 .npm
 
@@ -65,3 +71,11 @@ pids
 *.njsproj
 *.sln
 *.sw?
+
+.ignore
+
+*storybook.log
+storybook-static
+
+# bv (beads viewer) local config and caches
+.bv/
