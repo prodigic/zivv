@@ -1,0 +1,287 @@
+name: Automated Release
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'public/data/**'      # ETL data changes shouldn't trigger releases
+      - '.github/workflows/etl.yml'
+      - '.github/workflows/test.yml'
+      - 'README.md'
+      - 'docs/**'
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+
+jobs:
+  analyze-commits:
+    runs-on: ubuntu-latest
+    outputs:
+      should-release: ${{ steps.analyze.outputs.should-release }}
+      version-bump: ${{ steps.analyze.outputs.version-bump }}
+      new-version: ${{ steps.analyze.outputs.new-version }}
+      changelog: ${{ steps.analyze.outputs.changelog }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for changelog generation
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Get last release tag
+        id: last-release
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tags found, using initial commit"
+            LAST_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "last-tag=$LAST_TAG" >> $GITHUB_OUTPUT
+          echo "Last release: $LAST_TAG"
+
+      - name: Analyze commits for version bump
+        id: analyze
+        run: |
+          set -e
+
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+
+          # Get commits since last release
+          COMMITS=$(git log ${{ steps.last-release.outputs.last-tag }}..HEAD --oneline --no-merges)
+
+          if [ -z "$COMMITS" ]; then
+            echo "No new commits since last release"
+            echo "should-release=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Analyzing commits:"
+          echo "$COMMITS"
+
+          # Initialize version bump flags
+          BREAKING_CHANGE=false
+          FEATURE=false
+          FIX=false
+
+          # Parse commits for conventional commit types
+          while IFS= read -r commit; do
+            echo "Analyzing: $commit"
+
+            # Check for breaking changes
+            if echo "$commit" | grep -iE "(BREAKING CHANGE|!:|breaking:)" > /dev/null; then
+              BREAKING_CHANGE=true
+              echo "  → BREAKING CHANGE detected"
+            fi
+
+            # Check for features
+            if echo "$commit" | grep -E "^[a-f0-9]+ feat(\(.+\))?:" > /dev/null; then
+              FEATURE=true
+              echo "  → Feature detected"
+            fi
+
+            # Check for fixes
+            if echo "$commit" | grep -E "^[a-f0-9]+ fix(\(.+\))?:" > /dev/null; then
+              FIX=true
+              echo "  → Fix detected"
+            fi
+          done <<< "$COMMITS"
+
+          # Determine version bump
+          VERSION_BUMP="patch"
+          if [ "$BREAKING_CHANGE" = true ]; then
+            VERSION_BUMP="major"
+          elif [ "$FEATURE" = true ]; then
+            VERSION_BUMP="minor"
+          elif [ "$FIX" = true ]; then
+            VERSION_BUMP="patch"
+          fi
+
+          echo "Version bump type: $VERSION_BUMP"
+
+          # Calculate new version
+          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+
+          case $VERSION_BUMP in
+            "major")
+              NEW_VERSION="$((major + 1)).0.0"
+              ;;
+            "minor")
+              NEW_VERSION="$major.$((minor + 1)).0"
+              ;;
+            "patch")
+              NEW_VERSION="$major.$minor.$((patch + 1))"
+              ;;
+          esac
+
+          echo "New version: $NEW_VERSION"
+
+          # Generate changelog
+          CHANGELOG_FILE=$(mktemp)
+          echo "# Changelog" > $CHANGELOG_FILE
+          echo "" >> $CHANGELOG_FILE
+
+          # Add breaking changes section
+          if [ "$BREAKING_CHANGE" = true ]; then
+            echo "## 💥 BREAKING CHANGES" >> $CHANGELOG_FILE
+            echo "" >> $CHANGELOG_FILE
+            echo "$COMMITS" | grep -iE "(BREAKING CHANGE|!:|breaking:)" | sed 's/^[a-f0-9]* /- /' >> $CHANGELOG_FILE || true
+            echo "" >> $CHANGELOG_FILE
+          fi
+
+          # Add features section
+          if [ "$FEATURE" = true ]; then
+            echo "## ✨ Features" >> $CHANGELOG_FILE
+            echo "" >> $CHANGELOG_FILE
+            echo "$COMMITS" | grep -E "feat(\(.+\))?:" | sed 's/^[a-f0-9]* /- /' >> $CHANGELOG_FILE || true
+            echo "" >> $CHANGELOG_FILE
+          fi
+
+          # Add fixes section
+          if [ "$FIX" = true ]; then
+            echo "## 🐛 Bug Fixes" >> $CHANGELOG_FILE
+            echo "" >> $CHANGELOG_FILE
+            echo "$COMMITS" | grep -E "fix(\(.+\))?:" | sed 's/^[a-f0-9]* /- /' >> $CHANGELOG_FILE || true
+            echo "" >> $CHANGELOG_FILE
+          fi
+
+          # Add other changes
+          OTHER_COMMITS=$(echo "$COMMITS" | grep -vE "(feat|fix|BREAKING)" | head -10)
+          if [ ! -z "$OTHER_COMMITS" ]; then
+            echo "## 🔧 Other Changes" >> $CHANGELOG_FILE
+            echo "" >> $CHANGELOG_FILE
+            echo "$OTHER_COMMITS" | sed 's/^[a-f0-9]* /- /' >> $CHANGELOG_FILE
+            echo "" >> $CHANGELOG_FILE
+          fi
+
+          # Add footer
+          echo "---" >> $CHANGELOG_FILE
+          echo "*Full Changelog*: https://github.com/${{ github.repository }}/compare/${{ steps.last-release.outputs.last-tag }}...v$NEW_VERSION" >> $CHANGELOG_FILE
+
+          CHANGELOG_CONTENT=$(cat $CHANGELOG_FILE)
+
+          # Set outputs
+          echo "should-release=true" >> $GITHUB_OUTPUT
+          echo "version-bump=$VERSION_BUMP" >> $GITHUB_OUTPUT
+          echo "new-version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+          # Save changelog to output (escape for multiline)
+          {
+            echo "changelog<<EOF"
+            echo "$CHANGELOG_CONTENT"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+  release:
+    needs: analyze-commits
+    runs-on: ubuntu-latest
+    if: needs.analyze-commits.outputs.should-release == 'true'
+
+    outputs:
+      release-url: ${{ steps.create-release.outputs.html_url }}
+      release-tag: ${{ steps.create-release.outputs.tag_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Configure git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Update package.json version
+        run: |
+          NEW_VERSION="${{ needs.analyze-commits.outputs.new-version }}"
+          echo "Updating version to: $NEW_VERSION"
+
+          # Update package.json
+          npm version --no-git-tag-version $NEW_VERSION
+
+          # Commit version update
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $NEW_VERSION"
+          git push
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: |
+          npm run lint
+          npm run format:check
+          npm run test:run
+
+      - name: Build application
+        run: npm run build:full
+
+      - name: Create release archive
+        run: |
+          tar -czf zivv-${{ needs.analyze-commits.outputs.new-version }}.tar.gz \
+            dist/ \
+            package.json \
+            README.md \
+            LICENSE 2>/dev/null || true
+
+      - name: Create GitHub Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.analyze-commits.outputs.new-version }}
+          release_name: Release v${{ needs.analyze-commits.outputs.new-version }}
+          body: ${{ needs.analyze-commits.outputs.changelog }}
+          draft: false
+          prerelease: ${{ contains(needs.analyze-commits.outputs.new-version, '-') }}
+
+      - name: Upload release archive
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./zivv-${{ needs.analyze-commits.outputs.new-version }}.tar.gz
+          asset_name: zivv-${{ needs.analyze-commits.outputs.new-version }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload build artifacts to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./dist
+          asset_name: build-artifacts
+          asset_content_type: application/zip
+
+  notify:
+    needs: [analyze-commits, release]
+    runs-on: ubuntu-latest
+    if: needs.analyze-commits.outputs.should-release == 'true'
+
+    steps:
+      - name: Release notification
+        run: |
+          echo "🚀 Released version ${{ needs.analyze-commits.outputs.new-version }}"
+          echo "📦 Release URL: ${{ needs.release.outputs.release-url }}"
+          echo "🏷️  Tag: ${{ needs.release.outputs.release-tag }}"
+          echo "📝 Changelog:"
+          echo "${{ needs.analyze-commits.outputs.changelog }}"
