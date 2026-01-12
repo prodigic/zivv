@@ -75,6 +75,47 @@ export class DevServerManager {
   }
 
   /**
+   * Get current git branch for the working directory
+   */
+  private async getGitBranch(workingDir: string): Promise<string | undefined> {
+    try {
+      const { stdout } = await execAsync('git branch --show-current', {
+        cwd: workingDir,
+        timeout: 5000
+      });
+      const branch = stdout.trim();
+      return branch || undefined;
+    } catch (error) {
+      // Not a git repository or other git error
+      return undefined;
+    }
+  }
+
+  /**
+   * Get project name from working directory
+   */
+  private getProjectName(workingDir: string): string {
+    return basename(workingDir);
+  }
+
+  /**
+   * Gather project context information
+   */
+  private async getProjectContext(workingDir: string): Promise<{
+    gitBranch?: string;
+    projectName: string;
+  }> {
+    const [gitBranch] = await Promise.allSettled([
+      this.getGitBranch(workingDir)
+    ]);
+
+    return {
+      gitBranch: gitBranch.status === 'fulfilled' ? gitBranch.value : undefined,
+      projectName: this.getProjectName(workingDir)
+    };
+  }
+
+  /**
    * Start a new dev server instance
    */
   async start(options: StartOptions = {}): Promise<ServerInfo> {

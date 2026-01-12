@@ -12,6 +12,7 @@
     "dev:kill": "node scripts/dev-server.js kill",
     "dev:restart": "node scripts/dev-server.js restart",
     "dev:tui": "node scripts/dev-server.js tui",
+    "dev:logs": "node scripts/logs.js",
     "dev:help": "node scripts/dev-server.js help",
     "dev:legacy": "vite",
     "build": "vite build",
