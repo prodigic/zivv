@@ -139,30 +139,64 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Create Pull Request
-        if: steps.output-check.outputs.output_changed == 'true'
+      - name: Auto-commit processed data (zero errors)
+        if: steps.output-check.outputs.output_changed == 'true' && steps.summary.outputs.errors == '0'
+        run: |
+          echo "🎯 No errors detected, proceeding with auto-commit"
+
+          # Add all processed data files
+          git add public/data/
+
+          # Create commit with detailed message
+          git commit -m "🤖 chore(data): update processed data from ETL pipeline
+
+          - Events: ${{ steps.summary.outputs.events }}
+          - Artists: ${{ steps.summary.outputs.artists }}
+          - Venues: ${{ steps.summary.outputs.venues }}
+          - Errors: ${{ steps.summary.outputs.errors }}
+          - Warnings: ${{ steps.summary.outputs.warnings }}
+
+          Files updated:
+          - public/data/manifest.json
+          - public/data/events-*.json (monthly chunks)
+          - public/data/artists.json
+          - public/data/venues.json
+          - public/data/indexes.json
+          - public/data/search-*.json
+
+          Co-Authored-By: ETL Pipeline <etl@github.actions>"
+
+          # Push directly to main branch
+          echo "🚀 Pushing changes to main branch..."
+          git push origin main
+
+          echo "✅ ETL data successfully committed and pushed to main"
+
+      - name: Create Pull Request (errors detected or auto-commit failed)
+        if: steps.output-check.outputs.output_changed == 'true' && (steps.summary.outputs.errors != '0' || failure())
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: |
-            🤖 Update processed data from ETL pipeline
+            🤖 Update processed data from ETL pipeline (ERRORS DETECTED)
 
             - Events: ${{ steps.summary.outputs.events }}
             - Artists: ${{ steps.summary.outputs.artists }}
             - Venues: ${{ steps.summary.outputs.venues }}
             - Errors: ${{ steps.summary.outputs.errors }}
             - Warnings: ${{ steps.summary.outputs.warnings }}
-          title: "🤖 ETL Data Update"
+          title: "🚨 ETL Data Update (Manual Review Required)"
           body: |
-            ## 🚀 Automated ETL Processing Results
+            ## ⚠️ ETL Processing Results - Manual Review Required
 
-            This pull request contains updated processed data from the ETL pipeline.
+            This pull request contains processed data from the ETL pipeline.
+            **MANUAL REVIEW REQUIRED** due to errors detected or auto-commit failure.
 
             ### 📊 Processing Summary
             - **Events**: ${{ steps.summary.outputs.events }}
             - **Artists**: ${{ steps.summary.outputs.artists }}
             - **Venues**: ${{ steps.summary.outputs.venues }}
-            - **Errors**: ${{ steps.summary.outputs.errors }}
+            - **Errors**: ${{ steps.summary.outputs.errors }} ⚠️
             - **Warnings**: ${{ steps.summary.outputs.warnings }}
 
             ### 📁 Changed Files
@@ -177,18 +211,14 @@ jobs:
             ### 🔄 Triggered by
             Changes to source data files in the `data/` directory.
 
+            ### 🚨 Action Required
+            Please review the ETL processing errors before merging this PR.
+            Check the workflow logs for detailed error information.
+
             ---
             *This PR was automatically created by the ETL processing workflow.*
-          branch: etl-data-update
+          branch: etl-data-update-errors
           delete-branch: true
-
-      - name: Auto-merge if no errors
-        if: steps.output-check.outputs.output_changed == 'true' && steps.summary.outputs.errors == '0'
-        run: |
-          echo "🎯 No errors detected, considering auto-merge"
-          # In a production setup, you might want to auto-merge here
-          # For safety, we'll leave it as a manual review for now
-          echo "PR created successfully - manual review recommended"
 
   # Optional: Deploy preview for testing
   deploy-preview:
