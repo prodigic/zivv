@@ -124,17 +124,14 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
       {/* Filter Panel */}
       {isOpen && (
         <>
-          {/* Mobile Backdrop */}
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-            onClick={() => setIsOpen(false)}
-            aria-hidden="true"
-          />
-
           {/* Mobile/Small Screen Full Modal */}
           <div
-            className="fixed inset-0 z-50 bg-white dark:bg-gray-800 animate-slide-up md:hidden flex flex-col"
-            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+            className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-white dark:bg-gray-800 md:hidden flex flex-col animate-slide-up"
+            style={{
+              paddingBottom: "env(safe-area-inset-bottom)",
+              width: "100vw",
+              height: "100vh"
+            }}
             role="dialog"
             aria-modal="true"
             aria-label="Filter options"
