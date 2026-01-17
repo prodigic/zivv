@@ -4,7 +4,7 @@
 
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import type { EventFilters, SearchQuery } from "@/types/events.js";
+import type { EventFilters } from "@/types/events.js";
 
 // Filter state interface
 export interface FilterState {
@@ -61,7 +61,7 @@ export interface FilterActions {
 
   // Utilities
   getFilterSummary: () => string;
-  getActiveFilters: () => Array<{ key: string; value: any; label: string }>;
+  getActiveFilters: () => Array<{ key: string; value: unknown; label: string }>;
 }
 
 // Combined store type
@@ -80,11 +80,6 @@ function createDateFilter(days: number): {
     startDate: start.toISOString().split("T")[0],
     endDate: end.toISOString().split("T")[0],
   };
-}
-
-function isWeekend(date: Date): boolean {
-  const day = date.getDay();
-  return day === 0 || day === 6; // Sunday or Saturday
 }
 
 function getThisWeekendDates(): { startDate: string; endDate: string } {
@@ -294,13 +289,13 @@ export const useFilterStore = create<FilterStore>()(
           // Age restrictions
           const ageRestrictions = searchParams.get("ageRestrictions");
           if (ageRestrictions) {
-            filters.ageRestrictions = ageRestrictions.split(",") as any;
+            filters.ageRestrictions = ageRestrictions.split(",");
           }
 
           // Tags
           const tags = searchParams.get("tags");
           if (tags) {
-            filters.tags = tags.split(",") as any;
+            filters.tags = tags.split(",");
           }
 
           // Search query
@@ -462,7 +457,7 @@ export const useFilterStore = create<FilterStore>()(
 
         getActiveFilters() {
           const { filters } = get();
-          const active: Array<{ key: string; value: any; label: string }> = [];
+          const active: Array<{ key: string; value: unknown; label: string }> = [];
 
           // Map normalized city names to display names
           const cityDisplayMap: Record<string, string> = {

@@ -17,7 +17,6 @@ import type {
 } from "@/types/events.js";
 import type {
   DataManifest,
-  DataIndexes,
 } from "@/types/data.js";
 import type { TypeGuardResult } from "@/types/frontend.js";
 

@@ -303,12 +303,12 @@ export class WorkerService {
   }
 
   private buildSearchIndexMainThread(
-    events: Event[],
+    _events: Event[],
     artists: Artist[],
-    venues: Venue[]
-  ): { documents: any[]; terms: string[]; totalDocuments: number } {
+    _venues: Venue[]
+  ): { documents: unknown[]; terms: string[]; totalDocuments: number } {
     // Basic search index implementation
-    const documents: any[] = [];
+    const documents: unknown[] = [];
     const terms = new Set<string>();
     
     artists.forEach(artist => {
@@ -333,7 +333,7 @@ export class WorkerService {
     };
   }
 
-  private calculateStatsMainThread(events: Event[]): any {
+  private calculateStatsMainThread(events: Event[]): Record<string, number> {
     const now = Date.now();
     const upcoming = events.filter(event => event.dateEpochMs > now);
     const past = events.filter(event => event.dateEpochMs <= now);

@@ -521,8 +521,9 @@ export class DataService {
   }
 
   private findChunkForEvent(_eventId: EventId): string | null {
-    // This would need to be implemented based on the manifest
-    // For now, return null - would need to enhance manifest with event->chunk mapping
+    // eventId is intentionally unused - implementation would use manifest's event->chunk mapping
+    // For now, return null - would need to enhance manifest with this mapping
+    void _eventId; // Explicitly mark as intentionally unused
     return null;
   }
 

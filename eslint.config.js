@@ -9,7 +9,18 @@ import tseslint from 'typescript-eslint'
 import { globalIgnores } from 'eslint/config'
 
 export default tseslint.config([
-  globalIgnores(['dist']),
+  globalIgnores([
+    'dist',
+    'storybook-static',
+    'src/devserver',
+    'src/examples',
+    'src/stories',
+    'src/test',
+    'tests',
+    'playwright-report',
+    'test-results',
+    'coverage',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -21,6 +32,14 @@ export default tseslint.config([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+    rules: {
+      // Allow underscore-prefixed variables to be unused
+      '@typescript-eslint/no-unused-vars': ['error', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      }],
     },
   },
 ], storybook.configs["flat/recommended"]);

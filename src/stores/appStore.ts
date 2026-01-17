@@ -16,7 +16,7 @@ import type {
   VenueId,
 } from "@/types/events.js";
 import type { DataManifest, DataIndexes } from "@/types/data.js";
-import type { AsyncState, ViewState, LoadingState } from "@/types/frontend.js";
+import type { ViewState, LoadingState } from "@/types/frontend.js";
 
 // App state interface
 export interface AppState {
@@ -100,7 +100,7 @@ export interface AppActions {
 
   // Cache management
   refresh: () => Promise<void>;
-  getCacheStats: () => Promise<any>;
+  getCacheStats: () => Promise<Record<string, unknown> | null>;
 
   // Cleanup
   dispose: () => void;
@@ -465,7 +465,7 @@ export const useAppStore = create<AppStore>()(
         },
 
         clearAllErrors() {
-          set((state) => ({
+          set(() => ({
             errors: {
               manifest: null,
               artists: null,

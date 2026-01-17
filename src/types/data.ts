@@ -137,7 +137,7 @@ export interface LoadChunkRequest {
 }
 
 export interface LoadChunkResponse {
-  chunk: any; // EventChunk from events.ts
+  chunk: unknown; // EventChunk from events.ts
   indexes?: Partial<DataIndexes>;
 }
 

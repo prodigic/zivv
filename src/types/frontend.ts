@@ -10,12 +10,10 @@ import type {
   ArtistId,
   VenueId,
   EventFilters,
-  SearchQuery,
 } from "./events.js";
-import type { 
+import type {
   DataManifest,
   DataIndexes,
-  DataLoadError 
 } from "./data.js";
 
 // Loading states
