@@ -7,10 +7,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useFilterStore } from "@/stores/filterStore.ts";
 import { useAppStore } from "@/stores/appStore.ts";
 import { CompactDarkModeToggle } from "@/components/ui/DarkModeToggle.tsx";
-import {
-  ToolbarFilterDropdown,
-  SearchFilterToolbar,
-} from "@/components/filters";
+import { FilterButton, FilterModal } from "@/components/filters/FilterModalContext";
+import { SearchFilterToolbar } from "@/components/filters";
 import type { Event } from "@/types/events";
 
 interface HeaderProps {
@@ -317,10 +315,10 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right: Filter + View + Language + Dark Mode */}
           <div className="flex items-center space-x-3 xxs:space-x-1 xs:space-x-2">
-            {/* Unified Filter Dropdown */}
-            <ToolbarFilterDropdown>
-              <SearchFilterToolbar />
-            </ToolbarFilterDropdown>
+            {/* Filter Button - Desktop only */}
+            <div className="hidden md:block relative">
+              <FilterButton />
+            </div>
 
             {/* View Toggle - Desktop only */}
             <ViewToggle />

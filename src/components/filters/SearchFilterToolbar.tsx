@@ -19,34 +19,19 @@ export const SearchFilterToolbar: React.FC<SearchFilterToolbarProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Toggles - Upcoming and Age restriction */}
-      <div className="flex flex-col space-y-3">
+      <div className="flex flex-row gap-4">
         <UpcomingToggle />
         <AgeRestrictionToggle />
       </div>
 
       {/* City filters */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Cities
-        </label>
-        <CityPagination />
-      </div>
+      <CityPagination />
 
       {/* Date filters */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Dates
-        </label>
-        <DatePagination />
-      </div>
+      <DatePagination />
 
       {/* Venue filter */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Venues
-        </label>
-        <VenueFilter />
-      </div>
+      <VenueFilter />
     </div>
   );
 };

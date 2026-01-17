@@ -4,6 +4,7 @@
 
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { FilterButton } from "@/components/filters/FilterModalContext";
 
 interface BottomNavigationProps {
   className?: string;
@@ -113,10 +114,10 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = 
 
   return (
     <nav className={`fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 ${className}`}>
-      <div className="grid grid-cols-4 h-16">
+      <div className="grid grid-cols-5 h-16">
         {navigation.map((item) => {
           const active = isActive(item.to);
-          
+
           return (
             <NavLink
               key={item.name}
@@ -133,6 +134,9 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = 
             </NavLink>
           );
         })}
+
+        {/* Filter Button - Mobile Only */}
+        <FilterButton isMobile={true} />
       </div>
     </nav>
   );

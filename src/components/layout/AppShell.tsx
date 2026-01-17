@@ -11,6 +11,8 @@ import { useAppStore } from "@/stores/appStore.ts";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { PageLoading } from "@/components/ui/LoadingSpinner.tsx";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary.tsx";
+import { FilterModalProvider, FilterModal } from "@/components/filters/FilterModalContext";
+import { SearchFilterToolbar } from "@/components/filters";
 
 export const AppShell: React.FC = () => {
   const location = useLocation();
@@ -109,9 +111,10 @@ export const AppShell: React.FC = () => {
   }
 
   return (
-    <div className="h-full bg-gray-50 dark:bg-gray-900">
-      {/* Mobile-first layout */}
-      <div className="flex flex-col h-full lg:flex-row">
+    <FilterModalProvider>
+      <div className="h-full bg-gray-50 dark:bg-gray-900">
+        {/* Mobile-first layout */}
+        <div className="flex flex-col h-full lg:flex-row">
         {/* Side Navigation - Desktop */}
         <SideNavigation
           isOpen={isSideNavOpen}
@@ -162,7 +165,13 @@ export const AppShell: React.FC = () => {
           <BottomNavigation className="lg:hidden" />
         </div>
       </div>
-    </div>
+
+      {/* Filter Modal - Rendered at document level */}
+      <FilterModal>
+        <SearchFilterToolbar />
+      </FilterModal>
+      </div>
+    </FilterModalProvider>
   );
 };
 

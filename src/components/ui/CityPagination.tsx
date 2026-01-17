@@ -21,11 +21,11 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
   // Major Bay Area cities as requested
   const cities = useMemo(
     () => [
-      { name: "San Francisco", normalizedName: "S.f", slug: "sf" },
-      { name: "Oakland", normalizedName: "Oakland", slug: "oakland" },
-      { name: "Berkeley", normalizedName: "Berkeley", slug: "berkeley" },
-      { name: "Santa Cruz", normalizedName: "Santa", slug: "santa-cruz" },
-      { name: "Other", normalizedName: "Other", slug: "other" },
+      { name: "San Francisco", normalizedName: "S.f", slug: "sf", shortName: "SF" },
+      { name: "Oakland", normalizedName: "Oakland", slug: "oakland", shortName: "OAK" },
+      { name: "Berkeley", normalizedName: "Berkeley", slug: "berkeley", shortName: "BRK" },
+      { name: "Santa Cruz", normalizedName: "Santa", slug: "santa-cruz", shortName: "SCZ" },
+      { name: "Other", normalizedName: "Other", slug: "other", shortName: "OTHER" },
     ],
     []
   );
@@ -118,7 +118,7 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
 
         <div className="flex-1">
           {/* Single row of city filter options */}
-          <div className="flex flex-wrap gap-1 xxs:gap-0.5 xs:gap-1 items-center">
+          <div className="flex flex-wrap gap-2 items-center">
             {cities.map((city) => {
               const selected = isSelected(city.normalizedName);
               return (
@@ -126,9 +126,9 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
                   key={city.slug}
                   onClick={() => handleCityClick(city.normalizedName)}
                   className={`
-                    px-1 xxs:px-0.5 xs:px-1 sm:px-3 py-1 xxs:py-0.5 sm:py-1.5 rounded font-mono text-xs font-bold
+                    px-3 py-2 rounded-md font-mono text-sm font-bold
                     border border-dashed transition-all duration-200
-                    max-w-[80px] xxs:max-w-[30px] xs:max-w-[50px] sm:max-w-none text-center
+                    min-w-[60px] text-center
                     ${
                       selected
                         ? "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-300 dark:border-red-600"
@@ -137,13 +137,11 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
                   `}
                   title={city.name}
                 >
-                  <div className="leading-tight text-[10px] sm:text-xs">
+                  <div className="leading-tight">
                     {/* Full name for large screens */}
-                    <span className="hidden sm:inline">{city.name}</span>
-                    {/* Abbreviated name for medium screens */}
-                    <span className="hidden xs:inline sm:hidden">{city.slug.toUpperCase()}</span>
-                    {/* Single letter for ultra-small screens */}
-                    <span className="xs:hidden">{city.name.charAt(0).toUpperCase()}</span>
+                    <span className="hidden sm:inline text-sm">{city.name}</span>
+                    {/* Abbreviated name for small/medium screens */}
+                    <span className="sm:hidden text-sm">{city.shortName}</span>
                   </div>
                 </button>
               );

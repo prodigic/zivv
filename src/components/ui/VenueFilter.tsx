@@ -124,7 +124,7 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
   return (
     <div className={`venue-filter ${className}`} ref={dropdownRef}>
       {/* Header with icon and Clear All button */}
-      <div className="flex items-center gap-3 xxs:gap-1 xs:gap-2">
+      <div className="flex items-center gap-3">
         {/* Building Icon */}
         <div className="flex-shrink-0">
           <svg
@@ -147,11 +147,11 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
         <div className="flex-1">
           {/* Selected venues chips */}
           {selectedVenues.length > 0 && (
-            <div className="flex flex-wrap gap-1 xxs:gap-0.5 xs:gap-1 mb-2 xxs:mb-1">
+            <div className="flex flex-wrap gap-2 mb-2">
               {selectedVenues.map((venueName) => (
                 <div
                   key={venueName}
-                  className="inline-flex items-center px-2 xxs:px-1 xs:px-1.5 py-1 xxs:py-0.5 rounded-md bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs font-mono"
+                  className="inline-flex items-center px-3 py-2 rounded-md bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-sm font-mono"
                 >
                   <span className="mr-1 truncate max-w-[120px] xxs:max-w-[60px] xs:max-w-[80px] sm:max-w-[120px]">
                     {venueName}

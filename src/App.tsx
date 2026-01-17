@@ -14,7 +14,7 @@ function App() {
   }, []);
 
   return (
-    <RouterProvider 
+    <RouterProvider
       router={router}
       fallbackElement={
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
