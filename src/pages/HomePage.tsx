@@ -111,18 +111,19 @@ const HomePage: React.FC = () => {
 
     // Apply date range filter
     if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
+      const dateRange = filters.dateRange;
       filteredEvents = filteredEvents.filter((event) => {
         const eventDate = new Date(event.dateEpochMs);
         eventDate.setHours(0, 0, 0, 0);
 
-        if (filters.dateRange.startDate) {
-          const startDate = new Date(filters.dateRange.startDate);
+        if (dateRange.startDate) {
+          const startDate = new Date(dateRange.startDate);
           startDate.setHours(0, 0, 0, 0);
           if (eventDate < startDate) return false;
         }
 
-        if (filters.dateRange.endDate) {
-          const endDate = new Date(filters.dateRange.endDate);
+        if (dateRange.endDate) {
+          const endDate = new Date(dateRange.endDate);
           endDate.setHours(23, 59, 59, 999);
           if (eventDate > endDate) return false;
         }
@@ -133,9 +134,10 @@ const HomePage: React.FC = () => {
 
     // Apply venue filter
     if (filters.venues && filters.venues.length > 0) {
+      const selectedVenues = filters.venues;
       filteredEvents = filteredEvents.filter((event) => {
         const venue = getVenue(event.venueId);
-        return venue && filters.venues.includes(venue.name);
+        return venue && selectedVenues.includes(venue.name);
       });
     }
 
@@ -146,27 +148,20 @@ const HomePage: React.FC = () => {
       filters.priceRange?.min !== undefined ||
       filters.priceRange?.max !== undefined
     ) {
+      const priceRange = filters.priceRange;
       filteredEvents = filteredEvents.filter((event) => {
         // Handle free events
         if (event.isFree) {
-          return (
-            filters.priceRange.min === undefined || filters.priceRange.min === 0
-          );
+          return priceRange.min === undefined || priceRange.min === 0;
         }
 
         const eventPrice = event.priceMin || 0;
 
-        if (
-          filters.priceRange.min !== undefined &&
-          eventPrice < filters.priceRange.min
-        ) {
+        if (priceRange.min !== undefined && eventPrice < priceRange.min) {
           return false;
         }
 
-        if (
-          filters.priceRange.max !== undefined &&
-          eventPrice > filters.priceRange.max
-        ) {
+        if (priceRange.max !== undefined && eventPrice > priceRange.max) {
           return false;
         }
 
