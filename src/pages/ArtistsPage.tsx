@@ -118,6 +118,7 @@ const ArtistsPage: React.FC = () => {
 
     // Filter by cities - show artists who have events in selected cities
     if (filters.cities && filters.cities.length > 0) {
+      const selectedCities = filters.cities;
       artistsArray = artistsArray.filter((artist) => {
         const allUpcomingEvents = getUpcomingEvents(Infinity);
         const artistEvents = allUpcomingEvents.filter((event) => {
@@ -130,13 +131,14 @@ const ArtistsPage: React.FC = () => {
         // Check if any event is in a selected city
         return artistEvents.some((event) => {
           const venue = getVenue(event.venueId);
-          return venue && filters.cities.includes(venue.city);
+          return venue && selectedCities.includes(venue.city);
         });
       });
     }
 
     // Filter by date range - show artists with events in the date range
     if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
+      const dateRange = filters.dateRange;
       artistsArray = artistsArray.filter((artist) => {
         const allUpcomingEvents = getUpcomingEvents(Infinity);
         const artistEvents = allUpcomingEvents.filter((event) => {
@@ -151,14 +153,14 @@ const ArtistsPage: React.FC = () => {
           const eventDate = new Date(event.dateEpochMs);
           eventDate.setHours(0, 0, 0, 0);
 
-          if (filters.dateRange.startDate) {
-            const startDate = new Date(filters.dateRange.startDate);
+          if (dateRange.startDate) {
+            const startDate = new Date(dateRange.startDate);
             startDate.setHours(0, 0, 0, 0);
             if (eventDate < startDate) return false;
           }
 
-          if (filters.dateRange.endDate) {
-            const endDate = new Date(filters.dateRange.endDate);
+          if (dateRange.endDate) {
+            const endDate = new Date(dateRange.endDate);
             endDate.setHours(23, 59, 59, 999);
             if (eventDate > endDate) return false;
           }
@@ -170,6 +172,7 @@ const ArtistsPage: React.FC = () => {
 
     // Filter by specific dates
     if (filters.dates && filters.dates.length > 0) {
+      const selectedDates = filters.dates;
       artistsArray = artistsArray.filter((artist) => {
         const allUpcomingEvents = getUpcomingEvents(Infinity);
         const artistEvents = allUpcomingEvents.filter((event) => {
@@ -184,7 +187,7 @@ const ArtistsPage: React.FC = () => {
           const eventDate = new Date(event.dateEpochMs)
             .toISOString()
             .split("T")[0];
-          return filters.dates.includes(eventDate);
+          return selectedDates.includes(eventDate);
         });
       });
     }

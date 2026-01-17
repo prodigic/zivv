@@ -63,9 +63,7 @@ const EventCard: React.FC<EventCardProps> = ({
   const artists = event.artistIds
     ? event.artistIds
         .map((id: ArtistId) => getArtist(id))
-        .filter(
-          (artist: Artist | null) => artist !== null && artist !== undefined
-        )
+        .filter((artist): artist is Artist => artist !== null && artist !== undefined)
     : [];
   const headlinerArtist = event.headlinerArtistId
     ? getArtist(event.headlinerArtistId)

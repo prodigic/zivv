@@ -113,8 +113,9 @@ const VenuesPage: React.FC = () => {
 
     // Filter by cities - show venues in selected cities
     if (filters.cities && filters.cities.length > 0) {
+      const selectedCities = filters.cities;
       venuesArray = venuesArray.filter((venue) => {
-        return filters.cities.includes(venue.city);
+        return selectedCities.includes(venue.city);
       });
     }
 
@@ -142,6 +143,7 @@ const VenuesPage: React.FC = () => {
 
     // Filter by date range - show venues with events in the date range
     if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
+      const dateRange = filters.dateRange;
       venuesArray = venuesArray.filter((venue) => {
         const allUpcomingEvents = getUpcomingEvents(Infinity);
         const venueEvents = allUpcomingEvents.filter(
@@ -153,14 +155,14 @@ const VenuesPage: React.FC = () => {
           const eventDate = new Date(event.dateEpochMs);
           eventDate.setHours(0, 0, 0, 0);
 
-          if (filters.dateRange.startDate) {
-            const startDate = new Date(filters.dateRange.startDate);
+          if (dateRange.startDate) {
+            const startDate = new Date(dateRange.startDate);
             startDate.setHours(0, 0, 0, 0);
             if (eventDate < startDate) return false;
           }
 
-          if (filters.dateRange.endDate) {
-            const endDate = new Date(filters.dateRange.endDate);
+          if (dateRange.endDate) {
+            const endDate = new Date(dateRange.endDate);
             endDate.setHours(23, 59, 59, 999);
             if (eventDate > endDate) return false;
           }
@@ -172,6 +174,7 @@ const VenuesPage: React.FC = () => {
 
     // Filter by specific dates
     if (filters.dates && filters.dates.length > 0) {
+      const selectedDates = filters.dates;
       venuesArray = venuesArray.filter((venue) => {
         const allUpcomingEvents = getUpcomingEvents(Infinity);
         const venueEvents = allUpcomingEvents.filter(
@@ -183,7 +186,7 @@ const VenuesPage: React.FC = () => {
           const eventDate = new Date(event.dateEpochMs)
             .toISOString()
             .split("T")[0];
-          return filters.dates.includes(eventDate);
+          return selectedDates.includes(eventDate);
         });
       });
     }

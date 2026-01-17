@@ -91,19 +91,21 @@ const HomePage: React.FC = () => {
 
     // Apply city filter
     if (filters.cities && filters.cities.length > 0) {
+      const selectedCities = filters.cities;
       filteredEvents = filteredEvents.filter((event) => {
         const venue = getVenue(event.venueId);
-        return venue && filters.cities.includes(venue.city);
+        return venue && selectedCities.includes(venue.city);
       });
     }
 
     // Apply specific dates filter (multi-select dates)
     if (filters.dates && filters.dates.length > 0) {
+      const selectedDates = filters.dates;
       filteredEvents = filteredEvents.filter((event) => {
         const eventDate = new Date(event.dateEpochMs)
           .toISOString()
           .split("T")[0];
-        return filters.dates.includes(eventDate);
+        return selectedDates.includes(eventDate);
       });
     }
 

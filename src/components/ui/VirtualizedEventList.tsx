@@ -63,7 +63,7 @@ const VirtualizedEventList: React.FC<VirtualizedEventListProps> = ({
   );
 
   // List container with padding to prevent clipping on hover
-  const List = React.forwardRef<HTMLDivElement>((props, ref) => {
+  const List = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>((props, ref) => {
     return (
       <div
         {...props}
