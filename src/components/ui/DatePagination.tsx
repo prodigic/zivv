@@ -226,11 +226,11 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
   return (
     <div className={`date-pagination ${className}`}>
       {/* Header with icon and Clear All button */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 xxs:gap-1 xs:gap-2">
         {/* Calendar Icon */}
         <div className="flex-shrink-0">
           <svg
-            className="w-8 h-8 text-gray-600 dark:text-gray-400"
+            className="w-8 h-8 xxs:w-6 xxs:h-6 xs:w-7 xs:h-7 text-gray-600 dark:text-gray-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -248,13 +248,14 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
 
         <div className="flex-1">
           {/* Single row of all date filter options */}
-          <div className="flex flex-wrap gap-1 items-center">
+          <div className="flex flex-wrap gap-1 xxs:gap-0.5 xs:gap-1 items-center">
             {/* Month Button */}
             <button
               onClick={handleThisMonthClick}
               className={`
-                px-2 py-1 sm:px-3 sm:py-1.5 rounded font-mono text-xs font-bold
+                px-1 xxs:px-0.5 xs:px-1 sm:px-3 py-1 xxs:py-0.5 sm:py-1.5 rounded font-mono text-xs font-bold
                 border border-dashed transition-all duration-200
+                max-w-[60px] xxs:max-w-[20px] xs:max-w-[40px] sm:max-w-none text-center
                 ${
                   isThisMonthSelected()
                     ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-300 dark:border-green-600"
@@ -262,15 +263,18 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
                 }
               `}
             >
-              Month
+              <span className="hidden sm:inline">Month</span>
+              <span className="hidden xs:inline sm:hidden">Mo</span>
+              <span className="xs:hidden">M</span>
             </button>
 
             {/* Week Button */}
             <button
               onClick={handleThisWeekClick}
               className={`
-                px-2 py-1 sm:px-3 sm:py-1.5 rounded font-mono text-xs font-bold
+                px-1 xxs:px-0.5 xs:px-1 sm:px-3 py-1 xxs:py-0.5 sm:py-1.5 rounded font-mono text-xs font-bold
                 border border-dashed transition-all duration-200
+                max-w-[60px] xxs:max-w-[20px] xs:max-w-[40px] sm:max-w-none text-center
                 ${
                   isThisWeekSelected()
                     ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-600"
@@ -278,7 +282,9 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
                 }
               `}
             >
-              Week
+              <span className="hidden sm:inline">Week</span>
+              <span className="hidden xs:inline sm:hidden">Wk</span>
+              <span className="xs:hidden">W</span>
             </button>
 
             {/* Day buttons - Today and Tomorrow first, then the rest */}
@@ -289,9 +295,9 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
                   key={day.dateString}
                   onClick={() => handleDayClick(day.dateString)}
                   className={`
-                    px-2 py-1 sm:px-3 sm:py-1.5 rounded font-mono text-xs font-bold
+                    px-1 xxs:px-0.5 xs:px-1 sm:px-3 py-1 xxs:py-0.5 sm:py-1.5 rounded font-mono text-xs font-bold
                     border border-dashed transition-all duration-200
-                    min-w-[40px] sm:min-w-[70px] text-center
+                    max-w-[80px] xxs:max-w-[25px] xs:max-w-[40px] sm:max-w-none text-center
                     ${
                       selected
                         ? "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-300 dark:border-red-600"
@@ -300,10 +306,14 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
                   `}
                   title={day.label}
                 >
+                  {/* Full name for large screens */}
                   <span className="hidden sm:inline text-[10px]">
                     {day.label}
                   </span>
-                  <span className="sm:hidden text-[9px]">{day.shortLabel}</span>
+                  {/* Abbreviated name for medium screens */}
+                  <span className="hidden xs:inline sm:hidden text-[9px]">{day.shortLabel}</span>
+                  {/* Single letter for ultra-small screens */}
+                  <span className="xs:hidden text-[8px]">{day.label.charAt(0).toUpperCase()}</span>
                 </button>
               );
             })}

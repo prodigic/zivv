@@ -53,6 +53,7 @@ export default {
                 "128": "32rem",
             },
             screens: {
+                "xxs": "320px",
                 "xs": "475px",
             },
         },

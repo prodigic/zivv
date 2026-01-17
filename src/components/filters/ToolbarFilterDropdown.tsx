@@ -134,17 +134,18 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
           {/* Mobile Panel */}
           <div
             className="fixed inset-x-0 bottom-0 z-50 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto animate-slide-up md:hidden"
+            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             role="dialog"
             aria-modal="true"
             aria-label="Filter options"
           >
             {/* Mobile Handle */}
-            <div className="flex justify-center py-3 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex justify-center py-3 xxs:py-2 border-b border-gray-200 dark:border-gray-700">
               <div className="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" />
             </div>
 
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between px-4 xxs:px-2 xs:px-3 py-3 xxs:py-2 border-b border-gray-200 dark:border-gray-700">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Filters
                 {activeFilterCount > 0 && (
@@ -175,7 +176,7 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
             </div>
 
             {/* Filter Content */}
-            <div className="p-4">{children}</div>
+            <div className="p-4 xxs:p-2 xs:p-3 max-w-full overflow-hidden">{children}</div>
           </div>
 
           {/* Desktop Dropdown */}
@@ -218,7 +219,7 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
 
             {/* Filter Content */}
             <div
-              className="p-4 overflow-y-auto"
+              className="p-4 xxs:p-2 xs:p-3 overflow-y-auto max-w-full"
               style={{ maxHeight: "calc(600px - 60px)" }}
             >
               {children}

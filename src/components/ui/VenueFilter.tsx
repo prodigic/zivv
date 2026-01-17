@@ -124,11 +124,11 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
   return (
     <div className={`venue-filter ${className}`} ref={dropdownRef}>
       {/* Header with icon and Clear All button */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 xxs:gap-1 xs:gap-2">
         {/* Building Icon */}
         <div className="flex-shrink-0">
           <svg
-            className="w-8 h-8 text-gray-600 dark:text-gray-400"
+            className="w-8 h-8 xxs:w-6 xxs:h-6 xs:w-7 xs:h-7 text-gray-600 dark:text-gray-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -147,13 +147,13 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
         <div className="flex-1">
           {/* Selected venues chips */}
           {selectedVenues.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-2">
+            <div className="flex flex-wrap gap-1 xxs:gap-0.5 xs:gap-1 mb-2 xxs:mb-1">
               {selectedVenues.map((venueName) => (
                 <div
                   key={venueName}
-                  className="inline-flex items-center px-2 py-1 rounded-md bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs font-mono"
+                  className="inline-flex items-center px-2 xxs:px-1 xs:px-1.5 py-1 xxs:py-0.5 rounded-md bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs font-mono"
                 >
-                  <span className="mr-1 truncate max-w-[120px]">
+                  <span className="mr-1 truncate max-w-[120px] xxs:max-w-[60px] xs:max-w-[80px] sm:max-w-[120px]">
                     {venueName}
                   </span>
                   <button
@@ -218,13 +218,18 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
       {isOpen && (
         <div
           className="absolute z-50 mt-1 bg-white dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-600
-                     rounded shadow-lg max-h-64 overflow-y-auto"
-          style={{ left: "2.5rem", right: "0", width: "calc(100% - 2.5rem)" }}
+                     rounded shadow-lg max-h-64 overflow-y-auto max-w-full"
+          style={{
+            left: "2.5rem",
+            right: "0",
+            width: "calc(100% - 2.5rem)",
+            minWidth: "200px"
+          }}
         >
           {filteredVenues.length > 0 ? (
             <>
               {/* Results count */}
-              <div className="px-3 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-200 dark:border-gray-700">
+              <div className="px-3 xxs:px-2 py-2 xxs:py-1 text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-200 dark:border-gray-700">
                 {searchText.trim()
                   ? `${filteredVenues.length} matches`
                   : `${allVenues.length} venues`}
@@ -240,7 +245,7 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
                   <button
                     key={venue.id}
                     onClick={() => handleVenueToggle(venue.name)}
-                    className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
+                    className={`w-full px-3 xxs:px-2 py-2 xxs:py-1.5 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
                                border-b border-dashed border-gray-100 dark:border-gray-700 last:border-b-0
                                ${isSelected ? "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300" : "text-gray-700 dark:text-gray-300"}`}
                   >
@@ -264,7 +269,7 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
               })}
             </>
           ) : (
-            <div className="px-3 py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+            <div className="px-3 xxs:px-2 py-4 xxs:py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
               No venues found matching "{searchText}"
             </div>
           )}

@@ -104,7 +104,7 @@ const LanguageDropdown: React.FC = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-1 px-2 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="flex items-center space-x-1 px-2 xxs:px-1 xs:px-1.5 py-1.5 xxs:py-1 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
         aria-label="Select language"
       >
         <span className="text-base">🌐</span>
@@ -230,7 +230,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Center: Search */}
-          <div className="flex-1 max-w-lg mx-4 relative">
+          <div className="flex-1 max-w-lg mx-4 xxs:mx-2 xs:mx-3 relative">
             <form onSubmit={handleSearchSubmit}>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -316,7 +316,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Right: Filter + View + Language + Dark Mode */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 xxs:space-x-1 xs:space-x-2">
             {/* Unified Filter Dropdown */}
             <ToolbarFilterDropdown>
               <SearchFilterToolbar />
