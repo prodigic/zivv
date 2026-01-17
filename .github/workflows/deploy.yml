@@ -29,10 +29,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Verify vite installation
+        run: |
+          ls -la node_modules/.bin/ | grep vite || echo "vite not found in node_modules/.bin"
+          npm ls vite || echo "vite not in npm ls"
 
       - name: Run linter
         run: npm run lint
@@ -52,10 +58,14 @@ jobs:
 
       - name: Build
         run: |
+          echo "Node version: $(node -v)"
+          echo "NPM version: $(npm -v)"
+          echo "Checking vite binary..."
+          ls -la node_modules/.bin/vite || true
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            npx vite build
+            NODE_ENV=production ./node_modules/.bin/vite build
           else
-            npx tsc -b && npx vite build
+            ./node_modules/.bin/tsc -b && NODE_ENV=production ./node_modules/.bin/vite build
           fi
 
       - name: Setup Pages
