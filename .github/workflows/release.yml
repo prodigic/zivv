@@ -271,15 +271,8 @@ jobs:
           asset_name: zivv-${{ needs.analyze-commits.outputs.new-version }}.tar.gz
           asset_content_type: application/gzip
 
-      - name: Upload build artifacts to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./dist
-          asset_name: build-artifacts
-          asset_content_type: application/zip
+      # Note: Build artifacts are already included in the tar.gz archive above
+      # The ./dist directory cannot be uploaded directly as a release asset
 
   notify:
     needs: [analyze-commits, release]

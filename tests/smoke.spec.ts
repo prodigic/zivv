@@ -7,11 +7,12 @@ test.describe("Zivv Application Smoke Tests", () => {
     // Check that the page loads without errors
     await expect(page).toHaveTitle(/Zivv/);
 
-    // Check for main navigation elements
-    await expect(page.locator("nav").first()).toBeVisible();
-
     // Check for main content area
     await expect(page.locator("main")).toBeVisible();
+
+    // Check for navigation - on mobile nav may be hidden, so check header instead
+    // which is always visible across all viewport sizes
+    await expect(page.locator("header").first()).toBeVisible();
 
     // Wait for initial data loading to complete
     await page.waitForLoadState("networkidle");
