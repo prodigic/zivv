@@ -135,6 +135,35 @@ The codebase uses strict TypeScript with branded types for type safety:
 
 ## Development Guidelines
 
+### 🚨 Session Close Protocol ("Let's Land This Plane") 🚨
+
+**CRITICAL**: Before saying "done" or "complete", you MUST run this checklist:
+
+```
+[ ] 1. git status              (check what changed)
+[ ] 2. git add <files>         (stage code changes)
+[ ] 3. git commit -m "..."     (commit code)
+[ ] 4. git push                (push to remote)
+[ ] 5. npm run build           (verify production build)
+[ ] 6. npx tsc --noEmit        (verify no type errors)
+[ ] 7. Monitor deployment      (GitHub Actions → Pages)
+```
+
+**Deployment Verification**:
+- **Automatic**: GitHub Actions workflow triggers on push to `main` branch
+- **Pipeline**: Lint → Format → Type Check → Test → Build → Deploy to GitHub Pages
+- **Live URL**: https://prodigic.github.io/zivv/
+- **Monitoring**: Check GitHub Actions tab for deployment status
+- **Expected**: ~2-3 minutes from push to live deployment
+
+**Build Requirements**:
+- All TypeScript compilation must pass (`npx tsc --noEmit`)
+- Production build must complete successfully (`npm run build`)
+- No console errors in build output
+- Bundle size should remain reasonable (<500KB total)
+
+**Note**: Daemon auto-syncs beads changes. No manual `bd sync` needed.
+
 ### Application Shell & Routing (Phase 4 - COMPLETED)
 
 **Router**: `src/router/`
