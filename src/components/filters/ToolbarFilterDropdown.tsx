@@ -131,9 +131,9 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
             aria-hidden="true"
           />
 
-          {/* Mobile Panel */}
+          {/* Mobile/Small Screen Full Modal */}
           <div
-            className="fixed inset-x-0 bottom-0 z-50 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto animate-slide-up md:hidden"
+            className="fixed inset-0 z-50 bg-white dark:bg-gray-800 animate-slide-up md:hidden flex flex-col"
             style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             role="dialog"
             aria-modal="true"
@@ -175,8 +175,8 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
               </button>
             </div>
 
-            {/* Filter Content */}
-            <div className="p-4 xxs:p-2 xs:p-3 max-w-full overflow-y-auto max-h-[75vh]">{children}</div>
+            {/* Filter Content - Full Screen Scrollable */}
+            <div className="flex-1 p-4 xxs:p-2 xs:p-3 overflow-y-auto">{children}</div>
           </div>
 
           {/* Desktop Dropdown */}
