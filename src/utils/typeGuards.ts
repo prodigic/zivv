@@ -183,7 +183,7 @@ export function validateEvent(data: unknown): TypeGuardResult<Event> {
 
   return {
     isValid: errors.length === 0,
-    data: errors.length === 0 ? (event as Event) : undefined,
+    data: errors.length === 0 ? (event as unknown as Event) : undefined,
     errors,
   };
 }
@@ -239,7 +239,7 @@ export function validateArtist(data: unknown): TypeGuardResult<Artist> {
 
   return {
     isValid: errors.length === 0,
-    data: errors.length === 0 ? (artist as Artist) : undefined,
+    data: errors.length === 0 ? (artist as unknown as Artist) : undefined,
     errors,
   };
 }
@@ -304,7 +304,7 @@ export function validateVenue(data: unknown): TypeGuardResult<Venue> {
 
   return {
     isValid: errors.length === 0,
-    data: errors.length === 0 ? (venue as Venue) : undefined,
+    data: errors.length === 0 ? (venue as unknown as Venue) : undefined,
     errors,
   };
 }
@@ -371,7 +371,7 @@ export function validateManifest(data: unknown): TypeGuardResult<DataManifest> {
 
   return {
     isValid: errors.length === 0,
-    data: errors.length === 0 ? (manifest as DataManifest) : undefined,
+    data: errors.length === 0 ? (manifest as unknown as DataManifest) : undefined,
     errors,
   };
 }
@@ -424,7 +424,7 @@ export function validateEventChunk(data: unknown): TypeGuardResult<EventChunk> {
 
   return {
     isValid: errors.length === 0,
-    data: errors.length === 0 ? (chunk as EventChunk) : undefined,
+    data: errors.length === 0 ? (chunk as unknown as EventChunk) : undefined,
     errors,
   };
 }

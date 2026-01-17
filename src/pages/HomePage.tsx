@@ -171,8 +171,9 @@ const HomePage: React.FC = () => {
 
     // Apply age restriction filter
     if (filters.ageRestrictions && filters.ageRestrictions.length > 0) {
+      const ageRestrictions = filters.ageRestrictions;
       filteredEvents = filteredEvents.filter((event) => {
-        return filters.ageRestrictions.some((restriction) => {
+        return ageRestrictions.some((restriction) => {
           const eventAge = event.ageRestriction?.toLowerCase() || "";
           const filterAge = restriction.toLowerCase();
 
@@ -193,9 +194,10 @@ const HomePage: React.FC = () => {
 
     // Apply tags filter
     if (filters.tags && filters.tags.length > 0) {
+      const tags = filters.tags;
       filteredEvents = filteredEvents.filter((event) => {
         if (!event.tags || event.tags.length === 0) return false;
-        return filters.tags.some((tag) => event.tags?.includes(tag));
+        return tags.some((tag) => event.tags?.includes(tag));
       });
     }
 
@@ -429,8 +431,8 @@ const HomePage: React.FC = () => {
                   const totalUnfilteredEvents = baseEvents.length;
 
                   const hasActiveFilters =
-                    filters.cities?.length > 0 ||
-                    filters.dates?.length > 0 ||
+                    (filters.cities?.length ?? 0) > 0 ||
+                    (filters.dates?.length ?? 0) > 0 ||
                     filters.dateRange?.startDate ||
                     filters.dateRange?.endDate ||
                     filters.priceRange?.min !== undefined ||

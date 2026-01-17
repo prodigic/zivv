@@ -121,8 +121,9 @@ const VenuesPage: React.FC = () => {
 
     // Filter by age restrictions - show venues matching selected age restrictions
     if (filters.ageRestrictions && filters.ageRestrictions.length > 0) {
+      const ageRestrictions = filters.ageRestrictions;
       venuesArray = venuesArray.filter((venue) => {
-        return filters.ageRestrictions.some((restriction) => {
+        return ageRestrictions.some((restriction) => {
           const venueAge = venue.ageRestriction?.toLowerCase() || "";
           const filterAge = restriction.toLowerCase();
 

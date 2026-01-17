@@ -4,7 +4,7 @@
 
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import type { EventFilters } from "@/types/events.js";
+import type { EventFilters, AgeRestriction, EventTag } from "@/types/events.js";
 
 // Filter state interface
 export interface FilterState {
@@ -289,13 +289,13 @@ export const useFilterStore = create<FilterStore>()(
           // Age restrictions
           const ageRestrictions = searchParams.get("ageRestrictions");
           if (ageRestrictions) {
-            filters.ageRestrictions = ageRestrictions.split(",");
+            filters.ageRestrictions = ageRestrictions.split(",") as AgeRestriction[];
           }
 
           // Tags
           const tags = searchParams.get("tags");
           if (tags) {
-            filters.tags = tags.split(",");
+            filters.tags = tags.split(",") as EventTag[];
           }
 
           // Search query

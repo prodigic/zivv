@@ -161,12 +161,14 @@ export function isRetryableError(type: DataErrorType | string): boolean {
 /**
  * Error severity levels
  */
-export enum ErrorSeverity {
-  LOW = "low",
-  MEDIUM = "medium",
-  HIGH = "high",
-  CRITICAL = "critical",
-}
+export const ErrorSeverity = {
+  LOW: "low",
+  MEDIUM: "medium",
+  HIGH: "high",
+  CRITICAL: "critical",
+} as const;
+
+export type ErrorSeverity = (typeof ErrorSeverity)[keyof typeof ErrorSeverity];
 
 export function getErrorSeverity(error: Error | AppError): ErrorSeverity {
   if (isAppError(error)) {

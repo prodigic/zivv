@@ -16,7 +16,7 @@ import type {
   VenueId,
 } from "@/types/events.js";
 import type { DataManifest, DataIndexes } from "@/types/data.js";
-import type { ViewState, LoadingState } from "@/types/frontend.js";
+import type { ViewState, LoadingState, CacheStats } from "@/types/frontend.js";
 
 // App state interface
 export interface AppState {
@@ -100,7 +100,7 @@ export interface AppActions {
 
   // Cache management
   refresh: () => Promise<void>;
-  getCacheStats: () => Promise<Record<string, unknown> | null>;
+  getCacheStats: () => Promise<CacheStats | null>;
 
   // Cleanup
   dispose: () => void;

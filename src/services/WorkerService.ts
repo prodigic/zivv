@@ -102,7 +102,7 @@ export class WorkerService {
       }, timeoutMs);
 
       // Store pending request
-      this.pendingRequests.set(id, { resolve, reject, timeout });
+      this.pendingRequests.set(id, { resolve: resolve as (value: unknown) => void, reject, timeout });
 
       // Send message to worker
       this.worker!.postMessage(fullMessage);
