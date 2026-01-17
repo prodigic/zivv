@@ -217,13 +217,12 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
       {/* Dropdown menu */}
       {isOpen && (
         <div
-          className="absolute z-50 mt-1 bg-white dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-600
-                     rounded shadow-lg max-h-64 overflow-y-auto max-w-full"
+          className="absolute z-60 mt-1 bg-white dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-600
+                     rounded shadow-lg max-h-64 overflow-y-auto"
           style={{
             left: "2.5rem",
-            right: "0",
-            width: "calc(100% - 2.5rem)",
-            minWidth: "200px"
+            right: "0.5rem",
+            maxWidth: "min(400px, calc(100vw - 3rem))"
           }}
         >
           {filteredVenues.length > 0 ? (

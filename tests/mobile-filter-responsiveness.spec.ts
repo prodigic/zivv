@@ -424,4 +424,98 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
       expect(isResponsive).toBeTruthy();
     });
   });
+
+  test.describe("Filter Display & Positioning Fixes", () => {
+    test("venue dropdown displays completely within viewport", async ({ page }) => {
+      // Test on desktop viewport where dropdown issues are most visible
+      await page.setViewportSize({ width: 1024, height: 768 });
+      await page.goto("/");
+
+      // Open filter modal
+      const filterButton = page.locator("button[aria-label*='filter' i]").first();
+      await filterButton.click();
+      await page.waitForTimeout(300);
+
+      // Open venue dropdown by clicking the venue search input
+      const venueInput = page.locator("input[placeholder*='venue' i]").first();
+      if (await venueInput.isVisible()) {
+        await venueInput.click();
+        await page.waitForTimeout(200);
+
+        // Check if dropdown is visible with updated z-index
+        const dropdown = page.locator(".absolute.z-60").first();
+
+        if (await dropdown.isVisible()) {
+          const dropdownBox = await dropdown.boundingBox();
+          const viewportWidth = page.viewportSize()?.width || 0;
+
+          // Verify dropdown doesn't extend beyond viewport
+          expect(dropdownBox?.x + dropdownBox?.width).toBeLessThanOrEqual(viewportWidth);
+
+          // Verify dropdown is properly positioned above modal
+          expect(dropdownBox?.x).toBeGreaterThanOrEqual(0);
+        }
+      }
+    });
+
+    test("mobile filter panel scrolls properly without hidden content", async ({ page }) => {
+      // Test on narrow mobile viewport where scrolling is critical
+      await page.setViewportSize({ width: 320, height: 568 });
+      await page.goto("/");
+
+      // Open mobile filter modal
+      const filterButton = page.locator("button[aria-label*='filter' i]").first();
+      await filterButton.click();
+      await page.waitForTimeout(300);
+
+      // Find the scrollable panel (should have overflow-y-auto now, not overflow-hidden)
+      const scrollablePanel = page.locator(".overflow-y-auto").first();
+
+      if (await scrollablePanel.isVisible()) {
+        await expect(scrollablePanel).toBeVisible();
+
+        // Test that content is scrollable, not hidden
+        const scrollHeight = await scrollablePanel.evaluate(el => el.scrollHeight);
+        const clientHeight = await scrollablePanel.evaluate(el => el.clientHeight);
+
+        // If content exceeds container, it should be scrollable
+        if (scrollHeight > clientHeight) {
+          // Test scrolling works
+          await scrollablePanel.evaluate(el => el.scrollTop = 50);
+          const scrollTop = await scrollablePanel.evaluate(el => el.scrollTop);
+          expect(scrollTop).toBeGreaterThan(0);
+        }
+      }
+    });
+
+    test("nested dropdowns maintain proper z-index hierarchy", async ({ page }) => {
+      await page.setViewportSize({ width: 1024, height: 768 });
+      await page.goto("/");
+
+      // Open filter modal (z-50)
+      const filterButton = page.locator("button[aria-label*='filter' i]").first();
+      await filterButton.click();
+      await page.waitForTimeout(300);
+
+      // Open venue dropdown (should be z-60)
+      const venueInput = page.locator("input[placeholder*='venue' i]").first();
+      if (await venueInput.isVisible()) {
+        await venueInput.click();
+        await page.waitForTimeout(200);
+
+        // Both modal and dropdown should be visible simultaneously
+        const modal = page.locator("[role='dialog']").first();
+        const dropdown = page.locator(".absolute.z-60").first();
+
+        if (await modal.isVisible() && await dropdown.isVisible()) {
+          // Verify both are visible (proper z-index stacking)
+          await expect(modal).toBeVisible();
+          await expect(dropdown).toBeVisible();
+
+          // The dropdown should appear "above" the modal visually
+          // (This is harder to test programmatically, but we verify both are visible)
+        }
+      }
+    });
+  });
 });

@@ -164,6 +164,101 @@ The codebase uses strict TypeScript with branded types for type safety:
 
 **Note**: Daemon auto-syncs beads changes. No manual `bd sync` needed.
 
+### 🎯 Task Planning & Management Protocol 🎯
+
+**CRITICAL**: All significant development tasks MUST use beads for planning and tracking. DO NOT use markdown files for plans.
+
+#### When to Create a Beads Epic
+- **Multi-component changes**: Tasks affecting 3+ files or components
+- **New features**: Any functionality addition requiring design decisions
+- **Bug fixes with multiple causes**: Issues requiring investigation and multiple fixes
+- **Architectural changes**: Refactoring, performance improvements, or system changes
+- **User-reported issues**: Any problem that needs structured investigation and resolution
+
+#### Planning Workflow with Beads
+
+**Phase 1: Epic Creation**
+```bash
+# Create epic for the main problem/feature
+bd create --title="Fix [Problem Description]" --type=epic --priority=1
+# Example: bd create --title="Fix Filter Display & Positioning Issues" --type=epic --priority=1
+```
+
+**Phase 2: Task Breakdown**
+```bash
+# Create individual tasks as separate issues
+bd create --title="Fix ToolbarFilterDropdown overflow issues" --type=task --priority=2
+bd create --title="Fix VenueFilter dropdown positioning" --type=bug --priority=2
+bd create --title="Implement proper z-index hierarchy" --type=task --priority=2
+
+# Link tasks to epic using dependencies
+bd dep add <task-id> <epic-id>  # Task depends on epic (epic blocks task)
+```
+
+**Phase 3: Implementation Tracking**
+```bash
+# Start work on a task
+bd update <task-id> --status=in_progress
+
+# Mark completed tasks
+bd close <task-id> --reason="Fixed overflow issues in mobile panel"
+
+# Close epic when all linked tasks complete
+bd close <epic-id> --reason="All filter display issues resolved"
+```
+
+#### Beads Planning Standards
+
+**Epic Titles**: Clear problem statement
+- ✅ "Fix Filter Display & Positioning Issues"
+- ✅ "Implement Mobile Filter Responsiveness"
+- ❌ "Update filters" (too vague)
+- ❌ "CSS fixes" (not descriptive)
+
+**Task Titles**: Specific, actionable items
+- ✅ "Fix VenueFilter dropdown cutoff on mobile"
+- ✅ "Update z-index hierarchy for nested dropdowns"
+- ❌ "Fix CSS" (too vague)
+- ❌ "Update component" (not specific)
+
+**Priority Guidelines**:
+- **P0**: Critical bugs breaking core functionality
+- **P1**: Important features/fixes affecting UX
+- **P2**: Standard improvements and enhancements
+- **P3**: Nice-to-have features
+- **P4**: Future considerations/backlog
+
+**Task Dependency Rules**:
+- Tasks depend on epics (epic blocks tasks until planning complete)
+- Implementation tasks can depend on investigation tasks
+- Testing tasks depend on implementation tasks
+- Never create circular dependencies
+
+#### Integration with Development Workflow
+
+**Before Starting Implementation**:
+1. Check `bd ready` for available work
+2. Review epic and linked tasks with `bd show <epic-id>`
+3. Update task status to in_progress: `bd update <task-id> --status=in_progress`
+
+**During Implementation**:
+- Keep beads issues updated with progress and blockers
+- Create new tasks if additional work is discovered
+- Link any new tasks to the parent epic
+
+**After Completion**:
+- Close completed tasks with descriptive reasons
+- Update epic status and close when all tasks complete
+- Use Session Close Protocol for deployment
+
+**Never Use Markdown Files for Planning**:
+- ❌ Do not create `.md` files in `.claude/plans/`
+- ❌ Do not write implementation plans in markdown
+- ✅ Use beads epics and issues for all planning
+- ✅ Use CLAUDE.md only for permanent project documentation
+
+This ensures all work is trackable, persistent across sessions, and integrates with the project's issue management system.
+
 ### Application Shell & Routing (Phase 4 - COMPLETED)
 
 **Router**: `src/router/`

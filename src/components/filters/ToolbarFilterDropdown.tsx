@@ -176,12 +176,12 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
             </div>
 
             {/* Filter Content */}
-            <div className="p-4 xxs:p-2 xs:p-3 max-w-full overflow-hidden">{children}</div>
+            <div className="p-4 xxs:p-2 xs:p-3 max-w-full overflow-y-auto max-h-[75vh]">{children}</div>
           </div>
 
           {/* Desktop Dropdown */}
           <div
-            className="hidden md:block absolute right-0 mt-2 w-96 max-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in z-50"
+            className="hidden md:block absolute right-0 mt-2 w-96 max-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-visible animate-fade-in z-50 isolation"
             role="dialog"
             aria-modal="true"
             aria-label="Filter options"
@@ -219,7 +219,7 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
 
             {/* Filter Content */}
             <div
-              className="p-4 xxs:p-2 xs:p-3 overflow-y-auto max-w-full"
+              className="p-4 xxs:p-2 xs:p-3 overflow-visible max-w-full"
               style={{ maxHeight: "calc(600px - 60px)" }}
             >
               {children}
