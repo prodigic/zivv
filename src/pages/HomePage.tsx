@@ -12,24 +12,6 @@ import {
   ListSkeleton,
 } from "@/components/ui/LoadingSpinner.tsx";
 import VirtualizedEventList from "@/components/ui/VirtualizedEventList.tsx";
-import type { Event } from "@/types/events";
-
-// City display name mapping
-const getCityDisplayName = (cityName: string): string => {
-  const cityMappings: Record<string, string> = {
-    Santa: "Santa Cruz",
-    "S.f": "San Francisco",
-    Uc: "Berkeley", // UC Berkeley area
-    San: "San Jose", // Partial city names
-    "140": "San Francisco", // Venue address codes
-    "2045": "San Francisco",
-    "23": "Petaluma",
-    "27826": "Unknown",
-    Mountain: "Mountain View",
-  };
-
-  return cityMappings[cityName] || cityName;
-};
 
 const HomePage: React.FC = () => {
   const getAllEvents = useAppStore((state) => state.getAllEvents);

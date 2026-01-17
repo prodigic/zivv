@@ -30,6 +30,7 @@ const VirtualizedEventList: React.FC<VirtualizedEventListProps> = ({
   useEffect(() => {
     if (viewMode !== "narrow" || !footerRef.current || !onEndReached) return;
 
+    const footerElement = footerRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !isLoading && hasMore) {
@@ -42,12 +43,10 @@ const VirtualizedEventList: React.FC<VirtualizedEventListProps> = ({
       }
     );
 
-    observer.observe(footerRef.current);
+    observer.observe(footerElement);
 
     return () => {
-      if (footerRef.current) {
-        observer.unobserve(footerRef.current);
-      }
+      observer.unobserve(footerElement);
     };
   }, [viewMode, onEndReached, isLoading, hasMore]);
 

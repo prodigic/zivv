@@ -20,7 +20,7 @@ const VenuesPage: React.FC = () => {
   const getArtist = useAppStore((state) => state.getArtist);
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
 
-  const { filters, updateFilter, clearFilters, clearFilter } = useFilterStore();
+  const { filters, updateFilter, clearFilter } = useFilterStore();
   const navigate = useNavigate();
   const location = useLocation();
 

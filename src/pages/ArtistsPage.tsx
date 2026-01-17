@@ -24,7 +24,7 @@ const ArtistsPage: React.FC = () => {
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
   const manifest = useAppStore((state) => state.manifest);
 
-  const { filters, setSearchQuery, clearFilters, clearSearch } =
+  const { filters, setSearchQuery, clearSearch } =
     useFilterStore();
   const navigate = useNavigate();
   const location = useLocation();

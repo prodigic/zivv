@@ -5,31 +5,6 @@ import '../src/index.css'; // Import Tailwind CSS and global styles
 // Import decorators and providers
 import { BrowserRouter } from 'react-router-dom';
 
-// Mock data for Storybook
-const mockEvents = [
-  {
-    id: 1,
-    title: "Sample Event",
-    dateEpochMs: Date.now() + 86400000,
-    venueId: 1,
-    artistIds: [1, 2],
-    priceMin: 20,
-    isFree: false,
-    ageRestriction: "21+",
-    description: "A great punk rock show"
-  }
-];
-
-const mockVenues = new Map([
-  [1, { id: 1, name: "The Fillmore", city: "S.f", normalizedName: "the-fillmore" }],
-  [2, { id: 2, name: "Fox Theater", city: "Oakland", normalizedName: "fox-theater" }]
-]);
-
-const mockArtists = new Map([
-  [1, { id: 1, name: "The Ramones", normalizedName: "the-ramones" }],
-  [2, { id: 2, name: "Dead Kennedys", normalizedName: "dead-kennedys" }]
-]);
-
 // Store decorators
 const withMockStores = (Story) => {
   // Mock Zustand stores for Storybook

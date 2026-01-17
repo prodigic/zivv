@@ -6,7 +6,7 @@
  */
 
 import { spawn, ChildProcess } from 'child_process';
-import { join, basename } from 'path';
+import { basename } from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import type { StartOptions, ServerInfo, DevServerProcess } from './types.js';
@@ -44,48 +44,7 @@ export class DevServerManager {
       });
       const branch = stdout.trim();
       return branch || undefined;
-    } catch (error) {
-      // Not a git repository or other git error
-      return undefined;
-    }
-  }
-
-  /**
-   * Get project name from working directory
-   */
-  private getProjectName(workingDir: string): string {
-    return basename(workingDir);
-  }
-
-  /**
-   * Gather project context information
-   */
-  private async getProjectContext(workingDir: string): Promise<{
-    gitBranch?: string;
-    projectName: string;
-  }> {
-    const [gitBranch] = await Promise.allSettled([
-      this.getGitBranch(workingDir)
-    ]);
-
-    return {
-      gitBranch: gitBranch.status === 'fulfilled' ? gitBranch.value : undefined,
-      projectName: this.getProjectName(workingDir)
-    };
-  }
-
-  /**
-   * Get current git branch for the working directory
-   */
-  private async getGitBranch(workingDir: string): Promise<string | undefined> {
-    try {
-      const { stdout } = await execAsync('git branch --show-current', {
-        cwd: workingDir,
-        timeout: 5000
-      });
-      const branch = stdout.trim();
-      return branch || undefined;
-    } catch (error) {
+    } catch {
       // Not a git repository or other git error
       return undefined;
     }
@@ -217,12 +176,10 @@ export class DevServerManager {
       });
 
       let serverReady = false;
-      let output = '';
 
       // Handle stdout
       child.stdout?.on('data', (data) => {
         const text = data.toString();
-        output += text;
 
         // Look for server ready indicator
         if (text.includes('Local:') && text.includes(`http://`) && !serverReady) {
@@ -236,9 +193,7 @@ export class DevServerManager {
 
       // Handle stderr
       child.stderr?.on('data', (data) => {
-        const text = data.toString();
-        output += text;
-        process.stderr.write(text);
+        process.stderr.write(data.toString());
       });
 
       // Handle process exit

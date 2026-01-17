@@ -87,11 +87,6 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
     }
   };
 
-  // Clear all city filters
-  const handleClearAll = () => {
-    clearFilter("cities");
-  };
-
   return (
     <div className={`city-pagination ${className}`}>
       {/* Header with icon and Clear All button */}

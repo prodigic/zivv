@@ -338,7 +338,7 @@ export class ETLProcessor {
     return `sha256-${Math.abs(hash).toString(16)}`;
   }
 
-  private toProcessingError(error: any): ProcessingError {
+  private toProcessingError(error: { type?: string; message: string; line?: number; rawText?: string }): ProcessingError {
     return {
       type: error.type === "validation" ? "validation" : "data",
       message: error.message,
@@ -348,7 +348,7 @@ export class ETLProcessor {
     };
   }
 
-  private toProcessingWarning(warning: any): ProcessingWarning {
+  private toProcessingWarning(warning: { message: string; line?: number }): ProcessingWarning {
     return {
       type: "data-quality",
       message: warning.message,

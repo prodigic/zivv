@@ -338,7 +338,7 @@ export class DevServerTUI {
       items.push(`  ${this.state.servers.length} server${this.state.servers.length === 1 ? '' : 's'} running:`);
       items.push('');
 
-      this.state.servers.forEach((server, index) => {
+      this.state.servers.forEach((server) => {
         const statusIcon = this.getStatusIcon(server.status);
         const timeAgo = this.formatTimeAgo(new Date(server.startTime));
         const memory = this.formatMemory(server.memoryUsage);

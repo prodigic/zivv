@@ -251,12 +251,13 @@ export class DevServerPortManager {
           throw new Error(`Cannot kill non-dev-server process on port ${targetPort}. Please stop it manually.`);
         }
 
-      case 'new-port':
+      case 'new-port': {
         const newPort = resolution.newPort || await this.findNextAvailablePort(targetPort + 1);
         return {
           port: newPort,
           action: 'use-alternative'
         };
+      }
 
       case 'cancel':
         return {

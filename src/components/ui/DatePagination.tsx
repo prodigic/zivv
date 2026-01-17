@@ -5,7 +5,6 @@
  */
 
 import React, { useMemo, useCallback } from "react";
-import { format, parseISO } from "date-fns";
 import { useFilterStore } from "@/stores/filterStore";
 
 interface DatePaginationProps {
@@ -222,17 +221,6 @@ export const DatePagination: React.FC<DatePaginationProps> = ({
       });
       updateFilter("dates", newDates);
     }
-  };
-
-  // Get display labels for dates
-  const getDateDisplayLabel = (dateString: string) => {
-    const day = days.find((d) => d.dateString === dateString);
-    return day ? day.shortLabel : dateString;
-  };
-
-  // Clear all date filters
-  const handleClearAll = () => {
-    clearFilter("dates");
   };
 
   return (

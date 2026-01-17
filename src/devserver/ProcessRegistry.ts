@@ -49,7 +49,7 @@ export class DevServerProcessRegistry {
     try {
       const content = await fs.readFile(this.registryFile, 'utf8');
       return JSON.parse(content);
-    } catch (error) {
+    } catch {
       // Return empty registry if file doesn't exist or is corrupted
       return {
         processes: [],

@@ -280,8 +280,8 @@ export class ExampleApp {
    * Get application statistics
    */
   async getApplicationStats(): Promise<{
-    cache: any;
-    memory: any;
+    cache: Record<string, unknown>;
+    memory: Record<string, unknown>;
     loadingStates: Record<string, string>;
   }> {
     try {

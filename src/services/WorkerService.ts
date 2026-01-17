@@ -14,7 +14,7 @@ import type { Event, Artist, Venue } from "@/types/events.js";
 export class WorkerService {
   private worker: Worker | null = null;
   private pendingRequests = new Map<string, {
-    resolve: (value: any) => void;
+    resolve: (value: unknown) => void;
     reject: (error: Error) => void;
     timeout: NodeJS.Timeout;
   }>();
@@ -140,7 +140,7 @@ export class WorkerService {
    */
   async filterEvents(
     events: Event[],
-    filters: any,
+    filters: Record<string, unknown>,
     searchQuery?: string
   ): Promise<{ events: Event[]; totalCount: number }> {
     if (!this.isWorkerSupported || !this.worker) {
@@ -193,7 +193,7 @@ export class WorkerService {
     artists: Artist[],
     venues: Venue[]
   ): Promise<{
-    documents: any[];
+    documents: unknown[];
     terms: string[];
     totalDocuments: number;
   }> {
@@ -217,7 +217,7 @@ export class WorkerService {
   /**
    * Calculate statistics using worker
    */
-  async calculateStats(events: Event[]): Promise<any> {
+  async calculateStats(events: Event[]): Promise<Record<string, unknown>> {
     if (!this.isWorkerSupported || !this.worker) {
       // Fallback to main thread calculation
       return this.calculateStatsMainThread(events);
@@ -239,7 +239,7 @@ export class WorkerService {
    * Fallback implementations for main thread
    */
 
-  private parseJsonMainThread<T>(jsonString: string, expectedType: string): T {
+  private parseJsonMainThread<T>(jsonString: string, _expectedType: string): T {
     try {
       const data = JSON.parse(jsonString);
       // Basic validation could be added here
@@ -251,8 +251,8 @@ export class WorkerService {
 
   private filterEventsMainThread(
     events: Event[],
-    filters: any,
-    searchQuery?: string
+    filters: Record<string, unknown>,
+    _searchQuery?: string
   ): { events: Event[]; totalCount: number } {
     // Simple filtering implementation
     let filtered = [...events];
@@ -276,8 +276,8 @@ export class WorkerService {
     sortOrder: "asc" | "desc"
   ): { events: Event[] } {
     const sorted = [...events].sort((a, b) => {
-      let aValue: any;
-      let bValue: any;
+      let aValue: string | number;
+      let bValue: string | number;
       
       switch (sortField) {
         case "date":
