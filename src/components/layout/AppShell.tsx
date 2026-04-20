@@ -166,6 +166,10 @@ export const AppShell: React.FC = () => {
         </div>
       </div>
 
+      {/* Filter Modal — rendered at app level so mobile full-screen works */}
+      <FilterModal>
+        <SearchFilterToolbar />
+      </FilterModal>
       </div>
     </FilterModalProvider>
   );

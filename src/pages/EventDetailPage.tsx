@@ -127,7 +127,7 @@ const EventDetailPage: React.FC = () => {
       {/* Outer 3-col grid: venue (1/3) left, event+artists (2/3) right */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
         {/* Event summary + artist cards — col-span-2, visually on the right */}
-        <div className="md:col-span-2 md:order-last space-y-4">
+        <div className="md:col-span-2 md:order-last space-y-4 md:sticky md:top-4 md:self-start">
 
         {/* Event summary card */}
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-3">
@@ -251,19 +251,28 @@ const EventDetailPage: React.FC = () => {
             </Link>
             {venueMonthEvents.length > 0 && (
               <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
-                {venueMonthEvents.map((ev) => (
-                  <Link
-                    key={ev.id}
-                    to={`/events/${ev.id}`}
-                    className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
-                      {new Date(ev.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                    </span>
-                    <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">{ev.headlinerName || "Show"}</span>
-                    <PriceWidget isFree={ev.isFree} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
-                  </Link>
-                ))}
+                {venueMonthEvents.map((ev) => {
+                  const isCurrent = ev.id === event.id;
+                  return (
+                    <Link
+                      key={ev.id}
+                      to={`/events/${ev.id}`}
+                      className={`flex items-center gap-1.5 py-0.5 rounded transition-colors ${
+                        isCurrent
+                          ? "bg-purple-100 dark:bg-purple-900/40 font-semibold"
+                          : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}
+                    >
+                      <span className={`text-xs w-14 shrink-0 tabular-nums ${isCurrent ? "text-purple-600 dark:text-purple-400" : "text-gray-400 dark:text-gray-500"}`}>
+                        {new Date(ev.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </span>
+                      <span className={`text-xs truncate flex-1 ${isCurrent ? "text-purple-900 dark:text-purple-100 font-semibold" : "text-gray-700 dark:text-gray-200 font-medium"}`}>
+                        {ev.headlinerName || "Show"}
+                      </span>
+                      <PriceWidget isFree={ev.isFree} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>

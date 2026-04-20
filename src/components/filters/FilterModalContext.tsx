@@ -167,7 +167,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({ children, className = 
 
       {/* Desktop Dropdown */}
       <div
-        className={`hidden md:block absolute right-0 mt-2 w-96 max-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-visible animate-fade-in z-50 isolation ${className}`}
+        className={`hidden md:block fixed top-14 right-4 w-96 max-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-visible animate-fade-in z-50 isolation ${className}`}
         role="dialog"
         aria-modal="true"
         aria-label="Filter options"
