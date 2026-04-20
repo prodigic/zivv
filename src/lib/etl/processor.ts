@@ -1,12 +1,13 @@
 import {
   readFileSync,
+  readdirSync,
   writeFileSync,
   existsSync,
   mkdirSync,
   statSync,
 } from "fs";
 import { join } from "path";
-import type { Event, Artist, Venue } from "@/types/events.js";
+import type { Event, Artist, Venue, ArtistUpcomingEvent, VenueUpcomingEvent } from "@/types/events.js";
 import type {
   DataManifest,
   ProcessingResult,
@@ -44,6 +45,9 @@ export class ETLProcessor {
       if (!existsSync(this.outputDir)) {
         mkdirSync(this.outputDir, { recursive: true });
       }
+
+      // Load existing createdAt timestamps to preserve them across runs
+      const existingCreatedAt = this.loadExistingCreatedAt();
 
       // Step 1: Read source files
       console.log("📖 Reading source files...");
@@ -97,8 +101,16 @@ export class ETLProcessor {
 
       const artists = Array.from(artistMap.values());
 
-      // Update upcoming event counts
+      // Restore original createdAtEpochMs for events that existed previously
+      for (const event of events) {
+        const prev = existingCreatedAt.get(event.id as number);
+        if (prev) event.createdAtEpochMs = prev;
+      }
+
+      // Update upcoming event counts and pre-compute per-artist event lists
       this.updateUpcomingCounts(events, artists, venues);
+      this.computeArtistUpcomingEvents(events, artists, venues);
+      this.computeVenueUpcomingEvents(events, artists, venues);
 
       console.log(
         `✅ Processed ${events.length} events, ${artists.length} artists, ${venues.length} venues`
@@ -252,9 +264,11 @@ export class ETLProcessor {
     // Reset counts
     artists.forEach((artist) => {
       artist.upcomingEventCount = 0;
+      artist.upcomingEvents = [];
     });
     venues.forEach((venue) => {
       venue.upcomingEventCount = 0;
+      venue.upcomingEvents = [];
     });
 
     // Count upcoming events
@@ -277,6 +291,106 @@ export class ETLProcessor {
     }
   }
 
+  private computeArtistUpcomingEvents(
+    events: Event[],
+    artists: Artist[],
+    venues: Venue[]
+  ): void {
+    const now = Date.now();
+    const venueMap = new Map(venues.map((v) => [v.id, v]));
+    const artistEventsMap = new Map<number, ArtistUpcomingEvent[]>();
+
+    for (const event of events) {
+      if (event.dateEpochMs <= now) continue;
+      const venue = venueMap.get(event.venueId);
+      const entry: ArtistUpcomingEvent = {
+        id: event.id,
+        dateEpochMs: event.dateEpochMs,
+        startTimeEpochMs: event.startTimeEpochMs,
+        venueId: event.venueId,
+        venueName: venue?.name ?? "",
+        venueCity: venue?.city ?? "",
+        isFree: event.isFree,
+        priceMin: event.priceMin,
+        priceMax: event.priceMax,
+        createdAtEpochMs: event.createdAtEpochMs,
+      };
+      for (const artistId of event.artistIds) {
+        let list = artistEventsMap.get(artistId as number);
+        if (!list) {
+          list = [];
+          artistEventsMap.set(artistId as number, list);
+        }
+        list.push(entry);
+      }
+    }
+
+    for (const artist of artists) {
+      const list = artistEventsMap.get(artist.id as number) ?? [];
+      list.sort((a, b) => a.dateEpochMs - b.dateEpochMs);
+      artist.upcomingEvents = list;
+    }
+  }
+
+  private loadExistingCreatedAt(): Map<number, number> {
+    const map = new Map<number, number>();
+    if (!existsSync(this.outputDir)) return map;
+    const files = readdirSync(this.outputDir).filter(
+      (f) => f.startsWith("events-") && f.endsWith(".json")
+    );
+    for (const file of files) {
+      try {
+        const raw = readFileSync(join(this.outputDir, file), "utf-8");
+        const chunk = JSON.parse(raw);
+        if (Array.isArray(chunk.events)) {
+          for (const e of chunk.events) {
+            if (e.id && e.createdAtEpochMs) map.set(e.id, e.createdAtEpochMs);
+          }
+        }
+      } catch {
+        // ignore unreadable chunks
+      }
+    }
+    return map;
+  }
+
+  private computeVenueUpcomingEvents(
+    events: Event[],
+    artists: Artist[],
+    venues: Venue[]
+  ): void {
+    const now = Date.now();
+    const artistMap = new Map(artists.map((a) => [a.id as number, a]));
+    const venueEventsMap = new Map<number, VenueUpcomingEvent[]>();
+
+    for (const event of events) {
+      if (event.dateEpochMs <= now) continue;
+      const headliner = artistMap.get(event.headlinerArtistId as number);
+      const entry: VenueUpcomingEvent = {
+        id: event.id,
+        dateEpochMs: event.dateEpochMs,
+        startTimeEpochMs: event.startTimeEpochMs,
+        headlinerName: headliner?.name ?? "",
+        isFree: event.isFree,
+        priceMin: event.priceMin,
+        priceMax: event.priceMax,
+        createdAtEpochMs: event.createdAtEpochMs,
+      };
+      let list = venueEventsMap.get(event.venueId as number);
+      if (!list) {
+        list = [];
+        venueEventsMap.set(event.venueId as number, list);
+      }
+      list.push(entry);
+    }
+
+    for (const venue of venues) {
+      const list = venueEventsMap.get(venue.id as number) ?? [];
+      list.sort((a, b) => a.dateEpochMs - b.dateEpochMs);
+      venue.upcomingEvents = list;
+    }
+  }
+
   private createManifest(
     events: Event[],
     artists: Artist[],
@@ -288,10 +402,15 @@ export class ETLProcessor {
     const startEpochMs = eventDates[0] || Date.now();
     const endEpochMs = eventDates[eventDates.length - 1] || Date.now();
 
+    // Find the latest distinct ingestion date across all events
+    const maxCreatedAt = events.reduce((max, e) => Math.max(max, e.createdAtEpochMs), 0);
+    const latestIngestionDate = new Date(maxCreatedAt).toISOString().split("T")[0];
+
     return {
       version: "1.0.0",
       datasetVersion: new Date().toISOString(),
       lastUpdated: Date.now(),
+      latestIngestionDate,
       totalEvents: events.length,
       totalArtists: artists.length,
       totalVenues: venues.length,

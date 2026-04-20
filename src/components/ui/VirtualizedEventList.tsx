@@ -70,7 +70,8 @@ const VirtualizedEventList: React.FC<VirtualizedEventListProps> = ({
         ref={ref}
         style={{
           ...props.style,
-          padding: "1em",
+          paddingLeft: "1em",
+          paddingRight: "1em",
         }}
       />
     );

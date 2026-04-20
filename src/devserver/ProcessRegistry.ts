@@ -7,7 +7,7 @@
 
 import { promises as fs } from 'fs';
 import { join } from 'path';
-import type { DevServerProcess, ProcessRegistry } from './types';
+import type { DevServerProcess, ProcessRegistry } from './types.js';
 
 export class DevServerProcessRegistry {
   private readonly registryDir: string;

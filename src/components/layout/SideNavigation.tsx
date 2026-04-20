@@ -45,6 +45,15 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
       ),
     },
     {
+      name: "Just Added",
+      to: "/new",
+      icon: (
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+      ),
+    },
+    {
       name: "Artists",
       to: "/artists",
       icon: (
@@ -55,8 +64,18 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
       count: manifest?.totalArtists,
     },
     {
+      name: "Local Artists",
+      to: "/local-artists",
+      icon: (
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      ),
+    },
+    {
       name: "Venues",
-      to: "/venues", 
+      to: "/venues",
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -145,27 +164,6 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
                   )}
                 </NavLink>
                 
-                {/* Calendar Sub-navigation */}
-                {item.to === "/calendar" && active && (
-                  <div className="mt-1 ml-8 space-y-1">
-                    {calendarSubNav.map((subItem) => (
-                      <NavLink
-                        key={subItem.name}
-                        to={subItem.to}
-                        onClick={() => onClose()}
-                        className={({ isActive }) => `
-                          block px-3 py-1 text-sm rounded-md transition-colors
-                          ${isActive 
-                            ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/50" 
-                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
-                          }
-                        `}
-                      >
-                        {subItem.name}
-                      </NavLink>
-                    ))}
-                  </div>
-                )}
               </div>
             );
           })}

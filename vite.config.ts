@@ -19,8 +19,7 @@ export default defineConfig({
     // Allow port increment if specified port is occupied (legacy behavior)
     strictPort: false,
 
-    // Open browser automatically (can be disabled via env var)
-    open: process.env.DEV_SERVER_NO_OPEN !== 'true',
+    open: false,
 
     // CORS settings for development
     cors: true,

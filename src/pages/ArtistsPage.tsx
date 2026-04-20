@@ -11,22 +11,27 @@ import {
 } from "@/components/ui/LoadingSpinner.js";
 import { useAppStore } from "@/stores/appStore.js";
 import { useFilterStore } from "@/stores/filterStore.js";
-import type { ArtistId } from "@/types/events.js";
+import PriceWidget from "@/components/ui/PriceWidget.js";
+import NewBadge from "@/components/ui/NewBadge.js";
 
 const ArtistsPage: React.FC = () => {
   const artists = useAppStore((state) => state.artists);
+  const manifest = useAppStore((state) => state.manifest);
   const loading = useAppStore((state) => state.loading);
   const errors = useAppStore((state) => state.errors);
-  const getUpcomingEvents = useAppStore((state) => state.getUpcomingEvents);
-  const getVenue = useAppStore((state) => state.getVenue);
-  const loadChunk = useAppStore((state) => state.loadChunk);
   const initialize = useAppStore((state) => state.initialize);
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
-  const manifest = useAppStore((state) => state.manifest);
 
-  const { filters, setSearchQuery, clearSearch } =
+  const { filters, setSearchQuery, clearSearch, updateFilter } =
     useFilterStore();
   const navigate = useNavigate();
+
+  const goToVenue = (venueName: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    updateFilter("venues", [venueName]);
+    navigate("/");
+  };
   const location = useLocation();
 
   // Initialize display limit based on saved scroll position
@@ -46,6 +51,7 @@ const ArtistsPage: React.FC = () => {
   const [artistsDisplayLimit, setArtistsDisplayLimit] = React.useState(
     getInitialDisplayLimit
   );
+  const [artistSearch, setArtistSearch] = React.useState("");
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
   // Clear search query when returning to artists page
@@ -111,86 +117,58 @@ const ArtistsPage: React.FC = () => {
 
     // Filter by upcoming events
     if (showUpcomingOnly) {
-      artistsArray = artistsArray.filter(
-        (artist) => artist.upcomingEventCount > 0
+      artistsArray = artistsArray.filter((a) => a.upcomingEvents.length > 0);
+    }
+
+    // Filter by cities
+    if (filters.cities && filters.cities.length > 0) {
+      const selectedCities = new Set(filters.cities);
+      artistsArray = artistsArray.filter((a) =>
+        a.upcomingEvents.some((e) => selectedCities.has(e.venueCity))
       );
     }
 
-    // Filter by cities - show artists who have events in selected cities
-    if (filters.cities && filters.cities.length > 0) {
-      const selectedCities = filters.cities;
-      artistsArray = artistsArray.filter((artist) => {
-        const allUpcomingEvents = getUpcomingEvents(Infinity);
-        const artistEvents = allUpcomingEvents.filter((event) => {
-          const isHeadliner = event.headlinerArtistId === artist.id;
-          const isSupporting =
-            event.artistIds && event.artistIds.includes(artist.id);
-          return isHeadliner || isSupporting;
-        });
-
-        // Check if any event is in a selected city
-        return artistEvents.some((event) => {
-          const venue = getVenue(event.venueId);
-          return venue && selectedCities.includes(venue.city);
-        });
-      });
-    }
-
-    // Filter by date range - show artists with events in the date range
+    // Filter by date range
     if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
-      const dateRange = filters.dateRange;
-      artistsArray = artistsArray.filter((artist) => {
-        const allUpcomingEvents = getUpcomingEvents(Infinity);
-        const artistEvents = allUpcomingEvents.filter((event) => {
-          const isHeadliner = event.headlinerArtistId === artist.id;
-          const isSupporting =
-            event.artistIds && event.artistIds.includes(artist.id);
-          return isHeadliner || isSupporting;
-        });
-
-        // Check if any event is in the date range
-        return artistEvents.some((event) => {
-          const eventDate = new Date(event.dateEpochMs);
-          eventDate.setHours(0, 0, 0, 0);
-
-          if (dateRange.startDate) {
-            const startDate = new Date(dateRange.startDate);
-            startDate.setHours(0, 0, 0, 0);
-            if (eventDate < startDate) return false;
-          }
-
-          if (dateRange.endDate) {
-            const endDate = new Date(dateRange.endDate);
-            endDate.setHours(23, 59, 59, 999);
-            if (eventDate > endDate) return false;
-          }
-
-          return true;
-        });
-      });
+      const start = filters.dateRange?.startDate ? new Date(filters.dateRange.startDate).setHours(0,0,0,0) : -Infinity;
+      const end = filters.dateRange?.endDate ? new Date(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
+      artistsArray = artistsArray.filter((a) =>
+        a.upcomingEvents.some((e) => e.dateEpochMs >= start && e.dateEpochMs <= end)
+      );
     }
 
     // Filter by specific dates
     if (filters.dates && filters.dates.length > 0) {
-      const selectedDates = filters.dates;
-      artistsArray = artistsArray.filter((artist) => {
-        const allUpcomingEvents = getUpcomingEvents(Infinity);
-        const artistEvents = allUpcomingEvents.filter((event) => {
-          const isHeadliner = event.headlinerArtistId === artist.id;
-          const isSupporting =
-            event.artistIds && event.artistIds.includes(artist.id);
-          return isHeadliner || isSupporting;
-        });
-
-        // Check if any event is on a selected date
-        return artistEvents.some((event) => {
-          const eventDate = new Date(event.dateEpochMs)
-            .toISOString()
-            .split("T")[0];
-          return selectedDates.includes(eventDate);
-        });
-      });
+      const selectedDates = new Set(filters.dates);
+      artistsArray = artistsArray.filter((a) =>
+        a.upcomingEvents.some((e) =>
+          selectedDates.has(new Date(e.dateEpochMs).toISOString().split("T")[0])
+        )
+      );
     }
+
+    // Filter by local search input
+    if (artistSearch.trim()) {
+      const q = artistSearch.trim().toLowerCase();
+      artistsArray = artistsArray.filter((a) => a.name.toLowerCase().includes(q));
+    }
+
+    // Sort: most discrete venues first, then lowest price, then earliest date
+    artistsArray.sort((a, b) => {
+      const venueCount = (events: typeof a.upcomingEvents) => new Set(events.map((e) => e.venueId)).size;
+      const va = venueCount(a.upcomingEvents);
+      const vb = venueCount(b.upcomingEvents);
+      if (vb !== va) return vb - va;
+      const priceOf = (ev: typeof a.upcomingEvents[0] | undefined) => {
+        if (!ev) return Infinity;
+        if (ev.isFree) return 0;
+        return ev.priceMin ?? ev.priceMax ?? Infinity;
+      };
+      const pa = priceOf(a.upcomingEvents[0]);
+      const pb = priceOf(b.upcomingEvents[0]);
+      if (pa !== pb) return pa - pb;
+      return (a.upcomingEvents[0]?.dateEpochMs ?? Infinity) - (b.upcomingEvents[0]?.dateEpochMs ?? Infinity);
+    });
 
     return artistsArray;
   }, [
@@ -199,9 +177,12 @@ const ArtistsPage: React.FC = () => {
     filters.cities,
     filters.dateRange,
     filters.dates,
-    getUpcomingEvents,
-    getVenue,
+    artistSearch,
   ]);
+
+  React.useEffect(() => {
+    setArtistsDisplayLimit(30);
+  }, [artistSearch]);
 
   const artistsArray = allArtistsArray.slice(0, artistsDisplayLimit);
 
@@ -226,71 +207,13 @@ const ArtistsPage: React.FC = () => {
     };
   }, [allArtistsArray.length, artistsDisplayLimit]);
 
-  // Initialize app and load initial event chunks
+  // Initialize app — only artists needed, no event chunks required
   useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        await initialize();
-        // Load event chunks dynamically based on available data
-        if (manifest?.chunks?.events) {
-          // Load more chunks for artists page to show more comprehensive data
-          const availableChunks = manifest.chunks.events
-            .map((chunk) => chunk.chunkId)
-            .slice(0, 8); // Load first 8 months for artists page
-
-          console.log("Loading event chunks for artists:", availableChunks);
-          await Promise.all(
-            availableChunks.map((chunkId) => loadChunk(chunkId))
-          );
-        } else {
-          // Fallback to known working chunks if manifest not available
-          console.log("Manifest not available, using fallback chunks");
-          await Promise.all([
-            loadChunk("2025-09"),
-            loadChunk("2025-10"),
-            loadChunk("2025-11"),
-            loadChunk("2025-12"),
-          ]);
-        }
-      } catch (error) {
-        console.error("Failed to initialize ArtistsPage:", error);
-      }
-    };
-
-    const currentEventCount = getUpcomingEvents(Infinity).length;
-
-    // Initialize if we need artists OR if we need events
-    const needsArtists =
-      artists.size === 0 && loading.artists === "idle" && !errors.artists;
-    const needsEvents =
-      currentEventCount === 0 && loading.events === "idle" && !errors.events;
-
-    if (needsArtists || needsEvents) {
-      initializeApp();
+    if (artists.size === 0 && loading.artists === "idle" && !errors.artists) {
+      initialize().catch(console.error);
     }
-  }, [
-    artists.size,
-    loading.artists,
-    errors.artists,
-    loading.events,
-    errors.events,
-    initialize,
-    loadChunk,
-    getUpcomingEvents,
-    manifest,
-  ]);
+  }, [artists.size, loading.artists, errors.artists, initialize]);
 
-  // Helper function to get next event for an artist
-  const getNextEventForArtist = (artistId: ArtistId) => {
-    const allUpcomingEvents = getUpcomingEvents(Infinity);
-
-    return allUpcomingEvents.find((event) => {
-      const isHeadliner = event.headlinerArtistId === artistId;
-      const isSupporting =
-        event.artistIds && event.artistIds.includes(artistId);
-      return isHeadliner || isSupporting;
-    });
-  };
 
   if (loading.artists === "loading") {
     return (
@@ -328,46 +251,58 @@ const ArtistsPage: React.FC = () => {
     );
   }
 
-  // Don't render artists until we have both artists and some events loaded
-  const hasEventsLoaded = getUpcomingEvents(Infinity).length > 0;
-  const eventCount = getUpcomingEvents(Infinity).length;
 
   return (
     <ContentArea
       title="Artists"
-      subtitle={`${artistsArray.length} artists in the Bay Area`}
+      subtitle={`${allArtistsArray.length} artists in the Bay Area`}
     >
-      {/* Debug info */}
-      <div className="debug-info mb-4 space-y-1">
-        <div className="debug-label">Page Debug Info:</div>
-        <div>Artists loaded: {artistsArray.length}</div>
-        <div>Events loaded: {eventCount}</div>
-        <div>
-          Loading states: artists={loading.artists}, events={loading.events}
-        </div>
-        <div>Has events loaded: {hasEventsLoaded.toString()}</div>
+      {/* Artist search input */}
+      <div className="relative mb-6">
+        <svg
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          type="text"
+          value={artistSearch}
+          onChange={(e) => setArtistSearch(e.target.value)}
+          placeholder="Search artists..."
+          className="w-full pl-9 pr-9 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+        />
+        {artistSearch && (
+          <button
+            onClick={() => setArtistSearch("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
 
-      {!hasEventsLoaded && artistsArray.length > 0 ? (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading events...</p>
-        </div>
-      ) : (
+      <>
+        {allArtistsArray.length === 0 && artistSearch ? (
+          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+            No artists found matching &ldquo;{artistSearch}&rdquo;
+          </div>
+        ) : null}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {artistsArray.map((artist) => {
-            const nextEvent = getNextEventForArtist(artist.id);
-            const venue = nextEvent?.venueId
-              ? getVenue(nextEvent.venueId)
-              : null;
+            const artistEvents = artist.upcomingEvents;
 
             return (
               <div
                 key={artist.id}
                 onClick={() => handleArtistClick(artist.name)}
-                className={`artist-card ${artist.upcomingEventCount === 0 ? "no-upcoming" : ""} bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow cursor-pointer`}
+                className={`artist-card ${artistEvents.length === 0 ? "no-upcoming" : ""} bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 hover:shadow-md transition-shadow cursor-pointer`}
               >
-                <div className="space-y-4">
+                <div className="space-y-2.5">
                   {/* Header with Avatar and Title */}
                   <div className="flex items-center space-x-4">
                     <div className="h-12 w-12 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 rounded-full flex items-center justify-center">
@@ -390,70 +325,44 @@ const ArtistsPage: React.FC = () => {
                         {artist.name}
                       </h3>
                       <div className="text-sm text-gray-600 dark:text-gray-300">
-                        {artist.upcomingEventCount > 0
-                          ? `${artist.upcomingEventCount} upcoming show${artist.upcomingEventCount !== 1 ? "s" : ""}`
+                        {artistEvents.length > 0
+                          ? `${artistEvents.length} upcoming show${artistEvents.length !== 1 ? "s" : ""}`
                           : "No upcoming shows"}
                       </div>
                     </div>
                   </div>
 
-                  {/* Full-width Upcoming Shows Inset */}
-                  {nextEvent && (
-                    <Link
-                      to={`/events/${nextEvent.id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="block bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      <div className="flex items-start space-x-3">
-                        {/* Tear-off Calendar Date */}
-                        <div className="flex-shrink-0">
-                          <div className="bg-white dark:bg-gray-800 rounded shadow-sm border border-gray-200 dark:border-gray-600 overflow-hidden w-8">
-                            {/* Calendar Header */}
-                            <div className="bg-red-500 text-white text-center py-0.5">
-                              <div className="text-xs font-bold uppercase leading-tight">
-                                {new Date(nextEvent.dateEpochMs)
-                                  .toLocaleDateString("en-US", {
-                                    month: "short",
-                                  })
-                                  .toUpperCase()}
-                              </div>
-                            </div>
-                            {/* Date */}
-                            <div className="text-center py-1">
-                              <div className="text-sm font-bold text-gray-900 dark:text-white leading-none">
-                                {new Date(nextEvent.dateEpochMs).getDate()}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Event Details */}
-                        <div className="flex-1 min-w-0 space-y-1">
-                          <div className="text-sm">
-                            <span className="font-semibold text-green-600 dark:text-green-400">
-                              {nextEvent.isFree
-                                ? "FREE"
-                                : nextEvent.priceMin === nextEvent.priceMax
-                                  ? `$${Math.ceil(nextEvent.priceMin || 0)}`
-                                  : `$${Math.ceil(nextEvent.priceMin || 0)}-${Math.ceil(nextEvent.priceMax || 0)}`}
-                            </span>
-                            <span className="font-medium text-gray-900 dark:text-gray-100 ml-2">
-                              {nextEvent.startTimeEpochMs
-                                ? new Date(
-                                    nextEvent.startTimeEpochMs
-                                  ).toLocaleTimeString("en-US", {
-                                    hour: "numeric",
-                                    minute: "2-digit",
-                                  })
-                                : "TBA"}
-                            </span>
-                          </div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">
-                            {venue?.name} • {venue?.city}
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
+                  {/* All events — compact rows */}
+                  {artistEvents.length > 0 && (
+                    <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
+                      {artistEvents.map((event) => (
+                        <Link
+                          key={event.id}
+                          to={`/events/${event.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
+                            {new Date(event.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                          </span>
+                          <button
+                            onClick={(e) => goToVenue(event.venueName, e)}
+                            className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1 text-left hover:underline"
+                          >
+                            {event.venueName}
+                          </button>
+                          <PriceWidget
+                            isFree={event.isFree}
+                            priceMin={event.priceMin}
+                            priceMax={event.priceMax}
+                            className="text-xs shrink-0"
+                          />
+                          {manifest?.latestIngestionDate && (
+                            <NewBadge createdAtEpochMs={event.createdAtEpochMs} latestIngestionDate={manifest.latestIngestionDate} />
+                          )}
+                        </Link>
+                      ))}
+                    </div>
                   )}
 
                   {/* Aliases */}
@@ -470,19 +379,19 @@ const ArtistsPage: React.FC = () => {
                       Artist:{" "}
                       <span className="debug-id artist-id">{artist.id}</span>
                     </div>
-                    {nextEvent && (
+                    {artistEvents[0] && (
                       <div className="space-y-1">
                         <div>
                           Next Event:{" "}
                           <span className="debug-id event-id">
-                            {nextEvent.id}
+                            {artistEvents[0].id}
                           </span>
                         </div>
-                        {nextEvent.venueId && (
+                        {artistEvents[0].venueId && (
                           <div>
                             Venue:{" "}
                             <span className="debug-id venue-id">
-                              {nextEvent.venueId}
+                              {artistEvents[0].venueId}
                             </span>
                           </div>
                         )}
@@ -504,7 +413,7 @@ const ArtistsPage: React.FC = () => {
             </div>
           )}
         </div>
-      )}
+      </>
     </ContentArea>
   );
 };

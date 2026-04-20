@@ -237,6 +237,7 @@ export class EventParser {
               aliases: [],
               upcomingEventCount: 0,
               totalEventCount: 0,
+              upcomingEvents: [],
               createdAtEpochMs: Date.now(),
               updatedAtEpochMs: Date.now(),
             };
@@ -271,6 +272,7 @@ export class EventParser {
             ageRestriction: venueInfo.ageRestriction,
             upcomingEventCount: 0,
             totalEventCount: 0,
+            upcomingEvents: [],
             createdAtEpochMs: Date.now(),
             updatedAtEpochMs: Date.now(),
             sourceLineNumber: rawEvent.lineNumber,
@@ -787,6 +789,7 @@ export class VenueParser {
             phone: rawVenue.phone,
             upcomingEventCount: 0,
             totalEventCount: 0,
+            upcomingEvents: [],
             createdAtEpochMs: Date.now(),
             updatedAtEpochMs: Date.now(),
             sourceLineNumber: rawVenue.lineNumber,

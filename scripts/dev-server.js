@@ -91,6 +91,14 @@ class DevServerCLI {
       console.log(`   Port: ${serverInfo.port}`);
       console.log(`   Startup time: ${serverInfo.startupTime}ms`);
 
+      // Open browser via cmux
+      const { execSync } = await import('child_process');
+      try {
+        execSync(`cmux browser navigate ${serverInfo.url}`, { stdio: 'ignore' });
+      } catch {
+        // cmux not available, skip
+      }
+
       if (!options.background) {
         console.log('\n💡 Use \'npm run dev:status\' to see running servers');
         console.log('💡 Use \'npm run dev:stop\' to stop this server');

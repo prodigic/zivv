@@ -6,6 +6,7 @@
 import React from "react";
 import { useAppStore } from "@/stores/appStore.ts";
 import type { Event, Artist, ArtistId } from "@/types/events";
+import PriceWidget from "@/components/ui/PriceWidget.js";
 
 // City display name mapping
 const getCityDisplayName = (cityName: string): string => {
@@ -109,8 +110,8 @@ const EventCard: React.FC<EventCardProps> = ({
   // Create background text pattern
   const backgroundText = `${headlinerArtist?.name || "PUNK SHOW"} • ${venue?.name || "VENUE"} • `;
 
-  // Generate random rotation between -1 and 1 degrees
-  const randomRotation = (Math.random() - 0.5) * 2; // -1 to +1 degrees
+  // Stable rotation derived from event id — no re-render churn
+  const randomRotation = ((event.id % 100) / 100 - 0.5) * 2;
 
   return (
     <div
@@ -235,19 +236,12 @@ const EventCard: React.FC<EventCardProps> = ({
           {/* Price */}
           {(event.priceMin || event.priceMax || event.isFree) && (
             <div className="mt-4">
-              <span
-                className={`bg-red-600 text-white rounded font-bold shadow-inner inline-block ${
-                  viewMode === "narrow"
-                    ? "px-2 py-1 text-sm"
-                    : "px-3 py-2 text-lg"
-                }`}
-              >
-                {event.isFree
-                  ? "FREE"
-                  : event.priceMin === event.priceMax
-                    ? `$${Math.ceil(event.priceMin || 0)}`
-                    : `$${Math.ceil(event.priceMin || 0)}-$${Math.ceil(event.priceMax || 0)}`}
-              </span>
+              <PriceWidget
+                isFree={event.isFree}
+                priceMin={event.priceMin}
+                priceMax={event.priceMax}
+                className={viewMode === "narrow" ? "text-sm" : "text-lg"}
+              />
             </div>
           )}
         </div>

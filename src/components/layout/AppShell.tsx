@@ -166,10 +166,6 @@ export const AppShell: React.FC = () => {
         </div>
       </div>
 
-      {/* Filter Modal - Rendered at document level */}
-      <FilterModal>
-        <SearchFilterToolbar />
-      </FilterModal>
       </div>
     </FilterModalProvider>
   );

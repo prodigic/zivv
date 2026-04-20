@@ -12,6 +12,7 @@ export interface DataManifest {
   version: string; // e.g., "1.0.0"
   datasetVersion: string; // e.g., "2024-08-15T10:30:00Z"
   lastUpdated: number; // epoch milliseconds
+  latestIngestionDate: string; // ISO date of the most recent event batch (YYYY-MM-DD)
 
   // Statistics
   totalEvents: number;

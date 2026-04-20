@@ -7,8 +7,8 @@
 
 import { createInterface } from 'readline';
 import { createConnection } from 'net';
-import type { ConflictResolution, DevServerProcess } from './types';
-import { DevServerProcessRegistry } from './ProcessRegistry';
+import type { ConflictResolution, DevServerProcess } from './types.js';
+import { DevServerProcessRegistry } from './ProcessRegistry.js';
 
 export class DevServerPortManager {
   private registry: DevServerProcessRegistry;
@@ -337,7 +337,7 @@ export class DevServerPortManager {
     isDevServer: boolean;
     process?: DevServerProcess;
   }>> {
-    const summary = [];
+    const summary: Array<{ port: number; available: boolean; isDevServer: boolean; process?: DevServerProcess }> = [];
 
     for (let port = startPort; port < startPort + count; port++) {
       const portInfo = await this.getPortInfo(port);

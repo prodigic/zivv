@@ -17,6 +17,8 @@ const VenuesPage = lazy(() => import("@/pages/VenuesPage.tsx"));
 const VenueDetailPage = lazy(() => import("@/pages/VenueDetailPage.tsx"));
 const EventDetailPage = lazy(() => import("@/pages/EventDetailPage.tsx"));
 const AboutPage = lazy(() => import("@/pages/AboutPage.tsx"));
+const NewEventsPage = lazy(() => import("@/pages/NewEventsPage.tsx"));
+const LocalArtistsPage = lazy(() => import("@/pages/LocalArtistsPage.tsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.tsx"));
 
 // PageWrapper now imported from components/layout/PageWrapper.tsx
@@ -34,6 +36,22 @@ export const router = createBrowserRouter(
           element: (
             <PageWrapper>
               <HomePage />
+            </PageWrapper>
+          ),
+        },
+        {
+          path: "new",
+          element: (
+            <PageWrapper>
+              <NewEventsPage />
+            </PageWrapper>
+          ),
+        },
+        {
+          path: "local-artists",
+          element: (
+            <PageWrapper>
+              <LocalArtistsPage />
             </PageWrapper>
           ),
         },
@@ -113,7 +131,7 @@ export const router = createBrowserRouter(
           ],
         },
         {
-          path: "event/:slug",
+          path: "events/:slug",
           element: (
             <PageWrapper>
               <EventDetailPage />

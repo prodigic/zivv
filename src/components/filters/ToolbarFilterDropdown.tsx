@@ -127,11 +127,7 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
           {/* Mobile/Small Screen Full Modal */}
           <div
             className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-white dark:bg-gray-800 md:hidden flex flex-col animate-slide-up"
-            style={{
-              paddingBottom: "env(safe-area-inset-bottom)",
-              width: "100vw",
-              height: "100vh"
-            }}
+            style={{ width: "100vw", height: "100vh" }}
             role="dialog"
             aria-modal="true"
             aria-label="Filter options"
@@ -173,12 +169,14 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
             </div>
 
             {/* Filter Content - Full Screen Scrollable */}
-            <div className="flex-1 p-4 xxs:p-2 xs:p-3 overflow-y-auto">{children}</div>
+            <div className="flex-1 overflow-y-auto p-4 xxs:p-2 xs:p-3">
+              <div style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>{children}</div>
+            </div>
           </div>
 
           {/* Desktop Dropdown */}
           <div
-            className="hidden md:block absolute right-0 mt-2 w-96 max-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-visible animate-fade-in z-50 isolation"
+            className="hidden md:block absolute right-0 top-full mt-2 w-96 max-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-visible animate-fade-in z-50 isolation"
             role="dialog"
             aria-modal="true"
             aria-label="Filter options"

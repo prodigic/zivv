@@ -59,6 +59,19 @@ export interface Event {
   sourceLineNumber: number;
 }
 
+export interface ArtistUpcomingEvent {
+  id: EventId;
+  dateEpochMs: number;
+  startTimeEpochMs?: number;
+  venueId: VenueId;
+  venueName: string;
+  venueCity: string;
+  isFree: boolean;
+  priceMin?: number;
+  priceMax?: number;
+  createdAtEpochMs: number;
+}
+
 export interface Artist {
   id: ArtistId;
   name: string;
@@ -68,9 +81,23 @@ export interface Artist {
   upcomingEventCount: number;
   totalEventCount: number;
 
+  // Pre-computed upcoming events (sorted by date, embedded at ETL time)
+  upcomingEvents: ArtistUpcomingEvent[];
+
   // Metadata
   createdAtEpochMs: number;
   updatedAtEpochMs: number;
+}
+
+export interface VenueUpcomingEvent {
+  id: EventId;
+  dateEpochMs: number;
+  startTimeEpochMs?: number;
+  headlinerName: string;
+  isFree: boolean;
+  priceMin?: number;
+  priceMax?: number;
+  createdAtEpochMs: number;
 }
 
 export interface Venue {
@@ -94,6 +121,7 @@ export interface Venue {
   // Computed fields
   upcomingEventCount: number;
   totalEventCount: number;
+  upcomingEvents: VenueUpcomingEvent[];
 
   // Metadata
   createdAtEpochMs: number;

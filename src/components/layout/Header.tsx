@@ -315,9 +315,12 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right: Filter + View + Language + Dark Mode */}
           <div className="flex items-center space-x-3 xxs:space-x-1 xs:space-x-2">
-            {/* Filter Button - Desktop only */}
+            {/* Filter Button + Dropdown - Desktop only */}
             <div className="hidden md:block relative">
               <FilterButton />
+              <FilterModal>
+                <SearchFilterToolbar />
+              </FilterModal>
             </div>
 
             {/* View Toggle - Desktop only */}
