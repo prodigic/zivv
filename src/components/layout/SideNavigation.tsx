@@ -19,8 +19,17 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
   className = "" 
 }) => {
   const location = useLocation();
-  const { manifest, getUpcomingEvents } = useAppStore();
+  const { manifest, getUpcomingEvents, artists } = useAppStore();
   const { hasActiveFilters, getFilterSummary } = useFilterStore();
+
+  const localArtistCount = React.useMemo(() => {
+    let count = 0;
+    for (const a of artists.values()) {
+      const venueCount = new Set(a.upcomingEvents.map((e) => e.venueId)).size;
+      if (a.upcomingEvents.length >= 3 && venueCount >= 2) count++;
+    }
+    return count;
+  }, [artists]);
 
   const upcomingEvents = getUpcomingEvents(3);
 
@@ -72,6 +81,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
       ),
+      count: localArtistCount > 0 ? localArtistCount : undefined,
     },
     {
       name: "Venues",

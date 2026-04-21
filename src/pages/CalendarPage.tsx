@@ -321,7 +321,7 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
                   return (
                     <Link
                       key={event.id}
-                      to={`/events/${event.id}`}
+                      to={`/events/${event.slug}`}
                       className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
                     >
                       {/* Time */}
@@ -347,6 +347,7 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
                       {/* Price */}
                       <PriceWidget
                         isFree={event.isFree}
+                        isSoldOut={event.status === "sold-out" || event.tags?.includes("sold-out")}
                         priceMin={event.priceMin}
                         priceMax={event.priceMax}
                         className="text-xs shrink-0"

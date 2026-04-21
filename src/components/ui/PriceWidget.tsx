@@ -2,6 +2,7 @@ import React from "react";
 
 interface PriceWidgetProps {
   isFree?: boolean;
+  isSoldOut?: boolean;
   priceMin?: number | null;
   priceMax?: number | null;
   className?: string;
@@ -17,10 +18,22 @@ function priceTier(price: number): number {
 
 const PriceWidget: React.FC<PriceWidgetProps> = ({
   isFree,
+  isSoldOut,
   priceMin,
   priceMax,
   className = "",
 }) => {
+  if (isSoldOut) {
+    return (
+      <span
+        className={`inline-flex items-center font-semibold text-red-500 dark:text-red-400 ${className}`}
+        title="Sold out"
+      >
+        SOLD
+      </span>
+    );
+  }
+
   const hasPrice = priceMin != null || priceMax != null;
   const price = priceMin ?? priceMax ?? 0;
   const tier = isFree ? 0 : hasPrice && price === 0 ? 0 : hasPrice ? priceTier(price) : null;

@@ -41,17 +41,23 @@ export class DateParser {
   // };
 
   /**
-   * Parse date string like "aug 15 fri" to ISO date
-   * Uses current year or next year if date has passed
+   * Parse date string like "aug 15 fri" to ISO date.
+   * Accepts an optional referenceDate (last parsed event's epochMs) so that
+   * when the file contains multiple sequential event blocks the year context
+   * is tracked correctly: a date is only bumped to the next year when it is
+   * genuinely in the future relative to the reference, not just because the
+   * calendar month wrapped backward in the source file.
    */
   static parseEventDate(
-    dateString: string
+    dateString: string,
+    referenceEpochMs?: number
   ): { date: string; epochMs: number } | null {
     const parts = dateString.trim().toLowerCase().split(/\s+/);
     if (parts.length < 2) return null;
 
     const monthStr = parts[0];
     const dayStr = parts[1];
+    const thirdToken = parts[2]; // day-of-week abbrev OR explicit year (e.g. "2027")
 
     const month = this.MONTHS[monthStr as keyof typeof this.MONTHS];
     const day = parseInt(dayStr, 10);
@@ -60,17 +66,41 @@ export class DateParser {
       return null;
     }
 
-    // Determine year (current or next if date has passed)
-    const now = new Date();
-    const currentYear = now.getFullYear();
-
-    let eventDate = new Date(currentYear, month, day);
-
-    // If the event date is more than 30 days in the past, assume it's next year
-    if (eventDate.getTime() < now.getTime() - 30 * 24 * 60 * 60 * 1000) {
-      eventDate = new Date(currentYear + 1, month, day);
+    // If the third token is a 4-digit year, use it directly
+    const explicitYear = thirdToken && /^\d{4}$/.test(thirdToken) ? parseInt(thirdToken, 10) : null;
+    if (explicitYear) {
+      const eventDate = new Date(explicitYear, month, day);
+      return {
+        date: eventDate.toISOString().split("T")[0],
+        epochMs: eventDate.getTime(),
+      };
     }
 
+    const now = new Date();
+
+    if (referenceEpochMs) {
+      // Sequential mode: resolve the date relative to the previous event's date.
+      // The year only advances when the calendar month wraps backward (i.e. the
+      // new month is earlier than the reference month by more than 6 months).
+      const ref = new Date(referenceEpochMs);
+      let year = ref.getFullYear();
+      let eventDate = new Date(year, month, day);
+
+      // If the new date is more than 6 months before the reference date, it
+      // means we've wrapped into the next year (e.g. Jan after Jul)
+      if (eventDate.getTime() < ref.getTime() - 180 * 24 * 60 * 60 * 1000) {
+        eventDate = new Date(year + 1, month, day);
+      }
+
+      return {
+        date: eventDate.toISOString().split("T")[0],
+        epochMs: eventDate.getTime(),
+      };
+    }
+
+    // No reference: assign the date to the current year; if it's already passed
+    // don't bump — just keep it as-is (past events are filtered downstream)
+    const eventDate = new Date(now.getFullYear(), month, day);
     return {
       date: eventDate.toISOString().split("T")[0],
       epochMs: eventDate.getTime(),

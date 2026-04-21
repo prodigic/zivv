@@ -7,7 +7,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
 import { useAppStore } from "@/stores/appStore.js";
-import type { EventId } from "@/types/events.js";
 
 const EventDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -27,26 +26,30 @@ const EventDetailPage: React.FC = () => {
     if (loading.artists === "idle") initialize().catch(console.error);
   }, [loading.artists, initialize]);
 
-  // Find event by id (slug param is the numeric id)
-  const eventId = slug ? (parseInt(slug, 10) as EventId) : null;
-  const event = eventId ? events.get(eventId) : undefined;
+  // Find event by slug
+  const event = slug ? Array.from(events.values()).find((e) => e.slug === slug) : undefined;
 
   // Load the right chunk if event not found yet
   useEffect(() => {
-    if (event || !eventId || !manifest?.chunks?.events) return;
-    // Try to find which chunk contains this event by searching all chunks
+    if (event || !slug || !manifest?.chunks?.events) return;
+    // Slug starts with YYYY-MM, use that to find the right chunk first
+    const chunkId = slug.slice(0, 7); // "YYYY-MM"
     const loadAll = async () => {
-      for (const chunk of manifest.chunks.events) {
+      // Try the matching month chunk first
+      const prioritized = [
+        ...manifest.chunks.events.filter((c) => c.chunkId === chunkId),
+        ...manifest.chunks.events.filter((c) => c.chunkId !== chunkId),
+      ];
+      for (const chunk of prioritized) {
         if (!loadedChunks.has(chunk.chunkId)) {
           await loadChunk(chunk.chunkId);
-          // Check if we found it
-          const found = useAppStore.getState().events.get(eventId);
+          const found = Array.from(useAppStore.getState().events.values()).find((e) => e.slug === slug);
           if (found) break;
         }
       }
     };
     loadAll().catch(console.error);
-  }, [event, eventId, manifest, loadedChunks, loadChunk]);
+  }, [event, slug, manifest, loadedChunks, loadChunk]);
 
   const isLoading = loading.events === "loading" || loading.artists === "loading";
 
@@ -168,7 +171,7 @@ const EventDetailPage: React.FC = () => {
 
           {/* Price / age / tags */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <PriceWidget isFree={event.isFree} priceMin={event.priceMin} priceMax={event.priceMax} className="text-sm" />
+            <PriceWidget isFree={event.isFree} isSoldOut={event.status === "sold-out" || event.tags?.includes("sold-out")} priceMin={event.priceMin} priceMax={event.priceMax} className="text-sm" />
             {event.ageRestriction && (
               <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">{event.ageRestriction}</span>
             )}
@@ -222,7 +225,7 @@ const EventDetailPage: React.FC = () => {
                           {new Date(ev.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                         </span>
                         <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">{ev.venueName}</span>
-                        <PriceWidget isFree={ev.isFree} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
+                        <PriceWidget isFree={ev.isFree} isSoldOut={ev.status === "sold-out" || ev.tags?.includes("sold-out")} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
                       </div>
                     ))}
                   </div>
@@ -256,7 +259,7 @@ const EventDetailPage: React.FC = () => {
                   return (
                     <Link
                       key={ev.id}
-                      to={`/events/${ev.id}`}
+                      to={`/events/${ev.slug}`}
                       className={`flex items-center gap-1.5 py-0.5 rounded transition-colors ${
                         isCurrent
                           ? "bg-purple-100 dark:bg-purple-900/40 font-semibold"
@@ -269,7 +272,7 @@ const EventDetailPage: React.FC = () => {
                       <span className={`text-xs truncate flex-1 ${isCurrent ? "text-purple-900 dark:text-purple-100 font-semibold" : "text-gray-700 dark:text-gray-200 font-medium"}`}>
                         {ev.headlinerName || "Show"}
                       </span>
-                      <PriceWidget isFree={ev.isFree} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
+                      <PriceWidget isFree={ev.isFree} isSoldOut={ev.status === "sold-out" || ev.tags?.includes("sold-out")} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
                     </Link>
                   );
                 })}

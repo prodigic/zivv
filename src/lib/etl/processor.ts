@@ -2,6 +2,7 @@ import {
   readFileSync,
   readdirSync,
   writeFileSync,
+  unlinkSync,
   existsSync,
   mkdirSync,
   statSync,
@@ -48,6 +49,14 @@ export class ETLProcessor {
 
       // Load existing createdAt timestamps to preserve them across runs
       const existingCreatedAt = this.loadExistingCreatedAt();
+
+      // Remove stale event chunk files before writing new ones so old chunks
+      // from previous runs don't linger in public/data/
+      for (const f of readdirSync(this.outputDir)) {
+        if (f.startsWith("events-") && f.endsWith(".json")) {
+          unlinkSync(join(this.outputDir, f));
+        }
+      }
 
       // Step 1: Read source files
       console.log("📖 Reading source files...");
@@ -305,12 +314,14 @@ export class ETLProcessor {
       const venue = venueMap.get(event.venueId);
       const entry: ArtistUpcomingEvent = {
         id: event.id,
+        slug: event.slug,
         dateEpochMs: event.dateEpochMs,
         startTimeEpochMs: event.startTimeEpochMs,
         venueId: event.venueId,
         venueName: venue?.name ?? "",
         venueCity: venue?.city ?? "",
         isFree: event.isFree,
+        isSoldOut: event.status === "sold-out" || event.tags.includes("sold-out"),
         priceMin: event.priceMin,
         priceMax: event.priceMax,
         createdAtEpochMs: event.createdAtEpochMs,
@@ -368,10 +379,12 @@ export class ETLProcessor {
       const headliner = artistMap.get(event.headlinerArtistId as number);
       const entry: VenueUpcomingEvent = {
         id: event.id,
+        slug: event.slug,
         dateEpochMs: event.dateEpochMs,
         startTimeEpochMs: event.startTimeEpochMs,
         headlinerName: headliner?.name ?? "",
         isFree: event.isFree,
+        isSoldOut: event.status === "sold-out" || event.tags.includes("sold-out"),
         priceMin: event.priceMin,
         priceMax: event.priceMax,
         createdAtEpochMs: event.createdAtEpochMs,
@@ -407,7 +420,7 @@ export class ETLProcessor {
     const latestIngestionDate = new Date(maxCreatedAt).toISOString().split("T")[0];
 
     return {
-      version: "1.0.0",
+      version: "1.1.0",
       datasetVersion: new Date().toISOString(),
       lastUpdated: Date.now(),
       latestIngestionDate,

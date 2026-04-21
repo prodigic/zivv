@@ -146,20 +146,17 @@ const LocalArtistsPage: React.FC = () => {
                 {artist.upcomingEvents.map((event) => (
                   <Link
                     key={event.id}
-                    to={`/events/${event.id}`}
+                    to={`/events/${event.slug}`}
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
                       {new Date(event.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </span>
-                    <button
-                      onClick={(e) => goToVenue(event.venueName, e)}
-                      className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1 text-left hover:underline"
-                    >
+                    <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">
                       {event.venueName}
-                    </button>
-                    <PriceWidget isFree={event.isFree} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
+                    </span>
+                    <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
                     {manifest?.latestIngestionDate && (
                       <NewBadge createdAtEpochMs={event.createdAtEpochMs} latestIngestionDate={manifest.latestIngestionDate} />
                     )}

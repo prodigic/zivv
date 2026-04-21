@@ -362,31 +362,49 @@ const VenuesPage: React.FC = () => {
             className={`venue-card ${venue.upcomingEvents.length === 0 ? "no-upcoming" : ""} bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 hover:shadow-md transition-shadow cursor-pointer`}
           >
             {/* Header */}
-            <div className="flex items-center space-x-3 mb-2.5">
-              <div className="h-10 w-10 bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900 dark:to-green-900 rounded-full flex items-center justify-center shrink-0">
-                <svg className="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">{venue.name}</h3>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {venue.city}
-                  {venue.ageRestriction && <span className="ml-2 text-gray-400 dark:text-gray-500">· {venue.ageRestriction}</span>}
-                  {(() => {
-                    const count = dateWindow
-                      ? venue.upcomingEvents.filter((e) => e.dateEpochMs >= dateWindow.start && e.dateEpochMs <= dateWindow.end).length
-                      : venue.upcomingEvents.length;
-                    return (
-                      <span className="ml-2 text-gray-400 dark:text-gray-500">
-                        · {count > 0 ? `${count} shows` : "no upcoming shows"}
-                      </span>
-                    );
-                  })()}
+            {(() => {
+              const firstEvent = venue.upcomingEvents[0];
+              const headerContent = (
+                <>
+                  <div className="h-10 w-10 bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900 dark:to-green-900 rounded-full flex items-center justify-center shrink-0">
+                    <svg className="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">{venue.name}</h3>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {venue.city}
+                      {venue.ageRestriction && <span className="ml-2 text-gray-400 dark:text-gray-500">· {venue.ageRestriction}</span>}
+                      {(() => {
+                        const count = dateWindow
+                          ? venue.upcomingEvents.filter((e) => e.dateEpochMs >= dateWindow.start && e.dateEpochMs <= dateWindow.end).length
+                          : venue.upcomingEvents.length;
+                        return (
+                          <span className="ml-2 text-gray-400 dark:text-gray-500">
+                            · {count > 0 ? `${count} shows` : "no upcoming shows"}
+                          </span>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                </>
+              );
+              return firstEvent ? (
+                <Link
+                  to={`/events/${firstEvent.slug}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center space-x-3 mb-2.5 hover:opacity-80 transition-opacity"
+                >
+                  {headerContent}
+                </Link>
+              ) : (
+                <div className="flex items-center space-x-3 mb-2.5">
+                  {headerContent}
                 </div>
-              </div>
-            </div>
+              );
+            })()}
 
             {/* Compact event rows */}
             {(() => {
@@ -398,7 +416,7 @@ const VenuesPage: React.FC = () => {
                 {visibleEvents.map((event) => (
                   <Link
                     key={event.id}
-                    to={`/events/${event.id}`}
+                    to={`/events/${event.slug}`}
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
@@ -408,7 +426,7 @@ const VenuesPage: React.FC = () => {
                     <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">
                       {event.headlinerName || "Show"}
                     </span>
-                    <PriceWidget isFree={event.isFree} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
+                    <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
                     {manifest?.latestIngestionDate && (
                       <NewBadge createdAtEpochMs={event.createdAtEpochMs} latestIngestionDate={manifest.latestIngestionDate} />
                     )}

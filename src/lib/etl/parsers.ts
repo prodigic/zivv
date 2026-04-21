@@ -43,8 +43,8 @@ export class EventParser {
       const lineNumber = i + 1;
 
       try {
-        // Check if this is a date line (e.g., "aug 15 fri")
-        const dateMatch = line.match(/^(\w{3}\s+\d{1,2}\s+\w{3})\s+(.*)$/);
+        // Check if this is a date line (e.g., "aug 15 fri" or "jan 9 2027")
+        const dateMatch = line.match(/^(\w{3}\s+\d{1,2}\s+\w{3,4})\s+(.*)$/);
         if (dateMatch) {
           // Save previous event if exists
           if (currentEvent && this.isCompleteEvent(currentEvent)) {
@@ -148,10 +148,12 @@ export class EventParser {
     const errors: ParseError[] = [];
     const warnings: ParseWarning[] = [];
     const eventKeys = new Set<string>();
+    // Seed just before the first event in the file. latest.txt starts Apr 2026.
+    let lastDateEpochMs: number = new Date(2026, 2, 1).getTime(); // Mar 1 2026
 
     for (const rawEvent of rawEvents) {
       try {
-        const parsedDate = DateParser.parseEventDate(rawEvent.dateString);
+        const parsedDate = DateParser.parseEventDate(rawEvent.dateString, lastDateEpochMs);
         if (!parsedDate) {
           errors.push({
             line: rawEvent.lineNumber,
@@ -334,7 +336,16 @@ export class EventParser {
           sourceLineNumber: rawEvent.lineNumber,
         };
 
-        events.push(event);
+        // Deduplicate: if the same headliner+venue already appears on the same
+        // calendar date (ignoring year), keep only the first occurrence so that
+        // repeated event blocks in the source file don't produce duplicate entries
+        // with incorrect years.
+        const dedupeKey = `${parsedDate.date.slice(5)}-${event.headlinerArtistId}-${event.venueId}`;
+        if (!eventKeys.has(dedupeKey)) {
+          eventKeys.add(dedupeKey);
+          lastDateEpochMs = parsedDate.epochMs;
+          events.push(event);
+        }
       } catch (error) {
         errors.push({
           line: rawEvent.lineNumber,

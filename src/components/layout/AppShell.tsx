@@ -67,6 +67,13 @@ export const AppShell: React.FC = () => {
     setIsSideNavOpen(false);
   }, [location.pathname]);
 
+  // Scroll to top on navigation to detail pages
+  useEffect(() => {
+    if (location.pathname.startsWith("/events/") || location.pathname.startsWith("/artists/") || location.pathname.startsWith("/venues/")) {
+      document.querySelector("main")?.scrollTo({ top: 0 });
+    }
+  }, [location.pathname]);
+
   // Show loading screen during initialization
   if (!isInitialized || loading.manifest === "loading") {
     return <PageLoading />;

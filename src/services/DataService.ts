@@ -39,7 +39,7 @@ export class DataService {
   constructor(config: Partial<DataServiceConfig> = {}) {
     this.config = {
       baseUrl: import.meta.env.DEV ? "/data" : "/zivv/data",
-      cacheName: "zivv-data",
+      cacheName: "zivv-data-v4",
       maxCacheSize: 50 * 1024 * 1024, // 50MB
       maxCacheAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       retryAttempts: 3,

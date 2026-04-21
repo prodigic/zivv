@@ -107,7 +107,7 @@ const VenueDetailPage: React.FC = () => {
                 return (
                   <Link
                     key={event.id}
-                    to={`/events/${event.id}`}
+                    to={`/events/${event.slug}`}
                     className="flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     <div className="bg-gray-100 dark:bg-gray-700 rounded text-center w-9 shrink-0">
@@ -128,7 +128,7 @@ const VenueDetailPage: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <PriceWidget isFree={event.isFree} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
+                    <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
                     <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>

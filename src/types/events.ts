@@ -61,12 +61,14 @@ export interface Event {
 
 export interface ArtistUpcomingEvent {
   id: EventId;
+  slug: string;
   dateEpochMs: number;
   startTimeEpochMs?: number;
   venueId: VenueId;
   venueName: string;
   venueCity: string;
   isFree: boolean;
+  isSoldOut: boolean;
   priceMin?: number;
   priceMax?: number;
   createdAtEpochMs: number;
@@ -91,10 +93,12 @@ export interface Artist {
 
 export interface VenueUpcomingEvent {
   id: EventId;
+  slug: string;
   dateEpochMs: number;
   startTimeEpochMs?: number;
   headlinerName: string;
   isFree: boolean;
+  isSoldOut: boolean;
   priceMin?: number;
   priceMax?: number;
   createdAtEpochMs: number;
