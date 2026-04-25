@@ -97,8 +97,47 @@ const EventDetailPage: React.FC = () => {
   const allArtists = [headliner, ...supportingArtists].filter(Boolean);
   const venueMonthEvents = venue ? venue.upcomingEvents : [];
 
+  const currentIndex = venueMonthEvents.findIndex((ev) => ev.id === event.id);
+  const prevEvent = currentIndex > 0 ? venueMonthEvents[currentIndex - 1] : null;
+  const nextEvent = currentIndex >= 0 && currentIndex < venueMonthEvents.length - 1 ? venueMonthEvents[currentIndex + 1] : null;
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === "ArrowUp" && prevEvent) navigate(`/events/${prevEvent.slug}`);
+      if (e.key === "ArrowDown" && nextEvent) navigate(`/events/${nextEvent.slug}`);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [prevEvent, nextEvent, navigate]);
+
   return (
     <ContentArea title="" subtitle="">
+      {/* Up/down nav between venue events */}
+      {(prevEvent || nextEvent) && (
+        <div className="flex items-center gap-1 mb-3 text-xs text-gray-400 dark:text-gray-500">
+          <button
+            disabled={!prevEvent}
+            onClick={() => prevEvent && navigate(`/events/${prevEvent.slug}`)}
+            title="Previous show at this venue (↑)"
+            className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-default transition-colors"
+          >
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
+            {prevEvent && <span className="truncate max-w-[160px]">{prevEvent.headlinerName}</span>}
+          </button>
+          <span className="text-gray-200 dark:text-gray-700">/</span>
+          <button
+            disabled={!nextEvent}
+            onClick={() => nextEvent && navigate(`/events/${nextEvent.slug}`)}
+            title="Next show at this venue (↓)"
+            className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-default transition-colors"
+          >
+            {nextEvent && <span className="truncate max-w-[160px]">{nextEvent.headlinerName}</span>}
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </button>
+        </div>
+      )}
+
       {/* Single-row header: back · artist · venue */}
       <div className="flex items-baseline gap-3 mb-5">
         <button
