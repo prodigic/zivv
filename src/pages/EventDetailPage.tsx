@@ -115,24 +115,31 @@ const EventDetailPage: React.FC = () => {
     <ContentArea title="" subtitle="">
       {/* Up/down nav between venue events */}
       {(prevEvent || nextEvent) && (
-        <div className="flex items-center gap-1 mb-3 text-xs text-gray-400 dark:text-gray-500">
+        <div className="flex items-center gap-1 mb-3 text-xs text-gray-400 dark:text-gray-500 min-w-0">
           <button
             disabled={!prevEvent}
             onClick={() => prevEvent && navigate(`/events/${prevEvent.slug}`)}
             title="Previous show at this venue (↑)"
-            className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-default transition-colors"
+            className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-default transition-colors shrink-0"
           >
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
-            {prevEvent && <span className="truncate max-w-[160px]">{prevEvent.headlinerName}</span>}
+            {prevEvent && <span className="truncate max-w-[120px]">{prevEvent.headlinerName}</span>}
           </button>
-          <span className="text-gray-200 dark:text-gray-700">/</span>
+          <span className="text-gray-200 dark:text-gray-700 shrink-0">/</span>
+          {/* Centre: venue · date */}
+          <span className="flex-1 text-center truncate px-1">
+            {venue && <span className="font-medium text-gray-500 dark:text-gray-400">{venue.name}</span>}
+            {venue && <span className="mx-1 text-gray-300 dark:text-gray-600">·</span>}
+            <span>{new Date(event.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+          </span>
+          <span className="text-gray-200 dark:text-gray-700 shrink-0">/</span>
           <button
             disabled={!nextEvent}
             onClick={() => nextEvent && navigate(`/events/${nextEvent.slug}`)}
             title="Next show at this venue (↓)"
-            className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-default transition-colors"
+            className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-default transition-colors shrink-0"
           >
-            {nextEvent && <span className="truncate max-w-[160px]">{nextEvent.headlinerName}</span>}
+            {nextEvent && <span className="truncate max-w-[120px]">{nextEvent.headlinerName}</span>}
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </button>
         </div>
