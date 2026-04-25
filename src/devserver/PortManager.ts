@@ -249,17 +249,25 @@ export class DevServerPortManager {
     });
 
     switch (resolution.action) {
-      case 'kill':
+      case 'kill': {
+        // dev:stop may have already freed the port — re-check before killing
+        const stillOccupied = await this.getPortInfo(targetPort);
+        if (!stillOccupied.isOccupied) {
+          return { port: targetPort, action: 'use-target' };
+        }
         if (portInfo.isDevServer && portInfo.process) {
-          await this.killProcess(portInfo.process);
-          return {
-            port: targetPort,
-            action: 'kill-existing',
-            killedProcess: portInfo.process
-          };
+          try {
+            await this.killProcess(portInfo.process);
+          } catch {
+            // Process may have already exited — verify port is now free
+            const afterKill = await this.getPortInfo(targetPort);
+            if (afterKill.isOccupied) throw new Error(`Port ${targetPort} still occupied after kill attempt.`);
+          }
+          return { port: targetPort, action: 'kill-existing', killedProcess: portInfo.process };
         } else {
           throw new Error(`Cannot kill non-dev-server process on port ${targetPort}. Please stop it manually.`);
         }
+      }
 
       case 'new-port': {
         const newPort = resolution.newPort || await this.findNextAvailablePort(targetPort + 1);
