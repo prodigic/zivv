@@ -7,6 +7,7 @@
 
 import { createInterface } from 'readline';
 import { createConnection } from 'net';
+import { execSync } from 'child_process';
 import type { ConflictResolution, DevServerProcess } from './types.js';
 import { DevServerProcessRegistry } from './ProcessRegistry.js';
 
@@ -154,16 +155,15 @@ export class DevServerPortManager {
             case 'r':
             case 'restart':
               rl.close();
+              try { execSync('npm run dev:stop', { stdio: 'inherit' }); } catch { /* ignore */ }
               resolve({ action: 'kill' });
               break;
 
             case 's':
             case 'stop':
               rl.close();
+              try { execSync('npm run dev:stop', { stdio: 'inherit' }); } catch { /* ignore */ }
               resolve({ action: 'cancel' });
-              import('child_process').then(({ execSync }) => {
-                try { execSync('npm run dev:stop', { stdio: 'inherit' }); } catch { /* ignore */ }
-              });
               break;
 
             case 'n':
