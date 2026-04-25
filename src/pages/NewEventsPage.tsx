@@ -95,23 +95,23 @@ const NewEventsPage: React.FC = () => {
             <Link
               key={event.id}
               to={`/events/${event.slug}`}
-              className="flex flex-wrap items-baseline gap-x-2 gap-y-0 px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="block px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
-              {/* Line 1: date + artist */}
-              <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
-                {d.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-              </span>
-              <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate min-w-0 sm:flex-1">
-                {headliner?.name ?? "Show"}
-                {otherCount > 0 && <span className="text-gray-400 dark:text-gray-500 font-normal text-xs"> +{otherCount}</span>}
-              </span>
-              {/* Line 2 on narrow / inline on wide: price + venue */}
-              <span className="w-full sm:w-auto sm:flex-1 flex items-center gap-2 sm:pl-0 sm:justify-end">
-                <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0 w-14 sm:w-auto" />
-                <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
+              <div className="flex items-baseline gap-2 min-w-0">
+                <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
+                  {d.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </span>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate min-w-0">
+                  {headliner?.name ?? "Show"}
+                  {otherCount > 0 && <span className="text-gray-400 dark:text-gray-500 font-normal text-xs"> +{otherCount}</span>}
+                </span>
+              </div>
+              <div className="flex items-baseline gap-2 min-w-0">
+                <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0 w-14" />
+                <span className="text-xs text-gray-500 dark:text-gray-400 truncate min-w-0">
                   {venue?.name ?? ""}
                 </span>
-              </span>
+              </div>
             </Link>
           );
         })}
