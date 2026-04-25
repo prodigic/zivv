@@ -106,8 +106,8 @@ const NewEventsPage: React.FC = () => {
                 {otherCount > 0 && <span className="text-gray-400 dark:text-gray-500 font-normal text-xs"> +{otherCount}</span>}
               </span>
               {/* Line 2 on narrow / inline on wide: price + venue */}
-              <span className="w-full sm:w-auto sm:flex-1 flex items-center gap-2 pl-16 sm:pl-0 sm:justify-end">
-                <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
+              <span className="w-full sm:w-auto sm:flex-1 flex items-center gap-2 sm:pl-0 sm:justify-end">
+                <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0 w-14 sm:w-auto" />
                 <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
                   {venue?.name ?? ""}
                 </span>
