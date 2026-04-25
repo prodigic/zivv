@@ -343,8 +343,8 @@ EXAMPLES:
 
 CONFLICT RESOLUTION:
   When a port is already in use, you'll be prompted to:
-  - [S]top the existing server and exit (default — just press Enter)
-  - [K]ill the existing process and start fresh
+  - [R]estart server on the same port (default — just press Enter)
+  - [S]top the existing server and exit
   - Use a [N]ew available port
   - [C]ancel the operation
 
