@@ -104,8 +104,8 @@ const EventDetailPage: React.FC = () => {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.key === "ArrowUp" && prevEvent) navigate(`/events/${prevEvent.slug}`);
-      if (e.key === "ArrowDown" && nextEvent) navigate(`/events/${nextEvent.slug}`);
+      if (e.key === "ArrowUp" && prevEvent) { e.preventDefault(); navigate(`/events/${prevEvent.slug}`); }
+      if (e.key === "ArrowDown" && nextEvent) { e.preventDefault(); navigate(`/events/${nextEvent.slug}`); }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
