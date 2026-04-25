@@ -95,19 +95,23 @@ const NewEventsPage: React.FC = () => {
             <Link
               key={event.id}
               to={`/events/${event.slug}`}
-              className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="flex flex-wrap items-baseline gap-x-2 gap-y-0 px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
+              {/* Line 1: date + artist */}
               <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
                 {d.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
               </span>
-              <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate flex-1">
+              <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate min-w-0 sm:flex-1">
                 {headliner?.name ?? "Show"}
                 {otherCount > 0 && <span className="text-gray-400 dark:text-gray-500 font-normal text-xs"> +{otherCount}</span>}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[160px] shrink-0">
-                {venue?.name ?? ""}
+              {/* Line 2 on narrow / inline on wide: price + venue */}
+              <span className="w-full sm:w-auto sm:flex-1 flex items-center gap-2 pl-16 sm:pl-0 sm:justify-end">
+                <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
+                <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  {venue?.name ?? ""}
+                </span>
               </span>
-              <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
             </Link>
           );
         })}
