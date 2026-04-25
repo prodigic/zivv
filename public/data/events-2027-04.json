@@ -1,0 +1,33 @@
+{
+  "chunkId": "2027-04",
+  "dateRange": {
+    "startEpochMs": 1808377200000,
+    "endEpochMs": 1808377200000
+  },
+  "events": [
+    {
+      "id": 92842150,
+      "slug": "2027-04-22-justb-the-chapel",
+      "date": "2027-04-22",
+      "dateEpochMs": 1808377200000,
+      "startTimeEpochMs": 1808506800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 989869309,
+      "artistIds": [
+        989869309
+      ],
+      "venueId": 680116887,
+      "priceMin": 36.09,
+      "priceMax": 36.09,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$236-$100 vip",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1777146045130,
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2408
+    }
+  ]
+}

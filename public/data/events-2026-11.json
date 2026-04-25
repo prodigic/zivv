@@ -26,12 +26,12 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314032,
-      "updatedAtEpochMs": 1776793357109,
-      "sourceLineNumber": 2506
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2376
     },
     {
       "id": 2127963877,
-      "slug": "2026-11-05-the-black-angels-the-regency-ballroom",
+      "slug": "2026-11-05-the-black-angels-regency-ballroom",
       "date": "2026-11-05",
       "dateEpochMs": 1793865600000,
       "startTimeEpochMs": 1793937600000,
@@ -48,8 +48,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314032,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2508
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2378
     },
     {
       "id": 387833041,
@@ -71,8 +71,50 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314032,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2510
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2379
+    },
+    {
+      "id": 1195362832,
+      "slug": "2026-11-06-syml-the-castro-theater",
+      "date": "2026-11-06",
+      "dateEpochMs": 1793952000000,
+      "startTimeEpochMs": 1794024000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971322152,
+      "artistIds": [
+        1971322152
+      ],
+      "venueId": 881479351,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1777146045129,
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2380
+    },
+    {
+      "id": 1501711198,
+      "slug": "2026-11-07-pj-morton-the-castro",
+      "date": "2026-11-07",
+      "dateEpochMs": 1794038400000,
+      "startTimeEpochMs": 1794110400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 730849462,
+      "artistIds": [
+        730849462
+      ],
+      "venueId": 1383208152,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1777146045129,
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2381
     },
     {
       "id": 191078883,
@@ -94,8 +136,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1776793314032,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2511
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2382
     },
     {
       "id": 949866796,
@@ -117,8 +159,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314032,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2512
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2383
+    },
+    {
+      "id": 1525352910,
+      "slug": "2026-11-10-teddy-swims-the-warriors-stadium",
+      "date": "2026-11-10",
+      "dateEpochMs": 1794297600000,
+      "startTimeEpochMs": 1794538800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1434942720,
+      "artistIds": [
+        1434942720
+      ],
+      "venueId": 793025194,
+      "priceMin": 67,
+      "priceMax": 67,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1777146045129,
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2385
     },
     {
       "id": 1315828248,
@@ -140,8 +205,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314032,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2514
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2386
+    },
+    {
+      "id": 1530252285,
+      "slug": "2026-11-11-the-damned-the-fillmore",
+      "date": "2026-11-11",
+      "dateEpochMs": 1794384000000,
+      "startTimeEpochMs": 1794456000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 811607152,
+      "artistIds": [
+        811607152,
+        1650978863,
+        1139409463
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1777146045129,
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2387
     },
     {
       "id": 71063767,
@@ -159,15 +247,12 @@
       "priceMax": 64.75,
       "isFree": false,
       "ageRestriction": "all-ages",
-      "notes": "sold out",
-      "status": "sold-out",
-      "tags": [
-        "sold-out"
-      ],
+      "status": "confirmed",
+      "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314032,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2515
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2389
     },
     {
       "id": 1980689656,
@@ -187,8 +272,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314032,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2516
+      "updatedAtEpochMs": 1777146045129,
+      "sourceLineNumber": 2390
     },
     {
       "id": 1460418466,
@@ -211,8 +296,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314033,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2517
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2391
     },
     {
       "id": 1213868777,
@@ -234,8 +319,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1776793314033,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2518
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2392
     },
     {
       "id": 240098919,
@@ -258,8 +343,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1776793314033,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2519
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2393
     },
     {
       "id": 2103217097,
@@ -272,7 +357,7 @@
       "artistIds": [
         995171028
       ],
-      "venueId": 833273350,
+      "venueId": 1637782129,
       "priceMin": 35.75,
       "priceMax": 53.37,
       "isFree": false,
@@ -281,8 +366,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1776793314033,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2520
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2396
     },
     {
       "id": 1410115400,
@@ -295,7 +380,7 @@
       "artistIds": [
         995171028
       ],
-      "venueId": 833273350,
+      "venueId": 1637782129,
       "priceMin": 35.75,
       "priceMax": 53.37,
       "isFree": false,
@@ -304,8 +389,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1776793314033,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2521
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2397
     },
     {
       "id": 466759183,
@@ -318,7 +403,7 @@
       "artistIds": [
         250161996
       ],
-      "venueId": 833273350,
+      "venueId": 1637782129,
       "isFree": false,
       "ageRestriction": "all-ages",
       "notes": "seated",
@@ -326,8 +411,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1776793314033,
-      "updatedAtEpochMs": 1776793357110,
-      "sourceLineNumber": 2522
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2398
     }
   ]
 }

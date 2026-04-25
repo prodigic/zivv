@@ -2,7 +2,7 @@
   "chunkId": "2027-02",
   "dateRange": {
     "startEpochMs": 1801814400000,
-    "endEpochMs": 1801814400000
+    "endEpochMs": 1802851200000
   },
   "events": [
     {
@@ -25,8 +25,30 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1776793357111,
-      "updatedAtEpochMs": 1776793357111,
-      "sourceLineNumber": 2529
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2405
+    },
+    {
+      "id": 270715009,
+      "slug": "2027-02-17-the-bouncing-souls-the-uc-theater",
+      "date": "2027-02-17",
+      "dateEpochMs": 1802851200000,
+      "startTimeEpochMs": 1802916000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1549370072,
+      "artistIds": [
+        1549370072,
+        313793903
+      ],
+      "venueId": 2093769319,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "diy",
+      "createdAtEpochMs": 1777146045130,
+      "updatedAtEpochMs": 1777146045130,
+      "sourceLineNumber": 2406
     }
   ]
 }
