@@ -141,15 +141,26 @@ export class DevServerPortManager {
 
       const nextPort = portInfo.port + 1;
       console.log(`\nOptions:`);
+      console.log(`  [S] Stop the existing server (default)`);
       console.log(`  [K] Kill existing process and use port ${portInfo.port}`);
       console.log(`  [N] Use next available port (${nextPort})`);
       console.log(`  [C] Cancel operation`);
 
       const askQuestion = () => {
-        rl.question('\nWhat would you like to do? [K/N/C]: ', (answer) => {
-          const choice = answer.trim().toLowerCase();
+        rl.question('\nWhat would you like to do? [S/K/N/C] (default: S): ', (answer) => {
+          const choice = answer.trim().toLowerCase() || 's';
 
           switch (choice) {
+            case 's':
+            case 'stop':
+              rl.close();
+              resolve({ action: 'cancel' });
+              // Run dev:stop after resolving
+              import('child_process').then(({ execSync }) => {
+                try { execSync('npm run dev:stop', { stdio: 'inherit' }); } catch { /* ignore */ }
+              });
+              break;
+
             case 'k':
             case 'kill':
               rl.close();
@@ -170,7 +181,7 @@ export class DevServerPortManager {
               break;
 
             default:
-              console.log('Invalid choice. Please enter K, N, or C.');
+              console.log('Invalid choice. Please enter S, K, N, or C.');
               askQuestion();
               break;
           }
