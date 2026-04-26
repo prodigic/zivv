@@ -2,7 +2,7 @@
  * Event detail page
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
@@ -65,16 +65,25 @@ const EventDetailPage: React.FC = () => {
   const prevEvent = currentIndex > 0 ? venueMonthEvents[currentIndex - 1] : null;
   const nextEvent = currentIndex >= 0 && currentIndex < venueMonthEvents.length - 1 ? venueMonthEvents[currentIndex + 1] : null;
 
-  // Keyboard nav — must be before early returns
+  // Use refs so the keydown handler always has fresh values without re-registering
+  const prevEventRef = useRef(prevEvent);
+  const nextEventRef = useRef(nextEvent);
+  prevEventRef.current = prevEvent;
+  nextEventRef.current = nextEvent;
+
+  // Keyboard nav — registered once, reads from refs to avoid stale closure
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.key === "ArrowUp" && prevEvent) { e.preventDefault(); navigate(`/events/${prevEvent.slug}`); }
-      if (e.key === "ArrowDown" && nextEvent) { e.preventDefault(); navigate(`/events/${nextEvent.slug}`); }
+      e.preventDefault();
+      if (e.key === "ArrowUp" && prevEventRef.current) navigate(`/events/${prevEventRef.current.slug}`);
+      if (e.key === "ArrowDown" && nextEventRef.current) navigate(`/events/${nextEventRef.current.slug}`);
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [prevEvent, nextEvent, navigate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]); // only re-register if navigate changes (never)
 
   // Early returns after all hooks
   if (!event && isLoading) {
