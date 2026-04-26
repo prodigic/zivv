@@ -15,7 +15,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = 
 
   const navigation = [
     {
-      name: "Home",
+      name: "All",
       to: "/",
       icon: (active: boolean) => (
         <svg className={`h-6 w-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
