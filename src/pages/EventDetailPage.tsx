@@ -51,7 +51,11 @@ const EventDetailPage: React.FC = () => {
     loadAll().catch(console.error);
   }, [event, slug, manifest, loadedChunks, loadChunk]);
 
-  const isLoading = loading.events === "loading" || loading.artists === "loading";
+  // Treat idle (not yet started) as loading — avoids false "not found" on cold load
+  const isLoading =
+    loading.artists === "idle" || loading.artists === "loading" ||
+    loading.venues === "idle" || loading.venues === "loading" ||
+    loading.events === "loading";
 
   if (!event && isLoading) {
     return (
