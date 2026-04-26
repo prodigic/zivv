@@ -57,8 +57,10 @@ export const DatePagination: React.FC<DatePaginationProps> = ({ className = "" }
   const [dragging, setDragging] = useState<"start" | "end" | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  const offsetToPercent = (offset: number) => (offset / maxOffset) * 100;
-  const percentToOffset = (pct: number) => Math.round(clamp(pct, 0, 100) * maxOffset / 100);
+  // Logarithmic scale so near-term days (0-14) get ~60% of the track width
+  const logMax = Math.log1p(maxOffset);
+  const offsetToPercent = (offset: number) => (Math.log1p(offset) / logMax) * 100;
+  const percentToOffset = (pct: number) => Math.round(Math.expm1(clamp(pct, 0, 100) / 100 * logMax));
 
   // Snap to nearest checkpoint
   const snapToCheckpoint = (offset: number) => {
