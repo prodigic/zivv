@@ -145,45 +145,42 @@ export const DatePagination: React.FC<DatePaginationProps> = ({ className = "" }
         )}
       </div>
 
-      {/* Track */}
-      <div ref={trackRef} className="relative h-6 flex items-center cursor-pointer mx-2">
-        {/* Background */}
-        <div className="absolute inset-x-0 h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full" />
+      {/* Track — tall enough for labels below the line */}
+      <div ref={trackRef} className="relative cursor-pointer mx-2" style={{ height: "36px" }}>
+        {/* Background rail — vertically centred at 8px from top */}
+        <div className="absolute inset-x-0 h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full" style={{ top: "7px" }} />
 
         {/* Active range fill */}
         <div
           className="absolute h-1.5 bg-blue-500 dark:bg-blue-400 rounded-full"
-          style={{ left: `${startPct}%`, right: `${100 - endPct}%` }}
+          style={{ top: "7px", left: `${startPct}%`, right: `${100 - endPct}%` }}
         />
 
-        {/* Checkpoint ticks */}
+        {/* Checkpoint ticks — dot on the rail, label below */}
         {CHECKPOINTS.map((cp, i) => {
           const pct = offsetToPercent(cp);
           const inside = cp >= startOffset && cp <= endOffset;
           return (
-            <div
-              key={cp}
-              className="absolute flex flex-col items-center"
-              style={{ left: `${pct}%`, transform: "translateX(-50%)" }}
-            >
-              <div className={`w-1.5 h-1.5 rounded-full ${inside ? "bg-blue-500 dark:bg-blue-400" : "bg-gray-300 dark:bg-gray-500"}`} />
-              <span className="mt-1 text-[9px] leading-none text-gray-400 dark:text-gray-500 whitespace-nowrap">{LABELS[i]}</span>
+            <div key={cp} className="absolute" style={{ left: `${pct}%`, transform: "translateX(-50%)" }}>
+              {/* Dot sits on the rail centre (top 7px + half rail 3px - half dot 3px = 7px) */}
+              <div className={`w-1.5 h-1.5 rounded-full ${inside ? "bg-blue-500 dark:bg-blue-400" : "bg-gray-300 dark:bg-gray-500"}`} style={{ marginTop: "7px" }} />
+              <span className="block text-[9px] leading-none text-gray-400 dark:text-gray-500 whitespace-nowrap text-center mt-1">{LABELS[i]}</span>
             </div>
           );
         })}
 
-        {/* Start handle */}
+        {/* Start handle — centred on rail */}
         <div
-          className="absolute w-4 h-4 bg-white dark:bg-gray-200 border-2 border-blue-500 rounded-full shadow cursor-grab active:cursor-grabbing z-10 -translate-x-1/2"
-          style={{ left: `${startPct}%` }}
+          className="absolute w-4 h-4 bg-white dark:bg-gray-200 border-2 border-blue-500 rounded-full shadow cursor-grab active:cursor-grabbing z-10"
+          style={{ top: "0px", left: `${startPct}%`, transform: "translateX(-50%)" }}
           onMouseDown={() => setDragging("start")}
           onTouchStart={() => setDragging("start")}
         />
 
         {/* End handle */}
         <div
-          className="absolute w-4 h-4 bg-white dark:bg-gray-200 border-2 border-blue-500 rounded-full shadow cursor-grab active:cursor-grabbing z-10 -translate-x-1/2"
-          style={{ left: `${endPct}%` }}
+          className="absolute w-4 h-4 bg-white dark:bg-gray-200 border-2 border-blue-500 rounded-full shadow cursor-grab active:cursor-grabbing z-10"
+          style={{ top: "0px", left: `${endPct}%`, transform: "translateX(-50%)" }}
           onMouseDown={() => setDragging("end")}
           onTouchStart={() => setDragging("end")}
         />
