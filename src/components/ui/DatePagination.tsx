@@ -7,8 +7,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useFilterStore } from "@/stores/filterStore";
 
 // Checkpoint offsets in days from today
-const CHECKPOINTS = [0, 2, 7, 14, 30, 90, 180];
-const LABELS = ["Today", "+2d", "Week", "+2wk", "Month", "+3mo", "+6mo"];
+const CHECKPOINTS = [0, 1, 7, 30, 90, 365];
+const LABELS = ["Today", "Tomorrow", "1 wk", "1 mon", "3 mon", "All"];
 
 function addDays(base: Date, n: number): Date {
   const d = new Date(base);
@@ -17,7 +17,12 @@ function addDays(base: Date, n: number): Date {
 }
 
 function toISO(d: Date): string {
-  return d.toISOString().split("T")[0];
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function parseLocalDate(iso: string): Date {
+  const [y, m, day] = iso.split("-").map(Number);
+  return new Date(y, m - 1, day);
 }
 
 function clamp(v: number, lo: number, hi: number) {
@@ -36,13 +41,13 @@ export const DatePagination: React.FC<DatePaginationProps> = ({ className = "" }
   // Derive current start/end offsets from filter store
   const startOffset = useMemo(() => {
     if (!filters.dateRange?.startDate) return 0;
-    const diff = Math.round((new Date(filters.dateRange.startDate).getTime() - today.getTime()) / 86400000);
+    const diff = Math.round((parseLocalDate(filters.dateRange.startDate).getTime() - today.getTime()) / 86400000);
     return clamp(diff, 0, maxOffset);
   }, [filters.dateRange?.startDate, today, maxOffset]);
 
   const endOffset = useMemo(() => {
     if (!filters.dateRange?.endDate) return 7;
-    const diff = Math.round((new Date(filters.dateRange.endDate).getTime() - today.getTime()) / 86400000);
+    const diff = Math.round((parseLocalDate(filters.dateRange.endDate).getTime() - today.getTime()) / 86400000);
     return clamp(diff, 0, maxOffset);
   }, [filters.dateRange?.endDate, today, maxOffset]);
 
@@ -57,10 +62,29 @@ export const DatePagination: React.FC<DatePaginationProps> = ({ className = "" }
   const [dragging, setDragging] = useState<"start" | "end" | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // Logarithmic scale so near-term days (0-14) get ~60% of the track width
-  const logMax = Math.log1p(maxOffset);
-  const offsetToPercent = (offset: number) => (Math.log1p(offset) / logMax) * 100;
-  const percentToOffset = (pct: number) => Math.round(Math.expm1(clamp(pct, 0, 100) / 100 * logMax));
+  // Even spacing: each checkpoint occupies an equal segment of the track
+  const n = CHECKPOINTS.length;
+  const offsetToPercent = (offset: number): number => {
+    for (let i = 0; i < n - 1; i++) {
+      if (offset <= CHECKPOINTS[i + 1]) {
+        const t = (offset - CHECKPOINTS[i]) / (CHECKPOINTS[i + 1] - CHECKPOINTS[i]);
+        return (i + t) / (n - 1) * 100;
+      }
+    }
+    return 100;
+  };
+  const percentToOffset = (pct: number): number => {
+    const p = clamp(pct, 0, 100);
+    for (let i = 0; i < n - 1; i++) {
+      const lo = i / (n - 1) * 100;
+      const hi = (i + 1) / (n - 1) * 100;
+      if (p <= hi) {
+        const t = (p - lo) / (hi - lo);
+        return Math.round(CHECKPOINTS[i] + t * (CHECKPOINTS[i + 1] - CHECKPOINTS[i]));
+      }
+    }
+    return CHECKPOINTS[n - 1];
+  };
 
   // Snap to nearest checkpoint
   const snapToCheckpoint = (offset: number) => {
@@ -146,7 +170,19 @@ export const DatePagination: React.FC<DatePaginationProps> = ({ className = "" }
       </div>
 
       {/* Track — tall enough for labels below the line */}
-      <div ref={trackRef} className="relative cursor-pointer mx-2" style={{ height: "36px" }}>
+      <div
+        ref={trackRef}
+        className="relative cursor-pointer mx-2"
+        style={{ height: "40px" }}
+        onClick={(e) => {
+          const offset = getOffsetFromEvent(e.clientX);
+          const snapped = snapToCheckpoint(offset);
+          const distToStart = Math.abs(snapped - startOffset);
+          const distToEnd = Math.abs(snapped - endOffset);
+          if (distToStart <= distToEnd) applyOffsets(snapped, endOffset);
+          else applyOffsets(startOffset, snapped);
+        }}
+      >
         {/* Background rail — vertically centred at 8px from top */}
         <div className="absolute inset-x-0 h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full" style={{ top: "7px" }} />
 
@@ -156,23 +192,29 @@ export const DatePagination: React.FC<DatePaginationProps> = ({ className = "" }
           style={{ top: "7px", left: `${startPct}%`, right: `${100 - endPct}%` }}
         />
 
-        {/* Checkpoint ticks — dot on the rail, label below */}
+        {/* Checkpoint ticks — dot absolutely on rail centre, label below */}
         {CHECKPOINTS.map((cp, i) => {
           const pct = offsetToPercent(cp);
           const inside = cp >= startOffset && cp <= endOffset;
           return (
-            <div key={cp} className="absolute" style={{ left: `${pct}%`, transform: "translateX(-50%)" }}>
-              {/* Dot sits on the rail centre (top 7px + half rail 3px - half dot 3px = 7px) */}
-              <div className={`w-1.5 h-1.5 rounded-full ${inside ? "bg-blue-500 dark:bg-blue-400" : "bg-gray-300 dark:bg-gray-500"}`} style={{ marginTop: "7px" }} />
-              <span className="block text-[9px] leading-none text-gray-400 dark:text-gray-500 whitespace-nowrap text-center mt-1">{LABELS[i]}</span>
-            </div>
+            <React.Fragment key={cp}>
+              {/* Rail centre = 7.75px; dot is 6px (w-1.5) → top = 7.75 - 3 = 4.75px */}
+              <div
+                className={`absolute w-1.5 h-1.5 rounded-full ${inside ? "bg-blue-500 dark:bg-blue-400" : "bg-gray-500 dark:bg-gray-500"}`}
+                style={{ top: "10px", left: `${pct}%`, transform: "translateX(-50%) translateY(-50%)" }}
+              />
+              <span
+                className="absolute text-[9px] leading-none text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                style={{ top: "22px", left: `${pct}%`, transform: "translateX(-50%)" }}
+              >{LABELS[i]}</span>
+            </React.Fragment>
           );
         })}
 
         {/* Start handle — centred on rail */}
         <div
           className="absolute w-4 h-4 bg-white dark:bg-gray-200 border-2 border-blue-500 rounded-full shadow cursor-grab active:cursor-grabbing z-10"
-          style={{ top: "0px", left: `${startPct}%`, transform: "translateX(-50%)" }}
+          style={{ top: "2px", left: `${startPct}%`, transform: "translateX(-50%)" }}
           onMouseDown={() => setDragging("start")}
           onTouchStart={() => setDragging("start")}
         />
@@ -180,7 +222,7 @@ export const DatePagination: React.FC<DatePaginationProps> = ({ className = "" }
         {/* End handle */}
         <div
           className="absolute w-4 h-4 bg-white dark:bg-gray-200 border-2 border-blue-500 rounded-full shadow cursor-grab active:cursor-grabbing z-10"
-          style={{ top: "0px", left: `${endPct}%`, transform: "translateX(-50%)" }}
+          style={{ top: "2px", left: `${endPct}%`, transform: "translateX(-50%)" }}
           onMouseDown={() => setDragging("end")}
           onTouchStart={() => setDragging("end")}
         />

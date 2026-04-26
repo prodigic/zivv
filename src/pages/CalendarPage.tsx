@@ -9,6 +9,7 @@ import PriceWidget from "@/components/ui/PriceWidget.js";
 import NewBadge from "@/components/ui/NewBadge.js";
 import { useAppStore } from "@/stores/appStore.js";
 import { useFilterStore } from "@/stores/filterStore.js";
+import { DatePagination } from "@/components/ui/DatePagination.js";
 
 interface CalendarPageProps {
   view: "month" | "week" | "agenda";
@@ -26,6 +27,7 @@ const CITY_COLORS: Record<string, { bg: string; text: string }> = {
   "Napa":          { bg: "bg-pink-600",    text: "text-pink-500 dark:text-pink-400" },
   "Petaluma":      { bg: "bg-teal-600",    text: "text-teal-500 dark:text-teal-400" },
   "Felton":        { bg: "bg-lime-600",    text: "text-lime-500 dark:text-lime-400" },
+  "Santa Cruz":    { bg: "bg-cyan-600",    text: "text-cyan-500 dark:text-cyan-400" },
   "Other":         { bg: "bg-gray-500",    text: "text-gray-500 dark:text-gray-400" },
 };
 
@@ -34,6 +36,7 @@ function normalizeCityName(city: string): string {
   if (c === "s.f" || c.startsWith("san francisco") || c === "sf") return "San Francisco";
   if (c === "oakland" || c.startsWith("west oakland")) return "Oakland";
   if (c === "berkeley" || c === "uc" || c.startsWith("uc berkeley")) return "Berkeley";
+  if (c === "santa cruz") return "Santa Cruz";
   if (c === "santa") return "Santa Rosa";
   if (c === "san" || c === "downtown") return "San Jose";
   if (c === "mountain") return "Mountain View";
@@ -50,26 +53,6 @@ function normalizeCityName(city: string): string {
 }
 const FULL_DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-// Compute date window for a filter key
-function getDateWindow(filter: string): { start: number; end: number } | null {
-  const now = new Date();
-  if (filter === "all") return null;
-  if (filter === "week") {
-    const end = new Date(now);
-    end.setDate(now.getDate() + 7);
-    end.setHours(23, 59, 59, 999);
-    return { start: new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime(), end: end.getTime() };
-  }
-  if (filter === "month") {
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-    return { start: new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime(), end: end.getTime() };
-  }
-  const [y, m] = filter.split("-").map(Number);
-  return {
-    start: new Date(y, m - 1, 1).getTime(),
-    end: new Date(y, m, 0, 23, 59, 59, 999).getTime(),
-  };
-}
 
 const CalendarPage: React.FC<CalendarPageProps> = () => {
   const events = useAppStore((state) => state.events);
@@ -81,7 +64,7 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
   const loadChunk = useAppStore((state) => state.loadChunk);
   const loadedChunks = useAppStore((state) => state.loadedChunks);
 
-  const { updateFilter } = useFilterStore();
+  const { filters, updateFilter } = useFilterStore();
   const navigate = useNavigate();
 
   const goToVenue = (venueName: string, e: React.MouseEvent) => {
@@ -90,41 +73,30 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
     updateFilter("venues", [venueName]);
     navigate("/");
   };
-  const [dateFilter, setDateFilter] = React.useState<string>("week");
   const [selectedCities, setSelectedCities] = React.useState<Set<string>>(new Set());
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
   const [displayDays, setDisplayDays] = React.useState(14);
 
-  const ALLOWED_CITIES = ["San Francisco", "Oakland", "Berkeley", "San Jose", "Santa Rosa", "Napa", "Petaluma", "Felton", "Other"];
+  const ALLOWED_CITIES = ["San Francisco", "Oakland", "Berkeley", "San Jose", "Santa Cruz", "Other"];
 
-  // Available months from manifest
-  const availableMonths = React.useMemo(() => {
-    if (!manifest?.chunks?.events) return [];
-    const now = new Date();
-    const currentYM = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-    return manifest.chunks.events
-      .map((c) => c.chunkId)
-      .filter((ym) => ym >= currentYM)
-      .sort();
-  }, [manifest]);
-
-  // Load chunks needed for the current filter
+  // Load chunks needed for the current date range
   useEffect(() => {
-    const window = getDateWindow(dateFilter);
     if (!manifest?.chunks?.events) return;
+    const parseLocal = (s: string) => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d); };
+    const start = filters.dateRange?.startDate ? parseLocal(filters.dateRange.startDate).getTime() : null;
+    const end = filters.dateRange?.endDate ? parseLocal(filters.dateRange.endDate).setHours(23,59,59,999) : null;
     const chunksNeeded = manifest.chunks.events
       .filter((c) => {
-        if (!window) return true;
         const [y, m] = c.chunkId.split("-").map(Number);
         const chunkStart = new Date(y, m - 1, 1).getTime();
         const chunkEnd = new Date(y, m, 0, 23, 59, 59, 999).getTime();
-        return chunkStart <= window.end && chunkEnd >= window.start;
+        if (start && end) return chunkStart <= end && chunkEnd >= start;
+        return true;
       })
       .map((c) => c.chunkId)
       .filter((id) => !loadedChunks.has(id));
-
     chunksNeeded.forEach((id) => loadChunk(id).catch(() => {}));
-  }, [dateFilter, manifest, loadedChunks, loadChunk]);
+  }, [filters.dateRange, manifest, loadedChunks, loadChunk]);
 
   // Initialize
   useEffect(() => {
@@ -132,17 +104,19 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
   }, [loading.artists, initialize]);
 
   // Reset display days when filter changes
-  React.useEffect(() => { setDisplayDays(14); }, [dateFilter, selectedCities]);
+  React.useEffect(() => { setDisplayDays(14); }, [filters.dateRange, selectedCities]);
 
   // Build day-grouped events
   const dayGroups = React.useMemo(() => {
-    const window = getDateWindow(dateFilter);
     const now = new Date();
     const todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const parseLocal = (s: string) => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d); };
+    const rangeStart = filters.dateRange?.startDate ? parseLocal(filters.dateRange.startDate).setHours(0,0,0,0) : todayMs;
+    const rangeEnd = filters.dateRange?.endDate ? parseLocal(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
 
     let filtered = Array.from(events.values()).filter((e) => {
       if (e.dateEpochMs < todayMs) return false;
-      if (window && (e.dateEpochMs < window.start || e.dateEpochMs > window.end)) return false;
+      if (e.dateEpochMs < rangeStart || e.dateEpochMs > rangeEnd) return false;
       if (selectedCities.size > 0) {
         const venue = venues.get(e.venueId);
         const city = normalizeCityName(venue?.city ?? "");
@@ -161,7 +135,7 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
     });
 
     return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b));
-  }, [events, venues, dateFilter, selectedCities]);
+  }, [events, venues, filters.dateRange, selectedCities]);
 
   const visibleDays = dayGroups.slice(0, displayDays);
 
@@ -181,44 +155,6 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
 
   return (
     <ContentArea title="Calendar" subtitle={`${dayGroups.length} days with shows`}>
-
-      {/* Date filter bar */}
-      <div className="flex flex-wrap gap-1.5 mb-6">
-        {(["all", "week", "month"] as const).map((f) => (
-          <button
-            key={f}
-            onClick={() => setDateFilter(f)}
-            className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
-              dateFilter === f
-                ? "bg-purple-600 text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-            }`}
-          >
-            {f === "all" ? "All" : f === "week" ? "This week" : "This month"}
-          </button>
-        ))}
-        {availableMonths.map((ym) => {
-          const [y, m] = ym.split("-").map(Number);
-          const now = new Date();
-          const sameYear = y === now.getFullYear();
-          const currentYM = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-          if (ym === currentYM) return null; // covered by "this month"
-          const label = new Date(y, m - 1, 1).toLocaleDateString("en-US", sameYear ? { month: "short" } : { month: "short", year: "2-digit" });
-          return (
-            <button
-              key={ym}
-              onClick={() => setDateFilter(ym)}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
-                dateFilter === ym
-                  ? "bg-purple-600 text-white"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              {label}
-            </button>
-          );
-        })}
-      </div>
 
       {/* City filter bar */}
       <div className="flex flex-wrap gap-1.5 mb-4 -mt-2">
@@ -250,6 +186,9 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
           )}
       </div>
 
+      {/* Date range slider */}
+      <DatePagination className="mb-4" />
+
       {isLoading && events.size === 0 && (
         <div className="text-center py-12 text-gray-500 dark:text-gray-400">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4" />
@@ -267,7 +206,9 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
         {visibleDays.map(([date, dayEvents]) => {
           const d = new Date(date + "T12:00:00");
-          const isToday = date === new Date().toISOString().split("T")[0];
+          const now = new Date();
+          const localToday = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+          const isToday = date === localToday;
           const isWeekend = d.getDay() === 0 || d.getDay() === 6;
           const dayOfWeek = FULL_DAY_NAMES[d.getDay()];
           const dayOfWeekShort = DAY_NAMES[d.getDay()];

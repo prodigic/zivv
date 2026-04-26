@@ -68,8 +68,9 @@ const HomePage: React.FC = () => {
       evs = evs.filter((e) => dates.has(new Date(e.dateEpochMs).toISOString().split("T")[0]));
     }
     if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
-      const start = filters.dateRange?.startDate ? new Date(filters.dateRange.startDate).setHours(0,0,0,0) : -Infinity;
-      const end = filters.dateRange?.endDate ? new Date(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
+      const parseLocal = (s: string) => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d); };
+      const start = filters.dateRange?.startDate ? parseLocal(filters.dateRange.startDate).setHours(0,0,0,0) : -Infinity;
+      const end = filters.dateRange?.endDate ? parseLocal(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
       evs = evs.filter((e) => e.dateEpochMs >= start && e.dateEpochMs <= end);
     }
     if (filters.venues?.length) {

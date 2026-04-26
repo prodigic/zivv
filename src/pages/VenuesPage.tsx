@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/LoadingSpinner.js";
 import { useAppStore } from "@/stores/appStore.js";
 import { useFilterStore } from "@/stores/filterStore.js";
+import { DatePagination } from "@/components/ui/DatePagination.js";
 
 const VenuesPage: React.FC = () => {
   const venues = useAppStore((state) => state.venues);
@@ -36,43 +37,16 @@ const VenuesPage: React.FC = () => {
 
   const [venuesDisplayLimit, setVenuesDisplayLimit] = React.useState(getInitialDisplayLimit);
   const [venueSearch, setVenueSearch] = React.useState("");
-  const [dateFilter, setDateFilter] = React.useState<string>("week"); // "all" | "week" | "month" | "YYYY-MM"
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
-  // Compute date window for the active filter
   const dateWindow = React.useMemo((): { start: number; end: number } | null => {
-    const now = new Date();
-    if (dateFilter === "all") return null;
-    if (dateFilter === "week") {
-      const end = new Date(now);
-      end.setDate(now.getDate() + 7);
-      end.setHours(23, 59, 59, 999);
-      return { start: now.setHours(0, 0, 0, 0), end: end.getTime() };
-    }
-    if (dateFilter === "month") {
-      // Today → end of current calendar month
-      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-      return { start: new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime(), end: end.getTime() };
-    }
-    // "YYYY-MM" — full calendar month from the 1st
-    const [y, m] = dateFilter.split("-").map(Number);
-    const start = new Date(y, m - 1, 1).getTime();
-    const end = new Date(y, m, 0, 23, 59, 59, 999).getTime();
-    return { start, end };
-  }, [dateFilter]);
-
-  // Derive available months from all venues, excluding current month (covered by "this month")
-  const availableMonths = React.useMemo(() => {
-    const now = new Date();
-    const currentYM = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-    const months = new Set<string>();
-    venues.forEach((v) => v.upcomingEvents?.forEach((e) => {
-      const d = new Date(e.dateEpochMs);
-      const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-      if (ym !== currentYM) months.add(ym);
-    }));
-    return [...months].sort();
-  }, [venues]);
+    if (!filters.dateRange?.startDate && !filters.dateRange?.endDate) return null;
+    const parseLocal = (s: string) => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d); };
+    return {
+      start: filters.dateRange?.startDate ? parseLocal(filters.dateRange.startDate).setHours(0,0,0,0) : -Infinity,
+      end: filters.dateRange?.endDate ? parseLocal(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity,
+    };
+  }, [filters.dateRange]);
 
   React.useEffect(() => {
     if (filters.venues && filters.venues.length > 0) clearFilter("venues");
@@ -184,12 +158,6 @@ const VenuesPage: React.FC = () => {
       );
     }
 
-    if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
-      const start = filters.dateRange?.startDate ? new Date(filters.dateRange.startDate).setHours(0,0,0,0) : -Infinity;
-      const end = filters.dateRange?.endDate ? new Date(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
-      arr = arr.filter((v) => v.upcomingEvents.some((e) => e.dateEpochMs >= start && e.dateEpochMs <= end));
-    }
-
     if (filters.dates && filters.dates.length > 0) {
       const selectedDates = new Set(filters.dates);
       arr = arr.filter((v) =>
@@ -229,9 +197,9 @@ const VenuesPage: React.FC = () => {
     });
 
     return arr;
-  }, [venues, showUpcomingOnly, filters.cities, filters.ageRestrictions, filters.dateRange, filters.dates, venueSearch, dateWindow]);
+  }, [venues, showUpcomingOnly, filters.cities, filters.ageRestrictions, filters.dates, venueSearch, dateWindow]);
 
-  React.useEffect(() => { setVenuesDisplayLimit(30); }, [venueSearch, dateFilter]);
+  React.useEffect(() => { setVenuesDisplayLimit(30); }, [venueSearch, dateWindow]);
 
   const venuesArray = allVenuesArray.slice(0, venuesDisplayLimit);
 
@@ -294,41 +262,8 @@ const VenuesPage: React.FC = () => {
         )}
       </div>
 
-      {/* Date filter bar */}
-      <div className="flex flex-wrap gap-1.5 mb-4 -mt-2">
-        {(["all", "week", "month"] as const).map((f) => (
-          <button
-            key={f}
-            onClick={() => setDateFilter(f)}
-            className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
-              dateFilter === f
-                ? "bg-purple-600 text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-            }`}
-          >
-            {f === "all" ? "All" : f === "week" ? "This week" : "This month"}
-          </button>
-        ))}
-        {availableMonths.map((ym) => {
-          const [y, m] = ym.split("-").map(Number);
-          const now = new Date();
-          const sameYear = y === now.getFullYear();
-          const label = new Date(y, m - 1, 1).toLocaleDateString("en-US", sameYear ? { month: "short" } : { month: "short", year: "2-digit" });
-          return (
-            <button
-              key={ym}
-              onClick={() => setDateFilter(ym)}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
-                dateFilter === ym
-                  ? "bg-purple-600 text-white"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              {label}
-            </button>
-          );
-        })}
-      </div>
+      {/* Date range slider */}
+      <DatePagination className="mb-4" />
 
       {allVenuesArray.length === 0 && venueSearch && (
         <div className="text-center py-12 text-gray-500 dark:text-gray-400">
