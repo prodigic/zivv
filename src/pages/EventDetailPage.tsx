@@ -57,6 +57,26 @@ const EventDetailPage: React.FC = () => {
     loading.venues === "idle" || loading.venues === "loading" ||
     loading.events === "loading";
 
+  // Derive venue/artist/nav data with null guards (must be before early returns — Rules of Hooks)
+  const headliner = event?.headlinerArtistId ? artists.get(event.headlinerArtistId) : null;
+  const venue = event?.venueId ? venues.get(event.venueId) : null;
+  const venueMonthEvents = venue ? venue.upcomingEvents : [];
+  const currentIndex = event ? venueMonthEvents.findIndex((ev) => ev.id === event.id) : -1;
+  const prevEvent = currentIndex > 0 ? venueMonthEvents[currentIndex - 1] : null;
+  const nextEvent = currentIndex >= 0 && currentIndex < venueMonthEvents.length - 1 ? venueMonthEvents[currentIndex + 1] : null;
+
+  // Keyboard nav — must be before early returns
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === "ArrowUp" && prevEvent) { e.preventDefault(); navigate(`/events/${prevEvent.slug}`); }
+      if (e.key === "ArrowDown" && nextEvent) { e.preventDefault(); navigate(`/events/${nextEvent.slug}`); }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [prevEvent, nextEvent, navigate]);
+
+  // Early returns after all hooks
   if (!event && isLoading) {
     return (
       <ContentArea title="Loading…">
@@ -78,8 +98,6 @@ const EventDetailPage: React.FC = () => {
     );
   }
 
-  const headliner = event.headlinerArtistId ? artists.get(event.headlinerArtistId) : null;
-  const venue = event.venueId ? venues.get(event.venueId) : null;
   const supportingArtists = event.artistIds
     .filter((id) => id !== event.headlinerArtistId)
     .map((id) => artists.get(id))
@@ -99,21 +117,6 @@ const EventDetailPage: React.FC = () => {
   };
 
   const allArtists = [headliner, ...supportingArtists].filter(Boolean);
-  const venueMonthEvents = venue ? venue.upcomingEvents : [];
-
-  const currentIndex = venueMonthEvents.findIndex((ev) => ev.id === event.id);
-  const prevEvent = currentIndex > 0 ? venueMonthEvents[currentIndex - 1] : null;
-  const nextEvent = currentIndex >= 0 && currentIndex < venueMonthEvents.length - 1 ? venueMonthEvents[currentIndex + 1] : null;
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.key === "ArrowUp" && prevEvent) { e.preventDefault(); navigate(`/events/${prevEvent.slug}`); }
-      if (e.key === "ArrowDown" && nextEvent) { e.preventDefault(); navigate(`/events/${nextEvent.slug}`); }
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [prevEvent, nextEvent, navigate]);
 
   return (
     <ContentArea title="" subtitle="">
