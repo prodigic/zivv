@@ -2,20 +2,17 @@
  * Home page - Event list with infinite scroll
  */
 
-import React, { useEffect, useState, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useCallback } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.tsx";
 import { useAppStore } from "@/stores/appStore.ts";
 import { useFilterStore } from "@/stores/filterStore.ts";
-import {
-  EventCardSkeleton,
-  ListSkeleton,
-} from "@/components/ui/LoadingSpinner.tsx";
-import VirtualizedEventList from "@/components/ui/VirtualizedEventList.tsx";
+import PriceWidget from "@/components/ui/PriceWidget.tsx";
 
 const HomePage: React.FC = () => {
   const getAllEvents = useAppStore((state) => state.getAllEvents);
   const getVenue = useAppStore((state) => state.getVenue);
+  const getArtist = useAppStore((state) => state.getArtist);
   const loading = useAppStore((state) => state.loading);
   const errors = useAppStore((state) => state.errors);
   const loadChunk = useAppStore((state) => state.loadChunk);
@@ -25,346 +22,144 @@ const HomePage: React.FC = () => {
   const manifest = useAppStore((state) => state.manifest);
 
   const { filters, searchQuery } = useFilterStore();
-  const getArtist = useAppStore((state) => state.getArtist);
   const location = useLocation();
 
-  const [viewMode, setViewMode] = useState<"wide" | "narrow">("narrow");
-  const [displayLimit, setDisplayLimit] = useState(50); // Start with 50 events
-  const pageSize = 50; // Load 50 events at a time for infinite scroll
-  const allEventsRaw = getAllEvents(Infinity); // Get all loaded events
+  const [displayLimit, setDisplayLimit] = React.useState(100);
+  const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
-  // Scroll position restoration with more reliable approach
+  // Scroll restoration
   useEffect(() => {
-    const scrollKey = `scroll-position-home`;
     const mainElement = document.querySelector("main");
-
     if (!mainElement) return;
-
-    // Restore scroll position when component mounts
-    const savedPosition = sessionStorage.getItem(scrollKey);
-    if (savedPosition) {
-      const timeoutId = setTimeout(() => {
-        mainElement.scrollTop = parseInt(savedPosition, 10);
-      }, 150);
-
-      // Clear the timeout on unmount
-      return () => clearTimeout(timeoutId);
+    const saved = sessionStorage.getItem("scroll-position-home");
+    if (saved) {
+      const id = setTimeout(() => { mainElement.scrollTop = parseInt(saved, 10); }, 150);
+      return () => clearTimeout(id);
     }
   }, [location.pathname]);
 
-  // Save scroll position continuously as user scrolls
   useEffect(() => {
-    const scrollKey = `scroll-position-home`;
     const mainElement = document.querySelector("main");
-
     if (!mainElement) return;
-
-    let scrollTimeout: NodeJS.Timeout;
-    const handleScroll = () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        sessionStorage.setItem(scrollKey, mainElement.scrollTop.toString());
-      }, 100);
+    let t: NodeJS.Timeout;
+    const handler = () => {
+      clearTimeout(t);
+      t = setTimeout(() => sessionStorage.setItem("scroll-position-home", mainElement.scrollTop.toString()), 100);
     };
-
-    mainElement.addEventListener("scroll", handleScroll);
-
-    return () => {
-      mainElement.removeEventListener("scroll", handleScroll);
-      clearTimeout(scrollTimeout);
-    };
+    mainElement.addEventListener("scroll", handler);
+    return () => { mainElement.removeEventListener("scroll", handler); clearTimeout(t); };
   }, []);
 
-  // Apply filters from filter store
-  const { allFilteredEvents, allEvents } = React.useMemo(() => {
-    let filteredEvents = allEventsRaw;
+  // Filter events
+  const allFilteredEvents = React.useMemo(() => {
+    let evs = getAllEvents(Infinity);
 
-    // Apply upcoming filter
     if (showUpcomingOnly) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Start of today
-      const todayMs = today.getTime();
-      filteredEvents = filteredEvents.filter(
-        (event) => event.dateEpochMs >= todayMs
-      );
+      const todayMs = new Date().setHours(0, 0, 0, 0);
+      evs = evs.filter((e) => e.dateEpochMs >= todayMs);
     }
-
-    // Apply city filter
-    if (filters.cities && filters.cities.length > 0) {
-      const selectedCities = filters.cities;
-      filteredEvents = filteredEvents.filter((event) => {
-        const venue = getVenue(event.venueId);
-        return venue && selectedCities.includes(venue.city);
-      });
+    if (filters.cities?.length) {
+      const cities = new Set(filters.cities);
+      evs = evs.filter((e) => { const v = getVenue(e.venueId); return v && cities.has(v.city); });
     }
-
-    // Apply specific dates filter (multi-select dates)
-    if (filters.dates && filters.dates.length > 0) {
-      const selectedDates = filters.dates;
-      filteredEvents = filteredEvents.filter((event) => {
-        const eventDate = new Date(event.dateEpochMs)
-          .toISOString()
-          .split("T")[0];
-        return selectedDates.includes(eventDate);
-      });
+    if (filters.dates?.length) {
+      const dates = new Set(filters.dates);
+      evs = evs.filter((e) => dates.has(new Date(e.dateEpochMs).toISOString().split("T")[0]));
     }
-
-    // Apply date range filter
     if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
-      const dateRange = filters.dateRange;
-      filteredEvents = filteredEvents.filter((event) => {
-        const eventDate = new Date(event.dateEpochMs);
-        eventDate.setHours(0, 0, 0, 0);
-
-        if (dateRange.startDate) {
-          const startDate = new Date(dateRange.startDate);
-          startDate.setHours(0, 0, 0, 0);
-          if (eventDate < startDate) return false;
-        }
-
-        if (dateRange.endDate) {
-          const endDate = new Date(dateRange.endDate);
-          endDate.setHours(23, 59, 59, 999);
-          if (eventDate > endDate) return false;
-        }
-
-        return true;
-      });
+      const start = filters.dateRange?.startDate ? new Date(filters.dateRange.startDate).setHours(0,0,0,0) : -Infinity;
+      const end = filters.dateRange?.endDate ? new Date(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
+      evs = evs.filter((e) => e.dateEpochMs >= start && e.dateEpochMs <= end);
     }
-
-    // Apply venue filter
-    if (filters.venues && filters.venues.length > 0) {
-      const selectedVenues = filters.venues;
-      filteredEvents = filteredEvents.filter((event) => {
-        const venue = getVenue(event.venueId);
-        return venue && selectedVenues.includes(venue.name);
-      });
+    if (filters.venues?.length) {
+      const venues = new Set(filters.venues);
+      evs = evs.filter((e) => { const v = getVenue(e.venueId); return v && venues.has(v.name); });
     }
-
-    // Apply price range filter
     if (filters.isFree) {
-      filteredEvents = filteredEvents.filter((event) => event.isFree === true);
-    } else if (
-      filters.priceRange?.min !== undefined ||
-      filters.priceRange?.max !== undefined
-    ) {
-      const priceRange = filters.priceRange;
-      filteredEvents = filteredEvents.filter((event) => {
-        // Handle free events
-        if (event.isFree) {
-          return priceRange.min === undefined || priceRange.min === 0;
-        }
-
-        const eventPrice = event.priceMin || 0;
-
-        if (priceRange.min !== undefined && eventPrice < priceRange.min) {
-          return false;
-        }
-
-        if (priceRange.max !== undefined && eventPrice > priceRange.max) {
-          return false;
-        }
-
+      evs = evs.filter((e) => e.isFree);
+    } else if (filters.priceRange?.min !== undefined || filters.priceRange?.max !== undefined) {
+      evs = evs.filter((e) => {
+        if (e.isFree) return (filters.priceRange?.min ?? 0) === 0;
+        const p = e.priceMin ?? 0;
+        if (filters.priceRange?.min !== undefined && p < filters.priceRange.min) return false;
+        if (filters.priceRange?.max !== undefined && p > filters.priceRange.max) return false;
         return true;
       });
     }
-
-    // Apply age restriction filter
-    if (filters.ageRestrictions && filters.ageRestrictions.length > 0) {
-      const ageRestrictions = filters.ageRestrictions;
-      filteredEvents = filteredEvents.filter((event) => {
-        return ageRestrictions.some((restriction) => {
-          const eventAge = event.ageRestriction?.toLowerCase() || "";
-          const filterAge = restriction.toLowerCase();
-
-          // Handle "all-ages" variations
-          if (filterAge === "all-ages" || filterAge === "all ages") {
-            return (
-              eventAge.includes("all") ||
-              eventAge.includes("a/a") ||
-              eventAge === "all-ages"
-            );
-          }
-
-          // Handle specific age restrictions (18+, 21+, etc.)
-          return eventAge.includes(filterAge);
-        });
-      });
+    if (filters.ageRestrictions?.length) {
+      const ages = filters.ageRestrictions;
+      evs = evs.filter((e) => ages.some((r) => {
+        const ea = (e.ageRestriction ?? "").toLowerCase();
+        if (r === "all-ages") return ea.includes("all") || ea === "all-ages";
+        return ea.includes(r.toLowerCase());
+      }));
     }
-
-    // Apply tags filter
-    if (filters.tags && filters.tags.length > 0) {
+    if (filters.tags?.length) {
       const tags = filters.tags;
-      filteredEvents = filteredEvents.filter((event) => {
-        if (!event.tags || event.tags.length === 0) return false;
-        return tags.some((tag) => event.tags?.includes(tag));
-      });
+      evs = evs.filter((e) => e.tags?.length && tags.some((t) => e.tags?.includes(t)));
     }
-
-    // Apply search query filter (search across artist names and venue names)
-    if (searchQuery && searchQuery.trim().length > 0) {
-      const searchLower = searchQuery.toLowerCase().trim();
-      filteredEvents = filteredEvents.filter((event) => {
-        // Search in headliner artist name
-        const headlinerArtist = getArtist(event.headlinerArtistId);
-        if (headlinerArtist?.name.toLowerCase().includes(searchLower)) {
-          return true;
-        }
-
-        // Search in supporting artist names
-        if (event.artistIds && event.artistIds.length > 0) {
-          const hasMatchingArtist = event.artistIds.some((artistId) => {
-            const artist = getArtist(artistId);
-            return artist?.name.toLowerCase().includes(searchLower);
-          });
-          if (hasMatchingArtist) return true;
-        }
-
-        // Search in venue name
-        const venue = getVenue(event.venueId);
-        if (venue?.name.toLowerCase().includes(searchLower)) {
-          return true;
-        }
-
+    if (searchQuery?.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      evs = evs.filter((e) => {
+        if (getArtist(e.headlinerArtistId)?.name.toLowerCase().includes(q)) return true;
+        if (e.artistIds?.some((id) => getArtist(id)?.name.toLowerCase().includes(q))) return true;
+        if (getVenue(e.venueId)?.name.toLowerCase().includes(q)) return true;
         return false;
       });
     }
+    return evs;
+  }, [getAllEvents, showUpcomingOnly, filters, searchQuery, getVenue, getArtist]);
 
-    // Return both full filtered count and display-limited events
-    return {
-      allFilteredEvents: filteredEvents, // Full count of filtered events
-      allEvents: filteredEvents.slice(0, displayLimit), // Display-limited events
+  // Initialize + load chunks
+  useEffect(() => {
+    const load = async () => {
+      if (artists.size === 0 && loading.artists === "idle" && !errors.artists) {
+        await initialize();
+      }
+      if (manifest?.chunks?.events) {
+        await Promise.all(manifest.chunks.events.slice(0, 6).map((c) => loadChunk(c.chunkId)));
+      }
     };
-  }, [
-    allEventsRaw,
-    showUpcomingOnly,
-    filters.dates,
-    filters.dateRange,
-    filters.priceRange,
-    filters.cities,
-    filters.venues,
-    filters.isFree,
-    filters.ageRestrictions,
-    filters.tags,
-    searchQuery,
-    displayLimit,
-    getVenue,
-    getArtist,
-  ]);
+    if ((artists.size === 0 && loading.artists === "idle") || (allFilteredEvents.length === 0 && loading.events === "idle")) {
+      load().catch(console.error);
+    }
+  }, [artists.size, loading.artists, loading.events, errors.artists, errors.events, initialize, loadChunk, manifest, allFilteredEvents.length]);
+
+  // Infinite scroll
+  const handleLoadMore = useCallback(async () => {
+    if (loading.events === "loading") return;
+    if (displayLimit < allFilteredEvents.length) {
+      setDisplayLimit((p) => p + 100);
+      return;
+    }
+    const lastEvent = getAllEvents(Infinity).at(-1);
+    if (lastEvent) {
+      const next = new Date(lastEvent.dateEpochMs);
+      next.setMonth(next.getMonth() + 1);
+      const chunkId = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`;
+      await loadChunk(chunkId);
+      setDisplayLimit((p) => p + 100);
+    }
+  }, [loading.events, displayLimit, allFilteredEvents.length, getAllEvents, loadChunk]);
 
   useEffect(() => {
-    const initializeAndLoadEvents = async () => {
-      try {
-        // Initialize the app store first if needed
-        if (
-          artists.size === 0 &&
-          loading.artists === "idle" &&
-          !errors.artists
-        ) {
-          await initialize();
-        }
+    const el = loadMoreRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries[0].isIntersecting) handleLoadMore(); },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [handleLoadMore]);
 
-        // Load event chunks dynamically based on available data
-        if (manifest?.chunks?.events) {
-          // Load first 6 months of available chunks for better initial experience
-          const availableChunks = manifest.chunks.events
-            .map((chunk) => chunk.chunkId)
-            .slice(0, 6); // Load first 6 months
+  const visibleEvents = allFilteredEvents.slice(0, displayLimit);
 
-          console.log("Loading event chunks:", availableChunks);
-          await Promise.all(
-            availableChunks.map((chunkId) => loadChunk(chunkId))
-          );
-        } else {
-          // Fallback to known working chunks if manifest not available
-          console.log("Manifest not available, using fallback chunks");
-          await Promise.all([
-            loadChunk("2025-09"),
-            loadChunk("2025-10"),
-            loadChunk("2025-11"),
-          ]);
-        }
-      } catch (error) {
-        console.error("Failed to initialize HomePage:", error);
-      }
-    };
-
-    // Initialize if we need artists OR if we need events
-    const needsArtists =
-      artists.size === 0 && loading.artists === "idle" && !errors.artists;
-    const needsEvents =
-      allEvents.length === 0 && loading.events === "idle" && !errors.events;
-
-    if (needsArtists || needsEvents) {
-      initializeAndLoadEvents();
-    }
-  }, [
-    allEvents.length,
-    loading.events,
-    errors.events,
-    artists.size,
-    loading.artists,
-    errors.artists,
-    loadChunk,
-    initialize,
-    manifest,
-  ]);
-
-  // Handle infinite scroll - load more events when reaching end
-  const handleEndReached = useCallback(async () => {
-    if (loading.events === "loading") return;
-
-    const currentFilteredTotal = allFilteredEvents.length;
-
-    // If we're showing all filtered events already
-    if (displayLimit >= currentFilteredTotal) {
-      // Check if we need to load more chunks
-      const allAvailableEvents = allEventsRaw.length;
-
-      if (allAvailableEvents > currentFilteredTotal) {
-        // There are more events available in loaded chunks, just increase display limit
-        setDisplayLimit((prev) => prev + pageSize);
-      } else {
-        // Need to load more chunks from server
-        const lastEvent = allEventsRaw[allEventsRaw.length - 1];
-        if (lastEvent) {
-          const lastEventDate = new Date(lastEvent.dateEpochMs);
-          const nextMonth = new Date(lastEventDate);
-          nextMonth.setMonth(nextMonth.getMonth() + 1);
-
-          const year = nextMonth.getFullYear();
-          const month = nextMonth.getMonth() + 1;
-          const yearMonth = `${year}-${month.toString().padStart(2, "0")}`;
-
-          console.log("Loading next chunk:", yearMonth);
-          await loadChunk(yearMonth);
-          setDisplayLimit((prev) => prev + pageSize);
-        }
-      }
-    } else {
-      // We have more filtered events to show, increase limit
-      setDisplayLimit((prev) =>
-        Math.min(prev + pageSize, currentFilteredTotal)
-      );
-    }
-  }, [
-    loading.events,
-    allFilteredEvents.length,
-    displayLimit,
-    allEventsRaw,
-    pageSize,
-    loadChunk,
-  ]);
-
-  if (loading.events === "loading" && allEvents.length === 0) {
+  if (loading.events === "loading" && allFilteredEvents.length === 0) {
     return (
       <ContentArea>
-        <div className="space-y-6">
-          <div className="flex flex-col space-y-4">
-            <div className="h-8 bg-gray-200 rounded animate-pulse w-48"></div>
-            <div className="h-4 bg-gray-200 rounded animate-pulse w-64"></div>
-          </div>
-          <ListSkeleton count={6} itemSkeleton={EventCardSkeleton} />
+        <div className="text-center py-16">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto" />
         </div>
       </ContentArea>
     );
@@ -374,210 +169,58 @@ const HomePage: React.FC = () => {
     return (
       <ContentArea>
         <div className="text-center py-12">
-          <div className="text-red-600 mb-4">
-            <svg
-              className="w-12 h-12 mx-auto mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
-              />
-            </svg>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Unable to load events
-          </h3>
-          <p className="text-gray-600 mb-4">{errors.events}</p>
-          <button
-            onClick={() => {
-              // Try to reload the first available chunk or fallback
-              const firstChunk =
-                manifest?.chunks?.events?.[0]?.chunkId || "2025-09";
-              loadChunk(firstChunk);
-            }}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-          >
-            Try Again
-          </button>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Unable to load events</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{errors.events}</p>
+          <button onClick={() => loadChunk(manifest?.chunks?.events?.[0]?.chunkId ?? "2026-04")}
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm">Try Again</button>
         </div>
       </ContentArea>
     );
   }
 
   return (
-    <ContentArea className="h-full">
-      <div className="flex flex-col h-full space-y-6">
-        {/* Header */}
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {(() => {
-                  // Calculate total unfiltered events based on showUpcomingOnly setting
-                  let baseEvents = getAllEvents(Infinity);
-                  if (showUpcomingOnly) {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0); // Start of today
-                    const todayMs = today.getTime();
-                    baseEvents = baseEvents.filter(
-                      (event) => event.dateEpochMs >= todayMs
-                    );
-                  }
-                  const totalUnfilteredEvents = baseEvents.length;
+    <ContentArea title="Upcoming Shows" subtitle={`${allFilteredEvents.length} events`}>
+      {allFilteredEvents.length === 0 && (
+        <div className="text-center py-12 text-gray-500 dark:text-gray-400">No events match your filters.</div>
+      )}
 
-                  const hasActiveFilters =
-                    (filters.cities?.length ?? 0) > 0 ||
-                    (filters.dates?.length ?? 0) > 0 ||
-                    filters.dateRange?.startDate ||
-                    filters.dateRange?.endDate ||
-                    filters.priceRange?.min !== undefined ||
-                    filters.priceRange?.max !== undefined ||
-                    filters.isFree ||
-                    !showUpcomingOnly;
+      <div className="space-y-0">
+        {visibleEvents.map((event) => {
+          const headliner = getArtist(event.headlinerArtistId);
+          const venue = getVenue(event.venueId);
+          const otherCount = event.artistIds.length - 1;
+          const d = new Date(event.dateEpochMs);
 
-                  if (
-                    hasActiveFilters &&
-                    allFilteredEvents.length !== totalUnfilteredEvents
-                  ) {
-                    return (
-                      <>
-                        Upcoming Shows{" "}
-                        <span className="text-sm text-gray-500 font-normal">
-                          ({allFilteredEvents.length} selected)
-                        </span>
-                      </>
-                    );
-                  } else {
-                    return "Upcoming Shows";
-                  }
-                })()}
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300">
-                Bay Area punk and alternative shows
-              </p>
-            </div>
-            <div className="flex items-center gap-3 ml-4">
-              <div className="text-sm text-gray-500">
-                {allFilteredEvents.length} events
+          return (
+            <Link
+              key={event.id}
+              to={`/events/${event.slug}`}
+              className="block px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              <div className="flex items-baseline gap-2 min-w-0">
+                <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
+                  {d.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </span>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate min-w-0">
+                  {headliner?.name ?? "Show"}
+                  {otherCount > 0 && <span className="text-gray-400 dark:text-gray-500 font-normal text-xs"> +{otherCount}</span>}
+                </span>
               </div>
-
-              {/* View Mode Toggle */}
-              <div className="flex items-center gap-1 ml-3">
-                <button
-                  onClick={() => setViewMode("wide")}
-                  className={`p-2 rounded ${
-                    viewMode === "wide"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600"
-                  }`}
-                  title="Wide view"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM3 16a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => setViewMode("narrow")}
-                  className={`p-2 rounded ${
-                    viewMode === "narrow"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600"
-                  }`}
-                  title="Narrow view"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                    <path d="M6 8a2 2 0 012-2h4a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2V8z" />
-                  </svg>
-                </button>
+              <div className="flex items-baseline gap-2 min-w-0">
+                <PriceWidget isFree={event.isFree} isSoldOut={event.status === "sold-out" || event.tags?.includes("sold-out")} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0 w-14" />
+                <span className="text-xs text-gray-500 dark:text-gray-400 truncate min-w-0">
+                  {venue?.name ?? ""}
+                </span>
               </div>
-            </div>
-          </div>
-        </div>
+            </Link>
+          );
+        })}
 
-        {/* Debug info */}
-        <div className="debug-info mb-4 space-y-1 p-3 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-mono text-xs border-2 border-gray-300 dark:border-gray-600 rounded">
-          <div className="debug-label text-blue-700 dark:text-blue-300 font-bold">
-            HomePage Debug Info:
+        {allFilteredEvents.length > displayLimit && (
+          <div ref={loadMoreRef} className="text-center py-6">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-500 mx-auto" />
           </div>
-          <div>
-            <span className="text-blue-700 dark:text-blue-300 font-bold">
-              Events filtered/shown:
-            </span>{" "}
-            {allFilteredEvents.length}/{allEvents.length}
-          </div>
-          <div>
-            <span className="text-blue-700 dark:text-blue-300 font-bold">
-              Artists loaded:
-            </span>{" "}
-            {artists.size}
-          </div>
-          <div>
-            <span className="text-blue-700 dark:text-blue-300 font-bold">
-              Loading states:
-            </span>{" "}
-            artists={loading.artists}, events={loading.events}
-          </div>
-          <div>
-            <span className="text-blue-700 dark:text-blue-300 font-bold">
-              Errors:
-            </span>{" "}
-            artists={errors.artists}, events={errors.events}
-          </div>
-          <div>
-            <span className="text-blue-700 dark:text-blue-300 font-bold">
-              Search query:
-            </span>{" "}
-            "{searchQuery}"
-          </div>
-          <div>
-            <span className="text-blue-700 dark:text-blue-300 font-bold">
-              Active city filters:
-            </span>{" "}
-            {Object.keys(filters.cities || {}).length}
-          </div>
-          <div>
-            <span className="text-blue-700 dark:text-blue-300 font-bold">
-              Filter details:
-            </span>{" "}
-            {JSON.stringify({ ...filters, showUpcomingOnly })}
-          </div>
-        </div>
-
-        {/* Event List - Virtualized */}
-        <div
-          style={{
-            flex: 1,
-            minHeight: 0,
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          }}
-        >
-          <VirtualizedEventList
-            events={allEvents}
-            isLoading={loading.events === "loading"}
-            viewMode={viewMode}
-            onEndReached={handleEndReached}
-            hasMore={
-              displayLimit < allFilteredEvents.length ||
-              allEventsRaw.length > allFilteredEvents.length
-            }
-          />
-        </div>
+        )}
       </div>
     </ContentArea>
   );
