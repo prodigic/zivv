@@ -11,6 +11,7 @@ import PriceWidget from "@/components/ui/PriceWidget.tsx";
 
 const HomePage: React.FC = () => {
   const getAllEvents = useAppStore((state) => state.getAllEvents);
+  const events = useAppStore((state) => state.events); // subscribe to events map for memo reactivity
   const getVenue = useAppStore((state) => state.getVenue);
   const getArtist = useAppStore((state) => state.getArtist);
   const loading = useAppStore((state) => state.loading);
@@ -108,7 +109,8 @@ const HomePage: React.FC = () => {
       });
     }
     return evs;
-  }, [getAllEvents, showUpcomingOnly, filters, searchQuery, getVenue, getArtist]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [events, showUpcomingOnly, filters, searchQuery]); // events map triggers recompute when chunks load
 
   // Initialize + load chunks
   useEffect(() => {
