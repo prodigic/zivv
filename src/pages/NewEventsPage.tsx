@@ -60,7 +60,8 @@ const NewEventsPage: React.FC = () => {
   }, [justAdded.length, displayLimit]);
 
   const runDateStr = runDate
-    ? new Date(runDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+    ? (() => { const [y,m,d] = runDate.split("-").map(Number); return new Date(y,m-1,d); })()
+        .toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
     : "";
 
   return (
