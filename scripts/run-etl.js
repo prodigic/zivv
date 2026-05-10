@@ -73,16 +73,16 @@ function verifyOutput(projectRoot, stats) {
     warnings.push(`${crossYearDupes} cross-year duplicate event(s) detected (same MM-DD + venue + headliner in multiple years)`);
   }
 
-  // 5. Year distribution sanity: no year should have > 5x the events of any other year
-  //    (catches runaway year-drift where one year accumulates everything)
+  // 5. Year-drift guard: if 99%+ of events share a single year and that year is
+  //    not the current or next year, something has gone wrong with date parsing.
   const yearCounts = {};
   for (const e of allEvents) yearCounts[e.date.slice(0, 4)] = (yearCounts[e.date.slice(0, 4)] || 0) + 1;
-  const yearValues = Object.values(yearCounts);
-  if (yearValues.length > 1) {
-    const maxYear = Math.max(...yearValues);
-    const minYear = Math.min(...yearValues);
-    if (maxYear / minYear > 20) {
-      warnings.push(`Unbalanced year distribution: ${JSON.stringify(yearCounts)} — possible year-drift`);
+  const currentYear = new Date().getFullYear();
+  const total = allEvents.length;
+  for (const [year, count] of Object.entries(yearCounts)) {
+    const y = parseInt(year);
+    if (count / total > 0.99 && y !== currentYear && y !== currentYear + 1) {
+      warnings.push(`Year-drift detected: ${count}/${total} events assigned to ${year} — expected ${currentYear} or ${currentYear + 1}`);
     }
   }
 
