@@ -97,6 +97,22 @@ function verifyOutput(projectRoot, stats) {
   }).length;
   if (badDates > 0) failures.push(`${badDates} events with implausible dates (year outside 2020–2035)`);
 
+  // 8. Orphaned venue IDs — events referencing a venueId not in venues.json
+  try {
+    const venuesPath = resolve(publicData, 'venues.json');
+    if (existsSync(venuesPath)) {
+      const venueIds = new Set(JSON.parse(readFileSync(venuesPath, 'utf-8')).map(v => v.id));
+      const orphaned = allEvents.filter(e => e.venueId && !venueIds.has(e.venueId));
+      if (orphaned.length > 0) {
+        // Group by venueId to keep the message compact
+        const byId = {};
+        orphaned.forEach(e => { byId[e.venueId] = (byId[e.venueId] || 0) + 1; });
+        const summary = Object.entries(byId).map(([id, n]) => `id=${id}(${n})`).join(', ');
+        warnings.push(`${orphaned.length} event(s) reference venue IDs not in venues.json: ${summary}`);
+      }
+    }
+  } catch { /* non-fatal */ }
+
   return { failures, warnings, sourceLines, etlCount };
 }
 

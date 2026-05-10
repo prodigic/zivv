@@ -94,12 +94,13 @@ export class ETLProcessor {
       console.log("🔧 Normalizing data...");
       const artistMap = new Map<string, Artist>();
       const venueMap = new Map<string, Venue>();
+      const venueAliases = this.loadVenueAliases();
 
       const {
         events,
         errors: eventNormErrors,
         warnings: eventNormWarnings,
-      } = EventParser.normalizeEvents(rawEvents, artistMap, venueMap);
+      } = EventParser.normalizeEvents(rawEvents, artistMap, venueMap, venueAliases);
 
       errors.push(...eventNormErrors.map(this.toProcessingError));
       warnings.push(...eventNormWarnings.map(this.toProcessingWarning));
@@ -220,6 +221,16 @@ export class ETLProcessor {
         errors: [criticalError, ...errors],
         warnings,
       };
+    }
+  }
+
+  private loadVenueAliases(): Record<string, string> {
+    const aliasPath = join(this.dataDir, "venue-aliases.json");
+    if (!existsSync(aliasPath)) return {};
+    try {
+      return JSON.parse(readFileSync(aliasPath, "utf-8"));
+    } catch {
+      return {};
     }
   }
 

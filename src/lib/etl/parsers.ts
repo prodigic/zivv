@@ -138,7 +138,8 @@ export class EventParser {
   static normalizeEvents(
     rawEvents: RawEventData[],
     artistMap: Map<string, Artist>,
-    venueMap: Map<string, Venue>
+    venueMap: Map<string, Venue>,
+    venueAliases: Record<string, string> = {}
   ): {
     events: Event[];
     errors: ParseError[];
@@ -251,23 +252,23 @@ export class EventParser {
           artist.updatedAtEpochMs = Date.now();
         }
 
-        // Find or create venue
-        const normalizedVenueName = StringNormalizer.normalizeName(
-          venueInfo.venue
-        );
+        // Find or create venue — resolve alias first so variants map to canonical name/ID
+        const resolvedVenueName =
+          venueAliases[venueInfo.venue.toLowerCase()] ?? venueInfo.venue;
+        const normalizedVenueName = StringNormalizer.normalizeName(resolvedVenueName);
         let venue = [...venueMap.values()].find(
           (v) => v.normalizedName === normalizedVenueName
         );
 
         if (!venue) {
           const venueId = HashGenerator.generateVenueId(
-            venueInfo.venue,
+            resolvedVenueName,
             venueInfo.city
           ) as VenueId;
           venue = {
             id: venueId,
-            name: venueInfo.venue.trim(),
-            slug: StringNormalizer.createSlug(venueInfo.venue),
+            name: resolvedVenueName.trim(),
+            slug: StringNormalizer.createSlug(resolvedVenueName),
             normalizedName: normalizedVenueName,
             address: "", // Will be filled from venues.txt
             city: venueInfo.city,
