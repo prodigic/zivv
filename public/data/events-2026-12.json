@@ -1,16 +1,16 @@
 {
-  "chunkId": "2027-12",
+  "chunkId": "2026-12",
   "dateRange": {
-    "startEpochMs": 1827820800000,
-    "endEpochMs": 1828339200000
+    "startEpochMs": 1796284800000,
+    "endEpochMs": 1796803200000
   },
   "events": [
     {
-      "id": 691614130,
-      "slug": "2027-12-03-pattie-gonia-the-fillmore",
-      "date": "2027-12-03",
-      "dateEpochMs": 1827820800000,
-      "startTimeEpochMs": 1828076400000,
+      "id": 1487567,
+      "slug": "2026-12-03-pattie-gonia-the-fillmore",
+      "date": "2026-12-03",
+      "dateEpochMs": 1796284800000,
+      "startTimeEpochMs": 1796540400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1486423906,
       "artistIds": [
@@ -24,16 +24,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778451628189,
-      "updatedAtEpochMs": 1778451704251,
-      "sourceLineNumber": 1562
+      "createdAtEpochMs": 1778452915703,
+      "updatedAtEpochMs": 1778452915703,
+      "sourceLineNumber": 1563
     },
     {
-      "id": 1436094149,
-      "slug": "2027-12-06-buck-meek-moes-alley",
-      "date": "2027-12-06",
-      "dateEpochMs": 1828080000000,
-      "startTimeEpochMs": 1828155600000,
+      "id": 2129195846,
+      "slug": "2026-12-06-buck-meek-moes-alley",
+      "date": "2026-12-06",
+      "dateEpochMs": 1796544000000,
+      "startTimeEpochMs": 1796619600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1459277008,
       "artistIds": [
@@ -48,16 +48,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778451628189,
-      "updatedAtEpochMs": 1778451704251,
-      "sourceLineNumber": 1563
+      "createdAtEpochMs": 1778452915704,
+      "updatedAtEpochMs": 1778452915704,
+      "sourceLineNumber": 1564
     },
     {
-      "id": 1911990365,
-      "slug": "2027-12-07-buck-meek-the-chapel",
-      "date": "2027-12-07",
-      "dateEpochMs": 1828166400000,
-      "startTimeEpochMs": 1828238400000,
+      "id": 1844983612,
+      "slug": "2026-12-07-buck-meek-the-chapel",
+      "date": "2026-12-07",
+      "dateEpochMs": 1796630400000,
+      "startTimeEpochMs": 1796702400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1459277008,
       "artistIds": [
@@ -70,16 +70,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778451628189,
-      "updatedAtEpochMs": 1778451704251,
-      "sourceLineNumber": 1564
+      "createdAtEpochMs": 1778452915704,
+      "updatedAtEpochMs": 1778452915704,
+      "sourceLineNumber": 1565
     },
     {
-      "id": 240241069,
-      "slug": "2027-12-09-the-pineapple-thief-august-hall",
-      "date": "2027-12-09",
-      "dateEpochMs": 1828339200000,
-      "startTimeEpochMs": 1828400400000,
+      "id": 1485239828,
+      "slug": "2026-12-09-the-pineapple-thief-august-hall",
+      "date": "2026-12-09",
+      "dateEpochMs": 1796803200000,
+      "startTimeEpochMs": 1796864400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1805884909,
       "artistIds": [
@@ -91,9 +91,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778451628190,
-      "updatedAtEpochMs": 1778451704252,
-      "sourceLineNumber": 1565
+      "createdAtEpochMs": 1778452915704,
+      "updatedAtEpochMs": 1778452915704,
+      "sourceLineNumber": 1566
     }
   ]
 }
