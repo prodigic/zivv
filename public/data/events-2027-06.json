@@ -32,8 +32,32 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658283,
-      "updatedAtEpochMs": 1778448665759,
-      "sourceLineNumber": 1544
+      "updatedAtEpochMs": 1778450351958,
+      "sourceLineNumber": 1540
+    },
+    {
+      "id": 1412200571,
+      "slug": "2027-06-09-ch-rocktikal-crybaby",
+      "date": "2027-06-09",
+      "dateEpochMs": 1812524400000,
+      "startTimeEpochMs": 1812704400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1960119724,
+      "artistIds": [
+        1960119724
+      ],
+      "venueId": 2137851775,
+      "priceMin": 50,
+      "priceMax": 50,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$250-$125 vip",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778450291145,
+      "updatedAtEpochMs": 1778450351958,
+      "sourceLineNumber": 1541
     },
     {
       "id": 1083692625,
@@ -60,8 +84,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658283,
-      "updatedAtEpochMs": 1778448665759,
-      "sourceLineNumber": 1546
+      "updatedAtEpochMs": 1778450351959,
+      "sourceLineNumber": 1542
     },
     {
       "id": 1844879184,
@@ -83,8 +107,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658283,
-      "updatedAtEpochMs": 1778448665759,
-      "sourceLineNumber": 1547
+      "updatedAtEpochMs": 1778450351959,
+      "sourceLineNumber": 1543
     },
     {
       "id": 1243619276,
@@ -108,8 +132,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658283,
-      "updatedAtEpochMs": 1778448665759,
-      "sourceLineNumber": 1548
+      "updatedAtEpochMs": 1778450351959,
+      "sourceLineNumber": 1544
     },
     {
       "id": 819357331,
@@ -137,8 +161,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658283,
-      "updatedAtEpochMs": 1778448665759,
-      "sourceLineNumber": 1549
+      "updatedAtEpochMs": 1778450351959,
+      "sourceLineNumber": 1545
     },
     {
       "id": 642792180,
@@ -162,8 +186,8 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778448658284,
-      "updatedAtEpochMs": 1778448665759,
-      "sourceLineNumber": 1550
+      "updatedAtEpochMs": 1778450351959,
+      "sourceLineNumber": 1546
     },
     {
       "id": 310045007,
@@ -193,8 +217,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658284,
-      "updatedAtEpochMs": 1778448665760,
-      "sourceLineNumber": 1551
+      "updatedAtEpochMs": 1778450351959,
+      "sourceLineNumber": 1547
     },
     {
       "id": 2009028604,
@@ -219,8 +243,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1778448658284,
-      "updatedAtEpochMs": 1778448665760,
-      "sourceLineNumber": 1552
+      "updatedAtEpochMs": 1778450351959,
+      "sourceLineNumber": 1548
     },
     {
       "id": 1261359228,
@@ -242,8 +266,8 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778448658284,
-      "updatedAtEpochMs": 1778448665760,
-      "sourceLineNumber": 1553
+      "updatedAtEpochMs": 1778450351959,
+      "sourceLineNumber": 1549
     },
     {
       "id": 626662492,
@@ -269,8 +293,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1778448658284,
-      "updatedAtEpochMs": 1778448665760,
-      "sourceLineNumber": 1554
+      "updatedAtEpochMs": 1778450351960,
+      "sourceLineNumber": 1550
     },
     {
       "id": 2090679976,
@@ -295,8 +319,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658284,
-      "updatedAtEpochMs": 1778448665760,
-      "sourceLineNumber": 1555
+      "updatedAtEpochMs": 1778450351960,
+      "sourceLineNumber": 1551
     },
     {
       "id": 525928772,
@@ -321,8 +345,36 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658284,
-      "updatedAtEpochMs": 1778448665760,
-      "sourceLineNumber": 1556
+      "updatedAtEpochMs": 1778450351960,
+      "sourceLineNumber": 1552
+    },
+    {
+      "id": 28719509,
+      "slug": "2027-06-27-wheelchair-sports-camp-great-american-music-hall",
+      "date": "2027-06-27",
+      "dateEpochMs": 1814079600000,
+      "startTimeEpochMs": 1814176800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 625631937,
+      "artistIds": [
+        625631937,
+        849349041,
+        1671095274,
+        1077849810,
+        861988829
+      ],
+      "venueId": 463728167,
+      "priceMin": 27,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "Alternative Tentacles Tentacle Fest",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778450291147,
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1553
     },
     {
       "id": 1693850865,
@@ -347,8 +399,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1558
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1554
     }
   ]
 }

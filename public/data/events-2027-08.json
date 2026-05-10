@@ -2,7 +2,7 @@
   "chunkId": "2027-08",
   "dateRange": {
     "startEpochMs": 1817103600000,
-    "endEpochMs": 1819522800000
+    "endEpochMs": 1819695600000
   },
   "events": [
     {
@@ -27,8 +27,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1567
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1563
     },
     {
       "id": 554566654,
@@ -51,8 +51,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778448658286,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1568
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1564
     },
     {
       "id": 1423799776,
@@ -75,8 +75,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658287,
-      "updatedAtEpochMs": 1778448665762,
-      "sourceLineNumber": 1569
+      "updatedAtEpochMs": 1778450351962,
+      "sourceLineNumber": 1565
     },
     {
       "id": 1496848812,
@@ -99,8 +99,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658287,
-      "updatedAtEpochMs": 1778448665762,
-      "sourceLineNumber": 1570
+      "updatedAtEpochMs": 1778450351962,
+      "sourceLineNumber": 1566
     },
     {
       "id": 1462780806,
@@ -120,8 +120,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658287,
-      "updatedAtEpochMs": 1778448665762,
-      "sourceLineNumber": 1571
+      "updatedAtEpochMs": 1778450351962,
+      "sourceLineNumber": 1567
     },
     {
       "id": 655029307,
@@ -144,8 +144,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658287,
-      "updatedAtEpochMs": 1778448665762,
-      "sourceLineNumber": 1572
+      "updatedAtEpochMs": 1778450351962,
+      "sourceLineNumber": 1568
     },
     {
       "id": 526609127,
@@ -169,8 +169,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1778448658287,
-      "updatedAtEpochMs": 1778448665762,
-      "sourceLineNumber": 1573
+      "updatedAtEpochMs": 1778450351962,
+      "sourceLineNumber": 1569
     },
     {
       "id": 393339586,
@@ -190,8 +190,57 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778448658287,
-      "updatedAtEpochMs": 1778448665762,
-      "sourceLineNumber": 1574
+      "updatedAtEpochMs": 1778450351962,
+      "sourceLineNumber": 1570
+    },
+    {
+      "id": 1921169205,
+      "slug": "2027-08-28-wax-the-independent",
+      "date": "2027-08-28",
+      "dateEpochMs": 1819436400000,
+      "startTimeEpochMs": 1819501200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 629148731,
+      "artistIds": [
+        629148731,
+        991898105,
+        1671492272,
+        638841828
+      ],
+      "venueId": 515101024,
+      "priceMin": 31.55,
+      "priceMax": 31.55,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778450291149,
+      "updatedAtEpochMs": 1778450351962,
+      "sourceLineNumber": 1571
+    },
+    {
+      "id": 657623318,
+      "slug": "2027-08-29-j-cole-the-arena",
+      "date": "2027-08-29",
+      "dateEpochMs": 1819522800000,
+      "startTimeEpochMs": 1819569600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 108521294,
+      "artistIds": [
+        108521294
+      ],
+      "venueId": 1887679738,
+      "priceMin": 131,
+      "priceMax": 131,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778450291149,
+      "updatedAtEpochMs": 1778450351962,
+      "sourceLineNumber": 1572
     },
     {
       "id": 1920385790,
@@ -213,8 +262,33 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658287,
-      "updatedAtEpochMs": 1778448665762,
-      "sourceLineNumber": 1577
+      "updatedAtEpochMs": 1778450351963,
+      "sourceLineNumber": 1573
+    },
+    {
+      "id": 869064463,
+      "slug": "2027-08-31-eagles-of-death-metal-the-catalyst",
+      "date": "2027-08-31",
+      "dateEpochMs": 1819695600000,
+      "startTimeEpochMs": 1819753200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1610095344,
+      "artistIds": [
+        1610095344,
+        1232846808
+      ],
+      "venueId": 1715490423,
+      "priceMin": 45.71,
+      "priceMax": 45.71,
+      "isFree": false,
+      "ageRestriction": "16+",
+      "notes": "$54.54 balcony",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778450291149,
+      "updatedAtEpochMs": 1778450351963,
+      "sourceLineNumber": 1574
     }
   ]
 }

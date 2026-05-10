@@ -25,8 +25,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1559
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1555
     },
     {
       "id": 976082514,
@@ -45,8 +45,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1560
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1556
     },
     {
       "id": 892925133,
@@ -70,8 +70,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1561
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1557
     },
     {
       "id": 2129209740,
@@ -91,8 +91,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1562
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1558
     },
     {
       "id": 465017077,
@@ -112,8 +112,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1563
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1559
     },
     {
       "id": 1048257184,
@@ -135,8 +135,32 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1564
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1560
+    },
+    {
+      "id": 152092671,
+      "slug": "2027-07-25-the-body-bottom-of-the-hill",
+      "date": "2027-07-25",
+      "dateEpochMs": 1816498800000,
+      "startTimeEpochMs": 1816574400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971838475,
+      "artistIds": [
+        1971838475,
+        810651411
+      ],
+      "venueId": 1016385760,
+      "priceMin": 20,
+      "priceMax": 20,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778450291148,
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1561
     },
     {
       "id": 631437184,
@@ -158,8 +182,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778448658285,
-      "updatedAtEpochMs": 1778448665761,
-      "sourceLineNumber": 1566
+      "updatedAtEpochMs": 1778450351961,
+      "sourceLineNumber": 1562
     }
   ]
 }

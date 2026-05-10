@@ -337,10 +337,7 @@ export class EventParser {
         };
 
         // Deduplicate: if the same headliner+venue already appears on the same
-        // calendar date (ignoring year), keep only the first occurrence so that
-        // repeated event blocks in the source file don't produce duplicate entries
-        // with incorrect years.
-        const dedupeKey = `${parsedDate.date.slice(5)}-${event.headlinerArtistId}-${event.venueId}`;
+        const dedupeKey = `${parsedDate.date}-${event.headlinerArtistId}-${event.venueId}`;
         if (!eventKeys.has(dedupeKey)) {
           eventKeys.add(dedupeKey);
           lastDateEpochMs = parsedDate.epochMs;
