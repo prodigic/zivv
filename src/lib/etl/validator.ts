@@ -31,7 +31,9 @@ export interface AddressOnlyVenue {
 }
 
 export interface VenueValidationResult {
-  nearDuplicates: NearDuplicateGroup[];
+  nearDuplicates: NearDuplicateGroup[];        // unresolved — not yet in alias file
+  resolvedDuplicates: NearDuplicateGroup[];    // already covered by alias file
+  newMappings: Record<string, string>;         // alias key → canonical, ready to append
   addressOnlyVenues: AddressOnlyVenue[];
   venueParseErrors: EventValidationIssue[];
   venueParseWarnings: EventValidationIssue[];
@@ -100,7 +102,8 @@ export class LatestValidator {
 
   validateVenues(
     latestContent: string,
-    venuesContent: string
+    venuesContent: string,
+    existingAliases: Record<string, string> = {}
   ): VenueValidationResult {
     const { eventsSection, clubInfoSection } =
       this.splitLatestFile(latestContent);
@@ -137,7 +140,34 @@ export class LatestValidator {
     addToPool(clubInfoNames);
     addToPool(registryNames);
 
-    const nearDuplicates = this.detectNearDuplicates(pool, latestEventVenues);
+    const allGroups = this.detectNearDuplicates(pool, latestEventVenues);
+
+    // Partition groups into resolved (all variants covered by alias file) vs new
+    const nearDuplicates: NearDuplicateGroup[] = [];
+    const resolvedDuplicates: NearDuplicateGroup[] = [];
+    const newMappings: Record<string, string> = {};
+
+    for (const group of allGroups) {
+      const allNames = [group.canonical, ...group.variants];
+      const uncovered = allNames.filter(
+        (name) => !(name.toLowerCase() in existingAliases)
+      );
+
+      if (uncovered.length <= 1) {
+        // Every variant already has an alias entry — group is resolved
+        resolvedDuplicates.push(group);
+      } else {
+        // New group: propose mappings for the non-canonical names
+        nearDuplicates.push(group);
+        for (const variant of group.variants) {
+          const key = variant.toLowerCase();
+          if (!(key in existingAliases)) {
+            newMappings[key] = group.canonical;
+          }
+        }
+      }
+    }
+
     const addressOnlyVenues = this.detectAddressOnlyVenues(latestEventVenues);
 
     const parsedVenueErrors = venueParseErrors.map((e) =>
@@ -149,6 +179,8 @@ export class LatestValidator {
 
     return {
       nearDuplicates,
+      resolvedDuplicates,
+      newMappings,
       addressOnlyVenues,
       venueParseErrors: parsedVenueErrors,
       venueParseWarnings: parsedVenueWarnings,

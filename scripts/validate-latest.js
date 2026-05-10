@@ -180,7 +180,8 @@ function formatVenuesErrFile(result, timestamp, sourcePaths) {
   lines.push(
     `Summary: ${result.venueParseErrors.length} parse errors, ` +
     `${result.addressOnlyVenues.length} address-only venues, ` +
-    `${result.nearDuplicates.length} near-dupe groups`
+    `${result.nearDuplicates.length} new dupe groups ` +
+    `(${result.resolvedDuplicates.length} already resolved in venue-aliases.json)`
   );
   lines.push('');
 
@@ -192,6 +193,7 @@ function formatVenuesErrFile(result, timestamp, sourcePaths) {
 async function main() {
   const latestPath = resolve(dataDir, 'latest.txt');
   const venuesPath = resolve(dataDir, 'venues.txt');
+  const aliasesPath = resolve(dataDir, 'venue-aliases.json');
   const eventsErrPath = resolve(dataDir, 'events.err.txt');
   const venuesErrPath = resolve(dataDir, 'venues.err.txt');
 
@@ -207,6 +209,9 @@ async function main() {
 
   const latestContent = readFileSync(latestPath, 'utf-8');
   const venuesContent = readFileSync(venuesPath, 'utf-8');
+  const existingAliases = existsSync(aliasesPath)
+    ? JSON.parse(readFileSync(aliasesPath, 'utf-8'))
+    : {};
   const timestamp = new Date().toISOString();
 
   const validator = new LatestValidator();
@@ -215,7 +220,16 @@ async function main() {
   const eventResult = validator.validateEvents(latestContent);
 
   console.log('🏛️  Validating venues...');
-  const venueResult = validator.validateVenues(latestContent, venuesContent);
+  const venueResult = validator.validateVenues(latestContent, venuesContent, existingAliases);
+
+  // Write new mappings into venue-aliases.json if any were found
+  const newMappingCount = Object.keys(venueResult.newMappings).length;
+  if (newMappingCount > 0) {
+    const merged = { ...existingAliases, ...venueResult.newMappings };
+    const sorted = Object.fromEntries(Object.entries(merged).sort(([a], [b]) => a.localeCompare(b)));
+    writeFileSync(aliasesPath, JSON.stringify(sorted, null, 2) + '\n');
+    console.log(`📝 Added ${newMappingCount} new mapping(s) to venue-aliases.json`);
+  }
 
   writeFileSync(eventsErrPath, formatEventsErrFile(eventResult, timestamp, 'data/latest.txt'));
   writeFileSync(venuesErrPath, formatVenuesErrFile(venueResult, timestamp, 'data/latest.txt + data/venues.txt'));
@@ -229,7 +243,8 @@ async function main() {
   console.log(
     `   Venues: ${venueResult.venueParseErrors.length} parse errors,` +
     ` ${venueResult.addressOnlyVenues.length} address-only,` +
-    ` ${venueResult.nearDuplicates.length} near-dupe groups`
+    ` ${venueResult.nearDuplicates.length} new dupe groups` +
+    ` (${venueResult.resolvedDuplicates.length} already resolved)`
   );
   console.log('');
   console.log(`💾 Written: ${eventsErrPath}`);
