@@ -1,0 +1,220 @@
+{
+  "chunkId": "2027-08",
+  "dateRange": {
+    "startEpochMs": 1817103600000,
+    "endEpochMs": 1819522800000
+  },
+  "events": [
+    {
+      "id": 871623190,
+      "slug": "2027-08-01-marty-oreilly-knot-club",
+      "date": "2027-08-01",
+      "dateEpochMs": 1817103600000,
+      "startTimeEpochMs": 1817229600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 599671317,
+      "artistIds": [
+        599671317,
+        961022938,
+        292942175
+      ],
+      "venueId": 747776193,
+      "priceMin": 35,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658285,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1567
+    },
+    {
+      "id": 554566654,
+      "slug": "2027-08-01-dark-star-orchestra-the-greek-theater",
+      "date": "2027-08-01",
+      "dateEpochMs": 1817103600000,
+      "startTimeEpochMs": 1817164800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 308348566,
+      "artistIds": [
+        308348566,
+        801378070,
+        1002416320
+      ],
+      "venueId": 474218142,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "Benefit for the Rex Rondation - day 2",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658286,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1568
+    },
+    {
+      "id": 1423799776,
+      "slug": "2027-08-05-alela-diane-the-crepe-place",
+      "date": "2027-08-05",
+      "dateEpochMs": 1817449200000,
+      "startTimeEpochMs": 1817532000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 747717457,
+      "artistIds": [
+        747717457,
+        804906652
+      ],
+      "venueId": 135768954,
+      "priceMin": 23.6,
+      "priceMax": 23.6,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1569
+    },
+    {
+      "id": 1496848812,
+      "slug": "2027-08-06-alela-diane-the-chapel",
+      "date": "2027-08-06",
+      "dateEpochMs": 1817535600000,
+      "startTimeEpochMs": 1817654400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 747717457,
+      "artistIds": [
+        747717457,
+        804906652
+      ],
+      "venueId": 680116887,
+      "priceMin": 33.4,
+      "priceMax": 33.4,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1570
+    },
+    {
+      "id": 1462780806,
+      "slug": "2027-08-07-shawn-colvin-hopmonk-tavern",
+      "date": "2027-08-07",
+      "dateEpochMs": 1817622000000,
+      "startTimeEpochMs": 1817686800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1540175317,
+      "artistIds": [
+        1540175317
+      ],
+      "venueId": 1637782129,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1571
+    },
+    {
+      "id": 655029307,
+      "slug": "2027-08-15-ejean-brick-and-mortar",
+      "date": "2027-08-15",
+      "dateEpochMs": 1818313200000,
+      "startTimeEpochMs": 1818435600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 994828646,
+      "artistIds": [
+        994828646
+      ],
+      "venueId": 1719765223,
+      "priceMin": 34.27,
+      "priceMax": 34.27,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 21 plus $5",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1572
+    },
+    {
+      "id": 526609127,
+      "slug": "2027-08-20-portraits-of-past-the-great-american-music-hall",
+      "date": "2027-08-20",
+      "dateEpochMs": 1818745200000,
+      "startTimeEpochMs": 1818828000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 46766240,
+      "artistIds": [
+        46766240,
+        1534555808,
+        1098735372
+      ],
+      "venueId": 463728167,
+      "priceMin": 23,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "diy",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1573
+    },
+    {
+      "id": 393339586,
+      "slug": "2027-08-22-ammy-virk-the-arena",
+      "date": "2027-08-22",
+      "dateEpochMs": 1818918000000,
+      "startTimeEpochMs": 1818990000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1399633919,
+      "artistIds": [
+        1399633919
+      ],
+      "venueId": 1887679738,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1574
+    },
+    {
+      "id": 1920385790,
+      "slug": "2027-08-29-mini-trees-the-rickshaw-stop",
+      "date": "2027-08-29",
+      "dateEpochMs": 1819522800000,
+      "startTimeEpochMs": 1819602000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 563771807,
+      "artistIds": [
+        563771807
+      ],
+      "venueId": 31041890,
+      "priceMin": 22,
+      "priceMax": 22,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1577
+    }
+  ]
+}

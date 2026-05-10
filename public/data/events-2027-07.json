@@ -1,0 +1,165 @@
+{
+  "chunkId": "2027-07",
+  "dateRange": {
+    "startEpochMs": 1814425200000,
+    "endEpochMs": 1817017200000
+  },
+  "events": [
+    {
+      "id": 1001581805,
+      "slug": "2027-07-01-skald-the-ritz",
+      "date": "2027-07-01",
+      "dateEpochMs": 1814425200000,
+      "startTimeEpochMs": 1814515200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 981873074,
+      "artistIds": [
+        981873074
+      ],
+      "venueId": 1253820046,
+      "priceMin": 25,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658285,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1559
+    },
+    {
+      "id": 976082514,
+      "slug": "2027-07-11-petty-theft-tribute-the-chapel",
+      "date": "2027-07-11",
+      "dateEpochMs": 1815289200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 981447182,
+      "artistIds": [
+        981447182
+      ],
+      "venueId": 680116887,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658285,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1560
+    },
+    {
+      "id": 892925133,
+      "slug": "2027-07-16-bed-bug-guru-rickshaw-stop",
+      "date": "2027-07-16",
+      "dateEpochMs": 1815721200000,
+      "startTimeEpochMs": 1815775200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1867596817,
+      "artistIds": [
+        1867596817,
+        202584085,
+        858640029
+      ],
+      "venueId": 31041890,
+      "priceMin": 15,
+      "priceMax": 20,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658285,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1561
+    },
+    {
+      "id": 2129209740,
+      "slug": "2027-07-17-jerrys-middle-finger-old-princeton-landing",
+      "date": "2027-07-17",
+      "dateEpochMs": 1815807600000,
+      "startTimeEpochMs": 1815973200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 370448267,
+      "artistIds": [
+        370448267
+      ],
+      "venueId": 246147025,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658285,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1562
+    },
+    {
+      "id": 465017077,
+      "slug": "2027-07-18-jerrys-middle-finger-old-princeton-landing",
+      "date": "2027-07-18",
+      "dateEpochMs": 1815894000000,
+      "startTimeEpochMs": 1816059600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 370448267,
+      "artistIds": [
+        370448267
+      ],
+      "venueId": 246147025,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658285,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1563
+    },
+    {
+      "id": 1048257184,
+      "slug": "2027-07-25-ray-and-paul-the-rickshaw-stop",
+      "date": "2027-07-25",
+      "dateEpochMs": 1816498800000,
+      "startTimeEpochMs": 1816578000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 487258758,
+      "artistIds": [
+        487258758
+      ],
+      "venueId": 31041890,
+      "priceMin": 22,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658285,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1564
+    },
+    {
+      "id": 631437184,
+      "slug": "2027-07-31-dark-star-orchestra-the-greek-theater",
+      "date": "2027-07-31",
+      "dateEpochMs": 1817017200000,
+      "startTimeEpochMs": 1817078400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 308348566,
+      "artistIds": [
+        308348566,
+        1039059077
+      ],
+      "venueId": 474218142,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "Benefit for the Rex Rondation - day 1",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658285,
+      "updatedAtEpochMs": 1778448665761,
+      "sourceLineNumber": 1566
+    }
+  ]
+}

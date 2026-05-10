@@ -1,0 +1,281 @@
+{
+  "chunkId": "2027-09",
+  "dateRange": {
+    "startEpochMs": 1819868400000,
+    "endEpochMs": 1822287600000
+  },
+  "events": [
+    {
+      "id": 1936598444,
+      "slug": "2027-09-02-lp-the-castro",
+      "date": "2027-09-02",
+      "dateEpochMs": 1819868400000,
+      "startTimeEpochMs": 1819940400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 574484119,
+      "artistIds": [
+        574484119
+      ],
+      "venueId": 1383208152,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1579
+    },
+    {
+      "id": 1277055895,
+      "slug": "2027-09-03-hayla-the-regency-ballroom",
+      "date": "2027-09-03",
+      "dateEpochMs": 1819954800000,
+      "startTimeEpochMs": 1820019600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 992306654,
+      "artistIds": [
+        992306654
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1580
+    },
+    {
+      "id": 289155022,
+      "slug": "2027-09-04-nitzer-ebb-the-regency-ballroom",
+      "date": "2027-09-04",
+      "dateEpochMs": 1820041200000,
+      "startTimeEpochMs": 1820113200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2113000518,
+      "artistIds": [
+        2113000518
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658287,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1581
+    },
+    {
+      "id": 1405744179,
+      "slug": "2027-09-04-devildriver-the-ritz",
+      "date": "2027-09-04",
+      "dateEpochMs": 1820041200000,
+      "startTimeEpochMs": 1820210400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1068909165,
+      "artistIds": [
+        1068909165,
+        663619135,
+        2140651809
+      ],
+      "venueId": 1253820046,
+      "priceMin": 47.05,
+      "priceMax": 47.05,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "diy",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665762,
+      "sourceLineNumber": 1582
+    },
+    {
+      "id": 1762424529,
+      "slug": "2027-09-09-liz-phair-the-greek-theater",
+      "date": "2027-09-09",
+      "dateEpochMs": 1820473200000,
+      "startTimeEpochMs": 1820539800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2009995108,
+      "artistIds": [
+        2009995108,
+        1872006394
+      ],
+      "venueId": 474218142,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1583
+    },
+    {
+      "id": 817390163,
+      "slug": "2027-09-09-pawpaw-rod-the-catalyst-atrium",
+      "date": "2027-09-09",
+      "dateEpochMs": 1820473200000,
+      "startTimeEpochMs": 1820530800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 461784582,
+      "artistIds": [
+        461784582
+      ],
+      "venueId": 1080825327,
+      "priceMin": 34.12,
+      "priceMax": 34.12,
+      "isFree": false,
+      "ageRestriction": "16+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1584
+    },
+    {
+      "id": 1808249598,
+      "slug": "2027-09-11-foster-the-people-the-greek-theater",
+      "date": "2027-09-11",
+      "dateEpochMs": 1820646000000,
+      "startTimeEpochMs": 1820718000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2081592236,
+      "artistIds": [
+        2081592236,
+        1261453459
+      ],
+      "venueId": 474218142,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1585
+    },
+    {
+      "id": 215384419,
+      "slug": "2027-09-13-bear-mccreary-the-great-american-music-hall",
+      "date": "2027-09-13",
+      "dateEpochMs": 1820818800000,
+      "startTimeEpochMs": 1820962800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 748823009,
+      "artistIds": [
+        748823009
+      ],
+      "venueId": 463728167,
+      "priceMin": 40,
+      "priceMax": 50,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1586
+    },
+    {
+      "id": 1576571246,
+      "slug": "2027-09-18-citizen-the-regency-ballroom",
+      "date": "2027-09-18",
+      "dateEpochMs": 1821250800000,
+      "startTimeEpochMs": 1821319200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 42152395,
+      "artistIds": [
+        42152395,
+        1631093080,
+        1670329988,
+        108110531
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1587
+    },
+    {
+      "id": 1825554395,
+      "slug": "2027-09-23-the-frights-the-great-american-music-hall",
+      "date": "2027-09-23",
+      "dateEpochMs": 1821682800000,
+      "startTimeEpochMs": 1821801600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1427181430,
+      "artistIds": [
+        1427181430,
+        1983781085
+      ],
+      "venueId": 463728167,
+      "priceMin": 33.5,
+      "priceMax": 38,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1588
+    },
+    {
+      "id": 1677902966,
+      "slug": "2027-09-24-elder-island-bimbos-365-club",
+      "date": "2027-09-24",
+      "dateEpochMs": 1821769200000,
+      "startTimeEpochMs": 1821844800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1508579778,
+      "artistIds": [
+        1508579778
+      ],
+      "venueId": 697962111,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1589
+    },
+    {
+      "id": 1881808754,
+      "slug": "2027-09-30-failure-the-chapel",
+      "date": "2027-09-30",
+      "dateEpochMs": 1822287600000,
+      "startTimeEpochMs": 1822453200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1913715625,
+      "artistIds": [
+        1913715625,
+        1156758914
+      ],
+      "venueId": 680116887,
+      "priceMin": 46,
+      "priceMax": 46,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$293 vip",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1590
+    }
+  ]
+}

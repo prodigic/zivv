@@ -1,0 +1,53 @@
+{
+  "chunkId": "2027-11",
+  "dateRange": {
+    "startEpochMs": 1825484400000,
+    "endEpochMs": 1826956800000
+  },
+  "events": [
+    {
+      "id": 1247887995,
+      "slug": "2027-11-06-syml-solo-the-castro-theater",
+      "date": "2027-11-06",
+      "dateEpochMs": 1825484400000,
+      "startTimeEpochMs": 1825635600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 177634742,
+      "artistIds": [
+        177634742
+      ],
+      "venueId": 881479351,
+      "priceMin": 41,
+      "priceMax": 41,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658289,
+      "updatedAtEpochMs": 1778448665764,
+      "sourceLineNumber": 1598
+    },
+    {
+      "id": 441321047,
+      "slug": "2027-11-23-gary-numan-the-regency-ballroom",
+      "date": "2027-11-23",
+      "dateEpochMs": 1826956800000,
+      "startTimeEpochMs": 1827028800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1286361081,
+      "artistIds": [
+        1286361081
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658289,
+      "updatedAtEpochMs": 1778448665764,
+      "sourceLineNumber": 1599
+    }
+  ]
+}

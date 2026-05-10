@@ -1,0 +1,160 @@
+{
+  "chunkId": "2027-10",
+  "dateRange": {
+    "startEpochMs": 1822806000000,
+    "endEpochMs": 1824706800000
+  },
+  "events": [
+    {
+      "id": 830856547,
+      "slug": "2027-10-06-aespa-the-arena",
+      "date": "2027-10-06",
+      "dateEpochMs": 1822806000000,
+      "startTimeEpochMs": 1822878000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 998657779,
+      "artistIds": [
+        998657779
+      ],
+      "venueId": 1887679738,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1591
+    },
+    {
+      "id": 1678047981,
+      "slug": "2027-10-10-palace-the-warfield",
+      "date": "2027-10-10",
+      "dateEpochMs": 1823151600000,
+      "startTimeEpochMs": 1823223600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 468099685,
+      "artistIds": [
+        468099685
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658288,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1592
+    },
+    {
+      "id": 729074814,
+      "slug": "2027-10-10-taking-back-sunday-frost-amphitheater",
+      "date": "2027-10-10",
+      "dateEpochMs": 1823151600000,
+      "startTimeEpochMs": 1823220000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 918806624,
+      "artistIds": [
+        918806624,
+        346932000,
+        302516464
+      ],
+      "venueId": 283436496,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658289,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1593
+    },
+    {
+      "id": 2104020074,
+      "slug": "2027-10-17-jessie-ware-the-warfield",
+      "date": "2027-10-17",
+      "dateEpochMs": 1823756400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1838519827,
+      "artistIds": [
+        1838519827,
+        995798628
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658289,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1594
+    },
+    {
+      "id": 1152126929,
+      "slug": "2027-10-19-geese-the-fox-theater",
+      "date": "2027-10-19",
+      "dateEpochMs": 1823929200000,
+      "startTimeEpochMs": 1824001200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 993130010,
+      "artistIds": [
+        993130010
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658289,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1595
+    },
+    {
+      "id": 613679762,
+      "slug": "2027-10-23-kacey-musgraves-the-arena",
+      "date": "2027-10-23",
+      "dateEpochMs": 1824274800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1107675719,
+      "artistIds": [
+        1107675719
+      ],
+      "venueId": 1887679738,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658289,
+      "updatedAtEpochMs": 1778448665763,
+      "sourceLineNumber": 1596
+    },
+    {
+      "id": 1562661754,
+      "slug": "2027-10-28-fred-armisen-comedy-for-musicans-the-castro",
+      "date": "2027-10-28",
+      "dateEpochMs": 1824706800000,
+      "startTimeEpochMs": 1824940800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 730629983,
+      "artistIds": [
+        730629983
+      ],
+      "venueId": 1383208152,
+      "priceMin": 65.25,
+      "priceMax": 65.25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "seated",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778448658289,
+      "updatedAtEpochMs": 1778448665764,
+      "sourceLineNumber": 1597
+    }
+  ]
+}
