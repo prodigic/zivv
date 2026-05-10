@@ -33,25 +33,20 @@ const NewEventsPage: React.FC = () => {
     });
   }, [manifest, loadedChunks, loadChunk]);
 
-  // Find the most recent createdAtEpochMs and show all events from that run
+  // Show events whose createdAtEpochMs (UTC date) matches manifest.latestIngestionDate
   const { justAdded, runDate } = React.useMemo(() => {
-    if (events.size === 0) return { justAdded: [], runDate: null };
-
-    // Find the latest createdAt day
-    let maxCreated = 0;
-    events.forEach((e) => { if (e.createdAtEpochMs > maxCreated) maxCreated = e.createdAtEpochMs; });
-
-    // All events created on the same calendar day as the max
-    const maxDay = new Date(maxCreated).toISOString().split("T")[0];
-    const dayStart = new Date(maxDay).getTime();
-    const dayEnd = dayStart + 24 * 60 * 60 * 1000;
+    const ingestDate = manifest?.latestIngestionDate ?? null;
+    if (events.size === 0 || !ingestDate) return { justAdded: [], runDate: null };
 
     const justAdded = Array.from(events.values())
-      .filter((e) => e.createdAtEpochMs >= dayStart && e.createdAtEpochMs < dayEnd && e.dateEpochMs > Date.now())
+      .filter((e) => {
+        const createdDay = new Date(e.createdAtEpochMs).toISOString().split("T")[0];
+        return createdDay === ingestDate && e.dateEpochMs > Date.now();
+      })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
 
-    return { justAdded, runDate: maxDay };
-  }, [events]);
+    return { justAdded, runDate: ingestDate };
+  }, [events, manifest]);
 
   React.useEffect(() => {
     const el = loadMoreRef.current;

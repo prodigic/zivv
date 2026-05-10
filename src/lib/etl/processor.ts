@@ -238,7 +238,8 @@ export class ETLProcessor {
       };
       const mon = months[m[1].slice(0, 3).toLowerCase()];
       if (mon === undefined) return Date.now();
-      return new Date(parseInt(m[3]), mon, parseInt(m[2])).getTime();
+      // Use noon UTC so the date reads consistently across all timezones
+      return Date.UTC(parseInt(m[3]), mon, parseInt(m[2]), 12, 0, 0);
     } catch {
       return Date.now();
     }
