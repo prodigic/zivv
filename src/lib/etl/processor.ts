@@ -50,6 +50,11 @@ export class ETLProcessor {
       // Load existing createdAt timestamps to preserve them across runs
       const existingCreatedAt = this.loadExistingCreatedAt();
 
+      // Parse the ingest date from the latest.txt header line:
+      // "funk-punk-thrash-ska  Upcoming shows of Interest May 8, 2026"
+      // Falls back to Date.now() if the file or header is absent.
+      const ingestTimestamp = this.readLatestTxtIngestDate();
+
       // Remove stale event chunk files before writing new ones so old chunks
       // from previous runs don't linger in public/data/
       for (const f of readdirSync(this.outputDir)) {
@@ -110,10 +115,11 @@ export class ETLProcessor {
 
       const artists = Array.from(artistMap.values());
 
-      // Restore original createdAtEpochMs for events that existed previously
+      // Set createdAtEpochMs: preserve existing timestamps for known events;
+      // stamp new events with the ingest date from latest.txt header.
       for (const event of events) {
         const prev = existingCreatedAt.get(event.id as number);
-        if (prev) event.createdAtEpochMs = prev;
+        event.createdAtEpochMs = prev ?? ingestTimestamp;
       }
 
       // Update upcoming event counts and pre-compute per-artist event lists
@@ -214,6 +220,27 @@ export class ETLProcessor {
         errors: [criticalError, ...errors],
         warnings,
       };
+    }
+  }
+
+  private readLatestTxtIngestDate(): number {
+    const latestPath = join(this.dataDir, "latest.txt");
+    if (!existsSync(latestPath)) return Date.now();
+    try {
+      const firstLine = readFileSync(latestPath, "utf-8").split("\n")[0];
+      // "funk-punk-thrash-ska  Upcoming shows of Interest May 8, 2026"
+      const m = firstLine.match(
+        /(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s+(\d{1,2}),?\s+(\d{4})/i
+      );
+      if (!m) return Date.now();
+      const months: Record<string, number> = {
+        jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11
+      };
+      const mon = months[m[1].slice(0, 3).toLowerCase()];
+      if (mon === undefined) return Date.now();
+      return new Date(parseInt(m[3]), mon, parseInt(m[2])).getTime();
+    } catch {
+      return Date.now();
     }
   }
 
@@ -415,9 +442,7 @@ export class ETLProcessor {
     const startEpochMs = eventDates[0] || Date.now();
     const endEpochMs = eventDates[eventDates.length - 1] || Date.now();
 
-    // Find the latest distinct ingestion date across all events
-    const maxCreatedAt = events.reduce((max, e) => Math.max(max, e.createdAtEpochMs), 0);
-    const latestIngestionDate = new Date(maxCreatedAt).toISOString().split("T")[0];
+    const latestIngestionDate = new Date(this.readLatestTxtIngestDate()).toISOString().split("T")[0];
 
     return {
       version: "1.1.0",
