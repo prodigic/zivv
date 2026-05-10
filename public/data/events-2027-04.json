@@ -1,10 +1,33 @@
 {
   "chunkId": "2027-04",
   "dateRange": {
-    "startEpochMs": 1808377200000,
+    "startEpochMs": 1807254000000,
     "endEpochMs": 1808377200000
   },
   "events": [
+    {
+      "id": 542885481,
+      "slug": "2027-04-09-los-lobos-the-uptown-theater",
+      "date": "2027-04-09",
+      "dateEpochMs": 1807254000000,
+      "startTimeEpochMs": 1807297200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2064110560,
+      "artistIds": [
+        2064110560,
+        1551366173
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778451628163,
+      "updatedAtEpochMs": 1778451704225,
+      "sourceLineNumber": 1238
+    },
     {
       "id": 92842150,
       "slug": "2027-04-22-justb-the-chapel",
@@ -26,8 +49,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777146045130,
-      "updatedAtEpochMs": 1778450351948,
-      "sourceLineNumber": 1450
+      "updatedAtEpochMs": 1778451704252,
+      "sourceLineNumber": 1569
     }
   ]
 }

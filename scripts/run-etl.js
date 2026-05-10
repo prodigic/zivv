@@ -12,8 +12,93 @@
  */
 
 import { ETLProcessor } from '../dist/lib/etl/processor.js';
+import { readFileSync, existsSync, readdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
+
+// ─── Post-ingest verification ────────────────────────────────
+
+function verifyOutput(projectRoot, stats) {
+  const publicData = resolve(projectRoot, 'public', 'data');
+  const dataDir    = resolve(projectRoot, 'data');
+  const failures   = [];
+  const warnings   = [];
+
+  // 1. Required output files exist and are non-empty
+  const required = ['manifest.json', 'artists.json', 'venues.json', 'indexes.json',
+                    'search-documents.json', 'search-terms.json'];
+  for (const f of required) {
+    const p = resolve(publicData, f);
+    if (!existsSync(p)) {
+      failures.push(`Missing output file: ${f}`);
+    } else if (readFileSync(p, 'utf-8').trim().length < 10) {
+      failures.push(`Empty output file: ${f}`);
+    }
+  }
+
+  // 2. At least one events-*.json chunk exists
+  const chunks = readdirSync(publicData).filter(f => f.startsWith('events-') && f.endsWith('.json'));
+  if (chunks.length === 0) failures.push('No events-*.json chunks written');
+
+  // Load all events and venues for richer checks
+  let allEvents = [];
+  for (const chunk of chunks) {
+    try {
+      const data = JSON.parse(readFileSync(resolve(publicData, chunk), 'utf-8'));
+      allEvents.push(...(data.events || []));
+    } catch { failures.push(`Could not parse ${chunk}`); }
+  }
+
+  // 3. Source line count vs ETL output: warn if ETL kept < 80% of source lines
+  const sourceLines = readFileSync(resolve(dataDir, 'events.txt'), 'utf-8')
+    .split('\n')
+    .filter(l => /^[a-z]{3}\s+\d{1,2}\s+\w{3}/i.test(l)).length;
+  const etlCount = allEvents.length;
+  const keepRate = sourceLines > 0 ? etlCount / sourceLines : 1;
+  if (keepRate < 0.80) {
+    warnings.push(
+      `Low event retention: ${etlCount} ETL events from ${sourceLines} source lines ` +
+      `(${(keepRate * 100).toFixed(1)}% — expected ≥80%)`
+    );
+  }
+
+  // 4. Cross-year duplicates: same MM-DD + venueId + headlinerArtistId in 2+ years
+  const keyCount = {};
+  for (const e of allEvents) {
+    const k = `${e.date.slice(5)}-${e.venueId}-${e.headlinerArtistId}`;
+    keyCount[k] = (keyCount[k] || 0) + 1;
+  }
+  const crossYearDupes = Object.values(keyCount).filter(c => c > 1).length;
+  if (crossYearDupes > 0) {
+    warnings.push(`${crossYearDupes} cross-year duplicate event(s) detected (same MM-DD + venue + headliner in multiple years)`);
+  }
+
+  // 5. Year distribution sanity: no year should have > 5x the events of any other year
+  //    (catches runaway year-drift where one year accumulates everything)
+  const yearCounts = {};
+  for (const e of allEvents) yearCounts[e.date.slice(0, 4)] = (yearCounts[e.date.slice(0, 4)] || 0) + 1;
+  const yearValues = Object.values(yearCounts);
+  if (yearValues.length > 1) {
+    const maxYear = Math.max(...yearValues);
+    const minYear = Math.min(...yearValues);
+    if (maxYear / minYear > 20) {
+      warnings.push(`Unbalanced year distribution: ${JSON.stringify(yearCounts)} — possible year-drift`);
+    }
+  }
+
+  // 6. Events have required fields
+  const malformed = allEvents.filter(e => !e.id || !e.date || !e.venueId || !e.headlinerArtistId).length;
+  if (malformed > 0) failures.push(`${malformed} events missing required fields (id/date/venueId/headlinerArtistId)`);
+
+  // 7. Dates are plausible (no events before 2020 or after 2035)
+  const badDates = allEvents.filter(e => {
+    const y = parseInt(e.date.slice(0, 4));
+    return y < 2020 || y > 2035;
+  }).length;
+  if (badDates > 0) failures.push(`${badDates} events with implausible dates (year outside 2020–2035)`);
+
+  return { failures, warnings, sourceLines, etlCount };
+}
 
 async function main() {
     const __filename = fileURLToPath(import.meta.url);
@@ -62,6 +147,24 @@ async function main() {
             console.log('   📄 venues.json - All venues');
             console.log('   📄 indexes.json - Search and filter indexes');
             console.log('   📄 search-*.json - Search index files');
+
+            // Post-ingest verification
+            console.log('\n🔬 Post-ingest verification...');
+            const verify = verifyOutput(projectRoot, result.stats);
+            console.log(`   Source lines: ${verify.sourceLines}  →  ETL events: ${verify.etlCount}`);
+
+            if (verify.warnings.length > 0) {
+                console.warn('\n⚠️  Verification warnings:');
+                verify.warnings.forEach((w, i) => console.warn(`   ${i + 1}. ${w}`));
+            }
+            if (verify.failures.length > 0) {
+                console.error('\n❌ Verification FAILED:');
+                verify.failures.forEach((f, i) => console.error(`   ${i + 1}. ${f}`));
+                process.exit(1);
+            }
+            if (verify.warnings.length === 0 && verify.failures.length === 0) {
+                console.log('   ✅ All checks passed');
+            }
 
             process.exit(0);
 
