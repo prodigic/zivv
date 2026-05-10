@@ -227,7 +227,7 @@ export class ETLProcessor {
     const latestPath = join(this.dataDir, "latest.txt");
     if (!existsSync(latestPath)) return Date.now();
     try {
-      const firstLine = readFileSync(latestPath, "utf-8").split("\n")[0];
+      const firstLine = readFileSync(latestPath, "utf-8").split("\n").find(l => l.trim()) ?? "";
       // "funk-punk-thrash-ska  Upcoming shows of Interest May 8, 2026"
       const m = firstLine.match(
         /(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s+(\d{1,2}),?\s+(\d{4})/i

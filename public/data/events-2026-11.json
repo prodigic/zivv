@@ -2,7 +2,7 @@
   "chunkId": "2026-11",
   "dateRange": {
     "startEpochMs": 1793779200000,
-    "endEpochMs": 1795939200000
+    "endEpochMs": 1795420800000
   },
   "events": [
     {
@@ -25,9 +25,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1672
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1569
     },
     {
       "id": 2127963877,
@@ -47,30 +47,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1673
-    },
-    {
-      "id": 1195362832,
-      "slug": "2026-11-06-syml-the-castro-theater",
-      "date": "2026-11-06",
-      "dateEpochMs": 1793952000000,
-      "startTimeEpochMs": 1794024000000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 1971322152,
-      "artistIds": [
-        1971322152
-      ],
-      "venueId": 881479351,
-      "isFree": false,
-      "ageRestriction": "all-ages",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1674
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1570
     },
     {
       "id": 387833041,
@@ -91,9 +70,30 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1675
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1571
+    },
+    {
+      "id": 1195362832,
+      "slug": "2026-11-06-syml-the-castro-theater",
+      "date": "2026-11-06",
+      "dateEpochMs": 1793952000000,
+      "startTimeEpochMs": 1794024000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971322152,
+      "artistIds": [
+        1971322152
+      ],
+      "venueId": 881479351,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1572
     },
     {
       "id": 222395996,
@@ -115,8 +115,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1676
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1573
     },
     {
       "id": 1501711198,
@@ -135,9 +135,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1677
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1574
     },
     {
       "id": 191078883,
@@ -158,9 +158,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1678
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1575
     },
     {
       "id": 949866796,
@@ -181,9 +181,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1679
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1576
     },
     {
       "id": 1525352910,
@@ -204,34 +204,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1680
-    },
-    {
-      "id": 398845964,
-      "slug": "2026-11-10-hit-the-lights-the-bottom-of-the-hill",
-      "date": "2026-11-10",
-      "dateEpochMs": 1794297600000,
-      "startTimeEpochMs": 1794373200000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 2115017708,
-      "artistIds": [
-        2115017708,
-        1722902138,
-        1912726722
-      ],
-      "venueId": 1016385760,
-      "priceMin": 25,
-      "priceMax": 30,
-      "isFree": false,
-      "ageRestriction": "21+",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1681
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1577
     },
     {
       "id": 1315828248,
@@ -252,9 +227,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449365,
-      "sourceLineNumber": 1682
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539826,
+      "sourceLineNumber": 1578
     },
     {
       "id": 1530252285,
@@ -275,33 +250,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1683
-    },
-    {
-      "id": 1560176811,
-      "slug": "2026-11-11-jake-xerxes-fussell-great-american-music-hall",
-      "date": "2026-11-11",
-      "dateEpochMs": 1794384000000,
-      "startTimeEpochMs": 1794474000000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 1854038547,
-      "artistIds": [
-        1854038547
-      ],
-      "venueId": 463728167,
-      "priceMin": 25,
-      "priceMax": 30,
-      "isFree": false,
-      "ageRestriction": "all-ages",
-      "notes": "fully seated",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1684
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1579
     },
     {
       "id": 71063767,
@@ -322,9 +273,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1685
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1580
     },
     {
       "id": 1980689656,
@@ -343,9 +294,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1686
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1581
     },
     {
       "id": 1460418466,
@@ -367,29 +318,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1687
-    },
-    {
-      "id": 580436608,
-      "slug": "2026-11-13-l7-the-regency-ballroom",
-      "date": "2026-11-13",
-      "dateEpochMs": 1794556800000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 574484062,
-      "artistIds": [
-        574484062
-      ],
-      "venueId": 2133080253,
-      "isFree": false,
-      "ageRestriction": "all-ages",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1688
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1582
     },
     {
       "id": 1213868777,
@@ -410,33 +341,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1689
-    },
-    {
-      "id": 1408845827,
-      "slug": "2026-11-17-son-volt-august-hall",
-      "date": "2026-11-17",
-      "dateEpochMs": 1794902400000,
-      "startTimeEpochMs": 1794963600000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 1599190690,
-      "artistIds": [
-        1599190690,
-        1621607856
-      ],
-      "venueId": 811075932,
-      "priceMin": 39.8,
-      "priceMax": 39.8,
-      "isFree": false,
-      "ageRestriction": "5+",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1690
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1583
     },
     {
       "id": 240098919,
@@ -458,9 +365,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1691
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1584
     },
     {
       "id": 1429268553,
@@ -485,9 +392,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1692
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1585
     },
     {
       "id": 2103217097,
@@ -508,55 +415,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1693
-    },
-    {
-      "id": 1214248361,
-      "slug": "2026-11-20-eivor-august-hall",
-      "date": "2026-11-20",
-      "dateEpochMs": 1795161600000,
-      "startTimeEpochMs": 1795222800000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 994841662,
-      "artistIds": [
-        994841662
-      ],
-      "venueId": 811075932,
-      "priceMin": 39.8,
-      "priceMax": 39.8,
-      "isFree": false,
-      "ageRestriction": "5+",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449366,
-      "sourceLineNumber": 1694
-    },
-    {
-      "id": 124106337,
-      "slug": "2026-11-20-bayonne-the-brick-and-mortar",
-      "date": "2026-11-20",
-      "dateEpochMs": 1795161600000,
-      "startTimeEpochMs": 1795266000000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 1153904195,
-      "artistIds": [
-        1153904195
-      ],
-      "venueId": 1719765223,
-      "priceMin": 29.64,
-      "priceMax": 29.64,
-      "isFree": false,
-      "ageRestriction": "all-ages",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449367,
-      "sourceLineNumber": 1695
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1586
     },
     {
       "id": 1410115400,
@@ -577,9 +438,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449367,
-      "sourceLineNumber": 1696
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1587
     },
     {
       "id": 466759183,
@@ -599,9 +460,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449367,
-      "sourceLineNumber": 1697
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1588
     },
     {
       "id": 1284159850,
@@ -621,31 +482,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449367,
-      "sourceLineNumber": 1698
-    },
-    {
-      "id": 1405011844,
-      "slug": "2026-11-29-scott-bradlees-postmodern-jukebox-henry-j-kaiser-center",
-      "date": "2026-11-29",
-      "dateEpochMs": 1795939200000,
-      "startTimeEpochMs": 1796205600000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 301349004,
-      "artistIds": [
-        301349004
-      ],
-      "venueId": 726597303,
-      "priceMin": 64.45,
-      "priceMax": 74.75,
-      "isFree": false,
-      "ageRestriction": "all-ages",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778454449367,
-      "sourceLineNumber": 1699
+      "updatedAtEpochMs": 1778455539827,
+      "sourceLineNumber": 1589
     }
   ]
 }

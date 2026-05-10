@@ -22,9 +22,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1776793357111,
-      "updatedAtEpochMs": 1778454449367,
-      "sourceLineNumber": 1708
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539828,
+      "sourceLineNumber": 1598
     },
     {
       "id": 1053114888,
@@ -40,16 +40,12 @@
       "venueId": 1531618194,
       "isFree": false,
       "ageRestriction": "all-ages",
-      "notes": "96.5 FM; UK; https://mmhradio.co.uk/podcasts/losin-it-with-luscious/; every other Tuesday",
       "status": "confirmed",
-      "tags": [
-        "matinee",
-        "late-show"
-      ],
-      "venueType": "club",
-      "createdAtEpochMs": 1776793357111,
-      "updatedAtEpochMs": 1778454449367,
-      "sourceLineNumber": 1709
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1777032000000,
+      "updatedAtEpochMs": 1778455539828,
+      "sourceLineNumber": 1599
     }
   ]
 }
