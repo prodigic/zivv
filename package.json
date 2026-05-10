@@ -16,6 +16,8 @@
     "dev:logs": "node scripts/logs.js",
     "dev:help": "node scripts/dev-server.js help",
     "dev:legacy": "vite",
+    "prevalidate": "npm run build:etl",
+    "validate": "node scripts/validate-latest.js",
     "build": "vite build",
     "build:full": "tsc -b && vite build",
     "build:etl": "tsc --project tsconfig.build.json",
