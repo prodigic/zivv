@@ -1,24 +1,35 @@
 {
   "version": "1.1.0",
-  "datasetVersion": "2026-05-10T23:25:39.922Z",
-  "lastUpdated": 1778455539922,
-  "latestIngestionDate": "2026-05-01",
-  "totalEvents": 1566,
-  "totalArtists": 3137,
+  "datasetVersion": "2026-05-10T23:31:41.411Z",
+  "lastUpdated": 1778455901411,
+  "latestIngestionDate": "2026-05-08",
+  "totalEvents": 1684,
+  "totalArtists": 3348,
   "totalVenues": 490,
   "dateRange": {
-    "startEpochMs": 1775718000000,
+    "startEpochMs": 1769155200000,
     "endEpochMs": 1810450800000,
-    "startDate": "2026-04-09",
+    "startDate": "2026-01-23",
     "endDate": "2027-05-16"
   },
   "chunks": {
     "events": [
       {
+        "filename": "events-2026-01.json",
+        "chunkId": "2026-01",
+        "size": 542,
+        "checksum": "sha256-4fe47081",
+        "eventCount": 1,
+        "dateRange": {
+          "startEpochMs": 1769155200000,
+          "endEpochMs": 1769155200000
+        }
+      },
+      {
         "filename": "events-2026-04.json",
         "chunkId": "2026-04",
-        "size": 76817,
-        "checksum": "sha256-3461a3c8",
+        "size": 76819,
+        "checksum": "sha256-74773765",
         "eventCount": 159,
         "dateRange": {
           "startEpochMs": 1775718000000,
@@ -28,9 +39,9 @@
       {
         "filename": "events-2026-05.json",
         "chunkId": "2026-05",
-        "size": 279836,
-        "checksum": "sha256-775174ea",
-        "eventCount": 581,
+        "size": 306354,
+        "checksum": "sha256-68a94f0c",
+        "eventCount": 635,
         "dateRange": {
           "startEpochMs": 1777618800000,
           "endEpochMs": 1780210800000
@@ -39,9 +50,9 @@
       {
         "filename": "events-2026-06.json",
         "chunkId": "2026-06",
-        "size": 141221,
-        "checksum": "sha256-64b81b9f",
-        "eventCount": 298,
+        "size": 153615,
+        "checksum": "sha256-3cd95f7d",
+        "eventCount": 324,
         "dateRange": {
           "startEpochMs": 1780297200000,
           "endEpochMs": 1782802800000
@@ -50,9 +61,9 @@
       {
         "filename": "events-2026-07.json",
         "chunkId": "2026-07",
-        "size": 75289,
-        "checksum": "sha256-642fd252",
-        "eventCount": 158,
+        "size": 79900,
+        "checksum": "sha256-4569b37d",
+        "eventCount": 167,
         "dateRange": {
           "startEpochMs": 1782889200000,
           "endEpochMs": 1785481200000
@@ -61,9 +72,9 @@
       {
         "filename": "events-2026-08.json",
         "chunkId": "2026-08",
-        "size": 62626,
-        "checksum": "sha256-5039e389",
-        "eventCount": 130,
+        "size": 66859,
+        "checksum": "sha256-278b9681",
+        "eventCount": 139,
         "dateRange": {
           "startEpochMs": 1785567600000,
           "endEpochMs": 1788159600000
@@ -72,9 +83,9 @@
       {
         "filename": "events-2026-09.json",
         "chunkId": "2026-09",
-        "size": 45773,
-        "checksum": "sha256-20963d1c",
-        "eventCount": 98,
+        "size": 48628,
+        "checksum": "sha256-216c7466",
+        "eventCount": 104,
         "dateRange": {
           "startEpochMs": 1788246000000,
           "endEpochMs": 1790751600000
@@ -83,9 +94,9 @@
       {
         "filename": "events-2026-10.json",
         "chunkId": "2026-10",
-        "size": 51339,
-        "checksum": "sha256-5d498aa4",
-        "eventCount": 111,
+        "size": 54249,
+        "checksum": "sha256-60c22ea7",
+        "eventCount": 117,
         "dateRange": {
           "startEpochMs": 1790838000000,
           "endEpochMs": 1793430000000
@@ -94,19 +105,19 @@
       {
         "filename": "events-2026-11.json",
         "chunkId": "2026-11",
-        "size": 9814,
-        "checksum": "sha256-298ebe07",
-        "eventCount": 21,
+        "size": 13115,
+        "checksum": "sha256-425ec131",
+        "eventCount": 28,
         "dateRange": {
           "startEpochMs": 1793779200000,
-          "endEpochMs": 1795420800000
+          "endEpochMs": 1795939200000
         }
       },
       {
         "filename": "events-2026-12.json",
         "chunkId": "2026-12",
         "size": 1912,
-        "checksum": "sha256-2eb82736",
+        "checksum": "sha256-2e573d6b",
         "eventCount": 4,
         "dateRange": {
           "startEpochMs": 1796284800000,
@@ -117,7 +128,7 @@
         "filename": "events-2027-01.json",
         "chunkId": "2027-01",
         "size": 592,
-        "checksum": "sha256-63dc30d4",
+        "checksum": "sha256-6b406cba",
         "eventCount": 1,
         "dateRange": {
           "startEpochMs": 1799481600000,
@@ -128,7 +139,7 @@
         "filename": "events-2027-02.json",
         "chunkId": "2027-02",
         "size": 1026,
-        "checksum": "sha256-38ccbb4",
+        "checksum": "sha256-8d2ef00",
         "eventCount": 2,
         "dateRange": {
           "startEpochMs": 1801814400000,
@@ -139,7 +150,7 @@
         "filename": "events-2027-04.json",
         "chunkId": "2027-04",
         "size": 584,
-        "checksum": "sha256-1373e978",
+        "checksum": "sha256-c0fad92",
         "eventCount": 1,
         "dateRange": {
           "startEpochMs": 1808377200000,
@@ -150,7 +161,7 @@
         "filename": "events-2027-05.json",
         "chunkId": "2027-05",
         "size": 975,
-        "checksum": "sha256-6a7f5df7",
+        "checksum": "sha256-7c676cc9",
         "eventCount": 2,
         "dateRange": {
           "startEpochMs": 1809586800000,
@@ -160,14 +171,14 @@
     ],
     "artists": {
       "filename": "artists.json",
-      "size": 1488810,
-      "checksum": "sha256-33fadc8a",
-      "recordCount": 3137
+      "size": 1612509,
+      "checksum": "sha256-141e843",
+      "recordCount": 3348
     },
     "venues": {
       "filename": "venues.json",
-      "size": 443603,
-      "checksum": "sha256-110ce36a",
+      "size": 467550,
+      "checksum": "sha256-54041b6",
       "recordCount": 490
     },
     "indexes": {
@@ -176,14 +187,14 @@
       "checksum": "sha256-f62"
     }
   },
-  "processedAt": 1778455539943,
+  "processedAt": 1778455901434,
   "sourceFiles": {
     "events": {
       "filename": "events.txt",
-      "size": 151194,
-      "lastModified": 1778455539613,
-      "lineCount": 1601,
-      "checksum": "sha256-1aca8e1a"
+      "size": 165644,
+      "lastModified": 1778455901093,
+      "lineCount": 1738,
+      "checksum": "sha256-1cf3efc7"
     },
     "venues": {
       "filename": "venues.txt",
