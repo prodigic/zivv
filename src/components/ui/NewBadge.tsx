@@ -11,7 +11,7 @@ const NewBadge: React.FC<NewBadgeProps> = ({ createdAtEpochMs, latestIngestionDa
   if (createdDay !== latestIngestionDate) return null;
 
   return (
-    <span className={`text-gray-400 dark:text-gray-300 shrink-0 ${className}`} title="Just added">
+    <span className={`text-gray-400 dark:text-gray-300 shrink-0 leading-none inline-flex items-center ${className}`} title="Just added">
       ✦
     </span>
   );
