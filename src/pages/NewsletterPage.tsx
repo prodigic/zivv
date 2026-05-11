@@ -33,6 +33,11 @@ const CITY_CONFIGS: Record<string, CityConfig> = {
     // VenueLineParser truncates to first word — "Santa Cruz" becomes "Santa"
     match: (c) => c === "Santa" || c.toLowerCase() === "santa cruz",
   },
+  "east-bay": {
+    label: "East Bay",
+    match: (c) => ["Oakland", "Berkeley", "Emeryville", "Albany", "El Cerrito", "Richmond"].includes(c) ||
+      c.toLowerCase() === "emeryville",
+  },
   "san-jose": {
     label: "San Jose",
     match: (c) => c === "San" || c.toLowerCase() === "san jose",
