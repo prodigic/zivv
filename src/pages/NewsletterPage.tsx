@@ -68,18 +68,29 @@ export default function NewsletterPage() {
     return blocks;
   }, [artists, localArtistExclude, nowMs, weekEndMs]);
 
-  // Just-added section — SF venues only
+  // Just-added section — all SF newly announced, any future date
   const justAddedEvents = useMemo(() => {
     if (!ingestDate) return [];
     return Array.from(events.values())
       .filter((e) => {
         const day = new Date(e.createdAtEpochMs).toISOString().split("T")[0];
-        if (day !== ingestDate || e.dateEpochMs <= nowMs || e.dateEpochMs > weekEndMs) return false;
+        if (day !== ingestDate || e.dateEpochMs <= nowMs) return false;
         const venueCity = venues.get(e.venueId)?.city ?? "";
         return isSF(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [events, venues, ingestDate, nowMs, weekEndMs]);
+  }, [events, venues, ingestDate, nowMs]);
+
+  // All SF shows this week (section 3)
+  const sfWeekEvents = useMemo(() => {
+    return Array.from(events.values())
+      .filter((e) => {
+        if (e.dateEpochMs <= nowMs || e.dateEpochMs > weekEndMs) return false;
+        const venueCity = venues.get(e.venueId)?.city ?? "";
+        return isSF(venueCity);
+      })
+      .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
+  }, [events, venues, nowMs, weekEndMs]);
 
   const artistMap = useMemo(() => {
     const m = new Map<number, string>();
@@ -96,7 +107,7 @@ export default function NewsletterPage() {
       month: "long", day: "numeric", year: "numeric",
     });
 
-    lines.push(`## SF Punk/DIY Shows — Week of ${weekStr}`);
+    lines.push(`## SF Shows — Week of ${weekStr}`);
     lines.push("");
 
     // Section 1: Local acts
@@ -151,8 +162,28 @@ export default function NewsletterPage() {
       lines.push("");
     }
 
+    // Section 3: All SF shows this week
+    lines.push("---");
+    lines.push("");
+    lines.push("### 📍 All SF Shows This Week");
+    lines.push("");
+
+    if (sfWeekEvents.length === 0) {
+      lines.push("*No SF shows found for this week.*");
+    } else {
+      for (const ev of sfWeekEvents) {
+        const headlinerName = artistMap.get(ev.headlinerArtistId as number) ?? "";
+        const venueName = venues.get(ev.venueId)?.name ?? "";
+        const price = fmtPrice(ev.priceMin, ev.priceMax, ev.isFree);
+        const pricePart = price ? ` · ${price}` : "";
+        const agePart = ev.ageRestriction && ev.ageRestriction !== "all-ages" ? ` · ${ev.ageRestriction}` : "";
+        const soldOut = ev.status === "sold-out" || ev.tags?.includes("sold-out") ? " ~~sold out~~" : "";
+        lines.push(`- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueName}${pricePart}${agePart}${soldOut}`);
+      }
+    }
+
     return lines.join("\n");
-  }, [localActBlocks, justAddedEvents, artistMap, venues, ingestDate]);
+  }, [localActBlocks, justAddedEvents, sfWeekEvents, artistMap, venues, ingestDate]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(text).then(() => {
@@ -179,7 +210,7 @@ export default function NewsletterPage() {
         <>
           <div className="flex items-center justify-between mb-3">
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {localActBlocks.length} local acts · {justAddedEvents.length} new shows
+              {localActBlocks.length} local acts · {justAddedEvents.length} newly announced · {sfWeekEvents.length} SF shows this week
             </div>
             <button
               onClick={handleCopy}
