@@ -3,17 +3,49 @@
  */
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import { useAppStore } from "@/stores/appStore.js";
 
 const MIN_EVENTS = 3;
 const MIN_VENUES = 2;
 
-const SF_CITIES = new Set(["S.f", "San Francisco", "SF", "S.F."]);
-
-function isSF(city: string) {
-  return SF_CITIES.has(city) || city.toLowerCase().includes("francisco");
+interface CityConfig {
+  label: string;
+  match: (city: string) => boolean;
 }
+
+const CITY_CONFIGS: Record<string, CityConfig> = {
+  sf: {
+    label: "SF",
+    match: (c) => ["S.f", "San Francisco", "SF", "S.F."].includes(c) || c.toLowerCase().includes("francisco"),
+  },
+  oakland: {
+    label: "Oakland",
+    match: (c) => c.toLowerCase() === "oakland",
+  },
+  berkeley: {
+    label: "Berkeley",
+    match: (c) => c.toLowerCase() === "berkeley",
+  },
+  "santa-cruz": {
+    label: "Santa Cruz",
+    // VenueLineParser truncates to first word — "Santa Cruz" becomes "Santa"
+    match: (c) => c === "Santa" || c.toLowerCase() === "santa cruz",
+  },
+  "san-jose": {
+    label: "San Jose",
+    match: (c) => c === "San" || c.toLowerCase() === "san jose",
+  },
+  emeryville: {
+    label: "Emeryville",
+    match: (c) => c.toLowerCase() === "emeryville",
+  },
+  petaluma: {
+    label: "Petaluma",
+    match: (c) => c.toLowerCase() === "petaluma",
+  },
+};
 
 function fmtDate(epochMs: number): string {
   const [y, m, d] = new Date(epochMs).toISOString().split("T")[0].split("-").map(Number);
@@ -30,6 +62,10 @@ function fmtPrice(priceMin?: number, priceMax?: number, isFree?: boolean): strin
 }
 
 export default function NewsletterPage() {
+  const { city: citySlug = "sf" } = useParams<{ city?: string }>();
+  const cityConfig = CITY_CONFIGS[citySlug] ?? CITY_CONFIGS.sf;
+  const isCity = cityConfig.match;
+
   const { artists, events, venues, manifest, loading, initialize, localArtistExclude } = useAppStore();
   const loadedChunks = useAppStore((s) => s.loadedChunks);
   const loadChunk = useAppStore((s) => s.loadChunk);
@@ -60,7 +96,7 @@ export default function NewsletterPage() {
       const venueCount = new Set(upcoming.map((e) => e.venueId)).size;
       if (upcoming.length < MIN_EVENTS || venueCount < MIN_VENUES) continue;
       if (localArtistExclude.has(artist.name.toLowerCase())) continue;
-      const sfEvents = upcoming.filter((e) => isSF(e.venueCity) && e.dateEpochMs <= weekEndMs);
+      const sfEvents = upcoming.filter((e) => isCity(e.venueCity) && e.dateEpochMs <= weekEndMs);
       if (sfEvents.length === 0) continue;
       blocks.push({ name: artist.name, slug: artist.slug, events: sfEvents });
     }
@@ -76,7 +112,7 @@ export default function NewsletterPage() {
         const day = new Date(e.createdAtEpochMs).toISOString().split("T")[0];
         if (day !== ingestDate || e.dateEpochMs <= nowMs) return false;
         const venueCity = venues.get(e.venueId)?.city ?? "";
-        return isSF(venueCity);
+        return isCity(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
   }, [events, venues, ingestDate, nowMs]);
@@ -87,7 +123,7 @@ export default function NewsletterPage() {
       .filter((e) => {
         if (e.dateEpochMs <= nowMs || e.dateEpochMs > weekEndMs) return false;
         const venueCity = venues.get(e.venueId)?.city ?? "";
-        return isSF(venueCity);
+        return isCity(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
   }, [events, venues, nowMs, weekEndMs]);
@@ -107,13 +143,13 @@ export default function NewsletterPage() {
       month: "long", day: "numeric", year: "numeric",
     });
 
-    lines.push(`## SF Shows — Week of ${weekStr}`);
+    lines.push(`## ${cityConfig.label} Shows — Week of ${weekStr}`);
     lines.push("");
 
     // Section 1: Local acts
     lines.push("---");
     lines.push("");
-    lines.push("### 🏠 Local Acts with Multiple Upcoming Shows");
+    lines.push(`### 🏠 Local Acts Playing ${cityConfig.label} This Week`);
     lines.push("");
 
     if (localActBlocks.length === 0) {
@@ -165,7 +201,7 @@ export default function NewsletterPage() {
     // Section 3: All SF shows this week
     lines.push("---");
     lines.push("");
-    lines.push("### 📍 All SF Shows This Week");
+    lines.push(`### 📍 All ${cityConfig.label} Shows This Week`);
     lines.push("");
 
     if (sfWeekEvents.length === 0) {
@@ -183,7 +219,7 @@ export default function NewsletterPage() {
     }
 
     return lines.join("\n");
-  }, [localActBlocks, justAddedEvents, sfWeekEvents, artistMap, venues, ingestDate]);
+  }, [localActBlocks, justAddedEvents, sfWeekEvents, artistMap, venues, ingestDate, cityConfig]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(text).then(() => {
@@ -197,7 +233,7 @@ export default function NewsletterPage() {
   return (
     <ContentArea
       title="Newsletter"
-      subtitle={`SF shows · local acts + newly announced · Reddit-ready`}
+      subtitle={`${cityConfig.label} · local acts + newly announced · Reddit-ready`}
     >
       {isLoading && (
         <div className="text-center py-12">
@@ -208,6 +244,22 @@ export default function NewsletterPage() {
 
       {!isLoading && (
         <>
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {Object.entries(CITY_CONFIGS).map(([slug, cfg]) => (
+              <Link
+                key={slug}
+                to={slug === "sf" ? "/newsletter" : `/newsletter/${slug}`}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  citySlug === slug || (slug === "sf" && !CITY_CONFIGS[citySlug])
+                    ? "bg-purple-600 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                }`}
+              >
+                {cfg.label}
+              </Link>
+            ))}
+          </div>
+
           <div className="flex items-center justify-between mb-3">
             <div className="text-sm text-gray-500 dark:text-gray-400">
               {localActBlocks.length} local acts · {justAddedEvents.length} newly announced · {sfWeekEvents.length} SF shows this week

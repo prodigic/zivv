@@ -148,6 +148,14 @@ export const router = createBrowserRouter(
           ),
         },
         {
+          path: "newsletter/:city",
+          element: (
+            <PageWrapper>
+              <NewsletterPage />
+            </PageWrapper>
+          ),
+        },
+        {
           path: "about",
           element: (
             <PageWrapper>
