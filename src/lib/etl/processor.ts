@@ -354,11 +354,13 @@ export class ETLProcessor {
   ): void {
     const now = Date.now();
     const venueMap = new Map(venues.map((v) => [v.id, v]));
+    const artistMap = new Map(artists.map((a) => [a.id as number, a]));
     const artistEventsMap = new Map<number, ArtistUpcomingEvent[]>();
 
     for (const event of events) {
       if (event.dateEpochMs <= now) continue;
       const venue = venueMap.get(event.venueId);
+      const headliner = artistMap.get(event.headlinerArtistId as number);
       const entry: ArtistUpcomingEvent = {
         id: event.id,
         slug: event.slug,
@@ -367,6 +369,7 @@ export class ETLProcessor {
         venueId: event.venueId,
         venueName: venue?.name ?? "",
         venueCity: venue?.city ?? "",
+        headlinerName: headliner?.name ?? "",
         isFree: event.isFree,
         isSoldOut: event.status === "sold-out" || event.tags.includes("sold-out"),
         priceMin: event.priceMin,

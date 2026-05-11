@@ -67,6 +67,7 @@ export interface ArtistUpcomingEvent {
   venueId: VenueId;
   venueName: string;
   venueCity: string;
+  headlinerName: string;
   isFree: boolean;
   isSoldOut: boolean;
   priceMin?: number;

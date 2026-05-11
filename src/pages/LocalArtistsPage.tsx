@@ -159,8 +159,11 @@ const LocalArtistsPage: React.FC = () => {
                     <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
                       {new Date(event.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </span>
-                    <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">
-                      {event.venueName}
+                    <span className="text-xs text-gray-700 dark:text-gray-200 truncate flex-1 min-w-0">
+                      <span className="font-medium">{event.venueName}</span>
+                      {event.headlinerName && event.headlinerName !== artist.name && (
+                        <span className="text-gray-400 dark:text-gray-500"> w/ {event.headlinerName}</span>
+                      )}
                     </span>
                     <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
                     {manifest?.latestIngestionDate && (
