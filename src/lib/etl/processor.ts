@@ -171,6 +171,7 @@ export class ETLProcessor {
       this.writeJSON("search-documents.json", documents);
       this.writeJSON("search-terms.json", terms);
       this.writeJSON("manifest.json", manifest);
+      this.copyLocalArtistExclude();
 
       // Step 9: Generate stats
       const processingTimeMs = Date.now() - startTime;
@@ -221,6 +222,13 @@ export class ETLProcessor {
         errors: [criticalError, ...errors],
         warnings,
       };
+    }
+  }
+
+  private copyLocalArtistExclude(): void {
+    const src = join(this.dataDir, "local-artist-exclude.json");
+    if (existsSync(src)) {
+      writeFileSync(join(this.outputDir, "local-artist-exclude.json"), readFileSync(src));
     }
   }
 

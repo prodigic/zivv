@@ -30,6 +30,8 @@ const LocalArtistsPage: React.FC = () => {
     navigate("/");
   };
 
+  const excludeSet = useAppStore((s) => s.localArtistExclude);
+
   const [artistSearch, setArtistSearch] = React.useState("");
   const [displayLimit, setDisplayLimit] = React.useState(30);
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
@@ -48,7 +50,11 @@ const LocalArtistsPage: React.FC = () => {
   const localArtists = React.useMemo(() => {
     let arr = Array.from(artists.values()).filter((a) => {
       const venueCount = new Set(a.upcomingEvents.map((e) => e.venueId)).size;
-      return a.upcomingEvents.length >= MIN_EVENTS && venueCount >= MIN_VENUES;
+      return (
+        a.upcomingEvents.length >= MIN_EVENTS &&
+        venueCount >= MIN_VENUES &&
+        !excludeSet.has(a.name.toLowerCase())
+      );
     });
 
     if (artistSearch.trim()) {

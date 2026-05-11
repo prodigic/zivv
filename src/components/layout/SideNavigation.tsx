@@ -19,17 +19,17 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
   className = "" 
 }) => {
   const location = useLocation();
-  const { manifest, getUpcomingEvents, artists } = useAppStore();
+  const { manifest, getUpcomingEvents, artists, localArtistExclude } = useAppStore();
   const { hasActiveFilters, getFilterSummary } = useFilterStore();
 
   const localArtistCount = React.useMemo(() => {
     let count = 0;
     for (const a of artists.values()) {
       const venueCount = new Set(a.upcomingEvents.map((e) => e.venueId)).size;
-      if (a.upcomingEvents.length >= 3 && venueCount >= 2) count++;
+      if (a.upcomingEvents.length >= 3 && venueCount >= 2 && !localArtistExclude.has(a.name.toLowerCase())) count++;
     }
     return count;
-  }, [artists]);
+  }, [artists, localArtistExclude]);
 
   const upcomingEvents = getUpcomingEvents(3);
 

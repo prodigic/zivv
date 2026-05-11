@@ -27,6 +27,7 @@ export interface AppState {
   venues: Map<VenueId, Venue>;
   indexes: DataIndexes | null;
   loadedChunks: Set<string>;
+  localArtistExclude: Set<string>; // lowercase artist names excluded from local artists list
 
   // Loading states
   loading: {
@@ -121,6 +122,7 @@ export const useAppStore = create<AppStore>()(
         venues: new Map(),
         indexes: null,
         loadedChunks: new Set(),
+        localArtistExclude: new Set(),
 
         loading: {
           manifest: "idle",
@@ -173,6 +175,12 @@ export const useAppStore = create<AppStore>()(
               get().loadArtists(),
               get().loadVenues(),
               get().loadIndexes(),
+              fetch(`${import.meta.env.BASE_URL}data/local-artist-exclude.json`)
+                .then((r) => r.json())
+                .then((list: string[]) =>
+                  set({ localArtistExclude: new Set(list.map((n: string) => n.toLowerCase())) })
+                )
+                .catch(() => {}),
             ]);
           } catch (error) {
             globalErrorHandler.handleError(error as Error, {
