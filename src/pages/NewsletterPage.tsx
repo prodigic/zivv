@@ -38,9 +38,10 @@ const CITY_CONFIGS: Record<string, CityConfig> = {
     match: (c) => ["Oakland", "Berkeley", "Emeryville", "Albany", "El Cerrito", "Richmond"].includes(c) ||
       c.toLowerCase() === "emeryville",
   },
-  "san-jose": {
-    label: "San Jose",
-    match: (c) => c === "San" || c.toLowerCase() === "san jose",
+  "south-bay": {
+    label: "South Bay",
+    match: (c) => ["San Jose", "Santa Clara", "Sunnyvale", "Mountain View", "Palo Alto", "Cupertino", "Milpitas", "Fremont"].includes(c) ||
+      c === "San" || c.toLowerCase() === "san jose",
   },
   emeryville: {
     label: "Emeryville",
