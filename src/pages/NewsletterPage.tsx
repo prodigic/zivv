@@ -50,6 +50,7 @@ export default function NewsletterPage() {
   const ingestDate = manifest?.latestIngestionDate ?? null;
 
   const nowMs = useMemo(() => Date.now(), []);
+  const weekEndMs = useMemo(() => nowMs + 7 * 24 * 60 * 60 * 1000, [nowMs]);
 
   // Local acts section — SF shows only, sorted by next SF show date
   const localActBlocks = useMemo(() => {
@@ -59,13 +60,13 @@ export default function NewsletterPage() {
       const venueCount = new Set(upcoming.map((e) => e.venueId)).size;
       if (upcoming.length < MIN_EVENTS || venueCount < MIN_VENUES) continue;
       if (localArtistExclude.has(artist.name.toLowerCase())) continue;
-      const sfEvents = upcoming.filter((e) => isSF(e.venueCity));
+      const sfEvents = upcoming.filter((e) => isSF(e.venueCity) && e.dateEpochMs <= weekEndMs);
       if (sfEvents.length === 0) continue;
       blocks.push({ name: artist.name, slug: artist.slug, events: sfEvents });
     }
     blocks.sort((a, b) => a.events[0].dateEpochMs - b.events[0].dateEpochMs);
     return blocks;
-  }, [artists, localArtistExclude, nowMs]);
+  }, [artists, localArtistExclude, nowMs, weekEndMs]);
 
   // Just-added section — SF venues only
   const justAddedEvents = useMemo(() => {
@@ -73,12 +74,12 @@ export default function NewsletterPage() {
     return Array.from(events.values())
       .filter((e) => {
         const day = new Date(e.createdAtEpochMs).toISOString().split("T")[0];
-        if (day !== ingestDate || e.dateEpochMs <= nowMs) return false;
+        if (day !== ingestDate || e.dateEpochMs <= nowMs || e.dateEpochMs > weekEndMs) return false;
         const venueCity = venues.get(e.venueId)?.city ?? "";
         return isSF(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [events, venues, ingestDate, nowMs]);
+  }, [events, venues, ingestDate, nowMs, weekEndMs]);
 
   const artistMap = useMemo(() => {
     const m = new Map<number, string>();
