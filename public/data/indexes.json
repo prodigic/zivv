@@ -20279,17 +20279,7 @@
     "yerba buena gardens": 498821921,
     "yoshi's": 174354249,
     "zeitgeist": 1183655994,
-    "15th": 1984956119,
-    "17th": 1985015701,
-    "19th": 1985075283,
-    "20th": 1985730685,
     "240 front street": 1740241181,
-    "26th st.": 698350602,
-    "30th": 1986654206,
-    "3rd and army skatepark": 1723393110,
-    "5th avenue": 1918698250,
-    "5th street": 668359765,
-    "8th": 1736815815,
     "924 gilman street": 888749966,
     "adobe books": 2128628460,
     "amoeba records": 384765524,
@@ -20300,25 +20290,17 @@
     "bolinas mesa park": 500917824,
     "brewsters beer garden": 1843224720,
     "bric-a-brack": 1720239941,
-    "broadway": 1049234786,
-    "bryant": 1428768047,
-    "capp": 2032439377,
     "catalyst atrium": 1080825327,
-    "cesar chavez": 1584422686,
     "civic center plaza": 374946520,
-    "clay": 2032752942,
     "drake's barrel house": 2063568438,
     "el infierno": 779096257,
     "fell st.": 1182839389,
-    "first": 1325548811,
     "gmas place": 13807888,
     "gerstle park": 486753773,
     "golden gate theater": 648572129,
     "good time tavern": 1141446017,
     "greek theater": 474218142,
-    "harbour way": 1535113581,
     "hardly stricty bluegrass": 778116947,
-    "harrison": 1909811155,
     "henry j kaiser center": 940678917,
     "hibernia bank": 1868963076,
     "hotboys/fifty's liquor": 1960158119,
@@ -20332,7 +20314,6 @@
     "mayes oyster house": 2011645013,
     "mcgovern's bar": 374820780,
     "mint": 2041911117,
-    "mission": 1096005849,
     "mosswood park": 1498339130,
     "music city starfactory": 1051500561,
     "new farm": 598294777,
@@ -21246,38 +21227,19 @@
       1183655994
     ],
     "": [
-      1984956119,
-      1985015701,
-      1985075283,
-      1985730685,
       1740241181,
-      698350602,
-      1986654206,
-      1723393110,
-      1918698250,
-      668359765,
-      1736815815,
       384765524,
       1038387369,
       1720239941,
-      1049234786,
-      1428768047,
-      2032439377,
-      1584422686,
       374946520,
-      2032752942,
       1182839389,
-      1325548811,
       13807888,
       486753773,
-      1535113581,
-      1909811155,
       940678917,
       1223333595,
       2041667798,
       1686504983,
       2041911117,
-      1096005849,
       1051500561,
       598294777,
       1738291909,
@@ -21669,7 +21631,7 @@
       "slug": "sf",
       "eventCount": 797,
       "venueCount": 42,
-      "upcomingEventCount": 598
+      "upcomingEventCount": 593
     },
     {
       "name": "Berkeley",
@@ -21683,7 +21645,7 @@
       "slug": "oakland",
       "eventCount": 117,
       "venueCount": 10,
-      "upcomingEventCount": 85
+      "upcomingEventCount": 83
     },
     {
       "name": "Santa",
@@ -21830,7 +21792,7 @@
       "slug": "1",
       "eventCount": 3,
       "venueCount": 1,
-      "upcomingEventCount": 2
+      "upcomingEventCount": 1
     },
     {
       "name": "86",
@@ -23131,7 +23093,7 @@
       "name": "",
       "slug": "",
       "eventCount": 0,
-      "venueCount": 94,
+      "venueCount": 75,
       "upcomingEventCount": 0
     },
     {
@@ -23772,14 +23734,14 @@
     }
   },
   "searchIndex": {
-    "indexedAt": 1778458616104,
-    "totalDocuments": 5521,
+    "indexedAt": 1778538967812,
+    "totalDocuments": 5502,
     "fields": [
       "name",
       "description",
       "city",
       "tags"
     ],
-    "size": 1104200
+    "size": 1100400
   }
 }
