@@ -9,6 +9,12 @@ import { useAppStore } from "@/stores/appStore.js";
 const MIN_EVENTS = 3;
 const MIN_VENUES = 2;
 
+const SF_CITIES = new Set(["S.f", "San Francisco", "SF", "S.F."]);
+
+function isSF(city: string) {
+  return SF_CITIES.has(city) || city.toLowerCase().includes("francisco");
+}
+
 function fmtDate(epochMs: number): string {
   const [y, m, d] = new Date(epochMs).toISOString().split("T")[0].split("-").map(Number);
   return new Date(y, m - 1, d).toLocaleDateString("en-US", {
@@ -45,7 +51,7 @@ export default function NewsletterPage() {
 
   const nowMs = useMemo(() => Date.now(), []);
 
-  // Local acts section — sorted by next show date
+  // Local acts section — SF shows only, sorted by next SF show date
   const localActBlocks = useMemo(() => {
     const blocks: { name: string; slug: string; events: typeof Array.prototype }[] = [];
     for (const artist of artists.values()) {
@@ -53,22 +59,26 @@ export default function NewsletterPage() {
       const venueCount = new Set(upcoming.map((e) => e.venueId)).size;
       if (upcoming.length < MIN_EVENTS || venueCount < MIN_VENUES) continue;
       if (localArtistExclude.has(artist.name.toLowerCase())) continue;
-      blocks.push({ name: artist.name, slug: artist.slug, events: upcoming });
+      const sfEvents = upcoming.filter((e) => isSF(e.venueCity));
+      if (sfEvents.length === 0) continue;
+      blocks.push({ name: artist.name, slug: artist.slug, events: sfEvents });
     }
     blocks.sort((a, b) => a.events[0].dateEpochMs - b.events[0].dateEpochMs);
     return blocks;
   }, [artists, localArtistExclude, nowMs]);
 
-  // Just-added section
+  // Just-added section — SF venues only
   const justAddedEvents = useMemo(() => {
     if (!ingestDate) return [];
     return Array.from(events.values())
       .filter((e) => {
         const day = new Date(e.createdAtEpochMs).toISOString().split("T")[0];
-        return day === ingestDate && e.dateEpochMs > nowMs;
+        if (day !== ingestDate || e.dateEpochMs <= nowMs) return false;
+        const venueCity = venues.get(e.venueId)?.city ?? "";
+        return isSF(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [events, ingestDate, nowMs]);
+  }, [events, venues, ingestDate, nowMs]);
 
   const artistMap = useMemo(() => {
     const m = new Map<number, string>();
@@ -85,9 +95,7 @@ export default function NewsletterPage() {
       month: "long", day: "numeric", year: "numeric",
     });
 
-    lines.push(`## Bay Area Punk/DIY Shows — Week of ${weekStr}`);
-    lines.push("");
-    lines.push("*Via [zivv.io](https://prodigic.github.io/zivv/) — Bay Area punk show finder*");
+    lines.push(`## SF Punk/DIY Shows — Week of ${weekStr}`);
     lines.push("");
 
     // Section 1: Local acts
@@ -142,10 +150,6 @@ export default function NewsletterPage() {
       lines.push("");
     }
 
-    lines.push("---");
-    lines.push("");
-    lines.push("*Full listings + search + calendar at [zivv.io](https://prodigic.github.io/zivv/)*");
-
     return lines.join("\n");
   }, [localActBlocks, justAddedEvents, artistMap, venues, ingestDate]);
 
@@ -161,7 +165,7 @@ export default function NewsletterPage() {
   return (
     <ContentArea
       title="Newsletter"
-      subtitle={`Local acts + new shows · Reddit-ready format`}
+      subtitle={`SF shows · local acts + newly announced · Reddit-ready`}
     >
       {isLoading && (
         <div className="text-center py-12">
