@@ -102,7 +102,16 @@ export default function NewsletterPage() {
       const venueCount = new Set(upcoming.map((e) => e.venueId)).size;
       if (upcoming.length < MIN_EVENTS || venueCount < MIN_VENUES) continue;
       if (localArtistExclude.has(artist.name.toLowerCase())) continue;
-      const sfEvents = upcoming.filter((e) => isCity(e.venueCity) && e.dateEpochMs <= weekEndMs);
+      const sfRaw = upcoming.filter((e) => isCity(e.venueCity) && e.dateEpochMs <= weekEndMs);
+      // Dedupe same date+venue (same show listed under multiple artist orderings).
+      // Prefer the entry where this artist is the headliner.
+      const seen = new Map<string, typeof sfRaw[0]>();
+      for (const ev of sfRaw) {
+        const key = `${ev.dateEpochMs}:${ev.venueId}`;
+        const existing = seen.get(key);
+        if (!existing || ev.headlinerName === artist.name) seen.set(key, ev);
+      }
+      const sfEvents = [...seen.values()].sort((a, b) => a.dateEpochMs - b.dateEpochMs);
       if (sfEvents.length === 0) continue;
       blocks.push({ name: artist.name, slug: artist.slug, events: sfEvents });
     }
