@@ -2,7 +2,7 @@
   "chunkId": "2026-12",
   "dateRange": {
     "startEpochMs": 1796284800000,
-    "endEpochMs": 1796803200000
+    "endEpochMs": 1797408000000
   },
   "events": [
     {
@@ -25,8 +25,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1727
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1955
+    },
+    {
+      "id": 196167253,
+      "slug": "2026-12-03-sandra-bernhard-the-castro",
+      "date": "2026-12-03",
+      "dateEpochMs": 1796284800000,
+      "startTimeEpochMs": 1796558400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 484602052,
+      "artistIds": [
+        484602052
+      ],
+      "venueId": 1383208152,
+      "priceMin": 76.15,
+      "priceMax": 76.15,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1956
     },
     {
       "id": 2129195846,
@@ -49,8 +72,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1728
+      "updatedAtEpochMs": 1778916306116,
+      "sourceLineNumber": 1957
     },
     {
       "id": 1844983612,
@@ -71,8 +94,30 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1729
+      "updatedAtEpochMs": 1778916306116,
+      "sourceLineNumber": 1958
+    },
+    {
+      "id": 839753172,
+      "slug": "2026-12-08-angine-de-poitrine-the-fox-theater",
+      "date": "2026-12-08",
+      "dateEpochMs": 1796716800000,
+      "startTimeEpochMs": 1796788800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1578546960,
+      "artistIds": [
+        1578546960,
+        1493068446
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306116,
+      "sourceLineNumber": 1959
     },
     {
       "id": 1485239828,
@@ -92,8 +137,54 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967753,
-      "sourceLineNumber": 1730
+      "updatedAtEpochMs": 1778916306116,
+      "sourceLineNumber": 1960
+    },
+    {
+      "id": 1709307841,
+      "slug": "2026-12-15-pokey-lafarge-hopmonk-tavern",
+      "date": "2026-12-15",
+      "dateEpochMs": 1797321600000,
+      "startTimeEpochMs": 1797397200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 319094477,
+      "artistIds": [
+        319094477,
+        280517662
+      ],
+      "venueId": 1637782129,
+      "priceMin": 53.37,
+      "priceMax": 53.37,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306117,
+      "sourceLineNumber": 1961
+    },
+    {
+      "id": 1785355123,
+      "slug": "2026-12-16-pokey-lafarge-bimbos-365-club",
+      "date": "2026-12-16",
+      "dateEpochMs": 1797408000000,
+      "startTimeEpochMs": 1797483600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 319094477,
+      "artistIds": [
+        319094477,
+        280517662
+      ],
+      "venueId": 697962111,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306117,
+      "sourceLineNumber": 1962
     }
   ]
 }

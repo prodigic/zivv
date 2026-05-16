@@ -26,8 +26,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967750,
-      "sourceLineNumber": 1699
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1918
     },
     {
       "id": 2127963877,
@@ -48,8 +48,32 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967750,
-      "sourceLineNumber": 1700
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1919
+    },
+    {
+      "id": 1320090586,
+      "slug": "2026-11-05-squirrel-flower-the-chapel",
+      "date": "2026-11-05",
+      "dateEpochMs": 1793865600000,
+      "startTimeEpochMs": 1793962800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 834022705,
+      "artistIds": [
+        834022705,
+        36869837
+      ],
+      "venueId": 680116887,
+      "priceMin": 27.22,
+      "priceMax": 27.22,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1920
     },
     {
       "id": 387833041,
@@ -71,8 +95,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967750,
-      "sourceLineNumber": 1701
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1921
     },
     {
       "id": 1195362832,
@@ -92,8 +116,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967750,
-      "sourceLineNumber": 1702
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1922
     },
     {
       "id": 222395996,
@@ -115,8 +139,51 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778538967750,
-      "sourceLineNumber": 1703
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1923
+    },
+    {
+      "id": 1485152095,
+      "slug": "2026-11-06-buena-vista-orchestra-the-warfield",
+      "date": "2026-11-06",
+      "dateEpochMs": 1793952000000,
+      "startTimeEpochMs": 1794024000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1969705620,
+      "artistIds": [
+        1969705620
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1924
+    },
+    {
+      "id": 1451085668,
+      "slug": "2026-11-06-thee-sinseers-the-fillmore",
+      "date": "2026-11-06",
+      "dateEpochMs": 1793952000000,
+      "startTimeEpochMs": 1794024000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1270515307,
+      "artistIds": [
+        1270515307,
+        1258118083
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1925
     },
     {
       "id": 1501711198,
@@ -136,8 +203,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967750,
-      "sourceLineNumber": 1704
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1926
+    },
+    {
+      "id": 71803349,
+      "slug": "2026-11-07-alex-cameron-the-chapel",
+      "date": "2026-11-07",
+      "dateEpochMs": 1794038400000,
+      "startTimeEpochMs": 1794157200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 13557996,
+      "artistIds": [
+        13557996
+      ],
+      "venueId": 680116887,
+      "priceMin": 33.4,
+      "priceMax": 33.4,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1927
     },
     {
       "id": 191078883,
@@ -159,8 +249,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1705
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1928
     },
     {
       "id": 949866796,
@@ -182,8 +272,52 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1706
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1929
+    },
+    {
+      "id": 444334350,
+      "slug": "2026-11-08-murray-hill-bimbos-365-club",
+      "date": "2026-11-08",
+      "dateEpochMs": 1794124800000,
+      "startTimeEpochMs": 1794200400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 274890098,
+      "artistIds": [
+        274890098
+      ],
+      "venueId": 697962111,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1930
+    },
+    {
+      "id": 1400759296,
+      "slug": "2026-11-09-alex-cameron-the-crepe-place",
+      "date": "2026-11-09",
+      "dateEpochMs": 1794211200000,
+      "startTimeEpochMs": 1794312000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 13557996,
+      "artistIds": [
+        13557996
+      ],
+      "venueId": 135768954,
+      "priceMin": 28.75,
+      "priceMax": 28.75,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306113,
+      "sourceLineNumber": 1931
     },
     {
       "id": 1525352910,
@@ -205,8 +339,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1707
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1932
     },
     {
       "id": 398845964,
@@ -230,8 +364,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1708
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1933
     },
     {
       "id": 1315828248,
@@ -253,8 +387,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1709
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1934
     },
     {
       "id": 1530252285,
@@ -276,8 +410,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1710
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1935
     },
     {
       "id": 1560176811,
@@ -300,8 +434,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1711
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1936
     },
     {
       "id": 71063767,
@@ -323,8 +457,29 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1712
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1937
+    },
+    {
+      "id": 1537860646,
+      "slug": "2026-11-12-gene-the-fillmore",
+      "date": "2026-11-12",
+      "dateEpochMs": 1794470400000,
+      "startTimeEpochMs": 1794542400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971698840,
+      "artistIds": [
+        1971698840
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1938
     },
     {
       "id": 1980689656,
@@ -344,8 +499,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1713
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1939
     },
     {
       "id": 1460418466,
@@ -368,8 +523,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1714
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1940
     },
     {
       "id": 580436608,
@@ -388,8 +543,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1715
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1941
     },
     {
       "id": 1213868777,
@@ -411,8 +566,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967751,
-      "sourceLineNumber": 1716
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1942
     },
     {
       "id": 1408845827,
@@ -435,8 +590,29 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1717
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1943
+    },
+    {
+      "id": 1198537562,
+      "slug": "2026-11-19-fred-eaglesmith-hopmonk-tavern",
+      "date": "2026-11-19",
+      "dateEpochMs": 1795075200000,
+      "startTimeEpochMs": 1795147200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1391279905,
+      "artistIds": [
+        1391279905
+      ],
+      "venueId": 1637782129,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306114,
+      "sourceLineNumber": 1944
     },
     {
       "id": 240098919,
@@ -459,8 +635,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1718
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1945
     },
     {
       "id": 1429268553,
@@ -486,8 +662,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1719
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1946
     },
     {
       "id": 2103217097,
@@ -509,8 +685,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1720
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1947
     },
     {
       "id": 1214248361,
@@ -532,8 +708,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1721
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1948
     },
     {
       "id": 124106337,
@@ -555,8 +731,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1722
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1949
     },
     {
       "id": 1410115400,
@@ -578,8 +754,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1723
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1950
     },
     {
       "id": 466759183,
@@ -600,8 +776,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1724
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1951
     },
     {
       "id": 1284159850,
@@ -621,8 +797,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1725
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1952
+    },
+    {
+      "id": 1078979738,
+      "slug": "2026-11-28-journey-the-warriors-stadium",
+      "date": "2026-11-28",
+      "dateEpochMs": 1795852800000,
+      "startTimeEpochMs": 1796065200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2048361101,
+      "artistIds": [
+        2048361101
+      ],
+      "venueId": 793025194,
+      "priceMin": 59,
+      "priceMax": 59,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1953
     },
     {
       "id": 1405011844,
@@ -644,8 +843,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778538967752,
-      "sourceLineNumber": 1726
+      "updatedAtEpochMs": 1778916306115,
+      "sourceLineNumber": 1954
     }
   ]
 }

@@ -2,7 +2,7 @@
   "chunkId": "2027-01",
   "dateRange": {
     "startEpochMs": 1799481600000,
-    "endEpochMs": 1799481600000
+    "endEpochMs": 1800086400000
   },
   "events": [
     {
@@ -25,8 +25,32 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778538967753,
-      "sourceLineNumber": 1731
+      "updatedAtEpochMs": 1778916306117,
+      "sourceLineNumber": 1963
+    },
+    {
+      "id": 2093010338,
+      "slug": "2027-01-16-book-of-love-the-chapel",
+      "date": "2027-01-16",
+      "dateEpochMs": 1800086400000,
+      "startTimeEpochMs": 1800230400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1236040503,
+      "artistIds": [
+        1236040503,
+        257306668
+      ],
+      "venueId": 680116887,
+      "priceMin": 40,
+      "priceMax": 40,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1778846400000,
+      "updatedAtEpochMs": 1778916306117,
+      "sourceLineNumber": 1964
     }
   ]
 }
