@@ -149,6 +149,18 @@ export default function NewsletterPage() {
     return m;
   }, [artists]);
 
+  // Full lineup keyed by "dateEpochMs:venueId" → artist names in bill order
+  const lineupMap = useMemo(() => {
+    const m = new Map<string, string[]>();
+    for (const ev of events.values()) {
+      const key = `${ev.dateEpochMs}:${ev.venueId}`;
+      if (!m.has(key)) {
+        m.set(key, ev.artistIds.map((id) => artistMap.get(id as number) ?? "").filter(Boolean));
+      }
+    }
+    return m;
+  }, [events, artistMap]);
+
   const text = useMemo(() => {
     const lines: string[] = [];
 
@@ -173,12 +185,12 @@ export default function NewsletterPage() {
       for (const block of localActBlocks) {
         lines.push(`**${block.name}**`);
         for (const ev of block.events) {
-          const isHeadlining = ev.headlinerName === block.name;
           const price = fmtPrice(ev.priceMin, ev.priceMax, ev.isFree);
-          const headlinerPart = !isHeadlining && ev.headlinerName ? ` (w/ ${ev.headlinerName})` : "";
           const pricePart = price ? ` · ${price}` : "";
           const soldOut = ev.isSoldOut ? " ~~sold out~~" : "";
-          lines.push(`- ${fmtDate(ev.dateEpochMs)} · ${ev.venueName}, ${ev.venueCity}${headlinerPart}${pricePart}${soldOut}`);
+          const lineup = lineupMap.get(`${ev.dateEpochMs}:${ev.venueId}`) ?? [ev.headlinerName].filter(Boolean);
+          const lineupStr = lineup.length > 0 ? ` · ${lineup.join(", ")}` : "";
+          lines.push(`- ${fmtDate(ev.dateEpochMs)} · ${ev.venueName}${lineupStr}${pricePart}${soldOut}`);
         }
         lines.push("");
       }
@@ -223,18 +235,18 @@ export default function NewsletterPage() {
       lines.push("*No SF shows found for this week.*");
     } else {
       for (const ev of sfWeekEvents) {
-        const headlinerName = artistMap.get(ev.headlinerArtistId as number) ?? "";
         const venueName = venues.get(ev.venueId)?.name ?? "";
+        const lineup = lineupMap.get(`${ev.dateEpochMs}:${ev.venueId}`) ?? [artistMap.get(ev.headlinerArtistId as number) ?? ""].filter(Boolean);
         const price = fmtPrice(ev.priceMin, ev.priceMax, ev.isFree);
         const pricePart = price ? ` · ${price}` : "";
         const agePart = ev.ageRestriction && ev.ageRestriction !== "all-ages" ? ` · ${ev.ageRestriction}` : "";
         const soldOut = ev.status === "sold-out" || ev.tags?.includes("sold-out") ? " ~~sold out~~" : "";
-        lines.push(`- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueName}${pricePart}${agePart}${soldOut}`);
+        lines.push(`- ${fmtDate(ev.dateEpochMs)} · ${lineup.join(", ")} at ${venueName}${pricePart}${agePart}${soldOut}`);
       }
     }
 
     return lines.join("\n");
-  }, [localActBlocks, justAddedEvents, sfWeekEvents, artistMap, venues, ingestDate, cityConfig]);
+  }, [localActBlocks, justAddedEvents, sfWeekEvents, artistMap, lineupMap, venues, ingestDate, cityConfig]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(text).then(() => {
