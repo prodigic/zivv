@@ -245,6 +245,10 @@ export default function NewsletterPage() {
       }
     }
 
+    lines.push("");
+    lines.push("-- event data sourced from https://www.stevelist.com/");
+    lines.push("");
+
     return lines.join("\n");
   }, [localActBlocks, justAddedEvents, sfWeekEvents, artistMap, lineupMap, venues, ingestDate, cityConfig]);
 
