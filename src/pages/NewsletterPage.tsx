@@ -117,7 +117,7 @@ export default function NewsletterPage() {
     }
     blocks.sort((a, b) => a.events[0].dateEpochMs - b.events[0].dateEpochMs);
     return blocks;
-  }, [artists, localArtistExclude, nowMs, weekEndMs]);
+  }, [artists, localArtistExclude, nowMs, weekEndMs, citySlug]);
 
   // Just-added section — all SF newly announced, any future date
   const justAddedEvents = useMemo(() => {
@@ -130,7 +130,7 @@ export default function NewsletterPage() {
         return isCity(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [events, venues, ingestDate, nowMs]);
+  }, [events, venues, ingestDate, nowMs, citySlug]);
 
   // All SF shows this week (section 3)
   const sfWeekEvents = useMemo(() => {
@@ -141,7 +141,7 @@ export default function NewsletterPage() {
         return isCity(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [events, venues, nowMs, weekEndMs]);
+  }, [events, venues, nowMs, weekEndMs, citySlug]);
 
   const artistMap = useMemo(() => {
     const m = new Map<number, string>();
