@@ -241,7 +241,7 @@ export default function NewsletterPage() {
         const pricePart = price ? ` · ${price}` : "";
         const agePart = ev.ageRestriction && ev.ageRestriction !== "all-ages" ? ` · ${ev.ageRestriction}` : "";
         const soldOut = ev.status === "sold-out" || ev.tags?.includes("sold-out") ? " ~~sold out~~" : "";
-        lines.push(`- ${fmtDate(ev.dateEpochMs)} · ${lineup.join(", ")} at ${venueName}${pricePart}${agePart}${soldOut}`);
+        lines.push(`- ${fmtDate(ev.dateEpochMs)} · **${lineup.join(", ")}** at ${venueName}${pricePart}${agePart}${soldOut}`);
       }
     }
 
