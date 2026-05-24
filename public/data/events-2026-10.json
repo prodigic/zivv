@@ -26,8 +26,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370336,
-      "sourceLineNumber": 1774
+      "updatedAtEpochMs": 1779584626397,
+      "sourceLineNumber": 1927
     },
     {
       "id": 1493058643,
@@ -51,8 +51,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1775
+      "updatedAtEpochMs": 1779584626397,
+      "sourceLineNumber": 1928
     },
     {
       "id": 27677446,
@@ -74,8 +74,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1776
+      "updatedAtEpochMs": 1779584626397,
+      "sourceLineNumber": 1929
     },
     {
       "id": 1340662498,
@@ -97,8 +97,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1777
+      "updatedAtEpochMs": 1779584626397,
+      "sourceLineNumber": 1930
     },
     {
       "id": 118208263,
@@ -118,8 +118,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1778
+      "updatedAtEpochMs": 1779584626397,
+      "sourceLineNumber": 1931
     },
     {
       "id": 1812157367,
@@ -146,8 +146,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1779
+      "updatedAtEpochMs": 1779584626398,
+      "sourceLineNumber": 1932
     },
     {
       "id": 62542977,
@@ -172,8 +172,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1780
+      "updatedAtEpochMs": 1779584626398,
+      "sourceLineNumber": 1933
     },
     {
       "id": 47714112,
@@ -198,8 +198,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1781
+      "updatedAtEpochMs": 1779584626398,
+      "sourceLineNumber": 1934
     },
     {
       "id": 207122316,
@@ -219,8 +219,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1782
+      "updatedAtEpochMs": 1779584626398,
+      "sourceLineNumber": 1935
     },
     {
       "id": 116769334,
@@ -240,8 +240,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1783
+      "updatedAtEpochMs": 1779584626398,
+      "sourceLineNumber": 1936
     },
     {
       "id": 574250324,
@@ -263,8 +263,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370337,
-      "sourceLineNumber": 1784
+      "updatedAtEpochMs": 1779584626398,
+      "sourceLineNumber": 1937
     },
     {
       "id": 1848000658,
@@ -286,8 +286,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1785
+      "updatedAtEpochMs": 1779584626398,
+      "sourceLineNumber": 1938
     },
     {
       "id": 2076267867,
@@ -309,8 +309,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1786
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1939
     },
     {
       "id": 134751900,
@@ -330,8 +330,83 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1787
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1940
+    },
+    {
+      "id": 1992667217,
+      "slug": "2026-10-02-death-from-above-the-uc-theater",
+      "date": "2026-10-02",
+      "dateEpochMs": 1790924400000,
+      "startTimeEpochMs": 1791064800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1788551002,
+      "artistIds": [
+        1788551002,
+        1973351587
+      ],
+      "venueId": 2093769319,
+      "priceMin": 39.5,
+      "priceMax": 39.5,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "matinee",
+        "late-show"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1941
+    },
+    {
+      "id": 1335891382,
+      "slug": "2026-10-02-madeon-the-civic-auditorium",
+      "date": "2026-10-02",
+      "dateEpochMs": 1790924400000,
+      "startTimeEpochMs": 1790989200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 554221241,
+      "artistIds": [
+        554221241
+      ],
+      "venueId": 1648637995,
+      "priceMin": 73.25,
+      "priceMax": 73.25,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1942
+    },
+    {
+      "id": 37754218,
+      "slug": "2026-10-02-hayley-williams-shoreline-amphitheater",
+      "date": "2026-10-02",
+      "dateEpochMs": 1790924400000,
+      "startTimeEpochMs": 1791050400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1671538173,
+      "artistIds": [
+        1671538173,
+        668381443,
+        1385819077
+      ],
+      "venueId": 1931913617,
+      "priceMin": 35,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1943
     },
     {
       "id": 642962652,
@@ -353,8 +428,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1788
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1944
     },
     {
       "id": 418473229,
@@ -374,8 +449,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1789
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1945
     },
     {
       "id": 225433994,
@@ -395,8 +470,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1790
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1946
     },
     {
       "id": 644069618,
@@ -419,8 +494,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1791
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1947
     },
     {
       "id": 1694011350,
@@ -441,8 +516,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1792
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1948
     },
     {
       "id": 1337312839,
@@ -464,8 +539,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1793
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1949
     },
     {
       "id": 1188302545,
@@ -487,8 +562,33 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1794
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1950
+    },
+    {
+      "id": 1856177852,
+      "slug": "2026-10-03-igorrr-great-american-music-hall",
+      "date": "2026-10-03",
+      "dateEpochMs": 1791010800000,
+      "startTimeEpochMs": 1791126000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 662856428,
+      "artistIds": [
+        662856428,
+        1493068446,
+        819828542
+      ],
+      "venueId": 463728167,
+      "priceMin": 32.5,
+      "priceMax": 38,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1951
     },
     {
       "id": 815421617,
@@ -511,8 +611,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1795
+      "updatedAtEpochMs": 1779584626399,
+      "sourceLineNumber": 1952
     },
     {
       "id": 736180023,
@@ -532,8 +632,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1796
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1953
     },
     {
       "id": 1489711291,
@@ -556,8 +656,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1797
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1954
     },
     {
       "id": 1829854947,
@@ -581,8 +681,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370338,
-      "sourceLineNumber": 1798
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1955
     },
     {
       "id": 2114263055,
@@ -606,8 +706,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1799
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1956
     },
     {
       "id": 306118569,
@@ -630,8 +730,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1800
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1957
     },
     {
       "id": 939464645,
@@ -653,8 +753,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1801
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1958
     },
     {
       "id": 1949441359,
@@ -676,8 +776,61 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1802
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1959
+    },
+    {
+      "id": 2040752530,
+      "slug": "2026-10-04-in-her-own-words-the-cornerstone",
+      "date": "2026-10-04",
+      "dateEpochMs": 1791097200000,
+      "startTimeEpochMs": 1791208800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 620110428,
+      "artistIds": [
+        620110428,
+        1133529946,
+        141977786
+      ],
+      "venueId": 1393740940,
+      "priceMin": 31.9,
+      "priceMax": 31.9,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "diy",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1960
+    },
+    {
+      "id": 126904197,
+      "slug": "2026-10-04-street-walking-cheetahs-the-ivy-room",
+      "date": "2026-10-04",
+      "dateEpochMs": 1791097200000,
+      "startTimeEpochMs": 1791172800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 545702002,
+      "artistIds": [
+        545702002,
+        919747078,
+        1007446825,
+        121997911
+      ],
+      "venueId": 1689618485,
+      "priceMin": 13,
+      "priceMax": 13,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "diy",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1961
     },
     {
       "id": 1761977206,
@@ -701,8 +854,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1803
+      "updatedAtEpochMs": 1779584626400,
+      "sourceLineNumber": 1962
     },
     {
       "id": 1935204091,
@@ -726,8 +879,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1804
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1963
     },
     {
       "id": 2011834250,
@@ -748,8 +901,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1805
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1964
     },
     {
       "id": 1832210206,
@@ -771,8 +924,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1806
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1965
     },
     {
       "id": 1635559239,
@@ -792,8 +945,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1807
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1966
     },
     {
       "id": 603264823,
@@ -814,8 +967,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1808
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1967
     },
     {
       "id": 60943925,
@@ -838,8 +991,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1809
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1968
     },
     {
       "id": 972902008,
@@ -862,8 +1015,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370339,
-      "sourceLineNumber": 1810
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1969
     },
     {
       "id": 13615324,
@@ -883,8 +1036,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1811
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1970
     },
     {
       "id": 172573952,
@@ -908,8 +1061,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1812
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1971
     },
     {
       "id": 1437809257,
@@ -932,8 +1085,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1813
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1972
     },
     {
       "id": 321706916,
@@ -954,8 +1107,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1814
+      "updatedAtEpochMs": 1779584626401,
+      "sourceLineNumber": 1973
     },
     {
       "id": 673945222,
@@ -975,8 +1128,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1815
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1974
     },
     {
       "id": 762284999,
@@ -1000,8 +1153,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1816
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1975
     },
     {
       "id": 1181194166,
@@ -1024,8 +1177,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1817
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1976
     },
     {
       "id": 1423112031,
@@ -1049,8 +1202,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1818
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1977
     },
     {
       "id": 1004692590,
@@ -1074,8 +1227,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1819
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1978
     },
     {
       "id": 1931371129,
@@ -1098,8 +1251,32 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1820
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1979
+    },
+    {
+      "id": 733906488,
+      "slug": "2026-10-07-son-lux-the-uc-theater",
+      "date": "2026-10-07",
+      "dateEpochMs": 1791356400000,
+      "startTimeEpochMs": 1791464400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1437050702,
+      "artistIds": [
+        1437050702,
+        2054053814
+      ],
+      "venueId": 2093769319,
+      "priceMin": 30,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1980
     },
     {
       "id": 1238327931,
@@ -1120,8 +1297,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1821
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1982
     },
     {
       "id": 1100459609,
@@ -1141,8 +1318,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1822
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1983
     },
     {
       "id": 85334118,
@@ -1164,8 +1341,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370340,
-      "sourceLineNumber": 1823
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1984
     },
     {
       "id": 1020722168,
@@ -1189,8 +1366,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370341,
-      "sourceLineNumber": 1824
+      "updatedAtEpochMs": 1779584626402,
+      "sourceLineNumber": 1985
+    },
+    {
+      "id": 1393490957,
+      "slug": "2026-10-08-eraserhead-xiu-xiu-gray-area",
+      "date": "2026-10-08",
+      "dateEpochMs": 1791442800000,
+      "startTimeEpochMs": 1791518400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 846336377,
+      "artistIds": [
+        846336377
+      ],
+      "venueId": 2036943294,
+      "priceMin": 30.49,
+      "priceMax": 36.59,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1986
     },
     {
       "id": 1701896390,
@@ -1214,8 +1414,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370341,
-      "sourceLineNumber": 1825
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1987
     },
     {
       "id": 1249282812,
@@ -1235,8 +1435,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370341,
-      "sourceLineNumber": 1826
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1988
     },
     {
       "id": 105839280,
@@ -1256,8 +1456,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370341,
-      "sourceLineNumber": 1827
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1989
     },
     {
       "id": 1298702015,
@@ -1278,8 +1478,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370341,
-      "sourceLineNumber": 1828
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1990
     },
     {
       "id": 1847926105,
@@ -1299,8 +1499,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370341,
-      "sourceLineNumber": 1829
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1991
     },
     {
       "id": 954673211,
@@ -1323,8 +1523,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370341,
-      "sourceLineNumber": 1830
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1992
     },
     {
       "id": 929954706,
@@ -1344,8 +1544,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370341,
-      "sourceLineNumber": 1831
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1993
     },
     {
       "id": 1845397224,
@@ -1366,8 +1566,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1832
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1994
     },
     {
       "id": 843084206,
@@ -1389,8 +1589,8 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1833
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1995
     },
     {
       "id": 994756421,
@@ -1411,8 +1611,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1834
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1996
     },
     {
       "id": 1770220871,
@@ -1431,8 +1631,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1835
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1997
     },
     {
       "id": 433283500,
@@ -1452,8 +1652,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1836
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1998
     },
     {
       "id": 1865152003,
@@ -1475,8 +1675,34 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1837
+      "updatedAtEpochMs": 1779584626403,
+      "sourceLineNumber": 1999
+    },
+    {
+      "id": 437272068,
+      "slug": "2026-10-10-movements-the-civic",
+      "date": "2026-10-10",
+      "dateEpochMs": 1791615600000,
+      "startTimeEpochMs": 1791662400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 766994737,
+      "artistIds": [
+        766994737,
+        1747454443,
+        228425306,
+        1971486600
+      ],
+      "venueId": 1414808200,
+      "priceMin": 55.06,
+      "priceMax": 55.06,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2000
     },
     {
       "id": 1764137204,
@@ -1505,8 +1731,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1838
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2001
     },
     {
       "id": 475217268,
@@ -1528,8 +1754,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1839
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2002
     },
     {
       "id": 1891568723,
@@ -1549,8 +1775,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1840
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2003
     },
     {
       "id": 1509749910,
@@ -1572,8 +1798,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1841
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2004
     },
     {
       "id": 983440294,
@@ -1594,8 +1820,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1842
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2005
     },
     {
       "id": 961903877,
@@ -1615,8 +1841,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1843
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2006
     },
     {
       "id": 1391348599,
@@ -1638,8 +1864,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1844
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2007
     },
     {
       "id": 1787869160,
@@ -1662,8 +1888,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370342,
-      "sourceLineNumber": 1845
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2008
     },
     {
       "id": 90079532,
@@ -1685,8 +1911,29 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1847
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2010
+    },
+    {
+      "id": 812572868,
+      "slug": "2026-10-13-mico-the-regency-ballroom",
+      "date": "2026-10-13",
+      "dateEpochMs": 1791874800000,
+      "startTimeEpochMs": 1791946800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971516581,
+      "artistIds": [
+        1971516581
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626404,
+      "sourceLineNumber": 2011
     },
     {
       "id": 378326520,
@@ -1711,8 +1958,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1848
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2012
     },
     {
       "id": 1282829488,
@@ -1735,8 +1982,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1849
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2013
     },
     {
       "id": 1083469203,
@@ -1758,8 +2005,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1851
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2016
     },
     {
       "id": 1870146708,
@@ -1779,8 +2026,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1852
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2017
     },
     {
       "id": 2091043964,
@@ -1802,8 +2049,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1853
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2018
     },
     {
       "id": 848568965,
@@ -1825,8 +2072,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1854
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2019
+    },
+    {
+      "id": 1628841600,
+      "slug": "2026-10-15-sim-august-hall",
+      "date": "2026-10-15",
+      "dateEpochMs": 1792047600000,
+      "startTimeEpochMs": 1792108800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 629145124,
+      "artistIds": [
+        629145124
+      ],
+      "venueId": 811075932,
+      "priceMin": 39.3,
+      "priceMax": 39.3,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2020
     },
     {
       "id": 1194323361,
@@ -1846,8 +2116,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1855
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2021
     },
     {
       "id": 1692513928,
@@ -1870,8 +2140,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1856
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2022
     },
     {
       "id": 1822083123,
@@ -1894,8 +2164,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1857
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2023
     },
     {
       "id": 188772760,
@@ -1915,8 +2185,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1858
+      "updatedAtEpochMs": 1779584626405,
+      "sourceLineNumber": 2024
     },
     {
       "id": 874501406,
@@ -1936,8 +2206,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370343,
-      "sourceLineNumber": 1859
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2025
     },
     {
       "id": 956555675,
@@ -1957,8 +2227,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1860
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2026
     },
     {
       "id": 1656302955,
@@ -1981,8 +2251,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1861
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2027
     },
     {
       "id": 505845812,
@@ -2007,8 +2277,31 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1862
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2028
+    },
+    {
+      "id": 160505722,
+      "slug": "2026-10-16-the-jungle-giants-great-american-music-hall",
+      "date": "2026-10-16",
+      "dateEpochMs": 1792134000000,
+      "startTimeEpochMs": 1792238400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 530767134,
+      "artistIds": [
+        530767134
+      ],
+      "venueId": 463728167,
+      "priceMin": 29.5,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2030
     },
     {
       "id": 391150028,
@@ -2030,8 +2323,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1863
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2031
     },
     {
       "id": 1508118942,
@@ -2051,8 +2344,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1864
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2032
     },
     {
       "id": 1024403558,
@@ -2072,8 +2365,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1865
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2033
     },
     {
       "id": 281798806,
@@ -2093,8 +2386,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1866
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2034
     },
     {
       "id": 1849283529,
@@ -2114,8 +2407,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1867
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2035
     },
     {
       "id": 1659288593,
@@ -2137,8 +2430,53 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1868
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2036
+    },
+    {
+      "id": 466091856,
+      "slug": "2026-10-17-blondshell-the-castro",
+      "date": "2026-10-17",
+      "dateEpochMs": 1792220400000,
+      "startTimeEpochMs": 1792292400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1133979464,
+      "artistIds": [
+        1133979464,
+        206021171
+      ],
+      "venueId": 1383208152,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2037
+    },
+    {
+      "id": 919835493,
+      "slug": "2026-10-17-lewis-ofman-bimbos-365-club",
+      "date": "2026-10-17",
+      "dateEpochMs": 1792220400000,
+      "startTimeEpochMs": 1792296000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2033620504,
+      "artistIds": [
+        2033620504
+      ],
+      "venueId": 697962111,
+      "priceMin": 41.21,
+      "priceMax": 41.21,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626406,
+      "sourceLineNumber": 2038
     },
     {
       "id": 349252365,
@@ -2158,8 +2496,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1869
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2039
     },
     {
       "id": 971661964,
@@ -2179,8 +2517,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1870
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2040
     },
     {
       "id": 143815831,
@@ -2200,8 +2538,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1871
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2041
     },
     {
       "id": 576289911,
@@ -2222,8 +2560,33 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1872
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2042
+    },
+    {
+      "id": 1257145748,
+      "slug": "2026-10-18-she-wants-revenge-the-regency-ballroom",
+      "date": "2026-10-18",
+      "dateEpochMs": 1792306800000,
+      "startTimeEpochMs": 1792479600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1242033866,
+      "artistIds": [
+        1242033866,
+        460679404
+      ],
+      "venueId": 2133080253,
+      "priceMin": 48.79,
+      "priceMax": 48.79,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$76.38 balcony",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2043
     },
     {
       "id": 2014335489,
@@ -2242,8 +2605,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370344,
-      "sourceLineNumber": 1873
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2044
     },
     {
       "id": 1065631024,
@@ -2263,8 +2626,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1874
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2045
     },
     {
       "id": 1789115146,
@@ -2286,8 +2649,53 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1876
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2047
+    },
+    {
+      "id": 948504951,
+      "slug": "2026-10-19-bebe-stockwell-the-rickshaw-stop",
+      "date": "2026-10-19",
+      "dateEpochMs": 1792393200000,
+      "startTimeEpochMs": 1792465200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1596608099,
+      "artistIds": [
+        1596608099
+      ],
+      "venueId": 31041890,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626407,
+      "sourceLineNumber": 2048
+    },
+    {
+      "id": 224126636,
+      "slug": "2026-10-20-shakey-graves-the-castro",
+      "date": "2026-10-20",
+      "dateEpochMs": 1792479600000,
+      "startTimeEpochMs": 1792652400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1878575784,
+      "artistIds": [
+        1878575784,
+        1915839385
+      ],
+      "venueId": 1383208152,
+      "priceMin": 48.6,
+      "priceMax": 48.6,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2049
     },
     {
       "id": 1764020070,
@@ -2310,8 +2718,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1877
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2050
     },
     {
       "id": 1393208652,
@@ -2333,8 +2741,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1878
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2051
     },
     {
       "id": 744364831,
@@ -2357,8 +2765,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1879
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2052
     },
     {
       "id": 212455408,
@@ -2378,8 +2786,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1880
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2053
     },
     {
       "id": 797999264,
@@ -2401,8 +2809,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1881
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2054
     },
     {
       "id": 1927361001,
@@ -2427,8 +2835,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1882
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2055
     },
     {
       "id": 1955838,
@@ -2449,8 +2857,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1883
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2056
     },
     {
       "id": 1023513373,
@@ -2473,8 +2881,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1884
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2057
     },
     {
       "id": 410173558,
@@ -2495,8 +2903,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1885
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2058
     },
     {
       "id": 100129475,
@@ -2517,8 +2925,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1886
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2059
     },
     {
       "id": 70173636,
@@ -2540,8 +2948,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1887
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2060
     },
     {
       "id": 1138185371,
@@ -2561,8 +2969,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370345,
-      "sourceLineNumber": 1888
+      "updatedAtEpochMs": 1779584626408,
+      "sourceLineNumber": 2061
     },
     {
       "id": 192446968,
@@ -2583,8 +2991,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1889
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2062
     },
     {
       "id": 79421935,
@@ -2603,8 +3011,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1890
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2063
     },
     {
       "id": 1134626228,
@@ -2629,8 +3037,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1891
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2064
     },
     {
       "id": 1406558517,
@@ -2651,8 +3059,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1893
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2066
     },
     {
       "id": 1116523021,
@@ -2674,8 +3082,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1894
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2067
     },
     {
       "id": 2124201896,
@@ -2697,8 +3105,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1895
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2068
     },
     {
       "id": 651534772,
@@ -2723,8 +3131,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1896
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2069
     },
     {
       "id": 1069442049,
@@ -2745,8 +3153,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1897
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2070
     },
     {
       "id": 1867299485,
@@ -2772,8 +3180,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370346,
-      "sourceLineNumber": 1898
+      "updatedAtEpochMs": 1779584626409,
+      "sourceLineNumber": 2071
     },
     {
       "id": 882540350,
@@ -2798,8 +3206,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1899
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2072
     },
     {
       "id": 1002350043,
@@ -2819,8 +3227,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1900
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2073
     },
     {
       "id": 1255978500,
@@ -2841,8 +3249,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1901
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2074
     },
     {
       "id": 1952399730,
@@ -2864,8 +3272,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1902
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2075
     },
     {
       "id": 2019117752,
@@ -2888,8 +3296,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1903
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2076
     },
     {
       "id": 1380706620,
@@ -2910,8 +3318,32 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1904
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2077
+    },
+    {
+      "id": 79329901,
+      "slug": "2026-10-27-grace-enger-august-hall",
+      "date": "2026-10-27",
+      "dateEpochMs": 1793084400000,
+      "startTimeEpochMs": 1793145600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 433019920,
+      "artistIds": [
+        433019920,
+        62780328
+      ],
+      "venueId": 811075932,
+      "priceMin": 29.55,
+      "priceMax": 29.55,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2079
     },
     {
       "id": 687554294,
@@ -2935,8 +3367,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1905
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2080
     },
     {
       "id": 1721686823,
@@ -2956,8 +3388,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1906
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2081
     },
     {
       "id": 1570421113,
@@ -2980,8 +3412,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1907
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2082
     },
     {
       "id": 337791264,
@@ -3003,8 +3435,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1908
+      "updatedAtEpochMs": 1779584626410,
+      "sourceLineNumber": 2083
     },
     {
       "id": 541084008,
@@ -3026,8 +3458,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1909
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2085
     },
     {
       "id": 1505240733,
@@ -3048,8 +3480,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370347,
-      "sourceLineNumber": 1910
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2086
     },
     {
       "id": 971880165,
@@ -3069,8 +3501,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370348,
-      "sourceLineNumber": 1911
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2087
     },
     {
       "id": 1256436634,
@@ -3092,8 +3524,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370348,
-      "sourceLineNumber": 1912
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2088
     },
     {
       "id": 600495149,
@@ -3113,8 +3545,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370348,
-      "sourceLineNumber": 1913
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2089
     },
     {
       "id": 709420922,
@@ -3136,8 +3568,29 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370348,
-      "sourceLineNumber": 1914
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2090
+    },
+    {
+      "id": 36894262,
+      "slug": "2026-10-30-stella-lefty-bimbos-365-club",
+      "date": "2026-10-30",
+      "dateEpochMs": 1793343600000,
+      "startTimeEpochMs": 1793415600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1028684546,
+      "artistIds": [
+        1028684546
+      ],
+      "venueId": 697962111,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2092
     },
     {
       "id": 1000474373,
@@ -3159,8 +3612,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370348,
-      "sourceLineNumber": 1916
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2093
     },
     {
       "id": 1104568367,
@@ -3186,8 +3639,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370348,
-      "sourceLineNumber": 1917
+      "updatedAtEpochMs": 1779584626411,
+      "sourceLineNumber": 2094
     }
   ]
 }

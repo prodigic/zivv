@@ -25,8 +25,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370351,
-      "sourceLineNumber": 1955
+      "updatedAtEpochMs": 1779584626415,
+      "sourceLineNumber": 2145
     },
     {
       "id": 196167253,
@@ -48,8 +48,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370351,
-      "sourceLineNumber": 1956
+      "updatedAtEpochMs": 1779584626415,
+      "sourceLineNumber": 2146
     },
     {
       "id": 2129195846,
@@ -72,8 +72,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370351,
-      "sourceLineNumber": 1957
+      "updatedAtEpochMs": 1779584626415,
+      "sourceLineNumber": 2148
     },
     {
       "id": 1844983612,
@@ -94,8 +94,29 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370351,
-      "sourceLineNumber": 1958
+      "updatedAtEpochMs": 1779584626415,
+      "sourceLineNumber": 2149
+    },
+    {
+      "id": 638669721,
+      "slug": "2026-12-07-angine-de-poitrine-the-castro",
+      "date": "2026-12-07",
+      "dateEpochMs": 1796630400000,
+      "startTimeEpochMs": 1796702400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1578546960,
+      "artistIds": [
+        1578546960
+      ],
+      "venueId": 1383208152,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626415,
+      "sourceLineNumber": 2150
     },
     {
       "id": 839753172,
@@ -116,8 +137,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370351,
-      "sourceLineNumber": 1959
+      "updatedAtEpochMs": 1779584626415,
+      "sourceLineNumber": 2151
     },
     {
       "id": 1485239828,
@@ -137,8 +158,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370351,
-      "sourceLineNumber": 1960
+      "updatedAtEpochMs": 1779584626415,
+      "sourceLineNumber": 2152
+    },
+    {
+      "id": 1610223820,
+      "slug": "2026-12-11-the-bobby-lees-the-independent",
+      "date": "2026-12-11",
+      "dateEpochMs": 1796976000000,
+      "startTimeEpochMs": 1797087600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1584422094,
+      "artistIds": [
+        1584422094
+      ],
+      "venueId": 515101024,
+      "priceMin": 31.55,
+      "priceMax": 31.55,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626415,
+      "sourceLineNumber": 2153
     },
     {
       "id": 1709307841,
@@ -161,8 +205,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370352,
-      "sourceLineNumber": 1961
+      "updatedAtEpochMs": 1779584626416,
+      "sourceLineNumber": 2154
     },
     {
       "id": 1785355123,
@@ -183,8 +227,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1778972370352,
-      "sourceLineNumber": 1962
+      "updatedAtEpochMs": 1779584626416,
+      "sourceLineNumber": 2155
     }
   ]
 }

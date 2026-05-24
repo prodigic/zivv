@@ -2,7 +2,7 @@
   "chunkId": "2027-02",
   "dateRange": {
     "startEpochMs": 1801814400000,
-    "endEpochMs": 1802851200000
+    "endEpochMs": 1802937600000
   },
   "events": [
     {
@@ -25,8 +25,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370352,
-      "sourceLineNumber": 1965
+      "updatedAtEpochMs": 1779584626417,
+      "sourceLineNumber": 2161
     },
     {
       "id": 270715009,
@@ -47,8 +47,28 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1778972370352,
-      "sourceLineNumber": 1966
+      "updatedAtEpochMs": 1779584626417,
+      "sourceLineNumber": 2162
+    },
+    {
+      "id": 1081281739,
+      "slug": "2027-02-18-blue-october-the-regency-ballroom",
+      "date": "2027-02-18",
+      "dateEpochMs": 1802937600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 895564179,
+      "artistIds": [
+        895564179
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1779584626417,
+      "sourceLineNumber": 2163
     }
   ]
 }
