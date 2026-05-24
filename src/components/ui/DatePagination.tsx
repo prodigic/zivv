@@ -46,7 +46,8 @@ export const DatePagination: React.FC<DatePaginationProps> = ({ className = "" }
   }, [filters.dateRange?.startDate, today, maxOffset]);
 
   const endOffset = useMemo(() => {
-    if (!filters.dateRange?.endDate) return 7;
+    // No endDate means "All" is selected (filter was cleared)
+    if (!filters.dateRange?.endDate) return maxOffset;
     const diff = Math.round((parseLocalDate(filters.dateRange.endDate).getTime() - today.getTime()) / 86400000);
     return clamp(diff, 0, maxOffset);
   }, [filters.dateRange?.endDate, today, maxOffset]);
