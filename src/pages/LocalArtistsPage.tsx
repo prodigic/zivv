@@ -31,6 +31,7 @@ const LocalArtistsPage: React.FC = () => {
   };
 
   const excludeSet = useAppStore((s) => s.localArtistExclude);
+  const localArtistList = useAppStore((s) => s.localArtistList);
 
   const [artistSearch, setArtistSearch] = React.useState("");
   const [displayLimit, setDisplayLimit] = React.useState(30);
@@ -49,12 +50,13 @@ const LocalArtistsPage: React.FC = () => {
 
   const localArtists = React.useMemo(() => {
     let arr = Array.from(artists.values()).filter((a) => {
+      if (excludeSet.has(a.name.toLowerCase())) return false;
+      if (a.upcomingEvents.length === 0) return false;
+      // Include if on the persistent list OR currently meets the threshold
+      const onList = localArtistList.has(a.name.toLowerCase());
       const venueCount = new Set(a.upcomingEvents.map((e) => e.venueId)).size;
-      return (
-        a.upcomingEvents.length >= MIN_EVENTS &&
-        venueCount >= MIN_VENUES &&
-        !excludeSet.has(a.name.toLowerCase())
-      );
+      const meetsThreshold = a.upcomingEvents.length >= MIN_EVENTS && venueCount >= MIN_VENUES;
+      return onList || meetsThreshold;
     });
 
     if (artistSearch.trim()) {

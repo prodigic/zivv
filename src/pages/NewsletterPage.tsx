@@ -72,7 +72,7 @@ export default function NewsletterPage() {
   const cityConfig = CITY_CONFIGS[citySlug] ?? CITY_CONFIGS.sf;
   const isCity = cityConfig.match;
 
-  const { artists, events, venues, manifest, loading, initialize, localArtistExclude } = useAppStore();
+  const { artists, events, venues, manifest, loading, initialize, localArtistExclude, localArtistList } = useAppStore();
   const loadedChunks = useAppStore((s) => s.loadedChunks);
   const loadChunk = useAppStore((s) => s.loadChunk);
   const [copied, setCopied] = useState(false);
@@ -98,10 +98,13 @@ export default function NewsletterPage() {
   const localActBlocks = useMemo(() => {
     const blocks: { name: string; slug: string; events: typeof Array.prototype }[] = [];
     for (const artist of artists.values()) {
-      const upcoming = artist.upcomingEvents.filter((e) => e.dateEpochMs > nowMs);
-      const venueCount = new Set(upcoming.map((e) => e.venueId)).size;
-      if (upcoming.length < MIN_EVENTS || venueCount < MIN_VENUES) continue;
       if (localArtistExclude.has(artist.name.toLowerCase())) continue;
+      const upcoming = artist.upcomingEvents.filter((e) => e.dateEpochMs > nowMs);
+      if (upcoming.length === 0) continue;
+      const venueCount = new Set(upcoming.map((e) => e.venueId)).size;
+      const onList = localArtistList.has(artist.name.toLowerCase());
+      const meetsThreshold = upcoming.length >= MIN_EVENTS && venueCount >= MIN_VENUES;
+      if (!onList && !meetsThreshold) continue;
       const sfRaw = upcoming.filter((e) => isCity(e.venueCity) && e.dateEpochMs <= weekEndMs);
       // Dedupe same date+venue (same show listed under multiple artist orderings).
       // Prefer the entry where this artist is the headliner.
@@ -117,7 +120,7 @@ export default function NewsletterPage() {
     }
     blocks.sort((a, b) => a.events[0].dateEpochMs - b.events[0].dateEpochMs);
     return blocks;
-  }, [artists, localArtistExclude, nowMs, weekEndMs, citySlug]);
+  }, [artists, localArtistExclude, localArtistList, nowMs, weekEndMs, citySlug]);
 
   // Just-added section — all SF newly announced, any future date
   const justAddedEvents = useMemo(() => {

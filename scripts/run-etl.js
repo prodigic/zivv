@@ -12,7 +12,7 @@
  */
 
 import { ETLProcessor } from '../dist/lib/etl/processor.js';
-import { readFileSync, existsSync, readdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync, copyFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 
@@ -116,6 +116,51 @@ function verifyOutput(projectRoot, stats) {
   return { failures, warnings, sourceLines, etlCount };
 }
 
+// ─── Local artist list auto-growth ──────────────────────────────────────────
+
+function growLocalArtistList(projectRoot) {
+  const publicData   = resolve(projectRoot, 'public', 'data');
+  const dataDir      = resolve(projectRoot, 'data');
+  const listPath     = resolve(dataDir, 'local-artists.json');
+  const excludePath  = resolve(dataDir, 'local-artist-exclude.json');
+
+  const existing = existsSync(listPath)
+    ? new Set(JSON.parse(readFileSync(listPath, 'utf-8')))
+    : new Set();
+  const excluded = existsSync(excludePath)
+    ? new Set(JSON.parse(readFileSync(excludePath, 'utf-8')).map(n => n.toLowerCase()))
+    : new Set();
+
+  let artists = [];
+  try { artists = JSON.parse(readFileSync(resolve(publicData, 'artists.json'), 'utf-8')); }
+  catch { return; }
+
+  const now = Date.now();
+  const newlyQualified = [];
+
+  for (const artist of artists) {
+    if (excluded.has(artist.name.toLowerCase())) continue;
+    if (existing.has(artist.name)) continue;
+    const upcoming = (artist.upcomingEvents || []).filter(e => e.dateEpochMs > now);
+    const venueCount = new Set(upcoming.map(e => e.venueId)).size;
+    if (upcoming.length >= 3 && venueCount >= 2) {
+      newlyQualified.push(artist.name);
+    }
+  }
+
+  if (newlyQualified.length > 0) {
+    const updated = [...existing, ...newlyQualified].sort();
+    writeFileSync(listPath, JSON.stringify(updated, null, 2) + '\n');
+    console.log(`🏠 Local artist list: +${newlyQualified.length} new → ${updated.length} total`);
+    newlyQualified.forEach(n => console.log(`   + ${n}`));
+  }
+
+  // Always copy to public/data so the UI can load it
+  if (existsSync(listPath)) {
+    copyFileSync(listPath, resolve(publicData, 'local-artists.json'));
+  }
+}
+
 async function main() {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
@@ -181,6 +226,9 @@ async function main() {
             if (verify.warnings.length === 0 && verify.failures.length === 0) {
                 console.log('   ✅ All checks passed');
             }
+
+            // Grow the persistent local artist list with any new qualifiers
+            growLocalArtistList(projectRoot);
 
             process.exit(0);
 
