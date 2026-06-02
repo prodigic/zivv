@@ -1,16 +1,16 @@
 {
   "chunkId": "2027-01",
   "dateRange": {
-    "startEpochMs": 1799481600000,
-    "endEpochMs": 1800086400000
+    "startEpochMs": 1799449200000,
+    "endEpochMs": 1800054000000
   },
   "events": [
     {
-      "id": 2113417285,
-      "slug": "2027-01-09-anna-von-hausswolff-the-great-american-music-hall",
-      "date": "2027-01-09",
-      "dateEpochMs": 1799481600000,
-      "startTimeEpochMs": 1799571600000,
+      "id": 210610554,
+      "slug": "2027-01-08-anna-von-hausswolff-the-great-american-music-hall",
+      "date": "2027-01-08",
+      "dateEpochMs": 1799449200000,
+      "startTimeEpochMs": 1799539200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1961924816,
       "artistIds": [
@@ -24,16 +24,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626416,
-      "sourceLineNumber": 2157
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896566,
+      "sourceLineNumber": 2366
     },
     {
-      "id": 1990606045,
-      "slug": "2027-01-15-book-of-love-the-chapel",
-      "date": "2027-01-15",
-      "dateEpochMs": 1800000000000,
-      "startTimeEpochMs": 1800144000000,
+      "id": 1779255132,
+      "slug": "2027-01-14-book-of-love-the-chapel",
+      "date": "2027-01-14",
+      "dateEpochMs": 1799967600000,
+      "startTimeEpochMs": 1800111600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1236040503,
       "artistIds": [
@@ -51,16 +51,16 @@
         "sold-out"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626416,
-      "sourceLineNumber": 2158
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896567,
+      "sourceLineNumber": 2367
     },
     {
-      "id": 2093010338,
-      "slug": "2027-01-16-book-of-love-the-chapel",
-      "date": "2027-01-16",
-      "dateEpochMs": 1800086400000,
-      "startTimeEpochMs": 1800230400000,
+      "id": 1990606045,
+      "slug": "2027-01-15-book-of-love-the-chapel",
+      "date": "2027-01-15",
+      "dateEpochMs": 1800054000000,
+      "startTimeEpochMs": 1800198000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1236040503,
       "artistIds": [
@@ -75,9 +75,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626416,
-      "sourceLineNumber": 2159
+      "createdAtEpochMs": 1779451200000,
+      "updatedAtEpochMs": 1780441896567,
+      "sourceLineNumber": 2368
     }
   ]
 }

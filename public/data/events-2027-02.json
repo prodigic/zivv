@@ -1,16 +1,16 @@
 {
   "chunkId": "2027-02",
   "dateRange": {
-    "startEpochMs": 1801814400000,
-    "endEpochMs": 1802937600000
+    "startEpochMs": 1801782000000,
+    "endEpochMs": 1802991600000
   },
   "events": [
     {
-      "id": 1165208094,
-      "slug": "2027-02-05-odezenne-the-independent",
-      "date": "2027-02-05",
-      "dateEpochMs": 1801814400000,
-      "startTimeEpochMs": 1801929600000,
+      "id": 1091702913,
+      "slug": "2027-02-04-odezenne-the-independent",
+      "date": "2027-02-04",
+      "dateEpochMs": 1801782000000,
+      "startTimeEpochMs": 1801897200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1870225213,
       "artistIds": [
@@ -24,16 +24,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626417,
-      "sourceLineNumber": 2161
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896567,
+      "sourceLineNumber": 2370
     },
     {
-      "id": 270715009,
-      "slug": "2027-02-17-the-bouncing-souls-the-uc-theater",
-      "date": "2027-02-17",
-      "dateEpochMs": 1802851200000,
-      "startTimeEpochMs": 1802916000000,
+      "id": 690899008,
+      "slug": "2027-02-16-the-bouncing-souls-the-uc-theater",
+      "date": "2027-02-16",
+      "dateEpochMs": 1802818800000,
+      "startTimeEpochMs": 1802883600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1549370072,
       "artistIds": [
@@ -46,15 +46,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626417,
-      "sourceLineNumber": 2162
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896567,
+      "sourceLineNumber": 2371
     },
     {
-      "id": 1081281739,
-      "slug": "2027-02-18-blue-october-the-regency-ballroom",
-      "date": "2027-02-18",
-      "dateEpochMs": 1802937600000,
+      "id": 1432081676,
+      "slug": "2027-02-17-blue-october-the-regency-ballroom",
+      "date": "2027-02-17",
+      "dateEpochMs": 1802905200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 895564179,
       "artistIds": [
@@ -66,9 +66,33 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626417,
-      "sourceLineNumber": 2163
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896567,
+      "sourceLineNumber": 2372
+    },
+    {
+      "id": 24814043,
+      "slug": "2027-02-18-buck-meek-moes-alley",
+      "date": "2027-02-18",
+      "dateEpochMs": 1802991600000,
+      "startTimeEpochMs": 1803067200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1459277008,
+      "artistIds": [
+        1459277008,
+        603631362
+      ],
+      "venueId": 1002839764,
+      "priceMin": 33.86,
+      "priceMax": 33.86,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896567,
+      "sourceLineNumber": 2373
     }
   ]
 }

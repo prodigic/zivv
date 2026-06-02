@@ -1,16 +1,16 @@
 {
   "chunkId": "2026-09",
   "dateRange": {
-    "startEpochMs": 1788246000000,
-    "endEpochMs": 1790751600000
+    "startEpochMs": 1788213600000,
+    "endEpochMs": 1790719200000
   },
   "events": [
     {
-      "id": 2128697448,
-      "slug": "2026-09-01-screeching-weasel-august-hall",
-      "date": "2026-09-01",
-      "dateEpochMs": 1788246000000,
-      "startTimeEpochMs": 1788307200000,
+      "id": 632138778,
+      "slug": "2026-08-31-screeching-weasel-august-hall",
+      "date": "2026-08-31",
+      "dateEpochMs": 1788213600000,
+      "startTimeEpochMs": 1788274800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1226352615,
       "artistIds": [
@@ -26,16 +26,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626384,
-      "sourceLineNumber": 1779
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896526,
+      "sourceLineNumber": 1918
     },
     {
-      "id": 704380143,
-      "slug": "2026-09-01-eagles-of-death-metal-the-fillmore",
-      "date": "2026-09-01",
-      "dateEpochMs": 1788246000000,
-      "startTimeEpochMs": 1788375600000,
+      "id": 1017803057,
+      "slug": "2026-08-31-eagles-of-death-metal-the-fillmore",
+      "date": "2026-08-31",
+      "dateEpochMs": 1788213600000,
+      "startTimeEpochMs": 1788343200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1610095344,
       "artistIds": [
@@ -49,16 +49,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626384,
-      "sourceLineNumber": 1780
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896526,
+      "sourceLineNumber": 1919
     },
     {
-      "id": 1696622059,
-      "slug": "2026-09-01-diana-ross-the-meritage-resort",
-      "date": "2026-09-01",
-      "dateEpochMs": 1788246000000,
-      "startTimeEpochMs": 1788318000000,
+      "id": 869840083,
+      "slug": "2026-08-31-diana-ross-the-meritage-resort",
+      "date": "2026-08-31",
+      "dateEpochMs": 1788213600000,
+      "startTimeEpochMs": 1788285600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1218391615,
       "artistIds": [
@@ -70,16 +70,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626384,
-      "sourceLineNumber": 1781
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896526,
+      "sourceLineNumber": 1920
     },
     {
-      "id": 1339667762,
-      "slug": "2026-09-01-rehash-the-catalyst",
-      "date": "2026-09-01",
-      "dateEpochMs": 1788246000000,
-      "startTimeEpochMs": 1788303600000,
+      "id": 1242725072,
+      "slug": "2026-08-31-rehash-the-catalyst",
+      "date": "2026-08-31",
+      "dateEpochMs": 1788213600000,
+      "startTimeEpochMs": 1788271200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 407265964,
       "artistIds": [
@@ -93,16 +93,43 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1779584626384,
-      "sourceLineNumber": 1782
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1921
     },
     {
-      "id": 1797174895,
-      "slug": "2026-09-02-asian-man-records-35th-anniversary-celebration-the-bottom-of-the-hill",
-      "date": "2026-09-02",
-      "dateEpochMs": 1788332400000,
-      "startTimeEpochMs": 1788440400000,
+      "id": 474480762,
+      "slug": "2026-08-31-ingested-neck-of-the-woods",
+      "date": "2026-08-31",
+      "dateEpochMs": 1788213600000,
+      "startTimeEpochMs": 1788300000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 326686934,
+      "artistIds": [
+        326686934,
+        1831000470,
+        159920412,
+        384750223,
+        1196681662
+      ],
+      "venueId": 1557090037,
+      "priceMin": 24.66,
+      "priceMax": 24.66,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1922
+    },
+    {
+      "id": 1889715538,
+      "slug": "2026-09-01-asian-man-records-35th-anniversary-celebration-the-bottom-of-the-hill",
+      "date": "2026-09-01",
+      "dateEpochMs": 1788300000000,
+      "startTimeEpochMs": 1788408000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1808968445,
       "artistIds": [
@@ -119,16 +146,16 @@
         "sold-out"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626384,
-      "sourceLineNumber": 1783
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1923
     },
     {
-      "id": 394755053,
-      "slug": "2026-09-02-zayn-the-warriors-stadium",
-      "date": "2026-09-02",
-      "dateEpochMs": 1788332400000,
-      "startTimeEpochMs": 1788404400000,
+      "id": 850009428,
+      "slug": "2026-09-01-zayn-the-warriors-stadium",
+      "date": "2026-09-01",
+      "dateEpochMs": 1788300000000,
+      "startTimeEpochMs": 1788372000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1971136305,
       "artistIds": [
@@ -140,16 +167,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626384,
-      "sourceLineNumber": 1784
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1924
     },
     {
-      "id": 1005059155,
-      "slug": "2026-09-02-lp-the-castro",
-      "date": "2026-09-02",
-      "dateEpochMs": 1788332400000,
-      "startTimeEpochMs": 1788404400000,
+      "id": 1492956782,
+      "slug": "2026-09-01-lp-the-castro",
+      "date": "2026-09-01",
+      "dateEpochMs": 1788300000000,
+      "startTimeEpochMs": 1788372000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 574484119,
       "artistIds": [
@@ -161,16 +188,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626384,
-      "sourceLineNumber": 1785
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1925
     },
     {
-      "id": 546974594,
-      "slug": "2026-09-02-roger-daltrey-the-mountain-winery",
-      "date": "2026-09-02",
-      "dateEpochMs": 1788332400000,
-      "startTimeEpochMs": 1788402600000,
+      "id": 196174657,
+      "slug": "2026-09-01-roger-daltrey-the-mountain-winery",
+      "date": "2026-09-01",
+      "dateEpochMs": 1788300000000,
+      "startTimeEpochMs": 1788370200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 406549083,
       "artistIds": [
@@ -182,16 +209,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626384,
-      "sourceLineNumber": 1788
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1928
     },
     {
-      "id": 1307016366,
-      "slug": "2026-09-03-tab-benoit-the-cornerstone",
-      "date": "2026-09-03",
-      "dateEpochMs": 1788418800000,
-      "startTimeEpochMs": 1788490800000,
+      "id": 1374023119,
+      "slug": "2026-09-02-tab-benoit-the-cornerstone",
+      "date": "2026-09-02",
+      "dateEpochMs": 1788386400000,
+      "startTimeEpochMs": 1788458400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1458641299,
       "artistIds": [
@@ -204,16 +231,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1790
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1930
     },
     {
-      "id": 1189098032,
-      "slug": "2026-09-03-asian-man-records-35th-anniversary-celebration-the-bottom-of-the-hill",
-      "date": "2026-09-03",
-      "dateEpochMs": 1788418800000,
-      "startTimeEpochMs": 1788526800000,
+      "id": 1797174895,
+      "slug": "2026-09-02-asian-man-records-35th-anniversary-celebration-the-bottom-of-the-hill",
+      "date": "2026-09-02",
+      "dateEpochMs": 1788386400000,
+      "startTimeEpochMs": 1788494400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1808968445,
       "artistIds": [
@@ -231,15 +258,15 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1791
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1931
     },
     {
-      "id": 623155498,
-      "slug": "2026-09-03-tajmo-the-mountain-winery",
-      "date": "2026-09-03",
-      "dateEpochMs": 1788418800000,
-      "startTimeEpochMs": 1788489000000,
+      "id": 621608983,
+      "slug": "2026-09-02-tajmo-the-mountain-winery",
+      "date": "2026-09-02",
+      "dateEpochMs": 1788386400000,
+      "startTimeEpochMs": 1788456600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 981238772,
       "artistIds": [
@@ -251,16 +278,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1792
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1932
     },
     {
-      "id": 1288372022,
-      "slug": "2026-09-03-hayla-the-regency-ballroom",
-      "date": "2026-09-03",
-      "dateEpochMs": 1788418800000,
-      "startTimeEpochMs": 1788483600000,
+      "id": 1221365269,
+      "slug": "2026-09-02-hayla-the-regency-ballroom",
+      "date": "2026-09-02",
+      "dateEpochMs": 1788386400000,
+      "startTimeEpochMs": 1788451200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 992306654,
       "artistIds": [
@@ -272,16 +299,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1793
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1933
     },
     {
-      "id": 638003037,
-      "slug": "2026-09-04-styx-the-pavilion",
-      "date": "2026-09-04",
-      "dateEpochMs": 1788505200000,
-      "startTimeEpochMs": 1788699600000,
+      "id": 869548772,
+      "slug": "2026-09-03-styx-the-pavilion",
+      "date": "2026-09-03",
+      "dateEpochMs": 1788472800000,
+      "startTimeEpochMs": 1788667200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1971326573,
       "artistIds": [
@@ -296,16 +323,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1794
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1934
     },
     {
-      "id": 581021169,
-      "slug": "2026-09-04-asian-man-records-35th-anniversary-celebration-the-bottom-of-the-hill",
-      "date": "2026-09-04",
-      "dateEpochMs": 1788505200000,
-      "startTimeEpochMs": 1788613200000,
+      "id": 1189098032,
+      "slug": "2026-09-03-asian-man-records-35th-anniversary-celebration-the-bottom-of-the-hill",
+      "date": "2026-09-03",
+      "dateEpochMs": 1788472800000,
+      "startTimeEpochMs": 1788580800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1808968445,
       "artistIds": [
@@ -323,15 +350,15 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1795
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1935
     },
     {
-      "id": 2014635919,
-      "slug": "2026-09-04-nitzer-ebb-the-regency-ballroom",
-      "date": "2026-09-04",
-      "dateEpochMs": 1788505200000,
-      "startTimeEpochMs": 1788577200000,
+      "id": 1587229680,
+      "slug": "2026-09-03-nitzer-ebb-the-regency-ballroom",
+      "date": "2026-09-03",
+      "dateEpochMs": 1788472800000,
+      "startTimeEpochMs": 1788544800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 2113000518,
       "artistIds": [
@@ -343,16 +370,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1796
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896527,
+      "sourceLineNumber": 1936
     },
     {
-      "id": 1472750932,
-      "slug": "2026-09-04-devildriver-the-ritz",
-      "date": "2026-09-04",
-      "dateEpochMs": 1788505200000,
-      "startTimeEpochMs": 1788674400000,
+      "id": 1825144011,
+      "slug": "2026-09-03-devildriver-the-ritz",
+      "date": "2026-09-03",
+      "dateEpochMs": 1788472800000,
+      "startTimeEpochMs": 1788642000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1068909165,
       "artistIds": [
@@ -368,16 +395,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1797
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896528,
+      "sourceLineNumber": 1937
     },
     {
-      "id": 1289867055,
-      "slug": "2026-09-04-roger-daltrey-luther-burbank-center",
-      "date": "2026-09-04",
-      "dateEpochMs": 1788505200000,
-      "startTimeEpochMs": 1788575400000,
+      "id": 1619632816,
+      "slug": "2026-09-03-roger-daltrey-luther-burbank-center",
+      "date": "2026-09-03",
+      "dateEpochMs": 1788472800000,
+      "startTimeEpochMs": 1788543000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 406549083,
       "artistIds": [
@@ -389,16 +416,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1798
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896528,
+      "sourceLineNumber": 1938
     },
     {
-      "id": 1729158869,
-      "slug": "2026-09-05-kamelot-the-fillmore",
-      "date": "2026-09-05",
-      "dateEpochMs": 1788591600000,
-      "startTimeEpochMs": 1788778800000,
+      "id": 732086516,
+      "slug": "2026-09-04-kamelot-the-fillmore",
+      "date": "2026-09-04",
+      "dateEpochMs": 1788559200000,
+      "startTimeEpochMs": 1788746400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1767687696,
       "artistIds": [
@@ -414,16 +441,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1799
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896528,
+      "sourceLineNumber": 1939
     },
     {
-      "id": 27055694,
-      "slug": "2026-09-05-asian-man-records-35th-anniversary-celebration-the-bottom-of-the-hill",
-      "date": "2026-09-05",
-      "dateEpochMs": 1788591600000,
-      "startTimeEpochMs": 1788699600000,
+      "id": 581021169,
+      "slug": "2026-09-04-asian-man-records-35th-anniversary-celebration-the-bottom-of-the-hill",
+      "date": "2026-09-04",
+      "dateEpochMs": 1788559200000,
+      "startTimeEpochMs": 1788667200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1808968445,
       "artistIds": [
@@ -441,15 +468,15 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1800
+      "updatedAtEpochMs": 1780441896528,
+      "sourceLineNumber": 1940
     },
     {
-      "id": 703510046,
-      "slug": "2026-09-05-tab-benoit-the-uptown-theater",
-      "date": "2026-09-05",
-      "dateEpochMs": 1788591600000,
-      "startTimeEpochMs": 1788634800000,
+      "id": 1665124063,
+      "slug": "2026-09-04-tab-benoit-the-uptown-theater",
+      "date": "2026-09-04",
+      "dateEpochMs": 1788559200000,
+      "startTimeEpochMs": 1788602400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1458641299,
       "artistIds": [
@@ -464,16 +491,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626385,
-      "sourceLineNumber": 1801
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896528,
+      "sourceLineNumber": 1941
     },
     {
-      "id": 557897679,
-      "slug": "2026-09-05-deep-purple-shoreline-amphitheater",
-      "date": "2026-09-05",
-      "dateEpochMs": 1788591600000,
-      "startTimeEpochMs": 1788912000000,
+      "id": 1786769362,
+      "slug": "2026-09-04-deep-purple-shoreline-amphitheater",
+      "date": "2026-09-04",
+      "dateEpochMs": 1788559200000,
+      "startTimeEpochMs": 1788879600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1633552963,
       "artistIds": [
@@ -489,16 +516,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626386,
-      "sourceLineNumber": 1802
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896528,
+      "sourceLineNumber": 1942
     },
     {
-      "id": 1427330041,
-      "slug": "2026-09-05-oingo-boingo-former-members-the-mountain-winery",
-      "date": "2026-09-05",
-      "dateEpochMs": 1788591600000,
-      "startTimeEpochMs": 1788656400000,
+      "id": 1166896776,
+      "slug": "2026-09-04-oingo-boingo-former-members-the-mountain-winery",
+      "date": "2026-09-04",
+      "dateEpochMs": 1788559200000,
+      "startTimeEpochMs": 1788624000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1150777753,
       "artistIds": [
@@ -520,16 +547,16 @@
         "matinee"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626386,
-      "sourceLineNumber": 1803
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896528,
+      "sourceLineNumber": 1943
     },
     {
-      "id": 228737857,
-      "slug": "2026-09-05-public-image-ltd-the-rio-theater",
-      "date": "2026-09-05",
-      "dateEpochMs": 1788591600000,
-      "startTimeEpochMs": 1788868800000,
+      "id": 122062080,
+      "slug": "2026-09-04-public-image-ltd-the-rio-theater",
+      "date": "2026-09-04",
+      "dateEpochMs": 1788559200000,
+      "startTimeEpochMs": 1788836400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1878036453,
       "artistIds": [
@@ -543,16 +570,59 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626386,
-      "sourceLineNumber": 1804
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896528,
+      "sourceLineNumber": 1944
     },
     {
-      "id": 62345193,
-      "slug": "2026-09-07-the-charlatans-uk-the-castro",
-      "date": "2026-09-07",
-      "dateEpochMs": 1788764400000,
-      "startTimeEpochMs": 1788836400000,
+      "id": 420331684,
+      "slug": "2026-09-04-con-funk-shun-meritage-resort",
+      "date": "2026-09-04",
+      "dateEpochMs": 1788559200000,
+      "startTimeEpochMs": 1788631200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 788891535,
+      "artistIds": [
+        788891535,
+        254321245
+      ],
+      "venueId": 1630275026,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896529,
+      "sourceLineNumber": 1945
+    },
+    {
+      "id": 1145113836,
+      "slug": "2026-09-05-babyface-meritage-resort",
+      "date": "2026-09-05",
+      "dateEpochMs": 1788645600000,
+      "startTimeEpochMs": 1788717600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2060777722,
+      "artistIds": [
+        2060777722
+      ],
+      "venueId": 1630275026,
+      "isFree": false,
+      "ageRestriction": "8+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896529,
+      "sourceLineNumber": 1946
+    },
+    {
+      "id": 1975711096,
+      "slug": "2026-09-06-the-charlatans-uk-the-castro",
+      "date": "2026-09-06",
+      "dateEpochMs": 1788732000000,
+      "startTimeEpochMs": 1788804000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 676709402,
       "artistIds": [
@@ -564,16 +634,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626386,
-      "sourceLineNumber": 1805
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896529,
+      "sourceLineNumber": 1947
     },
     {
-      "id": 1165794506,
-      "slug": "2026-09-08-slayyyter-the-regency-ballroom",
-      "date": "2026-09-08",
-      "dateEpochMs": 1788850800000,
-      "startTimeEpochMs": 1788922800000,
+      "id": 1420531051,
+      "slug": "2026-09-07-slayyyter-the-regency-ballroom",
+      "date": "2026-09-07",
+      "dateEpochMs": 1788818400000,
+      "startTimeEpochMs": 1788890400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1000264413,
       "artistIds": [
@@ -586,16 +656,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626386,
-      "sourceLineNumber": 1807
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896529,
+      "sourceLineNumber": 1949
     },
     {
-      "id": 122555552,
-      "slug": "2026-09-08-pawpaw-rod-the-independent",
-      "date": "2026-09-08",
-      "dateEpochMs": 1788850800000,
-      "startTimeEpochMs": 1788962400000,
+      "id": 55548799,
+      "slug": "2026-09-07-pawpaw-rod-the-independent",
+      "date": "2026-09-07",
+      "dateEpochMs": 1788818400000,
+      "startTimeEpochMs": 1788930000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 461784582,
       "artistIds": [
@@ -610,16 +680,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1808
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896529,
+      "sourceLineNumber": 1950
     },
     {
-      "id": 816041269,
-      "slug": "2026-09-08-slayyyter-the-rickshaw-stop",
-      "date": "2026-09-08",
-      "dateEpochMs": 1788850800000,
-      "startTimeEpochMs": 1788922800000,
+      "id": 1401716684,
+      "slug": "2026-09-07-slayyyter-the-rickshaw-stop",
+      "date": "2026-09-07",
+      "dateEpochMs": 1788818400000,
+      "startTimeEpochMs": 1788890400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1000264413,
       "artistIds": [
@@ -632,16 +702,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1809
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896529,
+      "sourceLineNumber": 1951
     },
     {
-      "id": 1743168088,
-      "slug": "2026-09-08-samara-joy-davies-symphony-hall",
-      "date": "2026-09-08",
-      "dateEpochMs": 1788850800000,
-      "startTimeEpochMs": 1788922800000,
+      "id": 368122281,
+      "slug": "2026-09-07-samara-joy-davies-symphony-hall",
+      "date": "2026-09-07",
+      "dateEpochMs": 1788818400000,
+      "startTimeEpochMs": 1788890400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1260842152,
       "artistIds": [
@@ -654,16 +724,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1810
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896529,
+      "sourceLineNumber": 1952
     },
     {
-      "id": 33246019,
-      "slug": "2026-09-09-eihwar-great-american-music-hall",
-      "date": "2026-09-09",
-      "dateEpochMs": 1788937200000,
-      "startTimeEpochMs": 1789063200000,
+      "id": 992245980,
+      "slug": "2026-09-08-eihwar-great-american-music-hall",
+      "date": "2026-09-08",
+      "dateEpochMs": 1788904800000,
+      "startTimeEpochMs": 1789030800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 775730249,
       "artistIds": [
@@ -677,16 +747,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1812
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896529,
+      "sourceLineNumber": 1954
     },
     {
-      "id": 1355472231,
-      "slug": "2026-09-09-weezer-the-warriors-stadium",
-      "date": "2026-09-09",
-      "dateEpochMs": 1788937200000,
-      "startTimeEpochMs": 1789239600000,
+      "id": 1386492038,
+      "slug": "2026-09-08-weezer-the-warriors-stadium",
+      "date": "2026-09-08",
+      "dateEpochMs": 1788904800000,
+      "startTimeEpochMs": 1789207200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 264185981,
       "artistIds": [
@@ -702,16 +772,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1813
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1955
     },
     {
-      "id": 803749332,
-      "slug": "2026-09-09-pawpaw-rod-the-catalyst",
-      "date": "2026-09-09",
-      "dateEpochMs": 1788937200000,
-      "startTimeEpochMs": 1788994800000,
+      "id": 592398419,
+      "slug": "2026-09-08-pawpaw-rod-the-catalyst",
+      "date": "2026-09-08",
+      "dateEpochMs": 1788904800000,
+      "startTimeEpochMs": 1788962400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 461784582,
       "artistIds": [
@@ -723,16 +793,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1814
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1956
     },
     {
-      "id": 2113224466,
-      "slug": "2026-09-09-liz-phair-the-greek-theater",
-      "date": "2026-09-09",
-      "dateEpochMs": 1788937200000,
-      "startTimeEpochMs": 1789003800000,
+      "id": 36015123,
+      "slug": "2026-09-08-liz-phair-the-greek-theater",
+      "date": "2026-09-08",
+      "dateEpochMs": 1788904800000,
+      "startTimeEpochMs": 1788971400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 2009995108,
       "artistIds": [
@@ -745,16 +815,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1815
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1957
     },
     {
-      "id": 1842882162,
-      "slug": "2026-09-09-pawpaw-rod-the-catalyst-atrium",
-      "date": "2026-09-09",
-      "dateEpochMs": 1788937200000,
-      "startTimeEpochMs": 1788994800000,
+      "id": 1588145617,
+      "slug": "2026-09-08-pawpaw-rod-the-catalyst-atrium",
+      "date": "2026-09-08",
+      "dateEpochMs": 1788904800000,
+      "startTimeEpochMs": 1788962400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 461784582,
       "artistIds": [
@@ -768,16 +838,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1816
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1958
     },
     {
-      "id": 945826750,
-      "slug": "2026-09-09-slayyyter-the-fox-theater",
-      "date": "2026-09-09",
-      "dateEpochMs": 1788937200000,
-      "startTimeEpochMs": 1789009200000,
+      "id": 298937731,
+      "slug": "2026-09-08-slayyyter-the-fox-theater",
+      "date": "2026-09-08",
+      "dateEpochMs": 1788904800000,
+      "startTimeEpochMs": 1788976800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1000264413,
       "artistIds": [
@@ -790,16 +860,58 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1779584626387,
-      "sourceLineNumber": 1817
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1959
     },
     {
-      "id": 635727168,
-      "slug": "2026-09-11-michael-blaustein-comedian-the-fox-theater",
-      "date": "2026-09-11",
-      "dateEpochMs": 1789110000000,
-      "startTimeEpochMs": 1789286400000,
+      "id": 1553925473,
+      "slug": "2026-09-08-blood-orange-the-warfield",
+      "date": "2026-09-08",
+      "dateEpochMs": 1788904800000,
+      "startTimeEpochMs": 1788969600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 883810407,
+      "artistIds": [
+        883810407
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "6+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1961
+    },
+    {
+      "id": 309160992,
+      "slug": "2026-09-09-blood-orange-the-warfield",
+      "date": "2026-09-09",
+      "dateEpochMs": 1788991200000,
+      "startTimeEpochMs": 1789056000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 883810407,
+      "artistIds": [
+        883810407
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "6+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1962
+    },
+    {
+      "id": 511653921,
+      "slug": "2026-09-10-michael-blaustein-comedian-the-fox-theater",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789254000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 551049004,
       "artistIds": [
@@ -813,16 +925,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626388,
-      "sourceLineNumber": 1819
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1963
     },
     {
-      "id": 1525953004,
-      "slug": "2026-09-11-altin-gun-the-regency-ballroom",
-      "date": "2026-09-11",
-      "dateEpochMs": 1789110000000,
-      "startTimeEpochMs": 1789182000000,
+      "id": 1271216459,
+      "slug": "2026-09-10-altin-gun-the-regency-ballroom",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789149600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1613481413,
       "artistIds": [
@@ -835,16 +947,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626388,
-      "sourceLineNumber": 1820
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1964
     },
     {
-      "id": 419978760,
-      "slug": "2026-09-11-bratmobile-bottom-of-the-hill",
-      "date": "2026-09-11",
-      "dateEpochMs": 1789110000000,
-      "startTimeEpochMs": 1789236000000,
+      "id": 770778697,
+      "slug": "2026-09-10-bratmobile-bottom-of-the-hill",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789203600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1533494520,
       "artistIds": [
@@ -859,16 +971,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626388,
-      "sourceLineNumber": 1821
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896530,
+      "sourceLineNumber": 1965
     },
     {
-      "id": 1248908785,
-      "slug": "2026-09-11-super-diamond-bimbos-365-club",
-      "date": "2026-09-11",
-      "dateEpochMs": 1789110000000,
-      "startTimeEpochMs": 1789185600000,
+      "id": 1035954670,
+      "slug": "2026-09-10-super-diamond-bimbos-365-club",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789153200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1300514492,
       "artistIds": [
@@ -881,16 +993,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626388,
-      "sourceLineNumber": 1822
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1966
     },
     {
-      "id": 1608009928,
-      "slug": "2026-09-11-tainted-love-hopmonk-tavern",
-      "date": "2026-09-11",
-      "dateEpochMs": 1789110000000,
-      "startTimeEpochMs": 1789174800000,
+      "id": 1993855671,
+      "slug": "2026-09-10-tainted-love-hopmonk-tavern",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789142400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1271418108,
       "artistIds": [
@@ -904,16 +1016,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626388,
-      "sourceLineNumber": 1823
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1967
     },
     {
-      "id": 2142240062,
-      "slug": "2026-09-11-jesse-mccartney-the-mountain-winery",
-      "date": "2026-09-11",
-      "dateEpochMs": 1789110000000,
-      "startTimeEpochMs": 1789180200000,
+      "id": 30949693,
+      "slug": "2026-09-10-jesse-mccartney-the-mountain-winery",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789147800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 2067634243,
       "artistIds": [
@@ -925,16 +1037,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626388,
-      "sourceLineNumber": 1824
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1968
     },
     {
-      "id": 1639264910,
-      "slug": "2026-09-11-powerman-5000-the-ritz",
-      "date": "2026-09-11",
-      "dateEpochMs": 1789110000000,
-      "startTimeEpochMs": 1789221600000,
+      "id": 1230440685,
+      "slug": "2026-09-10-powerman-5000-the-ritz",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789189200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 183754227,
       "artistIds": [
@@ -948,16 +1060,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626388,
-      "sourceLineNumber": 1825
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1969
     },
     {
-      "id": 1564034115,
-      "slug": "2026-09-11-foster-the-people-the-greek-theater",
-      "date": "2026-09-11",
-      "dateEpochMs": 1789110000000,
-      "startTimeEpochMs": 1789182000000,
+      "id": 619642812,
+      "slug": "2026-09-10-foster-the-people-the-greek-theater",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789149600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 2081592236,
       "artistIds": [
@@ -970,16 +1082,39 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626388,
-      "sourceLineNumber": 1826
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1970
     },
     {
-      "id": 2086706556,
-      "slug": "2026-09-12-public-image-ltd-the-fillmore",
-      "date": "2026-09-12",
-      "dateEpochMs": 1789196400000,
-      "startTimeEpochMs": 1789268400000,
+      "id": 1871920485,
+      "slug": "2026-09-10-asal-august-hall",
+      "date": "2026-09-10",
+      "dateEpochMs": 1789077600000,
+      "startTimeEpochMs": 1789138800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971864528,
+      "artistIds": [
+        1971864528
+      ],
+      "venueId": 811075932,
+      "priceMin": 39.8,
+      "priceMax": 39.8,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1972
+    },
+    {
+      "id": 1831970011,
+      "slug": "2026-09-11-public-image-ltd-the-fillmore",
+      "date": "2026-09-11",
+      "dateEpochMs": 1789164000000,
+      "startTimeEpochMs": 1789236000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1878036453,
       "artistIds": [
@@ -991,16 +1126,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1828
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1973
     },
     {
-      "id": 69178823,
-      "slug": "2026-09-12-bratmobile-bottom-of-the-hill",
-      "date": "2026-09-12",
-      "dateEpochMs": 1789196400000,
-      "startTimeEpochMs": 1789322400000,
+      "id": 419978760,
+      "slug": "2026-09-11-bratmobile-bottom-of-the-hill",
+      "date": "2026-09-11",
+      "dateEpochMs": 1789164000000,
+      "startTimeEpochMs": 1789290000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1533494520,
       "artistIds": [
@@ -1016,15 +1151,15 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1829
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1974
     },
     {
-      "id": 712887490,
-      "slug": "2026-09-12-san-holo-the-warfield",
-      "date": "2026-09-12",
-      "dateEpochMs": 1789196400000,
-      "startTimeEpochMs": 1789261200000,
+      "id": 1557359361,
+      "slug": "2026-09-11-san-holo-the-warfield",
+      "date": "2026-09-11",
+      "dateEpochMs": 1789164000000,
+      "startTimeEpochMs": 1789228800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 2058623965,
       "artistIds": [
@@ -1036,16 +1171,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1830
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1975
     },
     {
-      "id": 914908231,
-      "slug": "2026-09-12-tainted-love-hopmonk-tavern",
-      "date": "2026-09-12",
-      "dateEpochMs": 1789196400000,
-      "startTimeEpochMs": 1789261200000,
+      "id": 1608009928,
+      "slug": "2026-09-11-tainted-love-hopmonk-tavern",
+      "date": "2026-09-11",
+      "dateEpochMs": 1789164000000,
+      "startTimeEpochMs": 1789228800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1271418108,
       "artistIds": [
@@ -1060,15 +1195,15 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1831
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1976
     },
     {
-      "id": 916535065,
-      "slug": "2026-09-12-kenny-wayne-shepherd-band-the-meritage-resort",
-      "date": "2026-09-12",
-      "dateEpochMs": 1789196400000,
-      "startTimeEpochMs": 1789268400000,
+      "id": 1745628232,
+      "slug": "2026-09-11-kenny-wayne-shepherd-band-the-meritage-resort",
+      "date": "2026-09-11",
+      "dateEpochMs": 1789164000000,
+      "startTimeEpochMs": 1789236000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1654967011,
       "artistIds": [
@@ -1080,16 +1215,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1832
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1977
     },
     {
-      "id": 1483790772,
-      "slug": "2026-09-12-thievery-corporation-the-fox-theater",
-      "date": "2026-09-12",
-      "dateEpochMs": 1789196400000,
-      "startTimeEpochMs": 1789268400000,
+      "id": 458298773,
+      "slug": "2026-09-11-thievery-corporation-the-fox-theater",
+      "date": "2026-09-11",
+      "dateEpochMs": 1789164000000,
+      "startTimeEpochMs": 1789236000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1255631105,
       "artistIds": [
@@ -1101,16 +1236,38 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1833
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1978
     },
     {
-      "id": 227782650,
-      "slug": "2026-09-13-sub-urban-cafe-du-nord",
-      "date": "2026-09-13",
-      "dateEpochMs": 1789282800000,
-      "startTimeEpochMs": 1789354800000,
+      "id": 1572265120,
+      "slug": "2026-09-11-moms-feelin-themselves-the-regency-ballroom",
+      "date": "2026-09-11",
+      "dateEpochMs": 1789164000000,
+      "startTimeEpochMs": 1789239600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1412342191,
+      "artistIds": [
+        1412342191
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "notes": "mom dance party",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1979
+    },
+    {
+      "id": 160775897,
+      "slug": "2026-09-12-sub-urban-cafe-du-nord",
+      "date": "2026-09-12",
+      "dateEpochMs": 1789250400000,
+      "startTimeEpochMs": 1789322400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 2136244735,
       "artistIds": [
@@ -1122,16 +1279,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1834
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1980
     },
     {
-      "id": 944554093,
-      "slug": "2026-09-13-haute-freddy-bimbos-365-club",
-      "date": "2026-09-13",
-      "dateEpochMs": 1789282800000,
-      "startTimeEpochMs": 1789354800000,
+      "id": 1239122834,
+      "slug": "2026-09-12-haute-freddy-bimbos-365-club",
+      "date": "2026-09-12",
+      "dateEpochMs": 1789250400000,
+      "startTimeEpochMs": 1789322400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1325307584,
       "artistIds": [
@@ -1146,16 +1303,16 @@
         "sold-out"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1835
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1981
     },
     {
-      "id": 330408168,
-      "slug": "2026-09-13-smokey-robinson-the-mountain-winery",
-      "date": "2026-09-13",
-      "dateEpochMs": 1789282800000,
-      "startTimeEpochMs": 1789353000000,
+      "id": 1780882201,
+      "slug": "2026-09-12-smokey-robinson-the-mountain-winery",
+      "date": "2026-09-12",
+      "dateEpochMs": 1789250400000,
+      "startTimeEpochMs": 1789320600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1569975317,
       "artistIds": [
@@ -1167,16 +1324,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1836
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1982
     },
     {
-      "id": 2108643420,
-      "slug": "2026-09-13-bear-mccreary-the-great-american-music-hall",
-      "date": "2026-09-13",
-      "dateEpochMs": 1789282800000,
-      "startTimeEpochMs": 1789426800000,
+      "id": 250663589,
+      "slug": "2026-09-12-bear-mccreary-the-great-american-music-hall",
+      "date": "2026-09-12",
+      "dateEpochMs": 1789250400000,
+      "startTimeEpochMs": 1789394400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 748823009,
       "artistIds": [
@@ -1190,16 +1347,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1837
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896531,
+      "sourceLineNumber": 1983
     },
     {
-      "id": 696573518,
-      "slug": "2026-09-13-carla-dal-forno-the-chapel",
-      "date": "2026-09-13",
-      "dateEpochMs": 1789282800000,
-      "startTimeEpochMs": 1789387200000,
+      "id": 629566765,
+      "slug": "2026-09-12-carla-dal-forno-the-chapel",
+      "date": "2026-09-12",
+      "dateEpochMs": 1789250400000,
+      "startTimeEpochMs": 1789354800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1831647023,
       "artistIds": [
@@ -1213,16 +1370,40 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1838
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1984
     },
     {
-      "id": 1931122372,
-      "slug": "2026-09-15-johnny-blue-skies-the-dark-clouds-the-greek-theater",
-      "date": "2026-09-15",
-      "dateEpochMs": 1789455600000,
-      "startTimeEpochMs": 1789812000000,
+      "id": 675532330,
+      "slug": "2026-09-13-haute-freddy-the-castro",
+      "date": "2026-09-13",
+      "dateEpochMs": 1789336800000,
+      "startTimeEpochMs": 1789509600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1325307584,
+      "artistIds": [
+        1325307584,
+        1133138686
+      ],
+      "venueId": 1383208152,
+      "priceMin": 48,
+      "priceMax": 48,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1985
+    },
+    {
+      "id": 1230654331,
+      "slug": "2026-09-14-johnny-blue-skies-the-dark-clouds-the-greek-theater",
+      "date": "2026-09-14",
+      "dateEpochMs": 1789423200000,
+      "startTimeEpochMs": 1789779600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1686872433,
       "artistIds": [
@@ -1236,16 +1417,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1839
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1986
     },
     {
-      "id": 1210096263,
-      "slug": "2026-09-15-squeeze-the-warfield",
-      "date": "2026-09-15",
-      "dateEpochMs": 1789455600000,
-      "startTimeEpochMs": 1789524000000,
+      "id": 2087798680,
+      "slug": "2026-09-14-squeeze-the-warfield",
+      "date": "2026-09-14",
+      "dateEpochMs": 1789423200000,
+      "startTimeEpochMs": 1789491600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1502822639,
       "artistIds": [
@@ -1259,16 +1440,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1840
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1987
     },
     {
-      "id": 1736705456,
-      "slug": "2026-09-15-starbomb-the-regency-ballroom",
-      "date": "2026-09-15",
-      "dateEpochMs": 1789455600000,
-      "startTimeEpochMs": 1789527600000,
+      "id": 775091439,
+      "slug": "2026-09-14-starbomb-the-regency-ballroom",
+      "date": "2026-09-14",
+      "dateEpochMs": 1789423200000,
+      "startTimeEpochMs": 1789495200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1444695751,
       "artistIds": [
@@ -1281,16 +1462,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1841
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1988
     },
     {
-      "id": 343427713,
-      "slug": "2026-09-16-when-chai-met-toast-the-great-american-music-hall",
-      "date": "2026-09-16",
-      "dateEpochMs": 1789542000000,
-      "startTimeEpochMs": 1789650000000,
+      "id": 1627511744,
+      "slug": "2026-09-15-when-chai-met-toast-the-great-american-music-hall",
+      "date": "2026-09-15",
+      "dateEpochMs": 1789509600000,
+      "startTimeEpochMs": 1789617600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1414774467,
       "artistIds": [
@@ -1304,16 +1485,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626389,
-      "sourceLineNumber": 1842
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1990
     },
     {
-      "id": 275829413,
-      "slug": "2026-09-16-five-finger-death-punch-shoreline-ampheater",
-      "date": "2026-09-16",
-      "dateEpochMs": 1789542000000,
-      "startTimeEpochMs": 1789722000000,
+      "id": 1976569892,
+      "slug": "2026-09-15-five-finger-death-punch-shoreline-ampheater",
+      "date": "2026-09-15",
+      "dateEpochMs": 1789509600000,
+      "startTimeEpochMs": 1789689600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 129147718,
       "artistIds": [
@@ -1329,16 +1510,39 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1843
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1991
     },
     {
-      "id": 162312247,
-      "slug": "2026-09-17-bleachers-greek-theater",
-      "date": "2026-09-17",
-      "dateEpochMs": 1789628400000,
-      "startTimeEpochMs": 1789909200000,
+      "id": 812695201,
+      "slug": "2026-09-15-ali-the-rickshaw-stop",
+      "date": "2026-09-15",
+      "dateEpochMs": 1789509600000,
+      "startTimeEpochMs": 1789581600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 629127915,
+      "artistIds": [
+        629127915
+      ],
+      "venueId": 31041890,
+      "priceMin": 20,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1992
+    },
+    {
+      "id": 2055445706,
+      "slug": "2026-09-16-bleachers-greek-theater",
+      "date": "2026-09-16",
+      "dateEpochMs": 1789596000000,
+      "startTimeEpochMs": 1789876800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 209329096,
       "artistIds": [
@@ -1353,16 +1557,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1844
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896532,
+      "sourceLineNumber": 1993
     },
     {
-      "id": 2134155847,
-      "slug": "2026-09-17-josh-thomas-the-castro",
-      "date": "2026-09-17",
-      "dateEpochMs": 1789628400000,
-      "startTimeEpochMs": 1789801200000,
+      "id": 1751987224,
+      "slug": "2026-09-16-josh-thomas-the-castro",
+      "date": "2026-09-16",
+      "dateEpochMs": 1789596000000,
+      "startTimeEpochMs": 1789768800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1985215529,
       "artistIds": [
@@ -1377,16 +1581,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1845
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 1994
     },
     {
-      "id": 1129362853,
-      "slug": "2026-09-17-unsane-the-bottom-of-the-hill",
-      "date": "2026-09-17",
-      "dateEpochMs": 1789628400000,
-      "startTimeEpochMs": 1789704000000,
+      "id": 167748836,
+      "slug": "2026-09-16-unsane-the-bottom-of-the-hill",
+      "date": "2026-09-16",
+      "dateEpochMs": 1789596000000,
+      "startTimeEpochMs": 1789671600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 312739279,
       "artistIds": [
@@ -1402,16 +1606,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1846
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 1995
     },
     {
-      "id": 582360948,
-      "slug": "2026-09-17-the-temptations-the-mountain-winery",
-      "date": "2026-09-17",
-      "dateEpochMs": 1789628400000,
-      "startTimeEpochMs": 1789698600000,
+      "id": 1275462645,
+      "slug": "2026-09-16-the-temptations-the-mountain-winery",
+      "date": "2026-09-16",
+      "dateEpochMs": 1789596000000,
+      "startTimeEpochMs": 1789666200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 789502069,
       "artistIds": [
@@ -1424,16 +1628,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1847
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 1996
     },
     {
-      "id": 519107915,
-      "slug": "2026-09-17-the-growlers-the-catalyst",
-      "date": "2026-09-17",
-      "dateEpochMs": 1789628400000,
-      "startTimeEpochMs": 1789686000000,
+      "id": 1363579786,
+      "slug": "2026-09-16-the-growlers-the-catalyst",
+      "date": "2026-09-16",
+      "dateEpochMs": 1789596000000,
+      "startTimeEpochMs": 1789653600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 636515040,
       "artistIds": [
@@ -1447,16 +1651,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1848
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 1997
     },
     {
-      "id": 251202341,
-      "slug": "2026-09-17-defiance-the-ivy-room",
-      "date": "2026-09-17",
-      "dateEpochMs": 1789628400000,
-      "startTimeEpochMs": 1789704000000,
+      "id": 593269530,
+      "slug": "2026-09-16-defiance-the-ivy-room",
+      "date": "2026-09-16",
+      "dateEpochMs": 1789596000000,
+      "startTimeEpochMs": 1789671600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 779494182,
       "artistIds": [
@@ -1475,16 +1679,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1849
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 1998
     },
     {
-      "id": 2100273152,
-      "slug": "2026-09-18-the-growlers-the-castro-theater",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789945200000,
+      "id": 23063809,
+      "slug": "2026-09-17-the-growlers-the-castro-theater",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789912800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 636515040,
       "artistIds": [
@@ -1498,16 +1702,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1850
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 1999
     },
     {
-      "id": 777341164,
-      "slug": "2026-09-18-the-exploited-august-hall",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789833600000,
+      "id": 467423317,
+      "slug": "2026-09-17-the-exploited-august-hall",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789801200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 19473143,
       "artistIds": [
@@ -1523,16 +1727,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626390,
-      "sourceLineNumber": 1851
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 2000
     },
     {
-      "id": 1948774778,
-      "slug": "2026-09-18-carin-leon-the-shark-tank",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789988400000,
+      "id": 1101428037,
+      "slug": "2026-09-17-carin-leon-the-shark-tank",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789956000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 345299698,
       "artistIds": [
@@ -1546,16 +1750,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1852
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 2001
     },
     {
-      "id": 433532595,
-      "slug": "2026-09-18-citizen-the-regency-ballroom",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789783200000,
+      "id": 402512788,
+      "slug": "2026-09-17-citizen-the-regency-ballroom",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789750800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 42152395,
       "artistIds": [
@@ -1570,16 +1774,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1853
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896533,
+      "sourceLineNumber": 2002
     },
     {
-      "id": 2002287189,
-      "slug": "2026-09-18-plan-9-tribute-the-ivy-room",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789790400000,
+      "id": 1331066090,
+      "slug": "2026-09-17-plan-9-tribute-the-ivy-room",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789758000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1261997623,
       "artistIds": [
@@ -1596,16 +1800,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1854
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2003
     },
     {
-      "id": 983940698,
-      "slug": "2026-09-18-sweeping-promises-the-rickshaw-stop",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789786800000,
+      "id": 1199736229,
+      "slug": "2026-09-17-sweeping-promises-the-rickshaw-stop",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789754400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 660214959,
       "artistIds": [
@@ -1619,16 +1823,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1855
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2004
     },
     {
-      "id": 587725832,
-      "slug": "2026-09-18-jack-harlow-the-fox-theater",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789779600000,
+      "id": 1630032121,
+      "slug": "2026-09-17-jack-harlow-the-fox-theater",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789747200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 204011977,
       "artistIds": [
@@ -1644,16 +1848,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1856
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2005
     },
     {
-      "id": 468043860,
-      "slug": "2026-09-18-mojo-brookzz-the-paramount-theater",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789765200000,
+      "id": 1542059981,
+      "slug": "2026-09-17-mojo-brookzz-the-paramount-theater",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789732800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1827352235,
       "artistIds": [
@@ -1667,16 +1871,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1857
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2006
     },
     {
-      "id": 989860662,
-      "slug": "2026-09-18-lido-pimienta-bimbos-365-club",
-      "date": "2026-09-18",
-      "dateEpochMs": 1789714800000,
-      "startTimeEpochMs": 1789790400000,
+      "id": 1295002793,
+      "slug": "2026-09-17-lido-pimienta-bimbos-365-club",
+      "date": "2026-09-17",
+      "dateEpochMs": 1789682400000,
+      "startTimeEpochMs": 1789758000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 66288400,
       "artistIds": [
@@ -1689,16 +1893,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1860
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2009
     },
     {
-      "id": 117484801,
-      "slug": "2026-09-19-the-growlers-the-castro-theater",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1790031600000,
+      "id": 2100273152,
+      "slug": "2026-09-18-the-growlers-the-castro-theater",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789999200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 636515040,
       "artistIds": [
@@ -1713,15 +1917,15 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1861
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2010
     },
     {
-      "id": 116356502,
-      "slug": "2026-09-19-arlo-parks-the-warfield",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789873200000,
+      "id": 94994411,
+      "slug": "2026-09-18-arlo-parks-the-warfield",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789840800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1374959152,
       "artistIds": [
@@ -1733,16 +1937,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626391,
-      "sourceLineNumber": 1862
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2011
     },
     {
-      "id": 1351682273,
-      "slug": "2026-09-19-steve-aoki-the-civic-auditorium",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789866000000,
+      "id": 658580576,
+      "slug": "2026-09-18-steve-aoki-the-civic-auditorium",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789833600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1272878004,
       "artistIds": [
@@ -1759,16 +1963,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1863
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2012
     },
     {
-      "id": 1292150539,
-      "slug": "2026-09-19-albert-lee-hopmonk-tavern",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789866000000,
+      "id": 2041202740,
+      "slug": "2026-09-18-albert-lee-hopmonk-tavern",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789833600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1150789743,
       "artistIds": [
@@ -1780,16 +1984,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1864
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2013
     },
     {
-      "id": 1856078841,
-      "slug": "2026-09-19-jon-b-meritage-resort",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789873200000,
+      "id": 1923085594,
+      "slug": "2026-09-18-jon-b-meritage-resort",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789840800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 626948266,
       "artistIds": [
@@ -1801,16 +2005,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1865
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896534,
+      "sourceLineNumber": 2014
     },
     {
-      "id": 174839011,
-      "slug": "2026-09-19-brandi-carlile-frost-amphitheater",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789866000000,
+      "id": 1900319908,
+      "slug": "2026-09-18-brandi-carlile-frost-amphitheater",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789833600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1995563455,
       "artistIds": [
@@ -1823,16 +2027,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1866
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896535,
+      "sourceLineNumber": 2015
     },
     {
-      "id": 866254260,
-      "slug": "2026-09-19-jeff-dunham-the-mountain-winery",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789873200000,
+      "id": 1559355957,
+      "slug": "2026-09-18-jeff-dunham-the-mountain-winery",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789840800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1929724855,
       "artistIds": [
@@ -1844,16 +2048,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1867
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896535,
+      "sourceLineNumber": 2016
     },
     {
-      "id": 2047452019,
-      "slug": "2026-09-19-t-sisters-the-freight",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789941600000,
+      "id": 1403043406,
+      "slug": "2026-09-18-t-sisters-the-freight",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789909200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1785362768,
       "artistIds": [
@@ -1868,16 +2072,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1868
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896535,
+      "sourceLineNumber": 2017
     },
     {
-      "id": 1779080026,
-      "slug": "2026-09-19-be-your-own-pet-rickshaw-stop",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789887600000,
+      "id": 1428280089,
+      "slug": "2026-09-18-be-your-own-pet-rickshaw-stop",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789855200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 926883550,
       "artistIds": [
@@ -1891,16 +2095,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1869
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896535,
+      "sourceLineNumber": 2018
     },
     {
-      "id": 184666426,
-      "slug": "2026-09-19-elder-the-ritz",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789909200000,
+      "id": 313749145,
+      "slug": "2026-09-18-elder-the-ritz",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789876800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 994769897,
       "artistIds": [
@@ -1915,16 +2119,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1870
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896535,
+      "sourceLineNumber": 2019
     },
     {
-      "id": 109302770,
-      "slug": "2026-09-19-the-sisters-of-perpetual-indulgence-924-gilman",
-      "date": "2026-09-19",
-      "dateEpochMs": 1789801200000,
-      "startTimeEpochMs": 1789855200000,
+      "id": 1133996691,
+      "slug": "2026-09-18-the-sisters-of-perpetual-indulgence-924-gilman",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789822800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1245243645,
       "artistIds": [
@@ -1944,16 +2148,38 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626392,
-      "sourceLineNumber": 1871
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896535,
+      "sourceLineNumber": 2020
     },
     {
-      "id": 966651434,
-      "slug": "2026-09-20-rob-zombie-the-pavilion",
-      "date": "2026-09-20",
-      "dateEpochMs": 1789887600000,
-      "startTimeEpochMs": 1790031600000,
+      "id": 418538303,
+      "slug": "2026-09-18-jak-harlow-the-masonic",
+      "date": "2026-09-18",
+      "dateEpochMs": 1789768800000,
+      "startTimeEpochMs": 1789839000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 819885126,
+      "artistIds": [
+        819885126,
+        1967584198
+      ],
+      "venueId": 1120524281,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896535,
+      "sourceLineNumber": 2022
+    },
+    {
+      "id": 1321404224,
+      "slug": "2026-09-19-rob-zombie-the-pavilion",
+      "date": "2026-09-19",
+      "dateEpochMs": 1789855200000,
+      "startTimeEpochMs": 1789999200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 96119540,
       "artistIds": [
@@ -1970,16 +2196,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1872
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896535,
+      "sourceLineNumber": 2023
     },
     {
-      "id": 963859321,
-      "slug": "2026-09-20-deca-jones-the-independent",
-      "date": "2026-09-20",
-      "dateEpochMs": 1789887600000,
-      "startTimeEpochMs": 1789959600000,
+      "id": 1856959409,
+      "slug": "2026-09-19-deca-jones-the-independent",
+      "date": "2026-09-19",
+      "dateEpochMs": 1789855200000,
+      "startTimeEpochMs": 1789927200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 461821321,
       "artistIds": [
@@ -1994,16 +2220,16 @@
         "sold-out"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1873
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2024
     },
     {
-      "id": 795685896,
-      "slug": "2026-09-20-meltt-great-american-music-hall",
-      "date": "2026-09-20",
-      "dateEpochMs": 1789887600000,
-      "startTimeEpochMs": 1789966800000,
+      "id": 566242,
+      "slug": "2026-09-19-meltt-great-american-music-hall",
+      "date": "2026-09-19",
+      "dateEpochMs": 1789855200000,
+      "startTimeEpochMs": 1789934400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 987582111,
       "artistIds": [
@@ -2017,16 +2243,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1874
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2025
     },
     {
-      "id": 1134635210,
-      "slug": "2026-09-20-jeff-dunham-the-meritage-resort",
-      "date": "2026-09-20",
-      "dateEpochMs": 1789887600000,
-      "startTimeEpochMs": 1789959600000,
+      "id": 796996640,
+      "slug": "2026-09-19-jeff-dunham-the-meritage-resort",
+      "date": "2026-09-19",
+      "dateEpochMs": 1789855200000,
+      "startTimeEpochMs": 1789927200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1929724855,
       "artistIds": [
@@ -2038,16 +2264,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1875
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2026
     },
     {
-      "id": 631569908,
-      "slug": "2026-09-20-america-the-mountain-winery",
-      "date": "2026-09-20",
-      "dateEpochMs": 1789887600000,
-      "startTimeEpochMs": 1789957800000,
+      "id": 914464802,
+      "slug": "2026-09-19-america-the-mountain-winery",
+      "date": "2026-09-19",
+      "dateEpochMs": 1789855200000,
+      "startTimeEpochMs": 1789925400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1716244261,
       "artistIds": [
@@ -2059,16 +2285,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1876
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2027
     },
     {
-      "id": 14282330,
-      "slug": "2026-09-20-rebelution-discovery-museum",
-      "date": "2026-09-20",
-      "dateEpochMs": 1789887600000,
-      "startTimeEpochMs": 1789952400000,
+      "id": 1917349520,
+      "slug": "2026-09-19-rebelution-discovery-museum",
+      "date": "2026-09-19",
+      "dateEpochMs": 1789855200000,
+      "startTimeEpochMs": 1789920000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1703955302,
       "artistIds": [
@@ -2090,16 +2316,16 @@
         "matinee"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1877
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2028
     },
     {
-      "id": 2020658144,
-      "slug": "2026-09-21-jack-harlow-the-fox-theater",
-      "date": "2026-09-21",
-      "dateEpochMs": 1789974000000,
-      "startTimeEpochMs": 1790046000000,
+      "id": 56551199,
+      "slug": "2026-09-20-jack-harlow-the-fox-theater",
+      "date": "2026-09-20",
+      "dateEpochMs": 1789941600000,
+      "startTimeEpochMs": 1790013600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 204011977,
       "artistIds": [
@@ -2111,16 +2337,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1878
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2029
     },
     {
-      "id": 927215130,
-      "slug": "2026-09-21-peter-hook-the-light-the-warfield",
-      "date": "2026-09-21",
-      "dateEpochMs": 1789974000000,
-      "startTimeEpochMs": 1790046000000,
+      "id": 1256461797,
+      "slug": "2026-09-20-peter-hook-the-light-the-warfield",
+      "date": "2026-09-20",
+      "dateEpochMs": 1789941600000,
+      "startTimeEpochMs": 1790013600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 600759593,
       "artistIds": [
@@ -2132,16 +2358,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1879
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2030
     },
     {
-      "id": 1567669335,
-      "slug": "2026-09-21-marlon-magnee-the-chapel",
-      "date": "2026-09-21",
-      "dateEpochMs": 1789974000000,
-      "startTimeEpochMs": 1790046000000,
+      "id": 470386954,
+      "slug": "2026-09-20-marlon-magnee-the-chapel",
+      "date": "2026-09-20",
+      "dateEpochMs": 1789941600000,
+      "startTimeEpochMs": 1790013600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 673974597,
       "artistIds": [
@@ -2153,16 +2379,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1880
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2031
     },
     {
-      "id": 74106269,
-      "slug": "2026-09-21-friko-rickshaw-stop",
-      "date": "2026-09-21",
-      "dateEpochMs": 1789974000000,
-      "startTimeEpochMs": 1790067600000,
+      "id": 137244644,
+      "slug": "2026-09-20-friko-rickshaw-stop",
+      "date": "2026-09-20",
+      "dateEpochMs": 1789941600000,
+      "startTimeEpochMs": 1790035200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 993662642,
       "artistIds": [
@@ -2176,16 +2402,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1881
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2032
     },
     {
-      "id": 747272843,
-      "slug": "2026-09-21-waylon-wyatt-the-fillmore",
-      "date": "2026-09-21",
-      "dateEpochMs": 1789974000000,
-      "startTimeEpochMs": 1790114400000,
+      "id": 1992037324,
+      "slug": "2026-09-20-waylon-wyatt-the-fillmore",
+      "date": "2026-09-20",
+      "dateEpochMs": 1789941600000,
+      "startTimeEpochMs": 1790082000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1288909486,
       "artistIds": [
@@ -2199,15 +2425,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1882
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2033
     },
     {
-      "id": 70624692,
-      "slug": "2026-09-21-new-date-jack-harlow-fox-theater",
-      "date": "2026-09-21",
-      "dateEpochMs": 1789974000000,
+      "id": 1796105589,
+      "slug": "2026-09-20-new-date-jack-harlow-fox-theater",
+      "date": "2026-09-20",
+      "dateEpochMs": 1789941600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 879305525,
       "artistIds": [
@@ -2220,16 +2446,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1883
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2034
     },
     {
-      "id": 1440761833,
-      "slug": "2026-09-22-melanie-c-the-castro",
-      "date": "2026-09-22",
-      "dateEpochMs": 1790060400000,
-      "startTimeEpochMs": 1790226000000,
+      "id": 443689480,
+      "slug": "2026-09-21-melanie-c-the-castro",
+      "date": "2026-09-21",
+      "dateEpochMs": 1790028000000,
+      "startTimeEpochMs": 1790193600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 120173165,
       "artistIds": [
@@ -2243,16 +2469,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626393,
-      "sourceLineNumber": 1884
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2036
     },
     {
-      "id": 1835901968,
-      "slug": "2026-09-22-temples-the-chapel",
-      "date": "2026-09-22",
-      "dateEpochMs": 1790060400000,
-      "startTimeEpochMs": 1790132400000,
+      "id": 1325367791,
+      "slug": "2026-09-21-temples-the-chapel",
+      "date": "2026-09-21",
+      "dateEpochMs": 1790028000000,
+      "startTimeEpochMs": 1790100000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 2039722131,
       "artistIds": [
@@ -2264,16 +2490,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1885
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2037
     },
     {
-      "id": 1256713074,
-      "slug": "2026-09-22-peter-hook-the-light-the-mountain-winery",
-      "date": "2026-09-22",
-      "dateEpochMs": 1790060400000,
-      "startTimeEpochMs": 1790130600000,
+      "id": 1576674223,
+      "slug": "2026-09-21-peter-hook-the-light-the-mountain-winery",
+      "date": "2026-09-21",
+      "dateEpochMs": 1790028000000,
+      "startTimeEpochMs": 1790098200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 600759593,
       "artistIds": [
@@ -2285,16 +2511,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1886
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896536,
+      "sourceLineNumber": 2038
     },
     {
-      "id": 1723674408,
-      "slug": "2026-09-22-cola-hopmonk-tavern",
-      "date": "2026-09-22",
-      "dateEpochMs": 1790060400000,
-      "startTimeEpochMs": 1790136000000,
+      "id": 1512323495,
+      "slug": "2026-09-21-cola-hopmonk-tavern",
+      "date": "2026-09-21",
+      "dateEpochMs": 1790028000000,
+      "startTimeEpochMs": 1790103600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1971808460,
       "artistIds": [
@@ -2309,16 +2535,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1887
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2039
     },
     {
-      "id": 684844213,
-      "slug": "2026-09-22-bilal-august-hall",
-      "date": "2026-09-22",
-      "dateEpochMs": 1790060400000,
-      "startTimeEpochMs": 1790121600000,
+      "id": 159627658,
+      "slug": "2026-09-21-bilal-august-hall",
+      "date": "2026-09-21",
+      "dateEpochMs": 1790028000000,
+      "startTimeEpochMs": 1790089200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 997622275,
       "artistIds": [
@@ -2333,16 +2559,58 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1888
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2040
     },
     {
-      "id": 1948531151,
-      "slug": "2026-09-23-temples-the-chapel",
-      "date": "2026-09-23",
-      "dateEpochMs": 1790146800000,
-      "startTimeEpochMs": 1790218800000,
+      "id": 1023921363,
+      "slug": "2026-09-21-chance-the-rapper-the-masonic",
+      "date": "2026-09-21",
+      "dateEpochMs": 1790028000000,
+      "startTimeEpochMs": 1790100000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1938234652,
+      "artistIds": [
+        1938234652
+      ],
+      "venueId": 1120524281,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2041
+    },
+    {
+      "id": 434246813,
+      "slug": "2026-09-21-the-front-bottoms-the-warfield",
+      "date": "2026-09-21",
+      "dateEpochMs": 1790028000000,
+      "startTimeEpochMs": 1790092800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 444550722,
+      "artistIds": [
+        444550722
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "6+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2042
+    },
+    {
+      "id": 1835901968,
+      "slug": "2026-09-22-temples-the-chapel",
+      "date": "2026-09-22",
+      "dateEpochMs": 1790114400000,
+      "startTimeEpochMs": 1790186400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 2039722131,
       "artistIds": [
@@ -2355,15 +2623,15 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1889
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2043
     },
     {
-      "id": 110105892,
-      "slug": "2026-09-23-the-frights-the-great-american-music-hall",
-      "date": "2026-09-23",
-      "dateEpochMs": 1790146800000,
-      "startTimeEpochMs": 1790265600000,
+      "id": 1615375005,
+      "slug": "2026-09-22-the-frights-the-great-american-music-hall",
+      "date": "2026-09-22",
+      "dateEpochMs": 1790114400000,
+      "startTimeEpochMs": 1790233200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1427181430,
       "artistIds": [
@@ -2378,16 +2646,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1890
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2044
     },
     {
-      "id": 1318466771,
-      "slug": "2026-09-23-boz-scaggs-the-masonic",
-      "date": "2026-09-23",
-      "dateEpochMs": 1790146800000,
-      "startTimeEpochMs": 1790377200000,
+      "id": 1727290996,
+      "slug": "2026-09-22-boz-scaggs-the-masonic",
+      "date": "2026-09-22",
+      "dateEpochMs": 1790114400000,
+      "startTimeEpochMs": 1790344800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1906271656,
       "artistIds": [
@@ -2401,16 +2669,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1891
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2045
     },
     {
-      "id": 504019947,
-      "slug": "2026-09-23-wednesday-13-the-ritz",
-      "date": "2026-09-23",
-      "dateEpochMs": 1790146800000,
-      "startTimeEpochMs": 1790258400000,
+      "id": 1348491818,
+      "slug": "2026-09-22-wednesday-13-the-ritz",
+      "date": "2026-09-22",
+      "dateEpochMs": 1790114400000,
+      "startTimeEpochMs": 1790226000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 728663167,
       "artistIds": [
@@ -2425,15 +2693,55 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1892
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2046
     },
     {
-      "id": 1873667562,
-      "slug": "2026-09-24-stephen-wilson-jr-the-masonic",
-      "date": "2026-09-24",
-      "dateEpochMs": 1790233200000,
+      "id": 1775595410,
+      "slug": "2026-09-22-sebastien-tellier-the-castro",
+      "date": "2026-09-22",
+      "dateEpochMs": 1790114400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 341496146,
+      "artistIds": [
+        341496146
+      ],
+      "venueId": 1383208152,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2047
+    },
+    {
+      "id": 640707877,
+      "slug": "2026-09-22-jose-gonzalez-the-mountain-winery",
+      "date": "2026-09-22",
+      "dateEpochMs": 1790114400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 482130314,
+      "artistIds": [
+        482130314
+      ],
+      "venueId": 2021730900,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2048
+    },
+    {
+      "id": 1618931017,
+      "slug": "2026-09-23-stephen-wilson-jr-the-masonic",
+      "date": "2026-09-23",
+      "dateEpochMs": 1790200800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 119323508,
       "artistIds": [
@@ -2447,16 +2755,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1893
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2049
     },
     {
-      "id": 1248818028,
-      "slug": "2026-09-24-jack-white-the-civic-auditorium",
-      "date": "2026-09-24",
-      "dateEpochMs": 1790233200000,
-      "startTimeEpochMs": 1790305200000,
+      "id": 555716331,
+      "slug": "2026-09-23-jack-white-the-civic-auditorium",
+      "date": "2026-09-23",
+      "dateEpochMs": 1790200800000,
+      "startTimeEpochMs": 1790272800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1780481349,
       "artistIds": [
@@ -2468,16 +2776,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1894
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896537,
+      "sourceLineNumber": 2050
     },
     {
-      "id": 1245079068,
-      "slug": "2026-09-24-motley-crue-shoreline-amphteater",
-      "date": "2026-09-24",
-      "dateEpochMs": 1790233200000,
-      "startTimeEpochMs": 1790341200000,
+      "id": 219587069,
+      "slug": "2026-09-23-motley-crue-shoreline-amphteater",
+      "date": "2026-09-23",
+      "dateEpochMs": 1790200800000,
+      "startTimeEpochMs": 1790308800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1027770722,
       "artistIds": [
@@ -2493,16 +2801,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626394,
-      "sourceLineNumber": 1895
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2051
     },
     {
-      "id": 647199446,
-      "slug": "2026-09-24-starship-the-mountain-winery",
-      "date": "2026-09-24",
-      "dateEpochMs": 1790233200000,
-      "startTimeEpochMs": 1790303400000,
+      "id": 616179639,
+      "slug": "2026-09-23-starship-the-mountain-winery",
+      "date": "2026-09-23",
+      "dateEpochMs": 1790200800000,
+      "startTimeEpochMs": 1790271000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1445195361,
       "artistIds": [
@@ -2515,16 +2823,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1896
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2052
     },
     {
-      "id": 1348137205,
-      "slug": "2026-09-24-elder-island-bimbos-365-club",
-      "date": "2026-09-24",
-      "dateEpochMs": 1790233200000,
-      "startTimeEpochMs": 1790308800000,
+      "id": 997337268,
+      "slug": "2026-09-23-elder-island-bimbos-365-club",
+      "date": "2026-09-23",
+      "dateEpochMs": 1790200800000,
+      "startTimeEpochMs": 1790276400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1508579778,
       "artistIds": [
@@ -2536,16 +2844,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1897
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2053
     },
     {
-      "id": 70853776,
-      "slug": "2026-09-24-paris-paloma-the-warfield",
-      "date": "2026-09-24",
-      "dateEpochMs": 1790233200000,
-      "startTimeEpochMs": 1790298000000,
+      "id": 1173910705,
+      "slug": "2026-09-23-paris-paloma-the-warfield",
+      "date": "2026-09-23",
+      "dateEpochMs": 1790200800000,
+      "startTimeEpochMs": 1790265600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1261509296,
       "artistIds": [
@@ -2559,16 +2867,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1899
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2055
     },
     {
-      "id": 1253878848,
-      "slug": "2026-09-24-samantha-fish-the-uptown-theater",
-      "date": "2026-09-24",
-      "dateEpochMs": 1790233200000,
-      "startTimeEpochMs": 1790276400000,
+      "id": 1242562721,
+      "slug": "2026-09-23-samantha-fish-the-uptown-theater",
+      "date": "2026-09-23",
+      "dateEpochMs": 1790200800000,
+      "startTimeEpochMs": 1790244000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1426364540,
       "artistIds": [
@@ -2582,16 +2890,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1900
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2056
     },
     {
-      "id": 478397203,
-      "slug": "2026-09-25-kruder-dorfmeister-the-fox-theater",
-      "date": "2026-09-25",
-      "dateEpochMs": 1790319600000,
-      "startTimeEpochMs": 1790391600000,
+      "id": 1503889202,
+      "slug": "2026-09-24-kruder-dorfmeister-the-fox-theater",
+      "date": "2026-09-24",
+      "dateEpochMs": 1790287200000,
+      "startTimeEpochMs": 1790359200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 58216604,
       "artistIds": [
@@ -2603,16 +2911,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1901
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2057
     },
     {
-      "id": 2072184042,
-      "slug": "2026-09-25-jose-gonzlez-uptown-theater",
-      "date": "2026-09-25",
-      "dateEpochMs": 1790319600000,
-      "startTimeEpochMs": 1790362800000,
+      "id": 1529681557,
+      "slug": "2026-09-24-jose-gonzlez-uptown-theater",
+      "date": "2026-09-24",
+      "dateEpochMs": 1790287200000,
+      "startTimeEpochMs": 1790330400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1262488951,
       "artistIds": [
@@ -2625,16 +2933,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1902
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2058
     },
     {
-      "id": 214213342,
-      "slug": "2026-09-25-everything-everything-august-hall",
-      "date": "2026-09-25",
-      "dateEpochMs": 1790319600000,
-      "startTimeEpochMs": 1790380800000,
+      "id": 1511267555,
+      "slug": "2026-09-24-everything-everything-august-hall",
+      "date": "2026-09-24",
+      "dateEpochMs": 1790287200000,
+      "startTimeEpochMs": 1790348400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1341792845,
       "artistIds": [
@@ -2648,16 +2956,59 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1903
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2059
     },
     {
-      "id": 1831509720,
-      "slug": "2026-09-26-shreya-ghoshal-the-arena",
-      "date": "2026-09-26",
-      "dateEpochMs": 1790406000000,
-      "startTimeEpochMs": 1790640000000,
+      "id": 1359901496,
+      "slug": "2026-09-24-beck-the-masonic",
+      "date": "2026-09-24",
+      "dateEpochMs": 1790287200000,
+      "startTimeEpochMs": 1790359200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971848130,
+      "artistIds": [
+        1971848130
+      ],
+      "venueId": 1120524281,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2060
+    },
+    {
+      "id": 22564218,
+      "slug": "2026-09-24-jose-gonzalez-uptown-theater",
+      "date": "2026-09-24",
+      "dateEpochMs": 1790287200000,
+      "startTimeEpochMs": 1790330400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 482130314,
+      "artistIds": [
+        482130314
+      ],
+      "venueId": 1711400117,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2061
+    },
+    {
+      "id": 206546569,
+      "slug": "2026-09-25-shreya-ghoshal-the-arena",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
+      "startTimeEpochMs": 1790607600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1281998159,
       "artistIds": [
@@ -2671,16 +3022,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1904
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2062
     },
     {
-      "id": 772943597,
-      "slug": "2026-09-26-sugar-the-warfield",
-      "date": "2026-09-26",
-      "dateEpochMs": 1790406000000,
-      "startTimeEpochMs": 1790726400000,
+      "id": 262409420,
+      "slug": "2026-09-25-sugar-the-warfield",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
+      "startTimeEpochMs": 1790694000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 981569725,
       "artistIds": [
@@ -2695,16 +3046,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1905
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2063
     },
     {
-      "id": 1505543884,
-      "slug": "2026-09-26-the-concert-tribute-the-mountain-winery",
-      "date": "2026-09-26",
-      "dateEpochMs": 1790406000000,
-      "startTimeEpochMs": 1790476200000,
+      "id": 1063942515,
+      "slug": "2026-09-25-the-concert-tribute-the-mountain-winery",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
+      "startTimeEpochMs": 1790443800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1855542677,
       "artistIds": [
@@ -2716,16 +3067,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1906
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2064
     },
     {
-      "id": 42909354,
-      "slug": "2026-09-26-fantastic-negrito-davies-symphony-hall",
-      "date": "2026-09-26",
-      "dateEpochMs": 1790406000000,
-      "startTimeEpochMs": 1790478000000,
+      "id": 1504489353,
+      "slug": "2026-09-25-fantastic-negrito-davies-symphony-hall",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
+      "startTimeEpochMs": 1790445600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1017740266,
       "artistIds": [
@@ -2738,16 +3089,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1907
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2065
     },
     {
-      "id": 1257906538,
-      "slug": "2026-09-26-west-22nd-the-independent",
-      "date": "2026-09-26",
-      "dateEpochMs": 1790406000000,
-      "startTimeEpochMs": 1790506800000,
+      "id": 13142057,
+      "slug": "2026-09-25-west-22nd-the-independent",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
+      "startTimeEpochMs": 1790474400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1613290324,
       "artistIds": [
@@ -2761,16 +3112,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1908
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896538,
+      "sourceLineNumber": 2066
     },
     {
-      "id": 1683334301,
-      "slug": "2026-09-26-rusty-chains-tribute-great-american-music-hall",
-      "date": "2026-09-26",
-      "dateEpochMs": 1790406000000,
-      "startTimeEpochMs": 1790496000000,
+      "id": 1442794172,
+      "slug": "2026-09-25-rusty-chains-tribute-great-american-music-hall",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
+      "startTimeEpochMs": 1790463600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1258651762,
       "artistIds": [
@@ -2785,15 +3136,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626395,
-      "sourceLineNumber": 1909
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896539,
+      "sourceLineNumber": 2067
     },
     {
-      "id": 1613719257,
-      "slug": "2026-09-26-the-young-barons-pacificas-fogfist-parade",
-      "date": "2026-09-26",
-      "dateEpochMs": 1790406000000,
+      "id": 1219668040,
+      "slug": "2026-09-25-the-young-barons-pacificas-fogfist-parade",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 363675172,
       "artistIds": [
@@ -2807,16 +3158,91 @@
         "free"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1910
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896539,
+      "sourceLineNumber": 2068
     },
     {
-      "id": 935701936,
-      "slug": "2026-09-27-croce-plays-croce-the-mountain-winery",
-      "date": "2026-09-27",
-      "dateEpochMs": 1790492400000,
-      "startTimeEpochMs": 1790562600000,
+      "id": 1865460121,
+      "slug": "2026-09-25-beck-the-masonic",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
+      "startTimeEpochMs": 1790445600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971848130,
+      "artistIds": [
+        1971848130
+      ],
+      "venueId": 1120524281,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896539,
+      "sourceLineNumber": 2071
+    },
+    {
+      "id": 112771340,
+      "slug": "2026-09-25-robyn-pier-80",
+      "date": "2026-09-25",
+      "dateEpochMs": 1790373600000,
+      "startTimeEpochMs": 1790449200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 982676057,
+      "artistIds": [
+        982676057,
+        1736168867,
+        1445789416,
+        452292758,
+        1646270232,
+        1454514551,
+        1961042490,
+        104948016,
+        11675851,
+        1845420224,
+        1951210882,
+        891841717,
+        376072013,
+        1429045190,
+        517931989,
+        120173165,
+        749157052,
+        632627142,
+        337970407,
+        1862512932,
+        617601908,
+        514985548,
+        1062067657,
+        1274517237,
+        2127103773,
+        853792612,
+        706516618,
+        1571677050,
+        2009462194,
+        1013202109,
+        2068765928
+      ],
+      "venueId": 235316584,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "notes": "Portola Music Destival",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896541,
+      "sourceLineNumber": 2073
+    },
+    {
+      "id": 789778961,
+      "slug": "2026-09-26-croce-plays-croce-the-mountain-winery",
+      "date": "2026-09-26",
+      "dateEpochMs": 1790460000000,
+      "startTimeEpochMs": 1790530200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 343809968,
       "artistIds": [
@@ -2829,16 +3255,111 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1913
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896541,
+      "sourceLineNumber": 2075
     },
     {
-      "id": 1355844016,
-      "slug": "2026-09-28-aldous-harding-the-castro",
-      "date": "2026-09-28",
-      "dateEpochMs": 1790578800000,
-      "startTimeEpochMs": 1790794800000,
+      "id": 1066354255,
+      "slug": "2026-09-26-lucki-the-warfield",
+      "date": "2026-09-26",
+      "dateEpochMs": 1790460000000,
+      "startTimeEpochMs": 1790524800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 988037915,
+      "artistIds": [
+        988037915,
+        1275143679
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "6+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896541,
+      "sourceLineNumber": 2076
+    },
+    {
+      "id": 1590370850,
+      "slug": "2026-09-26-julieta-venegas-the-masonic",
+      "date": "2026-09-26",
+      "dateEpochMs": 1790460000000,
+      "startTimeEpochMs": 1790532000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1087096662,
+      "artistIds": [
+        1087096662
+      ],
+      "venueId": 1120524281,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896541,
+      "sourceLineNumber": 2077
+    },
+    {
+      "id": 587837760,
+      "slug": "2026-09-26-swedish-house-mafia-pier-80",
+      "date": "2026-09-26",
+      "dateEpochMs": 1790460000000,
+      "startTimeEpochMs": 1790535600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1607897294,
+      "artistIds": [
+        1607897294,
+        1404751215,
+        1296960037,
+        691068156,
+        1620585385,
+        398971239,
+        1431296087,
+        1942207610,
+        658273418,
+        975100277,
+        1621754347,
+        55834950,
+        998701148,
+        925710799,
+        610138411,
+        574484061,
+        869184717,
+        1069839868,
+        1971237391,
+        766530992,
+        1051893322,
+        1959053479,
+        1679696470,
+        260449316,
+        982839936,
+        150506359,
+        1584425319,
+        1158127417,
+        11645575
+      ],
+      "venueId": 235316584,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "notes": "Portola Music Destival",
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2078
+    },
+    {
+      "id": 111079535,
+      "slug": "2026-09-27-aldous-harding-the-castro",
+      "date": "2026-09-27",
+      "dateEpochMs": 1790546400000,
+      "startTimeEpochMs": 1790762400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1241255266,
       "artistIds": [
@@ -2852,16 +3373,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1914
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2079
     },
     {
-      "id": 1984014323,
-      "slug": "2026-09-28-social-distortion-the-masonic",
-      "date": "2026-09-28",
-      "dateEpochMs": 1790578800000,
-      "startTimeEpochMs": 1790649000000,
+      "id": 1022400306,
+      "slug": "2026-09-27-social-distortion-the-masonic",
+      "date": "2026-09-27",
+      "dateEpochMs": 1790546400000,
+      "startTimeEpochMs": 1790616600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1163447875,
       "artistIds": [
@@ -2877,16 +3398,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1915
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2080
     },
     {
-      "id": 1290875009,
-      "slug": "2026-09-28-tokyo-tea-room-bimbos-365-club",
-      "date": "2026-09-28",
-      "dateEpochMs": 1790578800000,
-      "startTimeEpochMs": 1790650800000,
+      "id": 892801918,
+      "slug": "2026-09-27-tokyo-tea-room-bimbos-365-club",
+      "date": "2026-09-27",
+      "dateEpochMs": 1790546400000,
+      "startTimeEpochMs": 1790618400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 224932360,
       "artistIds": [
@@ -2898,16 +3419,38 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1779451200000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1917
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2082
     },
     {
-      "id": 502689628,
-      "slug": "2026-09-29-social-distortion-the-fox-theater",
-      "date": "2026-09-29",
-      "dateEpochMs": 1790665200000,
-      "startTimeEpochMs": 1790946000000,
+      "id": 1576888432,
+      "slug": "2026-09-27-lucki-the-warfield",
+      "date": "2026-09-27",
+      "dateEpochMs": 1790546400000,
+      "startTimeEpochMs": 1790611200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 988037915,
+      "artistIds": [
+        988037915,
+        1275143679
+      ],
+      "venueId": 1531618194,
+      "isFree": false,
+      "ageRestriction": "6+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2083
+    },
+    {
+      "id": 151889691,
+      "slug": "2026-09-28-social-distortion-the-fox-theater",
+      "date": "2026-09-28",
+      "dateEpochMs": 1790632800000,
+      "startTimeEpochMs": 1790913600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1163447875,
       "artistIds": [
@@ -2923,16 +3466,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1918
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2084
     },
     {
-      "id": 292011788,
-      "slug": "2026-09-29-aldous-harding-the-rio-theater",
-      "date": "2026-09-29",
-      "dateEpochMs": 1790665200000,
-      "startTimeEpochMs": 1790830800000,
+      "id": 37275243,
+      "slug": "2026-09-28-aldous-harding-the-rio-theater",
+      "date": "2026-09-28",
+      "dateEpochMs": 1790632800000,
+      "startTimeEpochMs": 1790798400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1241255266,
       "artistIds": [
@@ -2946,16 +3489,41 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1919
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2085
     },
     {
-      "id": 404468961,
-      "slug": "2026-09-30-jack-johnson-the-greek-theater",
-      "date": "2026-09-30",
-      "dateEpochMs": 1790751600000,
-      "startTimeEpochMs": 1790818200000,
+      "id": 770167320,
+      "slug": "2026-09-28-chanel-beads-great-american-music-hall",
+      "date": "2026-09-28",
+      "dateEpochMs": 1790632800000,
+      "startTimeEpochMs": 1790715600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1928319111,
+      "artistIds": [
+        1928319111,
+        801886817,
+        1232790281
+      ],
+      "venueId": 463728167,
+      "priceMin": 23,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2086
+    },
+    {
+      "id": 1713705655,
+      "slug": "2026-09-29-jack-johnson-the-greek-theater",
+      "date": "2026-09-29",
+      "dateEpochMs": 1790719200000,
+      "startTimeEpochMs": 1790785800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 98919751,
       "artistIds": [
@@ -2971,16 +3539,16 @@
         "sold-out"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1920
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896543,
+      "sourceLineNumber": 2087
     },
     {
-      "id": 975055759,
-      "slug": "2026-09-30-emei-bimbos-365-club",
-      "date": "2026-09-30",
-      "dateEpochMs": 1790751600000,
-      "startTimeEpochMs": 1790823600000,
+      "id": 639959047,
+      "slug": "2026-09-29-emei-bimbos-365-club",
+      "date": "2026-09-29",
+      "dateEpochMs": 1790719200000,
+      "startTimeEpochMs": 1790791200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1971751009,
       "artistIds": [
@@ -2992,16 +3560,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1921
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896544,
+      "sourceLineNumber": 2088
     },
     {
-      "id": 1260004018,
-      "slug": "2026-09-30-beth-orton-great-american-music-hall",
-      "date": "2026-09-30",
-      "dateEpochMs": 1790751600000,
-      "startTimeEpochMs": 1790892000000,
+      "id": 301945592,
+      "slug": "2026-09-29-beth-orton-great-american-music-hall",
+      "date": "2026-09-29",
+      "dateEpochMs": 1790719200000,
+      "startTimeEpochMs": 1790859600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1954842822,
       "artistIds": [
@@ -3016,16 +3584,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1922
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896544,
+      "sourceLineNumber": 2089
     },
     {
-      "id": 1506549988,
-      "slug": "2026-09-30-chasing-abbey-the-independent",
-      "date": "2026-09-30",
-      "dateEpochMs": 1790751600000,
-      "startTimeEpochMs": 1790816400000,
+      "id": 1187221882,
+      "slug": "2026-09-29-chasing-abbey-the-independent",
+      "date": "2026-09-29",
+      "dateEpochMs": 1790719200000,
+      "startTimeEpochMs": 1790784000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 909881005,
       "artistIds": [
@@ -3039,16 +3607,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626396,
-      "sourceLineNumber": 1923
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896544,
+      "sourceLineNumber": 2090
     },
     {
-      "id": 1076421321,
-      "slug": "2026-09-30-pat-benatar-the-mountain-winery",
-      "date": "2026-09-30",
-      "dateEpochMs": 1790751600000,
-      "startTimeEpochMs": 1790821800000,
+      "id": 855210529,
+      "slug": "2026-09-29-pat-benatar-the-mountain-winery",
+      "date": "2026-09-29",
+      "dateEpochMs": 1790719200000,
+      "startTimeEpochMs": 1790789400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1845185409,
       "artistIds": [
@@ -3061,16 +3629,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777032000000,
-      "updatedAtEpochMs": 1779584626397,
-      "sourceLineNumber": 1924
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896544,
+      "sourceLineNumber": 2091
     },
     {
-      "id": 156247535,
-      "slug": "2026-09-30-failure-the-chapel",
-      "date": "2026-09-30",
-      "dateEpochMs": 1790751600000,
-      "startTimeEpochMs": 1790917200000,
+      "id": 1496902459,
+      "slug": "2026-09-29-failure-the-chapel",
+      "date": "2026-09-29",
+      "dateEpochMs": 1790719200000,
+      "startTimeEpochMs": 1790884800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1913715625,
       "artistIds": [
@@ -3086,16 +3654,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1777636800000,
-      "updatedAtEpochMs": 1779584626397,
-      "sourceLineNumber": 1925
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896544,
+      "sourceLineNumber": 2092
     },
     {
-      "id": 1369347598,
-      "slug": "2026-09-30-jpegmafia-the-warfield",
-      "date": "2026-09-30",
-      "dateEpochMs": 1790751600000,
-      "startTimeEpochMs": 1790816400000,
+      "id": 1773545956,
+      "slug": "2026-09-29-jpegmafia-the-warfield",
+      "date": "2026-09-29",
+      "dateEpochMs": 1790719200000,
+      "startTimeEpochMs": 1790784000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1491671567,
       "artistIds": [
@@ -3109,9 +3677,9 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778846400000,
-      "updatedAtEpochMs": 1779584626397,
-      "sourceLineNumber": 1926
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780441896544,
+      "sourceLineNumber": 2093
     }
   ]
 }
