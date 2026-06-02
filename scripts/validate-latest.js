@@ -207,7 +207,20 @@ async function main() {
     process.exit(1);
   }
 
-  const latestContent = readFileSync(latestPath, 'utf-8');
+  // Load and apply line corrections before validation
+  const correctionsPath = resolve(dataDir, 'line-corrections.json');
+  const corrections = existsSync(correctionsPath)
+    ? JSON.parse(readFileSync(correctionsPath, 'utf-8')).map(c => ({
+        re: new RegExp(c.pattern, 'gi'),
+        replacement: c.replacement,
+      }))
+    : [];
+  const applyCorrections = line => corrections.reduce((l, c) => l.replace(c.re, c.replacement), line);
+
+  const rawLatestContent = readFileSync(latestPath, 'utf-8');
+  // Apply corrections line-by-line so patterns work on individual event strings
+  const latestContent = rawLatestContent.split('\n').map(applyCorrections).join('\n');
+
   const venuesContent = readFileSync(venuesPath, 'utf-8');
   const existingAliases = existsSync(aliasesPath)
     ? JSON.parse(readFileSync(aliasesPath, 'utf-8'))

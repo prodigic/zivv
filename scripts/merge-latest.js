@@ -97,14 +97,30 @@ function main() {
     ? JSON.parse(readFileSync(aliasesPath, 'utf-8'))
     : {};
 
-  // Collapse latest.txt to single-line entries
+  // Load line corrections — static regex fixes applied to every incoming entry
+  const correctionsPath = resolve(dataDir, 'line-corrections.json');
+  const corrections = existsSync(correctionsPath)
+    ? JSON.parse(readFileSync(correctionsPath, 'utf-8')).map(c => ({
+        re: new RegExp(c.pattern, 'gi'),
+        replacement: c.replacement,
+        note: c.note,
+      }))
+    : [];
+
+  const applyCorrections = (line) =>
+    corrections.reduce((l, c) => l.replace(c.re, c.replacement), line);
+
+  // Collapse latest.txt to single-line entries, then apply corrections
   const latestContent = readFileSync(latestPath, 'utf-8');
-  const newEntries = EventSanitizer.collapseToSingleLines(latestContent);
+  const rawEntries = EventSanitizer.collapseToSingleLines(latestContent);
+  const newEntries = rawEntries.map(applyCorrections);
+  const correctedCount = rawEntries.filter((e, i) => e !== newEntries[i]).length;
+  if (correctedCount > 0) console.log(`🔧 Applied line corrections to ${correctedCount} entries`);
   console.log(`📖 ${newEntries.length} entries parsed from latest.txt`);
 
-  // Collapse existing events.txt the same way so the comparison is apples-to-apples
+  // Collapse existing events.txt and apply same corrections for consistent dedup
   const eventsContent = readFileSync(eventsPath, 'utf-8');
-  const existingEntries = EventSanitizer.collapseToSingleLines(eventsContent);
+  const existingEntries = EventSanitizer.collapseToSingleLines(eventsContent).map(applyCorrections);
   console.log(`📖 ${existingEntries.length} existing entries in events.txt`);
 
   // Normalise a line for dedup: strip explicit year token and day-of-week so that

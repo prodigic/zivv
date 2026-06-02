@@ -1,0 +1,17 @@
+[
+  {
+    "note": "Missing comma between venue and city — 'at Hopmonk Tavern Novato' → 'at Hopmonk Tavern, Novato'",
+    "pattern": "\\bat (Hopmonk Tavern) (Novato|Sebastopol)\\b",
+    "replacement": "at $1, $2"
+  },
+  {
+    "note": "Missing comma between venue and city for 'Winter's Tavern Pacifica'",
+    "pattern": "\\bat (Winter's Tavern) (Pacifica)\\b",
+    "replacement": "at $1, $2"
+  },
+  {
+    "note": "Generic: venue name followed by city without comma (catches common patterns)",
+    "pattern": "\\bat (Catalyst Atrium) (Santa Cruz)\\b",
+    "replacement": "at $1, $2"
+  }
+]
