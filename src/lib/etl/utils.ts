@@ -66,45 +66,39 @@ export class DateParser {
       return null;
     }
 
+    // Build a timezone-safe date string and noon-UTC epoch from explicit y/m/d.
+    // Using noon UTC avoids any timezone shifting the date across a day boundary
+    // regardless of where the ETL runs (PDT, CEST, etc.).
+    const toResult = (y: number, m: number, d: number) => ({
+      date: `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`,
+      epochMs: Date.UTC(y, m, d, 12, 0, 0),
+    });
+
     // If the third token is a 4-digit year, use it directly
     const explicitYear = thirdToken && /^\d{4}$/.test(thirdToken) ? parseInt(thirdToken, 10) : null;
     if (explicitYear) {
-      const eventDate = new Date(explicitYear, month, day);
-      return {
-        date: eventDate.toISOString().split("T")[0],
-        epochMs: eventDate.getTime(),
-      };
+      return toResult(explicitYear, month, day);
     }
 
     const now = new Date();
 
     if (referenceEpochMs) {
       // Sequential mode: resolve the date relative to the previous event's date.
-      // The year only advances when the calendar month wraps backward (i.e. the
-      // new month is earlier than the reference month by more than 6 months).
       const ref = new Date(referenceEpochMs);
-      let year = ref.getFullYear();
-      let eventDate = new Date(year, month, day);
+      let year = ref.getUTCFullYear();
+      // Use UTC noon for comparison to avoid local-time skew
+      let epochMs = Date.UTC(year, month, day, 12, 0, 0);
 
-      // If the new date is more than 6 months before the reference date, it
-      // means we've wrapped into the next year (e.g. Jan after Jul)
-      if (eventDate.getTime() < ref.getTime() - 180 * 24 * 60 * 60 * 1000) {
-        eventDate = new Date(year + 1, month, day);
+      // If the new date is more than 6 months before the reference, wrap to next year
+      if (epochMs < referenceEpochMs - 180 * 24 * 60 * 60 * 1000) {
+        year += 1;
       }
 
-      return {
-        date: eventDate.toISOString().split("T")[0],
-        epochMs: eventDate.getTime(),
-      };
+      return toResult(year, month, day);
     }
 
-    // No reference: assign the date to the current year; if it's already passed
-    // don't bump — just keep it as-is (past events are filtered downstream)
-    const eventDate = new Date(now.getFullYear(), month, day);
-    return {
-      date: eventDate.toISOString().split("T")[0],
-      epochMs: eventDate.getTime(),
-    };
+    // No reference: assign to current year
+    return toResult(now.getUTCFullYear(), month, day);
   }
 
   /**

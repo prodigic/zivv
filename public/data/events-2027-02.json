@@ -1,16 +1,16 @@
 {
   "chunkId": "2027-02",
   "dateRange": {
-    "startEpochMs": 1801782000000,
-    "endEpochMs": 1802991600000
+    "startEpochMs": 1801828800000,
+    "endEpochMs": 1803038400000
   },
   "events": [
     {
-      "id": 1091702913,
-      "slug": "2027-02-04-odezenne-the-independent",
-      "date": "2027-02-04",
-      "dateEpochMs": 1801782000000,
-      "startTimeEpochMs": 1801897200000,
+      "id": 1165208094,
+      "slug": "2027-02-05-odezenne-the-independent",
+      "date": "2027-02-05",
+      "dateEpochMs": 1801828800000,
+      "startTimeEpochMs": 1801900800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1870225213,
       "artistIds": [
@@ -24,16 +24,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070917,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016279,
       "sourceLineNumber": 2370
     },
     {
-      "id": 690899008,
-      "slug": "2027-02-16-the-bouncing-souls-the-uc-theater",
-      "date": "2027-02-16",
-      "dateEpochMs": 1802818800000,
-      "startTimeEpochMs": 1802883600000,
+      "id": 270715009,
+      "slug": "2027-02-17-the-bouncing-souls-the-uc-theater",
+      "date": "2027-02-17",
+      "dateEpochMs": 1802865600000,
+      "startTimeEpochMs": 1802887200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1549370072,
       "artistIds": [
@@ -46,15 +46,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070917,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016279,
       "sourceLineNumber": 2371
     },
     {
-      "id": 1432081676,
-      "slug": "2027-02-17-blue-october-the-regency-ballroom",
-      "date": "2027-02-17",
-      "dateEpochMs": 1802905200000,
+      "id": 1081281739,
+      "slug": "2027-02-18-blue-october-the-regency-ballroom",
+      "date": "2027-02-18",
+      "dateEpochMs": 1802952000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 895564179,
       "artistIds": [
@@ -66,16 +66,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070917,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016279,
       "sourceLineNumber": 2372
     },
     {
-      "id": 24814043,
-      "slug": "2027-02-18-buck-meek-moes-alley",
-      "date": "2027-02-18",
-      "dateEpochMs": 1802991600000,
-      "startTimeEpochMs": 1803067200000,
+      "id": 1269578524,
+      "slug": "2027-02-19-buck-meek-moes-alley",
+      "date": "2027-02-19",
+      "dateEpochMs": 1803038400000,
+      "startTimeEpochMs": 1803070800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1459277008,
       "artistIds": [
@@ -90,8 +90,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070918,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016279,
       "sourceLineNumber": 2373
     }
   ]

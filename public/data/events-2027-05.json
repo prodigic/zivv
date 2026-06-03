@@ -1,16 +1,16 @@
 {
   "chunkId": "2027-05",
   "dateRange": {
-    "startEpochMs": 1809554400000,
-    "endEpochMs": 1810418400000
+    "startEpochMs": 1809604800000,
+    "endEpochMs": 1810468800000
   },
   "events": [
     {
-      "id": 1633239583,
-      "slug": "2027-05-05-french-79-the-fillmore",
-      "date": "2027-05-05",
-      "dateEpochMs": 1809554400000,
-      "startTimeEpochMs": 1809626400000,
+      "id": 2042063808,
+      "slug": "2027-05-06-french-79-the-fillmore",
+      "date": "2027-05-06",
+      "dateEpochMs": 1809604800000,
+      "startTimeEpochMs": 1809633600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 486483275,
       "artistIds": [
@@ -22,16 +22,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070918,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016280,
       "sourceLineNumber": 2376
     },
     {
-      "id": 1164643065,
-      "slug": "2027-05-15-valery-meladze-the-warfield",
-      "date": "2027-05-15",
-      "dateEpochMs": 1810418400000,
-      "startTimeEpochMs": 1810490400000,
+      "id": 1053114888,
+      "slug": "2027-05-16-valery-meladze-the-warfield",
+      "date": "2027-05-16",
+      "dateEpochMs": 1810468800000,
+      "startTimeEpochMs": 1810497600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 367868544,
       "artistIds": [
@@ -43,8 +43,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070918,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016280,
       "sourceLineNumber": 2377
     }
   ]

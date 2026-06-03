@@ -292,9 +292,11 @@ export class EventParser {
           const [hours, minutes] = venueInfo.time.startTime
             .split(":")
             .map(Number);
-          const eventDateTime = new Date(parsedDate.epochMs);
-          eventDateTime.setHours(hours, minutes, 0, 0);
-          startTimeEpochMs = eventDateTime.getTime();
+          // Build time as UTC using the date components from parsedDate.date (YYYY-MM-DD).
+          // This avoids local-timezone skew — show times are Bay Area local but we store
+          // them as UTC offsets from midnight of the event date.
+          const [y, m, d] = parsedDate.date.split("-").map(Number);
+          startTimeEpochMs = Date.UTC(y, m - 1, d, hours, minutes, 0);
         }
 
         // Determine event status

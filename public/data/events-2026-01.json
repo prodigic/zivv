@@ -1,16 +1,16 @@
 {
   "chunkId": "2026-01",
   "dateRange": {
-    "startEpochMs": 1767481200000,
-    "endEpochMs": 1769122800000
+    "startEpochMs": 1767528000000,
+    "endEpochMs": 1769169600000
   },
   "events": [
     {
-      "id": 42361097,
-      "slug": "2026-01-03-apricot-court-the-blue-laggon",
-      "date": "2026-01-03",
-      "dateEpochMs": 1767481200000,
-      "startTimeEpochMs": 1767556800000,
+      "id": 919252920,
+      "slug": "2026-01-04-apricot-court-the-blue-laggon",
+      "date": "2026-01-04",
+      "dateEpochMs": 1767528000000,
+      "startTimeEpochMs": 1767560400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1926351334,
       "artistIds": [
@@ -26,16 +26,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070721,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016089,
       "sourceLineNumber": 2
     },
     {
-      "id": 1623937467,
-      "slug": "2026-01-22-arooj-aftab-palace-of-fine-arts",
-      "date": "2026-01-22",
-      "dateEpochMs": 1769122800000,
-      "startTimeEpochMs": 1769196600000,
+      "id": 559739460,
+      "slug": "2026-01-23-arooj-aftab-palace-of-fine-arts",
+      "date": "2026-01-23",
+      "dateEpochMs": 1769169600000,
+      "startTimeEpochMs": 1769200200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1801713526,
       "artistIds": [
@@ -47,8 +47,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070721,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016089,
       "sourceLineNumber": 3
     }
   ]

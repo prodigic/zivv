@@ -1,16 +1,16 @@
 {
   "chunkId": "2027-04",
   "dateRange": {
-    "startEpochMs": 1806703200000,
-    "endEpochMs": 1808344800000
+    "startEpochMs": 1806753600000,
+    "endEpochMs": 1808395200000
   },
   "events": [
     {
-      "id": 1957516945,
-      "slug": "2027-04-02-nothing-but-thieves-the-fox-theater",
-      "date": "2027-04-02",
-      "dateEpochMs": 1806703200000,
-      "startTimeEpochMs": 1806775200000,
+      "id": 153773424,
+      "slug": "2027-04-03-nothing-but-thieves-the-fox-theater",
+      "date": "2027-04-03",
+      "dateEpochMs": 1806753600000,
+      "startTimeEpochMs": 1806782400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 303790097,
       "artistIds": [
@@ -22,16 +22,16 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070918,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016279,
       "sourceLineNumber": 2374
     },
     {
-      "id": 412716475,
-      "slug": "2027-04-21-justb-the-chapel",
-      "date": "2027-04-21",
-      "dateEpochMs": 1808344800000,
-      "startTimeEpochMs": 1808474400000,
+      "id": 92842150,
+      "slug": "2027-04-22-justb-the-chapel",
+      "date": "2027-04-22",
+      "dateEpochMs": 1808395200000,
+      "startTimeEpochMs": 1808481600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 989869309,
       "artistIds": [
@@ -46,8 +46,8 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780443070918,
+      "createdAtEpochMs": 1780056000000,
+      "updatedAtEpochMs": 1780485016280,
       "sourceLineNumber": 2375
     }
   ]
