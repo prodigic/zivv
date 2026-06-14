@@ -25,8 +25,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596982,
-      "sourceLineNumber": 2623
+      "updatedAtEpochMs": 1781479158360,
+      "sourceLineNumber": 2786
     },
     {
       "id": 196167253,
@@ -48,8 +48,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596982,
-      "sourceLineNumber": 2624
+      "updatedAtEpochMs": 1781479158360,
+      "sourceLineNumber": 2787
     },
     {
       "id": 566269486,
@@ -69,8 +69,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596982,
-      "sourceLineNumber": 2626
+      "updatedAtEpochMs": 1781479158360,
+      "sourceLineNumber": 2789
+    },
+    {
+      "id": 1965348492,
+      "slug": "2026-12-03-meek-the-independent",
+      "date": "2026-12-03",
+      "dateEpochMs": 1796299200000,
+      "startTimeEpochMs": 1796371200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971520367,
+      "artistIds": [
+        1971520367
+      ],
+      "venueId": 515101024,
+      "priceMin": 32.55,
+      "priceMax": 32.55,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1781265600000,
+      "updatedAtEpochMs": 1781479158360,
+      "sourceLineNumber": 2790
     },
     {
       "id": 2129195846,
@@ -93,8 +116,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596982,
-      "sourceLineNumber": 2627
+      "updatedAtEpochMs": 1781479158360,
+      "sourceLineNumber": 2791
     },
     {
       "id": 1581542795,
@@ -121,8 +144,30 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1780660800000,
-      "updatedAtEpochMs": 1780841596982,
-      "sourceLineNumber": 2628
+      "updatedAtEpochMs": 1781479158360,
+      "sourceLineNumber": 2792
+    },
+    {
+      "id": 1262776935,
+      "slug": "2026-12-06-gracie-abrams-the-arena",
+      "date": "2026-12-06",
+      "dateEpochMs": 1796558400000,
+      "startTimeEpochMs": 1796587200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 349996186,
+      "artistIds": [
+        349996186,
+        396090288
+      ],
+      "venueId": 1887679738,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1781265600000,
+      "updatedAtEpochMs": 1781479158360,
+      "sourceLineNumber": 2793
     },
     {
       "id": 1844983612,
@@ -143,8 +188,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596982,
-      "sourceLineNumber": 2629
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2794
     },
     {
       "id": 638669721,
@@ -164,8 +209,30 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596982,
-      "sourceLineNumber": 2630
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2795
+    },
+    {
+      "id": 1474127848,
+      "slug": "2026-12-07-gracie-abrams-the-arena",
+      "date": "2026-12-07",
+      "dateEpochMs": 1796644800000,
+      "startTimeEpochMs": 1796673600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 349996186,
+      "artistIds": [
+        349996186,
+        396090288
+      ],
+      "venueId": 1887679738,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1781265600000,
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2796
     },
     {
       "id": 839753172,
@@ -186,8 +253,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2631
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2797
     },
     {
       "id": 1485239828,
@@ -207,8 +274,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2632
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2798
     },
     {
       "id": 665667582,
@@ -228,8 +295,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2633
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2799
     },
     {
       "id": 458793852,
@@ -252,8 +319,31 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1780660800000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2634
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2800
+    },
+    {
+      "id": 97241599,
+      "slug": "2026-12-10-oliver-hazard-the-rickshaw-stop",
+      "date": "2026-12-10",
+      "dateEpochMs": 1796904000000,
+      "startTimeEpochMs": 1796950800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 615044968,
+      "artistIds": [
+        615044968
+      ],
+      "venueId": 31041890,
+      "priceMin": 25,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1781265600000,
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2801
     },
     {
       "id": 1610223820,
@@ -275,8 +365,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2635
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2802
     },
     {
       "id": 1293270479,
@@ -296,8 +386,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2636
+      "updatedAtEpochMs": 1781479158361,
+      "sourceLineNumber": 2803
     },
     {
       "id": 1897385219,
@@ -319,8 +409,36 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2637
+      "updatedAtEpochMs": 1781479158362,
+      "sourceLineNumber": 2804
+    },
+    {
+      "id": 222835919,
+      "slug": "2026-12-12-dragon-force-the-black-cat",
+      "date": "2026-12-12",
+      "dateEpochMs": 1797076800000,
+      "startTimeEpochMs": 1797224400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 794351631,
+      "artistIds": [
+        794351631,
+        1955536999,
+        2056728296
+      ],
+      "venueId": 1082531611,
+      "priceMin": 53,
+      "priceMax": 53,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "matinee",
+        "late-show"
+      ],
+      "venueType": "diy",
+      "createdAtEpochMs": 1781265600000,
+      "updatedAtEpochMs": 1781479158362,
+      "sourceLineNumber": 2805
     },
     {
       "id": 1054945827,
@@ -343,8 +461,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2638
+      "updatedAtEpochMs": 1781479158362,
+      "sourceLineNumber": 2806
     },
     {
       "id": 1709307841,
@@ -367,8 +485,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2639
+      "updatedAtEpochMs": 1781479158362,
+      "sourceLineNumber": 2807
     },
     {
       "id": 1785355123,
@@ -389,8 +507,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596983,
-      "sourceLineNumber": 2640
+      "updatedAtEpochMs": 1781479158362,
+      "sourceLineNumber": 2808
     }
   ]
 }

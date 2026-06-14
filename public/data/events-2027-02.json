@@ -2,7 +2,7 @@
   "chunkId": "2027-02",
   "dateRange": {
     "startEpochMs": 1801828800000,
-    "endEpochMs": 1803038400000
+    "endEpochMs": 1803556800000
   },
   "events": [
     {
@@ -25,8 +25,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596984,
-      "sourceLineNumber": 2646
+      "updatedAtEpochMs": 1781479158362,
+      "sourceLineNumber": 2814
     },
     {
       "id": 270715009,
@@ -47,8 +47,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596984,
-      "sourceLineNumber": 2647
+      "updatedAtEpochMs": 1781479158362,
+      "sourceLineNumber": 2815
     },
     {
       "id": 1081281739,
@@ -67,8 +67,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596984,
-      "sourceLineNumber": 2648
+      "updatedAtEpochMs": 1781479158363,
+      "sourceLineNumber": 2816
     },
     {
       "id": 1269578524,
@@ -91,8 +91,29 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1780841596984,
-      "sourceLineNumber": 2649
+      "updatedAtEpochMs": 1781479158363,
+      "sourceLineNumber": 2817
+    },
+    {
+      "id": 564268285,
+      "slug": "2027-02-25-sylvan-esso-the-fox-theater",
+      "date": "2027-02-25",
+      "dateEpochMs": 1803556800000,
+      "startTimeEpochMs": 1803585600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1363348346,
+      "artistIds": [
+        1363348346
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1781265600000,
+      "updatedAtEpochMs": 1781479158363,
+      "sourceLineNumber": 2818
     }
   ]
 }
