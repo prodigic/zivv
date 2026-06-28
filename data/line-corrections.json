@@ -13,5 +13,10 @@
     "note": "Generic: venue name followed by city without comma (catches common patterns)",
     "pattern": "\\bat (Catalyst Atrium) (Santa Cruz)\\b",
     "replacement": "at $1, $2"
+  },
+  {
+    "note": "Typo: 'Cific Auditorium' → 'Civic Auditorium'",
+    "pattern": "\\bthe Cific Auditorium\\b",
+    "replacement": "the Civic Auditorium"
   }
 ]

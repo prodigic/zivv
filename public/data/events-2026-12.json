@@ -1,10 +1,34 @@
 {
   "chunkId": "2026-12",
   "dateRange": {
-    "startEpochMs": 1796299200000,
-    "endEpochMs": 1797422400000
+    "startEpochMs": 1796126400000,
+    "endEpochMs": 1797681600000
   },
   "events": [
+    {
+      "id": 234646293,
+      "slug": "2026-12-01-jalen-ngonda-august-hall",
+      "date": "2026-12-01",
+      "dateEpochMs": 1796126400000,
+      "startTimeEpochMs": 1796144400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1902179850,
+      "artistIds": [
+        1902179850,
+        1134846657
+      ],
+      "venueId": 811075932,
+      "priceMin": 34.7,
+      "priceMax": 34.7,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1782475200000,
+      "updatedAtEpochMs": 1782645525149,
+      "sourceLineNumber": 3037
+    },
     {
       "id": 1487567,
       "slug": "2026-12-03-pattie-gonia-the-fillmore",
@@ -25,8 +49,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158360,
-      "sourceLineNumber": 2786
+      "updatedAtEpochMs": 1782645525149,
+      "sourceLineNumber": 3038
     },
     {
       "id": 196167253,
@@ -48,8 +72,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158360,
-      "sourceLineNumber": 2787
+      "updatedAtEpochMs": 1782645525149,
+      "sourceLineNumber": 3039
     },
     {
       "id": 566269486,
@@ -69,8 +93,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158360,
-      "sourceLineNumber": 2789
+      "updatedAtEpochMs": 1782645525149,
+      "sourceLineNumber": 3041
     },
     {
       "id": 1965348492,
@@ -92,8 +116,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1781265600000,
-      "updatedAtEpochMs": 1781479158360,
-      "sourceLineNumber": 2790
+      "updatedAtEpochMs": 1782645525149,
+      "sourceLineNumber": 3042
     },
     {
       "id": 2129195846,
@@ -116,8 +140,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158360,
-      "sourceLineNumber": 2791
+      "updatedAtEpochMs": 1782645525149,
+      "sourceLineNumber": 3043
     },
     {
       "id": 1581542795,
@@ -144,8 +168,8 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1780660800000,
-      "updatedAtEpochMs": 1781479158360,
-      "sourceLineNumber": 2792
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3044
     },
     {
       "id": 1262776935,
@@ -166,8 +190,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1781265600000,
-      "updatedAtEpochMs": 1781479158360,
-      "sourceLineNumber": 2793
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3045
+    },
+    {
+      "id": 1784290575,
+      "slug": "2026-12-06-squirrel-nut-zippers-bimbos-365-club",
+      "date": "2026-12-06",
+      "dateEpochMs": 1796558400000,
+      "startTimeEpochMs": 1796590800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1783297008,
+      "artistIds": [
+        1783297008
+      ],
+      "venueId": 697962111,
+      "priceMin": 57.17,
+      "priceMax": 57.17,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1782475200000,
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3046
     },
     {
       "id": 1844983612,
@@ -188,8 +235,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2794
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3047
     },
     {
       "id": 638669721,
@@ -209,8 +256,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2795
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3048
     },
     {
       "id": 1474127848,
@@ -231,8 +278,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1781265600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2796
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3049
     },
     {
       "id": 839753172,
@@ -253,8 +300,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2797
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3050
     },
     {
       "id": 1485239828,
@@ -274,8 +321,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2798
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3051
+    },
+    {
+      "id": 1217136514,
+      "slug": "2026-12-09-the-jayhawks-the-fillmore",
+      "date": "2026-12-09",
+      "dateEpochMs": 1796817600000,
+      "startTimeEpochMs": 1796936400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 360553865,
+      "artistIds": [
+        360553865
+      ],
+      "venueId": 1136597428,
+      "priceMin": 45,
+      "priceMax": 45,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1782475200000,
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3052
     },
     {
       "id": 665667582,
@@ -295,8 +365,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2799
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3053
     },
     {
       "id": 458793852,
@@ -319,8 +389,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1780660800000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2800
+      "updatedAtEpochMs": 1782645525150,
+      "sourceLineNumber": 3054
     },
     {
       "id": 97241599,
@@ -342,8 +412,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1781265600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2801
+      "updatedAtEpochMs": 1782645525151,
+      "sourceLineNumber": 3055
     },
     {
       "id": 1610223820,
@@ -365,8 +435,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2802
+      "updatedAtEpochMs": 1782645525151,
+      "sourceLineNumber": 3056
     },
     {
       "id": 1293270479,
@@ -386,8 +456,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158361,
-      "sourceLineNumber": 2803
+      "updatedAtEpochMs": 1782645525151,
+      "sourceLineNumber": 3057
     },
     {
       "id": 1897385219,
@@ -409,8 +479,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158362,
-      "sourceLineNumber": 2804
+      "updatedAtEpochMs": 1782645525151,
+      "sourceLineNumber": 3058
     },
     {
       "id": 222835919,
@@ -437,8 +507,32 @@
       ],
       "venueType": "diy",
       "createdAtEpochMs": 1781265600000,
-      "updatedAtEpochMs": 1781479158362,
-      "sourceLineNumber": 2805
+      "updatedAtEpochMs": 1782645525151,
+      "sourceLineNumber": 3059
+    },
+    {
+      "id": 2089567281,
+      "slug": "2026-12-12-tiny-habits-the-castro",
+      "date": "2026-12-12",
+      "dateEpochMs": 1797076800000,
+      "startTimeEpochMs": 1797174000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1935841556,
+      "artistIds": [
+        1935841556,
+        2026012804
+      ],
+      "venueId": 1383208152,
+      "priceMin": 39,
+      "priceMax": 39,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1782475200000,
+      "updatedAtEpochMs": 1782645525151,
+      "sourceLineNumber": 3060
     },
     {
       "id": 1054945827,
@@ -461,8 +555,32 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158362,
-      "sourceLineNumber": 2806
+      "updatedAtEpochMs": 1782645525151,
+      "sourceLineNumber": 3061
+    },
+    {
+      "id": 2139034017,
+      "slug": "2026-12-13-yaelokre-the-castro",
+      "date": "2026-12-13",
+      "dateEpochMs": 1797163200000,
+      "startTimeEpochMs": 1797246000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 556685807,
+      "artistIds": [
+        556685807,
+        1392369713
+      ],
+      "venueId": 1383208152,
+      "priceMin": 35.25,
+      "priceMax": 35.25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1782475200000,
+      "updatedAtEpochMs": 1782645525151,
+      "sourceLineNumber": 3062
     },
     {
       "id": 1709307841,
@@ -485,8 +603,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158362,
-      "sourceLineNumber": 2807
+      "updatedAtEpochMs": 1782645525152,
+      "sourceLineNumber": 3063
     },
     {
       "id": 1785355123,
@@ -507,8 +625,30 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1781479158362,
-      "sourceLineNumber": 2808
+      "updatedAtEpochMs": 1782645525152,
+      "sourceLineNumber": 3064
+    },
+    {
+      "id": 1875353591,
+      "slug": "2026-12-19-ali-siddiq-the-fox-theater",
+      "date": "2026-12-19",
+      "dateEpochMs": 1797681600000,
+      "startTimeEpochMs": 1797710400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 622162989,
+      "artistIds": [
+        622162989
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "seated",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1782475200000,
+      "updatedAtEpochMs": 1782645525152,
+      "sourceLineNumber": 3066
     }
   ]
 }
