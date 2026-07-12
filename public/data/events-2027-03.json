@@ -1,0 +1,33 @@
+{
+  "chunkId": "2027-03",
+  "dateRange": {
+    "startEpochMs": 1805371200000,
+    "endEpochMs": 1805371200000
+  },
+  "events": [
+    {
+      "id": 931419921,
+      "slug": "2027-03-18-wheeler-walker-jr-uptown-theater",
+      "date": "2027-03-18",
+      "dateEpochMs": 1805371200000,
+      "startTimeEpochMs": 1805371200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1294522905,
+      "artistIds": [
+        1294522905
+      ],
+      "venueId": 1711400117,
+      "priceMin": 55.25,
+      "priceMax": 55.25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1783684800000,
+      "updatedAtEpochMs": 1783816503158,
+      "sourceLineNumber": 3448
+    }
+  ]
+}

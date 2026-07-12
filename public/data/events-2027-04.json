@@ -23,8 +23,31 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1783294135054,
-      "sourceLineNumber": 3253
+      "updatedAtEpochMs": 1783816503158,
+      "sourceLineNumber": 3449
+    },
+    {
+      "id": 1511143606,
+      "slug": "2027-04-08-gutalax-neck-of-the-woods",
+      "date": "2027-04-08",
+      "dateEpochMs": 1807185600000,
+      "startTimeEpochMs": 1807218000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 443807051,
+      "artistIds": [
+        443807051
+      ],
+      "venueId": 1557090037,
+      "priceMin": 25,
+      "priceMax": 30,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "diy",
+      "createdAtEpochMs": 1783684800000,
+      "updatedAtEpochMs": 1783816503158,
+      "sourceLineNumber": 3451
     },
     {
       "id": 92842150,
@@ -47,8 +70,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1783294135054,
-      "sourceLineNumber": 3255
+      "updatedAtEpochMs": 1783816503158,
+      "sourceLineNumber": 3452
     }
   ]
 }
