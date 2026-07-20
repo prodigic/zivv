@@ -1,10 +1,34 @@
 {
   "chunkId": "2027-01",
   "dateRange": {
-    "startEpochMs": 1799496000000,
-    "endEpochMs": 1800100800000
+    "startEpochMs": 1799409600000,
+    "endEpochMs": 1801310400000
   },
   "events": [
+    {
+      "id": 284381709,
+      "slug": "2027-01-08-com-truise-the-independent",
+      "date": "2027-01-08",
+      "dateEpochMs": 1799409600000,
+      "startTimeEpochMs": 1799431200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 571140342,
+      "artistIds": [
+        571140342,
+        1191652833
+      ],
+      "venueId": 515101024,
+      "priceMin": 34.05,
+      "priceMax": 34.05,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1784289600000,
+      "updatedAtEpochMs": 1784567934801,
+      "sourceLineNumber": 3739
+    },
     {
       "id": 2113417285,
       "slug": "2027-01-09-anna-von-hausswolff-the-great-american-music-hall",
@@ -25,8 +49,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1783816503157,
-      "sourceLineNumber": 3438
+      "updatedAtEpochMs": 1784567934801,
+      "sourceLineNumber": 3740
     },
     {
       "id": 1990606045,
@@ -52,8 +76,8 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1783816503157,
-      "sourceLineNumber": 3439
+      "updatedAtEpochMs": 1784567934801,
+      "sourceLineNumber": 3741
     },
     {
       "id": 2093010338,
@@ -76,8 +100,124 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1783816503157,
-      "sourceLineNumber": 3440
+      "updatedAtEpochMs": 1784567934801,
+      "sourceLineNumber": 3742
+    },
+    {
+      "id": 501761858,
+      "slug": "2027-01-23-pete-floyd-tribute-the-chapel",
+      "date": "2027-01-23",
+      "dateEpochMs": 1800705600000,
+      "startTimeEpochMs": 1800748800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 566282897,
+      "artistIds": [
+        566282897
+      ],
+      "venueId": 680116887,
+      "priceMin": 24,
+      "priceMax": 28,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1784289600000,
+      "updatedAtEpochMs": 1784567934801,
+      "sourceLineNumber": 3744
+    },
+    {
+      "id": 1293864265,
+      "slug": "2027-01-27-ibeyi-the-fillmore",
+      "date": "2027-01-27",
+      "dateEpochMs": 1801051200000,
+      "startTimeEpochMs": 1801180800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 991372151,
+      "artistIds": [
+        991372151
+      ],
+      "venueId": 1136597428,
+      "priceMin": 48,
+      "priceMax": 48,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1784289600000,
+      "updatedAtEpochMs": 1784567934802,
+      "sourceLineNumber": 3745
+    },
+    {
+      "id": 109083181,
+      "slug": "2027-01-28-the-california-honeydrops-the-fillmore",
+      "date": "2027-01-28",
+      "dateEpochMs": 1801137600000,
+      "startTimeEpochMs": 1801166400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1662822270,
+      "artistIds": [
+        1662822270,
+        2078714519,
+        847772459
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1784289600000,
+      "updatedAtEpochMs": 1784567934802,
+      "sourceLineNumber": 3746
+    },
+    {
+      "id": 2119187022,
+      "slug": "2027-01-29-the-california-honeydrops-the-fillmore",
+      "date": "2027-01-29",
+      "dateEpochMs": 1801224000000,
+      "startTimeEpochMs": 1801252800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1662822270,
+      "artistIds": [
+        1662822270,
+        2078714519,
+        1260718863,
+        847772459
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1784289600000,
+      "updatedAtEpochMs": 1784567934802,
+      "sourceLineNumber": 3747
+    },
+    {
+      "id": 903168732,
+      "slug": "2027-01-30-the-california-honeydrops-the-fillmore",
+      "date": "2027-01-30",
+      "dateEpochMs": 1801310400000,
+      "startTimeEpochMs": 1801339200000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1662822270,
+      "artistIds": [
+        1662822270,
+        2078714519,
+        847772459
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1784289600000,
+      "updatedAtEpochMs": 1784567934802,
+      "sourceLineNumber": 3748
     }
   ]
 }

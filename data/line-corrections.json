@@ -18,5 +18,15 @@
     "note": "Typo: 'Cific Auditorium' → 'Civic Auditorium'",
     "pattern": "\\bthe Cific Auditorium\\b",
     "replacement": "the Civic Auditorium"
+  },
+  {
+    "note": "Doubled 'at at' before venue → single 'at'",
+    "pattern": "\\bat at (Open Gallery)\\b",
+    "replacement": "at $1"
+  },
+  {
+    "note": "Typo: 'BVottom of the Hill' → 'Bottom of the Hill'",
+    "pattern": "\\bBVottom of the Hill\\b",
+    "replacement": "Bottom of the Hill"
   }
 ]

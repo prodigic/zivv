@@ -23,8 +23,32 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1783816503158,
-      "sourceLineNumber": 3449
+      "updatedAtEpochMs": 1784567934803,
+      "sourceLineNumber": 3758
+    },
+    {
+      "id": 1471972580,
+      "slug": "2027-04-06-valencia-grace-the-rickshaw-stop",
+      "date": "2027-04-06",
+      "dateEpochMs": 1807012800000,
+      "startTimeEpochMs": 1807059600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 894682204,
+      "artistIds": [
+        894682204
+      ],
+      "venueId": 31041890,
+      "priceMin": 25,
+      "priceMax": 25,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "$75 vip",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1784289600000,
+      "updatedAtEpochMs": 1784567934803,
+      "sourceLineNumber": 3761
     },
     {
       "id": 1511143606,
@@ -46,8 +70,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1783684800000,
-      "updatedAtEpochMs": 1783816503158,
-      "sourceLineNumber": 3451
+      "updatedAtEpochMs": 1784567934804,
+      "sourceLineNumber": 3762
     },
     {
       "id": 92842150,
@@ -70,8 +94,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1783816503158,
-      "sourceLineNumber": 3452
+      "updatedAtEpochMs": 1784567934804,
+      "sourceLineNumber": 3763
     }
   ]
 }
