@@ -9,6 +9,7 @@ import { useAppStore } from "@/stores/appStore.js";
 
 const MIN_EVENTS = 3;
 const MIN_VENUES = 2;
+const MAX_NAMES_SHOWN = 5;
 
 interface CityConfig {
   label: string;
@@ -67,6 +68,11 @@ function fmtPrice(priceMin?: number, priceMax?: number, isFree?: boolean): strin
   return `$${priceMin}`;
 }
 
+function joinCapped(names: string[], cap = MAX_NAMES_SHOWN): string {
+  if (names.length <= cap) return names.join(", ");
+  return `${names.slice(0, cap).join(", ")}, ...and more`;
+}
+
 export default function NewsletterPage() {
   const { city: citySlug = "sf" } = useParams<{ city?: string }>();
   const cityConfig = CITY_CONFIGS[citySlug] ?? CITY_CONFIGS.sf;
@@ -94,9 +100,41 @@ export default function NewsletterPage() {
   const nowMs = useMemo(() => Date.now(), []);
   const weekEndMs = useMemo(() => nowMs + 7 * 24 * 60 * 60 * 1000, [nowMs]);
 
-  // Local acts section — SF shows only, sorted by next SF show date
-  const localActBlocks = useMemo(() => {
-    const blocks: { name: string; slug: string; events: typeof Array.prototype }[] = [];
+  const artistMap = useMemo(() => {
+    const m = new Map<number, string>();
+    for (const a of artists.values()) m.set(a.id as number, a.name);
+    return m;
+  }, [artists]);
+
+  // Full lineup keyed by "dateEpochMs:venueId" → artist names in bill order
+  const lineupMap = useMemo(() => {
+    const m = new Map<string, string[]>();
+    for (const ev of events.values()) {
+      const key = `${ev.dateEpochMs}:${ev.venueId}`;
+      if (!m.has(key)) {
+        m.set(key, ev.artistIds.map((id) => artistMap.get(id as number) ?? "").filter(Boolean));
+      }
+    }
+    return m;
+  }, [events, artistMap]);
+
+  // Local acts section — one row per physical show, not per artist. A bill
+  // with multiple qualifying local acts (e.g. a big multi-band festival) is
+  // still a single show, so it lists all of them together in one bolded
+  // header instead of repeating the same venue/date under each act.
+  const localShowRows = useMemo(() => {
+    interface Row {
+      dateEpochMs: number;
+      venueId: number;
+      venueName: string;
+      priceMin?: number;
+      priceMax?: number;
+      isFree?: boolean;
+      isSoldOut?: boolean;
+      localNames: Set<string>;
+    }
+    const rows = new Map<string, Row>();
+
     for (const artist of artists.values()) {
       if (localArtistExclude.has(artist.name.toLowerCase())) continue;
       const upcoming = artist.upcomingEvents.filter((e) => e.dateEpochMs > nowMs);
@@ -105,37 +143,41 @@ export default function NewsletterPage() {
       const onList = localArtistList.has(artist.name.toLowerCase());
       const meetsThreshold = upcoming.length >= MIN_EVENTS && venueCount >= MIN_VENUES;
       if (!onList && !meetsThreshold) continue;
-      const sfRaw = upcoming.filter((e) => isCity(e.venueCity) && e.dateEpochMs <= weekEndMs);
-      // Dedupe same date+venue (same show listed under multiple artist orderings).
-      // Prefer the entry where this artist is the headliner.
-      const seen = new Map<string, typeof sfRaw[0]>();
-      for (const ev of sfRaw) {
-        const key = `${ev.dateEpochMs}:${ev.venueId}`;
-        const existing = seen.get(key);
-        if (!existing || ev.headlinerName === artist.name) seen.set(key, ev);
-      }
-      const sfEvents = [...seen.values()].sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-      if (sfEvents.length === 0) continue;
-      blocks.push({ name: artist.name, slug: artist.slug, events: sfEvents });
-    }
-    blocks.sort((a, b) => a.events[0].dateEpochMs - b.events[0].dateEpochMs);
 
-    // Global dedup: when multiple local acts share the same bill, only list
-    // that show once (under whichever act's block comes first) instead of
-    // repeating the same venue/date under every local act playing it.
-    const seenShowKeys = new Set<string>();
-    const dedupedBlocks: typeof blocks = [];
-    for (const block of blocks) {
-      const events = block.events.filter((ev) => {
+      const sfEvents = upcoming.filter((e) => isCity(e.venueCity) && e.dateEpochMs <= weekEndMs);
+      for (const ev of sfEvents) {
         const key = `${ev.dateEpochMs}:${ev.venueId}`;
-        if (seenShowKeys.has(key)) return false;
-        seenShowKeys.add(key);
-        return true;
-      });
-      if (events.length > 0) dedupedBlocks.push({ ...block, events });
+        let row = rows.get(key);
+        if (!row) {
+          row = {
+            dateEpochMs: ev.dateEpochMs,
+            venueId: ev.venueId as number,
+            venueName: ev.venueName,
+            priceMin: ev.priceMin,
+            priceMax: ev.priceMax,
+            isFree: ev.isFree,
+            isSoldOut: ev.isSoldOut,
+            localNames: new Set(),
+          };
+          rows.set(key, row);
+        }
+        row.localNames.add(artist.name);
+      }
     }
-    return dedupedBlocks;
-  }, [artists, localArtistExclude, localArtistList, nowMs, weekEndMs, citySlug]);
+
+    return [...rows.values()]
+      .map((row) => {
+        const key = `${row.dateEpochMs}:${row.venueId}`;
+        const fullLineup = lineupMap.get(key) ?? [];
+        // Preserve bill order: locals in lineup order, then any local name
+        // the lineup lookup missed (shouldn't normally happen).
+        const localNames = fullLineup.filter((n) => row.localNames.has(n));
+        for (const n of row.localNames) if (!localNames.includes(n)) localNames.push(n);
+        const coActs = fullLineup.filter((n) => !row.localNames.has(n));
+        return { ...row, localNames, coActs };
+      })
+      .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
+  }, [artists, localArtistExclude, localArtistList, nowMs, weekEndMs, citySlug, lineupMap]);
 
   // Just-added section — all SF newly announced, any future date
   const justAddedEvents = useMemo(() => {
@@ -161,23 +203,12 @@ export default function NewsletterPage() {
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
   }, [events, venues, nowMs, weekEndMs, citySlug]);
 
-  const artistMap = useMemo(() => {
-    const m = new Map<number, string>();
-    for (const a of artists.values()) m.set(a.id as number, a.name);
-    return m;
-  }, [artists]);
-
-  // Full lineup keyed by "dateEpochMs:venueId" → artist names in bill order
-  const lineupMap = useMemo(() => {
-    const m = new Map<string, string[]>();
-    for (const ev of events.values()) {
-      const key = `${ev.dateEpochMs}:${ev.venueId}`;
-      if (!m.has(key)) {
-        m.set(key, ev.artistIds.map((id) => artistMap.get(id as number) ?? "").filter(Boolean));
-      }
-    }
-    return m;
-  }, [events, artistMap]);
+  // Distinct local acts appearing anywhere in this week's rows (for the summary line)
+  const localActCount = useMemo(() => {
+    const names = new Set<string>();
+    for (const row of localShowRows) for (const n of row.localNames) names.add(n);
+    return names.size;
+  }, [localShowRows]);
 
   const text = useMemo(() => {
     const lines: string[] = [];
@@ -197,19 +228,17 @@ export default function NewsletterPage() {
     lines.push(`### 🏠 Local Acts Playing ${cityConfig.label} This Week`);
     lines.push("");
 
-    if (localActBlocks.length === 0) {
+    if (localShowRows.length === 0) {
       lines.push("*No local acts with 3+ shows across 2+ venues this week.*");
     } else {
-      for (const block of localActBlocks) {
-        lines.push(`**${block.name}**`);
-        for (const ev of block.events) {
-          const price = fmtPrice(ev.priceMin, ev.priceMax, ev.isFree);
-          const pricePart = price ? ` · ${price}` : "";
-          const soldOut = ev.isSoldOut ? " ~~sold out~~" : "";
-          const lineup = lineupMap.get(`${ev.dateEpochMs}:${ev.venueId}`) ?? [ev.headlinerName].filter(Boolean);
-          const lineupStr = lineup.length > 0 ? ` · ${lineup.join(", ")}` : "";
-          lines.push(`- ${fmtDate(ev.dateEpochMs)} · ${ev.venueName}${lineupStr}${pricePart}${soldOut}`);
-        }
+      for (const row of localShowRows) {
+        const price = fmtPrice(row.priceMin, row.priceMax, row.isFree);
+        const pricePart = price ? ` · ${price}` : "";
+        const soldOut = row.isSoldOut ? " ~~sold out~~" : "";
+        const header = joinCapped(row.localNames);
+        const withPart = row.coActs.length > 0 ? ` w/ · ${joinCapped(row.coActs)}` : "";
+        lines.push(`**${header}**${withPart}`);
+        lines.push(`- ${fmtDate(row.dateEpochMs)} · ${row.venueName}${pricePart}${soldOut}`);
         lines.push("");
       }
     }
@@ -268,7 +297,7 @@ export default function NewsletterPage() {
     lines.push("");
 
     return lines.join("\n");
-  }, [localActBlocks, justAddedEvents, sfWeekEvents, artistMap, lineupMap, venues, ingestDate, cityConfig]);
+  }, [localShowRows, justAddedEvents, sfWeekEvents, artistMap, lineupMap, venues, ingestDate, cityConfig]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(text).then(() => {
@@ -311,7 +340,7 @@ export default function NewsletterPage() {
 
           <div className="flex items-center justify-between mb-3">
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {localActBlocks.length} local acts · {justAddedEvents.length} newly announced · {sfWeekEvents.length} SF shows this week
+              {localActCount} local acts · {justAddedEvents.length} newly announced · {sfWeekEvents.length} SF shows this week
             </div>
             <button
               onClick={handleCopy}
