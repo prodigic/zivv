@@ -119,7 +119,22 @@ export default function NewsletterPage() {
       blocks.push({ name: artist.name, slug: artist.slug, events: sfEvents });
     }
     blocks.sort((a, b) => a.events[0].dateEpochMs - b.events[0].dateEpochMs);
-    return blocks;
+
+    // Global dedup: when multiple local acts share the same bill, only list
+    // that show once (under whichever act's block comes first) instead of
+    // repeating the same venue/date under every local act playing it.
+    const seenShowKeys = new Set<string>();
+    const dedupedBlocks: typeof blocks = [];
+    for (const block of blocks) {
+      const events = block.events.filter((ev) => {
+        const key = `${ev.dateEpochMs}:${ev.venueId}`;
+        if (seenShowKeys.has(key)) return false;
+        seenShowKeys.add(key);
+        return true;
+      });
+      if (events.length > 0) dedupedBlocks.push({ ...block, events });
+    }
+    return dedupedBlocks;
   }, [artists, localArtistExclude, localArtistList, nowMs, weekEndMs, citySlug]);
 
   // Just-added section — all SF newly announced, any future date
