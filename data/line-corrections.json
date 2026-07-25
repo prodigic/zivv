@@ -28,5 +28,20 @@
     "note": "Typo: 'BVottom of the Hill' → 'Bottom of the Hill'",
     "pattern": "\\bBVottom of the Hill\\b",
     "replacement": "Bottom of the Hill"
+  },
+  {
+    "note": "Missing city — 'at Finnish Hall Auditorium' → 'at Finnish Hall, Berkeley' (matches other Finnish Hall entries in source)",
+    "pattern": "\\bat Finnish Hall Auditorium\\b",
+    "replacement": "at Finnish Hall, Berkeley"
+  },
+  {
+    "note": "Malformed 3-part venue line for Hardly Strictly Bluegrass festival — drop festival-name prefix so it parses as standard 'venue, city'",
+    "pattern": "\\bat Hardly Strictly Bluegrass, Golden Gare Park, S\\.F\\.",
+    "replacement": "at Golden Gate Park, S.F."
+  },
+  {
+    "note": "Typo: 'Golden Gare Park' → 'Golden Gate Park'",
+    "pattern": "\\bGolden Gare Park\\b",
+    "replacement": "Golden Gate Park"
   }
 ]
