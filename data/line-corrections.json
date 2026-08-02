@@ -43,5 +43,15 @@
     "note": "Typo: 'Golden Gare Park' → 'Golden Gate Park'",
     "pattern": "\\bGolden Gare Park\\b",
     "replacement": "Golden Gate Park"
+  },
+  {
+    "note": "Typo in month at start of event line: 'nob 3 mon' → 'nov 3 mon'",
+    "pattern": "^nob(\\s+\\d)",
+    "replacement": "nov$1"
+  },
+  {
+    "note": "Typo + 3-part venue string — 'at Koret Auditorumn, Main Library, S.F.' → 'at Koret Auditorium, S.F.' (building name breaks the venue,city parse)",
+    "pattern": "\\bat Koret Auditor(?:umn|ium), Main Library, S\\.F\\.",
+    "replacement": "at Koret Auditorium, S.F."
   }
 ]

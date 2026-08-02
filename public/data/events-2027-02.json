@@ -1,10 +1,33 @@
 {
   "chunkId": "2027-02",
   "dateRange": {
-    "startEpochMs": 1801828800000,
+    "startEpochMs": 1801483200000,
     "endEpochMs": 1803556800000
   },
   "events": [
+    {
+      "id": 100032277,
+      "slug": "2027-02-01-vansire-bimbos-365-club",
+      "date": "2027-02-01",
+      "dateEpochMs": 1801483200000,
+      "startTimeEpochMs": 1801587600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 593744007,
+      "artistIds": [
+        593744007
+      ],
+      "venueId": 697962111,
+      "priceMin": 41.21,
+      "priceMax": 41.21,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1785499200000,
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4019
+    },
     {
       "id": 1165208094,
       "slug": "2027-02-05-odezenne-the-independent",
@@ -25,8 +48,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1784964146683,
-      "sourceLineNumber": 3867
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4020
     },
     {
       "id": 310620397,
@@ -48,8 +71,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1784964146683,
-      "sourceLineNumber": 3868
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4021
     },
     {
       "id": 270715009,
@@ -70,8 +93,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1784964146683,
-      "sourceLineNumber": 3869
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4022
     },
     {
       "id": 1081281739,
@@ -90,8 +113,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1784964146683,
-      "sourceLineNumber": 3870
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4023
     },
     {
       "id": 1269578524,
@@ -114,8 +137,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1784964146683,
-      "sourceLineNumber": 3871
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4024
     },
     {
       "id": 633804749,
@@ -138,8 +161,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1782475200000,
-      "updatedAtEpochMs": 1784964146684,
-      "sourceLineNumber": 3872
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4025
     },
     {
       "id": 564268285,
@@ -159,8 +182,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1781265600000,
-      "updatedAtEpochMs": 1784964146684,
-      "sourceLineNumber": 3873
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4026
     }
   ]
 }

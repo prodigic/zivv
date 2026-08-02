@@ -26,8 +26,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1784964146682,
-      "sourceLineNumber": 3857
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4008
     },
     {
       "id": 2113417285,
@@ -49,8 +49,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1784964146682,
-      "sourceLineNumber": 3858
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4009
     },
     {
       "id": 1990606045,
@@ -76,8 +76,8 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1784964146682,
-      "sourceLineNumber": 3859
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4010
     },
     {
       "id": 2093010338,
@@ -100,8 +100,33 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1784964146682,
-      "sourceLineNumber": 3860
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4011
+    },
+    {
+      "id": 966750323,
+      "slug": "2027-01-21-beth-hart-uptown-theater",
+      "date": "2027-01-21",
+      "dateEpochMs": 1800532800000,
+      "startTimeEpochMs": 1800532800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1460736273,
+      "artistIds": [
+        1460736273,
+        1971361560
+      ],
+      "venueId": 1711400117,
+      "priceMin": 67.1,
+      "priceMax": 67.1,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "under 16 with adult",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1785499200000,
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4013
     },
     {
       "id": 501761858,
@@ -123,8 +148,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1784964146682,
-      "sourceLineNumber": 3862
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4014
     },
     {
       "id": 1293864265,
@@ -146,8 +171,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1784964146682,
-      "sourceLineNumber": 3863
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4015
     },
     {
       "id": 109083181,
@@ -169,8 +194,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1784964146682,
-      "sourceLineNumber": 3864
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4016
     },
     {
       "id": 2119187022,
@@ -193,8 +218,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1784964146683,
-      "sourceLineNumber": 3865
+      "updatedAtEpochMs": 1785705268809,
+      "sourceLineNumber": 4017
     },
     {
       "id": 903168732,
@@ -216,8 +241,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1784964146683,
-      "sourceLineNumber": 3866
+      "updatedAtEpochMs": 1785705268810,
+      "sourceLineNumber": 4018
     }
   ]
 }
