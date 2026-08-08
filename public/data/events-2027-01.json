@@ -1,10 +1,31 @@
 {
   "chunkId": "2027-01",
   "dateRange": {
-    "startEpochMs": 1799409600000,
+    "startEpochMs": 1798977600000,
     "endEpochMs": 1801310400000
   },
   "events": [
+    {
+      "id": 436734284,
+      "slug": "2027-01-03-lord-huron-the-fox-theater",
+      "date": "2027-01-03",
+      "dateEpochMs": 1798977600000,
+      "startTimeEpochMs": 1799006400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1028235980,
+      "artistIds": [
+        1028235980
+      ],
+      "venueId": 631118593,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1786104000000,
+      "updatedAtEpochMs": 1786181851079,
+      "sourceLineNumber": 4285
+    },
     {
       "id": 284381709,
       "slug": "2027-01-08-com-truise-the-independent",
@@ -26,8 +47,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1786181435728,
-      "sourceLineNumber": 4008
+      "updatedAtEpochMs": 1786181851079,
+      "sourceLineNumber": 4286
     },
     {
       "id": 2113417285,
@@ -49,8 +70,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1786181435728,
-      "sourceLineNumber": 4009
+      "updatedAtEpochMs": 1786181851079,
+      "sourceLineNumber": 4287
     },
     {
       "id": 1990606045,
@@ -76,8 +97,8 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1786181435728,
-      "sourceLineNumber": 4010
+      "updatedAtEpochMs": 1786181851079,
+      "sourceLineNumber": 4288
     },
     {
       "id": 2093010338,
@@ -100,8 +121,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1786181435728,
-      "sourceLineNumber": 4011
+      "updatedAtEpochMs": 1786181851079,
+      "sourceLineNumber": 4289
     },
     {
       "id": 966750323,
@@ -125,8 +146,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1785499200000,
-      "updatedAtEpochMs": 1786181435728,
-      "sourceLineNumber": 4013
+      "updatedAtEpochMs": 1786181851079,
+      "sourceLineNumber": 4291
     },
     {
       "id": 501761858,
@@ -148,8 +169,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1786181435728,
-      "sourceLineNumber": 4014
+      "updatedAtEpochMs": 1786181851079,
+      "sourceLineNumber": 4292
     },
     {
       "id": 1293864265,
@@ -171,8 +192,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1786181435728,
-      "sourceLineNumber": 4015
+      "updatedAtEpochMs": 1786181851080,
+      "sourceLineNumber": 4293
     },
     {
       "id": 109083181,
@@ -194,8 +215,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1786181435729,
-      "sourceLineNumber": 4016
+      "updatedAtEpochMs": 1786181851080,
+      "sourceLineNumber": 4294
     },
     {
       "id": 2119187022,
@@ -218,8 +239,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1786181435729,
-      "sourceLineNumber": 4017
+      "updatedAtEpochMs": 1786181851080,
+      "sourceLineNumber": 4295
     },
     {
       "id": 903168732,
@@ -241,8 +262,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1786181435729,
-      "sourceLineNumber": 4018
+      "updatedAtEpochMs": 1786181851080,
+      "sourceLineNumber": 4296
     }
   ]
 }
