@@ -4,6 +4,7 @@ import '../src/index.css'; // Import Tailwind CSS and global styles
 
 // Import decorators and providers
 import { BrowserRouter } from 'react-router-dom';
+import { FilterModalProvider } from '../src/components/filters/FilterModalContext';
 
 // Store decorators
 const withMockStores = (Story) => {
@@ -17,7 +18,9 @@ const withMockStores = (Story) => {
 
 const withRouter = (Story) => (
   <BrowserRouter>
-    <Story />
+    <FilterModalProvider>
+      <Story />
+    </FilterModalProvider>
   </BrowserRouter>
 );
 
