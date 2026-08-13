@@ -6,3 +6,4 @@ export * from "./json/JsonArtistRepository.ts";
 export * from "./json/JsonEventRepository.ts";
 export * from "./json/JsonVenueRepository.ts";
 export * from "./json/JsonQueryRepository.ts";
+export * from "./query/buildEventQuery.ts";
