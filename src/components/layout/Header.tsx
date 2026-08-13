@@ -181,7 +181,9 @@ export const Header: React.FC<HeaderProps> = ({
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/?q=${encodeURIComponent(searchQuery.trim())}`);
+      // Keep search state in the browser/store. Query strings are sent to the
+      // hosting server in request URLs and must not contain user activity.
+      navigate("/");
       setIsSearchFocused(false);
       setSearchResults([]);
     }
