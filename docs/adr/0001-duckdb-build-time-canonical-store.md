@@ -29,6 +29,8 @@ source text and curation
 
 The first implementation will preserve the existing static JSON delivery contract. The React application will consume repository/query ports, with JSON as the first adapter. DuckDB is not a browser runtime dependency in this phase.
 
+The initial implementation deliberately keeps `@duckdb/node-api` optional. The repository now defines the build-store schema, staging/canonical/projection/export interfaces, a runtime capability probe, and a deterministic in-memory fallback. The fallback is used when the native package is not already available; it does not install dependencies or weaken the static JSON/privacy boundary. Native DuckDB execution can be wired to the same `BuildStore` contract after the supported Node/OS/CI matrix is verified.
+
 DuckDB-Wasm is explicitly deferred until a benchmark compares JSON plus IndexedDB, DuckDB-Wasm, and any future API adapter against product-relevant queries and mobile startup behavior.
 
 ## Required canonical concepts
