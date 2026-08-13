@@ -9,7 +9,7 @@ import type {
   ParseJsonPayload,
   FilterEventsPayload,
 } from "@/types/frontend.js";
-import type { Event, Artist, Venue } from "@/types/events.js";
+import type { Event, Artist, Venue, EventFilters } from "@/types/events.js";
 
 export class WorkerService {
   private worker: Worker | null = null;
@@ -140,7 +140,7 @@ export class WorkerService {
    */
   async filterEvents(
     events: Event[],
-    filters: Record<string, unknown>,
+    filters: EventFilters,
     searchQuery?: string
   ): Promise<{ events: Event[]; totalCount: number }> {
     if (!this.isWorkerSupported || !this.worker) {
@@ -251,7 +251,7 @@ export class WorkerService {
 
   private filterEventsMainThread(
     events: Event[],
-    filters: Record<string, unknown>,
+    filters: EventFilters,
     _searchQuery?: string
   ): { events: Event[]; totalCount: number } {
     // Simple filtering implementation

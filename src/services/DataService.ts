@@ -24,6 +24,7 @@ import type {
   ChunkLoadMetrics,
 } from "@/types/frontend.js";
 import { CacheService } from "./CacheService.js";
+import { createStaticReadRequest } from "@/privacy/requestPolicy.ts";
 
 export class DataService {
   private config: DataServiceConfig;
@@ -463,13 +464,15 @@ export class DataService {
 
     for (let attempt = 1; attempt <= this.config.retryAttempts; attempt++) {
       try {
-        const response = await fetch(url, {
+        const request = createStaticReadRequest(url, {
           ...options,
           headers: {
             'Accept': 'application/json',
             ...options.headers,
           },
         });
+
+        const response = await fetch(request);
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -557,7 +560,7 @@ export class DataService {
   }
 
   private recordMetrics(metrics: ChunkLoadMetrics): void {
-    // Store metrics for monitoring - could be enhanced with analytics
+    // Keep performance metrics local to the browser console. Never upload them.
     console.debug('Chunk load metrics:', metrics);
   }
 

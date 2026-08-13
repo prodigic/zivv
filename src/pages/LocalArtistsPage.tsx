@@ -20,15 +20,8 @@ const LocalArtistsPage: React.FC = () => {
   const errors = useAppStore((s) => s.errors);
   const initialize = useAppStore((s) => s.initialize);
 
-  const { setSearchQuery, updateFilter } = useFilterStore();
+  const { setSearchQuery } = useFilterStore();
   const navigate = useNavigate();
-
-  const goToVenue = (venueName: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    updateFilter("venues", [venueName]);
-    navigate("/");
-  };
 
   const excludeSet = useAppStore((s) => s.localArtistExclude);
   const localArtistList = useAppStore((s) => s.localArtistList);
@@ -73,7 +66,7 @@ const LocalArtistsPage: React.FC = () => {
     });
 
     return arr;
-  }, [artists, artistSearch]);
+  }, [artists, artistSearch, excludeSet, localArtistList]);
 
   React.useEffect(() => { setDisplayLimit(30); }, [artistSearch]);
 

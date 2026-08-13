@@ -2,7 +2,7 @@
  * Newsletter — Reddit-ready weekly digest of local act shows + newly announced events
  */
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import { useAppStore } from "@/stores/appStore.js";
@@ -177,7 +177,7 @@ export default function NewsletterPage() {
         return { ...row, localNames, coActs };
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [artists, localArtistExclude, localArtistList, nowMs, weekEndMs, citySlug, lineupMap]);
+  }, [artists, localArtistExclude, localArtistList, nowMs, weekEndMs, lineupMap, isCity]);
 
   // Just-added section — all SF newly announced, any future date
   const justAddedEvents = useMemo(() => {
@@ -190,7 +190,7 @@ export default function NewsletterPage() {
         return isCity(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [events, venues, ingestDate, nowMs, citySlug]);
+  }, [events, venues, ingestDate, nowMs, isCity]);
 
   // All SF shows this week (section 3)
   const sfWeekEvents = useMemo(() => {
@@ -201,7 +201,7 @@ export default function NewsletterPage() {
         return isCity(venueCity);
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [events, venues, nowMs, weekEndMs, citySlug]);
+  }, [events, venues, nowMs, weekEndMs, isCity]);
 
   // Distinct local acts appearing anywhere in this week's rows (for the summary line)
   const localActCount = useMemo(() => {

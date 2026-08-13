@@ -246,7 +246,7 @@ export class LatestValidator {
     for (let i = 0; i < entries.length; i++) {
       if (assigned.has(i)) continue;
 
-      let group: number[] = [i];
+      const group: number[] = [i];
 
       for (let j = i + 1; j < entries.length; j++) {
         if (assigned.has(j)) continue;

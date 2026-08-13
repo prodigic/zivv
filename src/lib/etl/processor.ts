@@ -5,7 +5,6 @@ import {
   unlinkSync,
   existsSync,
   mkdirSync,
-  statSync,
 } from "fs";
 import { join } from "path";
 import type { Event, Artist, Venue, ArtistUpcomingEvent, VenueUpcomingEvent } from "@/types/events.js";
@@ -19,23 +18,27 @@ import type {
   SourceFileInfo,
   ChunkInfo,
 } from "@/types/data.js";
+import { readSourceBundle } from "./source/reader.js";
+import type { ETLRunConfig } from "./pipeline/types.js";
 import { EventParser, VenueParser } from "./parsers.js";
 import { DataIndexer, DataChunker, SearchIndexBuilder } from "./indexer.js";
 
 export class ETLProcessor {
   private dataDir: string;
   private outputDir: string;
+  private readonly config: ETLRunConfig;
 
-  constructor(projectRoot: string) {
-    this.dataDir = join(projectRoot, "data");
-    this.outputDir = join(projectRoot, "public", "data");
+  constructor(projectRoot: string, config: ETLRunConfig = {}) {
+    this.config = config;
+    this.dataDir = config.inputDir ?? join(projectRoot, "data");
+    this.outputDir = config.outputDir ?? join(projectRoot, "public", "data");
   }
 
   /**
    * Main ETL processing pipeline
    */
   async processData(): Promise<ProcessingResult> {
-    const startTime = Date.now();
+    const startTime = this.config.processingTimestamp ?? Date.now();
     const errors: ProcessingError[] = [];
     const warnings: ProcessingWarning[] = [];
 
@@ -43,7 +46,7 @@ export class ETLProcessor {
       console.log("🚀 Starting ETL processing...");
 
       // Ensure output directory exists
-      if (!existsSync(this.outputDir)) {
+      if (this.config.write !== false && !existsSync(this.outputDir)) {
         mkdirSync(this.outputDir, { recursive: true });
       }
 
@@ -53,20 +56,29 @@ export class ETLProcessor {
       // Parse the ingest date from the latest.txt header line:
       // "funk-punk-thrash-ska  Upcoming shows of Interest May 8, 2026"
       // Falls back to Date.now() if the file or header is absent.
-      const ingestTimestamp = this.readLatestTxtIngestDate();
+      const ingestTimestamp = this.config.processingTimestamp ?? this.readLatestTxtIngestDate();
 
       // Remove stale event chunk files before writing new ones so old chunks
       // from previous runs don't linger in public/data/
-      for (const f of readdirSync(this.outputDir)) {
-        if (f.startsWith("events-") && f.endsWith(".json")) {
-          unlinkSync(join(this.outputDir, f));
+      if (this.config.write !== false && existsSync(this.outputDir)) {
+        for (const f of readdirSync(this.outputDir)) {
+          if (f.startsWith("events-") && f.endsWith(".json")) {
+            unlinkSync(join(this.outputDir, f));
+          }
         }
       }
 
       // Step 1: Read source files
       console.log("📖 Reading source files...");
-      const { eventsContent, venuesContent, sourceFiles } =
-        this.readSourceFiles();
+      const source = readSourceBundle(join(this.dataDir, ".."), {
+        inputDir: this.dataDir,
+        eventsFile: this.config.eventsFile,
+        venuesFile: this.config.venuesFile,
+        eventsPath: this.config.eventsPath,
+        venuesPath: this.config.venuesPath,
+        aliasesPath: this.config.aliasesPath,
+      });
+      const { eventsContent, venuesContent, sourceFiles } = source;
 
       // Step 2: Parse events
       console.log("🔍 Parsing events...");
@@ -159,19 +171,21 @@ export class ETLProcessor {
       );
 
       // Write chunks
-      for (const chunk of chunks) {
-        const filename = `events-${chunk.chunkId}.json`;
-        this.writeJSON(filename, chunk);
-      }
+      if (this.config.write !== false) {
+        for (const chunk of chunks) {
+          const filename = `events-${chunk.chunkId}.json`;
+          this.writeJSON(filename, chunk);
+        }
 
-      // Write other data files
-      this.writeJSON("artists.json", artists);
-      this.writeJSON("venues.json", venues);
-      this.writeJSON("indexes.json", indexes);
-      this.writeJSON("search-documents.json", documents);
-      this.writeJSON("search-terms.json", terms);
-      this.writeJSON("manifest.json", manifest);
-      this.copyLocalArtistExclude();
+        // Write other data files
+        this.writeJSON("artists.json", artists);
+        this.writeJSON("venues.json", venues);
+        this.writeJSON("indexes.json", indexes);
+        this.writeJSON("search-documents.json", documents);
+        this.writeJSON("search-terms.json", terms);
+        this.writeJSON("manifest.json", manifest);
+        this.copyLocalArtistExclude();
+      }
 
       // Step 9: Generate stats
       const processingTimeMs = Date.now() - startTime;
@@ -262,52 +276,6 @@ export class ETLProcessor {
     } catch {
       return Date.now();
     }
-  }
-
-  private readSourceFiles(): {
-    eventsContent: string;
-    venuesContent: string;
-    sourceFiles: {
-      events: SourceFileInfo;
-      venues: SourceFileInfo;
-    };
-  } {
-    const eventsPath = join(this.dataDir, "events.txt");
-    const venuesPath = join(this.dataDir, "venues.txt");
-
-    if (!existsSync(eventsPath)) {
-      throw new Error(`Events file not found: ${eventsPath}`);
-    }
-    if (!existsSync(venuesPath)) {
-      throw new Error(`Venues file not found: ${venuesPath}`);
-    }
-
-    const eventsContent = readFileSync(eventsPath, "utf-8");
-    const venuesContent = readFileSync(venuesPath, "utf-8");
-
-    const eventsStats = statSync(eventsPath);
-    const venuesStats = statSync(venuesPath);
-
-    return {
-      eventsContent,
-      venuesContent,
-      sourceFiles: {
-        events: {
-          filename: "events.txt",
-          size: eventsStats.size,
-          lastModified: eventsStats.mtime.getTime(),
-          lineCount: eventsContent.split("\n").length,
-          checksum: this.calculateChecksum(eventsContent),
-        },
-        venues: {
-          filename: "venues.txt",
-          size: venuesStats.size,
-          lastModified: venuesStats.mtime.getTime(),
-          lineCount: venuesContent.split("\n").length,
-          checksum: this.calculateChecksum(venuesContent),
-        },
-      },
-    };
   }
 
   private updateUpcomingCounts(
