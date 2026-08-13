@@ -13,10 +13,12 @@ A modern, responsive web application for discovering punk and alternative music 
 
 ## Tech Stack
 
-- **Frontend**: React 18, TypeScript, Tailwind CSS
+- **Frontend**: React 19, TypeScript, Tailwind CSS
 - **Build Tool**: Vite
 - **State Management**: Zustand
-- **Calendar**: FullCalendar React
+- **Calendar**: Custom calendar views
+- **Virtualization**: react-virtuoso
+- **Search**: Custom generated indexes and search documents
 - **Testing**: Vitest, Testing Library
 - **Deployment**: GitHub Pages
 
@@ -39,7 +41,7 @@ A modern, responsive web application for discovering punk and alternative music 
 2. Install dependencies:
 
    ```bash
-   npm install
+   npm ci
    ```
 
 3. Start the development server:
@@ -64,6 +66,9 @@ A modern, responsive web application for discovering punk and alternative music 
 - `npm run test` - Run tests
 - `npm run test:run` - Run tests once
 - `npm run test:coverage` - Run tests with coverage
+- `npm run test:e2e` - Run Playwright end-to-end tests
+- `npm run build:etl` - Type-check the ETL pipeline
+- `npm run etl` - Build the ETL pipeline and regenerate public data
 
 ### Project Structure
 
@@ -85,6 +90,11 @@ src/
 3. Run linting and tests: `npm run lint && npm run test`
 4. Build and verify: `npm run build`
 5. Create pull request
+
+The current architecture assessment and reorganization plan live in
+[`docs/repo-state-and-architecture-reorg.md`](docs/repo-state-and-architecture-reorg.md) and
+[`docs/reorg-parallel-agent-plan.md`](docs/reorg-parallel-agent-plan.md). The DuckDB decision is recorded in
+[`docs/adr/0001-duckdb-build-time-canonical-store.md`](docs/adr/0001-duckdb-build-time-canonical-store.md).
 
 ## Contributing
 
