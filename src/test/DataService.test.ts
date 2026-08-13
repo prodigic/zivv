@@ -41,10 +41,14 @@ const mockIndexedDB = {
 global.indexedDB = mockIndexedDB;
 
 // Mock CacheService to avoid async initialization issues
+const { mockCacheGet } = vi.hoisted(() => ({
+  mockCacheGet: vi.fn().mockResolvedValue(null),
+}));
+
 vi.mock("../services/CacheService.js", () => ({
   CacheService: vi.fn().mockImplementation(() => ({
     initialize: vi.fn().mockResolvedValue(undefined),
-    get: vi.fn().mockResolvedValue(null),
+    get: mockCacheGet,
     set: vi.fn().mockResolvedValue(undefined),
     delete: vi.fn().mockResolvedValue(undefined),
     clear: vi.fn().mockResolvedValue(undefined),
@@ -243,9 +247,8 @@ describe("DataService", () => {
       const result = await dataService.loadManifest();
 
       expect(result).toEqual(mockManifest);
-      expect(mockFetch).toHaveBeenCalledWith(
-        "/test-data/manifest.json",
-        expect.any(Object)
+      expect(mockFetch.mock.calls[0][0].url).toBe(
+        "http://localhost:3000/test-data/manifest.json",
       );
     });
 
@@ -256,10 +259,15 @@ describe("DataService", () => {
     });
 
     it("should return cached manifest on subsequent calls", async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockManifest),
-      });
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(mockManifest),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(mockManifest),
+        });
 
       // First call
       const result1 = await dataService.loadManifest();
@@ -267,7 +275,7 @@ describe("DataService", () => {
       const result2 = await dataService.loadManifest();
 
       expect(result1).toEqual(result2);
-      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -288,9 +296,8 @@ describe("DataService", () => {
       const result = await dataService.loadArtists();
 
       expect(result).toEqual(mockArtists);
-      expect(mockFetch).toHaveBeenCalledWith(
-        "/test-data/artists.json",
-        expect.any(Object)
+      expect(mockFetch.mock.calls[1][0].url).toBe(
+        "http://localhost:3000/test-data/artists.json",
       );
     });
 
@@ -313,6 +320,25 @@ describe("DataService", () => {
 
       expect(result1).toEqual(result2);
       expect(mockFetch).toHaveBeenCalledTimes(2); // manifest + artists
+    });
+
+    it("should only accept artists cached for the current dataset version", async () => {
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(mockManifest),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(mockArtists),
+        });
+
+      await dataService.loadArtists();
+
+      expect(mockCacheGet).toHaveBeenCalledWith(
+        "artists",
+        mockManifest.datasetVersion,
+      );
     });
   });
 

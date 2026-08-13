@@ -117,7 +117,7 @@ export class DataService {
     const manifest = await this.loadManifest();
     
     // Try cache first
-    const cached = await this.cache.get<Artist[]>(cacheKey);
+    const cached = await this.cache.get<Artist[]>(cacheKey, manifest.datasetVersion);
     if (cached) {
       cached.forEach(artist => this.artists.set(artist.id, artist));
       return cached;
@@ -147,7 +147,7 @@ export class DataService {
     const manifest = await this.loadManifest();
     
     // Try cache first
-    const cached = await this.cache.get<Venue[]>(cacheKey);
+    const cached = await this.cache.get<Venue[]>(cacheKey, manifest.datasetVersion);
     if (cached) {
       cached.forEach(venue => this.venues.set(venue.id, venue));
       return cached;
@@ -177,7 +177,7 @@ export class DataService {
     const manifest = await this.loadManifest();
     
     // Try cache first
-    const cached = await this.cache.get<DataIndexes>(cacheKey);
+    const cached = await this.cache.get<DataIndexes>(cacheKey, manifest.datasetVersion);
     if (cached) {
       this.indexes = cached;
       return cached;
@@ -225,7 +225,7 @@ export class DataService {
       // Try cache first if enabled
       let chunkData: EventChunk | null = null;
       if (useCache) {
-        chunkData = await this.cache.get<EventChunk>(cacheKey);
+        chunkData = await this.cache.get<EventChunk>(cacheKey, manifest.datasetVersion);
         if (chunkData) {
           fromCache = true;
         }
