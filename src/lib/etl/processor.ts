@@ -20,9 +20,6 @@ import type {
   ChunkInfo,
 } from "@/types/data.js";
 import { readSourceBundle } from "./source/reader.js";
-import { normalizeSourceBundle } from "./normalization/model.js";
-import { applyLegacyProjections, buildTemporalProjections } from "./derivations/projections.js";
-import { buildDefaultExports } from "./export/interfaces.js";
 import type { ETLRunConfig } from "./pipeline/types.js";
 import { EventParser, VenueParser } from "./parsers.js";
 import { DataIndexer, DataChunker, SearchIndexBuilder } from "./indexer.js";
