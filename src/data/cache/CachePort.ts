@@ -5,7 +5,8 @@
  * has no request, user, or query telemetry API.
  */
 export interface CachePort {
-  get<T>(key: string): Promise<T | null>;
+  /** Return only an entry matching the requested dataset version, when given. */
+  get<T>(key: string, version?: string): Promise<T | null>;
   set<T>(key: string, value: T, version: string): Promise<void>;
   delete(key: string): Promise<void>;
   clearVersion(version: string): Promise<void>;

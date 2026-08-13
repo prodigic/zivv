@@ -3,6 +3,8 @@ import type { Artist, EventChunk, Venue } from "@/types/events.js";
 import { createStaticReadRequest } from "@/privacy/requestPolicy.ts";
 import { IndexedDbCacheAdapter } from "../cache/IndexedDbCacheAdapter.ts";
 import type { CachePort } from "../cache/CachePort.ts";
+import { datasetCacheKey } from "../cache/cacheKeys.ts";
+import type { DataWorkerPort } from "../worker/WorkerDataProcessor.ts";
 import type { DatasetMetrics, DatasetReader, SearchDocumentRecord } from "../ports.ts";
 import type { EventId } from "@/domain/identifiers.ts";
 
@@ -12,6 +14,8 @@ export interface JsonDatasetReaderOptions {
   readonly fetcher?: (request: Request) => Promise<Response>;
   readonly retryAttempts?: number;
   readonly retryDelayMs?: number;
+  /** Optional CPU offload; repository reads remain valid without a Worker. */
+  readonly processor?: DataWorkerPort;
 }
 
 type JsonFile = DataManifest | DataIndexes | Artist[] | Venue[] | EventChunk | SearchDocumentRecord[];
@@ -26,6 +30,7 @@ export class JsonDatasetReader implements DatasetReader {
   private readonly fetcher: (request: Request) => Promise<Response>;
   private readonly retryAttempts: number;
   private readonly retryDelayMs: number;
+  private readonly processor?: DataWorkerPort;
   private manifest: DataManifest | null = null;
   private indexes: DataIndexes | null = null;
   private readonly metrics: MutableMetrics = {
@@ -43,6 +48,7 @@ export class JsonDatasetReader implements DatasetReader {
     this.fetcher = options.fetcher ?? fetch;
     this.retryAttempts = options.retryAttempts ?? 3;
     this.retryDelayMs = options.retryDelayMs ?? 250;
+    this.processor = options.processor;
   }
 
   async getManifest(): Promise<DataManifest> {
@@ -123,6 +129,12 @@ export class JsonDatasetReader implements DatasetReader {
     return { ...this.metrics };
   }
 
+  /** Release the optional worker and browser cache connection owned by this reader. */
+  close(): void {
+    this.processor?.dispose();
+    this.cache.close();
+  }
+
   private async getLocationMetadata(): Promise<{ eventIds?: Record<string, string>; eventSlugs?: Record<string, string> }> {
     const manifest = await this.getManifest();
     const record = asRecord(manifest);
@@ -136,7 +148,8 @@ export class JsonDatasetReader implements DatasetReader {
   private async readFile<T extends JsonFile>(filename: string, cacheKey: string, isChunk = false): Promise<T> {
     const manifest = filename === "manifest.json" ? null : await this.getManifest();
     const version = manifest?.datasetVersion ?? "manifest";
-    const cached = await this.cache.get<T>(cacheKey);
+    const key = datasetCacheKey(cacheKey as Parameters<typeof datasetCacheKey>[0]);
+    const cached = await this.cache.get<T>(key, version);
     if (cached !== null) {
       this.metrics.cacheHits += 1;
       return cached;
@@ -151,8 +164,12 @@ export class JsonDatasetReader implements DatasetReader {
         });
         const response = await this.fetcher(request);
         if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        const value = await response.json() as T;
-        await this.cache.set(cacheKey, value, version);
+        const body = await response.text();
+        const parseType = this.parseType(filename);
+        const value = this.processor && parseType
+          ? await this.processor.parseJson<T>(body, parseType)
+          : JSON.parse(body) as T;
+        await this.cache.set(key, value, version);
         const bytes = JSON.stringify(value).length;
         this.metrics.bytesLoaded += bytes;
         if (isChunk) this.metrics.chunksLoaded += 1;
@@ -165,6 +182,15 @@ export class JsonDatasetReader implements DatasetReader {
       }
     }
     throw lastError instanceof Error ? lastError : new Error(`Failed to read ${filename}`);
+  }
+
+  private parseType(filename: string): "events" | "artists" | "venues" | "manifest" | "indexes" | undefined {
+    if (filename === "manifest.json") return "manifest";
+    if (filename === "indexes.json") return "indexes";
+    if (filename === "artists.json") return "artists";
+    if (filename === "venues.json") return "venues";
+    if (filename.startsWith("events-")) return "events";
+    return undefined;
   }
 
   private chunkForDate(date: string): string | null {

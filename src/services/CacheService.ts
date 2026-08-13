@@ -83,7 +83,7 @@ export class CacheService {
   /**
    * Get data from cache
    */
-  async get<T>(key: string): Promise<T | null> {
+  async get<T>(key: string, expectedVersion?: string): Promise<T | null> {
     if (!this.db) {
       await this.initialize();
     }
@@ -104,6 +104,14 @@ export class CacheService {
         const result = request.result as (CacheEntry<T> & { key: string }) | undefined;
         
         if (!result) {
+          resolve(null);
+          return;
+        }
+
+        if (expectedVersion !== undefined && result.version !== expectedVersion) {
+          // A key may outlive a dataset update. Treat a version mismatch as a
+          // miss and remove it without exposing stale data to callers.
+          this.delete(key).catch(() => undefined);
           resolve(null);
           return;
         }
