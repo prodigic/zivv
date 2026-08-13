@@ -35,6 +35,45 @@ DuckDB build store          static read-model export
 
 DuckDB is the build-time canonical store in the first target state. The web app continues to consume versioned static JSON read models until a separate benchmark proves that DuckDB-Wasm or an API is warranted.
 
+## Cross-cutting privacy and anti-surveillance charter
+
+Privacy is a product invariant, not an optional feature. Zivv must be designed against surveillance capitalism: the application must not turn a person's searches, filters, navigation, reading, or event interest into a server-side behavioral record.
+
+### 2.1 Non-negotiable application rules
+
+- No accounts, login, authentication, user profiles, or user-identifying cookies.
+- No analytics, advertising, telemetry, session replay, fingerprinting, third-party tracking pixels, or remote error-reporting service.
+- No browser-to-server `POST`, `PUT`, `PATCH`, `DELETE`, `sendBeacon`, WebSocket, or equivalent event-reporting channel for user actions.
+- Application data requests are same-origin, static, read-only asset requests. They must not include search text, selected filters, route history, click events, or generated user IDs.
+- Errors and performance measurements remain local to the browser and developer console. They must never be uploaded automatically.
+- IndexedDB and `localStorage` may hold only explicitly documented, non-identifying preferences/cache data. They are not user profiles and must not be synced.
+- Outbound ticket, venue, GitHub, and email links must use an explicit no-referrer policy where supported and must not append Zivv-specific user state.
+- Search and filter state must not be placed in the HTTP query string. If shareable state is retained, use URL fragments or another client-only representation so the state is not sent to the static host on reload.
+
+### 2.2 Honest boundary of the promise
+
+The UI may promise that Zivv does not send application-level user actions or identifiers to a server. It must not claim that ordinary network metadata is impossible: loading a static site necessarily exposes transport metadata such as an IP address, timestamp, and user agent to the hosting/network layer. Zivv will not add another application-level record of that activity and will document this distinction plainly.
+
+### 2.3 Required UI language
+
+The About/privacy surface must visibly state:
+
+> Zivv is against surveillance capitalism. No account is required. Searches, filters, browsing, and reading choices stay in your browser; Zivv does not send them to us for tracking, profiling, advertising, or analytics.
+
+It must also link to a technical privacy explanation covering local storage, static asset requests, outbound links, and the hosting-metadata boundary. Avoid vague claims such as “no digital footprint” when the claim cannot be guaranteed at the network layer.
+
+### 2.4 Privacy test gate
+
+The reorganization is not ready to merge until automated tests and a manual browser audit show that:
+
+- no third-party script, analytics SDK, tracking pixel, auth provider, or remote error reporter is loaded by the production app;
+- no user action causes an application-level request beyond the allowlisted same-origin static reads;
+- search and filter actions do not add user state to `window.location.search`;
+- cold and warm cache behavior is equivalent without sending cache contents or action history anywhere;
+- error handling, worker messages, and debug metrics remain local;
+- outbound links have `rel="noreferrer"` or an equivalent enforced referrer policy;
+- the visible privacy statement matches the actual network behavior.
+
 The seven committed snapshots in `data/steve/` are the incremental ingestion test sequence:
 
 1. `week-251010.txt`
@@ -131,6 +170,7 @@ flowchart TD
   F["F. UI/query integration"]
   G["G. Worker and cache adapters"]
   H["H. CI, docs, and backlog reconciliation"]
+  P["P. Privacy and anti-surveillance boundary"]
   I["I. Integration, benchmarks, and cutover"]
 
   A --> D
@@ -146,9 +186,13 @@ flowchart TD
   F --> I
   G --> I
   H --> I
+  P --> F
+  P --> G
+  P --> H
+  P --> I
 ```
 
-The first useful parallel wave is `A + B + H`. The second is `C + D`. DuckDB work begins after the baseline contract and domain boundaries exist. UI migration begins only after a repository/query port is available.
+The first useful parallel wave is `A + B + H + P`. The second is `C + D`. DuckDB work begins after the baseline contract and domain boundaries exist. UI migration begins only after a repository/query port and privacy boundary are available.
 
 ## 4. Workstream A — baseline data contract and incremental fixtures
 
@@ -574,17 +618,69 @@ Before implementing, benchmark whether current dataset size benefits from a work
 - Stale phase tickets are not treated as the reorganization plan.
 - No CI workflow claims a test passed when it was configured to continue on error.
 
+## 11A. Workstream P — privacy and anti-surveillance boundary
+
+**Suggested branch:** `codex/reorg-privacy-boundary`  
+**Priority:** first wave  
+**Dependencies:** none for the audit; A/B recommended for shared contracts  
+**May run in parallel with:** A, B, and H  
+**Primary purpose:** turn the privacy charter into enforced application boundaries, tests, and visible product language.
+
+### Scope
+
+Own:
+
+```text
+src/privacy/
+src/components/privacy/
+src/pages/AboutPage.tsx        # privacy copy and link only
+src/router/                    # client-only state policy
+src/stores/filterStore.ts      # fragment/local-state migration
+index.html                     # referrer policy and third-party script audit
+tests/privacy/
+docs/privacy.md
+```
+
+Coordinate with C/G for repository and cache behavior. Do not add a telemetry service to make the audit easier.
+
+### Tasks
+
+1. Create an outbound-request allowlist and a test helper that records `fetch`, beacon, WebSocket, and script requests during browser tests.
+2. Assert that production code performs only same-origin, read-only static data reads and never uploads action data.
+3. Remove or rename misleading error terminology such as “error ID for tracking”; a locally displayed support reference must remain explicitly local and must never be transmitted.
+4. Audit error reporting, debug metrics, worker messages, cache keys, and persisted preferences for accidental user content or identifiers.
+5. Move search/filter state out of the HTTP query string. Prefer URL fragments or client-only state so reloads do not send user choices to the static host.
+6. Enforce no-referrer behavior for outbound links and add `rel="noreferrer"` where applicable.
+7. Add a visible About/privacy section using the required anti-surveillance language and a technical privacy page.
+8. Remove roadmap language that proposes Sentry, analytics, or “privacy-friendly analytics” unless the product owner explicitly revises this charter.
+9. Add production-build checks for third-party scripts, analytics identifiers, auth providers, and disallowed request methods.
+
+### Acceptance criteria
+
+- Privacy tests fail if any application-level request contains search text, filter state, route history, click data, a generated user ID, or cache contents.
+- Search and filter actions leave `window.location.search` free of user state.
+- No login, account, analytics, advertising, remote error reporting, or tracking dependency exists in the production bundle.
+- Local error references and performance metrics remain local and are clearly described as such.
+- The About/privacy UI explicitly names the anti-surveillance position and accurately explains the hosting-metadata boundary.
+- Outbound links do not send Zivv route/query state as a referrer.
+- The agent provides a browser network-audit report and a list of permitted persistent local keys.
+
+### Handoff
+
+Deliver the request allowlist, privacy tests, copy, technical privacy document, and a short threat-model report. Mark the branch unsafe to merge if the observed network behavior differs from the charter.
+
 ## 12. Integration waves
 
-### Wave 0 — baseline and decisions
+### Wave 0 — baseline, privacy, and decisions
 
-Merge A, B, and the inventory portion of H.
+Merge A, B, P, and the inventory portion of H.
 
 Gate:
 
 - domain tests pass;
 - fixture discovery passes;
 - current generated-data contract failures are documented;
+- privacy request audit and visible privacy copy are present;
 - no application behavior changes.
 
 ### Wave 1 — storage-neutral query seam
@@ -647,6 +743,15 @@ The reorganization is ready for production consideration only when all are true:
 - Generated manifests describe exact output bytes.
 - Exported files pass referential-integrity checks.
 
+### Privacy and autonomy
+
+- No user action or application state is uploaded for analytics, profiling, error reporting, or personalization.
+- Only allowlisted same-origin static reads occur during normal app use.
+- Search/filter state is client-only and is not sent in request URLs.
+- Local storage and IndexedDB keys are documented, non-identifying, and never synced.
+- No login, account, cookie identifier, tracking SDK, third-party pixel, or remote error reporter is present.
+- Privacy language names the anti-surveillance position and does not overpromise about unavoidable transport metadata.
+
 ### Architecture
 
 - Domain modules are storage/UI independent.
@@ -702,7 +807,7 @@ Integration notes:
 
 ## 15. Recommended first assignments
 
-If seven agents are available, assign:
+If eight agents are available, assign:
 
 | Agent | Workstream | Start condition |
 |---|---|---|
@@ -713,6 +818,7 @@ If seven agents are available, assign:
 | 5 | D — ingestion boundaries | after B types are stable |
 | 6 | G — worker/cache analysis and tests | after C ports are drafted |
 | 7 | E — DuckDB schema prototype | after A/B/D handoffs; may start schema review earlier but should not finalize integration before D |
+| 8 | P — privacy boundary and network audit | immediate; coordinate with A/B/H |
 
 The coordinator should own F and the integration waves because UI migration touches the most shared files and must be sequenced against the repository contract.
 
@@ -729,6 +835,8 @@ This plan does not authorize:
 - redesigning the visual system;
 - rewriting every parser for style reasons;
 - introducing DuckDB-Wasm before its benchmark gate.
+- adding analytics, error tracking, advertising, session replay, or any other surveillance mechanism;
+- adding accounts, login, personalization profiles, or synchronized user preferences.
 
 ## 17. Definition of done for this plan
 
@@ -738,5 +846,5 @@ This planning task is complete when:
 2. each workstream has a named owner, file scope, dependency list, acceptance criteria, and handoff contract;
 3. the seven `data/steve` snapshots are included as incremental-load fixtures;
 4. integration waves and rollback rules are explicit;
-5. the next agent can start Workstream A or B without additional architecture discovery.
-
+5. the privacy charter, request allowlist, and UI disclosure requirements are explicit;
+6. the next agent can start Workstream A, B, or P without additional architecture discovery.
