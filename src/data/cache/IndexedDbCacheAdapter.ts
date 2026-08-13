@@ -10,8 +10,8 @@ export class IndexedDbCacheAdapter implements CachePort {
     this.service = new CacheService(config);
   }
 
-  get<T>(key: string): Promise<T | null> {
-    return this.service.get<T>(key);
+  get<T>(key: string, version?: string): Promise<T | null> {
+    return this.service.get<T>(key, version);
   }
 
   set<T>(key: string, value: T, version: string): Promise<void> {
