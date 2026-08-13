@@ -7,9 +7,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useFilterStore } from "@/stores/filterStore.ts";
 import { useAppStore } from "@/stores/appStore.ts";
 import { CompactDarkModeToggle } from "@/components/ui/DarkModeToggle.tsx";
-import { FilterButton, FilterModal } from "@/components/filters/FilterModalContext";
-import { SearchFilterToolbar } from "@/components/filters";
-import type { Event } from "@/types/events";
+import { FilterButton } from "@/components/filters/FilterModalContext";
+import type { EventSummary } from "@/domain/projections.ts";
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -155,10 +154,10 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const navigate = useNavigate();
   const { searchQuery, setSearchQuery } = useFilterStore();
-  const { searchEvents, loading } = useAppStore();
+  const { searchEventSummaries, loading } = useAppStore();
 
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [searchResults, setSearchResults] = useState<Event[]>([]);
+  const [searchResults, setSearchResults] = useState<readonly EventSummary[]>([]);
 
   // Handle search input
   const handleSearchChange = async (query: string) => {
@@ -166,8 +165,8 @@ export const Header: React.FC<HeaderProps> = ({
 
     if (query.trim().length > 2) {
       try {
-        const results = await searchEvents(query);
-        setSearchResults(results.slice(0, 5)); // Show top 5 results
+        const results = await searchEventSummaries(query);
+        setSearchResults(results);
       } catch (error) {
         console.error("Search failed:", error);
         setSearchResults([]);
@@ -271,17 +270,17 @@ export const Header: React.FC<HeaderProps> = ({
                     <button
                       key={index}
                       onClick={() => {
-                        navigate(`/event/${result.slug}`);
+                        navigate(`/events/${result.slug}`);
                         setIsSearchFocused(false);
                       }}
                       className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
                     >
                       <div className="text-sm font-medium text-gray-900">
                         {/* This would show artist names - placeholder for now */}
-                        Event {result.id}
+                        {result.headlinerName} · {result.venueName}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {new Date(result.dateEpochMs).toLocaleDateString()}
+                        {new Date(`${result.date}T12:00:00`).toLocaleDateString()}
                       </div>
                     </button>
                   ))}
