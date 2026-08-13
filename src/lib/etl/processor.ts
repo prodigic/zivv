@@ -19,23 +19,30 @@ import type {
   SourceFileInfo,
   ChunkInfo,
 } from "@/types/data.js";
+import { readSourceBundle } from "./source/reader.js";
+import { normalizeSourceBundle } from "./normalization/model.js";
+import { applyLegacyProjections, buildTemporalProjections } from "./derivations/projections.js";
+import { buildDefaultExports } from "./export/interfaces.js";
+import type { ETLRunConfig } from "./pipeline/types.js";
 import { EventParser, VenueParser } from "./parsers.js";
 import { DataIndexer, DataChunker, SearchIndexBuilder } from "./indexer.js";
 
 export class ETLProcessor {
   private dataDir: string;
   private outputDir: string;
+  private readonly config: ETLRunConfig;
 
-  constructor(projectRoot: string) {
-    this.dataDir = join(projectRoot, "data");
-    this.outputDir = join(projectRoot, "public", "data");
+  constructor(projectRoot: string, config: ETLRunConfig = {}) {
+    this.config = config;
+    this.dataDir = config.inputDir ?? join(projectRoot, "data");
+    this.outputDir = config.outputDir ?? join(projectRoot, "public", "data");
   }
 
   /**
    * Main ETL processing pipeline
    */
   async processData(): Promise<ProcessingResult> {
-    const startTime = Date.now();
+    const startTime = this.config.processingTimestamp ?? Date.now();
     const errors: ProcessingError[] = [];
     const warnings: ProcessingWarning[] = [];
 
@@ -43,7 +50,7 @@ export class ETLProcessor {
       console.log("🚀 Starting ETL processing...");
 
       // Ensure output directory exists
-      if (!existsSync(this.outputDir)) {
+      if (this.config.write !== false && !existsSync(this.outputDir)) {
         mkdirSync(this.outputDir, { recursive: true });
       }
 
@@ -53,20 +60,29 @@ export class ETLProcessor {
       // Parse the ingest date from the latest.txt header line:
       // "funk-punk-thrash-ska  Upcoming shows of Interest May 8, 2026"
       // Falls back to Date.now() if the file or header is absent.
-      const ingestTimestamp = this.readLatestTxtIngestDate();
+      const ingestTimestamp = this.config.processingTimestamp ?? this.readLatestTxtIngestDate();
 
       // Remove stale event chunk files before writing new ones so old chunks
       // from previous runs don't linger in public/data/
-      for (const f of readdirSync(this.outputDir)) {
-        if (f.startsWith("events-") && f.endsWith(".json")) {
-          unlinkSync(join(this.outputDir, f));
+      if (this.config.write !== false && existsSync(this.outputDir)) {
+        for (const f of readdirSync(this.outputDir)) {
+          if (f.startsWith("events-") && f.endsWith(".json")) {
+            unlinkSync(join(this.outputDir, f));
+          }
         }
       }
 
       // Step 1: Read source files
       console.log("📖 Reading source files...");
-      const { eventsContent, venuesContent, sourceFiles } =
-        this.readSourceFiles();
+      const source = readSourceBundle(join(this.dataDir, ".."), {
+        inputDir: this.dataDir,
+        eventsFile: this.config.eventsFile,
+        venuesFile: this.config.venuesFile,
+        eventsPath: this.config.eventsPath,
+        venuesPath: this.config.venuesPath,
+        aliasesPath: this.config.aliasesPath,
+      });
+      const { eventsContent, venuesContent, sourceFiles } = source;
 
       // Step 2: Parse events
       console.log("🔍 Parsing events...");
@@ -159,19 +175,21 @@ export class ETLProcessor {
       );
 
       // Write chunks
-      for (const chunk of chunks) {
-        const filename = `events-${chunk.chunkId}.json`;
-        this.writeJSON(filename, chunk);
-      }
+      if (this.config.write !== false) {
+        for (const chunk of chunks) {
+          const filename = `events-${chunk.chunkId}.json`;
+          this.writeJSON(filename, chunk);
+        }
 
-      // Write other data files
-      this.writeJSON("artists.json", artists);
-      this.writeJSON("venues.json", venues);
-      this.writeJSON("indexes.json", indexes);
-      this.writeJSON("search-documents.json", documents);
-      this.writeJSON("search-terms.json", terms);
-      this.writeJSON("manifest.json", manifest);
-      this.copyLocalArtistExclude();
+        // Write other data files
+        this.writeJSON("artists.json", artists);
+        this.writeJSON("venues.json", venues);
+        this.writeJSON("indexes.json", indexes);
+        this.writeJSON("search-documents.json", documents);
+        this.writeJSON("search-terms.json", terms);
+        this.writeJSON("manifest.json", manifest);
+        this.copyLocalArtistExclude();
+      }
 
       // Step 9: Generate stats
       const processingTimeMs = Date.now() - startTime;
