@@ -117,12 +117,6 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
     },
   ];
 
-  const calendarSubNav = [
-    { name: "Month View", to: "/calendar/month" },
-    { name: "Week View", to: "/calendar/week" },
-    { name: "Agenda", to: "/calendar/agenda" },
-  ];
-
   // Check if current path matches navigation item
   const isActive = (to: string) => {
     if (to === "/") {

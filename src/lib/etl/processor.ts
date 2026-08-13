@@ -5,7 +5,6 @@ import {
   unlinkSync,
   existsSync,
   mkdirSync,
-  statSync,
 } from "fs";
 import { join } from "path";
 import type { Event, Artist, Venue, ArtistUpcomingEvent, VenueUpcomingEvent } from "@/types/events.js";
@@ -277,52 +276,6 @@ export class ETLProcessor {
     } catch {
       return Date.now();
     }
-  }
-
-  private readSourceFiles(): {
-    eventsContent: string;
-    venuesContent: string;
-    sourceFiles: {
-      events: SourceFileInfo;
-      venues: SourceFileInfo;
-    };
-  } {
-    const eventsPath = join(this.dataDir, "events.txt");
-    const venuesPath = join(this.dataDir, "venues.txt");
-
-    if (!existsSync(eventsPath)) {
-      throw new Error(`Events file not found: ${eventsPath}`);
-    }
-    if (!existsSync(venuesPath)) {
-      throw new Error(`Venues file not found: ${venuesPath}`);
-    }
-
-    const eventsContent = readFileSync(eventsPath, "utf-8");
-    const venuesContent = readFileSync(venuesPath, "utf-8");
-
-    const eventsStats = statSync(eventsPath);
-    const venuesStats = statSync(venuesPath);
-
-    return {
-      eventsContent,
-      venuesContent,
-      sourceFiles: {
-        events: {
-          filename: "events.txt",
-          size: eventsStats.size,
-          lastModified: eventsStats.mtime.getTime(),
-          lineCount: eventsContent.split("\n").length,
-          checksum: this.calculateChecksum(eventsContent),
-        },
-        venues: {
-          filename: "venues.txt",
-          size: venuesStats.size,
-          lastModified: venuesStats.mtime.getTime(),
-          lineCount: venuesContent.split("\n").length,
-          checksum: this.calculateChecksum(venuesContent),
-        },
-      },
-    };
   }
 
   private updateUpcomingCounts(

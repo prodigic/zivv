@@ -1,4 +1,5 @@
 import type { EventQuery } from "@/domain/filters.ts";
+import { dateOnly, type DateOnly } from "@/domain/dates.ts";
 import type { Venue } from "@/types/events.js";
 import type { EventFilters } from "@/types/events.js";
 
@@ -29,7 +30,7 @@ export function buildEventQuery(
   const domainFilters = filters
     ? {
       ...(filters.cities?.length ? { cities: filters.cities } : {}),
-      ...(filters.dates?.length ? { dates: filters.dates as readonly `${number}-${number}-${number}`[] } : {}),
+      ...(filters.dates?.length ? { dates: filters.dates.map(dateOnly) as readonly DateOnly[] } : {}),
       ...(filters?.venues?.length ? { venueIds: venueIds?.length ? venueIds : ["__no_matching_venue__"] } : {}),
       ...(filters.ageRestrictions?.length ? { ageRestrictions: filters.ageRestrictions } : {}),
       ...(filters.priceRange && (filters.priceRange.min !== undefined || filters.priceRange.max !== undefined)
@@ -39,8 +40,8 @@ export function buildEventQuery(
       ...(filters.dateRange?.startDate || filters.dateRange?.endDate
         ? {
           dateRange: {
-            ...(filters.dateRange.startDate ? { start: filters.dateRange.startDate as `${number}-${number}-${number}` } : {}),
-            ...(filters.dateRange.endDate ? { end: filters.dateRange.endDate as `${number}-${number}-${number}` } : {}),
+            ...(filters.dateRange.startDate ? { start: dateOnly(filters.dateRange.startDate) } : {}),
+            ...(filters.dateRange.endDate ? { end: dateOnly(filters.dateRange.endDate) } : {}),
           },
         }
         : {}),

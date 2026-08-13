@@ -104,7 +104,7 @@ const NewEventsPage: React.FC = () => {
               </div>
               <div className="flex items-baseline gap-2 min-w-0">
                 <span className="w-14 shrink-0">
-                  <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs" />
+                  <PriceWidget isFree={event.isFree} isSoldOut={event.status === "sold-out" || event.tags?.includes("sold-out")} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs" />
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400 truncate min-w-0">
                   {venue?.name ?? ""}
