@@ -34,13 +34,13 @@ const AboutPage: React.FC = () => {
           </h2>
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
             Zivv exists to connect the Bay Area's vibrant punk and alternative music community 
-            without barriers, tracking, or costs. We believe that discovering great live music 
+            without barriers, surveillance, or costs. We believe that discovering great live music
             shouldn't be a challenge - it should be an adventure that's accessible to everyone.
           </p>
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
             Our platform helps you find the shows you'll love, discover new venues, and never 
             miss out on the underground scene that makes the Bay Area special. No registration, 
-            no tracking, no fees - just music discovery the way it should be.
+            no tracking, no fees - just private music discovery the way it should be.
           </p>
         </div>
 
@@ -87,9 +87,9 @@ const AboutPage: React.FC = () => {
                 <div>
                   <h3 className="font-bold text-gray-900 dark:text-white mb-2">Anonymous Access</h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
-                    No accounts required, no personal data collected, no tracking cookies. 
-                    Browse shows, discover music, and explore venues without leaving 
-                    any digital footprint.
+                    No accounts required, no tracking cookies, and no behavioral profile.
+                    Browse shows, discover music, and explore venues without sending
+                    your choices to Zivv for tracking or advertising.
                   </p>
                 </div>
               </div>
@@ -133,11 +133,14 @@ const AboutPage: React.FC = () => {
           </div>
 
           <div className="mt-6 p-4 bg-white/50 dark:bg-gray-800/50 rounded-lg border border-white/30 dark:border-gray-600/30">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Privacy Promise</h4>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Against Surveillance Capitalism</h4>
             <p className="text-sm text-gray-700 dark:text-gray-300">
-              We don't collect emails, we don't use analytics that track users, and we don't sell data 
-              because we don't have any. Your music taste, show attendance, and browsing habits are 
-              yours alone. Zivv works entirely in your browser with no server-side user tracking.
+              Zivv is against surveillance capitalism. No account is required. Searches, filters,
+              browsing, and reading choices stay in your browser; we do not send them to Zivv for
+              tracking, profiling, advertising, or analytics. Zivv uses static, read-only data files
+              and local browser storage for preferences and caching. Loading any website still exposes
+              ordinary network metadata to its hosting provider, but Zivv does not add an application-level
+              record of your actions.
             </p>
           </div>
         </div>
@@ -354,7 +357,8 @@ const AboutPage: React.FC = () => {
           </p>
           <div className="flex flex-wrap gap-4">
             <a 
-              href="https://github.com/anthropics/zivv" 
+              href="https://github.com/anthropics/zivv"
+              rel="noreferrer"
               className="inline-flex items-center px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
             >
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -363,7 +367,8 @@ const AboutPage: React.FC = () => {
               View on GitHub
             </a>
             <a 
-              href="mailto:feedback@zivv.dev" 
+              href="mailto:feedback@zivv.dev"
+              rel="noreferrer"
               className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

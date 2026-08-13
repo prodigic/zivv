@@ -7,6 +7,7 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { DataService } from "@/services/DataService.js";
 import { globalErrorHandler } from "@/utils/errorHandling.js";
+import { createStaticReadRequest } from "@/privacy/requestPolicy.ts";
 import type {
   Event,
   Artist,
@@ -177,13 +178,13 @@ export const useAppStore = create<AppStore>()(
               get().loadArtists(),
               get().loadVenues(),
               get().loadIndexes(),
-              fetch(`${import.meta.env.BASE_URL}data/local-artist-exclude.json`)
+              fetch(createStaticReadRequest(`${import.meta.env.BASE_URL}data/local-artist-exclude.json`))
                 .then((r) => r.json())
                 .then((list: string[]) =>
                   set({ localArtistExclude: new Set(list.map((n: string) => n.toLowerCase())) })
                 )
                 .catch(() => {}),
-              fetch(`${import.meta.env.BASE_URL}data/local-artists.json`)
+              fetch(createStaticReadRequest(`${import.meta.env.BASE_URL}data/local-artists.json`))
                 .then((r) => r.json())
                 .then((list: string[]) =>
                   set({ localArtistList: new Set(list.map((n: string) => n.toLowerCase())) })
