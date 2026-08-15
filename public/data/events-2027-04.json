@@ -1,10 +1,33 @@
 {
   "chunkId": "2027-04",
   "dateRange": {
-    "startEpochMs": 1806753600000,
-    "endEpochMs": 1808395200000
+    "startEpochMs": 1806580800000,
+    "endEpochMs": 1808827200000
   },
   "events": [
+    {
+      "id": 937163212,
+      "slug": "2027-04-01-the-mary-wallopers-august-hall",
+      "date": "2027-04-01",
+      "dateEpochMs": 1806580800000,
+      "startTimeEpochMs": 1806598800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 998043159,
+      "artistIds": [
+        998043159
+      ],
+      "venueId": 811075932,
+      "priceMin": 34.7,
+      "priceMax": 34.7,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1786708800000,
+      "updatedAtEpochMs": 1786759826704,
+      "sourceLineNumber": 4459
+    },
     {
       "id": 153773424,
       "slug": "2027-04-03-nothing-but-thieves-the-fox-theater",
@@ -23,8 +46,8 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1786181851082,
-      "sourceLineNumber": 4311
+      "updatedAtEpochMs": 1786759826704,
+      "sourceLineNumber": 4460
     },
     {
       "id": 1471972580,
@@ -47,8 +70,8 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1786181851082,
-      "sourceLineNumber": 4314
+      "updatedAtEpochMs": 1786759826704,
+      "sourceLineNumber": 4463
     },
     {
       "id": 1511143606,
@@ -70,8 +93,8 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1783684800000,
-      "updatedAtEpochMs": 1786181851082,
-      "sourceLineNumber": 4315
+      "updatedAtEpochMs": 1786759826704,
+      "sourceLineNumber": 4464
     },
     {
       "id": 92842150,
@@ -94,8 +117,29 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1786181851082,
-      "sourceLineNumber": 4316
+      "updatedAtEpochMs": 1786759826704,
+      "sourceLineNumber": 4465
+    },
+    {
+      "id": 1535516437,
+      "slug": "2027-04-27-mass-of-the-fermenting-dregs-the-regency-ballroom",
+      "date": "2027-04-27",
+      "dateEpochMs": 1808827200000,
+      "startTimeEpochMs": 1808856000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1210325165,
+      "artistIds": [
+        1210325165
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1786708800000,
+      "updatedAtEpochMs": 1786759826704,
+      "sourceLineNumber": 4466
     }
   ]
 }
