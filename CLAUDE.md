@@ -36,6 +36,40 @@ Zivv is a Bay Area Punk Show Finder - a modern, responsive web application for d
 - `npm run etl:verbose` - Run ETL with verbose logging
 - `node scripts/run-etl.js` - Direct ETL script execution
 
+### Latest Ingestion Workflow
+
+Use this workflow when a new source export is available in
+`data/latest.txt`:
+
+1. Validate the source before changing the canonical files:
+   `npm run validate`.
+2. Confirm there are no hard errors. Review
+   `data/events.err.txt` and `data/venues.err.txt`; warnings do not
+   automatically block ingestion, but unexpected warnings should be
+   investigated.
+3. Merge the validated source into the canonical raw files:
+   `npm run merge`. This updates `data/events.txt`, adds venue stubs when
+   needed, and may update `data/venue-aliases.json`.
+4. Rebuild the browser data contract:
+   `npm run etl`. This regenerates `public/data/manifest.json`, event
+   chunks, entity directories, indexes, and search artifacts.
+5. Verify the ETL summary reports zero errors and inspect the manifest for
+   `latestIngestionDate`, `totalEvents`, `totalArtists`, and `totalVenues`.
+
+If `npm` is unavailable in the local Windows runtime but dependencies are
+already installed, use the bundled tools directly:
+
+```
+node node_modules\\typescript\\bin\\tsc --project tsconfig.build.json
+node scripts/validate-latest.js
+node scripts/merge-latest.js
+node scripts/run-etl.js
+```
+
+Do not commit `node_modules`, `.pnpm-store`, package-manager lockfiles
+created only for local setup, or temporary `*.err.txt` reports unless the
+task explicitly requires them.
+
 ## Architecture Overview
 
 ### Data Pipeline (ETL)
@@ -155,6 +189,33 @@ The codebase uses strict TypeScript with branded types for type safety:
 - **Live URL**: https://prodigic.github.io/zivv/
 - **Monitoring**: Check GitHub Actions tab for deployment status
 - **Expected**: ~2-3 minutes from push to live deployment
+
+### Publishing an Ingested Dataset
+
+Publish only the validated raw sources and generated browser data. Keep
+unrelated local setup files out of the commit.
+
+```
+git status -sb
+git fetch origin main
+git switch -c codex/ingest-YYYY-MM-DD
+git add data/events.txt data/local-artists.json data/venue-aliases.json data/venues.txt public/data/*.json
+git commit -m "chore: ingest latest event data"
+git rebase origin/main
+git push origin HEAD:main
+```
+
+The push to `main` triggers `.github/workflows/deploy.yml` for GitHub Pages
+and `.github/workflows/etl.yml` for ETL verification/normalization. Before
+calling the release complete, confirm:
+
+1. The pushed commit is present on `origin/main`.
+2. `ETL Data Processing` completed successfully.
+3. `Deploy to GitHub Pages` completed successfully.
+4. `https://prodigic.github.io/zivv/` returns HTTP 200 and shows the
+   expected title.
+5. `https://prodigic.github.io/zivv/data/manifest.json` reports the new
+   `datasetVersion`, ingestion date, and entity counts.
 
 **Build Requirements**:
 - All TypeScript compilation must pass (`npx tsc --noEmit`)
@@ -789,10 +850,11 @@ PUT / api / venues / { id } / signage / override; // Emergency content override
 
 ### Running the ETL Pipeline
 
-1. Place raw data files in `data/events.txt` and `data/venues.txt`
-2. Run `npm run etl` to process data
-3. Check `public/data/` for generated JSON files
-4. Review console output for processing statistics and any errors
+1. Place the new source export in `data/latest.txt`.
+2. Follow the **Latest Ingestion Workflow** above.
+3. Check `public/data/` for generated JSON files and verify the manifest.
+4. Follow **Publishing an Ingested Dataset** when the data is ready for
+   production.
 
 ### Adding New ETL Features
 
