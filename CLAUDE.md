@@ -56,6 +56,28 @@ Use this workflow when a new source export is available in
 5. Verify the ETL summary reports zero errors and inspect the manifest for
    `latestIngestionDate`, `totalEvents`, `totalArtists`, and `totalVenues`.
 
+### Local Preview Before Publishing
+
+After ingestion succeeds and before committing the release, open the local
+instance and inspect the updated app:
+
+```
+npm run dev
+```
+
+If `npm`/`npx` is unavailable but dependencies are installed, start Vite
+directly:
+
+```
+node node_modules\\vite\\bin\\vite.js --config vite.config.ts
+```
+
+Open `http://localhost:5173/` (or the route being reviewed), reload any
+already-open browser tab, and verify the app shows the new data. Also check
+`http://localhost:5173/data/manifest.json` returns HTTP 200 with the expected
+dataset version, ingestion date, and counts. Complete this local check
+before starting the publishing commands below.
+
 If `npm` is unavailable in the local Windows runtime but dependencies are
 already installed, use the bundled tools directly:
 
@@ -193,7 +215,8 @@ The codebase uses strict TypeScript with branded types for type safety:
 ### Publishing an Ingested Dataset
 
 Publish only the validated raw sources and generated browser data. Keep
-unrelated local setup files out of the commit.
+unrelated local setup files out of the commit. Complete **Local Preview
+Before Publishing** first.
 
 ```
 git status -sb
