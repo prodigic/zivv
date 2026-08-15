@@ -16,6 +16,7 @@
  */
 
 import { EventSanitizer } from '../dist/lib/etl/sanitizer.js';
+import { normalizeLatestContent } from '../dist/lib/etl/latest-content.js';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
@@ -111,7 +112,7 @@ function main() {
     corrections.reduce((l, c) => l.replace(c.re, c.replacement), line);
 
   // Collapse latest.txt to single-line entries, then apply corrections
-  const latestContent = readFileSync(latestPath, 'utf-8');
+  const latestContent = normalizeLatestContent(readFileSync(latestPath, 'utf-8'));
   const rawEntries = EventSanitizer.collapseToSingleLines(latestContent);
   const newEntries = rawEntries.map(applyCorrections);
   const correctedCount = rawEntries.filter((e, i) => e !== newEntries[i]).length;

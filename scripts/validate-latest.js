@@ -19,6 +19,7 @@
  */
 
 import { LatestValidator } from '../dist/lib/etl/validator.js';
+import { normalizeLatestContent } from '../dist/lib/etl/latest-content.js';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
@@ -219,7 +220,10 @@ async function main() {
 
   const rawLatestContent = readFileSync(latestPath, 'utf-8');
   // Apply corrections line-by-line so patterns work on individual event strings
-  const latestContent = rawLatestContent.split('\n').map(applyCorrections).join('\n');
+  const latestContent = normalizeLatestContent(rawLatestContent)
+    .split('\n')
+    .map(applyCorrections)
+    .join('\n');
 
   const venuesContent = readFileSync(venuesPath, 'utf-8');
   const existingAliases = existsSync(aliasesPath)
