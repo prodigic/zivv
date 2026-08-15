@@ -22,16 +22,10 @@ const ArtistsPage: React.FC = () => {
   const initialize = useAppStore((state) => state.initialize);
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
 
-  const { filters, setSearchQuery, clearSearch, updateFilter } =
+  const { filters, setSearchQuery, clearSearch } =
     useFilterStore();
   const navigate = useNavigate();
 
-  const goToVenue = (venueName: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    updateFilter("venues", [venueName]);
-    navigate("/");
-  };
   const location = useLocation();
 
   // Initialize display limit based on saved scroll position

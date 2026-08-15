@@ -35,7 +35,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
-    // Generate unique error ID for tracking
+    // Generate a local support reference. It is never transmitted.
     const errorId = `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
     return {
@@ -176,7 +176,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, errorId, onRetry }
             </summary>
             <div className="mt-2 p-2 bg-gray-100 rounded text-xs font-mono text-gray-700 overflow-auto max-h-32">
               <div className="mb-1">
-                <strong>Error ID:</strong> {errorId}
+                <strong>Local support reference:</strong> {errorId}
               </div>
               <div className="mb-1">
                 <strong>Message:</strong> {error.message}

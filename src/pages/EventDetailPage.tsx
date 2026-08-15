@@ -82,7 +82,6 @@ const EventDetailPage: React.FC = () => {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]); // only re-register if navigate changes (never)
 
   // Early returns after all hooks
@@ -287,7 +286,7 @@ const EventDetailPage: React.FC = () => {
                           {new Date(ev.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                         </span>
                         <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">{ev.venueName}</span>
-                        <PriceWidget isFree={ev.isFree} isSoldOut={ev.status === "sold-out" || ev.tags?.includes("sold-out")} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
+                        <PriceWidget isFree={ev.isFree} isSoldOut={ev.isSoldOut} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
                       </div>
                     ))}
                   </div>
@@ -334,7 +333,7 @@ const EventDetailPage: React.FC = () => {
                       <span className={`text-xs truncate flex-1 ${isCurrent ? "text-purple-900 dark:text-purple-100 font-semibold" : "text-gray-700 dark:text-gray-200 font-medium"}`}>
                         {ev.headlinerName || "Show"}
                       </span>
-                      <PriceWidget isFree={ev.isFree} isSoldOut={ev.status === "sold-out" || ev.tags?.includes("sold-out")} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
+                      <PriceWidget isFree={ev.isFree} isSoldOut={ev.isSoldOut} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
                     </Link>
                   );
                 })}

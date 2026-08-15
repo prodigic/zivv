@@ -7,6 +7,11 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { DataService } from "@/services/DataService.js";
 import { globalErrorHandler } from "@/utils/errorHandling.js";
+import { createStaticReadRequest } from "@/privacy/requestPolicy.ts";
+import { createJsonQueryRepository, JsonDatasetReader, buildEventQuery } from "@/data/index.ts";
+import type { UiEventQueryInput } from "@/data/query/buildEventQuery.ts";
+import type { QueryRepository, Page } from "@/domain/repository.ts";
+import type { EventSummary } from "@/domain/projections.ts";
 import type {
   Event,
   Artist,
@@ -56,6 +61,8 @@ export interface AppState {
 
   // Data service instance
   dataService: DataService | null;
+  // Transitional domain query boundary. Legacy maps remain for rendering until pages migrate.
+  queryRepository: QueryRepository | null;
 
   // Last updated timestamps
   lastUpdated: {
@@ -80,6 +87,8 @@ export interface AppActions {
 
   // Search
   searchEvents: (query: string) => Promise<Event[]>;
+  queryEventSummaries: (input?: UiEventQueryInput) => Promise<Page<EventSummary>>;
+  searchEventSummaries: (query: string) => Promise<readonly EventSummary[]>;
 
   // Data access helpers
   getEvent: (eventId: EventId) => Event | undefined;
@@ -155,6 +164,7 @@ export const useAppStore = create<AppStore>()(
         showUpcomingOnly: true,
 
         dataService: null,
+        queryRepository: null,
 
         lastUpdated: {
           manifest: null,
@@ -167,7 +177,11 @@ export const useAppStore = create<AppStore>()(
         async initialize() {
           try {
             const dataService = new DataService();
-            set({ dataService });
+            const queryReader = new JsonDatasetReader({
+              baseUrl: import.meta.env.DEV ? "/data" : "/zivv/data",
+            });
+            const queryRepository = createJsonQueryRepository(queryReader);
+            set({ dataService, queryRepository });
 
             await dataService.initialize();
 
@@ -177,13 +191,13 @@ export const useAppStore = create<AppStore>()(
               get().loadArtists(),
               get().loadVenues(),
               get().loadIndexes(),
-              fetch(`${import.meta.env.BASE_URL}data/local-artist-exclude.json`)
+              fetch(createStaticReadRequest(`${import.meta.env.BASE_URL}data/local-artist-exclude.json`))
                 .then((r) => r.json())
                 .then((list: string[]) =>
                   set({ localArtistExclude: new Set(list.map((n: string) => n.toLowerCase())) })
                 )
                 .catch(() => {}),
-              fetch(`${import.meta.env.BASE_URL}data/local-artists.json`)
+              fetch(createStaticReadRequest(`${import.meta.env.BASE_URL}data/local-artists.json`))
                 .then((r) => r.json())
                 .then((list: string[]) =>
                   set({ localArtistList: new Set(list.map((n: string) => n.toLowerCase())) })
@@ -383,6 +397,38 @@ export const useAppStore = create<AppStore>()(
             }));
             return [];
           }
+        },
+
+        async queryEventSummaries(input: UiEventQueryInput = {}) {
+          const { queryRepository, venues } = get();
+          if (!queryRepository) throw new Error("Query repository not initialized");
+
+          set((state) => ({
+            loading: { ...state.loading, search: "loading" },
+            errors: { ...state.errors, search: null },
+          }));
+
+          try {
+            const page = await queryRepository.events.list(buildEventQuery(input, venues));
+            set((state) => ({ loading: { ...state.loading, search: "success" } }));
+            return page;
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : "Query failed";
+            set((state) => ({
+              loading: { ...state.loading, search: "error" },
+              errors: { ...state.errors, search: errorMessage },
+            }));
+            throw error;
+          }
+        },
+
+        async searchEventSummaries(query: string) {
+          const page = await get().queryEventSummaries({
+            searchQuery: query,
+            sortBy: "relevance",
+            limit: 5,
+          });
+          return page.items;
         },
 
         // Data access helpers

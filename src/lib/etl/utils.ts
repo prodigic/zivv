@@ -87,7 +87,7 @@ export class DateParser {
       const ref = new Date(referenceEpochMs);
       let year = ref.getUTCFullYear();
       // Use UTC noon for comparison to avoid local-time skew
-      let epochMs = Date.UTC(year, month, day, 12, 0, 0);
+      const epochMs = Date.UTC(year, month, day, 12, 0, 0);
 
       // If the new date is more than 6 months before the reference, wrap to next year
       if (epochMs < referenceEpochMs - 180 * 24 * 60 * 60 * 1000) {
