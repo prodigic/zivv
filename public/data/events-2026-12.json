@@ -165,11 +165,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1135,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -180,10 +180,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1136597428,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:d2ba32de0b7f6f9f",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -195,7 +195,7 @@
           "incomingValue": 1796270400000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -204,7 +204,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -229,11 +229,11 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1137,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -244,10 +244,10 @@
           "canonicalUrl": null,
           "originalVenueId": 135768954,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:da43bc06ab4a2a38",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -259,7 +259,7 @@
           "incomingValue": 1796270400000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -268,11 +268,57 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
       "timeBasis": "instant"
+    },
+    {
+      "id": 1824325317,
+      "slug": "2026-12-02-the-womack-sisters-bimbos-365-club",
+      "date": "2026-12-02",
+      "dateEpochMs": 1796212800000,
+      "startTimeEpochMs": 1796270400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1884514538,
+      "artistIds": [
+        1884514538
+      ],
+      "venueId": 697962111,
+      "priceMin": 35.54,
+      "priceMax": 35.54,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
+      "sourceLineNumber": 1197,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1788566700000,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 697962111,
+          "session": null,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1788566700000,
+          "contentHash": "fnv1a64:8e26cd95d65b5dc9",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+          "lastSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
     },
     {
       "id": 551542685,
@@ -294,13 +340,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1134,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -311,8 +357,8 @@
           "canonicalUrl": null,
           "originalVenueId": 31041890,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:b8591c3f4d4b892a",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -431,11 +477,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1140,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -446,10 +492,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1120524281,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:20b8e83916c2c75b",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -461,7 +507,7 @@
           "incomingValue": 1796356800000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -470,7 +516,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -588,11 +634,11 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1787313600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1136,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -603,10 +649,10 @@
           "canonicalUrl": null,
           "originalVenueId": 697962111,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:2060010ee8344118",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -618,7 +664,7 @@
           "incomingValue": "sold out",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -627,7 +673,7 @@
           "incomingValue": 1796356800000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -636,7 +682,7 @@
           "incomingValue": "sold-out",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -647,7 +693,7 @@
           ],
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -656,7 +702,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -728,11 +774,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1786708800000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1144,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -743,10 +789,10 @@
           "canonicalUrl": null,
           "originalVenueId": 631118593,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:a4c1a14397db69d7",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -758,7 +804,7 @@
           "incomingValue": 1796439600000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -767,7 +813,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -838,11 +884,11 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1783684800000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1153,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -853,10 +899,10 @@
           "canonicalUrl": null,
           "originalVenueId": 515101024,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:842e40e0aef70da3",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -868,7 +914,7 @@
           "incomingValue": 1796533200000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -877,7 +923,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -951,11 +997,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1785499200000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1150,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -966,10 +1012,10 @@
           "canonicalUrl": null,
           "originalVenueId": 89816907,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:1a4ac38ec3d2b548",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -981,7 +1027,7 @@
           "incomingValue": 1796529600000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -990,7 +1036,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -1014,11 +1060,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1786708800000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1146,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -1029,10 +1075,10 @@
           "canonicalUrl": null,
           "originalVenueId": 631118593,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:1e76050fa0f74f64",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -1044,7 +1090,7 @@
           "incomingValue": 1796526000000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1053,7 +1099,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -1124,11 +1170,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1787313600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1151,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -1139,10 +1185,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1383208152,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:1f7aae3d95fc2eb8",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -1154,7 +1200,7 @@
           "incomingValue": 1796526000000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1163,7 +1209,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -1218,6 +1264,52 @@
       "timeBasis": "legacy-wall-clock"
     },
     {
+      "id": 646655244,
+      "slug": "2026-12-05-the-expendables-the-catalyst",
+      "date": "2026-12-05",
+      "dateEpochMs": 1796472000000,
+      "startTimeEpochMs": 1796529600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1170776008,
+      "artistIds": [
+        1170776008
+      ],
+      "venueId": 1715490423,
+      "priceMin": 43.6,
+      "priceMax": 43.6,
+      "isFree": false,
+      "ageRestriction": "16+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
+      "sourceLineNumber": 1156,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1788566700000,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1715490423,
+          "session": null,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
+          "contentHash": "fnv1a64:7a645d6d12d46ec5",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
       "id": 1260954819,
       "slug": "2026-12-05-kamasi-washington-the-uc-theater",
       "date": "2026-12-05",
@@ -1236,13 +1328,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1147,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -1253,8 +1345,8 @@
           "canonicalUrl": null,
           "originalVenueId": 2093769319,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:7073be0cdb5d4d5d",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -1283,13 +1375,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1148,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -1300,55 +1392,9 @@
           "canonicalUrl": null,
           "originalVenueId": 1689618485,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:4d8c30f8ed85ca27",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-          "evidence": null
-        }
-      ],
-      "provenanceConflicts": []
-    },
-    {
-      "id": 646655244,
-      "slug": "2026-12-05-the-expendables-the-catalyst",
-      "date": "2026-12-05",
-      "dateEpochMs": 1796472000000,
-      "startTimeEpochMs": 1796529600000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 1170776008,
-      "artistIds": [
-        1170776008
-      ],
-      "venueId": 1715490423,
-      "priceMin": 43.6,
-      "priceMax": 43.6,
-      "isFree": false,
-      "ageRestriction": "16+",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
-      "sourceLineNumber": 1156,
-      "timeBasis": "instant",
-      "firstImportedBy": "steveslist",
-      "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
-      "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-      "sources": [
-        {
-          "kind": "steveslist",
-          "sourceId": "steveslist",
-          "externalEventId": null,
-          "canonicalUrl": null,
-          "originalVenueId": 1715490423,
-          "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
-          "contentHash": "fnv1a64:7a645d6d12d46ec5",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
@@ -1428,11 +1474,11 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1780660800000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1159,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -1443,10 +1489,10 @@
           "canonicalUrl": null,
           "originalVenueId": 463728167,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:3a9c613271d0e18b",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -1458,7 +1504,7 @@
           "incomingValue": 1796601600000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1467,7 +1513,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -1492,11 +1538,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1781265600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1158,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -1507,10 +1553,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1887679738,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:68261ee6c51b5a99",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -1522,7 +1568,7 @@
           "incomingValue": 1796616000000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1531,7 +1577,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -1604,11 +1650,11 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1783684800000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1163,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -1619,10 +1665,10 @@
           "canonicalUrl": null,
           "originalVenueId": 183693907,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:e83e2ce89cc8bc6c",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -1634,7 +1680,7 @@
           "incomingValue": 1796601600000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1643,7 +1689,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -1696,6 +1742,50 @@
       "timeBasis": "legacy-wall-clock"
     },
     {
+      "id": 430289154,
+      "slug": "2026-12-06-ripe-the-regency-ballroom",
+      "date": "2026-12-06",
+      "dateEpochMs": 1796558400000,
+      "startTimeEpochMs": 1796616000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971367233,
+      "artistIds": [
+        1971367233
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
+      "sourceLineNumber": 1161,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1788566700000,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2133080253,
+          "session": null,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
+          "contentHash": "fnv1a64:24150a8f018da717",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
       "id": 1082655578,
       "slug": "2026-12-06-sunday-cruise-924-gilman-street",
       "date": "2026-12-06",
@@ -1716,13 +1806,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1157,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -1733,53 +1823,9 @@
           "canonicalUrl": null,
           "originalVenueId": 888749966,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:74ae4ebcb27a9fcb",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-          "evidence": null
-        }
-      ],
-      "provenanceConflicts": []
-    },
-    {
-      "id": 430289154,
-      "slug": "2026-12-06-ripe-the-regency-ballroom",
-      "date": "2026-12-06",
-      "dateEpochMs": 1796558400000,
-      "startTimeEpochMs": 1796616000000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 1971367233,
-      "artistIds": [
-        1971367233
-      ],
-      "venueId": 2133080253,
-      "isFree": false,
-      "ageRestriction": "all-ages",
-      "status": "confirmed",
-      "tags": [],
-      "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
-      "sourceLineNumber": 1161,
-      "timeBasis": "instant",
-      "firstImportedBy": "steveslist",
-      "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
-      "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-      "sources": [
-        {
-          "kind": "steveslist",
-          "sourceId": "steveslist",
-          "externalEventId": null,
-          "canonicalUrl": null,
-          "originalVenueId": 2133080253,
-          "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
-          "contentHash": "fnv1a64:24150a8f018da717",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
@@ -1806,11 +1852,11 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1166,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -1821,10 +1867,10 @@
           "canonicalUrl": null,
           "originalVenueId": 680116887,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:67e2b303606b5e31",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -1836,7 +1882,7 @@
           "incomingValue": 1796702400000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1845,7 +1891,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -1871,11 +1917,11 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1167,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -1886,10 +1932,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1383208152,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:b6a5b13bc607d754",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -1901,7 +1947,7 @@
           "incomingValue": "sold out",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1910,7 +1956,7 @@
           "incomingValue": 1796702400000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1919,7 +1965,7 @@
           "incomingValue": "sold-out",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1930,7 +1976,7 @@
           ],
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -1939,7 +1985,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -1965,11 +2011,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1781265600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1165,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -1980,10 +2026,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1887679738,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:51c93cbcccc0a75b",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -1995,7 +2041,7 @@
           "incomingValue": 1796702400000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2004,7 +2050,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -2031,11 +2077,11 @@
       ],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1168,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -2046,10 +2092,10 @@
           "canonicalUrl": null,
           "originalVenueId": 631118593,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:734ebd30210cd9f4",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -2061,7 +2107,7 @@
           "incomingValue": "sold out",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2070,7 +2116,7 @@
           "incomingValue": 1796788800000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2079,7 +2125,7 @@
           "incomingValue": "sold-out",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2090,7 +2136,7 @@
           ],
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2099,7 +2145,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -2125,11 +2171,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1786708800000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1169,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -2140,10 +2186,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1383208152,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:6465d24673d55cdc",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -2155,7 +2201,7 @@
           "incomingValue": 1796788800000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2164,7 +2210,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -2465,13 +2511,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1176,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -2482,8 +2528,8 @@
           "canonicalUrl": null,
           "originalVenueId": 463728167,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:34d6d04d2f639b58",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -2512,13 +2558,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1177,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -2529,8 +2575,8 @@
           "canonicalUrl": null,
           "originalVenueId": 476970951,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:7abd4b0f4af31bee",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -2557,11 +2603,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1179,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -2572,10 +2618,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1136597428,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:3ce8195e2fe529e3",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -2587,7 +2633,7 @@
           "incomingValue": 1796961600000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2596,7 +2642,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -2761,13 +2807,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1181,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -2778,8 +2824,8 @@
           "canonicalUrl": null,
           "originalVenueId": 31041890,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:5101729191c07dff",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -2852,11 +2898,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1183,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -2867,10 +2913,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1120524281,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:2ad04fb4823e2c36",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -2882,7 +2928,7 @@
           "incomingValue": 1797048000000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2891,7 +2937,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -2919,11 +2965,11 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1783080000000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1185,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -2934,10 +2980,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1016385760,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:584f946b4c015a0f",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -2949,7 +2995,7 @@
           "incomingValue": 1797051600000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2958,7 +3004,7 @@
           "incomingValue": "sold-out",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2969,7 +3015,7 @@
           ],
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -2978,7 +3024,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -3096,15 +3142,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1184,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -3113,10 +3159,10 @@
           "canonicalUrl": null,
           "originalVenueId": 31041890,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:eea1901d340e3a95",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -3142,15 +3188,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1187,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -3159,10 +3205,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1253820046,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:d8267f527c0a8ddb",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -3189,11 +3235,11 @@
       "tags": [],
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1189,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -3204,10 +3250,10 @@
           "canonicalUrl": null,
           "originalVenueId": 2093769319,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:36a8696dfec47c90",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -3219,7 +3265,7 @@
           "incomingValue": 39.5,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -3228,7 +3274,7 @@
           "incomingValue": 39.5,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -3237,7 +3283,7 @@
           "incomingValue": 1797132600000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -3246,7 +3292,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -3255,7 +3301,7 @@
           "incomingValue": "diy",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -3568,15 +3614,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1192,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -3585,10 +3631,10 @@
           "canonicalUrl": null,
           "originalVenueId": 31041890,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:41aa050ab1e24d57",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -3617,15 +3663,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1196,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -3634,10 +3680,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1715490423,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:42ed4adbe904375e",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -3805,11 +3851,11 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1784894400000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1199,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -3820,10 +3866,10 @@
           "canonicalUrl": null,
           "originalVenueId": 31041890,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:e62772ab1aa5b4f1",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -3835,7 +3881,7 @@
           "incomingValue": 1797393600000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -3844,7 +3890,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -3913,15 +3959,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1201,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -3930,10 +3976,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1136597428,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:b8161c720a3f3726",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -3958,11 +4004,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1786708800000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1203,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -3973,10 +4019,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1383208152,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:e62eed9eac72d0bd",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -3988,7 +4034,7 @@
           "incomingValue": 1797652800000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -3997,7 +4043,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -4024,15 +4070,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "diy",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1204,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -4041,10 +4087,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1136597428,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:c7f1ae358d44b17b",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -4070,15 +4116,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1205,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -4087,10 +4133,10 @@
           "canonicalUrl": null,
           "originalVenueId": 31041890,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:3aa76131bf369cbe",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -4117,13 +4163,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1206,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -4134,8 +4180,8 @@
           "canonicalUrl": null,
           "originalVenueId": 463728167,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:aba28745d8a188e7",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -4163,11 +4209,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1782475200000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1207,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -4178,10 +4224,10 @@
           "canonicalUrl": null,
           "originalVenueId": 631118593,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:780b236961f06b52",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -4193,7 +4239,7 @@
           "incomingValue": 63,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -4202,7 +4248,7 @@
           "incomingValue": 63,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -4211,7 +4257,7 @@
           "incomingValue": 1797739200000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -4220,7 +4266,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -4333,11 +4379,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1787313600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1209,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -4348,10 +4394,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1136597428,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:2c87654dd3c681dd",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -4363,7 +4409,7 @@
           "incomingValue": 1797737400000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -4372,7 +4418,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -4445,13 +4491,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1210,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -4462,8 +4508,8 @@
           "canonicalUrl": null,
           "originalVenueId": 463728167,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:930faeabce3ae73c",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -4489,13 +4535,13 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1211,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -4506,8 +4552,8 @@
           "canonicalUrl": null,
           "originalVenueId": 2133080253,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:42f09837ad0c99b5",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -4584,11 +4630,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1787313600000,
-      "updatedAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1214,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -4599,10 +4645,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1136597428,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:2691d34ed433bc0a",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -4614,7 +4660,7 @@
           "incomingValue": 1797823800000,
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         },
         {
@@ -4623,7 +4669,7 @@
           "incomingValue": "instant",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789172046956,
+          "detectedAtEpochMs": 1788566700000,
           "reason": "source-update"
         }
       ],
@@ -4697,13 +4743,13 @@
         "matinee"
       ],
       "venueType": "major",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789085100000,
       "sourceLineNumber": 1215,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1789085100000,
       "announcedAtEpochMs": null,
       "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
       "sources": [
@@ -4714,8 +4760,8 @@
           "canonicalUrl": null,
           "originalVenueId": 463728167,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:e7fcce14f729b061",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -4745,15 +4791,15 @@
         "matinee"
       ],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1218,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -4762,10 +4808,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1383208152,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:ca7aca2f3d951d66",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }
@@ -4883,15 +4929,15 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
-      "createdAtEpochMs": 1789172046956,
-      "updatedAtEpochMs": 1789172046956,
+      "createdAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1788566700000,
       "sourceLineNumber": 1220,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1789172046956,
+      "firstObservedAtEpochMs": 1788566700000,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "firstImportRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
       "sources": [
         {
           "kind": "steveslist",
@@ -4900,10 +4946,10 @@
           "canonicalUrl": null,
           "originalVenueId": 1689618485,
           "session": null,
-          "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "firstSeenAtEpochMs": 1788566700000,
+          "lastSeenAtEpochMs": 1789085100000,
           "contentHash": "fnv1a64:dfcbab3b8ec64442",
-          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "evidence": null
         }

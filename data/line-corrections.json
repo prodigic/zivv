@@ -78,5 +78,15 @@
     "note": "Restore the missing 'at' separator in the Save Ferris Napa Music Hall listing.",
     "pattern": "Save Ferris\\s+Napa Music Hall, Napa\\b",
     "replacement": "Save Ferris at Napa Music Hall, Napa"
+  },
+  {
+    "note": "Missing separator before River Front Cafe in New Copasetics listing.",
+    "pattern": "^(sep\\s+4\\s+\\w{3}\\s+New Copasetics) River Front Cafe,",
+    "replacement": "$1 at River Front Cafe,"
+  },
+  {
+    "note": "Missing separator and city typo in Ivy Room listing.",
+    "pattern": "dj Misfailed Bday Partyat the Ivy Room, Albanu\\b",
+    "replacement": "dj Misfailed Bday Party at Ivy Room, Albany"
   }
 ]
