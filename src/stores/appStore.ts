@@ -15,7 +15,11 @@ import type {
   ArtistId,
   VenueId,
 } from "@/types/events.js";
-import type { DataManifest, DataIndexes } from "@/types/data.js";
+import type {
+  DataManifest,
+  DataIndexes,
+  RecentAdditionsIndex,
+} from "@/types/data.js";
 import type { ViewState, LoadingState, CacheStats } from "@/types/frontend.js";
 
 // App state interface
@@ -26,9 +30,10 @@ export interface AppState {
   artists: Map<ArtistId, Artist>;
   venues: Map<VenueId, Venue>;
   indexes: DataIndexes | null;
+  recentAdditions: RecentAdditionsIndex | null;
   loadedChunks: Set<string>;
   localArtistExclude: Set<string>; // lowercase artist names excluded from local artists list
-  localArtistList: Set<string>;    // lowercase confirmed local artist names (persistent, grows over time)
+  localArtistList: Set<string>; // lowercase confirmed local artist names (persistent, grows over time)
 
   // Loading states
   loading: {
@@ -76,6 +81,7 @@ export interface AppActions {
   loadArtists: () => Promise<void>;
   loadVenues: () => Promise<void>;
   loadIndexes: () => Promise<void>;
+  loadRecentAdditions: () => Promise<void>;
   loadChunk: (chunkId: string) => Promise<void>;
 
   // Search
@@ -122,6 +128,7 @@ export const useAppStore = create<AppStore>()(
         artists: new Map(),
         venues: new Map(),
         indexes: null,
+        recentAdditions: null,
         loadedChunks: new Set(),
         localArtistExclude: new Set(),
         localArtistList: new Set(),
@@ -180,13 +187,21 @@ export const useAppStore = create<AppStore>()(
               fetch(`${import.meta.env.BASE_URL}data/local-artist-exclude.json`)
                 .then((r) => r.json())
                 .then((list: string[]) =>
-                  set({ localArtistExclude: new Set(list.map((n: string) => n.toLowerCase())) })
+                  set({
+                    localArtistExclude: new Set(
+                      list.map((n: string) => n.toLowerCase())
+                    ),
+                  })
                 )
                 .catch(() => {}),
               fetch(`${import.meta.env.BASE_URL}data/local-artists.json`)
                 .then((r) => r.json())
                 .then((list: string[]) =>
-                  set({ localArtistList: new Set(list.map((n: string) => n.toLowerCase())) })
+                  set({
+                    localArtistList: new Set(
+                      list.map((n: string) => n.toLowerCase())
+                    ),
+                  })
                 )
                 .catch(() => {}),
             ]);
@@ -211,6 +226,17 @@ export const useAppStore = create<AppStore>()(
             const manifest = await dataService.loadManifest();
             set((state) => ({
               manifest,
+              ...(state.manifest &&
+              state.manifest.datasetVersion !== manifest.datasetVersion
+                ? {
+                    events: new Map(),
+                    artists: new Map(),
+                    venues: new Map(),
+                    indexes: null,
+                    recentAdditions: null,
+                    loadedChunks: new Set<string>(),
+                  }
+                : {}),
               loading: { ...state.loading, manifest: "success" },
               lastUpdated: { ...state.lastUpdated, manifest: Date.now() },
             }));
@@ -314,6 +340,13 @@ export const useAppStore = create<AppStore>()(
             }));
             throw error;
           }
+        },
+
+        async loadRecentAdditions() {
+          const { dataService } = get();
+          if (!dataService) throw new Error("DataService not initialized");
+          const recentAdditions = await dataService.loadRecentAdditions();
+          set({ recentAdditions });
         },
 
         async loadChunk(chunkId: string) {
@@ -505,6 +538,7 @@ export const useAppStore = create<AppStore>()(
             artists: new Map(),
             venues: new Map(),
             indexes: null,
+            recentAdditions: null,
             loadedChunks: new Set(),
           });
 

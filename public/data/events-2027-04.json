@@ -26,14 +26,37 @@
       "venueType": "major",
       "createdAtEpochMs": 1786708800000,
       "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4645
+      "sourceLineNumber": 4645,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:706329c5b6e693e2",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 153773424,
       "slug": "2027-04-03-nothing-but-thieves-the-fox-theater",
       "date": "2027-04-03",
       "dateEpochMs": 1806753600000,
-      "startTimeEpochMs": 1806782400000,
+      "startTimeEpochMs": 1806807600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 303790097,
       "artistIds": [
@@ -46,8 +69,70 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4646
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1257,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 631118593,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:299b08a2b6e4ec4f",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [
+        {
+          "field": "priceMax",
+          "existingValue": "undefined",
+          "incomingValue": 59.6,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "priceMin",
+          "existingValue": "undefined",
+          "incomingValue": 59.6,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1806782400000,
+          "incomingValue": 1806807600000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant",
+      "priceMin": 59.6,
+      "priceMax": 59.6
     },
     {
       "id": 1471972580,
@@ -71,7 +156,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1784289600000,
       "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4649
+      "sourceLineNumber": 4649,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 31041890,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:20f15bedc636b8da",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1511143606,
@@ -94,7 +202,74 @@
       "venueType": "diy",
       "createdAtEpochMs": 1783684800000,
       "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4650
+      "sourceLineNumber": 4650,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1557090037,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:5766689af288f3d6",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
+    },
+    {
+      "id": 1893793026,
+      "slug": "2027-04-08-chris-fleming-the-castro",
+      "date": "2027-04-08",
+      "dateEpochMs": 1807185600000,
+      "startTimeEpochMs": 1807239600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 5940808,
+      "artistIds": [
+        5940808
+      ],
+      "venueId": 1383208152,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1259,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1383208152,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:2940f92a4f6c2f5e",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
     },
     {
       "id": 92842150,
@@ -118,14 +293,37 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4651
+      "sourceLineNumber": 4651,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 680116887,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:f274e0e532ea31da",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1535516437,
       "slug": "2027-04-27-mass-of-the-fermenting-dregs-the-regency-ballroom",
       "date": "2027-04-27",
       "dateEpochMs": 1808827200000,
-      "startTimeEpochMs": 1808856000000,
+      "startTimeEpochMs": 1808881200000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1210325165,
       "artistIds": [
@@ -138,8 +336,50 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1786708800000,
-      "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4652
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1262,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2133080253,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:f4284387ecd33ba2",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1808856000000,
+          "incomingValue": 1808881200000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant"
     }
   ]
 }

@@ -1,0 +1,2152 @@
+{
+  "datasetVersion": "2026-08-22T01:09:30.583Z",
+  "rawSfRows": 75,
+  "generatedSfRows": 65,
+  "candidateGroups": 103,
+  "records": [
+    {
+      "rawName": "4 Star Theater",
+      "rawLine": 3,
+      "rawText": "4 Star Theater, 2200 Clement Street, S.F. a/a",
+      "generatedVenueIds": [
+        89816907,
+        392702093
+      ],
+      "generatedNames": [
+        "4 Star Theater",
+        "4-Star Theater"
+      ],
+      "generatedCities": [
+        "S.f",
+        ""
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "4 Star Theater",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Amado's",
+      "rawLine": 8,
+      "rawText": "Amado's, 998 Valencia Street, S.F. 21+",
+      "generatedVenueIds": [
+        826658255
+      ],
+      "generatedNames": [
+        "Amado's"
+      ],
+      "generatedCities": [
+        "998 Valencia Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Amnesia",
+      "rawLine": 9,
+      "rawText": "Amnesia, 853 Valencia at 20th, S.F. 21+ 415-970-0012",
+      "generatedVenueIds": [
+        1908553417
+      ],
+      "generatedNames": [
+        "Amnesia"
+      ],
+      "generatedCities": [
+        "853 Valencia At 20th"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Amoeba Music",
+      "rawLine": 11,
+      "rawText": "Amoeba Music, 1855 Haight, S.F. a/a 415-831-1200",
+      "generatedVenueIds": [
+        2013304995
+      ],
+      "generatedNames": [
+        "Amoeba Music"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Amoeba Music - San Francisco",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Audio SF",
+      "rawLine": 15,
+      "rawText": "Audio SF, 316 11th Street, S.F. 21+",
+      "generatedVenueIds": [
+        915438229
+      ],
+      "generatedNames": [
+        "Audio SF"
+      ],
+      "generatedCities": [
+        "316 11th Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "August Hall",
+      "rawLine": 16,
+      "rawText": "August Hall, 420 Mason Street, S.F. 5+",
+      "generatedVenueIds": [
+        811075932
+      ],
+      "generatedNames": [
+        "August Hall"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "August Hall",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Bender's Bar And Grill",
+      "rawLine": 19,
+      "rawText": "Bender's Bar And Grill, 806 South Van Ness Ave., S.F. 21+ 415-824-1800",
+      "generatedVenueIds": [
+        418122002
+      ],
+      "generatedNames": [
+        "Bender's Bar And Grill"
+      ],
+      "generatedCities": [
+        "806 South Van Ness Ave"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Bimbo's 365 Club",
+      "rawLine": 20,
+      "rawText": "Bimbo's 365 Club, 1025 Columbus Avenue, S.F. 21+ 18+ 415-474-0365",
+      "generatedVenueIds": [
+        697962111
+      ],
+      "generatedNames": [
+        "Bimbo's 365 Club"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Bimbo's 365 Club",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Black Cat",
+      "rawLine": 22,
+      "rawText": "Black Cat, 400 Eddy Street, S.F. 21+ a/a",
+      "generatedVenueIds": [
+        1082531611
+      ],
+      "generatedNames": [
+        "the Black Cat"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Black Cat",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Boom Boom Room",
+      "rawLine": 25,
+      "rawText": "Boom Boom Room, 1601 Fillmore, S.F. 21+ 415-673-8000",
+      "generatedVenueIds": [
+        1125299906
+      ],
+      "generatedNames": [
+        "Boom Boom Room"
+      ],
+      "generatedCities": [
+        "1601 Fillmore"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Bottom of the Hill",
+      "rawLine": 26,
+      "rawText": "Bottom of the Hill, 1233 17th St., S.F. a/a 21+ 415-621-4455",
+      "generatedVenueIds": [
+        1016385760
+      ],
+      "generatedNames": [
+        "Bottom of the Hill"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Bottom of the Hill",
+          "report": "docs/venue-source-investigation.md",
+          "status": "previous-investigation"
+        }
+      ]
+    },
+    {
+      "rawName": "Brick and Mortar",
+      "rawLine": 28,
+      "rawText": "Brick and Mortar, 1710 Mission Street, S.F. 21+ 18+ a/a 415-371-1631",
+      "generatedVenueIds": [
+        1719765223
+      ],
+      "generatedNames": [
+        "the Brick and Mortar"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Brick & Mortar Music Hall",
+          "report": "docs/research/sf-additional-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Cafe Cocomo",
+      "rawLine": 31,
+      "rawText": "Cafe Cocomo, 650 Indiana at Mariposa, S.F. 21+",
+      "generatedVenueIds": [
+        1296228040
+      ],
+      "generatedNames": [
+        "Cafe Cocomo"
+      ],
+      "generatedCities": [
+        "650 Indiana At Mariposa"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Cafe Du Nord",
+      "rawLine": 32,
+      "rawText": "Cafe Du Nord, Inc., 2170 Market Street, S.F. 21+ 415-471-2969",
+      "generatedVenueIds": [
+        1550837691
+      ],
+      "generatedNames": [
+        "Cafe Du Nord"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Café du Nord",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Chapel",
+      "rawLine": 36,
+      "rawText": "Chapel, 777 Valencia Street at 19th, S.F. a/a",
+      "generatedVenueIds": [
+        680116887
+      ],
+      "generatedNames": [
+        "Chapel"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Chapel SF / The Chapel Outdoor Stage",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Civic Auditorium",
+      "rawLine": 40,
+      "rawText": "Civic Auditorium, 99 Grove Street, S.F. a/a 18+",
+      "generatedVenueIds": [
+        1648637995
+      ],
+      "generatedNames": [
+        "Civic Auditorium"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Bill Graham Civic Auditorium",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Curio Bar",
+      "rawLine": 46,
+      "rawText": "Curio Bar, 775 Valencia Street, S.F. ?/?",
+      "generatedVenueIds": [
+        705503013
+      ],
+      "generatedNames": [
+        "Curio Bar"
+      ],
+      "generatedCities": [
+        "775 Valencia Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Davies Symphony Hall",
+      "rawLine": 47,
+      "rawText": "Davies Symphony Hall, 201 Van Ness Ave., S.F. a/a",
+      "generatedVenueIds": [
+        664752640
+      ],
+      "generatedNames": [
+        "Davies Symphony Hall"
+      ],
+      "generatedCities": [
+        "201"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Depot",
+      "rawLine": 48,
+      "rawText": "Depot, SFSU Student Center, 1650 Holloway Ave., S.F. a/a",
+      "generatedVenueIds": [
+        1189056044
+      ],
+      "generatedNames": [
+        "Depot"
+      ],
+      "generatedCities": [
+        "Sfsu Student Center"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Driftwood",
+      "rawLine": 50,
+      "rawText": "Driftwood, 1225 Folsom Street, S.F. 21+",
+      "generatedVenueIds": [
+        884606152
+      ],
+      "generatedNames": [
+        "Driftwood"
+      ],
+      "generatedCities": [
+        "1225 Folsom Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "DNA Lounge",
+      "rawLine": 51,
+      "rawText": "DNA Lounge, 375 11th Street at Harrison, S.F. 21+ a/a 415-626-1409",
+      "generatedVenueIds": [
+        405307007
+      ],
+      "generatedNames": [
+        "DNA Lounge"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "DNA Lounge",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Eagle Tavern",
+      "rawLine": 52,
+      "rawText": "Eagle Tavern, 398 12th St., S.F. 21+ 415-626-0880",
+      "generatedVenueIds": [
+        321425008
+      ],
+      "generatedNames": [
+        "Eagle Tavern"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "SF Eagle",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Edinburgh Castle",
+      "rawLine": 53,
+      "rawText": "Edinburgh Castle, 950 Geary, S.F. 21+",
+      "generatedVenueIds": [
+        1220592213
+      ],
+      "generatedNames": [
+        "Edinburgh Castle"
+      ],
+      "generatedCities": [
+        "950 Geary"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "El Rincon",
+      "rawLine": 54,
+      "rawText": "El Rincon, 2700 16th Street at Harrison, S.F. 21+ 18+",
+      "generatedVenueIds": [
+        645156289
+      ],
+      "generatedNames": [
+        "El Rincon"
+      ],
+      "generatedCities": [
+        "2700 16th Street At Harrison"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "El Rio",
+      "rawLine": 55,
+      "rawText": "El Rio, 3158 Mission Street at Cesar Chavez, S.F. 21+ 415-282-3325",
+      "generatedVenueIds": [
+        1925979067
+      ],
+      "generatedNames": [
+        "El Rio"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "El Rio",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Fillmore",
+      "rawLine": 63,
+      "rawText": "Fillmore, 1805 Geary Blvd., S.F. a/a 415-346-6000",
+      "generatedVenueIds": [
+        1136597428
+      ],
+      "generatedNames": [
+        "Fillmore"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Fillmore",
+          "report": "docs/venue-source-investigation.md",
+          "status": "previous-investigation"
+        }
+      ]
+    },
+    {
+      "rawName": "Gray Area Grand Theater",
+      "rawLine": 73,
+      "rawText": "Gray Area Grand Theater, 2665 Mission Street, S.F. a/a 21+",
+      "generatedVenueIds": [
+        1996487210
+      ],
+      "generatedNames": [
+        "Gray Area Grand Theater"
+      ],
+      "generatedCities": [
+        "2665 Mission Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Great American Music Hall",
+      "rawLine": 75,
+      "rawText": "Great American Music Hall, 859 O'Farrell, S.F. ages 6+ 415-885-0750",
+      "generatedVenueIds": [
+        463728167
+      ],
+      "generatedNames": [
+        "Great American Music Hall"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Great American Music Hall",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Great Northern",
+      "rawLine": 76,
+      "rawText": "Great Northern, 119 Utah at 15th, S.F. 21+",
+      "generatedVenueIds": [
+        549865205
+      ],
+      "generatedNames": [
+        "Great Northern"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Great Northern",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Herbst Theater",
+      "rawLine": 81,
+      "rawText": "Herbst Theater, 401 Van Ness Avenue, S.F. a/a 415-551-2000",
+      "generatedVenueIds": [
+        1931690015
+      ],
+      "generatedNames": [
+        "Herbst Theater"
+      ],
+      "generatedCities": [
+        "401 Van Ness Avenue"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Honey Hive",
+      "rawLine": 83,
+      "rawText": "Honey Hive, 4117 Judah Street, S.F. a/a",
+      "generatedVenueIds": [
+        1488360326
+      ],
+      "generatedNames": [
+        "Honey Hive"
+      ],
+      "generatedCities": [
+        "4117 Judah Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Hotel Utah Saloon",
+      "rawLine": 86,
+      "rawText": "Hotel Utah Saloon, 500 4th St. at Bryant, S.F. 21+ 415-546-6300",
+      "generatedVenueIds": [
+        1558756676
+      ],
+      "generatedNames": [
+        "Hotel Utah Saloon"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Hotel Utah Saloon",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Independent",
+      "rawLine": 88,
+      "rawText": "Independent, 628 Divisadero, S.F. 21+ 415-771-1420",
+      "generatedVenueIds": [
+        515101024
+      ],
+      "generatedNames": [
+        "Independent"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Independent",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Jack Adams Hall",
+      "rawLine": 91,
+      "rawText": "Jack Adams Hall, SFSU Student Center, 1600 Holloway Ave., S.F. a/a",
+      "generatedVenueIds": [
+        1935435606
+      ],
+      "generatedNames": [
+        "Jack Adams Hall"
+      ],
+      "generatedCities": [
+        "Sfsu Student Center"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Jerry Garcia Amphitheater",
+      "rawLine": 93,
+      "rawText": "Jerry Garcia Amphitheater, 52 John F Shelley Drive, McLaren Park, S.F.",
+      "generatedVenueIds": [
+        679424983
+      ],
+      "generatedNames": [
+        "Jerry Garcia Amphitheater"
+      ],
+      "generatedCities": [
+        "Mcclaren"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Johnny Foley's Irish House",
+      "rawLine": 94,
+      "rawText": "Johnny Foley's Irish House, 243 O'Farrell Street, S.F. 21+ 415-954-0777",
+      "generatedVenueIds": [
+        984695167
+      ],
+      "generatedNames": [
+        "Johnny Foley's Irish House"
+      ],
+      "generatedCities": [
+        "243 O'farrell Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Kilowatt",
+      "rawLine": 97,
+      "rawText": "Kilowatt, 3160 16th St., San Francisco  21+ book 415-861-2597 415-861-2595",
+      "generatedVenueIds": [
+        1433810567
+      ],
+      "generatedNames": [
+        "Kilowatt"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Kilowatt",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Knockout",
+      "rawLine": 98,
+      "rawText": "Knockout, 3223 Mission St., S.F. 21+ 415-550-6994",
+      "generatedVenueIds": [
+        793956182
+      ],
+      "generatedNames": [
+        "Knockout"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Knockout",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Lab",
+      "rawLine": 100,
+      "rawText": "Lab, 2948 16th Street at Capp, S.F. a/a",
+      "generatedVenueIds": [
+        1652761549
+      ],
+      "generatedNames": [
+        "the Lab"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Lab",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Li-Po Lounge",
+      "rawLine": 103,
+      "rawText": "Li-Po Lounge, 916 Grant Ave., S.F. 21+",
+      "generatedVenueIds": [
+        598804186
+      ],
+      "generatedNames": [
+        "Li-Po Lounge"
+      ],
+      "generatedCities": [
+        "916 Grant Ave"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Lost Church",
+      "rawLine": 106,
+      "rawText": "Lost Church, 988 Columbus Avenue, S.F. a/a",
+      "generatedVenueIds": [
+        698121015
+      ],
+      "generatedNames": [
+        "Lost Church"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Lost Church - San Francisco",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Madrone Art Bar",
+      "rawLine": 110,
+      "rawText": "Madrone Art Bar, 500 Divisadero St. at Fell St., S.F. 21+ 415-241-0202",
+      "generatedVenueIds": [
+        1966034770
+      ],
+      "generatedNames": [
+        "Madrone Art Bar"
+      ],
+      "generatedCities": [
+        "500 Divisadero St. At Fell St"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Makeout Room",
+      "rawLine": 111,
+      "rawText": "Makeout Room, 3225 22nd St. at Mission, S.F. 21+ 415-647-2888",
+      "generatedVenueIds": [
+        337931090,
+        398859205,
+        879587410
+      ],
+      "generatedNames": [
+        "Makeout Room",
+        "Make Out Room",
+        "the Make-Out Room"
+      ],
+      "generatedCities": [
+        "3225 22nd St. At Mission",
+        "S.f",
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Make Out Room",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Masonic Center",
+      "rawLine": 112,
+      "rawText": "Masonic Center, 1111 California Street, S.F. 5+",
+      "generatedVenueIds": [
+        1120524281
+      ],
+      "generatedNames": [
+        "Masonic Center"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Masonic",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "McEvoy Fondation for the Arts",
+      "rawLine": 113,
+      "rawText": "McEvoy Fondation for the Arts, 1150 25th Street, Bldg. B, S.F. a/a",
+      "generatedVenueIds": [
+        954167517
+      ],
+      "generatedNames": [
+        "McEvoy Fondation for the Arts"
+      ],
+      "generatedCities": [
+        "1150 25th Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Mezzanine",
+      "rawLine": 116,
+      "rawText": "Mezzanine, 444 Jessie Street at Mint, S.F. 21+ 415-625-8880",
+      "generatedVenueIds": [
+        798787109
+      ],
+      "generatedNames": [
+        "Mezzanine"
+      ],
+      "generatedCities": [
+        "444 Jessie Street At Mint"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Midway",
+      "rawLine": 117,
+      "rawText": "Midway, 900 Marin Street, S.F. 21+",
+      "generatedVenueIds": [
+        343961277
+      ],
+      "generatedNames": [
+        "Midway"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Midway SF",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Milk Bar",
+      "rawLine": 118,
+      "rawText": "Milk Bar, 1840 Haight Street, S.F. 21+ 415-387-6455",
+      "generatedVenueIds": [
+        2078810884
+      ],
+      "generatedNames": [
+        "Milk Bar"
+      ],
+      "generatedCities": [
+        "1840 Haight Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Miner Auditorium (SF Jazz Center)",
+      "rawLine": 119,
+      "rawText": "Miner Auditorium (SF Jazz Center), 201 Franklin St, S.F. 21+",
+      "generatedVenueIds": [
+        826017948
+      ],
+      "generatedNames": [
+        "Miner Auditorium (SF Jazz Center)"
+      ],
+      "generatedCities": [
+        "201 Franklin St"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Monarch",
+      "rawLine": 121,
+      "rawText": "Monarch, 101 6th Street, S.F. 21+",
+      "generatedVenueIds": [
+        1439874346
+      ],
+      "generatedNames": [
+        "Monarch"
+      ],
+      "generatedCities": [
+        "101 6th Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Music City",
+      "rawLine": 124,
+      "rawText": "Music City, 1355 Bush Street, S.F. a/a 21+ 415-816-6207",
+      "generatedVenueIds": [
+        1386365370
+      ],
+      "generatedNames": [
+        "Music City"
+      ],
+      "generatedCities": [
+        "1355 Bush Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Music City Starfactory",
+          "report": "docs/research/sf-additional-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Neck of the Woods",
+      "rawLine": 126,
+      "rawText": "Neck of the Woods, 406 Clement at 5th Avenue, S.F. a/a 21+",
+      "generatedVenueIds": [
+        1557090037
+      ],
+      "generatedNames": [
+        "Neck of the Woods"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Neck of the Woods",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Noisebridge Hackerspace",
+      "rawLine": 128,
+      "rawText": "Noisebridge Hackerspace, 2169 Mission Street, S.F. a/a",
+      "generatedVenueIds": [
+        513710571
+      ],
+      "generatedNames": [
+        "Noisebridge Hackerspace"
+      ],
+      "generatedCities": [
+        "2169 Mission Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "O'Reilly's Pub",
+      "rawLine": 133,
+      "rawText": "O'Reilly's Pub, 1840 Haight Street, S.F. 21+",
+      "generatedVenueIds": [
+        117533728
+      ],
+      "generatedNames": [
+        "O'Reilly's Pub"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Palace of Fine Arts",
+      "rawLine": 135,
+      "rawText": "Palace of Fine Arts, 3301 Lyon Street, S.F. a/a",
+      "generatedVenueIds": [
+        390079947
+      ],
+      "generatedNames": [
+        "Palace of Fine Arts"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Palace of Fine Arts Theatre",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Parkside",
+      "rawLine": 137,
+      "rawText": "Parkside, 1600 17th St., S.F. 21+ 415-503-0393",
+      "generatedVenueIds": [
+        485759302
+      ],
+      "generatedNames": [
+        "Parkside"
+      ],
+      "generatedCities": [
+        "1600 17th St"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Thee Parkside",
+          "report": "docs/research/sf-additional-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Peacock Lounge",
+      "rawLine": 138,
+      "rawText": "Peacock Lounge, 552 Haight Street, S.F. a/a 21+ 415-621-9850",
+      "generatedVenueIds": [
+        1185666454
+      ],
+      "generatedNames": [
+        "the Peacock Lounge"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Peacock Lounge",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Phoenix Hotel",
+      "rawLine": 140,
+      "rawText": "Phoenix Hotel, 601 Eddy Street, S.F. 21+",
+      "generatedVenueIds": [
+        1810219236
+      ],
+      "generatedNames": [
+        "Phoenix Hotel"
+      ],
+      "generatedCities": [
+        "601 Eddy Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Plough and Stars",
+      "rawLine": 142,
+      "rawText": "Plough and Stars, 116 Clement St., S.F. 21+ 415-751-1122",
+      "generatedVenueIds": [
+        1282095081
+      ],
+      "generatedNames": [
+        "Plough and Stars"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Plough and Stars",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Public Works",
+      "rawLine": 146,
+      "rawText": "Public Works, 161 Erie Street at Mission, S.F. 21+",
+      "generatedVenueIds": [
+        755151683
+      ],
+      "generatedNames": [
+        "Public Works"
+      ],
+      "generatedCities": [
+        "161 Erie Street At Mission"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Public Works SF",
+          "report": "docs/research/sf-additional-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Radio Habana Social Club",
+      "rawLine": 148,
+      "rawText": "Radio Habana Social Club, 1109 Valencia Street, S.F. a/a",
+      "generatedVenueIds": [
+        1655849135
+      ],
+      "generatedNames": [
+        "Radio Habana Social Club"
+      ],
+      "generatedCities": [
+        "1109 Valencia Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Red Devil Lounge",
+      "rawLine": 151,
+      "rawText": "Red Devil Lounge, 1695 Polk at Clay, S.F. 21+ 415-921-1695",
+      "generatedVenueIds": [
+        427667661
+      ],
+      "generatedNames": [
+        "Red Devil Lounge"
+      ],
+      "generatedCities": [
+        "1695 Polk At Clay"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Regency Ballroom",
+      "rawLine": 152,
+      "rawText": "Regency Ballroom, 1300 Van Ness Avenue, S.F. a/a",
+      "generatedVenueIds": [
+        2133080253
+      ],
+      "generatedNames": [
+        "Regency Ballroom"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Regency Ballroom",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Rickshaw Stop",
+      "rawLine": 154,
+      "rawText": "Rickshaw Stop, 155 Fell St. at Van Ness, S.F. a/a",
+      "generatedVenueIds": [
+        31041890
+      ],
+      "generatedNames": [
+        "Rickshaw Stop"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Rickshaw Stop",
+          "report": "docs/venue-source-investigation.md",
+          "status": "previous-investigation"
+        }
+      ]
+    },
+    {
+      "rawName": "Rite Spot",
+      "rawLine": 156,
+      "rawText": "Rite Spot, 2099 Folsom Street at 17th, S.F. a/a 415-552-6066",
+      "generatedVenueIds": [
+        2113527323
+      ],
+      "generatedNames": [
+        "Rite Spot"
+      ],
+      "generatedCities": [
+        "2099 Folsom Street At 17th"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Social Hall",
+      "rawLine": 167,
+      "rawText": "Social Hall, 1270 Sutter Street, S.F. a/a 18+ 21+",
+      "generatedVenueIds": [
+        549325977
+      ],
+      "generatedNames": [
+        "Social Hall"
+      ],
+      "generatedCities": [
+        "1270 Sutter Street"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Stern Grove",
+      "rawLine": 173,
+      "rawText": "Stern Grove, 19th Avenue & SLoat Blvd., S.F. a/a",
+      "generatedVenueIds": [
+        1276498217
+      ],
+      "generatedNames": [
+        "Stern Grove"
+      ],
+      "generatedCities": [
+        "19th Avenue & Sloat Blvd"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Stern Grove Festival",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Swedish American Hall",
+      "rawLine": 178,
+      "rawText": "Swedish American Hall, 2170 Market Street, S.F. a/a 21+ 415-861-5016",
+      "generatedVenueIds": [
+        927889318
+      ],
+      "generatedNames": [
+        "the Swedish American Hall"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Swedish American Hall",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Thrillhouse Records",
+      "rawLine": 182,
+      "rawText": "Thrillhouse Records, 3422 Mission at 30th, S.F. a/a 415-666-9991",
+      "generatedVenueIds": [
+        735357859
+      ],
+      "generatedNames": [
+        "Thrillhouse Records"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Thrillhouse Records",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Tupelo",
+      "rawLine": 184,
+      "rawText": "Tupelo, 1337 Grant Ave., S.F. a/a (during sun shows) 415-981-9177",
+      "generatedVenueIds": [
+        1327234872
+      ],
+      "generatedNames": [
+        "Tupelo"
+      ],
+      "generatedCities": [
+        "1337 Grant Ave"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Warfield",
+      "rawLine": 185,
+      "rawText": "Warfield, 982 Market St., S.F. a/a 415-345-0900",
+      "generatedVenueIds": [
+        1531618194
+      ],
+      "generatedNames": [
+        "Warfield"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Warfield",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": "Warriors Stadium",
+      "rawLine": 186,
+      "rawText": "Warriors Stadium, 300 16th Street, S.F. a/a",
+      "generatedVenueIds": [
+        793025194
+      ],
+      "generatedNames": [
+        "Warriors Stadium"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Chase Center",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": "Verdi Club",
+      "rawLine": 194,
+      "rawText": "Verdi Club, 2424 Mariposa at Potrero, S.F. a/a 415-505-8530",
+      "generatedVenueIds": [
+        415372741
+      ],
+      "generatedNames": [
+        "Verdi Club"
+      ],
+      "generatedCities": [
+        "2424 Mariposa At Potrero"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Yerba Buena Gardens",
+      "rawLine": 200,
+      "rawText": "Yerba Buena Gardens, 773 Mission St., S.F. a/a",
+      "generatedVenueIds": [
+        882308789
+      ],
+      "generatedNames": [
+        "Yerba Buena Gardens"
+      ],
+      "generatedCities": [
+        "750"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": "Zeitgeist",
+      "rawLine": 202,
+      "rawText": "Zeitgeist, 199 Valencia and Duboce, S.F. 21+",
+      "generatedVenueIds": [
+        1183655994
+      ],
+      "generatedNames": [
+        "Zeitgeist"
+      ],
+      "generatedCities": [
+        "199 Valencia And Duboce"
+      ],
+      "membershipBasis": "explicit SF marker in source venue row",
+      "identityStatus": "candidate",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        718099583
+      ],
+      "generatedNames": [
+        "Amoeba Records"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Amoeba Music - San Francisco",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1533734128
+      ],
+      "generatedNames": [
+        "Jack Kerouac Alley"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1038152615
+      ],
+      "generatedNames": [
+        "Somewhere"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        881479351
+      ],
+      "generatedNames": [
+        "Castro Theater"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Castro Theatre",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1383208152
+      ],
+      "generatedNames": [
+        "Castro"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Castro Theatre",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1237996847
+      ],
+      "generatedNames": [
+        "1015 Folsom"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "1015 Folsom",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1769347402
+      ],
+      "generatedNames": [
+        "Jax Vineyards"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1710454576
+      ],
+      "generatedNames": [
+        "Mass"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1094184065
+      ],
+      "generatedNames": [
+        "Stern Grove Festival"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Stern Grove Festival",
+          "report": "docs/research/sf-other-venues.md",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1009706718
+      ],
+      "generatedNames": [
+        "above DNA Lounge"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "Above DNA Lounge (separate room alias)",
+          "report": "docs/research/sf-club-venues.md",
+          "status": "unverified"
+        }
+      ]
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1140492065
+      ],
+      "generatedNames": [
+        "Giants Ballpark"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1291359065
+      ],
+      "generatedNames": [
+        "Embarcadero Plaza"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        445731900
+      ],
+      "generatedNames": [
+        "22nd & Bartlett"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        674532354
+      ],
+      "generatedNames": [
+        "Civic Center and Market Street Parade"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        2038208300
+      ],
+      "generatedNames": [
+        "Harrison between 16th and 24th"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1094129374
+      ],
+      "generatedNames": [
+        "Mabuhay Gardens and on Broadway"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        235316584
+      ],
+      "generatedNames": [
+        "Pier 80"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        2124529002
+      ],
+      "generatedNames": [
+        "Union Square"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1781054735
+      ],
+      "generatedNames": [
+        "Ellis Street between Powell and Stockton"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        595294036
+      ],
+      "generatedNames": [
+        "the Ferry Buiding"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1270795673
+      ],
+      "generatedNames": [
+        "Museum of Modern Art"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1774955152
+      ],
+      "generatedNames": [
+        "Haight Ashbury Street Fair"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        723101454
+      ],
+      "generatedNames": [
+        "Larkin Street at Eddy Street"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        506133276
+      ],
+      "generatedNames": [
+        "the Chapel Outdoor State"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "source-investigated-identity-may-remain-unresolved",
+      "investigations": [
+        {
+          "officialName": "The Chapel SF / The Chapel Outdoor Stage",
+          "report": "docs/research/sf-major-venues.md",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1306836772
+      ],
+      "generatedNames": [
+        "Golden Gate Park"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1384743074
+      ],
+      "generatedNames": [
+        "Koret Auditorium"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        204594355
+      ],
+      "generatedNames": [
+        "Undergarden"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    },
+    {
+      "rawName": null,
+      "rawLine": null,
+      "rawText": null,
+      "generatedVenueIds": [
+        1510199156
+      ],
+      "generatedNames": [
+        "On Broadway"
+      ],
+      "generatedCities": [
+        "S.f"
+      ],
+      "membershipBasis": "generated SF city label; not independently verified",
+      "identityStatus": "needs-review",
+      "researchStatus": "not-yet-investigated",
+      "investigations": []
+    }
+  ],
+  "investigatedOn": "2026-09-07",
+  "method": "Explicit , S.F. or , San Francisco markers in data/venues.txt plus unmatched generated SF city rows; candidate names use venue-aliases.json, strip leading The and non-alphanumerics. Membership and name matching are not verified identity.",
+  "researchedCandidateGroups": 46,
+  "remainingCandidateGroups": 57,
+  "rawSfGroupsWithNonSfGeneratedCity": 41
+}

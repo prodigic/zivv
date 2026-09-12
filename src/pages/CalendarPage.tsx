@@ -114,7 +114,7 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
     const rangeStart = filters.dateRange?.startDate ? parseLocal(filters.dateRange.startDate).setHours(0,0,0,0) : todayMs;
     const rangeEnd = filters.dateRange?.endDate ? parseLocal(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
 
-    let filtered = Array.from(events.values()).filter((e) => {
+    const filtered = Array.from(events.values()).filter((e) => {
       if (e.dateEpochMs < todayMs) return false;
       if (e.dateEpochMs < rangeStart || e.dateEpochMs > rangeEnd) return false;
       if (selectedCities.size > 0) {
@@ -293,9 +293,10 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
                         priceMax={event.priceMax}
                         className="text-xs shrink-0"
                       />
-                      {manifest?.latestIngestionDate && (
-                        <NewBadge createdAtEpochMs={event.createdAtEpochMs} latestIngestionDate={manifest.latestIngestionDate} />
-                      )}
+                      <NewBadge
+                        createdAtEpochMs={event.createdAtEpochMs}
+                        addedDateProvenance={event.addedDateProvenance}
+                      />
                     </Link>
                   );
                 })}

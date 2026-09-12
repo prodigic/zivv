@@ -26,7 +26,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969656,
-      "sourceLineNumber": 6
+      "sourceLineNumber": 6,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1711400117,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:0ed7af87a8ca7f3b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 369219893,
@@ -49,7 +72,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969656,
-      "sourceLineNumber": 7
+      "sourceLineNumber": 7,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:904b5121bfab1685",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 105131615,
@@ -76,7 +122,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969657,
-      "sourceLineNumber": 8
+      "sourceLineNumber": 8,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 888749966,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:a582a8a108fc7a1e",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2084110384,
@@ -103,7 +172,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969657,
-      "sourceLineNumber": 9
+      "sourceLineNumber": 9,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1392713409,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:557da29a3120a8cb",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 417986401,
@@ -131,7 +223,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969657,
-      "sourceLineNumber": 10
+      "sourceLineNumber": 10,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1166870039,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:58dd549c7960f9bd",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1028009185,
@@ -155,7 +270,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969657,
-      "sourceLineNumber": 11
+      "sourceLineNumber": 11,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2093769319,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:b1205a3b648fc46b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1647332155,
@@ -181,7 +319,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969657,
-      "sourceLineNumber": 12
+      "sourceLineNumber": 12,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1393740940,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:71154b78a33a09fa",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2618041,
@@ -206,7 +367,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969657,
-      "sourceLineNumber": 13
+      "sourceLineNumber": 13,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1103257170,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:d65882a806ef1448",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 927162357,
@@ -230,7 +414,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 14
+      "sourceLineNumber": 14,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1689618485,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:dea7cb0e5dd2061a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1784783499,
@@ -255,7 +462,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 15
+      "sourceLineNumber": 15,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1368465968,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6ba0f201d88d8b61",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2080983613,
@@ -281,7 +511,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 16
+      "sourceLineNumber": 16,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 174354249,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:39fda65c8612a161",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1668609686,
@@ -309,7 +562,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 17
+      "sourceLineNumber": 17,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2011645013,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6b5a6fa9ba847d9e",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 144335205,
@@ -334,7 +610,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 18
+      "sourceLineNumber": 18,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 680116887,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:cd96ad20cf05ad71",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1483476804,
@@ -361,7 +660,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 19
+      "sourceLineNumber": 19,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 31041890,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:28fb3b47aea00c32",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 54555928,
@@ -386,7 +708,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 20
+      "sourceLineNumber": 20,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1531618194,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:85f212fa7277c0a2",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 153500232,
@@ -409,7 +754,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 21
+      "sourceLineNumber": 21,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:0f5740e59b760bf7",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1128673320,
@@ -433,7 +801,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 22
+      "sourceLineNumber": 22,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:8764462936f0e733",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 221230856,
@@ -458,7 +849,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 23
+      "sourceLineNumber": 23,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1016385760,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:53b431be5f737c7f",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 72058276,
@@ -483,7 +897,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 24
+      "sourceLineNumber": 24,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1557090037,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1689be673e27d13a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1685630282,
@@ -507,7 +944,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 25
+      "sourceLineNumber": 25,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 89816907,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:7ca92106832e5ba5",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 366739690,
@@ -534,7 +994,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 26
+      "sourceLineNumber": 26,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 413292306,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:15d681b7341894fb",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 588143115,
@@ -560,7 +1043,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 27
+      "sourceLineNumber": 27,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1719765223,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:ba1e6de7dac1dad9",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1796877142,
@@ -583,7 +1089,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 28
+      "sourceLineNumber": 28,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2133080253,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:7c05b827d06e4222",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1427509935,
@@ -609,7 +1138,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 29
+      "sourceLineNumber": 29,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1433810567,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:a729ec324296cf55",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 392023500,
@@ -633,7 +1185,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969658,
-      "sourceLineNumber": 30
+      "sourceLineNumber": 30,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1769347402,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:3fa524bb605100d4",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 180288555,
@@ -661,7 +1236,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 31
+      "sourceLineNumber": 31,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 398859205,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:f8f46fd2160cd433",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1290119122,
@@ -686,7 +1284,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 32
+      "sourceLineNumber": 32,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 793956182,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:c00d62e5586bd7d8",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 640646548,
@@ -709,7 +1330,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 33
+      "sourceLineNumber": 33,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1082531611,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:e242a545421ef369",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1898534175,
@@ -735,7 +1379,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 34
+      "sourceLineNumber": 34,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1375571612,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:a6fed0f40f76ae81",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 327424347,
@@ -759,7 +1426,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 35
+      "sourceLineNumber": 35,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1637782129,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:dd24a39085b7ef2b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1879551724,
@@ -783,7 +1473,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 36
+      "sourceLineNumber": 36,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 476970951,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:8e16549f32e2420a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1797597152,
@@ -810,7 +1523,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 37
+      "sourceLineNumber": 37,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 112130441,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:27bec036bb14ebb0",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 254614576,
@@ -835,7 +1571,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 38
+      "sourceLineNumber": 38,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 678550912,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:24bfeb4ec92f11ff",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 297197199,
@@ -861,7 +1620,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 39
+      "sourceLineNumber": 39,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1884206801,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6d97abecf6c88ab7",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 655992905,
@@ -884,7 +1666,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 40
+      "sourceLineNumber": 40,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1080825327,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:439856fef9208169",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 876738041,
@@ -909,7 +1714,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 41
+      "sourceLineNumber": 41,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1190204401,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:8604d89c07a68399",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1450261864,
@@ -933,7 +1761,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 42
+      "sourceLineNumber": 42,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1372815670,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:536e5df5ed420e79",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1147732985,
@@ -958,7 +1809,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 43
+      "sourceLineNumber": 43,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1158772644,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:f40a4ef4c2a8fef0",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1283173154,
@@ -986,7 +1860,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969659,
-      "sourceLineNumber": 44
+      "sourceLineNumber": 44,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 888749966,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:b0da8629e720c9b7",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 458153309,
@@ -1012,7 +1909,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969660,
-      "sourceLineNumber": 45
+      "sourceLineNumber": 45,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1217828948,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:ed9fe588ecf64b3b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1454011078,
@@ -1037,7 +1957,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969660,
-      "sourceLineNumber": 46
+      "sourceLineNumber": 46,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1392713409,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:4e0350b7e51c8f0d",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 300256112,
@@ -1058,7 +2001,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969660,
-      "sourceLineNumber": 47
+      "sourceLineNumber": 47,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1393740940,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:793f149f4dccf10a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 995882505,
@@ -1082,7 +2048,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969660,
-      "sourceLineNumber": 48
+      "sourceLineNumber": 48,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1547203889,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:82b7564643c50339",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2082043382,
@@ -1107,7 +2096,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969660,
-      "sourceLineNumber": 49
+      "sourceLineNumber": 49,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1103257170,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:911baa60d7bce1b2",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 35014362,
@@ -1134,7 +2146,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969660,
-      "sourceLineNumber": 50
+      "sourceLineNumber": 50,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 631118593,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:50627dcde43e9bb6",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1610191830,
@@ -1160,7 +2195,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969660,
-      "sourceLineNumber": 51
+      "sourceLineNumber": 51,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1902350253,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:b1d641e77cdf84e8",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1956910366,
@@ -1186,7 +2244,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 52
+      "sourceLineNumber": 52,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 174354249,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:3d963e44b4258054",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1885117374,
@@ -1212,7 +2293,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 53
+      "sourceLineNumber": 53,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 873142532,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6f5c1c36e6066f8a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 522042213,
@@ -1237,7 +2341,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 54
+      "sourceLineNumber": 54,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 907513889,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:2b201e2e8ff9cb24",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2067077387,
@@ -1262,7 +2389,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 55
+      "sourceLineNumber": 55,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 735357859,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:ab8def16803d40ce",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1508441866,
@@ -1285,7 +2435,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 56
+      "sourceLineNumber": 56,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 390079947,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:99110f6920bde9f0",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1626876245,
@@ -1310,7 +2483,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 57
+      "sourceLineNumber": 57,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 881479351,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:9b4cd040f6f774b4",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 797109853,
@@ -1333,7 +2529,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 58
+      "sourceLineNumber": 58,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1136597428,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:d9510bf2cf629ae9",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1000213923,
@@ -1355,7 +2574,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 59
+      "sourceLineNumber": 59,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1531618194,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6573a5baf3af9e19",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 551092407,
@@ -1380,7 +2622,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 60
+      "sourceLineNumber": 60,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:0e476d488905b8a0",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1108748224,
@@ -1403,7 +2668,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969661,
-      "sourceLineNumber": 61
+      "sourceLineNumber": 61,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 405307007,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1c3e051cfd67e570",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1056911899,
@@ -1429,7 +2717,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 62
+      "sourceLineNumber": 62,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1550837691,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:800c7ba167d4757c",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 847270056,
@@ -1455,7 +2766,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 63
+      "sourceLineNumber": 63,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 89816907,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:0063a8bf263d8d7f",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2010430484,
@@ -1481,7 +2815,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 64
+      "sourceLineNumber": 64,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1817412579,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:d7c29e614b4114f4",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 638200021,
@@ -1505,7 +2862,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 65
+      "sourceLineNumber": 65,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 697988159,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:37951b1a5610999f",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 301713093,
@@ -1531,7 +2911,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 66
+      "sourceLineNumber": 66,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1719765223,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:7d2534cb13a50475",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1103775445,
@@ -1554,7 +2957,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 67
+      "sourceLineNumber": 67,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2133080253,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:c63f8895ea482ab8",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 503683068,
@@ -1577,7 +3003,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 68
+      "sourceLineNumber": 68,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:11a2b0cc061d92a3",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1402365306,
@@ -1601,7 +3050,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 69
+      "sourceLineNumber": 69,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1016385760,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:52ac2a8fc770d18b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 866933970,
@@ -1628,7 +3100,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969662,
-      "sourceLineNumber": 70
+      "sourceLineNumber": 70,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1433810567,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6c69ad7d468abc40",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2144629852,
@@ -1654,7 +3149,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 71
+      "sourceLineNumber": 71,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1433810567,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:fc3746707756f008",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2119259460,
@@ -1677,7 +3195,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 72
+      "sourceLineNumber": 72,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 31041890,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:767fe3680b3d435c",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 226922401,
@@ -1701,7 +3242,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 73
+      "sourceLineNumber": 73,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 793956182,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:784a6fde936dcb2b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 384845451,
@@ -1724,7 +3288,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 74
+      "sourceLineNumber": 74,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1082531611,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:8431e47415067b87",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 585577196,
@@ -1747,7 +3334,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 75
+      "sourceLineNumber": 75,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 398859205,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:bab643c6301353d5",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1295649514,
@@ -1770,7 +3380,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 76
+      "sourceLineNumber": 76,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1769347402,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:ac96737ec175b9d0",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1004671985,
@@ -1796,7 +3429,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 77
+      "sourceLineNumber": 77,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1558756676,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:58870ce5c1e735c3",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 258787352,
@@ -1822,7 +3478,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 78
+      "sourceLineNumber": 78,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1375571612,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:c8385f98089ef246",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1577472352,
@@ -1846,7 +3525,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 79
+      "sourceLineNumber": 79,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2115869685,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:15cb61c964d316a7",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 587853933,
@@ -1871,7 +3573,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 80
+      "sourceLineNumber": 80,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2124628181,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:a7baa2105d265cf4",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 386079775,
@@ -1898,7 +3623,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 81
+      "sourceLineNumber": 81,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 112130441,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:0a97cf09d78894bd",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1136247505,
@@ -1923,7 +3671,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 82
+      "sourceLineNumber": 82,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1327146532,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:ff60876e01dc0e27",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1425446840,
@@ -1949,7 +3720,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969663,
-      "sourceLineNumber": 83
+      "sourceLineNumber": 83,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1229703691,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:46b44b9f731e25c1",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 537033988,
@@ -1970,7 +3764,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969664,
-      "sourceLineNumber": 84
+      "sourceLineNumber": 84,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 135768954,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:d4341796013cacc0",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1048305820,
@@ -1994,7 +3811,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969664,
-      "sourceLineNumber": 85
+      "sourceLineNumber": 85,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1715490423,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:b0b6ee5ef97bf98f",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2120252472,
@@ -2019,7 +3859,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969664,
-      "sourceLineNumber": 86
+      "sourceLineNumber": 86,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1372815670,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:bf1f9e7948df89eb",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1709307282,
@@ -2046,7 +3909,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969664,
-      "sourceLineNumber": 87
+      "sourceLineNumber": 87,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 888749966,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:a5de6c9e65c18c04",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1458303893,
@@ -2078,7 +3964,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969665,
-      "sourceLineNumber": 88
+      "sourceLineNumber": 88,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 564779164,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:3271347c3edbc74d",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1075626031,
@@ -2109,7 +4018,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969665,
-      "sourceLineNumber": 89
+      "sourceLineNumber": 89,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1241927296,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:410437ee3a531c1e",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1346608892,
@@ -2135,7 +4067,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969665,
-      "sourceLineNumber": 90
+      "sourceLineNumber": 90,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2093769319,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:f456fa13d68f6f19",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1595545279,
@@ -2160,7 +4115,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969665,
-      "sourceLineNumber": 91
+      "sourceLineNumber": 91,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1103257170,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1c7da3fe74156884",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2064548043,
@@ -2185,7 +4163,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969665,
-      "sourceLineNumber": 92
+      "sourceLineNumber": 92,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 873142532,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1a2adc0450250910",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1576422108,
@@ -2212,7 +4213,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969665,
-      "sourceLineNumber": 93
+      "sourceLineNumber": 93,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1689618485,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:daff75143fb2bf3b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1645965984,
@@ -2238,7 +4262,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 94
+      "sourceLineNumber": 94,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 735357859,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:0e06c135ae282cb0",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1219304803,
@@ -2261,7 +4308,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 95
+      "sourceLineNumber": 95,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:7dc51bc0b9ccd6a3",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1140177168,
@@ -2283,7 +4353,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 96
+      "sourceLineNumber": 96,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2133080253,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6970ed65bdafc5a7",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 31579840,
@@ -2306,7 +4399,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 97
+      "sourceLineNumber": 97,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:70d03206f79ecbd1",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1743984401,
@@ -2330,7 +4446,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 98
+      "sourceLineNumber": 98,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 405307007,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:59eb967765d937ec",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1920009842,
@@ -2356,7 +4495,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 99
+      "sourceLineNumber": 99,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 31041890,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:72740c37dfc42cba",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1859035548,
@@ -2381,7 +4543,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 100
+      "sourceLineNumber": 100,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 89816907,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:c5023a5f1c3ac2ce",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 787362195,
@@ -2409,7 +4594,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 101
+      "sourceLineNumber": 101,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1016385760,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:5986c36c0a3cd321",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1671839485,
@@ -2436,7 +4644,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 102
+      "sourceLineNumber": 102,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 413292306,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:dc21ab2310c18d3d",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1668505121,
@@ -2459,7 +4690,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 103
+      "sourceLineNumber": 103,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 463728167,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6bbd75a5d405dc74",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1162702145,
@@ -2484,7 +4738,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 104
+      "sourceLineNumber": 104,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1719765223,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:5c587c527ff0ca43",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 263665309,
@@ -2511,7 +4788,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 105
+      "sourceLineNumber": 105,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1383208152,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:e43870a0552f8113",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 81825410,
@@ -2536,7 +4836,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 106
+      "sourceLineNumber": 106,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1433810567,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:921dcd1071729248",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 893278070,
@@ -2561,7 +4884,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 107
+      "sourceLineNumber": 107,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1433810567,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:901169dbd911641a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1410337450,
@@ -2584,7 +4930,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 108
+      "sourceLineNumber": 108,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1082531611,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:9ec084aed1e27421",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1548996008,
@@ -2609,7 +4978,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 109
+      "sourceLineNumber": 109,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 398859205,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:b782604ebbe6b7aa",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 387492602,
@@ -2631,7 +5023,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969666,
-      "sourceLineNumber": 110
+      "sourceLineNumber": 110,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1711400117,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:38596b97cc46af89",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2079147923,
@@ -2673,7 +5088,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 111
+      "sourceLineNumber": 111,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 825183386,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:3824ff93e278b8c9",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1736500775,
@@ -2696,7 +5134,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 112
+      "sourceLineNumber": 112,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 342623995,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1892500d68cb7eaf",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 742306245,
@@ -2722,7 +5183,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 113
+      "sourceLineNumber": 113,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1002839764,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:ca18c2ed7553dafd",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1804924939,
@@ -2748,7 +5232,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 115
+      "sourceLineNumber": 115,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1393740940,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:a29ac880f0eac42f",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 308762355,
@@ -2771,7 +5278,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 116
+      "sourceLineNumber": 116,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 31041890,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:57d9fdea7dcfe5bc",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1518565384,
@@ -2792,7 +5322,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 117
+      "sourceLineNumber": 117,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2133080253,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:528a42f72b80d873",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 292250199,
@@ -2817,7 +5370,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 118
+      "sourceLineNumber": 118,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1637782129,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:fa0b76a7e3d78c22",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1769234963,
@@ -2842,7 +5418,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 119
+      "sourceLineNumber": 119,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 888749966,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:aaeeabb89c90623f",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1202090289,
@@ -2868,7 +5467,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 120
+      "sourceLineNumber": 120,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1393740940,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:37ea8d8a8322366c",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2129250730,
@@ -2893,7 +5515,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 121
+      "sourceLineNumber": 121,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 873142532,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:b85da07f392a778f",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 270145654,
@@ -2914,7 +5559,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 122
+      "sourceLineNumber": 122,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 680116887,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:501c32f6ab3b7c69",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 392804126,
@@ -2937,7 +5605,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 123
+      "sourceLineNumber": 123,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6f4d93ebee8b4abc",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2112957834,
@@ -2961,7 +5652,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 124
+      "sourceLineNumber": 124,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:095ec5f0a33f8c62",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1738262781,
@@ -2985,7 +5699,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 125
+      "sourceLineNumber": 125,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1016385760,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:5a070fe8a369ac16",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 470014842,
@@ -3010,7 +5747,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 126
+      "sourceLineNumber": 126,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1550837691,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:9a87c0c950c4a483",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 421483474,
@@ -3036,7 +5796,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 127
+      "sourceLineNumber": 127,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1557090037,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:b5576f96baa9ed27",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 594458765,
@@ -3062,7 +5845,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 128
+      "sourceLineNumber": 128,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 112130441,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:d62b2dd0af0319d4",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1458644793,
@@ -3085,7 +5891,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969667,
-      "sourceLineNumber": 129
+      "sourceLineNumber": 129,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1002839764,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:66831845dc993664",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 225361753,
@@ -3113,7 +5942,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 130
+      "sourceLineNumber": 130,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 888749966,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:014ff7cdfd3bea4a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 436968377,
@@ -3139,7 +5991,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 131
+      "sourceLineNumber": 131,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1217828948,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6e88403a6fc8b058",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 363638771,
@@ -3164,7 +6039,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 132
+      "sourceLineNumber": 132,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2093769319,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:162adb9e07aa32c6",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 523570035,
@@ -3189,7 +6087,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 133
+      "sourceLineNumber": 133,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 631118593,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:cf526c027e7f7113",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 588327786,
@@ -3212,7 +6133,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 134
+      "sourceLineNumber": 134,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:82f859ef9f447c00",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1387537427,
@@ -3236,7 +6180,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 135
+      "sourceLineNumber": 135,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1016385760,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1aaa5f25f52895da",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1887019159,
@@ -3260,7 +6227,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 136
+      "sourceLineNumber": 136,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 31041890,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1647d3f9b7f061eb",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 38854301,
@@ -3286,7 +6276,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 137
+      "sourceLineNumber": 137,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 89816907,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:4d40be92ef730c88",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1536348755,
@@ -3308,7 +6321,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 138
+      "sourceLineNumber": 138,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:0875fb32c5bf64cf",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1350372125,
@@ -3334,7 +6370,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 139
+      "sourceLineNumber": 139,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1082531611,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:8090cc1d9c51e774",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1480797025,
@@ -3359,7 +6418,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 140
+      "sourceLineNumber": 140,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 793956182,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:e7f03491eaefc1d3",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1605005032,
@@ -3384,7 +6466,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 141
+      "sourceLineNumber": 141,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1762929864,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:c5d5e7d21408c37b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 988123777,
@@ -3410,7 +6515,30 @@
       "venueType": "diy",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 142
+      "sourceLineNumber": 142,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 888749966,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:fbe2a50f734bf377",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 787687321,
@@ -3432,7 +6560,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 143
+      "sourceLineNumber": 143,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1393740940,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:a3e4c2feb0b7b505",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 840008895,
@@ -3456,7 +6607,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 144
+      "sourceLineNumber": 144,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1210289743,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1e55b6aa150f9c5e",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 156514227,
@@ -3481,7 +6655,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 145
+      "sourceLineNumber": 145,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 873142532,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:ff4e1a10bbf94508",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 493038704,
@@ -3507,7 +6704,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 146
+      "sourceLineNumber": 146,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1368465968,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:86d6e985480c46ab",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 933243707,
@@ -3532,7 +6752,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 147
+      "sourceLineNumber": 147,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1689618485,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:f0bccaa766ab9462",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 835242459,
@@ -3556,7 +6799,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 148
+      "sourceLineNumber": 148,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 680116887,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:5a057aa704086ea1",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 957827733,
@@ -3577,7 +6843,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 149
+      "sourceLineNumber": 149,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 881479351,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:2ff2d372166dc272",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 435215970,
@@ -3599,7 +6888,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 150
+      "sourceLineNumber": 150,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1531618194,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:18a5923647a22377",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 399455541,
@@ -3620,7 +6932,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 151
+      "sourceLineNumber": 151,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:5325fd10e4cf8372",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1517233231,
@@ -3644,7 +6979,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969668,
-      "sourceLineNumber": 152
+      "sourceLineNumber": 152,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:11471c6510018c68",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 14199322,
@@ -3669,7 +7027,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 153
+      "sourceLineNumber": 153,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 463728167,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:d297c9e41ddb0756",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 812852339,
@@ -3693,7 +7074,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 154
+      "sourceLineNumber": 154,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1016385760,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:f999dc099f75550d",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 429226143,
@@ -3715,7 +7119,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 155
+      "sourceLineNumber": 155,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 89816907,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:288b339981fe6087",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 919626956,
@@ -3737,7 +7164,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 156
+      "sourceLineNumber": 156,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2036943294,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6a3bf7f233b8750a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 57472751,
@@ -3760,7 +7210,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 157
+      "sourceLineNumber": 157,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 31041890,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:a5f02bc34a168436",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1605204796,
@@ -3785,7 +7258,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 158
+      "sourceLineNumber": 158,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1719765223,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:bd1babb465b4afd2",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1774982860,
@@ -3808,7 +7304,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 159
+      "sourceLineNumber": 159,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 793956182,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:64130b9a9bd9c9d4",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 283422175,
@@ -3831,7 +7350,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 160
+      "sourceLineNumber": 160,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1082531611,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:0abde25881c82952",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 120844899,
@@ -3856,7 +7398,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 161
+      "sourceLineNumber": 161,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 32234871,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:d624fad75163e236",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 2089177752,
@@ -3882,7 +7447,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 162
+      "sourceLineNumber": 162,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1925979067,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:6e40a765f972488b",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 1497627592,
@@ -3908,7 +7496,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 163
+      "sourceLineNumber": 163,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1953779877,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:2d929726eed1d779",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 22198719,
@@ -3933,7 +7544,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 164
+      "sourceLineNumber": 164,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 269944746,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:c871088a424828f6",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 672283,
@@ -3957,7 +7591,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 165
+      "sourceLineNumber": 165,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1715490423,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:5e9c61e74133542c",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     },
     {
       "id": 292808453,
@@ -3980,7 +7637,30 @@
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1787360969669,
-      "sourceLineNumber": 166
+      "sourceLineNumber": 166,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1190204401,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:56e18275e80a280a",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     }
   ]
 }

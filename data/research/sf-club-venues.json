@@ -1,0 +1,296 @@
+{
+  "investigatedOn": "2026-09-07",
+  "group": "clubs",
+  "venues": [
+    {
+      "venueIds": [405307007, 447883166],
+      "primaryVenueId": 405307007,
+      "venueNames": ["DNA Lounge", "the DNA Louge"],
+      "officialName": "DNA Lounge",
+      "website": "https://www.dnalounge.com/",
+      "calendarUrl": "https://www.dnalounge.com/calendar/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "official-calendar-with-robots-block-review-and-room-aware-manual-extraction",
+      "evidenceUrls": ["https://www.dnalounge.com/calendar/", "https://www.sf.gov/sites/default/files/2024-11/item_3d._lbr-2017-18-007_dna_lounge.pdf"],
+      "observations": [
+        "The official calendar URL is known, but web retrieval was denied by robots.txt; no current event fields or pagination behavior were verified from the first-party page.",
+        "The San Francisco Legacy Business record identifies DNA Lounge at 375 11th Street, San Francisco, CA 94103 and describes four performance spaces, all-ages/18+/21+ programming, music, dance, comedy and other performances.",
+        "Existing generated record 405307007 has address 375 11th Street at Harrison and city S.f; 447883166 is the misspelled alias the DNA Louge with blank address/city.",
+        "A deterministic adapter should treat official event detail URLs or provider IDs as candidates only after access is restored; preserve event kind, age, and room separately from ticket status, and keep source event identity in a ledger across edits or reschedules."
+      ],
+      "unknowns": [
+        "Provider, feed/API, full future horizon, stable event ID format, cancellation/status fields, and exact ticket host were not verified because the official calendar is blocked.",
+        "The official source was not checked for whether Above DNA has distinct event records versus a room label."
+      ]
+    },
+    {
+      "venueIds": [1009706718],
+      "venueNames": ["above DNA Lounge"],
+      "officialName": "Above DNA Lounge (separate room alias)",
+      "website": "https://www.dnalounge.com/",
+      "calendarUrl": "https://www.dnalounge.com/calendar/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "unverified",
+      "strategy": "retain-as-separate-room-until-official-calendar-room-label-is-confirmed",
+      "evidenceUrls": ["https://www.dnalounge.com/calendar/", "https://www.sf.gov/sites/default/files/2024-11/item_3d._lbr-2017-18-007_dna_lounge.pdf"],
+      "observations": [
+        "The generated dataset has a distinct venue ID 1009706718 named above DNA Lounge, with blank address and city S.f; it has two upcoming records and must not be silently folded into the DNA Lounge room.",
+        "The official Legacy Business record says DNA Lounge has four performance spaces, which is consistent with a possible room distinction but does not name Above DNA.",
+        "The source calendar is the same first-party DNA calendar URL; retrieval was blocked by robots.txt."
+      ],
+      "unknowns": [
+        "No first-party evidence was available to confirm the room name, room address, or whether room-specific records have separate provider IDs.",
+        "The same-date Johnny/Jonhhy Manchild records in generated DNA and Above DNA data are a duplicate or typo review candidate, not proof of two performances."
+      ]
+    },
+    {
+      "venueIds": [1433810567],
+      "venueNames": ["Kilowatt"],
+      "officialName": "Kilowatt",
+      "website": "https://kilowattbar.com/",
+      "calendarUrl": "https://kilowattbar.com/events",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "official-events-page-dom-extraction-with-client-rendering-check",
+      "evidenceUrls": ["https://kilowattbar.com/", "https://kilowattbar.com/events", "https://kilowattbar.com/contact"],
+      "observations": [
+        "Official site describes Kilowatt as a San Francisco music venue/bar and lists 3160 16th Street, San Francisco, CA 94103; contact page repeats the address and phone.",
+        "The official /events page is titled calendar but its fetched HTML exposes only search and calendar shell text; event cards did not render in the web check.",
+        "Proposed scope is weekly live music shows and DJ nights; ordinary bar activity is not an event candidate.",
+        "Existing generated record 1433810567 has address 3160 16th St. and city S.f."
+      ],
+      "unknowns": [
+        "Underlying calendar provider, event endpoint, pagination/full horizon, stable IDs, ticket hosts, status/cancellation, and field completeness require JavaScript-capable inspection.",
+        "No official feed URL was exposed in the retrieved page."
+      ]
+    },
+    {
+      "venueIds": [793956182],
+      "venueNames": ["Knockout", "The Knockout"],
+      "officialName": "The Knockout",
+      "website": "https://theknockoutsf.com/",
+      "calendarUrl": "https://theknockoutsf.com/events-2-1",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "verified",
+      "strategy": "squarespace-event-list-with-ical-links-and-stable-event-paths",
+      "evidenceUrls": ["https://theknockoutsf.com/calendar2", "https://theknockoutsf.com/events-2-1"],
+      "observations": [
+        "Official calendar page lists 3223 Mission St., San Francisco, CA 94110 and hours 6pm–2am daily; the existing generated address is 3223 Mission St. and city S.f.",
+        "The official events list is a Squarespace-style event collection with dated records, start/end times, descriptions, Google Calendar links and per-event ICS links; sampled event URLs include an opaque stable path token.",
+        "The fetched list covers current and future records from September through at least December 2026; no explicit page count was visible, so the full horizon needs a bounded date check.",
+        "Programming mixes band bills and matinees with karaoke, comedy, vinyl/DJ nights, trivia, and dance parties. Proposed scope includes live music, with recurring dance, karaoke, comedy and social events classified by event kind rather than turned into artist records."
+      ],
+      "unknowns": [
+        "No stable provider venue ID or ticket host was exposed; events use first-party pages and calendar exports.",
+        "Cancellation/status semantics and whether the opaque event path is immutable over edits are unverified."
+      ]
+    },
+    {
+      "venueIds": [1557090037],
+      "venueNames": ["Neck of the Woods"],
+      "officialName": "Neck of the Woods",
+      "website": "https://www.neckofthewoodssf.com/",
+      "calendarUrl": "https://www.neckofthewoodssf.com/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["www.ticketweb.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "verified",
+      "strategy": "official-wordpress-calendar-and-paginated-list-with-ticketweb-enrichment",
+      "evidenceUrls": ["https://www.neckofthewoodssf.com/", "https://www.neckofthewoodssf.com/about-us/", "https://www.neckofthewoodssf.com/contact/"],
+      "observations": [
+        "Official contact page gives 406 Clement Street, San Francisco, CA between 5th and 6th Avenue; the generated record says 406 Clement at 5th Avenue, city S.f.",
+        "The first-party WordPress page exposes dated event cards with title, show time, doors, prices, More Info and TicketWeb links. The visible list has numbered pagination through 12.",
+        "A sample event detail includes separate artist names and lineup, and the site describes two floors, local/touring acts, and both music and comedy/private events.",
+        "Use calendar/list discovery for live music; retain comedy, karaoke and salsa as explicit non-concert or review event kinds."
+      ],
+      "unknowns": [
+        "TicketWeb venue/event IDs are not exposed in the first-party HTML sample; do not key on title/date alone without canonical detail URL matching.",
+        "The 12-page list is a visible horizon snapshot, not proof that no later records exist."
+      ]
+    },
+    {
+      "venueIds": [1558756676],
+      "venueNames": ["Hotel Utah Saloon", "The Hotel Utah Saloon"],
+      "officialName": "The Hotel Utah Saloon",
+      "website": "https://hotelutah.com/",
+      "calendarUrl": "https://hotelutah.com/calendar/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["hotelutah.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "verified",
+      "strategy": "official-wordpress-calendar-with-seetickets-event-detail-enrichment",
+      "evidenceUrls": ["https://hotelutah.com/", "https://hotelutah.com/calendar/", "https://hotelutah.com/utah-booking-request/"],
+      "observations": [
+        "Official site lists 500 4th St., San Francisco, CA 94107 and presents the venue as a live-music saloon; the generated record has 500 4th St. at Bryant and city S.f.",
+        "The official calendar renders list and month views with title, date, genre, age (21+), price, show time and lineup. The observed month grid extends September 2026 through November 2026, with empty later months not establishing exhaustion.",
+        "First-party event detail paths use /seetickets-event/ naming, indicating a venue-side See Tickets integration, but no provider venue ID was visible.",
+        "Proposed scope is live music, open mics and bluegrass jams; use event kind for open mic/jam rather than treating the recurring title as an artist."
+      ],
+      "unknowns": [
+        "The direct calendar request timed out in one web check; test conditional retrieval, pagination/month navigation and event-detail availability before unattended use.",
+        "Exact external ticket host, stable provider event ID and cancellation/status mapping were not verified."
+      ]
+    },
+    {
+      "venueIds": [1925979067],
+      "venueNames": ["El Rio"],
+      "officialName": "El Rio",
+      "website": "https://www.elriosf.com/",
+      "calendarUrl": null,
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "official-squarespace-calendar-discovery-pending-rendered-target-resolution",
+      "evidenceUrls": ["https://www.elriosf.com/home", "https://www.elriosf.com/about/", "https://www.elriosf.com/faq"],
+      "observations": [
+        "Official pages identify El Rio as a queer neighborhood bar/community space/patio at 3158 Mission St, San Francisco, CA 94110; FAQ repeats the address and says the entry policy is 21+.",
+        "The home page has a View Calendar/Calendar CTA, but the web check returned the home page again and did not expose a dedicated calendar URL or current event cards.",
+        "Official About content describes live music, salsa, rock, country, pop, queer dance nights, drag shows and community benefits. Proposed scope is live music; classify dance/drag/community events by kind.",
+        "The FAQ says most tickets are day-of-show cash at door, with some presales controlled by event pages; no stable ticket host was verified."
+      ],
+      "unknowns": [
+        "Calendar target, provider, pagination/full horizon, event fields, stable IDs, status and feed are unknown until a JavaScript-capable page inspection resolves the CTA.",
+        "Existing generated record 1925979067 has address 3158 Mission Street at Cesar Chavez and city S.f.; no alias ID was located in the generated records."
+      ]
+    },
+    {
+      "venueIds": [321425008],
+      "venueNames": ["Eagle Tavern", "SF Eagle", "San Francisco Eagle", "The Eagle"],
+      "officialName": "SF Eagle",
+      "website": "https://sf-eagle.com/",
+      "calendarUrl": "https://sf-eagle.com/events/list/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "verified",
+      "strategy": "wordpress-events-calendar-with-ical-export-and-event-kind-filter",
+      "evidenceUrls": ["https://sf-eagle.com/", "https://sf-eagle.com/events/list/"],
+      "observations": [
+        "Official SF Eagle pages identify 398 12th Street, San Francisco, CA 94103 and the bar's weekly/monthly resident parties; the generated record is named Eagle Tavern at 398 12th St. and city S.f.",
+        "The official WordPress Events Calendar list exposes event title, date, start/end times, venue label, descriptions, list/month/day/photo/week views and Google/iCalendar/Outlook export links.",
+        "Observed programming includes beer bust, drag, karaoke, comedy, leather/community socials, resident DJ and dance nights, plus at least one live music bill. Proposed scope is music and clearly eventized programming; preserve kinds and do not fabricate bands from party names.",
+        "The official site uses SF Eagle/SF Eagle Bar in event venue labels; retain Eagle Tavern as a legacy alias for matching."
+      ],
+      "unknowns": [
+        "Exact ICS feed URL was not copied because the link target was not exposed in the bounded page output; discover it from the export link before using feedUrls.",
+        "WordPress event post IDs and cancellation/status conventions need fixture testing."
+      ]
+    },
+    {
+      "venueIds": [337931090, 398859205, 879587410],
+      "primaryVenueId": 337931090,
+      "venueNames": ["Makeout Room", "Make Out Room", "the Make-Out Room"],
+      "officialName": "Make Out Room",
+      "website": "https://www.makeoutroom.com/",
+      "calendarUrl": "https://www.makeoutroom.com/calendar.html",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["www.eventbrite.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "verified",
+      "strategy": "official-events-page-plus-calendarwiz-iframe-with-source-id-reconciliation",
+      "evidenceUrls": ["https://www.makeoutroom.com/", "https://www.makeoutroom.com/calendar.html", "https://www.makeoutroom.com/mhome.html"],
+      "observations": [
+        "Official home/contact content identifies Make Out Room at 3225 22nd Street & Mission, San Francisco, CA and describes a strictly 21+ club; generated canonical record 337931090 has the same address, while alias records 398859205 and 879587410 have blank addresses.",
+        "The official events page is a dated reverse-chronological list with title, DJ/artist or presenter names, genres/descriptions, door/show windows and prices. A sample links presale tickets to Eventbrite and many entries link to Instagram.",
+        "The dedicated calendar page embeds CalendarWiz; provider event IDs and full horizon were not exposed in the bounded output. The events page is the best first-party discovery surface and needs source-ID/URL reconciliation against the iframe; date/title matching is only a collision review aid, not authoritative identity.",
+        "Programming includes live band bills plus dance/DJ nights, drag, karaoke, storytelling and comedy. Proposed scope retains all records with explicit event-kind classification; do not infer performers from a themed dance title."
+      ],
+      "unknowns": [
+        "CalendarWiz account/calendar ID, pagination/exhaustion semantics, stable IDs and cancellation/status fields require iframe inspection.",
+        "Eventbrite is observed on one sample link only; presale hosts vary by promoter."
+      ]
+    },
+    {
+      "venueIds": [1082531611, 186436097],
+      "primaryVenueId": 1082531611,
+      "venueNames": ["the Black Cat", "the Black Cat S.F."],
+      "officialName": "Black Cat",
+      "website": "https://blackcatsf.com/",
+      "calendarUrl": "https://blackcatsf.turntabletickets.com/calendar",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["blackcatsf.turntabletickets.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "verified",
+      "strategy": "turntabletickets-show-list-and-calendar-with-show-and-occurrence-session-keying",
+      "evidenceUrls": ["https://blackcatsf.com/", "https://blackcatsf.turntabletickets.com/", "https://blackcatsf.turntabletickets.com/calendar", "https://blackcatsf.turntabletickets.com/shows/12455/2026-09-02"],
+      "observations": [
+        "Official Black Cat page gives 400 Eddy St., San Francisco, CA 94109 and describes a jazz supper club; generated canonical record 1082531611 has 400 Eddy Street and city S.f., while alias 186436097 is the Black Cat S.F. with blank address/city.",
+        "The first-party Turntable Tickets show list exposes title, date, ticket tiers, fee note, doors, one or two show sessions, descriptions and band lineup. The calendar route exists but initially returns a loading shell.",
+        "Sample stable show URLs use /shows/{numeric-show-id}/{date}; recurring/residency pages use /r/{slug}. Early and late ticketable performances must remain distinct occurrence/session keys (show ID + date + session); never collapse them solely because the source groups them on one page.",
+        "Proposed scope is live jazz/music programming; descriptions can contain full musician lineups, while the residency label is a series marker rather than an artist."
+      ],
+      "unknowns": [
+        "No Turntable venue ID was exposed; use numeric show IDs and canonical URL as the initial event key.",
+        "Calendar loading endpoint, full future horizon and cancellation/status representation require browser/fixture work."
+      ]
+    },
+    {
+      "venueIds": [549865205],
+      "venueNames": ["Great Northern"],
+      "officialName": "The Great Northern",
+      "website": "https://www.thegreatnorthernsf.com/",
+      "calendarUrl": "https://www.thegreatnorthernsf.com/",
+      "feedUrls": [],
+      "providerVenueIds": {"axs": "128662"},
+      "ticketHosts": ["www.axs.com", "www.eventbrite.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "official-upcoming-events-block-with-provider-reconciliation-across-axs-and-eventbrite",
+      "evidenceUrls": ["https://www.thegreatnorthernsf.com/", "https://www.thegreatnorthernsf.com/contact-us", "https://www.axs.com/venues/128662/the-great-northern-san-francisco-tickets/staticDetails"],
+      "observations": [
+        "Official home page contains an Upcoming Events section but the bounded HTML response exposes no event cards; official contact page prints 119 Utah St., San Francisco, CA 941o3 with a letter o in the ZIP.",
+        "The AXS venue page lists The Great Northern at 119 Utah Street, San Francisco, CA 94103 and exposes an 11-event sample with numeric AXS event IDs; one event is explicitly marked moved from Monarch.",
+        "Search-visible provider listings also show Eventbrite for at least one event, so provider parity must be reconciled rather than assuming AXS is exhaustive.",
+        "The venue hosts dance/electronic shows and multiple rooms/loft programming; preserve room labels when present and classify themed dance/tribute nights as events without creating named performers."
+      ],
+      "unknowns": [
+        "Official event provider, rendered full horizon, pagination, cancellation/status fields and provider parity are unknown because the first-party event section did not render.",
+        "The official ZIP typo should be corrected only after a first-party source presents 94103; the AXS listing is supporting evidence for that correction."
+      ]
+    },
+    {
+      "venueIds": [343961277],
+      "venueNames": ["Midway", "The Midway"],
+      "officialName": "The Midway SF",
+      "website": "https://themidwaysf.com/",
+      "calendarUrl": "https://themidwaysf.com/events/",
+      "feedUrls": [],
+      "providerVenueIds": {"ticketmasterWebsite": "230127"},
+      "ticketHosts": ["www.tixr.com", "www.ticketmaster.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "official-javascript-events-page-with-room-aware-tixr-and-ticketmaster-reconciliation",
+      "evidenceUrls": ["https://themidwaysf.com/", "https://themidwaysf.com/events/", "https://themidwaysf.com/connect/contact/", "https://themidwaysf.com/connect/venue-rental/", "https://www.ticketmaster.com/the-midway-billets-san-francisco/venue/230127"],
+      "observations": [
+        "Official site identifies The Midway at 900 Marin St., San Francisco, CA 94124 in Dogpatch and lists multiple rooms: RiDE, Gods & Monsters, The Terrace, 888 Garage and block parties.",
+        "The first-party /events/ page has an Upcoming Events component but explicitly reports JavaScript disabled/failed loading in the bounded retrieval; no full event inventory was available from the official HTML.",
+        "Official contact text directs ticket questions to the Tixr FAQ and names room choices; the Ticketmaster venue page exposes provider venue 230127 and a 19-event sample. Treat those as complementary observations pending parity testing.",
+        "The venue spans electronic/dance/live performances, workshops, art and culinary programming. Import music performances and clearly eventized shows; preserve room/session labels and classify non-music programming separately."
+      ],
+      "unknowns": [
+        "Tixr venue/account ID, official event API, pagination/full horizon, event status/cancellation fields and parity with Ticketmaster are unverified.",
+        "A Ticketmaster event venue match does not prove that all Midway rooms use the same provider venue ID."
+      ]
+    }
+  ]
+}

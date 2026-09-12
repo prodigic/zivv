@@ -7,6 +7,7 @@ import React from "react";
 import { useAppStore } from "@/stores/appStore.ts";
 import type { Event, Artist, ArtistId } from "@/types/events";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import { formatAddedDateLabel } from "@/lib/discovery.js";
 
 // City display name mapping
 const getCityDisplayName = (cityName: string): string => {
@@ -107,6 +108,11 @@ const EventCard: React.FC<EventCardProps> = ({
   const colorIndex = Math.abs(event.id) % colorVariants.length;
   const colors = colorVariants[colorIndex];
 
+  const addedLabel =
+    event.addedDateProvenance === "unknown"
+      ? null
+      : formatAddedDateLabel(event.createdAtEpochMs);
+
   // Create background text pattern
   const backgroundText = `${headlinerArtist?.name || "PUNK SHOW"} • ${venue?.name || "VENUE"} • `;
 
@@ -186,6 +192,12 @@ const EventCard: React.FC<EventCardProps> = ({
 
         {/* Main Content - Full Width */}
         <div className="p-6">
+          {addedLabel && (
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-purple-700 dark:text-purple-300">
+              {addedLabel}
+            </div>
+          )}
+
           {/* Main Artist Name - Full Width */}
           <h2
             className={`font-bold text-gray-900 mb-3 tracking-tight ${

@@ -28,6 +28,7 @@ coverage/
 test-results/
 playwright-report/
 *.html
+!src/test/fixtures/venues/**/*.html
 
 # Editor directories and files
 .vscode/*
@@ -63,7 +64,13 @@ pids
 
 # Parcel-bundler cache (https://parceljs.org/)
 .cache
+data/ingestion/.writer.lock
 .parcel-cache
+
+# Private ingestion inputs and audit artifacts stay out of public releases.
+data/latest.txt
+data/ingestion/ledger.json
+data/ingestion/reports/
 
 # Build tool output
 *.suo

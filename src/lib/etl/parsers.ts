@@ -154,7 +154,10 @@ export class EventParser {
 
     for (const rawEvent of rawEvents) {
       try {
-        const parsedDate = DateParser.parseEventDate(rawEvent.dateString, lastDateEpochMs);
+        const parsedDate = DateParser.parseEventDate(
+          rawEvent.dateString,
+          lastDateEpochMs
+        );
         if (!parsedDate) {
           errors.push({
             line: rawEvent.lineNumber,
@@ -203,11 +206,12 @@ export class EventParser {
         );
 
         // Check for duplicates
-        const eventKey = DeduplicationUtils.generateEventKey(
-          parsedDate.date,
-          venueInfo.venue,
-          headliner
-        );
+        const eventKey =
+          DeduplicationUtils.generateEventKey(
+            parsedDate.date,
+            venueInfo.venue,
+            headliner
+          ) + `-${venueInfo.time.startTime ?? "unknown"}`;
 
         if (eventKeys.has(eventKey)) {
           warnings.push({
@@ -255,7 +259,8 @@ export class EventParser {
         // Find or create venue — resolve alias first so variants map to canonical name/ID
         const resolvedVenueName =
           venueAliases[venueInfo.venue.toLowerCase()] ?? venueInfo.venue;
-        const normalizedVenueName = StringNormalizer.normalizeName(resolvedVenueName);
+        const normalizedVenueName =
+          StringNormalizer.normalizeName(resolvedVenueName);
         let venue = [...venueMap.values()].find(
           (v) => v.normalizedName === normalizedVenueName
         );
@@ -340,7 +345,7 @@ export class EventParser {
         };
 
         // Deduplicate: if the same headliner+venue already appears on the same
-        const dedupeKey = `${parsedDate.date}-${event.headlinerArtistId}-${event.venueId}`;
+        const dedupeKey = `${parsedDate.date}-${event.headlinerArtistId}-${event.venueId}-${startTimeEpochMs ?? "unknown"}`;
         if (!eventKeys.has(dedupeKey)) {
           eventKeys.add(dedupeKey);
           lastDateEpochMs = parsedDate.epochMs;

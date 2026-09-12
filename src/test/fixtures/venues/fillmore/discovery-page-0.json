@@ -1,0 +1,46 @@
+{
+  "_embedded": {
+    "events": [
+      {
+        "id": "FILL001",
+        "name": "Fixture Headliner",
+        "url": "https://www.ticketmaster.com/fixture-headliner/event/FILL001",
+        "dates": {
+          "start": {
+            "localDate": "2026-09-12",
+            "localTime": "20:00:00",
+            "dateTime": "2026-09-13T03:00:00Z",
+            "status": { "code": "onsale" }
+          },
+          "timezone": "America/Los_Angeles"
+        },
+        "_embedded": {
+          "venues": [{ "id": "KovZpZAE6eeA", "name": "The Fillmore" }],
+          "attractions": [{ "id": "artist-1", "name": "Fixture Headliner" }]
+        },
+        "classifications": [{ "primary": true, "segment": { "name": "Music" } }]
+      },
+      {
+        "id": "FILL002",
+        "name": "Fixture Band - Three (3) Show Ticket",
+        "url": "https://www.ticketmaster.com/fixture-band-pass/event/FILL002",
+        "dates": {
+          "start": {
+            "localDate": "2026-10-03",
+            "dateTime": "2026-10-03T07:00:01Z"
+          },
+          "end": { "localDate": "2026-10-05" },
+          "spanMultipleDays": true,
+          "timezone": "America/Los_Angeles"
+        },
+        "productType": "Package",
+        "_embedded": {
+          "venues": [{ "id": "KovZpZAE6eeA", "name": "The Fillmore" }],
+          "attractions": [{ "id": "artist-2", "name": "Fixture Band" }]
+        },
+        "classifications": [{ "primary": true, "segment": { "name": "Music" } }]
+      }
+    ]
+  },
+  "page": { "size": 2, "totalElements": 3, "totalPages": 2, "number": 0 }
+}

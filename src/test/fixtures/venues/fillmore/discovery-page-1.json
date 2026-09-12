@@ -1,0 +1,23 @@
+{
+  "_embedded": {
+    "events": [
+      {
+        "id": "FILL003",
+        "name": "Fixture Listing Without Artist Markup",
+        "url": "https://www.ticketmaster.com/fixture-review/event/FILL003",
+        "dates": {
+          "start": {
+            "localDate": "2026-10-10",
+            "dateTime": "2026-10-11T03:00:00Z"
+          },
+          "timezone": "America/Los_Angeles"
+        },
+        "_embedded": {
+          "venues": [{ "id": "KovZpZAE6eeA", "name": "The Fillmore" }]
+        },
+        "classifications": [{ "primary": true, "segment": { "name": "Music" } }]
+      }
+    ]
+  },
+  "page": { "size": 2, "totalElements": 3, "totalPages": 2, "number": 1 }
+}

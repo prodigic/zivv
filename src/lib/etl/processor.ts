@@ -1,544 +1,334 @@
 import {
-  readFileSync,
-  readdirSync,
-  writeFileSync,
-  unlinkSync,
   existsSync,
   mkdirSync,
+  readFileSync,
+  renameSync,
   statSync,
-} from "fs";
-import { join } from "path";
-import type { Event, Artist, Venue, ArtistUpcomingEvent, VenueUpcomingEvent } from "@/types/events.js";
+  writeFileSync,
+} from "node:fs";
+import { join, resolve } from "node:path";
+import { createHash, randomUUID } from "node:crypto";
+import type {
+  Event,
+  Artist,
+  Venue,
+  EventProvenance,
+} from "../../types/events.js";
 import type {
   DataManifest,
-  ProcessingResult,
-  ProcessingStats,
-  ProcessingError,
-  ProcessingWarning,
   FileInfo,
+  ProcessingResult,
+  RecentAdditionsIndex,
   SourceFileInfo,
-  ChunkInfo,
-} from "@/types/data.js";
-import { EventParser, VenueParser } from "./parsers.js";
+} from "../../types/data.js";
+import { loadLedger } from "../ingestion/ledger.js";
+import { withIngestionLock } from "../ingestion/lock.js";
+import { isEventUpcoming, localDateKey } from "../discovery.js";
 import { DataIndexer, DataChunker, SearchIndexBuilder } from "./indexer.js";
-import { normalizeLatestContent } from "./latest-content.js";
 
+/** Export the durable ledger. Rebuilding is deliberately not an import. */
 export class ETLProcessor {
-  private dataDir: string;
-  private outputDir: string;
-
+  private readonly projectRoot: string;
   constructor(projectRoot: string) {
-    this.dataDir = join(projectRoot, "data");
-    this.outputDir = join(projectRoot, "public", "data");
+    this.projectRoot = resolve(projectRoot);
   }
 
-  /**
-   * Main ETL processing pipeline
-   */
   async processData(): Promise<ProcessingResult> {
-    const startTime = Date.now();
-    const errors: ProcessingError[] = [];
-    const warnings: ProcessingWarning[] = [];
+    return withIngestionLock(this.projectRoot, () => this.exportData());
+  }
 
+  private async exportData(): Promise<ProcessingResult> {
+    const start = Date.now();
     try {
-      console.log("🚀 Starting ETL processing...");
-
-      // Ensure output directory exists
-      if (!existsSync(this.outputDir)) {
-        mkdirSync(this.outputDir, { recursive: true });
-      }
-
-      // Load existing createdAt timestamps to preserve them across runs
-      const existingCreatedAt = this.loadExistingCreatedAt();
-
-      // Parse the ingest date from the latest.txt header line:
-      // "funk-punk-thrash-ska  Upcoming shows of Interest May 8, 2026"
-      // Falls back to Date.now() if the file or header is absent.
-      const ingestTimestamp = this.readLatestTxtIngestDate();
-
-      // Remove stale event chunk files before writing new ones so old chunks
-      // from previous runs don't linger in public/data/
-      for (const f of readdirSync(this.outputDir)) {
-        if (f.startsWith("events-") && f.endsWith(".json")) {
-          unlinkSync(join(this.outputDir, f));
+      const ledger = await loadLedger(
+        join(this.projectRoot, "data/ingestion/ledger.json")
+      );
+      const events: Event[] = structuredClone(ledger.events);
+      const artists = structuredClone(ledger.artists);
+      const venues = structuredClone(ledger.venues);
+      const registryPath = join(this.projectRoot, "data/venue-sources.json");
+      if (existsSync(registryPath)) {
+        const registry = JSON.parse(readFileSync(registryPath, "utf8"));
+        const pilot = new Set([
+          "fillmore-sf",
+          "rickshaw-stop-sf",
+          "bottom-of-the-hill-sf",
+        ]);
+        for (const source of registry.sources ?? []) {
+          if (!pilot.has(source.sourceId)) continue;
+          const venue = venues.find((v) => v.id === source.venueId);
+          if (
+            !venue ||
+            venue.name !== source.venueName ||
+            new URL(source.website).protocol !== "https:"
+          )
+            throw new Error(
+              `Pilot source identity/website mismatch: ${source.sourceId}`
+            );
+          venue.website = source.website;
         }
       }
-
-      // Step 1: Read source files
-      console.log("📖 Reading source files...");
-      const { eventsContent, venuesContent, sourceFiles } =
-        this.readSourceFiles();
-
-      // Step 2: Parse events
-      console.log("🔍 Parsing events...");
-      const {
-        rawEvents,
-        errors: eventParseErrors,
-        warnings: eventParseWarnings,
-      } = EventParser.parseEventsFile(eventsContent);
-
-      errors.push(...eventParseErrors.map(this.toProcessingError));
-      warnings.push(...eventParseWarnings.map(this.toProcessingWarning));
-
-      // Step 3: Parse venues
-      console.log("🏛️  Parsing venues...");
-      const {
-        rawVenues,
-        errors: venueParseErrors,
-        warnings: venueParseWarnings,
-      } = VenueParser.parseVenuesFile(venuesContent);
-
-      errors.push(...venueParseErrors.map(this.toProcessingError));
-      warnings.push(...venueParseWarnings.map(this.toProcessingWarning));
-
-      // Step 4: Normalize data
-      console.log("🔧 Normalizing data...");
-      const artistMap = new Map<string, Artist>();
-      const venueMap = new Map<string, Venue>();
-      const venueAliases = this.loadVenueAliases();
-
-      const {
-        events,
-        errors: eventNormErrors,
-        warnings: eventNormWarnings,
-      } = EventParser.normalizeEvents(rawEvents, artistMap, venueMap, venueAliases);
-
-      errors.push(...eventNormErrors.map(this.toProcessingError));
-      warnings.push(...eventNormWarnings.map(this.toProcessingWarning));
-
-      const {
-        venues,
-        errors: venueNormErrors,
-        warnings: venueNormWarnings,
-      } = VenueParser.normalizeVenues(rawVenues, venueMap);
-
-      errors.push(...venueNormErrors.map(this.toProcessingError));
-      warnings.push(...venueNormWarnings.map(this.toProcessingWarning));
-
-      const artists = Array.from(artistMap.values());
-
-      // Set createdAtEpochMs: preserve existing timestamps for known events;
-      // stamp new events with the ingest date from latest.txt header.
-      for (const event of events) {
-        const prev = existingCreatedAt.get(event.id as number);
-        event.createdAtEpochMs = prev ?? ingestTimestamp;
-      }
-
-      // Update upcoming event counts and pre-compute per-artist event lists
-      this.updateUpcomingCounts(events, artists, venues);
-      this.computeArtistUpcomingEvents(events, artists, venues);
-      this.computeVenueUpcomingEvents(events, artists, venues);
-
-      console.log(
-        `✅ Processed ${events.length} events, ${artists.length} artists, ${venues.length} venues`
-      );
-
-      // Step 5: Build indexes
-      console.log("📇 Building indexes...");
+      this.validateReferences(events, artists, venues);
+      this.populateSummaries(events, artists, venues, start);
       const indexes = DataIndexer.buildIndexes(events, artists, venues);
-
-      // Step 6: Chunk events by month
-      console.log("📦 Chunking events...");
       const { chunks, chunkInfos } = DataChunker.chunkEventsByMonth(events);
-
-      // Step 7: Build search index
-      console.log("🔎 Building search index...");
       const { documents, terms } = SearchIndexBuilder.buildSearchIndex(
         events,
         artists,
         venues
       );
-
-      // Step 8: Write output files
-      console.log("💾 Writing output files...");
-      const manifest = this.createManifest(
-        events,
-        artists,
-        venues,
-        chunkInfos,
-        sourceFiles
+      const datasetVersion = new Date(start).toISOString();
+      const stage = join(
+        this.projectRoot,
+        ".cache",
+        `etl-export-${randomUUID()}`
       );
-
-      // Write chunks
-      for (const chunk of chunks) {
-        const filename = `events-${chunk.chunkId}.json`;
-        this.writeJSON(filename, chunk);
-      }
-
-      // Write other data files
-      this.writeJSON("artists.json", artists);
-      this.writeJSON("venues.json", venues);
-      this.writeJSON("indexes.json", indexes);
-      this.writeJSON("search-documents.json", documents);
-      this.writeJSON("search-terms.json", terms);
-      this.writeJSON("manifest.json", manifest);
-      this.copyLocalArtistExclude();
-
-      // Step 9: Generate stats
-      const processingTimeMs = Date.now() - startTime;
-      const stats: ProcessingStats = {
-        sourceEvents: rawEvents.length,
-        sourceVenues: rawVenues.length,
-        parsedEvents: events.length,
-        parsedVenues: venues.length,
-        parsedArtists: artists.length,
-        duplicateEventsRemoved: rawEvents.length - events.length,
-        duplicateArtistsRemoved: 0, // TODO: track this
-        duplicateVenuesRemoved: 0, // TODO: track this
-        validationErrors: errors.filter((e) => e.type === "validation").length,
-        validationWarnings: warnings.length,
-        processingTimeMs,
+      mkdirSync(stage, { recursive: true });
+      const write = (filename: string, data: unknown): FileInfo => {
+        const bytes = Buffer.from(JSON.stringify(data, null, 2) + "\n", "utf8");
+        writeFileSync(join(stage, filename), bytes);
+        return {
+          filename,
+          size: bytes.length,
+          checksum: this.checksum(bytes),
+          ...(Array.isArray(data) ? { recordCount: data.length } : {}),
+        };
+      };
+      chunks.forEach((chunk, i) =>
+        Object.assign(
+          chunkInfos[i],
+          write(`events-${chunk.chunkId}.json`, chunk)
+        )
+      );
+      const artistFile = write("artists.json", artists);
+      const venueFile = write("venues.json", venues);
+      const indexFile = write("indexes.json", indexes);
+      write("search-documents.json", documents);
+      write("search-terms.json", terms);
+      // Full-ledger compact index supports custom ranges and missed weekly runs.
+      const additions: RecentAdditionsIndex = {
+        schemaVersion: 1,
+        datasetVersion,
+        events: ledger.events.map((e) => ({
+          eventId: e.id,
+          chunkId: e.date.slice(0, 7),
+          createdAtEpochMs: e.createdAtEpochMs,
+          addedDateProvenance: e.addedDateProvenance,
+          firstImportedBy: e.firstImportedBy,
+          sourceKinds: [...new Set(e.sources.map((s) => s.kind))],
+        })),
+      };
+      const additionsFile = write("recent-additions.json", additions);
+      const dates = events.map((e) => e.dateEpochMs).sort((a, b) => a - b);
+      const first = dates[0] ?? start;
+      const last = dates.at(-1) ?? start;
+      const manifest: DataManifest = {
+        version: "2.0.0",
+        schemaVersion: "2.0.0",
+        datasetVersion,
+        lastUpdated: start,
+        processedAt: start,
+        latestIngestionDate:
+          localDateKey(
+            Math.max(0, ...ledger.events.map((e) => e.createdAtEpochMs || 0)),
+            "America/Los_Angeles"
+          ) ?? new Date(start).toISOString().slice(0, 10),
+        totalEvents: events.length,
+        totalArtists: artists.length,
+        totalVenues: venues.length,
+        dateRange: {
+          startEpochMs: first,
+          endEpochMs: last,
+          startDate: new Date(first).toISOString().slice(0, 10),
+          endDate: new Date(last).toISOString().slice(0, 10),
+        },
         chunks: {
-          total: chunks.length,
-          averageSize:
-            chunks.reduce((sum, chunk) => sum + chunk.events.length, 0) /
-            chunks.length,
-          largestSize: Math.max(...chunks.map((chunk) => chunk.events.length)),
+          events: chunkInfos,
+          artists: artistFile,
+          venues: venueFile,
+          indexes: indexFile,
+          recentAdditions: additionsFile,
+        },
+        sourceFiles: {
+          events: this.sourceInfo("events.txt"),
+          venues: this.sourceInfo("venues.txt"),
+          venueSources: this.sourceInfo("venue-sources.json"),
         },
       };
-
-      console.log(`🎉 ETL processing completed in ${processingTimeMs}ms`);
-      console.log(
-        `📊 Stats: ${stats.parsedEvents} events, ${stats.parsedArtists} artists, ${stats.parsedVenues} venues`
+      const weeklyPath = join(
+        this.projectRoot,
+        "data/ingestion/weekly-editions.json"
       );
-      console.log(`⚠️  ${errors.length} errors, ${warnings.length} warnings`);
-
+      if (existsSync(weeklyPath)) {
+        const { parseWeeklyEditionLedger } =
+          await import("../ingestion/weekly.js");
+        const weekly = parseWeeklyEditionLedger(
+          JSON.parse(readFileSync(weeklyPath, "utf8"))
+        );
+        const edition = [...weekly.editions].sort(
+          (a, b) => b.endEpochMs - a.endEpochMs
+        )[0];
+        if (edition)
+          manifest.weeklyEdition = {
+            editionId: edition.editionId,
+            startEpochMs: edition.startEpochMs,
+            endEpochMs: edition.endEpochMs,
+            eventIds: edition.eventIds.map(Number),
+            datasetVersion: edition.datasetVersion,
+          };
+      }
+      for (const name of ["local-artists.json", "local-artist-exclude.json"]) {
+        const file = join(this.projectRoot, "data", name);
+        if (existsSync(file))
+          writeFileSync(join(stage, name), readFileSync(file));
+      }
+      write("manifest.json", manifest);
+      // Paths are fixed children of the resolved project root. Preserve the old
+      // directory as rollback; failed replacement restores it immediately.
+      const output = join(this.projectRoot, "public/data");
+      const backup = join(
+        this.projectRoot,
+        ".cache",
+        `etl-backup-${randomUUID()}`
+      );
+      mkdirSync(join(this.projectRoot, "public"), { recursive: true });
+      const hadOutput = existsSync(output);
+      if (hadOutput) renameSync(output, backup);
+      try {
+        renameSync(stage, output);
+      } catch (error) {
+        if (hadOutput) renameSync(backup, output);
+        throw error;
+      }
       return {
-        success: errors.filter((e) => e.type === "critical").length === 0,
+        success: true,
         manifest,
-        stats,
-        errors,
-        warnings,
+        errors: [],
+        warnings: [],
+        stats: {
+          sourceEvents: events.length,
+          sourceVenues: venues.length,
+          parsedEvents: events.length,
+          parsedVenues: venues.length,
+          parsedArtists: artists.length,
+          duplicateEventsRemoved: 0,
+          duplicateArtistsRemoved: 0,
+          duplicateVenuesRemoved: 0,
+          validationErrors: 0,
+          validationWarnings: 0,
+          processingTimeMs: Date.now() - start,
+          chunks: {
+            total: chunks.length,
+            averageSize: chunks.length ? events.length / chunks.length : 0,
+            largestSize: Math.max(0, ...chunks.map((c) => c.events.length)),
+          },
+        },
       };
     } catch (error) {
-      const criticalError: ProcessingError = {
-        type: "critical",
-        message: `ETL processing failed: ${error}`,
-      };
-
       return {
         success: false,
-        manifest: {} as DataManifest, // Empty manifest on failure
-        stats: {} as ProcessingStats, // Empty stats on failure
-        errors: [criticalError, ...errors],
-        warnings,
+        manifest: {} as DataManifest,
+        stats: {} as ProcessingResult["stats"],
+        errors: [
+          {
+            type: "critical",
+            message: `ETL export failed: ${error instanceof Error ? error.message : String(error)}`,
+          },
+        ],
+        warnings: [],
       };
     }
   }
 
-  private copyLocalArtistExclude(): void {
-    const src = join(this.dataDir, "local-artist-exclude.json");
-    if (existsSync(src)) {
-      writeFileSync(join(this.outputDir, "local-artist-exclude.json"), readFileSync(src));
-    }
+  private checksum(bytes: string | Buffer): string {
+    return `sha256-${createHash("sha256").update(bytes).digest("hex")}`;
   }
 
-  private loadVenueAliases(): Record<string, string> {
-    const aliasPath = join(this.dataDir, "venue-aliases.json");
-    if (!existsSync(aliasPath)) return {};
-    try {
-      return JSON.parse(readFileSync(aliasPath, "utf-8"));
-    } catch {
-      return {};
-    }
-  }
-
-  private readLatestTxtIngestDate(): number {
-    const latestPath = join(this.dataDir, "latest.txt");
-    if (!existsSync(latestPath)) return Date.now();
-    try {
-      const firstLine = normalizeLatestContent(readFileSync(latestPath, "utf-8"))
-        .split("\n")
-        .find(l => l.trim()) ?? "";
-      // "funk-punk-thrash-ska  Upcoming shows of Interest May 8, 2026"
-      const m = firstLine.match(
-        /(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s+(\d{1,2}),?\s+(\d{4})/i
-      );
-      if (!m) return Date.now();
-      const months: Record<string, number> = {
-        jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11
-      };
-      const mon = months[m[1].slice(0, 3).toLowerCase()];
-      if (mon === undefined) return Date.now();
-      // Use noon UTC so the date reads consistently across all timezones
-      return Date.UTC(parseInt(m[3]), mon, parseInt(m[2]), 12, 0, 0);
-    } catch {
-      return Date.now();
-    }
-  }
-
-  private readSourceFiles(): {
-    eventsContent: string;
-    venuesContent: string;
-    sourceFiles: {
-      events: SourceFileInfo;
-      venues: SourceFileInfo;
-    };
-  } {
-    const eventsPath = join(this.dataDir, "events.txt");
-    const venuesPath = join(this.dataDir, "venues.txt");
-
-    if (!existsSync(eventsPath)) {
-      throw new Error(`Events file not found: ${eventsPath}`);
-    }
-    if (!existsSync(venuesPath)) {
-      throw new Error(`Venues file not found: ${venuesPath}`);
-    }
-
-    const eventsContent = readFileSync(eventsPath, "utf-8");
-    const venuesContent = readFileSync(venuesPath, "utf-8");
-
-    const eventsStats = statSync(eventsPath);
-    const venuesStats = statSync(venuesPath);
-
+  private sourceInfo(filename: string): SourceFileInfo {
+    const file = join(this.projectRoot, "data", filename);
+    const bytes = existsSync(file) ? readFileSync(file) : Buffer.from("");
     return {
-      eventsContent,
-      venuesContent,
-      sourceFiles: {
-        events: {
-          filename: "events.txt",
-          size: eventsStats.size,
-          lastModified: eventsStats.mtime.getTime(),
-          lineCount: eventsContent.split("\n").length,
-          checksum: this.calculateChecksum(eventsContent),
-        },
-        venues: {
-          filename: "venues.txt",
-          size: venuesStats.size,
-          lastModified: venuesStats.mtime.getTime(),
-          lineCount: venuesContent.split("\n").length,
-          checksum: this.calculateChecksum(venuesContent),
-        },
-      },
+      filename,
+      size: bytes.length,
+      checksum: this.checksum(bytes),
+      lineCount: bytes.toString("utf8").split(/\r?\n/).length,
+      lastModified: existsSync(file) ? statSync(file).mtimeMs : 0,
     };
   }
 
-  private updateUpcomingCounts(
+  private validateReferences(
     events: Event[],
     artists: Artist[],
     venues: Venue[]
   ): void {
-    const now = Date.now();
-
-    // Reset counts
-    artists.forEach((artist) => {
-      artist.upcomingEventCount = 0;
-      artist.upcomingEvents = [];
-    });
-    venues.forEach((venue) => {
-      venue.upcomingEventCount = 0;
-      venue.upcomingEvents = [];
-    });
-
-    // Count upcoming events
-    for (const event of events) {
-      if (event.dateEpochMs > now) {
-        // Update artist counts
-        for (const artistId of event.artistIds) {
-          const artist = artists.find((a) => a.id === artistId);
-          if (artist) {
-            artist.upcomingEventCount++;
-          }
-        }
-
-        // Update venue count
-        const venue = venues.find((v) => v.id === event.venueId);
-        if (venue) {
-          venue.upcomingEventCount++;
-        }
-      }
+    const artistIds = new Set(artists.map((a) => a.id));
+    const venueIds = new Set(venues.map((v) => v.id));
+    if (new Set(events.map((e) => e.id)).size !== events.length)
+      throw new Error("Duplicate canonical event IDs");
+    for (const e of events) {
+      if (
+        !venueIds.has(e.venueId) ||
+        !artistIds.has(e.headlinerArtistId) ||
+        e.artistIds.some((id) => !artistIds.has(id))
+      )
+        throw new Error(`Broken entity reference on event ${e.id}`);
+      if (!e.firstImportedBy || !e.sources?.length || !e.addedDateProvenance)
+        throw new Error(`Missing provenance on event ${e.id}`);
     }
   }
 
-  private computeArtistUpcomingEvents(
-    events: Event[],
-    artists: Artist[],
-    venues: Venue[]
-  ): void {
-    const now = Date.now();
-    const venueMap = new Map(venues.map((v) => [v.id, v]));
-    const artistMap = new Map(artists.map((a) => [a.id as number, a]));
-    const artistEventsMap = new Map<number, ArtistUpcomingEvent[]>();
-
-    for (const event of events) {
-      if (event.dateEpochMs <= now) continue;
-      const venue = venueMap.get(event.venueId);
-      const headliner = artistMap.get(event.headlinerArtistId as number);
-      const entry: ArtistUpcomingEvent = {
-        id: event.id,
-        slug: event.slug,
-        dateEpochMs: event.dateEpochMs,
-        startTimeEpochMs: event.startTimeEpochMs,
-        venueId: event.venueId,
-        venueName: venue?.name ?? "",
-        venueCity: venue?.city ?? "",
-        headlinerName: headliner?.name ?? "",
-        isFree: event.isFree,
-        isSoldOut: event.status === "sold-out" || event.tags.includes("sold-out"),
-        priceMin: event.priceMin,
-        priceMax: event.priceMax,
-        createdAtEpochMs: event.createdAtEpochMs,
-      };
-      for (const artistId of event.artistIds) {
-        let list = artistEventsMap.get(artistId as number);
-        if (!list) {
-          list = [];
-          artistEventsMap.set(artistId as number, list);
-        }
-        list.push(entry);
-      }
-    }
-
-    for (const artist of artists) {
-      const list = artistEventsMap.get(artist.id as number) ?? [];
-      list.sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-      artist.upcomingEvents = list;
-    }
-  }
-
-  private loadExistingCreatedAt(): Map<number, number> {
-    const map = new Map<number, number>();
-    if (!existsSync(this.outputDir)) return map;
-    const files = readdirSync(this.outputDir).filter(
-      (f) => f.startsWith("events-") && f.endsWith(".json")
-    );
-    for (const file of files) {
-      try {
-        const raw = readFileSync(join(this.outputDir, file), "utf-8");
-        const chunk = JSON.parse(raw);
-        if (Array.isArray(chunk.events)) {
-          for (const e of chunk.events) {
-            if (e.id && e.createdAtEpochMs) map.set(e.id, e.createdAtEpochMs);
-          }
-        }
-      } catch {
-        // ignore unreadable chunks
-      }
-    }
-    return map;
-  }
-
-  private computeVenueUpcomingEvents(
-    events: Event[],
-    artists: Artist[],
-    venues: Venue[]
-  ): void {
-    const now = Date.now();
-    const artistMap = new Map(artists.map((a) => [a.id as number, a]));
-    const venueEventsMap = new Map<number, VenueUpcomingEvent[]>();
-
-    for (const event of events) {
-      if (event.dateEpochMs <= now) continue;
-      const headliner = artistMap.get(event.headlinerArtistId as number);
-      const entry: VenueUpcomingEvent = {
-        id: event.id,
-        slug: event.slug,
-        dateEpochMs: event.dateEpochMs,
-        startTimeEpochMs: event.startTimeEpochMs,
-        headlinerName: headliner?.name ?? "",
-        isFree: event.isFree,
-        isSoldOut: event.status === "sold-out" || event.tags.includes("sold-out"),
-        priceMin: event.priceMin,
-        priceMax: event.priceMax,
-        createdAtEpochMs: event.createdAtEpochMs,
-      };
-      let list = venueEventsMap.get(event.venueId as number);
-      if (!list) {
-        list = [];
-        venueEventsMap.set(event.venueId as number, list);
-      }
-      list.push(entry);
-    }
-
-    for (const venue of venues) {
-      const list = venueEventsMap.get(venue.id as number) ?? [];
-      list.sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-      venue.upcomingEvents = list;
-    }
-  }
-
-  private createManifest(
+  private populateSummaries(
     events: Event[],
     artists: Artist[],
     venues: Venue[],
-    chunkInfos: ChunkInfo[],
-    sourceFiles: { events: SourceFileInfo; venues: SourceFileInfo }
-  ): DataManifest {
-    const eventDates = events.map((e) => e.dateEpochMs).sort((a, b) => a - b);
-    const startEpochMs = eventDates[0] || Date.now();
-    const endEpochMs = eventDates[eventDates.length - 1] || Date.now();
-
-    const latestIngestionDate = new Date(this.readLatestTxtIngestDate()).toISOString().split("T")[0];
-
-    return {
-      version: "1.1.0",
-      datasetVersion: new Date().toISOString(),
-      lastUpdated: Date.now(),
-      latestIngestionDate,
-      totalEvents: events.length,
-      totalArtists: artists.length,
-      totalVenues: venues.length,
-      dateRange: {
-        startEpochMs,
-        endEpochMs,
-        startDate: new Date(startEpochMs).toISOString().split("T")[0],
-        endDate: new Date(endEpochMs).toISOString().split("T")[0],
-      },
-      chunks: {
-        events: chunkInfos,
-        artists: this.createFileInfo("artists.json", artists),
-        venues: this.createFileInfo("venues.json", venues),
-        indexes: this.createFileInfo("indexes.json", {}), // Will be filled after writing
-      },
-      processedAt: Date.now(),
-      sourceFiles,
-      schemaVersion: "1.0.0",
-    };
-  }
-
-  private createFileInfo(filename: string, data: unknown): FileInfo {
-    const serialized = JSON.stringify(data);
-    return {
-      filename,
-      size: new Blob([serialized]).size,
-      checksum: this.calculateChecksum(serialized),
-      recordCount: Array.isArray(data) ? data.length : undefined,
-    };
-  }
-
-  private writeJSON(filename: string, data: unknown): void {
-    const filepath = join(this.outputDir, filename);
-    writeFileSync(filepath, JSON.stringify(data, null, 2), "utf-8");
-  }
-
-  private calculateChecksum(data: string): string {
-    let hash = 0;
-    for (let i = 0; i < data.length; i++) {
-      const char = data.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash;
+    now: number
+  ): void {
+    const artistMap = new Map(artists.map((a) => [a.id, a]));
+    const venueMap = new Map(venues.map((v) => [v.id, v]));
+    for (const entity of [...artists, ...venues]) {
+      entity.totalEventCount = 0;
+      entity.upcomingEventCount = 0;
+      entity.upcomingEvents = [];
     }
-    return `sha256-${Math.abs(hash).toString(16)}`;
-  }
-
-  private toProcessingError(error: { type?: string; message: string; line?: number; rawText?: string }): ProcessingError {
-    return {
-      type: error.type === "validation" ? "validation" : "data",
-      message: error.message,
-      sourceFile: "events.txt", // Could be improved to track actual source
-      lineNumber: error.line,
-      rawData: error.rawText,
-    };
-  }
-
-  private toProcessingWarning(warning: { message: string; line?: number }): ProcessingWarning {
-    return {
-      type: "data-quality",
-      message: warning.message,
-      sourceFile: "events.txt",
-      lineNumber: warning.line,
-    };
+    for (const e of events) {
+      const venue = venueMap.get(e.venueId)!;
+      const headliner = artistMap.get(e.headlinerArtistId)!;
+      venue.totalEventCount++;
+      e.artistIds.forEach((id) => artistMap.get(id)!.totalEventCount++);
+      if (!isEventUpcoming(e, now)) continue;
+      const provenance: EventProvenance = {
+        firstImportedBy: e.firstImportedBy,
+        addedDateProvenance: e.addedDateProvenance,
+        sources: e.sources,
+        timeBasis: e.timeBasis,
+      };
+      const summary = {
+        id: e.id,
+        slug: e.slug,
+        dateEpochMs: e.dateEpochMs,
+        startTimeEpochMs: e.startTimeEpochMs,
+        headlinerName: headliner.name,
+        isFree: e.isFree,
+        isSoldOut: e.status === "sold-out" || e.tags.includes("sold-out"),
+        priceMin: e.priceMin,
+        priceMax: e.priceMax,
+        createdAtEpochMs: e.createdAtEpochMs,
+        ...provenance,
+      };
+      venue.upcomingEventCount++;
+      venue.upcomingEvents.push(summary);
+      for (const id of e.artistIds) {
+        const artist = artistMap.get(id)!;
+        artist.upcomingEventCount++;
+        artist.upcomingEvents.push({
+          ...summary,
+          venueId: venue.id,
+          venueName: venue.name,
+          venueCity: venue.city,
+        });
+      }
+    }
+    for (const entity of [...artists, ...venues])
+      entity.upcomingEvents.sort((a, b) => a.dateEpochMs - b.dateEpochMs);
   }
 }
-
-// ETL processor class - use the separate script in scripts/run-etl.js to execute

@@ -75,7 +75,7 @@ export function isEpochTimestamp(value: unknown): value is number {
  */
 export function isAgeRestriction(value: unknown): value is AgeRestriction {
   const validAges: AgeRestriction[] = [
-    "all-ages", "18+", "21+", "16+", "8+", "5+", "6+"
+    "all-ages", "18+", "21+", "16+", "8+", "5+", "6+", "unknown"
   ];
   return typeof value === "string" && validAges.includes(value as AgeRestriction);
 }

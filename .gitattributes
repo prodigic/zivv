@@ -1,3 +1,8 @@
 
 # Use bd merge for beads JSONL files
 .beads/issues.jsonl merge=beads
+
+# Manifest checksums describe exact served bytes on every platform.
+public/data/*.json text eol=lf
+data/ingestion/*.json text eol=lf
+data/ingestion/reports/*.json text eol=lf

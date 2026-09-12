@@ -1,0 +1,104 @@
+{
+  "chunkId": "2027-06",
+  "dateRange": {
+    "startEpochMs": 1813320000000,
+    "endEpochMs": 1813406400000
+  },
+  "events": [
+    {
+      "id": 305072771,
+      "slug": "2027-06-18-the-airborne-toxic-event-the-guild-theater",
+      "date": "2027-06-18",
+      "dateEpochMs": 1813320000000,
+      "startTimeEpochMs": 1813374000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1724304682,
+      "artistIds": [
+        1724304682
+      ],
+      "venueId": 112130441,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [
+        "outdoor"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1266,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 112130441,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:1fd31e85e8a0008b",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
+      "id": 2039594270,
+      "slug": "2027-06-19-the-airborne-toxic-event-the-guild-theater",
+      "date": "2027-06-19",
+      "dateEpochMs": 1813406400000,
+      "startTimeEpochMs": 1813460400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1724304682,
+      "artistIds": [
+        1724304682
+      ],
+      "venueId": 112130441,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "notes": "96.5 FM; UK; https://mmhradio.co.uk/podcasts/losin-it-with-luscious/ [9]; every other Tuesday",
+      "status": "confirmed",
+      "tags": [
+        "outdoor",
+        "matinee",
+        "late-show"
+      ],
+      "venueType": "major",
+      "createdAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1267,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 112130441,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:cd97c41d2870d806",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    }
+  ]
+}

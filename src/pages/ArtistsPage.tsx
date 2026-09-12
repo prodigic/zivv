@@ -16,22 +16,14 @@ import NewBadge from "@/components/ui/NewBadge.js";
 
 const ArtistsPage: React.FC = () => {
   const artists = useAppStore((state) => state.artists);
-  const manifest = useAppStore((state) => state.manifest);
   const loading = useAppStore((state) => state.loading);
   const errors = useAppStore((state) => state.errors);
   const initialize = useAppStore((state) => state.initialize);
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
 
-  const { filters, setSearchQuery, clearSearch, updateFilter } =
+  const { filters, setSearchQuery, clearSearch } =
     useFilterStore();
   const navigate = useNavigate();
-
-  const goToVenue = (venueName: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    updateFilter("venues", [venueName]);
-    navigate("/");
-  };
   const location = useLocation();
 
   // Initialize display limit based on saved scroll position
@@ -355,9 +347,10 @@ const ArtistsPage: React.FC = () => {
                             priceMax={event.priceMax}
                             className="text-xs shrink-0"
                           />
-                          {manifest?.latestIngestionDate && (
-                            <NewBadge createdAtEpochMs={event.createdAtEpochMs} latestIngestionDate={manifest.latestIngestionDate} />
-                          )}
+                          <NewBadge
+                            createdAtEpochMs={event.createdAtEpochMs}
+                            addedDateProvenance={event.addedDateProvenance}
+                          />
                         </Link>
                       ))}
                     </div>

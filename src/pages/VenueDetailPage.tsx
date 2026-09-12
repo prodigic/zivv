@@ -101,8 +101,6 @@ const VenueDetailPage: React.FC = () => {
             <h2 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Upcoming Shows</h2>
             <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700">
               {venue.upcomingEvents.map((event) => {
-                const headliner = artists.get(event.id as unknown as never) ?? null; // handled below
-                void headliner;
                 const d = new Date(event.dateEpochMs);
                 return (
                   <Link

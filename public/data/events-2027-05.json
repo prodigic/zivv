@@ -10,7 +10,7 @@
       "slug": "2027-05-06-french-79-the-fillmore",
       "date": "2027-05-06",
       "dateEpochMs": 1809604800000,
-      "startTimeEpochMs": 1809633600000,
+      "startTimeEpochMs": 1809658800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 486483275,
       "artistIds": [
@@ -23,15 +23,124 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4653
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1263,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1136597428,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:20a112aae5e00739",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [
+        {
+          "field": "priceMax",
+          "existingValue": "undefined",
+          "incomingValue": 43.5,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "priceMin",
+          "existingValue": "undefined",
+          "incomingValue": 43.5,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1809633600000,
+          "incomingValue": 1809658800000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant",
+      "priceMin": 43.5,
+      "priceMax": 43.5
+    },
+    {
+      "id": 489208615,
+      "slug": "2027-05-15-the-liminanas-the-chapel",
+      "date": "2027-05-15",
+      "dateEpochMs": 1810382400000,
+      "startTimeEpochMs": 1810440000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1425243617,
+      "artistIds": [
+        1425243617,
+        1959777494
+      ],
+      "venueId": 680116887,
+      "priceMin": 30,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1264,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 680116887,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:89446a4750374209",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
     },
     {
       "id": 1053114888,
       "slug": "2027-05-16-valery-meladze-the-warfield",
       "date": "2027-05-16",
       "dateEpochMs": 1810468800000,
-      "startTimeEpochMs": 1810497600000,
+      "startTimeEpochMs": 1810522800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 367868544,
       "artistIds": [
@@ -39,13 +148,64 @@
       ],
       "venueId": 1531618194,
       "isFree": false,
-      "ageRestriction": "all-ages",
+      "ageRestriction": "6+",
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4655
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1265,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1531618194,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:e2e7051c7ef5eabd",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [
+        {
+          "field": "ageRestriction",
+          "existingValue": "all-ages",
+          "incomingValue": "6+",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1810497600000,
+          "incomingValue": 1810522800000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant"
     }
   ]
 }

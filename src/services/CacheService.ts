@@ -49,9 +49,11 @@ export class CacheService {
       const request = indexedDB.open(this.config.dbName, this.config.dbVersion);
 
       request.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed to open IndexedDB", {
-          error: request.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed to open IndexedDB", {
+            error: request.error,
+          })
+        );
       };
 
       request.onsuccess = () => {
@@ -61,7 +63,7 @@ export class CacheService {
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        
+
         // Delete existing store if it exists
         if (db.objectStoreNames.contains(this.config.storeName)) {
           db.deleteObjectStore(this.config.storeName);
@@ -83,27 +85,42 @@ export class CacheService {
   /**
    * Get data from cache
    */
-  async get<T>(key: string): Promise<T | null> {
+  async get<T>(key: string, expectedVersion?: string): Promise<T | null> {
     if (!this.db) {
       await this.initialize();
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readonly");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readonly"
+      );
       const store = transaction.objectStore(this.config.storeName);
       const request = store.get(key);
 
       request.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed to read from cache", {
-          key,
-          error: request.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed to read from cache", {
+            key,
+            error: request.error,
+          })
+        );
       };
 
       request.onsuccess = () => {
-        const result = request.result as (CacheEntry<T> & { key: string }) | undefined;
-        
+        const result = request.result as
+          (CacheEntry<T> & { key: string }) | undefined;
+
         if (!result) {
+          resolve(null);
+          return;
+        }
+
+        // A missing/expired manifest must not make stale data look current.
+        if (
+          expectedVersion !== undefined &&
+          result.version !== expectedVersion
+        ) {
           resolve(null);
           return;
         }
@@ -119,7 +136,7 @@ export class CacheService {
 
         // Update access time for LRU
         this.touchEntry(key).catch(console.error);
-        
+
         resolve(result.data);
       };
     });
@@ -154,16 +171,21 @@ export class CacheService {
     };
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readwrite");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readwrite"
+      );
       const store = transaction.objectStore(this.config.storeName);
       const request = store.put(entry);
 
       request.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed to write to cache", {
-          key,
-          size,
-          error: request.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed to write to cache", {
+            key,
+            size,
+            error: request.error,
+          })
+        );
       };
 
       request.onsuccess = () => {
@@ -183,12 +205,15 @@ export class CacheService {
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readwrite");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readwrite"
+      );
       const store = transaction.objectStore(this.config.storeName);
-      
+
       // First get the entry to update stats
       const getRequest = store.get(key);
-      
+
       getRequest.onsuccess = () => {
         const result = getRequest.result;
         if (result) {
@@ -198,12 +223,14 @@ export class CacheService {
 
         // Now delete the entry
         const deleteRequest = store.delete(key);
-        
+
         deleteRequest.onerror = () => {
-          reject(this.createError("CACHE_ERROR", "Failed to delete from cache", {
-            key,
-            error: deleteRequest.error,
-          }));
+          reject(
+            this.createError("CACHE_ERROR", "Failed to delete from cache", {
+              key,
+              error: deleteRequest.error,
+            })
+          );
         };
 
         deleteRequest.onsuccess = () => {
@@ -212,10 +239,12 @@ export class CacheService {
       };
 
       getRequest.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed to read before delete", {
-          key,
-          error: getRequest.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed to read before delete", {
+            key,
+            error: getRequest.error,
+          })
+        );
       };
     });
   }
@@ -229,16 +258,21 @@ export class CacheService {
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readwrite");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readwrite"
+      );
       const store = transaction.objectStore(this.config.storeName);
       const index = store.index("version");
       const request = index.openCursor(IDBKeyRange.only(version));
 
       request.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed to clear version", {
-          version,
-          error: request.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed to clear version", {
+            version,
+            error: request.error,
+          })
+        );
       };
 
       request.onsuccess = () => {
@@ -265,14 +299,19 @@ export class CacheService {
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readwrite");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readwrite"
+      );
       const store = transaction.objectStore(this.config.storeName);
       const request = store.clear();
 
       request.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed to clear cache", {
-          error: request.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed to clear cache", {
+            error: request.error,
+          })
+        );
       };
 
       request.onsuccess = () => {
@@ -308,7 +347,10 @@ export class CacheService {
     const maxAge = this.config.maxAge;
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readwrite");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readwrite"
+      );
       const store = transaction.objectStore(this.config.storeName);
       const index = store.index("timestamp");
       const request = index.openCursor();
@@ -316,25 +358,27 @@ export class CacheService {
       const entriesToDelete: string[] = [];
 
       request.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed during cleanup", {
-          error: request.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed during cleanup", {
+            error: request.error,
+          })
+        );
       };
 
       request.onsuccess = () => {
         const cursor = request.result;
         if (cursor) {
           const entry = cursor.value;
-          
+
           // Check if entry is expired
           if (now - entry.timestamp > maxAge) {
             entriesToDelete.push(entry.key);
           }
-          
+
           cursor.continue();
         } else {
           // Delete expired entries
-          Promise.all(entriesToDelete.map(key => this.delete(key)))
+          Promise.all(entriesToDelete.map((key) => this.delete(key)))
             .then(() => {
               this.stats.lastCleanup = now;
               resolve();
@@ -366,17 +410,23 @@ export class CacheService {
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readwrite");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readwrite"
+      );
       const store = transaction.objectStore(this.config.storeName);
       const index = store.index("timestamp");
       const request = index.openCursor();
 
-      const entries: Array<{ key: string; timestamp: number; size: number }> = [];
+      const entries: Array<{ key: string; timestamp: number; size: number }> =
+        [];
 
       request.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed during LRU eviction", {
-          error: request.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed during LRU eviction", {
+            error: request.error,
+          })
+        );
       };
 
       request.onsuccess = () => {
@@ -392,22 +442,22 @@ export class CacheService {
         } else {
           // Sort by timestamp (oldest first)
           entries.sort((a, b) => a.timestamp - b.timestamp);
-          
+
           // Delete entries until we have enough space
           let freedSpace = 0;
           const toDelete: string[] = [];
-          
+
           for (const entry of entries) {
             toDelete.push(entry.key);
             freedSpace += entry.size;
-            
+
             if (freedSpace >= spaceNeeded) {
               break;
             }
           }
 
           // Delete the selected entries
-          Promise.all(toDelete.map(key => this.delete(key)))
+          Promise.all(toDelete.map((key) => this.delete(key)))
             .then(() => resolve())
             .catch(reject);
         }
@@ -424,7 +474,10 @@ export class CacheService {
     }
 
     return new Promise((resolve) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readwrite");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readwrite"
+      );
       const store = transaction.objectStore(this.config.storeName);
       const getRequest = store.get(key);
 
@@ -453,7 +506,10 @@ export class CacheService {
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.config.storeName], "readonly");
+      const transaction = this.db!.transaction(
+        [this.config.storeName],
+        "readonly"
+      );
       const store = transaction.objectStore(this.config.storeName);
       const request = store.openCursor();
 
@@ -461,9 +517,11 @@ export class CacheService {
       let entryCount = 0;
 
       request.onerror = () => {
-        reject(this.createError("CACHE_ERROR", "Failed to recalculate stats", {
-          error: request.error,
-        }));
+        reject(
+          this.createError("CACHE_ERROR", "Failed to recalculate stats", {
+            error: request.error,
+          })
+        );
       };
 
       request.onsuccess = () => {

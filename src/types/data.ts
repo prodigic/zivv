@@ -6,6 +6,32 @@ import type {
   ArtistId,
   VenueId,
 } from "./events.js";
+import type {
+  AddedDateProvenance,
+  FirstImportedBy,
+  SourceKind,
+} from "./ingestion.js";
+
+export interface RecentAdditionsIndex {
+  schemaVersion: 1;
+  datasetVersion: string;
+  events: {
+    eventId: EventId;
+    chunkId: string;
+    createdAtEpochMs: number;
+    addedDateProvenance: AddedDateProvenance;
+    firstImportedBy: FirstImportedBy;
+    sourceKinds: SourceKind[];
+  }[];
+}
+
+export interface WeeklyEditionSummary {
+  editionId: string;
+  startEpochMs: number;
+  endEpochMs: number;
+  eventIds: number[];
+  datasetVersion: string;
+}
 
 // Data manifest - describes the structure and metadata of processed data
 export interface DataManifest {
@@ -13,6 +39,7 @@ export interface DataManifest {
   datasetVersion: string; // e.g., "2024-08-15T10:30:00Z"
   lastUpdated: number; // epoch milliseconds
   latestIngestionDate: string; // ISO date of the most recent event batch (YYYY-MM-DD)
+  weeklyEdition?: WeeklyEditionSummary;
 
   // Statistics
   totalEvents: number;
@@ -33,6 +60,7 @@ export interface DataManifest {
     artists: FileInfo;
     venues: FileInfo;
     indexes: FileInfo;
+    recentAdditions?: FileInfo;
   };
 
   // Processing metadata
@@ -40,6 +68,8 @@ export interface DataManifest {
   sourceFiles: {
     events: SourceFileInfo;
     venues: SourceFileInfo;
+    ingestion?: SourceFileInfo;
+    venueSources?: SourceFileInfo;
   };
 
   // Schema version for compatibility

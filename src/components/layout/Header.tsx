@@ -7,8 +7,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useFilterStore } from "@/stores/filterStore.ts";
 import { useAppStore } from "@/stores/appStore.ts";
 import { CompactDarkModeToggle } from "@/components/ui/DarkModeToggle.tsx";
-import { FilterButton, FilterModal } from "@/components/filters/FilterModalContext";
-import { SearchFilterToolbar } from "@/components/filters";
+import { FilterButton } from "@/components/filters/FilterModalContext";
 import type { Event } from "@/types/events";
 
 interface HeaderProps {

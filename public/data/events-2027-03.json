@@ -10,7 +10,7 @@
       "slug": "2027-03-13-alok-the-fox-theater",
       "date": "2027-03-13",
       "dateEpochMs": 1804939200000,
-      "startTimeEpochMs": 1804968000000,
+      "startTimeEpochMs": 1804996800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1971870822,
       "artistIds": [
@@ -23,8 +23,126 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784894400000,
-      "updatedAtEpochMs": 1787360970306,
-      "sourceLineNumber": 4641
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1253,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 631118593,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:36fd328f0885f4bf",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [
+        {
+          "field": "notes",
+          "existingValue": "undefined",
+          "incomingValue": "seated",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "priceMax",
+          "existingValue": "undefined",
+          "incomingValue": 78,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "priceMin",
+          "existingValue": "undefined",
+          "incomingValue": 43,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1804968000000,
+          "incomingValue": 1804996800000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1789172046956,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant",
+      "priceMin": 43,
+      "priceMax": 78,
+      "notes": "seated"
+    },
+    {
+      "id": 217064491,
+      "slug": "2027-03-14-alok-the-catalyst",
+      "date": "2027-03-14",
+      "dateEpochMs": 1805025600000,
+      "startTimeEpochMs": 1805079600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1971870822,
+      "artistIds": [
+        1971870822
+      ],
+      "venueId": 1715490423,
+      "priceMin": 34.12,
+      "priceMax": 65.24,
+      "isFree": false,
+      "ageRestriction": "16+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1251,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1715490423,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:58e24e26fdc4d426",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
     },
     {
       "id": 931419921,
@@ -48,7 +166,76 @@
       "venueType": "major",
       "createdAtEpochMs": 1783684800000,
       "updatedAtEpochMs": 1787360970306,
-      "sourceLineNumber": 4643
+      "sourceLineNumber": 4643,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1711400117,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:4b9ad38e0f625aae",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
+    },
+    {
+      "id": 1492261871,
+      "slug": "2027-03-25-kid-francescoll-august-hall",
+      "date": "2027-03-25",
+      "dateEpochMs": 1805976000000,
+      "startTimeEpochMs": 1806030000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1124505111,
+      "artistIds": [
+        1124505111
+      ],
+      "venueId": 811075932,
+      "priceMin": 39.3,
+      "priceMax": 39.3,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1789172046956,
+      "updatedAtEpochMs": 1789172046956,
+      "sourceLineNumber": 1254,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789172046956,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789172046956,
+          "contentHash": "fnv1a64:246839b094f5b063",
+          "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
     },
     {
       "id": 497376960,
@@ -69,7 +256,30 @@
       "venueType": "major",
       "createdAtEpochMs": 1786708800000,
       "updatedAtEpochMs": 1787360970307,
-      "sourceLineNumber": 4644
+      "sourceLineNumber": 4644,
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": null,
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1383208152,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:f11caeac7df9a5a2",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": [],
+      "timeBasis": "legacy-wall-clock"
     }
   ]
 }

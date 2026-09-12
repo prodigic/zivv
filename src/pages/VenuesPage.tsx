@@ -15,13 +15,24 @@ import { useAppStore } from "@/stores/appStore.js";
 import { useFilterStore } from "@/stores/filterStore.js";
 import { DatePagination } from "@/components/ui/DatePagination.js";
 
+const CITY_ORDER = [
+  "San Francisco", "Oakland", "Berkeley", "San Jose",
+  "Albany", "Emeryville", "Alameda", "Richmond", "El Cerrito",
+  "Hayward", "Daly City", "Pacifica",
+  "Santa Cruz", "Santa Rosa", "Santa Clara",
+  "Mountain View", "Palo Alto", "Saratoga",
+  "Napa", "Sonoma", "Petaluma", "Novato", "Rohnert Park",
+  "Mill Valley", "Walnut Creek", "Concord", "Vallejo",
+  "Crockett", "Fairfield", "Felton", "Salinas", "Memlo", "Piedmont",
+  "Other",
+];
+
 const VenuesPage: React.FC = () => {
   const venues = useAppStore((state) => state.venues);
   const loading = useAppStore((state) => state.loading);
   const errors = useAppStore((state) => state.errors);
   const initialize = useAppStore((state) => state.initialize);
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
-  const manifest = useAppStore((state) => state.manifest);
 
   const { filters, updateFilter, clearFilter } = useFilterStore();
   const navigate = useNavigate();
@@ -121,18 +132,6 @@ const VenuesPage: React.FC = () => {
     return city || "Other";
   };
 
-  // Preferred city order
-  const CITY_ORDER = [
-    "San Francisco", "Oakland", "Berkeley", "San Jose",
-    "Albany", "Emeryville", "Alameda", "Richmond", "El Cerrito",
-    "Hayward", "Daly City", "Pacifica",
-    "Santa Cruz", "Santa Rosa", "Santa Clara",
-    "Mountain View", "Palo Alto", "Saratoga",
-    "Napa", "Sonoma", "Petaluma", "Novato", "Rohnert Park",
-    "Mill Valley", "Walnut Creek", "Concord", "Vallejo",
-    "Crockett", "Fairfield", "Felton", "Salinas", "Memlo", "Piedmont",
-    "Other",
-  ];
 
   const allVenuesArray = React.useMemo(() => {
     let arr = Array.from(venues.values());
@@ -362,9 +361,10 @@ const VenuesPage: React.FC = () => {
                       {event.headlinerName || "Show"}
                     </span>
                     <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
-                    {manifest?.latestIngestionDate && (
-                      <NewBadge createdAtEpochMs={event.createdAtEpochMs} latestIngestionDate={manifest.latestIngestionDate} />
-                    )}
+                    <NewBadge
+                      createdAtEpochMs={event.createdAtEpochMs}
+                      addedDateProvenance={event.addedDateProvenance}
+                    />
                   </Link>
                 ))}
               </div>

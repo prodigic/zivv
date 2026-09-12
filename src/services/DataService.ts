@@ -15,6 +15,7 @@ import type {
 import type {
   DataManifest,
   DataIndexes,
+  RecentAdditionsIndex,
 } from "@/types/data.js";
 import type {
   DataServiceConfig,
@@ -39,7 +40,7 @@ export class DataService {
   constructor(config: Partial<DataServiceConfig> = {}) {
     this.config = {
       baseUrl: import.meta.env.DEV ? "/data" : "/zivv/data",
-      cacheName: "zivv-data-v5",
+      cacheName: "zivv-data-v6",
       maxCacheSize: 50 * 1024 * 1024, // 50MB
       maxCacheAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       retryAttempts: 3,
@@ -59,14 +60,14 @@ export class DataService {
    */
   async initialize(): Promise<void> {
     await this.cache.initialize();
-    
+
     // Load manifest first to check data version
     await this.loadManifest();
-    
+
     // Load core data (artists, venues, indexes)
     await Promise.all([
       this.loadArtists(),
-      this.loadVenues(), 
+      this.loadVenues(),
       this.loadIndexes(),
     ]);
   }
@@ -76,7 +77,7 @@ export class DataService {
    */
   async loadManifest(): Promise<DataManifest> {
     const cacheKey = "manifest";
-    
+
     // Always load from network first to check for version changes
     const networkManifest = await this.fetchWithRetry<DataManifest>(
       `${this.config.baseUrl}/manifest.json`
@@ -84,11 +85,15 @@ export class DataService {
 
     // Check if we have cached data and if versions match
     const cached = await this.cache.get<DataManifest>(cacheKey);
-    
-    if (cached && cached.datasetVersion !== networkManifest.datasetVersion) {
-      console.log(`🔄 Dataset version changed: ${cached.datasetVersion} → ${networkManifest.datasetVersion}`);
+
+    const previousVersion =
+      this.manifest?.datasetVersion ?? cached?.datasetVersion;
+    if (previousVersion && previousVersion !== networkManifest.datasetVersion) {
+      console.log(
+        `🔄 Dataset version changed: ${previousVersion} → ${networkManifest.datasetVersion}`
+      );
       // Clear old version from cache
-      await this.cache.clearVersion(cached.datasetVersion);
+      await this.cache.clearVersion(previousVersion);
       // Clear in-memory data
       this.artists.clear();
       this.venues.clear();
@@ -98,8 +103,12 @@ export class DataService {
     }
 
     // Cache the new manifest
-    await this.cache.set(cacheKey, networkManifest, networkManifest.datasetVersion);
-    
+    await this.cache.set(
+      cacheKey,
+      networkManifest,
+      networkManifest.datasetVersion
+    );
+
     this.manifest = networkManifest;
     return networkManifest;
   }
@@ -113,12 +122,15 @@ export class DataService {
     }
 
     const cacheKey = "artists";
-    const manifest = await this.loadManifest();
-    
+    const manifest = this.manifest ?? (await this.loadManifest());
+
     // Try cache first
-    const cached = await this.cache.get<Artist[]>(cacheKey);
+    const cached = await this.cache.get<Artist[]>(
+      cacheKey,
+      manifest.datasetVersion
+    );
     if (cached) {
-      cached.forEach(artist => this.artists.set(artist.id, artist));
+      cached.forEach((artist) => this.artists.set(artist.id, artist));
       return cached;
     }
 
@@ -129,8 +141,8 @@ export class DataService {
 
     // Cache and store
     await this.cache.set(cacheKey, artists, manifest.datasetVersion);
-    artists.forEach(artist => this.artists.set(artist.id, artist));
-    
+    artists.forEach((artist) => this.artists.set(artist.id, artist));
+
     return artists;
   }
 
@@ -143,12 +155,15 @@ export class DataService {
     }
 
     const cacheKey = "venues";
-    const manifest = await this.loadManifest();
-    
+    const manifest = this.manifest ?? (await this.loadManifest());
+
     // Try cache first
-    const cached = await this.cache.get<Venue[]>(cacheKey);
+    const cached = await this.cache.get<Venue[]>(
+      cacheKey,
+      manifest.datasetVersion
+    );
     if (cached) {
-      cached.forEach(venue => this.venues.set(venue.id, venue));
+      cached.forEach((venue) => this.venues.set(venue.id, venue));
       return cached;
     }
 
@@ -159,8 +174,8 @@ export class DataService {
 
     // Cache and store
     await this.cache.set(cacheKey, venues, manifest.datasetVersion);
-    venues.forEach(venue => this.venues.set(venue.id, venue));
-    
+    venues.forEach((venue) => this.venues.set(venue.id, venue));
+
     return venues;
   }
 
@@ -173,10 +188,13 @@ export class DataService {
     }
 
     const cacheKey = "indexes";
-    const manifest = await this.loadManifest();
-    
+    const manifest = this.manifest ?? (await this.loadManifest());
+
     // Try cache first
-    const cached = await this.cache.get<DataIndexes>(cacheKey);
+    const cached = await this.cache.get<DataIndexes>(
+      cacheKey,
+      manifest.datasetVersion
+    );
     if (cached) {
       this.indexes = cached;
       return cached;
@@ -190,22 +208,43 @@ export class DataService {
     // Cache and store
     await this.cache.set(cacheKey, indexes, manifest.datasetVersion);
     this.indexes = indexes;
-    
+
     return indexes;
   }
 
   /**
    * Load a specific event chunk
    */
+  async loadRecentAdditions(): Promise<RecentAdditionsIndex | null> {
+    const manifest = this.manifest ?? (await this.loadManifest());
+    const file = manifest.chunks.recentAdditions;
+    if (!file) return null;
+    const cached = await this.cache.get<RecentAdditionsIndex>(
+      "recent-additions",
+      manifest.datasetVersion
+    );
+    if (cached?.datasetVersion === manifest.datasetVersion) return cached;
+    const index = await this.fetchWithRetry<RecentAdditionsIndex>(
+      `${this.config.baseUrl}/${file.filename}`
+    );
+    if (
+      index.schemaVersion !== 1 ||
+      index.datasetVersion !== manifest.datasetVersion ||
+      !Array.isArray(index.events)
+    ) {
+      throw new Error(
+        "Recent additions do not match the current dataset. Refresh to retry."
+      );
+    }
+    await this.cache.set("recent-additions", index, manifest.datasetVersion);
+    return index;
+  }
+
   async loadChunk(
     chunkId: string,
     options: LoadChunkOptions = {}
   ): Promise<Event[]> {
-    const {
-      useCache = true,
-      priority = "normal",
-      signal,
-    } = options;
+    const { useCache = true, priority = "normal", signal } = options;
 
     // Check if already loaded in memory
     if (this.loadedChunks.has(chunkId)) {
@@ -217,14 +256,17 @@ export class DataService {
     const cacheKey = `chunk-${chunkId}`;
     const startTime = Date.now();
     let fromCache = false;
-    
+
     try {
-      const manifest = await this.loadManifest();
-      
+      const manifest = this.manifest ?? (await this.loadManifest());
+
       // Try cache first if enabled
       let chunkData: EventChunk | null = null;
       if (useCache) {
-        chunkData = await this.cache.get<EventChunk>(cacheKey);
+        chunkData = await this.cache.get<EventChunk>(
+          cacheKey,
+          manifest.datasetVersion
+        );
         if (chunkData) {
           fromCache = true;
         }
@@ -245,7 +287,7 @@ export class DataService {
 
       // Store events in memory
       const events = chunkData.events;
-      events.forEach(event => this.events.set(event.id, event));
+      events.forEach((event) => this.events.set(event.id, event));
 
       // Track chunk metadata
       const metadata: ChunkMetadata = {
@@ -268,7 +310,6 @@ export class DataService {
       this.recordMetrics(metrics);
 
       return events;
-
     } catch (error) {
       throw this.createDataError(
         "NETWORK_ERROR",
@@ -304,10 +345,10 @@ export class DataService {
 
     // Load required chunks and return events
     const chunks = this.getChunksForEventIds(eventIds);
-    await Promise.all(chunks.map(chunkId => this.loadChunk(chunkId)));
+    await Promise.all(chunks.map((chunkId) => this.loadChunk(chunkId)));
 
     return eventIds
-      .map(id => this.events.get(id))
+      .map((id) => this.events.get(id))
       .filter((event): event is Event => event !== undefined);
   }
 
@@ -323,7 +364,7 @@ export class DataService {
 
     // Find which chunk contains this event
     const chunkId = this.findChunkForEvent(eventId);
-    
+
     if (!chunkId) {
       return null;
     }
@@ -353,7 +394,7 @@ export class DataService {
   async searchEvents(query: string): Promise<Event[]> {
     const indexes = await this.loadIndexes();
     const normalizedQuery = query.toLowerCase().trim();
-    
+
     if (!normalizedQuery) {
       return [];
     }
@@ -364,7 +405,7 @@ export class DataService {
     for (const [name, artistId] of Object.entries(indexes.artistsByName)) {
       if (name.includes(normalizedQuery)) {
         const eventIds = indexes.eventsByArtist[artistId] || [];
-        eventIds.forEach(id => matchingEventIds.add(id));
+        eventIds.forEach((id) => matchingEventIds.add(id));
       }
     }
 
@@ -372,17 +413,17 @@ export class DataService {
     for (const [name, venueId] of Object.entries(indexes.venuesByName)) {
       if (name.includes(normalizedQuery)) {
         const eventIds = indexes.eventsByVenue[venueId] || [];
-        eventIds.forEach(id => matchingEventIds.add(id));
+        eventIds.forEach((id) => matchingEventIds.add(id));
       }
     }
 
     // Load required chunks
     const chunks = this.getChunksForEventIds(Array.from(matchingEventIds));
-    await Promise.all(chunks.map(chunkId => this.loadChunk(chunkId)));
+    await Promise.all(chunks.map((chunkId) => this.loadChunk(chunkId)));
 
     // Return matching events
     return Array.from(matchingEventIds)
-      .map(id => this.events.get(id))
+      .map((id) => this.events.get(id))
       .filter((event): event is Event => event !== undefined);
   }
 
@@ -394,7 +435,7 @@ export class DataService {
     if (this.manifest) {
       await this.cache.clearVersion(this.manifest.datasetVersion);
     }
-    
+
     // Clear current data
     this.manifest = null;
     this.artists.clear();
@@ -445,7 +486,7 @@ export class DataService {
 
     // Remove events from this chunk
     const chunkEvents = this.getEventsForChunk(chunkId);
-    chunkEvents.forEach(event => this.events.delete(event.id));
+    chunkEvents.forEach((event) => this.events.delete(event.id));
 
     // Remove chunk metadata
     this.loadedChunks.delete(chunkId);
@@ -466,7 +507,7 @@ export class DataService {
         const response = await fetch(url, {
           ...options,
           headers: {
-            'Accept': 'application/json',
+            Accept: "application/json",
             ...options.headers,
           },
         });
@@ -475,19 +516,18 @@ export class DataService {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        return await response.json() as T;
-
+        return (await response.json()) as T;
       } catch (error) {
         lastError = error as Error;
-        
+
         // Don't retry on abort
-        if (error instanceof Error && error.name === 'AbortError') {
+        if (error instanceof Error && error.name === "AbortError") {
           throw error;
         }
 
         // Wait before retry (except on last attempt)
         if (attempt < this.config.retryAttempts) {
-          await new Promise(resolve => 
+          await new Promise((resolve) =>
             setTimeout(resolve, this.config.retryDelay * attempt)
           );
         }
@@ -498,21 +538,21 @@ export class DataService {
   }
 
   private getEventsForChunk(chunkId: string): Event[] {
-    return Array.from(this.events.values()).filter(event => {
+    return Array.from(this.events.values()).filter((event) => {
       const eventDate = new Date(event.dateEpochMs);
-      const eventChunkId = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}`;
+      const eventChunkId = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, "0")}`;
       return eventChunkId === chunkId;
     });
   }
 
   private getChunksForEventIds(eventIds: EventId[]): string[] {
     const chunks = new Set<string>();
-    
+
     for (const eventId of eventIds) {
       const event = this.events.get(eventId);
       if (event) {
         const eventDate = new Date(event.dateEpochMs);
-        const chunkId = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}`;
+        const chunkId = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, "0")}`;
         chunks.add(chunkId);
       }
     }
@@ -536,10 +576,14 @@ export class DataService {
 
   private getPriorityValue(priority: "high" | "normal" | "low"): number {
     switch (priority) {
-      case "high": return 3;
-      case "normal": return 2;
-      case "low": return 1;
-      default: return 2;
+      case "high":
+        return 3;
+      case "normal":
+        return 2;
+      case "low":
+        return 1;
+      default:
+        return 2;
     }
   }
 
@@ -558,7 +602,7 @@ export class DataService {
 
   private recordMetrics(metrics: ChunkLoadMetrics): void {
     // Store metrics for monitoring - could be enhanced with analytics
-    console.debug('Chunk load metrics:', metrics);
+    console.debug("Chunk load metrics:", metrics);
   }
 
   private createDataError(
@@ -580,7 +624,7 @@ export class DataService {
    */
   dispose(): void {
     // Cancel any pending requests
-    this.abortControllers.forEach(controller => controller.abort());
+    this.abortControllers.forEach((controller) => controller.abort());
     this.abortControllers.clear();
 
     // Clear data

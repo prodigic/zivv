@@ -53,5 +53,30 @@
     "note": "Typo + 3-part venue string — 'at Koret Auditorumn, Main Library, S.F.' → 'at Koret Auditorium, S.F.' (building name breaks the venue,city parse)",
     "pattern": "\\bat Koret Auditor(?:umn|ium), Main Library, S\\.F\\.",
     "replacement": "at Koret Auditorium, S.F."
+  },
+  {
+    "note": "The Folsom Street Fair row omits its self-named venue; make the non-music event explicit for exclusion.",
+    "pattern": "^(sep 27\\s+\\w{3}\\s+Folsom Street Fair),\\s+S\\.F\\.\\s+18\\+$",
+    "replacement": "$1 at Folsom Street Fair, S.F. 18+"
+  },
+  {
+    "note": "The Castro Street Fair row omits its self-named venue; make the non-music event explicit for exclusion.",
+    "pattern": "^(oct\\s+4\\s+\\w{3}\\s+Castro Street Fair),\\s+S\\.F\\.\\s+a/a$",
+    "replacement": "$1 at Castro Street Fair, S.F. a/a"
+  },
+  {
+    "note": "Restore the missing separator before the Ivy Room venue and correct the source typo Albanu to Albany.",
+    "pattern": "dj Misfailed Bday\\s+Partyat Ivy Room, Albanu\\b",
+    "replacement": "dj Misfailed Bday Party at Ivy Room, Albany"
+  },
+  {
+    "note": "Restore the missing 'at' separator in the Michael Nau Hopmonk listing.",
+    "pattern": "^(nov 19\\s+\\w{3}\\s+Michael Nau, Breezers) Hopmonk, Sebastopol\\b",
+    "replacement": "$1 at Hopmonk, Sebastopol"
+  },
+  {
+    "note": "Restore the missing 'at' separator in the Save Ferris Napa Music Hall listing.",
+    "pattern": "Save Ferris\\s+Napa Music Hall, Napa\\b",
+    "replacement": "Save Ferris at Napa Music Hall, Napa"
   }
 ]

@@ -2,15 +2,24 @@ name: ETL Data Processing
 
 on:
   push:
+    branches: [main]
     paths:
       - "data/**"
       - "src/lib/etl/**"
+      - "src/lib/ingestion/**"
+      - "src/lib/discovery.ts"
+      - "src/types/**"
+      - "scripts/run-etl.js"
       - ".github/workflows/etl.yml"
   workflow_dispatch: # Allow manual triggering
 
 permissions:
   contents: write
   pull-requests: write
+
+concurrency:
+  group: ingestion-export-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   process-data:
@@ -23,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "22"
           cache: "npm"
 
       - name: Install dependencies
@@ -32,21 +41,26 @@ jobs:
       - name: Check for data changes
         id: data-check
         run: |
-          # Check if data files have changed
-          if git diff --name-only HEAD~1 HEAD | grep -E '^data/(events|venues)\.txt$'; then
+          # The durable ledger is kept in the private operator checkout. The
+          # public deployment branch already contains the generated static
+          # data, so there is nothing for this workflow to export when the
+          # ledger is absent.
+          if [ -f data/ingestion/ledger.json ]; then
             echo "data_changed=true" >> $GITHUB_OUTPUT
-            echo "📊 Data files have changed, processing needed"
           else
             echo "data_changed=false" >> $GITHUB_OUTPUT
-            echo "📊 No data file changes detected"
+            echo "No private ingestion ledger present; skipping ETL export."
           fi
 
       - name: Build TypeScript
-        if: steps.data-check.outputs.data_changed == 'true' || github.event_name == 'workflow_dispatch'
-        run: npm run build
+        if: steps.data-check.outputs.data_changed == 'true'
+        run: npm run build:etl
+
+      - name: Validate ingestion behavior
+        run: npm run test:ingestion
 
       - name: Run ETL Processing
-        if: steps.data-check.outputs.data_changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: steps.data-check.outputs.data_changed == 'true'
         id: etl
         run: |
           echo "🚀 Starting ETL processing..."
@@ -140,7 +154,7 @@ jobs:
           git config --local user.name "GitHub Action"
 
       - name: Auto-commit processed data (zero errors)
-        if: steps.output-check.outputs.output_changed == 'true' && steps.summary.outputs.errors == '0'
+        if: github.ref == 'refs/heads/main' && steps.output-check.outputs.output_changed == 'true' && steps.summary.outputs.errors == '0'
         run: |
           echo "🎯 No errors detected, proceeding with auto-commit"
 
@@ -233,7 +247,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "22"
           cache: "npm"
 
       - name: Install dependencies

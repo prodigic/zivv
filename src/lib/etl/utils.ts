@@ -75,7 +75,10 @@ export class DateParser {
     });
 
     // If the third token is a 4-digit year, use it directly
-    const explicitYear = thirdToken && /^\d{4}$/.test(thirdToken) ? parseInt(thirdToken, 10) : null;
+    const explicitYear =
+      thirdToken && /^\d{4}$/.test(thirdToken)
+        ? parseInt(thirdToken, 10)
+        : null;
     if (explicitYear) {
       return toResult(explicitYear, month, day);
     }
@@ -87,7 +90,7 @@ export class DateParser {
       const ref = new Date(referenceEpochMs);
       let year = ref.getUTCFullYear();
       // Use UTC noon for comparison to avoid local-time skew
-      let epochMs = Date.UTC(year, month, day, 12, 0, 0);
+      const epochMs = Date.UTC(year, month, day, 12, 0, 0);
 
       // If the new date is more than 6 months before the reference, wrap to next year
       if (epochMs < referenceEpochMs - 180 * 24 * 60 * 60 * 1000) {
@@ -305,8 +308,9 @@ export class VenueLineParser {
   }
 
   private static extractTime(text: string): string {
+    // Require a clock marker; ages and ticket prices are not show times.
     const timeMatch = text.match(
-      /(\d{1,2}(?::\d{2})?\s*(?:am|pm)?(?:\/\d{1,2}(?::\d{2})?\s*(?:am|pm)?)?)/i
+      /\b(\d{1,2}(?::\d{2})?\s*(?:am|pm)?\s*\/\s*\d{1,2}(?::\d{2})?\s*(?:am|pm)|\d{1,2}(?::\d{2})?\s*(?:am|pm))\b/i
     );
     return timeMatch?.[1] || "";
   }
@@ -429,7 +433,7 @@ export class HashGenerator {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return Math.abs(hash);
@@ -455,9 +459,15 @@ export class HashGenerator {
   /**
    * Generate an event ID from key attributes
    */
-  static generateEventId(date: string, headlinerName: string, venueName: string): number {
+  static generateEventId(
+    date: string,
+    headlinerName: string,
+    venueName: string
+  ): number {
     const normalizedHeadliner = StringNormalizer.normalizeName(headlinerName);
     const normalizedVenue = StringNormalizer.normalizeName(venueName);
-    return this.simpleHash(`event:${date}:${normalizedHeadliner}:${normalizedVenue}`);
+    return this.simpleHash(
+      `event:${date}:${normalizedHeadliner}:${normalizedVenue}`
+    );
   }
 }

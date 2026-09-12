@@ -15,20 +15,12 @@ const MIN_VENUES = 2;
 
 const LocalArtistsPage: React.FC = () => {
   const artists = useAppStore((s) => s.artists);
-  const manifest = useAppStore((s) => s.manifest);
   const loading = useAppStore((s) => s.loading);
   const errors = useAppStore((s) => s.errors);
   const initialize = useAppStore((s) => s.initialize);
 
-  const { setSearchQuery, updateFilter } = useFilterStore();
+  const { setSearchQuery } = useFilterStore();
   const navigate = useNavigate();
-
-  const goToVenue = (venueName: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    updateFilter("venues", [venueName]);
-    navigate("/");
-  };
 
   const excludeSet = useAppStore((s) => s.localArtistExclude);
   const localArtistList = useAppStore((s) => s.localArtistList);
@@ -73,7 +65,7 @@ const LocalArtistsPage: React.FC = () => {
     });
 
     return arr;
-  }, [artists, artistSearch]);
+  }, [artists, artistSearch, excludeSet, localArtistList]);
 
   React.useEffect(() => { setDisplayLimit(30); }, [artistSearch]);
 
@@ -168,9 +160,10 @@ const LocalArtistsPage: React.FC = () => {
                       )}
                     </span>
                     <PriceWidget isFree={event.isFree} isSoldOut={event.isSoldOut} priceMin={event.priceMin} priceMax={event.priceMax} className="text-xs shrink-0" />
-                    {manifest?.latestIngestionDate && (
-                      <NewBadge createdAtEpochMs={event.createdAtEpochMs} latestIngestionDate={manifest.latestIngestionDate} />
-                    )}
+                    <NewBadge
+                      createdAtEpochMs={event.createdAtEpochMs}
+                      addedDateProvenance={event.addedDateProvenance}
+                    />
                   </Link>
                 ))}
               </div>

@@ -2,10 +2,17 @@
  * Newsletter — Reddit-ready weekly digest of local act shows + newly announced events
  */
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import { useAppStore } from "@/stores/appStore.js";
+import {
+  DISCOVERY_TIME_ZONE,
+  formatLocalDate,
+  getLast7LocalDateWindow,
+  isAddedInWindow,
+  isEventUpcoming,
+} from "@/lib/discovery.js";
 
 const MIN_EVENTS = 3;
 const MIN_VENUES = 2;
@@ -75,16 +82,17 @@ const CITY_CONFIGS: Record<string, CityConfig> = {
 };
 
 function fmtDate(epochMs: number): string {
-  const [y, m, d] = new Date(epochMs)
-    .toISOString()
-    .split("T")[0]
-    .split("-")
-    .map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
+  return (
+    formatLocalDate(
+      epochMs,
+      {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      },
+      DISCOVERY_TIME_ZONE
+    ) ?? "Date TBA"
+  );
 }
 
 function fmtPrice(
@@ -101,6 +109,29 @@ function fmtPrice(
 function joinCapped(names: string[], cap = MAX_NAMES_SHOWN): string {
   if (names.length <= cap) return names.join(", ");
   return `${names.slice(0, cap).join(", ")}, ...and more`;
+}
+
+function sourceAttribution(
+  events: Iterable<{
+    firstImportedBy?: string;
+    sources?: Array<{ kind?: string }>;
+  }>
+): string {
+  const labels = new Set<string>();
+  for (const event of events) {
+    if (event.firstImportedBy === "steveslist")
+      labels.add("Steve's List at https://www.stevelist.com/");
+    if (event.firstImportedBy === "zivv-venue-import")
+      labels.add("venue calendars");
+    for (const source of event.sources ?? []) {
+      if (source.kind === "steveslist")
+        labels.add("Steve's List at https://www.stevelist.com/");
+      if (source.kind === "venue-calendar") labels.add("venue calendars");
+    }
+  }
+  return labels.size > 0
+    ? [...labels].join(" and ")
+    : "the loaded event sources";
 }
 
 const INLINE_MARKDOWN_PATTERN =
@@ -209,6 +240,7 @@ export default function NewsletterPage() {
     venues,
     manifest,
     loading,
+    errors,
     initialize,
     localArtistExclude,
     localArtistList,
@@ -217,23 +249,79 @@ export default function NewsletterPage() {
   const loadChunk = useAppStore((s) => s.loadChunk);
   const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<"preview" | "raw">("preview");
+  const [pendingChunkIds, setPendingChunkIds] = useState<Set<string>>(
+    () => new Set()
+  );
+  const [chunkLoadError, setChunkLoadError] = useState<string | null>(null);
+  const chunkRequestDatasetRef = useRef<string | null>(null);
+  const requestedChunkIdsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (loading.artists === "idle") initialize().catch(console.error);
   }, [loading.artists, initialize]);
 
-  // Load all chunks
+  // Newsletter membership and local-acts thresholds both use the complete
+  // event set. Keep failed chunk ids requested so a rejected promise does not
+  // trigger a render/retry loop while still making the failure visible.
   useEffect(() => {
     if (!manifest?.chunks?.events) return;
-    manifest.chunks.events.forEach((c) => {
-      if (!loadedChunks.has(c.chunkId)) loadChunk(c.chunkId).catch(() => {});
-    });
-  }, [manifest, loadedChunks, loadChunk]);
+    const datasetKey = manifest.datasetVersion;
+    if (chunkRequestDatasetRef.current !== datasetKey) {
+      chunkRequestDatasetRef.current = datasetKey;
+      requestedChunkIdsRef.current = new Set();
+      setPendingChunkIds(new Set());
+      setChunkLoadError(null);
+    }
 
-  const ingestDate = manifest?.latestIngestionDate ?? null;
+    const chunksToLoad = [
+      ...new Set(manifest.chunks.events.map((chunk) => chunk.chunkId)),
+    ].filter(
+      (chunkId) =>
+        !loadedChunks.has(chunkId) && !requestedChunkIdsRef.current.has(chunkId)
+    );
+    if (chunksToLoad.length === 0) return;
+
+    for (const chunkId of chunksToLoad)
+      requestedChunkIdsRef.current.add(chunkId);
+    setPendingChunkIds((previous) => {
+      const next = new Set(previous);
+      for (const chunkId of chunksToLoad) next.add(chunkId);
+      return next;
+    });
+
+    Promise.allSettled(chunksToLoad.map((chunkId) => loadChunk(chunkId))).then(
+      (results) => {
+        // Ignore an older dataset's completion after a refresh or manifest
+        // replacement has started a new request set.
+        if (chunkRequestDatasetRef.current !== datasetKey) return;
+        const failure = results.find(
+          (result): result is PromiseRejectedResult =>
+            result.status === "rejected"
+        );
+        if (failure) {
+          setChunkLoadError(
+            failure.reason instanceof Error
+              ? failure.reason.message
+              : "Failed to load one or more event months."
+          );
+        }
+        setPendingChunkIds((previous) => {
+          const next = new Set(previous);
+          for (const chunkId of chunksToLoad) next.delete(chunkId);
+          return next;
+        });
+      }
+    );
+  }, [manifest, loadedChunks, loadChunk]);
 
   const nowMs = useMemo(() => Date.now(), []);
   const weekEndMs = useMemo(() => nowMs + 7 * 24 * 60 * 60 * 1000, [nowMs]);
+  const fallbackAddedWindow = useMemo(
+    () => getLast7LocalDateWindow(nowMs, DISCOVERY_TIME_ZONE),
+    [nowMs]
+  );
+  const weeklyEdition = manifest?.weeklyEdition ?? null;
+  const weekHeadingEpochMs = weeklyEdition?.endEpochMs ?? nowMs;
 
   const artistMap = useMemo(() => {
     const m = new Map<number, string>();
@@ -241,11 +329,16 @@ export default function NewsletterPage() {
     return m;
   }, [artists]);
 
-  // Full lineup keyed by "dateEpochMs:venueId" → artist names in bill order
+  const eventSourceAttribution = useMemo(
+    () => sourceAttribution(events.values()),
+    [events]
+  );
+
+  // Full lineup keyed by canonical event ID → artist names in bill order.
   const lineupMap = useMemo(() => {
-    const m = new Map<string, string[]>();
+    const m = new Map<number, string[]>();
     for (const ev of events.values()) {
-      const key = `${ev.dateEpochMs}:${ev.venueId}`;
+      const key = Number(ev.id);
       if (!m.has(key)) {
         m.set(
           key,
@@ -264,6 +357,7 @@ export default function NewsletterPage() {
   // header instead of repeating the same venue/date under each act.
   const localShowRows = useMemo(() => {
     interface Row {
+      eventId: number;
       dateEpochMs: number;
       venueId: number;
       venueName: string;
@@ -273,12 +367,12 @@ export default function NewsletterPage() {
       isSoldOut?: boolean;
       localNames: Set<string>;
     }
-    const rows = new Map<string, Row>();
+    const rows = new Map<number, Row>();
 
     for (const artist of artists.values()) {
       if (localArtistExclude.has(artist.name.toLowerCase())) continue;
-      const upcoming = artist.upcomingEvents.filter(
-        (e) => e.dateEpochMs > nowMs
+      const upcoming = artist.upcomingEvents.filter((e) =>
+        isEventUpcoming(e, nowMs, DISCOVERY_TIME_ZONE)
       );
       if (upcoming.length === 0) continue;
       const venueCount = new Set(upcoming.map((e) => e.venueId)).size;
@@ -291,10 +385,11 @@ export default function NewsletterPage() {
         (e) => isCity(e.venueCity) && e.dateEpochMs <= weekEndMs
       );
       for (const ev of sfEvents) {
-        const key = `${ev.dateEpochMs}:${ev.venueId}`;
+        const key = Number(ev.id);
         let row = rows.get(key);
         if (!row) {
           row = {
+            eventId: key,
             dateEpochMs: ev.dateEpochMs,
             venueId: ev.venueId as number,
             venueName: ev.venueName,
@@ -312,8 +407,7 @@ export default function NewsletterPage() {
 
     return [...rows.values()]
       .map((row) => {
-        const key = `${row.dateEpochMs}:${row.venueId}`;
-        const fullLineup = lineupMap.get(key) ?? [];
+        const fullLineup = lineupMap.get(row.eventId) ?? [];
         // Preserve bill order: locals in lineup order, then any local name
         // the lineup lookup missed (shouldn't normally happen).
         const localNames = fullLineup.filter((n) => row.localNames.has(n));
@@ -333,24 +427,48 @@ export default function NewsletterPage() {
     lineupMap,
   ]);
 
-  // Just-added section — all SF newly announced, any future date
+  // Build additions from the frozen weekly membership when available. The
+  // membership is intentionally retained even when a show has already
+  // happened by the time this page is opened; presentation marks that case
+  // below instead of silently dropping it.
   const justAddedEvents = useMemo(() => {
-    if (!ingestDate) return [];
+    const editionIds = weeklyEdition?.eventIds;
+    const editionIdSet = Array.isArray(editionIds)
+      ? new Set(editionIds.map((id) => Number(id)))
+      : null;
+
     return Array.from(events.values())
       .filter((e) => {
-        const day = new Date(e.createdAtEpochMs).toISOString().split("T")[0];
-        if (day !== ingestDate || e.dateEpochMs <= nowMs) return false;
+        const isInEdition = editionIdSet
+          ? editionIdSet.has(Number(e.id))
+          : weeklyEdition?.startEpochMs !== undefined &&
+              weeklyEdition.endEpochMs !== undefined
+            ? isAddedInWindow(e, {
+                startEpochMs: weeklyEdition.startEpochMs,
+                endEpochMs: weeklyEdition.endEpochMs,
+              })
+            : isAddedInWindow(e, fallbackAddedWindow);
+        if (!isInEdition) return false;
         const venueCity = venues.get(e.venueId)?.city ?? "";
         return isCity(venueCity);
       })
-      .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [events, venues, ingestDate, nowMs, isCity]);
+      .sort((a, b) => {
+        const aUpcoming = isEventUpcoming(a, nowMs, DISCOVERY_TIME_ZONE);
+        const bUpcoming = isEventUpcoming(b, nowMs, DISCOVERY_TIME_ZONE);
+        if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
+        return a.dateEpochMs - b.dateEpochMs;
+      });
+  }, [events, venues, weeklyEdition, fallbackAddedWindow, nowMs, isCity]);
 
   // All SF shows this week (section 3)
   const sfWeekEvents = useMemo(() => {
     return Array.from(events.values())
       .filter((e) => {
-        if (e.dateEpochMs <= nowMs || e.dateEpochMs > weekEndMs) return false;
+        if (
+          !isEventUpcoming(e, nowMs, DISCOVERY_TIME_ZONE) ||
+          e.dateEpochMs > weekEndMs
+        )
+          return false;
         const venueCity = venues.get(e.venueId)?.city ?? "";
         return isCity(venueCity);
       })
@@ -368,13 +486,16 @@ export default function NewsletterPage() {
   const text = useMemo(() => {
     const lines: string[] = [];
 
-    const today = new Date();
-    const [y, m, d] = today.toISOString().split("T")[0].split("-").map(Number);
-    const weekStr = new Date(y, m - 1, d).toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
+    const weekStr =
+      formatLocalDate(
+        weekHeadingEpochMs,
+        {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        },
+        DISCOVERY_TIME_ZONE
+      ) ?? "this week";
 
     lines.push(`## ${cityConfig.label} Shows — Week of ${weekStr}`);
     lines.push("");
@@ -403,44 +524,40 @@ export default function NewsletterPage() {
       }
     }
 
-    // Section 2: Just added
-    if (ingestDate) {
-      const [iy, im, id2] = ingestDate.split("-").map(Number);
-      const ingestStr = new Date(iy, im - 1, id2).toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-      });
+    // Section 2: Added this week. Keep all frozen edition membership and mark
+    // rows whose performance has already happened at render time.
+    lines.push("---");
+    lines.push("");
+    lines.push("### ✦ Added this week");
+    lines.push("");
 
-      lines.push("---");
-      lines.push("");
-      lines.push(`### ✦ Newly Announced (added ${ingestStr})`);
-      lines.push("");
-
-      if (justAddedEvents.length === 0) {
-        lines.push("*No new events this week.*");
-      } else {
-        for (const ev of justAddedEvents) {
-          const headlinerName =
-            artistMap.get(ev.headlinerArtistId as number) ?? "";
-          const venueName = venues.get(ev.venueId)?.name ?? "";
-          const venueCity = venues.get(ev.venueId)?.city ?? "";
-          const price = fmtPrice(ev.priceMin, ev.priceMax, ev.isFree);
-          const pricePart = price ? ` · ${price}` : "";
-          const agePart =
-            ev.ageRestriction && ev.ageRestriction !== "all-ages"
-              ? ` · ${ev.ageRestriction}`
-              : "";
-          const soldOut =
-            ev.status === "sold-out" || ev.tags?.includes("sold-out")
-              ? " ~~sold out~~"
-              : "";
-          lines.push(
-            `- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueName}, ${venueCity}${pricePart}${agePart}${soldOut}`
-          );
-        }
+    if (justAddedEvents.length === 0) {
+      lines.push("*No additions this week.*");
+    } else {
+      for (const ev of justAddedEvents) {
+        const headlinerName =
+          artistMap.get(ev.headlinerArtistId as number) ?? "";
+        const venueName = venues.get(ev.venueId)?.name ?? "";
+        const venueCity = venues.get(ev.venueId)?.city ?? "";
+        const price = fmtPrice(ev.priceMin, ev.priceMax, ev.isFree);
+        const pricePart = price ? ` · ${price}` : "";
+        const agePart =
+          ev.ageRestriction && ev.ageRestriction !== "all-ages"
+            ? ` · ${ev.ageRestriction}`
+            : "";
+        const soldOut =
+          ev.status === "sold-out" || ev.tags?.includes("sold-out")
+            ? " ~~sold out~~"
+            : "";
+        const happened = isEventUpcoming(ev, nowMs, DISCOVERY_TIME_ZONE)
+          ? ""
+          : " · already happened";
+        lines.push(
+          `- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueName}, ${venueCity}${pricePart}${agePart}${soldOut}${happened}`
+        );
       }
-      lines.push("");
     }
+    lines.push("");
 
     // Section 3: All SF shows this week
     lines.push("---");
@@ -454,7 +571,7 @@ export default function NewsletterPage() {
       for (const ev of sfWeekEvents) {
         const venueName = venues.get(ev.venueId)?.name ?? "";
         const lineup =
-          lineupMap.get(`${ev.dateEpochMs}:${ev.venueId}`) ??
+          lineupMap.get(Number(ev.id)) ??
           [artistMap.get(ev.headlinerArtistId as number) ?? ""].filter(Boolean);
         const price = fmtPrice(ev.priceMin, ev.priceMax, ev.isFree);
         const pricePart = price ? ` · ${price}` : "";
@@ -473,7 +590,7 @@ export default function NewsletterPage() {
     }
 
     lines.push("");
-    lines.push("-- event data sourced from https://www.stevelist.com/");
+    lines.push(`-- event data sourced from ${eventSourceAttribution}`);
     lines.push("");
 
     return lines.join("\n");
@@ -484,33 +601,69 @@ export default function NewsletterPage() {
     artistMap,
     lineupMap,
     venues,
-    ingestDate,
+    nowMs,
+    weekHeadingEpochMs,
+    eventSourceAttribution,
     cityConfig,
   ]);
 
+  const requiredChunkIds = useMemo(
+    () =>
+      manifest?.chunks?.events
+        ? [...new Set(manifest.chunks.events.map((chunk) => chunk.chunkId))]
+        : [],
+    [manifest?.chunks?.events]
+  );
+  const allRequiredChunksLoaded = requiredChunkIds.every((chunkId) =>
+    loadedChunks.has(chunkId)
+  );
+  const newsletterError =
+    errors.manifest ||
+    errors.artists ||
+    errors.venues ||
+    errors.events ||
+    chunkLoadError;
+  const isLoading =
+    !manifest ||
+    loading.manifest === "loading" ||
+    loading.artists === "loading" ||
+    loading.venues === "loading" ||
+    loading.events === "loading" ||
+    pendingChunkIds.size > 0 ||
+    (!allRequiredChunksLoaded && !newsletterError);
+  const canCopy = !isLoading && !newsletterError;
+
   const handleCopy = () => {
+    if (!canCopy) return;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
-  const isLoading =
-    loading.artists === "loading" || loading.events === "loading";
-
   return (
     <ContentArea
       title="Newsletter"
-      subtitle={`${cityConfig.label} · local acts + newly announced · Reddit-ready`}
+      subtitle={`${cityConfig.label} · local acts + added this week · Reddit-ready`}
     >
-      {isLoading && (
+      {newsletterError && (
+        <div
+          role="alert"
+          className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-200"
+        >
+          <div className="font-semibold">Unable to load newsletter events</div>
+          <div>{newsletterError}</div>
+        </div>
+      )}
+
+      {isLoading && !newsletterError && (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4" />
           <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>
         </div>
       )}
 
-      {!isLoading && (
+      {!isLoading && !newsletterError && (
         <>
           <div className="flex flex-wrap gap-1.5 mb-4">
             {Object.entries(CITY_CONFIGS).map(([slug, cfg]) => (
@@ -531,8 +684,8 @@ export default function NewsletterPage() {
 
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {localActCount} local acts · {justAddedEvents.length} newly
-              announced · {sfWeekEvents.length} SF shows this week
+              {localActCount} local acts · {justAddedEvents.length} added this
+              week · {sfWeekEvents.length} SF shows this week
             </div>
             <div className="flex items-center gap-2">
               <div
@@ -558,7 +711,8 @@ export default function NewsletterPage() {
               </div>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-purple-600 hover:bg-purple-700 text-white transition-colors"
+                disabled={!canCopy}
+                className="flex items-center gap-1.5 rounded-md bg-purple-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {copied ? (
                   <>

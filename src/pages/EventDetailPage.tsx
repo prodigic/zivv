@@ -7,6 +7,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
 import { useAppStore } from "@/stores/appStore.js";
+import { formatAddedDateLabel } from "@/lib/discovery.js";
 
 const EventDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -82,7 +83,6 @@ const EventDetailPage: React.FC = () => {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]); // only re-register if navigate changes (never)
 
   // Early returns after all hooks
@@ -117,6 +117,10 @@ const EventDetailPage: React.FC = () => {
   const timeStr = event.startTimeEpochMs
     ? new Date(event.startTimeEpochMs).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
     : null;
+  const addedLabel =
+    event.addedDateProvenance === "unknown"
+      ? null
+      : formatAddedDateLabel(event.createdAtEpochMs);
 
   const statusColors: Record<string, string> = {
     "confirmed": "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300",
@@ -233,6 +237,11 @@ const EventDetailPage: React.FC = () => {
 
           {/* Price / age / tags */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
+            {addedLabel && (
+              <span className="text-xs font-semibold text-purple-700 dark:text-purple-300">
+                {addedLabel}
+              </span>
+            )}
             <PriceWidget isFree={event.isFree} isSoldOut={event.status === "sold-out" || event.tags?.includes("sold-out")} priceMin={event.priceMin} priceMax={event.priceMax} className="text-sm" />
             {event.ageRestriction && (
               <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">{event.ageRestriction}</span>
@@ -287,7 +296,7 @@ const EventDetailPage: React.FC = () => {
                           {new Date(ev.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                         </span>
                         <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">{ev.venueName}</span>
-                        <PriceWidget isFree={ev.isFree} isSoldOut={ev.status === "sold-out" || ev.tags?.includes("sold-out")} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
+                        <PriceWidget isFree={ev.isFree} isSoldOut={ev.isSoldOut} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
                       </div>
                     ))}
                   </div>
@@ -334,7 +343,7 @@ const EventDetailPage: React.FC = () => {
                       <span className={`text-xs truncate flex-1 ${isCurrent ? "text-purple-900 dark:text-purple-100 font-semibold" : "text-gray-700 dark:text-gray-200 font-medium"}`}>
                         {ev.headlinerName || "Show"}
                       </span>
-                      <PriceWidget isFree={ev.isFree} isSoldOut={ev.status === "sold-out" || ev.tags?.includes("sold-out")} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
+                      <PriceWidget isFree={ev.isFree} isSoldOut={ev.isSoldOut} priceMin={ev.priceMin} priceMax={ev.priceMax} className="text-xs shrink-0" />
                     </Link>
                   );
                 })}

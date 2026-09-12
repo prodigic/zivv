@@ -1,3 +1,20 @@
+import type {
+  FirstImportedBy,
+  AddedDateProvenance,
+  SourceLink,
+} from "./ingestion.js";
+
+/** Provenance is optional only for legacy JSON and transient parser results. */
+export interface EventProvenance {
+  timeBasis?: "legacy-wall-clock" | "instant";
+  firstImportedBy?: FirstImportedBy;
+  addedDateProvenance?: AddedDateProvenance;
+  firstObservedAtEpochMs?: number | null;
+  announcedAtEpochMs?: number | null;
+  firstImportRunId?: string | null;
+  sources?: SourceLink[];
+}
+
 // Branded types for IDs to prevent mixing
 export type EventId = number & { readonly __brand: "EventId" };
 export type ArtistId = number & { readonly __brand: "ArtistId" };
@@ -21,7 +38,7 @@ export interface RawVenueData {
 }
 
 // Processed/normalized types
-export interface Event {
+export interface Event extends EventProvenance {
   id: EventId;
   slug: string; // URL-safe identifier
   date: string; // ISO date string (YYYY-MM-DD)
@@ -59,7 +76,7 @@ export interface Event {
   sourceLineNumber: number;
 }
 
-export interface ArtistUpcomingEvent {
+export interface ArtistUpcomingEvent extends EventProvenance {
   id: EventId;
   slug: string;
   dateEpochMs: number;
@@ -92,7 +109,7 @@ export interface Artist {
   updatedAtEpochMs: number;
 }
 
-export interface VenueUpcomingEvent {
+export interface VenueUpcomingEvent extends EventProvenance {
   id: EventId;
   slug: string;
   dateEpochMs: number;
@@ -136,20 +153,10 @@ export interface Venue {
 
 // Enums and unions
 export type AgeRestriction =
-  | "all-ages"
-  | "18+"
-  | "21+"
-  | "16+"
-  | "8+"
-  | "5+"
-  | "6+";
+  "all-ages" | "18+" | "21+" | "16+" | "8+" | "5+" | "6+" | "unknown";
 
 export type EventStatus =
-  | "confirmed"
-  | "sold-out"
-  | "cancelled"
-  | "postponed"
-  | "rescheduled";
+  "confirmed" | "sold-out" | "cancelled" | "postponed" | "rescheduled";
 
 export type EventTag =
   | "sold-out"
@@ -164,12 +171,7 @@ export type EventTag =
   | "late-show";
 
 export type VenueType =
-  | "major"
-  | "club"
-  | "diy"
-  | "outdoor"
-  | "festival"
-  | "unknown";
+  "major" | "club" | "diy" | "outdoor" | "festival" | "unknown";
 
 // Data chunk types
 export interface EventChunk {

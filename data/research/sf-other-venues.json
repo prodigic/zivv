@@ -1,0 +1,325 @@
+{
+  "investigatedOn": "2026-09-07",
+  "group": "other",
+  "venues": [
+    {
+      "venueIds": [89816907, 392702093],
+      "venueNames": ["4 Star Theater", "4-Star Theater"],
+      "officialName": "4 Star Theater",
+      "website": "https://www.4-star-movies.com/",
+      "calendarUrl": "https://www.4-star-movies.com/calendar-of-events",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["ticketing.uswest.veezi.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "squarespace-calendar-card-discovery-with-canonical-event-page-and-veezi-ticket-link; classify film/private/nonmusic separately from live music",
+      "evidenceUrls": [
+        "https://www.4-star-movies.com/calendar-of-events",
+        "https://www.4-star-movies.com/contact"
+      ],
+      "observations": [
+        "[observed] Official CinemaSF Bay calendar is publicly readable and identifies The 4 Star Theater at 2200 Clement Street, San Francisco, CA 94121.",
+        "[observed] Calendar cards expose date, start/end time, title, event detail slug, description, and links to the venue's Veezi ticketing host; sample current cards include live music, film screenings, private rentals, and dance/film programs.",
+        "[observed] Existing IDs 89816907 and 392702093 are duplicate aliases; the second has no address in generated data.",
+        "[inferred] Canonical event identity can use the official detail-page URL, with the Veezi purchase/session ID retained as a ticket reference.",
+        "[inferred] Import only events classified as in-scope live music; retain movie, private-event, Q&A, and other programs for explicit exclusion/review."
+      ],
+      "unknowns": [
+        "[untested] Full calendar horizon, pagination/archive behavior, and whether all future cards are present in one response.",
+        "[untested] No stable provider venue ID was exposed on the public pages."
+      ]
+    },
+    {
+      "venueIds": [1652761549],
+      "primaryVenueId": 1652761549,
+      "venueNames": ["the Lab"],
+      "officialName": "The Lab",
+      "website": "https://www.thelab.org/",
+      "calendarUrl": "https://www.thelab.org/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["link.dice.fm"],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "Squarespace upcoming-project cards plus dated project detail pages; use DICE links for ticket provenance and filter exhibitions/nonmusic programs",
+      "evidenceUrls": [
+        "https://www.thelab.org/",
+        "https://www.thelab.org/projects/2026/9/11/heart-trio-william-parker-hamid-drake-cooper-moore",
+        "https://www.thelab.org/info"
+      ],
+      "observations": [
+        "[observed] Official homepage and project page identify The Lab at 2948 16th Street, San Francisco, CA 94103, at 16th and Capp.",
+        "[observed] Homepage exposes upcoming dated event cards with title, start/end time, doors/show time, price, detail URL, and DICE buy-ticket short links.",
+        "[observed] Current programming includes creative/experimental music and electronic festival nights; the organization also publishes exhibitions and other art programming.",
+        "[inferred] Stable identity should prefer the dated official project URL and retain the DICE URL as a ticket alias; performer extraction must handle multi-artist titles and festival nights.",
+        "[inferred] Scope rules must distinguish live music from exhibitions, installations, and ambiguous performance listings."
+      ],
+      "unknowns": [
+        "[untested] Whether the homepage loads all future projects or paginates/filters beyond the visible cards.",
+        "[untested] DICE event IDs and redirect targets were not opened beyond the public short-link host."
+      ]
+    },
+    {
+      "venueIds": [698121015],
+      "primaryVenueId": 698121015,
+      "venueNames": ["Lost Church"],
+      "officialName": "The Lost Church - San Francisco",
+      "website": "https://thelostchurch.org/",
+      "calendarUrl": "https://thelostchurch.org/san-francisco/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["thelostchurch.my.salesforce-sites.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "San-Francisco-only official card discovery with Salesforce ticket-instance IDs; reject the separate Santa Rosa page and classify music, theater, comedy, film, and variety scope",
+      "evidenceUrls": [
+        "https://thelostchurch.org/san-francisco/",
+        "https://thelostchurch.org/contact/",
+        "https://thelostchurch.my.salesforce-sites.com/ticket#/"
+      ],
+      "observations": [
+        "[observed] Official San Francisco page states 988 Columbus Avenue, SF, CA 94133, where Columbus, Chestnut, and Taylor meet.",
+        "[observed] The SF page has a public dated card list with titles, month/day/year, Read More, and Buy Ticket links; links resolve to Salesforce ticket instance hashes.",
+        "[observed] The organization separately publishes a Santa Rosa page; this record is restricted to the 988 Columbus Avenue SF page.",
+        "[observed] Current cards include music, standup/comedy, theater, readings, documentary screenings, and variety shows.",
+        "[inferred] Salesforce instance IDs are the strongest exposed event identity; preserve the official card title/date and ticket URL together."
+      ],
+      "unknowns": [
+        "[untested] Salesforce instance detail fields, cancellation/status semantics, and complete calendar-view pagination.",
+        "[untested] No provider venue ID was exposed; the Salesforce IDs observed are event instances, not venue identity."
+      ]
+    },
+    {
+      "venueIds": [735357859],
+      "primaryVenueId": 735357859,
+      "venueNames": ["Thrillhouse Records"],
+      "officialName": "Thrillhouse Records",
+      "website": "https://thrillhouserecords.com/",
+      "calendarUrl": "https://thrillhouserecords.com/pages/calendar",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "Shopify event-calendar page and linked shows-and-events blog posts; use canonical blog post URLs and require explicit date/title extraction before importing",
+      "evidenceUrls": [
+        "https://thrillhouserecords.com/pages/about-us",
+        "https://thrillhouserecords.com/pages/calendar",
+        "https://thrillhouserecords.com/blogs/shows-and-events"
+      ],
+      "observations": [
+        "[observed] Official About page gives 3422 Mission Street at 30th Street, San Francisco, CA 94110, and describes the store as a volunteer-run DIY record store.",
+        "[observed] Official calendar is public and links to Shopify blog posts under /blogs/shows-and-events; the current page visibly lists September 12-13 and September 27 entries plus a dated page-update label.",
+        "[observed] Calendar content includes shows and nonmusic events such as a film screening; no ticket host was exposed on the calendar page.",
+        "[inferred] Use canonical blog post URLs as event identity and parse the post body for date, title, venue, and any ticket information; do not treat Shopify product URLs as events."
+      ],
+      "unknowns": [
+        "[untested] The calendar page is sparse and its post/date rendering is not a complete inventory guarantee; no pagination or feed was confirmed.",
+        "[untested] Event detail pages and historical post retention were not exhaustively checked."
+      ]
+    },
+    {
+      "venueIds": [1185666454],
+      "primaryVenueId": 1185666454,
+      "venueNames": ["the Peacock Lounge"],
+      "officialName": "Peacock Lounge",
+      "website": "https://sfpeacock.org/",
+      "calendarUrl": "https://sfpeacock.org/events/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "Monitor official WordPress events page for concrete dated cards; hold import while page only exposes a coming-soon placeholder and recurring descriptor",
+      "evidenceUrls": [
+        "https://sfpeacock.org/",
+        "https://sfpeacock.org/events/",
+        "https://sfpeacock.org/contact-us/"
+      ],
+      "observations": [
+        "[observed] Official contact page confirms 552 Haight Street, San Francisco, CA 94117.",
+        "[observed] Official events page is publicly reachable but currently shows Date: Coming Soon, 2026, doors 7PM/show 8PM, and Every Third Thursday of the Month; it exposes no concrete upcoming event title, date, detail URL, or ticket host.",
+        "[observed] Homepage describes concerts, spoken word, record releases, and intimate performances alongside private and corporate events.",
+        "[inferred] An adapter should remain disabled until a dated event card/detail contract is observable; recurring copy alone is insufficient for event creation."
+      ],
+      "unknowns": [
+        "[untested] Whether events are announced through an unlinked social channel or later injected into the page.",
+        "[untested] No stable event or provider identity was exposed."
+      ]
+    },
+    {
+      "venueIds": [1282095081],
+      "primaryVenueId": 1282095081,
+      "venueNames": ["Plough and Stars"],
+      "officialName": "The Plough and Stars",
+      "website": "https://theploughandstars.com/",
+      "calendarUrl": "https://theploughandstars.com/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "verified",
+      "strategy": "Parse the official static monthly calendar by day cell; composite identity from local date plus normalized event text, preserving recurring sessions and stated show time",
+      "evidenceUrls": [
+        "https://theploughandstars.com/"
+      ],
+      "observations": [
+        "[observed] Official homepage identifies the pub at 116 Clement Street at 2nd Avenue, San Francisco, and labels it an Irish pub featuring live music.",
+        "[observed] September 2026 calendar is publicly rendered with day context, named bands/sessions, recurring events, and an explicit default of 9PM unless otherwise indicated; page reports last updated Monday, September 7, 2026.",
+        "[observed] Calendar includes live music plus set dancing, trivia, board-game night, and other non-concert programming.",
+        "[inferred] The date cell and event text form a matching fingerprint because no event detail URLs/provider IDs were exposed; preserve it in a ledger/review workflow rather than treating it as a durable provider ID, and keep same-day performances separate."
+      ],
+      "unknowns": [
+        "[untested] Monthly archive navigation and whether future months are available before publication.",
+        "[untested] No ticket host, feed, or stable per-event ID was exposed."
+      ]
+    },
+    {
+      "venueIds": [2013304995, 718099583],
+      "venueNames": ["Amoeba Music", "Amoeba Records"],
+      "officialName": "Amoeba Music - San Francisco",
+      "website": "https://www.amoeba.com/",
+      "calendarUrl": "https://www.amoeba.com/live-shows/upcoming/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "Parse the official Upcoming Shows page by explicit branch heading and keep only the San Francisco 1855 Haight section; require city/address match before joining existing aliases",
+      "evidenceUrls": [
+        "https://www.amoeba.com/our-stores/",
+        "https://www.amoeba.com/live-shows/upcoming/",
+        "https://www.amoeba.com/other/faq/"
+      ],
+      "observations": [
+        "[observed] Official store pages identify the SF branch as 1855 Haight Street, San Francisco, CA 94117, and separately identify Berkeley at 2455 Telegraph Avenue and Hollywood at 6200 Hollywood Boulevard.",
+        "[observed] Official Upcoming Shows page contains branch sections and dated title/time/description entries; the SF sample includes a September 11 book signing and DJ set at 5PM, and events are free/all ages where stated.",
+        "[observed] Existing generated row 2013304995 is named Amoeba Music but carries address 2455 Telegraph with city S.f, which conflicts with the official SF identity; alias 718099583 (Amoeba Records) is addressless. This is an identity review, not a certified SF mapping.",
+        "[inferred] Adapter must select only the SF heading/address and retain branch in provenance; do not merge Berkeley or Hollywood records into the SF venue."
+      ],
+      "unknowns": [
+        "[untested] Complete future-event pagination/retention and whether event cards have stable per-event URLs or only page text.",
+        "[untested] Existing alias merge between the two generated IDs requires ETL review against source data."
+      ]
+    },
+    {
+      "venueIds": [1237996847],
+      "venueNames": ["1015 Folsom"],
+      "officialName": "1015 Folsom",
+      "website": "https://1015.com/",
+      "calendarUrl": "https://1015.com/#calendar",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["wl.seetickets.us"],
+      "verifiedOn": "2026-09-07",
+      "status": "verified",
+      "strategy": "Official event-card discovery with month/day/status/genre filters, canonical /events/slug detail URLs, and See Tickets links as ticket provenance",
+      "evidenceUrls": [
+        "https://1015.com/",
+        "https://1015.com/about/",
+        "https://1015.com/events/throttle-d-dan-2026-09-10/"
+      ],
+      "observations": [
+        "[observed] Official About page identifies 1015 at 1015 Folsom Street, San Francisco, CA 94103, and says all events are 21+.",
+        "[observed] Official homepage exposes an Upcoming Events list with 15 current cards, month/day/status/genre filters, event detail slugs, artist/support text, and Buy Tickets/Bottle Service links.",
+        "[observed] A current detail link exposes title/date and a See Tickets URL with a numeric event ID; the homepage also exposes sign-up-only events, so ticket state is separate from event existence.",
+        "[inferred] Use the official detail slug as canonical identity, retain See Tickets IDs/URLs as aliases, and preserve 21+ plus DJ/club programming as source fields."
+      ],
+      "unknowns": [
+        "[untested] Filter pagination and event horizon beyond the 15 cards visible on the current homepage.",
+        "[untested] No stable provider venue ID was exposed by the official pages."
+      ]
+    },
+    {
+      "venueIds": [390079947],
+      "primaryVenueId": 390079947,
+      "venueNames": ["Palace of Fine Arts"],
+      "officialName": "Palace of Fine Arts Theatre",
+      "website": "https://www.palaceoffinearts.org/",
+      "calendarUrl": "https://www.palaceoffinearts.org/events",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": ["folkyeah.com"],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "Official WordPress events listing with page navigation and per-event slug detail pages; classify concerts separately from comedy, ballet, podcasts, film, and other theater programs",
+      "evidenceUrls": [
+        "https://www.palaceoffinearts.org/",
+        "https://www.palaceoffinearts.org/events",
+        "https://www.palaceoffinearts.org/event/the-tallest-man-on-earth/"
+      ],
+      "observations": [
+        "[observed] Official events page identifies Palace of Fine Arts Theatre at 3301 Lyon Street, San Francisco, CA 94123.",
+        "[observed] Public listing exposes title, date, start time, and per-event slug; the current page reports Page 1 of 4 with Next navigation.",
+        "[observed] Detail page adds door time, ticket link, and seating/map links; a sample ticket host is folkyeah.com.",
+        "[observed] Inventory mixes music, comedy, ballet, podcasts, film presentations, and other performing arts, including explicitly postponed events.",
+        "[inferred] Follow all four pages, key by official event URL, preserve door time and postponed status, and apply event-kind scope before artist creation."
+      ],
+      "unknowns": [
+        "[untested] Whether page count changes with month filters and whether old pages include canceled/postponed entries indefinitely.",
+        "[untested] Ticket host consistency across all event detail pages."
+      ]
+    },
+    {
+      "venueIds": [793025194, 261131824],
+      "venueNames": ["Warriors Stadium", "Warrior's Arena"],
+      "officialName": "Chase Center",
+      "website": "https://www.chasecenter.com/",
+      "calendarUrl": "https://www.chasecenter.com/events/",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "Use official Chase Center per-event pages when discovered, with title/date/start/doors and canonical slug; repair venue identity only after explicit ETL alias review and separate sports, concerts, and Thrive City scope",
+      "evidenceUrls": [
+        "https://www.chasecenter.com/",
+        "https://www.chasecenter.com/events/",
+        "https://www.chasecenter.com/events/joji-20260714/",
+        "https://www.chasecenter.com/events/harmonic-jam-20260809/",
+        "https://am.ticketmaster.com/warriors/"
+      ],
+      "observations": [
+        "[observed] Official Chase Center event pages identify the arena as Chase Center in San Francisco; the official Warriors ticket account gives 1 Warriors Way, San Francisco, CA 94158.",
+        "[observed] Official per-event pages expose title, date, event/show start, doors when applicable, description, and Buy Tickets/venue-map/travel sections; examples include arena concerts, games, and Thrive City events.",
+        "[observed] Browser retrieval of the central /events/ page returned an empty shell; the official community calendar currently displayed an event-fetch error, so discovery completeness is not established.",
+        "[observed] Existing generated ID 793025194 named Warriors Stadium has 300 16th Street, which does not match the official Chase Center address; 261131824 named Warrior's Arena is addressless. Treat both as ambiguous aliases requiring review.",
+        "[inferred] Keep sports, concerts, and nearby Thrive City/community events as distinct event kinds and do not auto-join the old IDs to Chase Center without an address/name migration decision."
+      ],
+      "unknowns": [
+        "[untested] Official event discovery endpoint/API, pagination, and complete future inventory.",
+        "[untested] Provider ticket venue ID and ticket-host consistency were not confirmed from the inaccessible central calendar."
+      ]
+    },
+    {
+      "venueIds": [1276498217, 1094184065],
+      "venueNames": ["Stern Grove", "Stern Grove Festival"],
+      "officialName": "Stern Grove Festival",
+      "website": "https://www.sterngrove.org/",
+      "calendarUrl": "https://www.sterngrove.org/lineup2026",
+      "feedUrls": [],
+      "providerVenueIds": {},
+      "ticketHosts": [],
+      "verifiedOn": "2026-09-07",
+      "status": "partial",
+      "strategy": "Parse official season lineup cards by date/headliner/support and preserve ticket-state labels; run season-bounded imports with explicit festival/park scope",
+      "evidenceUrls": [
+        "https://www.sterngrove.org/",
+        "https://www.sterngrove.org/lineup2026",
+        "https://www.sterngrove.org/faq"
+      ],
+      "observations": [
+        "[observed] Official homepage and 2026 lineup identify the venue as 19th Avenue and Sloat Boulevard, San Francisco, CA 94132, and describe the free summer music festival.",
+        "[observed] Lineup page exposes dated headliners, support/DJ text, and ticket-state labels; the 2026 page shows all listed dates as sold out or lottery closed, with table options on some dates.",
+        "[observed] Homepage says the 2026 season is complete and directs visitors to next summer's 90th season; this is an active festival source, not evidence of permanent closure.",
+        "[observed] Existing IDs 1276498217 (Stern Grove) and 1094184065 (Stern Grove Festival) describe the same official location/name family; merge remains an ETL identity decision.",
+        "[inferred] Use season lineup URL and date/headliner/support as a matching fingerprint, preserve it in a season ledger/review workflow rather than treating it as a durable provider ID, keep same-day performances separate, and avoid creating a generic Stern Grove park event."
+      ],
+      "unknowns": [
+        "[untested] Future-season URL pattern and whether lineup pages are replaced or archived.",
+        "[untested] No provider venue ID or external ticket host was exposed on the official lineup page."
+      ]
+    }
+  ]
+}
