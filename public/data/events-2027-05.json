@@ -39,7 +39,7 @@
           "originalVenueId": 1136597428,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789172046956,
           "contentHash": "fnv1a64:20a112aae5e00739",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -126,7 +126,7 @@
           "originalVenueId": 680116887,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789172046956,
           "contentHash": "fnv1a64:89446a4750374209",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -153,7 +153,7 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1789085100000,
+      "updatedAtEpochMs": 1789172046956,
       "sourceLineNumber": 1265,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -169,7 +169,7 @@
           "originalVenueId": 1531618194,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789085100000,
+          "lastSeenAtEpochMs": 1789172046956,
           "contentHash": "fnv1a64:e2e7051c7ef5eabd",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
@@ -231,7 +231,7 @@
           "incomingValue": "6+",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789085100000,
+          "detectedAtEpochMs": 1789172046956,
           "reason": "source-update"
         },
         {
@@ -243,7 +243,7 @@
           "incomingValue": [],
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789085100000,
+          "detectedAtEpochMs": 1789172046956,
           "reason": "source-update"
         },
         {
@@ -252,7 +252,7 @@
           "incomingValue": "major",
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1789085100000,
+          "detectedAtEpochMs": 1789172046956,
           "reason": "source-update"
         }
       ],
