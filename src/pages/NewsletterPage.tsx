@@ -360,6 +360,26 @@ export default function NewsletterPage() {
     return m;
   }, [events, artistMap]);
 
+  // Use the same local-artist rules for emphasis throughout the weekly shows
+  // list: explicitly listed locals, plus acts with enough upcoming shows
+  // across multiple venues, unless they are explicitly excluded.
+  const localArtistNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const artist of artists.values()) {
+      const normalizedName = artist.name.toLowerCase();
+      if (localArtistExclude.has(normalizedName)) continue;
+      const upcoming = artist.upcomingEvents.filter((event) =>
+        isEventUpcoming(event, nowMs, DISCOVERY_TIME_ZONE)
+      );
+      const venueCount = new Set(upcoming.map((event) => event.venueId)).size;
+      const onList = localArtistList.has(normalizedName);
+      const meetsThreshold =
+        upcoming.length >= MIN_EVENTS && venueCount >= MIN_VENUES;
+      if (onList || meetsThreshold) names.add(normalizedName);
+    }
+    return names;
+  }, [artists, localArtistExclude, localArtistList, nowMs]);
+
   // Local acts section — one row per physical show, not per artist. A bill
   // with multiple qualifying local acts (e.g. a big multi-band festival) is
   // still a single show, so it lists all of them together in one bolded
@@ -380,16 +400,11 @@ export default function NewsletterPage() {
     const rows = new Map<number, Row>();
 
     for (const artist of artists.values()) {
-      if (localArtistExclude.has(artist.name.toLowerCase())) continue;
+      if (!localArtistNames.has(artist.name.toLowerCase())) continue;
       const upcoming = artist.upcomingEvents.filter((e) =>
         isEventUpcoming(e, nowMs, DISCOVERY_TIME_ZONE)
       );
       if (upcoming.length === 0) continue;
-      const venueCount = new Set(upcoming.map((e) => e.venueId)).size;
-      const onList = localArtistList.has(artist.name.toLowerCase());
-      const meetsThreshold =
-        upcoming.length >= MIN_EVENTS && venueCount >= MIN_VENUES;
-      if (!onList && !meetsThreshold) continue;
 
       const sfEvents = upcoming.filter(
         (e) => isCity(e.venueCity) && e.dateEpochMs <= weekEndMs
@@ -430,8 +445,7 @@ export default function NewsletterPage() {
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
   }, [
     artists,
-    localArtistExclude,
-    localArtistList,
+    localArtistNames,
     nowMs,
     weekEndMs,
     isCity,
@@ -601,8 +615,13 @@ export default function NewsletterPage() {
         const multiplePart = ev.tags?.includes("multiple-show")
           ? " · Multiple shows"
           : "";
+        const lineupText = lineup
+          .map((name) =>
+            localArtistNames.has(name.toLowerCase()) ? `**${name}**` : name
+          )
+          .join(", ");
         lines.push(
-          `- ${fmtDate(ev.dateEpochMs)} · **${lineup.join(", ")}** at ${venueName}${pricePart}${agePart}${soldOut}${multiplePart}`
+          `- ${fmtDate(ev.dateEpochMs)} · ${lineupText} at ${venueName}${pricePart}${agePart}${soldOut}${multiplePart}`
         );
       }
     }
@@ -618,6 +637,7 @@ export default function NewsletterPage() {
     sfWeekEvents,
     artistMap,
     lineupMap,
+    localArtistNames,
     venues,
     nowMs,
     weekHeadingEpochMs,
