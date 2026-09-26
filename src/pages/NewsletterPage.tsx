@@ -321,7 +321,16 @@ export default function NewsletterPage() {
     [nowMs]
   );
   const weeklyEdition = manifest?.weeklyEdition ?? null;
-  const weekHeadingEpochMs = weeklyEdition?.endEpochMs ?? nowMs;
+  const weekHeadingEpochMs = useMemo(() => {
+    const editionId = weeklyEdition?.editionId;
+    if (editionId && /^\d{4}-\d{2}-\d{2}$/u.test(editionId)) {
+      const [year, month, day] = editionId.split("-").map(Number);
+      // Edition IDs are the Friday publication date. Use midday UTC so the
+      // date remains the same in the discovery timezone during DST.
+      return Date.UTC(year, month - 1, day, 12);
+    }
+    return weeklyEdition?.endEpochMs ?? nowMs;
+  }, [weeklyEdition, nowMs]);
 
   const artistMap = useMemo(() => {
     const m = new Map<number, string>();
