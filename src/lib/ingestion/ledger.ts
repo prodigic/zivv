@@ -82,6 +82,7 @@ interface EventMatch {
   fingerprintMatch: boolean;
   ambiguousIds: EventId[];
   legacyTimeUncertainIds: EventId[];
+  multipleShow?: boolean;
 }
 
 interface EventUpdateResult {
@@ -127,6 +128,7 @@ const EVENT_TAGS = new Set([
   "all-ages",
   "matinee",
   "late-show",
+  "multiple-show",
 ]);
 const RUN_STATUSES = new Set([
   "reconciled",
@@ -575,6 +577,137 @@ function sameFingerprint(
   );
 }
 
+/**
+ * A Steve's List lineup can gain or lose support acts between issues while
+ * the show identity remains stable.  Once venue, date, start time, and
+ * headliner agree, use that identity as a guarded fallback when the exact
+ * lineup fingerprint no longer matches.
+ */
+function sameStableIdentity(
+  existing: LedgerEvent,
+  candidate: Event,
+  artists: Artist[],
+  sourceKind: SourceKind,
+  sourceId: string,
+  session: string | null
+): boolean {
+  if (
+    existing.venueId !== candidate.venueId ||
+    existing.date !== candidate.date
+  )
+    return false;
+
+  const existingTime = eventTimeKey(existing);
+  const candidateTime = eventTimeKey(candidate);
+  if (existingTime === null || candidateTime === null || existingTime !== candidateTime)
+    return false;
+
+  if (session !== null) {
+    const existingSessions = sourceSessions(existing, sourceKind, sourceId);
+    if (
+      existingSessions.length === 0 ||
+      !existingSessions.includes(normalizeName(session))
+    )
+      return false;
+  }
+
+  const oldHeadliner = lineupFingerprint(existing, artists).headliner;
+  const newHeadliner = lineupFingerprint(candidate, artists).headliner;
+  return oldHeadliner !== null && oldHeadliner === newHeadliner;
+}
+
+function lineupArtistKey(name: string): string {
+  // Parenthetical role/presentation markers should not block a near-duplicate
+  // comparison (for example, "Kochina Rude (performance)").
+  return normalizeName(name).replace(/\s*\([^)]*\)\s*$/u, "").trim();
+}
+
+function lineupSet(event: Event, artists: Artist[]): Set<string> {
+  return new Set(
+    event.artistIds
+      .map((id) => artistNameById(artists, id))
+      .filter((name): name is string => name !== null)
+      .map(lineupArtistKey)
+      .filter(Boolean)
+  );
+}
+
+function lineupOverlap(
+  existing: Event,
+  candidate: Event,
+  artists: Artist[]
+): number {
+  const oldLineup = lineupSet(existing, artists);
+  const newLineup = lineupSet(candidate, artists);
+  if (oldLineup.size < 3 || newLineup.size < 3) return 0;
+  let intersection = 0;
+  for (const artist of oldLineup) if (newLineup.has(artist)) intersection++;
+  return intersection / Math.min(oldLineup.size, newLineup.size);
+}
+
+function isStrictLineupSubset(
+  existing: Event,
+  candidate: Event,
+  artists: Artist[]
+): boolean {
+  const oldLineup = lineupSet(existing, artists);
+  const newLineup = lineupSet(candidate, artists);
+  if (oldLineup.size === newLineup.size || Math.min(oldLineup.size, newLineup.size) < 2)
+    return false;
+  const smaller = oldLineup.size < newLineup.size ? oldLineup : newLineup;
+  const larger = oldLineup.size < newLineup.size ? newLineup : oldLineup;
+  return [...smaller].every((artist) => larger.has(artist));
+}
+
+function isNearbyLineupRevision(
+  existing: Event,
+  candidate: Event,
+  artists: Artist[]
+): boolean {
+  if (!isStrictLineupSubset(existing, candidate, artists)) return false;
+  const existingTime = actualStartEpochMs(existing);
+  const candidateTime = actualStartEpochMs(candidate);
+  return (
+    existingTime !== null &&
+    candidateTime !== null &&
+    Math.abs(existingTime - candidateTime) <= 2 * 60 * 60 * 1000
+  );
+}
+
+/**
+ * A migrated Steve's List row can have an uncertain wall-clock time while a
+ * later observation has an instant timestamp and a richer (or corrected)
+ * lineup. A migrated row may contain only the headliner, or a couple of support
+ * acts may have been corrected between listings. Require the same headliner
+ * and at least two shared acts when both lineups have multiple acts. Explicitly
+ * timed rows remain governed by the multiple-show guard below.
+ */
+function isLegacyLineupRevision(
+  existing: Event,
+  candidate: Event,
+  artists: Artist[]
+): boolean {
+  const oldLineup = lineupSet(existing, artists);
+  const newLineup = lineupSet(candidate, artists);
+  const smallerSize = Math.min(oldLineup.size, newLineup.size);
+  if (smallerSize < 1) return false;
+  const intersection = [...oldLineup].filter((artist) =>
+    newLineup.has(artist)
+  ).length;
+  const oldHeadliner = artistNameById(artists, existing.headlinerArtistId);
+  const newHeadliner = artistNameById(artists, candidate.headlinerArtistId);
+  if (oldHeadliner === null || oldHeadliner !== newHeadliner) return false;
+  if (
+    (smallerSize === 1 && intersection !== 1) ||
+    (smallerSize > 1 && (intersection < 2 || intersection / smallerSize < 0.6))
+  )
+    return false;
+  return (
+    existing.timeBasis === "legacy-wall-clock" &&
+    candidate.timeBasis === "instant"
+  );
+}
+
 function matchEvent(
   events: LedgerEvent[],
   candidate: CandidateParts,
@@ -682,6 +815,145 @@ function matchEvent(
       fingerprintMatch: true,
       ambiguousIds: [],
       legacyTimeUncertainIds: [],
+    };
+  }
+
+  const stableIdentityCandidates = events.filter(
+    (event) =>
+      !unmatchedRelativeUrl &&
+      !conflictsWithExistingSourceIdentity(
+        event,
+        candidate,
+        sourceKind,
+        sourceId
+      ) &&
+      sameStableIdentity(
+        event,
+        candidate.event,
+        artists,
+        sourceKind,
+        sourceId,
+        candidate.session
+      )
+  );
+  if (stableIdentityCandidates.length > 1) {
+    return {
+      event: null,
+      sourceMatch: false,
+      fingerprintMatch: false,
+      ambiguousIds: stableIdentityCandidates.map((event) => event.id),
+      legacyTimeUncertainIds: [],
+    };
+  }
+  if (stableIdentityCandidates.length === 1) {
+    return {
+      event: stableIdentityCandidates[0] ?? null,
+      sourceMatch: false,
+      // The stable identity fallback is still an identity-proven match; the
+      // event update will preserve its canonical ID and original added date.
+      fingerprintMatch: true,
+      ambiguousIds: [],
+      legacyTimeUncertainIds: [],
+    };
+  }
+
+  // A same-day bill can be rewritten with a different headliner, reordered
+  // acts, or role markers while remaining the same show. Compare the shared
+  // lineup against all rows, including earlier candidates in this batch; a
+  // plausible second performance is rolled into one grouped event below.
+  const nearLineupCandidates = events.filter(
+    (event) =>
+      !unmatchedRelativeUrl &&
+      !conflictsWithExistingSourceIdentity(
+        event,
+        candidate,
+        sourceKind,
+        sourceId
+      ) &&
+      event.venueId === candidate.event.venueId &&
+      event.date === candidate.event.date &&
+      (lineupOverlap(event, candidate.event, artists) >= 0.75 ||
+        (sourceKind === "steveslist" &&
+          isLegacyLineupRevision(event, candidate.event, artists)) ||
+        isNearbyLineupRevision(event, candidate.event, artists))
+  );
+  if (nearLineupCandidates.length > 0) {
+    const sameTime = nearLineupCandidates.filter(
+      (event) => eventTimeKey(event) === eventTimeKey(candidate.event)
+    );
+    if (sameTime.length === 1) {
+      return {
+        event: sameTime[0] ?? null,
+        sourceMatch: false,
+        fingerprintMatch: true,
+        ambiguousIds: [],
+        legacyTimeUncertainIds: [],
+      };
+    }
+    if (sameTime.length > 1) {
+      return {
+        event: null,
+        sourceMatch: false,
+        fingerprintMatch: false,
+        ambiguousIds: sameTime.map((event) => event.id),
+        legacyTimeUncertainIds: [],
+      };
+    }
+    if (
+      sourceKind === "steveslist" &&
+      nearLineupCandidates.length === 1 &&
+      isLegacyLineupRevision(
+        nearLineupCandidates[0] as LedgerEvent,
+        candidate.event,
+        artists
+      )
+    ) {
+      return {
+        event: nearLineupCandidates[0] ?? null,
+        sourceMatch: false,
+        fingerprintMatch: true,
+        ambiguousIds: [],
+        legacyTimeUncertainIds: [],
+      };
+    }
+    if (
+      nearLineupCandidates.length === 1 &&
+      isNearbyLineupRevision(
+        nearLineupCandidates[0] as LedgerEvent,
+        candidate.event,
+        artists
+      )
+    ) {
+      return {
+        event: nearLineupCandidates[0] ?? null,
+        sourceMatch: false,
+        fingerprintMatch: true,
+        ambiguousIds: [],
+        legacyTimeUncertainIds: [],
+      };
+    }
+    const ids = nearLineupCandidates.map((event) => event.id);
+    if (
+      nearLineupCandidates.some(
+        (event) => event.timeBasis === "legacy-wall-clock"
+      ) ||
+      candidate.event.timeBasis === "legacy-wall-clock"
+    ) {
+      return {
+        event: null,
+        sourceMatch: false,
+        fingerprintMatch: false,
+        ambiguousIds: [],
+        legacyTimeUncertainIds: ids,
+      };
+    }
+    return {
+      event: nearLineupCandidates.length === 1 ? nearLineupCandidates[0] ?? null : null,
+      sourceMatch: false,
+      fingerprintMatch: false,
+      ambiguousIds: [],
+      legacyTimeUncertainIds: [],
+      multipleShow: true,
     };
   }
 
@@ -830,6 +1102,13 @@ function validateEvent(
       false,
       code
     );
+  if (
+    event.multipleShowTimesEpochMs !== undefined &&
+    (!Array.isArray(event.multipleShowTimesEpochMs) ||
+      event.multipleShowTimesEpochMs.some((time) => !isFiniteNumber(time)))
+  ) {
+    fail(`${label}.multipleShowTimesEpochMs is invalid`, code);
+  }
   if (
     event.timeBasis !== undefined &&
     event.timeBasis !== "legacy-wall-clock" &&
@@ -1874,6 +2153,43 @@ function eventUpdate(
   };
 }
 
+function multipleShowCandidate(
+  existing: LedgerEvent,
+  candidate: CandidateParts
+): CandidateParts {
+  const times = [
+    ...(existing.multipleShowTimesEpochMs ??
+      (existing.startTimeEpochMs === undefined
+        ? []
+        : [existing.startTimeEpochMs])),
+    ...(candidate.event.multipleShowTimesEpochMs ??
+      (candidate.event.startTimeEpochMs === undefined
+        ? []
+        : [candidate.event.startTimeEpochMs])),
+  ].sort((a, b) => a - b);
+  return {
+    ...candidate,
+    event: {
+      ...candidate.event,
+      headlinerArtistId: existing.headlinerArtistId,
+      artistIds: [
+        ...new Set([...existing.artistIds, ...candidate.event.artistIds]),
+      ],
+      startTime: existing.startTime ?? candidate.event.startTime,
+      startTimeEpochMs:
+        existing.startTimeEpochMs ?? candidate.event.startTimeEpochMs,
+      multipleShowTimesEpochMs: times,
+      tags: [
+        ...new Set<Event["tags"][number]>([
+          ...existing.tags,
+          ...candidate.event.tags,
+          "multiple-show",
+        ]),
+      ],
+    },
+  };
+}
+
 function newLedgerEvent(
   candidate: CandidateParts,
   origin: FirstImportedBy,
@@ -2101,10 +2417,23 @@ export function reconcileCandidates(
       );
       continue;
     }
-
     if (!match.event) {
+      const candidateForInsert = match.multipleShow
+        ? {
+            ...candidate,
+            event: {
+              ...candidate.event,
+              tags: [
+                ...new Set<Event["tags"][number]>([
+                  ...candidate.event.tags,
+                  "multiple-show",
+                ]),
+              ],
+            },
+          }
+        : candidate;
       const allocatedId = allocateId(
-        candidate.event.id,
+        candidateForInsert.event.id,
         usedEventIds
       ) as EventId;
       const insertedVenueConflicts = venueReportConflicts(
@@ -2115,7 +2444,7 @@ export function reconcileCandidates(
         batch.observedAtEpochMs
       );
       const inserted = newLedgerEvent(
-        candidate,
+        candidateForInsert,
         batch.origin,
         sourceKind,
         batch.sourceId,
@@ -2138,7 +2467,7 @@ export function reconcileCandidates(
       fail(`Matched event ${match.event.id} disappeared during reconciliation`);
     const updated = eventUpdate(
       match.event,
-      candidate,
+      match.multipleShow ? multipleShowCandidate(match.event, candidate) : candidate,
       sourceKind,
       batch.sourceId,
       batch.observedAtEpochMs,

@@ -12,6 +12,7 @@ import type {
   IngestionLedger,
 } from "../../types/ingestion.js";
 import { StringNormalizer } from "../etl/utils.js";
+import { isNonPerformerArtistName } from "../etl/non-performer-artists.js";
 import {
   actualStartEpochMs,
   localDateKey,
@@ -145,7 +146,15 @@ export function assessVenueCoverage(
       item.reason = "Start instant disagrees with the local show date";
       continue;
     }
-    const names = [...new Set(listing.artists.map(normalized))];
+    const performerNames = listing.artists.filter(
+      (name) => !isNonPerformerArtistName(name)
+    );
+    if (!performerNames.length) {
+      item.outcome = "excluded";
+      item.reason = "Listing contains no performer artists";
+      continue;
+    }
+    const names = [...new Set(performerNames.map(normalized))];
     const directlyLinked = ledger.events.filter((e) =>
       e.sources.some(
         (s) =>
@@ -191,7 +200,7 @@ export function assessVenueCoverage(
         : nearMatches.find(
             (e) => actualStartEpochMs(e) === (listing.startTimeEpochMs ?? null)
           );
-    for (const name of listing.artists) {
+    for (const name of performerNames) {
       const key = normalized(name);
       let artist = artists.get(key);
       if (!artist) {
@@ -214,7 +223,7 @@ export function assessVenueCoverage(
     }
     const event: Event = {
       id: nextCandidate++ as EventId,
-      slug: `${listing.date}-${StringNormalizer.createSlug(listing.artists[0])}-${venue.slug}-${digest(listing.key).slice(0, 8)}`,
+      slug: `${listing.date}-${StringNormalizer.createSlug(performerNames[0])}-${venue.slug}-${digest(listing.key).slice(0, 8)}`,
       date: listing.date,
       dateEpochMs: Date.parse(`${listing.date}T12:00:00Z`),
       timezone: source.timezone,

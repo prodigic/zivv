@@ -243,6 +243,30 @@ at The Fillmore, San Francisco 21+ $45`;
       }
     });
 
+    it("should keep vendors out of performer identities", () => {
+      const rawEvents: RawEventData[] = [
+        {
+          dateString: "aug 15 fri",
+          artistLine: "The Headliner, vendors",
+          venueLine: "at Test Venue, San Francisco 21+ $25",
+          rawText:
+            "aug 15 fri The Headliner, vendors\nat Test Venue, San Francisco 21+ $25",
+          lineNumber: 1,
+        },
+      ];
+
+      const artistMap = new Map<string, Artist>();
+      const venueMap = new Map<string, Venue>();
+      const result = EventParser.normalizeEvents(rawEvents, artistMap, venueMap);
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.events).toHaveLength(1);
+      expect(result.events[0].artistIds).toHaveLength(1);
+      expect([...artistMap.values()].map((artist) => artist.normalizedName)).toEqual([
+        "headliner",
+      ]);
+    });
+
     it("should create and update venue entries", () => {
       const rawEvents: RawEventData[] = [
         {

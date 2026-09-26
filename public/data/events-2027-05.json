@@ -1,10 +1,54 @@
 {
   "chunkId": "2027-05",
   "dateRange": {
-    "startEpochMs": 1809604800000,
-    "endEpochMs": 1810468800000
+    "startEpochMs": 1809432000000,
+    "endEpochMs": 1810814400000
   },
   "events": [
+    {
+      "id": 397081345,
+      "slug": "2027-05-04-jean-michel-blais-the-chapel",
+      "date": "2027-05-04",
+      "dateEpochMs": 1809432000000,
+      "startTimeEpochMs": 1809486000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1864425371,
+      "artistIds": [
+        1864425371
+      ],
+      "venueId": 680116887,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1789777368000,
+      "updatedAtEpochMs": 1789777368000,
+      "sourceLineNumber": 1200,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789777368000,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 680116887,
+          "session": null,
+          "firstSeenAtEpochMs": 1789777368000,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:7a1a6bdf80ca4ade",
+          "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
     {
       "id": 2042063808,
       "slug": "2027-05-06-french-79-the-fillmore",
@@ -24,7 +68,7 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1788566700000,
-      "sourceLineNumber": 1263,
+      "sourceLineNumber": 1201,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
       "firstObservedAtEpochMs": 1788566700000,
@@ -39,10 +83,10 @@
           "originalVenueId": 1136597428,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:20a112aae5e00739",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
@@ -89,6 +133,96 @@
       "priceMax": 43.5
     },
     {
+      "id": 148121611,
+      "slug": "2027-05-09-alaska-thunderfuck-the-castro",
+      "date": "2027-05-09",
+      "dateEpochMs": 1809864000000,
+      "startTimeEpochMs": 1809914400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 544664959,
+      "artistIds": [
+        544664959
+      ],
+      "venueId": 1383208152,
+      "priceMin": 48,
+      "priceMax": 48,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1789777368000,
+      "updatedAtEpochMs": 1789777368000,
+      "sourceLineNumber": 1202,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789777368000,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1383208152,
+          "session": null,
+          "firstSeenAtEpochMs": 1789777368000,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:f010eaa54f280e68",
+          "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
+      "id": 792508062,
+      "slug": "2027-05-09-too-many-zooz-the-independent",
+      "date": "2027-05-09",
+      "dateEpochMs": 1809864000000,
+      "startTimeEpochMs": 1809918000000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1153516098,
+      "artistIds": [
+        1153516098
+      ],
+      "venueId": 515101024,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1203,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:6988e55065bd07e9",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
       "id": 489208615,
       "slug": "2027-05-15-the-liminanas-the-chapel",
       "date": "2027-05-15",
@@ -110,7 +244,7 @@
       "venueType": "club",
       "createdAtEpochMs": 1788566700000,
       "updatedAtEpochMs": 1788566700000,
-      "sourceLineNumber": 1264,
+      "sourceLineNumber": 1204,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
@@ -126,10 +260,10 @@
           "originalVenueId": 680116887,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:89446a4750374209",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
@@ -154,7 +288,7 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1789172046956,
-      "sourceLineNumber": 1265,
+      "sourceLineNumber": 1205,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
       "firstObservedAtEpochMs": 1788566700000,
@@ -169,10 +303,10 @@
           "originalVenueId": 1531618194,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:e2e7051c7ef5eabd",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
@@ -258,6 +392,50 @@
       ],
       "timeBasis": "instant",
       "notes": "96.5 FM; UK; https://mmhradio.co.uk/podcasts/losin-it-with-luscious/ [9]; every other Tuesday"
+    },
+    {
+      "id": 573826892,
+      "slug": "2027-05-20-agnes-obel-the-castro",
+      "date": "2027-05-20",
+      "dateEpochMs": 1810814400000,
+      "startTimeEpochMs": 1810868400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 990412279,
+      "artistIds": [
+        990412279
+      ],
+      "venueId": 1383208152,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1206,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1383208152,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:08b81fe0b4c15896",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
     }
   ]
 }

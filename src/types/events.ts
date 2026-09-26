@@ -45,6 +45,8 @@ export interface Event extends EventProvenance {
   dateEpochMs: number;
   startTime?: string; // ISO datetime string
   startTimeEpochMs?: number;
+  /** All performance times when a venue has more than one show that day. */
+  multipleShowTimesEpochMs?: number[];
   timezone: string; // e.g., "America/Los_Angeles"
 
   // Artists
@@ -168,7 +170,8 @@ export type EventTag =
   | "outdoor"
   | "all-ages"
   | "matinee"
-  | "late-show";
+  | "late-show"
+  | "multiple-show";
 
 export type VenueType =
   "major" | "club" | "diy" | "outdoor" | "festival" | "unknown";

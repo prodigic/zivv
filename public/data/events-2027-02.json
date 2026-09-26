@@ -2,7 +2,7 @@
   "chunkId": "2027-02",
   "dateRange": {
     "startEpochMs": 1801483200000,
-    "endEpochMs": 1803729600000
+    "endEpochMs": 1803816000000
   },
   "events": [
     {
@@ -10,7 +10,7 @@
       "slug": "2027-02-01-vansire-bimbos-365-club",
       "date": "2027-02-01",
       "dateEpochMs": 1801483200000,
-      "startTimeEpochMs": 1801587600000,
+      "startTimeEpochMs": 1801540800000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 593744007,
       "artistIds": [
@@ -25,11 +25,11 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1785499200000,
-      "updatedAtEpochMs": 1787360970305,
-      "sourceLineNumber": 4630,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1152,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": null,
+      "firstObservedAtEpochMs": 1790381132084,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -40,23 +40,42 @@
           "canonicalUrl": null,
           "originalVenueId": 697962111,
           "session": null,
-          "firstSeenAtEpochMs": null,
-          "lastSeenAtEpochMs": null,
-          "contentHash": "fnv1a64:3bbb15bcc0e4f841",
-          "firstSeenRunId": null,
-          "lastSeenRunId": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:18f820355180b45b",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
-      "timeBasis": "legacy-wall-clock"
+      "provenanceConflicts": [
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1801587600000,
+          "incomingValue": 1801540800000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant"
     },
     {
       "id": 1109271821,
       "slug": "2027-02-04-ajj-great-american-music-hall",
       "date": "2027-02-04",
       "dateEpochMs": 1801742400000,
-      "startTimeEpochMs": 1801803600000,
+      "startTimeEpochMs": 1801800000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 629127854,
       "artistIds": [
@@ -71,11 +90,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1786104000000,
-      "updatedAtEpochMs": 1787360970305,
-      "sourceLineNumber": 4631,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1153,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": null,
+      "firstObservedAtEpochMs": 1790381132084,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -86,23 +105,42 @@
           "canonicalUrl": null,
           "originalVenueId": 463728167,
           "session": null,
-          "firstSeenAtEpochMs": null,
-          "lastSeenAtEpochMs": null,
-          "contentHash": "fnv1a64:9f259a2d7e2011d1",
-          "firstSeenRunId": null,
-          "lastSeenRunId": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:f2170dd5e5a2b6b1",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
-      "timeBasis": "legacy-wall-clock"
+      "provenanceConflicts": [
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1801803600000,
+          "incomingValue": 1801800000000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant"
     },
     {
       "id": 1165208094,
       "slug": "2027-02-05-odezenne-the-independent",
       "date": "2027-02-05",
       "dateEpochMs": 1801828800000,
-      "startTimeEpochMs": 1801900800000,
+      "startTimeEpochMs": 1801886400000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1870225213,
       "artistIds": [
@@ -117,11 +155,11 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970305,
-      "sourceLineNumber": 4632,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1154,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": null,
+      "firstObservedAtEpochMs": 1790381132084,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -132,16 +170,125 @@
           "canonicalUrl": null,
           "originalVenueId": 515101024,
           "session": null,
-          "firstSeenAtEpochMs": null,
-          "lastSeenAtEpochMs": null,
-          "contentHash": "fnv1a64:2cb1449034cc29c8",
-          "firstSeenRunId": null,
-          "lastSeenRunId": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:cf6506a0975dca53",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
-      "timeBasis": "legacy-wall-clock"
+      "provenanceConflicts": [
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1801900800000,
+          "incomingValue": 1801886400000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant"
+    },
+    {
+      "id": 397194489,
+      "slug": "2027-02-05-twinsick-the-regency-ballroom",
+      "date": "2027-02-05",
+      "dateEpochMs": 1801828800000,
+      "startTimeEpochMs": 1801886400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1780889337,
+      "artistIds": [
+        1780889337
+      ],
+      "venueId": 2133080253,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1155,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2133080253,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:3c5af3842c8fd562",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
+      "id": 1222341339,
+      "slug": "2027-02-05-alvie-the-breakfast-pigs-kilowatt",
+      "date": "2027-02-05",
+      "dateEpochMs": 1801828800000,
+      "startTimeEpochMs": 1801882800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 768613345,
+      "artistIds": [
+        768613345,
+        745218816,
+        952091815
+      ],
+      "venueId": 1433810567,
+      "isFree": false,
+      "ageRestriction": "21+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1156,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1433810567,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:df6bbf0f6076eca1",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
     },
     {
       "id": 438847347,
@@ -165,7 +312,7 @@
       "venueType": "diy",
       "createdAtEpochMs": 1789172046956,
       "updatedAtEpochMs": 1789172046956,
-      "sourceLineNumber": 1241,
+      "sourceLineNumber": 1157,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
@@ -181,10 +328,56 @@
           "originalVenueId": 1689618485,
           "session": null,
           "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:890879938fb31ae8",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
+      "id": 1692279657,
+      "slug": "2027-02-06-romare-the-independent",
+      "date": "2027-02-06",
+      "dateEpochMs": 1801915200000,
+      "startTimeEpochMs": 1801976400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 397881833,
+      "artistIds": [
+        397881833
+      ],
+      "venueId": 515101024,
+      "priceMin": 39.68,
+      "priceMax": 39.68,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1158,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:480bfb52e92747f6",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
@@ -195,7 +388,7 @@
       "slug": "2027-02-09-rhiannon-giddens-the-fillmore",
       "date": "2027-02-09",
       "dateEpochMs": 1802174400000,
-      "startTimeEpochMs": 1802343600000,
+      "startTimeEpochMs": 1802232000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1448884712,
       "artistIds": [
@@ -210,11 +403,11 @@
       "tags": [],
       "venueType": "major",
       "createdAtEpochMs": 1784289600000,
-      "updatedAtEpochMs": 1787360970306,
-      "sourceLineNumber": 4633,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1159,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": null,
+      "firstObservedAtEpochMs": 1790381132084,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -225,16 +418,125 @@
           "canonicalUrl": null,
           "originalVenueId": 1136597428,
           "session": null,
-          "firstSeenAtEpochMs": null,
-          "lastSeenAtEpochMs": null,
-          "contentHash": "fnv1a64:ddd798c5b79cea2c",
-          "firstSeenRunId": null,
-          "lastSeenRunId": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:7206f5d1a7cdfe2c",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
-      "timeBasis": "legacy-wall-clock"
+      "provenanceConflicts": [
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1802343600000,
+          "incomingValue": 1802232000000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant"
+    },
+    {
+      "id": 190538854,
+      "slug": "2027-02-11-death-from-above-1979-august-hall",
+      "date": "2027-02-11",
+      "dateEpochMs": 1802347200000,
+      "startTimeEpochMs": 1802404800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 2084197820,
+      "artistIds": [
+        2084197820
+      ],
+      "venueId": 811075932,
+      "priceMin": 44.45,
+      "priceMax": 44.45,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1160,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:10be57aeb5069ff6",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
+      "id": 31564672,
+      "slug": "2027-02-12-ely-oaks-the-independent",
+      "date": "2027-02-12",
+      "dateEpochMs": 1802433600000,
+      "startTimeEpochMs": 1802494800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 621837371,
+      "artistIds": [
+        621837371
+      ],
+      "venueId": 515101024,
+      "isFree": false,
+      "ageRestriction": "18+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "club",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1161,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 515101024,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:4cc06583d5905ebf",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
     },
     {
       "id": 1164453243,
@@ -256,7 +558,7 @@
       "venueType": "club",
       "createdAtEpochMs": 1789172046956,
       "updatedAtEpochMs": 1789172046956,
-      "sourceLineNumber": 1243,
+      "sourceLineNumber": 1250,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
@@ -272,59 +574,59 @@
           "originalVenueId": 1689618485,
           "session": null,
           "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1789777368000,
           "contentHash": "fnv1a64:369762578fb9ae56",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
           "evidence": null
         }
       ],
       "provenanceConflicts": []
     },
     {
-      "id": 270715009,
-      "slug": "2027-02-17-the-bouncing-souls-the-uc-theater",
-      "date": "2027-02-17",
-      "dateEpochMs": 1802865600000,
-      "startTimeEpochMs": 1802887200000,
+      "id": 1077808807,
+      "slug": "2027-02-13-ultra-mode-tribute-the-ivy-room",
+      "date": "2027-02-13",
+      "dateEpochMs": 1802520000000,
       "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 1549370072,
+      "headlinerArtistId": 1511290100,
       "artistIds": [
-        1549370072,
-        313793903
+        1511290100,
+        674297221,
+        288782381
       ],
-      "venueId": 2093769319,
+      "venueId": 1689618485,
       "isFree": false,
-      "ageRestriction": "all-ages",
+      "ageRestriction": "21+",
       "status": "confirmed",
       "tags": [],
-      "venueType": "diy",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970306,
-      "sourceLineNumber": 4634,
+      "venueType": "club",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1162,
+      "timeBasis": "instant",
       "firstImportedBy": "steveslist",
-      "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": null,
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
       "announcedAtEpochMs": null,
-      "firstImportRunId": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
       "sources": [
         {
           "kind": "steveslist",
           "sourceId": "steveslist",
           "externalEventId": null,
           "canonicalUrl": null,
-          "originalVenueId": 2093769319,
+          "originalVenueId": 1689618485,
           "session": null,
-          "firstSeenAtEpochMs": null,
-          "lastSeenAtEpochMs": null,
-          "contentHash": "fnv1a64:1daea008f271a26c",
-          "firstSeenRunId": null,
-          "lastSeenRunId": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:e3490a3b7e4838f4",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
-      "timeBasis": "legacy-wall-clock"
+      "provenanceConflicts": []
     },
     {
       "id": 270715010,
@@ -350,7 +652,7 @@
       "venueType": "diy",
       "createdAtEpochMs": 1788566700000,
       "updatedAtEpochMs": 1788566700000,
-      "sourceLineNumber": 1244,
+      "sourceLineNumber": 1163,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
@@ -366,10 +668,10 @@
           "originalVenueId": 2093769319,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:763d4acaf45e3f2e",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
@@ -393,7 +695,7 @@
       "venueType": "major",
       "createdAtEpochMs": 1778241600000,
       "updatedAtEpochMs": 1788566700000,
-      "sourceLineNumber": 1245,
+      "sourceLineNumber": 1164,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
       "firstObservedAtEpochMs": 1788566700000,
@@ -408,10 +710,10 @@
           "originalVenueId": 2133080253,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:4283082e12284d4c",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
@@ -433,7 +735,7 @@
       "slug": "2027-02-19-buck-meek-moes-alley",
       "date": "2027-02-19",
       "dateEpochMs": 1803038400000,
-      "startTimeEpochMs": 1803070800000,
+      "startTimeEpochMs": 1803096000000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 1459277008,
       "artistIds": [
@@ -449,11 +751,11 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970306,
-      "sourceLineNumber": 4637,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1167,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": null,
+      "firstObservedAtEpochMs": 1790381132084,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -464,23 +766,42 @@
           "canonicalUrl": null,
           "originalVenueId": 1002839764,
           "session": null,
-          "firstSeenAtEpochMs": null,
-          "lastSeenAtEpochMs": null,
-          "contentHash": "fnv1a64:f1933b4fcdb16799",
-          "firstSeenRunId": null,
-          "lastSeenRunId": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:e480b9b56d68020a",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
-      "timeBasis": "legacy-wall-clock"
+      "provenanceConflicts": [
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1803070800000,
+          "incomingValue": 1803096000000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant"
     },
     {
       "id": 633804749,
       "slug": "2027-02-19-small-brown-bike-the-rickshaw-stop",
       "date": "2027-02-19",
       "dateEpochMs": 1803038400000,
-      "startTimeEpochMs": 1803067200000,
+      "startTimeEpochMs": 1803099600000,
       "timezone": "America/Los_Angeles",
       "headlinerArtistId": 131666199,
       "artistIds": [
@@ -496,11 +817,11 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1782475200000,
-      "updatedAtEpochMs": 1787360970306,
-      "sourceLineNumber": 4638,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1165,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": null,
+      "firstObservedAtEpochMs": 1790381132084,
       "announcedAtEpochMs": null,
       "firstImportRunId": null,
       "sources": [
@@ -511,16 +832,35 @@
           "canonicalUrl": null,
           "originalVenueId": 31041890,
           "session": null,
-          "firstSeenAtEpochMs": null,
-          "lastSeenAtEpochMs": null,
-          "contentHash": "fnv1a64:c1f799fc1c51eabf",
-          "firstSeenRunId": null,
-          "lastSeenRunId": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:97f77f27c7fee3c3",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
-      "timeBasis": "legacy-wall-clock"
+      "provenanceConflicts": [
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1803067200000,
+          "incomingValue": 1803099600000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        }
+      ],
+      "timeBasis": "instant"
     },
     {
       "id": 1767286095,
@@ -543,7 +883,7 @@
       "venueType": "club",
       "createdAtEpochMs": 1788566700000,
       "updatedAtEpochMs": 1788566700000,
-      "sourceLineNumber": 1247,
+      "sourceLineNumber": 1166,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
@@ -559,10 +899,54 @@
           "originalVenueId": 515101024,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:cd914c7569dc3c09",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
+      "id": 1828128754,
+      "slug": "2027-02-23-jack-white-the-fillmore",
+      "date": "2027-02-23",
+      "dateEpochMs": 1803384000000,
+      "startTimeEpochMs": 1803441600000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 1780481349,
+      "artistIds": [
+        1780481349
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1789777368000,
+      "updatedAtEpochMs": 1789777368000,
+      "sourceLineNumber": 143,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789777368000,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1136597428,
+          "session": null,
+          "firstSeenAtEpochMs": 1789777368000,
+          "lastSeenAtEpochMs": 1789777368000,
+          "contentHash": "fnv1a64:5178e7ca314203f1",
+          "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+          "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
           "evidence": null
         }
       ],
@@ -587,7 +971,7 @@
       "venueType": "major",
       "createdAtEpochMs": 1781265600000,
       "updatedAtEpochMs": 1788566700000,
-      "sourceLineNumber": 1249,
+      "sourceLineNumber": 1168,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
       "firstObservedAtEpochMs": 1788566700000,
@@ -602,10 +986,10 @@
           "originalVenueId": 631118593,
           "session": null,
           "firstSeenAtEpochMs": 1788566700000,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:917f89251affee54",
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],
@@ -652,6 +1036,50 @@
       "priceMax": 68.75
     },
     {
+      "id": 763943814,
+      "slug": "2027-02-25-spin-doctors-the-fillmore",
+      "date": "2027-02-25",
+      "dateEpochMs": 1803556800000,
+      "startTimeEpochMs": 1803614400000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 832350889,
+      "artistIds": [
+        832350889
+      ],
+      "venueId": 1136597428,
+      "isFree": false,
+      "ageRestriction": "all-ages",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1789777368000,
+      "updatedAtEpochMs": 1789777368000,
+      "sourceLineNumber": 1169,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1789777368000,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 1136597428,
+          "session": null,
+          "firstSeenAtEpochMs": 1789777368000,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:4142b592b20471e9",
+          "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
       "id": 693803615,
       "slug": "2027-02-27-fang-the-ivy-room",
       "date": "2027-02-27",
@@ -672,7 +1100,7 @@
       "venueType": "diy",
       "createdAtEpochMs": 1789172046956,
       "updatedAtEpochMs": 1789172046956,
-      "sourceLineNumber": 1250,
+      "sourceLineNumber": 1170,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "observed",
@@ -688,10 +1116,56 @@
           "originalVenueId": 1689618485,
           "session": null,
           "firstSeenAtEpochMs": 1789172046956,
-          "lastSeenAtEpochMs": 1789172046956,
+          "lastSeenAtEpochMs": 1790381132084,
           "contentHash": "fnv1a64:7b3365954bbfa825",
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-          "lastSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        }
+      ],
+      "provenanceConflicts": []
+    },
+    {
+      "id": 718154469,
+      "slug": "2027-02-28-james-marriott-august-hall",
+      "date": "2027-02-28",
+      "dateEpochMs": 1803816000000,
+      "startTimeEpochMs": 1803871800000,
+      "timezone": "America/Los_Angeles",
+      "headlinerArtistId": 902867223,
+      "artistIds": [
+        902867223
+      ],
+      "venueId": 811075932,
+      "priceMin": 35,
+      "priceMax": 35,
+      "isFree": false,
+      "ageRestriction": "5+",
+      "status": "confirmed",
+      "tags": [],
+      "venueType": "major",
+      "createdAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790381132084,
+      "sourceLineNumber": 1171,
+      "timeBasis": "instant",
+      "firstImportedBy": "steveslist",
+      "addedDateProvenance": "observed",
+      "firstObservedAtEpochMs": 1790381132084,
+      "announcedAtEpochMs": null,
+      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 811075932,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:75cf70d0851d4042",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "evidence": null
         }
       ],

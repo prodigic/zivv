@@ -167,6 +167,26 @@ describe("venue completeness and DB accounting", () => {
     ).toEqual(["one"]);
   });
 
+  it("does not promote vendor markers into performer identities", () => {
+    const input = result([
+      {
+        ...listing,
+        key: "vendor-marker",
+        url: "https://venue.example/vendor-marker",
+        date: "2026-11-10",
+        startTimeEpochMs: undefined,
+        artists: ["Example", "vendors"],
+      },
+    ]);
+    const assessment = assessVenueCoverage(ledger(), source, input, observed);
+
+    expect(assessment.batch.events).toHaveLength(1);
+    expect(assessment.batch.events[0].event.artistIds).toHaveLength(1);
+    expect(assessment.batch.artists.map((artist) => artist.normalizedName)).toEqual([
+      "example",
+    ]);
+  });
+
   it("requires a valid horizon before claiming the DB is verified", () => {
     const input = result([listing]);
     input.coverageEnd = undefined;

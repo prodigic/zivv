@@ -197,6 +197,11 @@ const EventCard: React.FC<EventCardProps> = ({
               {addedLabel}
             </div>
           )}
+          {event.tags.includes("multiple-show") && (
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-purple-700 dark:text-purple-300">
+              Multiple shows
+            </div>
+          )}
 
           {/* Main Artist Name - Full Width */}
           <h2
@@ -381,7 +386,9 @@ const EventCard: React.FC<EventCardProps> = ({
               <span className="text-blue-700 dark:text-blue-300 font-bold">
                 Tags:
               </span>{" "}
-              {event.tags.join(", ")}
+                {event.tags
+                  .map((tag) => (tag === "multiple-show" ? "Multiple shows" : tag))
+                  .join(", ")}
             </div>
           )}
           <div>

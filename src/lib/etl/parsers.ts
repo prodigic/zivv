@@ -17,6 +17,7 @@ import {
   DeduplicationUtils,
   HashGenerator,
 } from "./utils.js";
+import { isNonPerformerArtistName } from "./non-performer-artists.js";
 
 export class EventParser {
   /**
@@ -180,7 +181,9 @@ export class EventParser {
         }
 
         // Parse artists
-        const artistNames = this.parseArtistNames(rawEvent.artistLine);
+        const artistNames = this
+          .parseArtistNames(rawEvent.artistLine)
+          .filter((name) => !isNonPerformerArtistName(name));
         if (artistNames.length === 0) {
           errors.push({
             line: rawEvent.lineNumber,

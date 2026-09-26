@@ -44,6 +44,7 @@
     "test:all": "npm run test:run && npm run test:e2e",
     "test:all:coverage": "npm run test:coverage && npm run test:e2e && npm run test:performance",
     "etl": "npm run build:etl && node scripts/run-etl.js",
+    "local-acts:check": "npm run build:etl && node scripts/check-weekly-local-acts.js",
     "etl:verbose": "npm run etl -- --verbose",
     "ingestion:migrate": "npm run build:etl && node scripts/migrate-ingestion.js",
     "import:steveslist": "npm run build:etl && node scripts/import-events.js steveslist",

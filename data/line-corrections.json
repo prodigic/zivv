@@ -80,13 +80,28 @@
     "replacement": "Save Ferris at Napa Music Hall, Napa"
   },
   {
+    "note": "Drop malformed Steve List row with no venue so the batch remains auditable without inventing one.",
+    "pattern": "^sep\\s+26\\s+\\w{3}\\s+Maldita Cruda, Skalofrios, Self Mitigation$",
+    "replacement": ""
+  },
+  {
+    "note": "Restore missing venue separator and source typo in November 5 Stork Club listing.",
+    "pattern": "Hottiat\\s+thee Stork Club\\b",
+    "replacement": "at thee Stork Club"
+  },
+  {
     "note": "Missing separator before River Front Cafe in New Copasetics listing.",
     "pattern": "^(sep\\s+4\\s+\\w{3}\\s+New Copasetics) River Front Cafe,",
     "replacement": "$1 at River Front Cafe,"
   },
   {
-    "note": "Missing separator and city typo in Ivy Room listing.",
-    "pattern": "dj Misfailed Bday Partyat the Ivy Room, Albanu\\b",
-    "replacement": "dj Misfailed Bday Party at Ivy Room, Albany"
+    "note": "Map the known 1 Paseo de San Antonio address to SAP Center, San Jose.",
+    "pattern": "at 1 Paseo de San Antonio San Jose\\b",
+    "replacement": "at SAP Center, San Jose"
+  },
+  {
+    "note": "Typo: 'Stay Gold Delik' → 'Stay Gold Deli'",
+    "pattern": "\\bStay Gold Delik\\b",
+    "replacement": "Stay Gold Deli"
   }
 ]

@@ -557,6 +557,361 @@ describe("durable ingestion ledger", () => {
     expect(result.report.acceptedEventIds).toEqual([]);
   });
 
+  it("merges a lineup revision when the stable show identity is unchanged", () => {
+    const headliner = makeArtist(1, "Stable Headliner");
+    const oldSupport = makeArtist(4, "Original Support");
+    const newSupport = makeArtist(5, "Added Support");
+    const venue = makeVenue(2, "Stable Room");
+    const start = Date.parse("2026-09-21T03:00:00.000Z");
+    const existing = makeEvent(10, headliner.id, venue.id, "2026-09-20", start, {
+      artistIds: [headliner.id, oldSupport.id],
+    });
+    const candidate = makeEvent(11, headliner.id, venue.id, "2026-09-20", start, {
+      artistIds: [headliner.id, newSupport.id],
+    });
+
+    const result = reconcileCandidates(
+      bootstrapLedger(
+        {
+          events: [existing],
+          artists: [headliner, oldSupport],
+          venues: [venue],
+        },
+        1000
+      ),
+      batch(
+        "lineup-revision-1",
+        "steveslist",
+        "steveslist",
+        2000,
+        candidate,
+        [headliner, newSupport],
+        [venue]
+      )
+    );
+
+    expect(result.ledger.events).toHaveLength(1);
+    expect(result.report.newEventIds).toEqual([]);
+    expect(result.report.updatedEventIds).toEqual([10]);
+    expect(result.ledger.events[0]).toMatchObject({
+      id: 10,
+      artistIds: [headliner.id, newSupport.id],
+      createdAtEpochMs: existing.createdAtEpochMs,
+    });
+  });
+
+  it("merges a same-time close lineup even when the headliner changes", () => {
+    const firstHeadliner = makeArtist(1, "Original Headliner");
+    const revisedHeadliner = makeArtist(2, "Revised Headliner");
+    const supports = [
+      makeArtist(3, "Support One"),
+      makeArtist(4, "Support Two"),
+      makeArtist(5, "Support Three"),
+    ];
+    const venue = makeVenue(6, "Close Lineup Room");
+    const start = Date.parse("2026-09-21T03:00:00.000Z");
+    const existing = makeEvent(10, firstHeadliner.id, venue.id, "2026-09-20", start, {
+      artistIds: [firstHeadliner.id, ...supports.map((artist) => artist.id)],
+    });
+    const candidate = makeEvent(11, revisedHeadliner.id, venue.id, "2026-09-20", start, {
+      artistIds: [revisedHeadliner.id, ...supports.map((artist) => artist.id)],
+    });
+
+    const result = reconcileCandidates(
+      bootstrapLedger(
+        {
+          events: [existing],
+          artists: [firstHeadliner, revisedHeadliner, ...supports],
+          venues: [venue],
+        },
+        1000
+      ),
+      batch(
+        "close-lineup-same-time",
+        "steveslist",
+        "steveslist",
+        2000,
+        candidate,
+        [revisedHeadliner, ...supports],
+        [venue]
+      )
+    );
+
+    expect(result.ledger.events).toHaveLength(1);
+    expect(result.report.newEventIds).toEqual([]);
+    expect(result.report.updatedEventIds).toEqual([10]);
+  });
+
+  it("merges a two-act legacy row into a richer instant lineup revision", () => {
+    const headliner = makeArtist(1, "Legacy Headliner");
+    const originalSupport = makeArtist(3, "Original Support");
+    const addedSupport = makeArtist(4, "Added Support");
+    const venue = makeVenue(5, "Migrated Room");
+    const existing = makeEvent(
+      10,
+      headliner.id,
+      venue.id,
+      "2026-09-25",
+      Date.parse("2026-09-25T21:00:00.000Z"),
+      {
+        artistIds: [headliner.id, originalSupport.id],
+        timeBasis: "legacy-wall-clock",
+      }
+    );
+    const candidate = makeEvent(
+      11,
+      headliner.id,
+      venue.id,
+      "2026-09-25",
+      Date.parse("2026-09-26T04:00:00.000Z"),
+      {
+        artistIds: [headliner.id, originalSupport.id, addedSupport.id],
+        timeBasis: "instant",
+      }
+    );
+
+    const result = reconcileCandidates(
+      bootstrapLedger(
+        {
+          events: [existing],
+          artists: [headliner, originalSupport],
+          venues: [venue],
+        },
+        1000
+      ),
+      batch(
+        "legacy-subset-revision",
+        "steveslist",
+        "steveslist",
+        2000,
+        candidate,
+        [headliner, originalSupport, addedSupport],
+        [venue]
+      )
+    );
+
+    expect(result.ledger.events).toHaveLength(1);
+    expect(result.report.newEventIds).toEqual([]);
+    expect(result.report.updatedEventIds).toEqual([10]);
+    expect(result.ledger.events[0]?.artistIds).toEqual([
+      headliner.id,
+      originalSupport.id,
+      addedSupport.id,
+    ]);
+  });
+
+  it("rolls a plausible second performance into one multiple-show event", () => {
+    const firstHeadliner = makeArtist(1, "Early Headliner");
+    const revisedHeadliner = makeArtist(2, "Late Headliner");
+    const supports = [
+      makeArtist(3, "Shared One"),
+      makeArtist(4, "Shared Two"),
+      makeArtist(5, "Shared Three"),
+    ];
+    const venue = makeVenue(6, "Multiple Performance Room");
+    const existing = makeEvent(
+      10,
+      firstHeadliner.id,
+      venue.id,
+      "2026-09-20",
+      Date.parse("2026-09-21T01:00:00.000Z"),
+      { artistIds: [firstHeadliner.id, ...supports.map((artist) => artist.id)] }
+    );
+    const candidate = makeEvent(
+      11,
+      revisedHeadliner.id,
+      venue.id,
+      "2026-09-20",
+      Date.parse("2026-09-21T05:00:00.000Z"),
+      { artistIds: [revisedHeadliner.id, ...supports.map((artist) => artist.id)] }
+    );
+
+    const result = reconcileCandidates(
+      bootstrapLedger(
+        {
+          events: [existing],
+          artists: [firstHeadliner, revisedHeadliner, ...supports],
+          venues: [venue],
+        },
+        1000
+      ),
+      batch(
+        "close-lineup-second-performance",
+        "steveslist",
+        "steveslist",
+        2000,
+        candidate,
+        [revisedHeadliner, ...supports],
+        [venue]
+      )
+    );
+
+    expect(result.ledger.events).toHaveLength(1);
+    expect(result.report.newEventIds).toEqual([]);
+    expect(result.report.updatedEventIds).toEqual([10]);
+    expect(result.ledger.events[0]?.tags).toContain("multiple-show");
+    expect(result.ledger.events[0]?.multipleShowTimesEpochMs).toEqual([
+      Date.parse("2026-09-21T01:00:00.000Z"),
+      Date.parse("2026-09-21T05:00:00.000Z"),
+    ]);
+  });
+
+  it("consolidates a same-batch one-hour lineup revision", () => {
+    const headliner = makeArtist(1, "Batch Headliner");
+    const support = makeArtist(2, "Batch Support");
+    const added = makeArtist(3, "Batch Addition");
+    const venue = makeVenue(4, "Batch Room");
+    const first = makeEvent(
+      10,
+      headliner.id,
+      venue.id,
+      "2026-09-20",
+      Date.parse("2026-09-21T02:00:00.000Z"),
+      { artistIds: [headliner.id, support.id], timeBasis: "instant" }
+    );
+    const revision = makeEvent(
+      11,
+      headliner.id,
+      venue.id,
+      "2026-09-20",
+      Date.parse("2026-09-21T03:00:00.000Z"),
+      {
+        artistIds: [headliner.id, support.id, added.id],
+        timeBasis: "instant",
+      }
+    );
+    const result = reconcileCandidates(emptyLedger(), {
+      runId: "same-batch-lineup-revision",
+      origin: "steveslist",
+      sourceId: "steveslist",
+      observedAtEpochMs: 2000,
+      events: [first, revision],
+      artists: [headliner, support, added],
+      venues: [venue],
+    });
+
+    expect(result.ledger.events).toHaveLength(1);
+    expect(result.ledger.events[0]?.artistIds).toEqual([
+      headliner.id,
+      support.id,
+      added.id,
+    ]);
+    expect(result.ledger.events[0]?.tags).not.toContain("multiple-show");
+  });
+
+  it("consolidates a single-headliner legacy row with a later instant lineup", () => {
+    const headliner = makeArtist(1, "Legacy Headliner");
+    const support = makeArtist(2, "New Support");
+    const venue = makeVenue(3, "Legacy Room");
+    const existing = makeEvent(
+      10,
+      headliner.id,
+      venue.id,
+      "2026-09-18",
+      Date.parse("2026-09-18T20:00:00.000Z"),
+      { timeBasis: "legacy-wall-clock" }
+    );
+    const candidate = makeEvent(
+      11,
+      headliner.id,
+      venue.id,
+      "2026-09-18",
+      Date.parse("2026-09-19T03:00:00.000Z"),
+      {
+        artistIds: [headliner.id, support.id],
+        timeBasis: "instant",
+      }
+    );
+
+    const result = reconcileCandidates(
+      bootstrapLedger(
+        {
+          events: [existing],
+          artists: [headliner, support],
+          venues: [venue],
+        },
+        1000
+      ),
+      batch(
+        "legacy-single-headliner-revision",
+        "steveslist",
+        "steveslist",
+        2000,
+        candidate,
+        [headliner, support],
+        [venue]
+      )
+    );
+
+    expect(result.ledger.events).toHaveLength(1);
+    expect(result.report.newEventIds).toEqual([]);
+    expect(result.report.updatedEventIds).toEqual([10]);
+    expect(result.ledger.events[0]?.artistIds).toEqual([
+      headliner.id,
+      support.id,
+    ]);
+    expect(result.ledger.events[0]?.tags).not.toContain("multiple-show");
+  });
+
+  it("matches a legacy lineup after support-act corrections", () => {
+    const headliner = makeArtist(1, "Changed Bill Headliner");
+    const sharedSupport = makeArtist(2, "Shared Support");
+    const formerSupport = makeArtist(3, "Former Support");
+    const currentSupport = makeArtist(4, "Current Support");
+    const venue = makeVenue(5, "Changed Bill Room");
+    const existing = makeEvent(
+      10,
+      headliner.id,
+      venue.id,
+      "2026-09-20",
+      Date.parse("2026-09-20T20:00:00.000Z"),
+      {
+        artistIds: [headliner.id, sharedSupport.id, formerSupport.id],
+        timeBasis: "legacy-wall-clock",
+      }
+    );
+    const candidate = makeEvent(
+      11,
+      headliner.id,
+      venue.id,
+      "2026-09-20",
+      Date.parse("2026-09-21T03:00:00.000Z"),
+      {
+        artistIds: [headliner.id, sharedSupport.id, currentSupport.id],
+        timeBasis: "instant",
+      }
+    );
+    const artists = [
+      headliner,
+      sharedSupport,
+      formerSupport,
+      currentSupport,
+    ];
+
+    const result = reconcileCandidates(
+      bootstrapLedger({ events: [existing], artists, venues: [venue] }, 1000),
+      batch(
+        "legacy-corrected-supports",
+        "steveslist",
+        "steveslist",
+        2000,
+        candidate,
+        artists,
+        [venue]
+      )
+    );
+
+    expect(result.ledger.events).toHaveLength(1);
+    expect(result.report.newEventIds).toEqual([]);
+    expect(result.report.updatedEventIds).toEqual([10]);
+    expect(result.ledger.events[0]?.artistIds).toEqual([
+      headliner.id,
+      sharedSupport.id,
+      currentSupport.id,
+    ]);
+    expect(result.ledger.events[0]?.tags).not.toContain("multiple-show");
+  });
+
   it("allocates a new ID when a candidate collides with a different canonical event", () => {
     const artist = makeArtist(1, "Collision Artist");
     const venue = makeVenue(2, "Collision Room");

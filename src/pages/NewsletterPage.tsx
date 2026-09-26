@@ -365,6 +365,7 @@ export default function NewsletterPage() {
       priceMax?: number;
       isFree?: boolean;
       isSoldOut?: boolean;
+      multipleShow?: boolean;
       localNames: Set<string>;
     }
     const rows = new Map<number, Row>();
@@ -397,6 +398,7 @@ export default function NewsletterPage() {
             priceMax: ev.priceMax,
             isFree: ev.isFree,
             isSoldOut: ev.isSoldOut,
+            multipleShow: ev.tags?.includes("multiple-show"),
             localNames: new Set(),
           };
           rows.set(key, row);
@@ -513,22 +515,23 @@ export default function NewsletterPage() {
         const price = fmtPrice(row.priceMin, row.priceMax, row.isFree);
         const pricePart = price ? ` · ${price}` : "";
         const soldOut = row.isSoldOut ? " ~~sold out~~" : "";
+        const multiplePart = row.multipleShow ? " · Multiple shows" : "";
         const header = joinCapped(row.localNames);
         const withPart =
           row.coActs.length > 0 ? ` w/ · ${joinCapped(row.coActs)}` : "";
         lines.push(`**${header}**${withPart}`);
         lines.push(
-          `- ${fmtDate(row.dateEpochMs)} · ${row.venueName}${pricePart}${soldOut}`
+          `- ${fmtDate(row.dateEpochMs)} · ${row.venueName}${pricePart}${soldOut}${multiplePart}`
         );
         lines.push("");
       }
     }
 
-    // Section 2: Added this week. Keep all frozen edition membership and mark
+    // Section 2: Recently added shows. Keep all frozen edition membership and mark
     // rows whose performance has already happened at render time.
     lines.push("---");
     lines.push("");
-    lines.push("### ✦ Added this week");
+    lines.push("### ✦ Recently added shows");
     lines.push("");
 
     if (justAddedEvents.length === 0) {
@@ -549,11 +552,14 @@ export default function NewsletterPage() {
           ev.status === "sold-out" || ev.tags?.includes("sold-out")
             ? " ~~sold out~~"
             : "";
+        const multiplePart = ev.tags?.includes("multiple-show")
+          ? " · Multiple shows"
+          : "";
         const happened = isEventUpcoming(ev, nowMs, DISCOVERY_TIME_ZONE)
           ? ""
           : " · already happened";
         lines.push(
-          `- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueName}, ${venueCity}${pricePart}${agePart}${soldOut}${happened}`
+          `- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueName}, ${venueCity}${pricePart}${agePart}${soldOut}${multiplePart}${happened}`
         );
       }
     }
@@ -583,8 +589,11 @@ export default function NewsletterPage() {
           ev.status === "sold-out" || ev.tags?.includes("sold-out")
             ? " ~~sold out~~"
             : "";
+        const multiplePart = ev.tags?.includes("multiple-show")
+          ? " · Multiple shows"
+          : "";
         lines.push(
-          `- ${fmtDate(ev.dateEpochMs)} · **${lineup.join(", ")}** at ${venueName}${pricePart}${agePart}${soldOut}`
+          `- ${fmtDate(ev.dateEpochMs)} · **${lineup.join(", ")}** at ${venueName}${pricePart}${agePart}${soldOut}${multiplePart}`
         );
       }
     }
@@ -644,7 +653,7 @@ export default function NewsletterPage() {
   return (
     <ContentArea
       title="Newsletter"
-      subtitle={`${cityConfig.label} · local acts + added this week · Reddit-ready`}
+      subtitle={`${cityConfig.label} · local acts + recently added shows · Reddit-ready`}
     >
       {newsletterError && (
         <div
@@ -684,8 +693,8 @@ export default function NewsletterPage() {
 
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {localActCount} local acts · {justAddedEvents.length} added this
-              week · {sfWeekEvents.length} SF shows this week
+              {localActCount} local acts · {justAddedEvents.length} recently
+              added shows · {sfWeekEvents.length} SF shows this week
             </div>
             <div className="flex items-center gap-2">
               <div

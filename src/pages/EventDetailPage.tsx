@@ -247,7 +247,7 @@ const EventDetailPage: React.FC = () => {
               <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">{event.ageRestriction}</span>
             )}
             {event.tags?.map((tag) => (
-              <span key={tag} className="text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-1 rounded">{tag}</span>
+              <span key={tag} className="text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-1 rounded">{tag === "multiple-show" ? "Multiple shows" : tag}</span>
             ))}
             {event.ticketUrl && (
               <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer"

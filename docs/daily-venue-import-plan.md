@@ -174,6 +174,13 @@ provider ID updates the same event; a second performance is a new event. Preserv
 manual corrections and define field-level precedence: explicit manual override,
 then authoritative source for that field, then fallback source. Record conflicts.
 
+When the same venue has multiple listings on one date, reconciliation also
+compares the performer sets. A close lineup with the same parsed time is merged;
+a close lineup with distinct precise times is retained as a second event and
+tagged `multiple-show`; a close lineup involving a legacy or uncertain time is
+held for review. This prevents a rewritten bill from creating duplicates while
+keeping a plausible early/late performance visible for manual confirmation.
+
 Both weekly text and venue import candidates use this same reconciliation logic.
 The current text-only merge cannot safely establish cross-source identity. Do not
 round-trip structured events through lossy text just to invoke that merge script.
@@ -240,6 +247,20 @@ Advance its cutoff only after the edition artifact is successfully published;
 retry a failed edition with the same window and membership. A missed week uses
 the last successful cutoff, preventing a gap. Corrections to an already published
 edition require an explicit revision. No newsletter sending is implied here.
+
+After ingestion, run `npm run local-acts:check`. The command reads only the
+selected weekly edition, reports performer names missing from
+`data/local-artist-verification.json`, and skips names with a recorded local or
+non-local decision. Review each candidate on the web, preferring the act's
+official site or profile and then a venue bill or reputable local press. Mark an
+act local only when the evidence identifies the Bay Area or Greater Bay Area
+(including a named city such as San Francisco, Oakland, Berkeley, or San Jose).
+Record the decision and source URL with `--method web-search`, for example
+`--record "Act=local" --evidence "https://example.org/bio"`; use
+`--record "Act=non-local"` when the source identifies another home region. The
+decision is durable and updates the compatibility local-artist lists used by the
+browser. ETL no longer promotes artists into the local list from event-count
+heuristics without a verification decision.
 
 Build weekly additions before applying presentation filters. Keep the full
 membership, including shows that happened before the digest ran; group those as
