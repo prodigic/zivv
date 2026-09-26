@@ -26,9 +26,7 @@ interface CityConfig {
 const CITY_CONFIGS: Record<string, CityConfig> = {
   sf: {
     label: "SF",
-    match: (c) =>
-      ["S.f", "San Francisco", "SF", "S.F."].includes(c) ||
-      c.toLowerCase().includes("francisco"),
+    match: (c) => /^(?:s\.?f\.?|san francisco)(?:,.*)?$/i.test(c.trim()),
   },
   oakland: {
     label: "Oakland",

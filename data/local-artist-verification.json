@@ -497,6 +497,15 @@
       "method": "legacy-local-artist-list"
     },
     {
+      "name": "Fake Your Own Death",
+      "normalizedName": "fake your own death",
+      "status": "local",
+      "verifiedAtEpochMs": 1790384901727,
+      "method": "web-origin-check",
+      "evidence": "Bandcamp lists Fake Your Own Death as San Francisco, California; Axios also calls them a San Francisco-based group. https://fakeyourowndeath.bandcamp.com/",
+      "lastSeenEditionId": "2026-09-25"
+    },
+    {
       "name": "Fallidos",
       "normalizedName": "fallidos",
       "status": "local",
@@ -577,8 +586,19 @@
       "name": "Ghost Town Hangmen",
       "normalizedName": "ghost town hangmen",
       "status": "local",
-      "verifiedAtEpochMs": 1790406000000,
-      "method": "legacy-local-artist-list"
+      "verifiedAtEpochMs": 1790384901626,
+      "method": "web-origin-check",
+      "evidence": "Gretsch artist biography describes Ghost Town Hangmen as a San Francisco Bay Area-based rock trio. https://www.gretsch.com/guitarist/craig-hyatt/",
+      "lastSeenEditionId": "2026-09-25"
+    },
+    {
+      "name": "Gillian Welch & David Rawlings",
+      "normalizedName": "gillian welch & david rawlings",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790384901843,
+      "method": "web-origin-check",
+      "evidence": "Berklee says Welch and Rawlings met at Berklee, then moved to Nashville and began their musical partnership there; not a Bay Area act. https://www.berklee.edu/berklee-today/summer-2016/gillian-welch-david-rawlings",
+      "lastSeenEditionId": "2026-09-25"
     },
     {
       "name": "Grolixes",
@@ -1536,8 +1556,10 @@
       "name": "The Young Barons",
       "normalizedName": "the young barons",
       "status": "local",
-      "verifiedAtEpochMs": 1790406000000,
-      "method": "legacy-local-artist-list"
+      "verifiedAtEpochMs": 1790384901519,
+      "method": "web-origin-check",
+      "evidence": "Artist listing identifies the band as a teen surf rock group from Rockaway Beach, Pacifica, California, within the Greater Bay Area. https://www.bandsintown.com/a/14594744-the-young-barons",
+      "lastSeenEditionId": "2026-09-25"
     },
     {
       "name": "The Zac Schulze Gang",
