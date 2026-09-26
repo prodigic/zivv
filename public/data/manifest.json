@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "schemaVersion": "2.0.0",
-  "datasetVersion": "2026-09-26T00:14:35.049Z",
-  "lastUpdated": 1790381675049,
-  "processedAt": 1790381675049,
+  "datasetVersion": "2026-09-26T00:22:36.670Z",
+  "lastUpdated": 1790382156670,
+  "processedAt": 1790382156670,
   "latestIngestionDate": "2026-09-25",
   "totalEvents": 4320,
   "totalArtists": 8212,
@@ -208,12 +208,12 @@
     "indexes": {
       "filename": "indexes.json",
       "size": 1016626,
-      "checksum": "sha256-a1613a52051adce50356a44f7f825456e6563f454a85505cd204e03e4073e5b9"
+      "checksum": "sha256-b47f737b91170e6598861a949b34bc28fdca47f9c339fb30ea0837ef67b6a0c8"
     },
     "recentAdditions": {
       "filename": "recent-additions.json",
       "size": 1062173,
-      "checksum": "sha256-911da6e9c7f1cde3c51e04386a0b7990177be54d14a8be8513da008cbd0e5e61"
+      "checksum": "sha256-eadc1892ec871bc252ed77bd4f54a3b555a74b7dfa1c6d47ea88692c5da0d039"
     }
   },
   "sourceFiles": {
