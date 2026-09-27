@@ -19,7 +19,8 @@ const HomePage: React.FC = () => {
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
   const manifest = useAppStore((state) => state.manifest);
 
-  const { filters, searchQuery } = useFilterStore();
+  const { filters, searchQuery, hasActiveFilters, clearFilters, clearSearch } =
+    useFilterStore();
   const location = useLocation();
 
   const [displayLimit, setDisplayLimit] = React.useState(100);
@@ -257,7 +258,18 @@ const HomePage: React.FC = () => {
     >
       {allFilteredEvents.length === 0 && (
         <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-          No events match your filters.
+          <p>No events match your filters.</p>
+          {(hasActiveFilters || searchQuery.trim()) && (
+            <button
+              onClick={() => {
+                clearFilters();
+                clearSearch();
+              }}
+              className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm"
+            >
+              Clear filters and search
+            </button>
+          )}
         </div>
       )}
 

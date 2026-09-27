@@ -144,6 +144,36 @@ const openHome = () =>
   );
 
 describe("Homepage monthly event loading", () => {
+  it("recovers returning visitors whose saved date range ended last week", async () => {
+    localStorage.setItem(
+      "zivv-filters",
+      JSON.stringify({
+        state: {
+          filters: {
+            dateRange: { startDate: "2026-09-19", endDate: "2026-09-26" },
+          },
+        },
+        version: 0,
+      })
+    );
+    await useFilterStore.persist.rehydrate();
+    openHome();
+    expect(await screen.findByText("Upcoming Band")).toBeInTheDocument();
+    expect(screen.getByText("2 events")).toBeInTheDocument();
+  });
+
+  it("lets visitors clear a restrictive filter directly from the empty list", async () => {
+    useFilterStore.getState().setFilters({ venues: ["No matching venue"] });
+    openHome();
+    expect(
+      await screen.findByText("No events match your filters.")
+    ).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Clear filters and search" })
+    );
+    expect(await screen.findByText("Upcoming Band")).toBeInTheDocument();
+  });
+
   it("applies venue filters to the loaded upcoming months", async () => {
     useFilterStore.getState().setFilters({ venues: ["Test Venue"] });
     openHome();

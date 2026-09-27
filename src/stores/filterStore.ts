@@ -5,6 +5,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import type { EventFilters, AgeRestriction, EventTag } from "@/types/events.js";
+import { localDateKey } from "@/lib/discovery.js";
 
 // Filter state interface
 export interface FilterState {
@@ -289,7 +290,9 @@ export const useFilterStore = create<FilterStore>()(
           // Age restrictions
           const ageRestrictions = searchParams.get("ageRestrictions");
           if (ageRestrictions) {
-            filters.ageRestrictions = ageRestrictions.split(",") as AgeRestriction[];
+            filters.ageRestrictions = ageRestrictions.split(
+              ","
+            ) as AgeRestriction[];
           }
 
           // Tags
@@ -457,7 +460,8 @@ export const useFilterStore = create<FilterStore>()(
 
         getActiveFilters() {
           const { filters } = get();
-          const active: Array<{ key: string; value: unknown; label: string }> = [];
+          const active: Array<{ key: string; value: unknown; label: string }> =
+            [];
 
           // Map normalized city names to display names
           const cityDisplayMap: Record<string, string> = {
@@ -573,6 +577,35 @@ export const useFilterStore = create<FilterStore>()(
       }),
       {
         name: "zivv-filters", // localStorage key
+        merge: (persisted, current) => {
+          const saved = persisted as Partial<FilterState> | undefined;
+          const filters = { ...current.filters, ...saved?.filters };
+          const today = localDateKey(Date.now());
+          // Saved calendar dates expire; otherwise last week's selection can
+          // silently hide every upcoming show on a returning visit.
+          if (today) {
+            if (
+              filters.dateRange?.endDate &&
+              filters.dateRange.endDate < today
+            ) {
+              filters.dateRange = {};
+            }
+            if (
+              filters.dates?.length &&
+              filters.dates.every((date) => date < today)
+            ) {
+              filters.dates = [];
+            }
+          }
+          const activeFilterCount = calculateActiveFilterCount(filters);
+          return {
+            ...current,
+            ...saved,
+            filters,
+            activeFilterCount,
+            hasActiveFilters: activeFilterCount > 0,
+          };
+        },
         partialize: (state) => ({
           filters: state.filters,
           searchQuery: state.searchQuery,
