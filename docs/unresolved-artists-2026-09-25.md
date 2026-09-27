@@ -1,0 +1,162 @@
+# Unresolved artist entries
+
+Review window: September 25–October 4, 2026.
+
+Snapshot of the 154 unresolved entries shared in chat. Ana Lopez and Ick had classifications recorded after the original 156-entry audit.
+
+Some entries are event titles, combined bills or parsing fragments rather than individual acts. Unresolved means that a confident local/visiting classification was not established.
+
+- 1979
+- 3 Feet No Pressure
+- A Murphy
+- All Hope Lost
+- All Weekend Long
+- Amper&nd
+- Amy Cordova
+- and the Cast
+- Annecca
+- Attack Dog
+- Bela Ruino
+- Beya
+- Blivet
+- Boyg1rl
+- Brahm
+- BRNR
+- Brute Pressure
+- Buckshot
+- Buhb
+- Burning Down
+- C U Next Tuesday
+- Can't
+- Casino Black Coffee
+- Castro Street Fair
+- Catfight
+- Cement Eater
+- Charlie Bishop
+- Choke
+- Church Of The Dead
+- Cici Chavez
+- Circuit Split
+- Contact Sports
+- Country Fair
+- crafts
+- Creekcide
+- Croissant
+- Crosby Collective
+- Culo A Boca
+- Custody Weekend
+- Damaged Party
+- Darling I'm Dying
+- Darrell Scott String Band w/ Rob Ickes
+- Dave Hughes And The Goods
+- Dear Motorist
+- Deep Space
+- dj Cavity Rock
+- dj Gracie's Dad
+- dj LB
+- dj Lovazzano
+- dj Misfailed Bday Party
+- dj Trill
+- dj Yng Gma
+- Dollygrass (tribute)
+- Drop Step
+- Dust
+- Ear Brunello
+- Emo Night
+- Emo Nite
+- Everything Falls Into Place
+- Fatale
+- Felicity
+- Folsom Street Fair
+- Food Coma
+- Granny Nix
+- Hamdi FC vs. San Francisco
+- Hard Chiller
+- Hardly Strictly Bluegrass
+- Harf.
+- Hauntu
+- Heavy Arts Ensemble
+- Hex Pest
+- Hills to Hollers
+- Hogan & Timms
+- host Chaos
+- Hot Pink Static (debut)
+- Hot Tub Action
+- Insecure: Issa Rae
+- Into Dust
+- IX Of Swords
+- Jesus Crist Taxi Driver
+- John Craigie w/ The Coffis Brothers
+- Johnny
+- Jon Q Public
+- Jt
+- Jyotty
+- Kenny Stahl
+- Kill 'Em All
+- Lacecat
+- Langford
+- Little Debungus (album release)
+- Living In Silence
+- Los Thuthanaka
+- Lust 4 Blood
+- Marcelle & The Heartbreak Kids
+- membership meeting
+- Michael Mouse
+- Mimi Byrn
+- Mind's Eye
+- Naisha
+- Neighborhood Threat
+- No Country
+- One Last Prayer
+- Out Of The Ring
+- Palm Tree Music Festival
+- pathy Flowers
+- Petals For Armor
+- Phazed Out
+- Pink 40 (first show)
+- Polesmoker
+- Prenitce Penny
+- Press Start
+- Preston Barnes And The Jammers
+- Quasar
+- Ragwead
+- Rip Off
+- Rotten Core
+- Salt + (9:25pm)
+- Scissors
+- Scrrratched
+- Scuff Queer Line Dancing f. Jail Preacher
+- Seldon
+- Shape
+- Shorts
+- Siniestro
+- Slim Gucci
+- Splendor
+- Stardog Champions
+- Steel Beams
+- Stefano Flia
+- Street
+- Studio Phoebe
+- Sundale
+- Sym
+- T'Maro
+- The Bends
+- The Black Excellence Band (noon)
+- The Buffalo Soldiers
+- The Concert (tribute)
+- The Delirious
+- The Fancy Monkeys
+- The Infinite Conversation
+- The Phil Collins Story
+- The Republic Of Love
+- The True None
+- Todd Snider Rules!
+- Touch Me Hooker
+- Toy
+- Trashday
+- Triangle Fire
+- Trix From Peels
+- Venus
+- Viola Swamp
+- Violent Handjob
+- Your Local Union
