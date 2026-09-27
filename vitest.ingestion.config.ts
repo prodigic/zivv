@@ -12,6 +12,7 @@ export default defineConfig({
       "src/test/etl/**/*.test.ts",
       "src/test/components/NewEventsPage.test.tsx",
       "src/test/components/NewsletterPage.test.tsx",
+      "src/test/components/HomePage.test.tsx",
     ],
     reporters: ["default"],
   },

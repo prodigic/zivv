@@ -150,7 +150,14 @@ describe("NewEventsPage discovery controls", () => {
       target: { value: "2026-09-10" },
     });
     expect(screen.getByText("Test Band")).toBeInTheDocument();
-    expect(screen.getByText("Added Sep 10")).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "Recently added" })
+    ).toHaveTextContent("🆕");
+    expect(screen.getByRole("img", { name: "Recently added" })).toHaveAttribute(
+      "title",
+      "Added Sep 10"
+    );
+    expect(screen.queryByText("Added Sep 10")).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText("First imported by"), {
       target: { value: "zivv-venue-import" },

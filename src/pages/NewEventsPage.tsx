@@ -6,6 +6,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import NewShowBadge from "@/components/ui/NewShowBadge.js";
 import { useAppStore } from "@/stores/appStore.js";
 import {
   DISCOVERY_TIME_ZONE,
@@ -515,9 +516,9 @@ const NewEventsPage: React.FC = () => {
                     )}
                   </span>
                   {addedLabel && (
-                    <span className="shrink-0 text-xs font-semibold text-purple-700 dark:text-purple-300">
-                      {addedLabel}
-                    </span>
+                    <NewShowBadge
+                      addedAtEpochMs={discoveryData.createdAtEpochMs}
+                    />
                   )}
                 </div>
                 <div className="flex min-w-0 items-baseline gap-2">

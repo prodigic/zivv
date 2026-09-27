@@ -420,7 +420,7 @@ export default function NewsletterPage() {
             priceMax: ev.priceMax,
             isFree: ev.isFree,
             isSoldOut: ev.isSoldOut,
-            multipleShow: ev.tags?.includes("multiple-show"),
+            multipleShow: events.get(ev.id)?.tags.includes("multiple-show"),
             localNames: new Set(),
           };
           rows.set(key, row);
@@ -443,6 +443,7 @@ export default function NewsletterPage() {
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
   }, [
     artists,
+    events,
     localArtistNames,
     nowMs,
     weekEndMs,
