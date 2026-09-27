@@ -109,6 +109,44 @@ afterEach(() => {
 });
 
 describe("migration and ledger export", () => {
+  it("rebuilds local lists from evidence instead of copying stale compatibility labels", async () => {
+    const { root } = setup();
+    await migrateExistingCatalog(root);
+    writeFileSync(
+      join(root, "data/local-artists.json"),
+      JSON.stringify(["Touring Visitor"])
+    );
+    writeFileSync(
+      join(root, "data/local-artist-verification.json"),
+      JSON.stringify({
+        schemaVersion: 1,
+        entries: [
+          {
+            name: "Touring Visitor",
+            normalizedName: "touring visitor",
+            status: "local",
+            method: "legacy-local-artist-list",
+            verifiedAtEpochMs: 1,
+          },
+          {
+            name: "Test Band",
+            normalizedName: "test band",
+            status: "local",
+            method: "web-origin-check",
+            verifiedAtEpochMs: 2,
+            evidence: "Official bio: Oakland.",
+            sources: ["https://example.org/bio"],
+          },
+        ],
+      })
+    );
+    expect((await new ETLProcessor(root).processData()).success).toBe(true);
+    expect(
+      JSON.parse(
+        readFileSync(join(root, "public/data/local-artists.json"), "utf8")
+      )
+    ).toEqual(["Test Band"]);
+  });
   it("backfills the exact prior catalog and does not repeat the migration", async () => {
     const { root, event } = setup();
     await migrateExistingCatalog(root, Date.parse("2026-09-07T12:00:00Z"));

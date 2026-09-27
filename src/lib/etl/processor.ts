@@ -22,6 +22,8 @@ import type {
   SourceFileInfo,
 } from "../../types/data.js";
 import { loadLedger } from "../ingestion/ledger.js";
+import { namesForVerificationStatus } from "../ingestion/local-artist-verification.js";
+import type { LocalArtistVerificationLedger } from "../ingestion/local-artist-verification.js";
 import { withIngestionLock } from "../ingestion/lock.js";
 import { isEventUpcoming, localDateKey } from "../discovery.js";
 import { DataIndexer, DataChunker, SearchIndexBuilder } from "./indexer.js";
@@ -177,11 +179,23 @@ export class ETLProcessor {
             datasetVersion: edition.datasetVersion,
           };
       }
-      for (const name of ["local-artists.json", "local-artist-exclude.json"]) {
-        const file = join(this.projectRoot, "data", name);
-        if (existsSync(file))
-          writeFileSync(join(stage, name), readFileSync(file));
-      }
+      const verificationPath = join(
+        this.projectRoot,
+        "data/local-artist-verification.json"
+      );
+      const verification: LocalArtistVerificationLedger = existsSync(
+        verificationPath
+      )
+        ? JSON.parse(readFileSync(verificationPath, "utf8"))
+        : { schemaVersion: 1, entries: [] };
+      write(
+        "local-artists.json",
+        namesForVerificationStatus(verification, "local", artists)
+      );
+      write(
+        "local-artist-exclude.json",
+        namesForVerificationStatus(verification, "non-local", artists)
+      );
       write("manifest.json", manifest);
       // Paths are fixed children of the resolved project root. Preserve the old
       // directory as rollback; failed replacement restores it immediately.

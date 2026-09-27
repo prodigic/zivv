@@ -1,5 +1,5 @@
 /**
- * Local Artists — artists playing 3+ shows at 2+ distinct venues
+ * Local Artists — artists with verified Bay Area origins
  */
 
 import React, { useEffect } from "react";
@@ -9,9 +9,6 @@ import PriceWidget from "@/components/ui/PriceWidget.js";
 import NewBadge from "@/components/ui/NewBadge.js";
 import { useAppStore } from "@/stores/appStore.js";
 import { useFilterStore } from "@/stores/filterStore.js";
-
-const MIN_EVENTS = 3;
-const MIN_VENUES = 2;
 
 const LocalArtistsPage: React.FC = () => {
   const artists = useAppStore((s) => s.artists);
@@ -44,11 +41,7 @@ const LocalArtistsPage: React.FC = () => {
     let arr = Array.from(artists.values()).filter((a) => {
       if (excludeSet.has(a.name.toLowerCase())) return false;
       if (a.upcomingEvents.length === 0) return false;
-      // Include if on the persistent list OR currently meets the threshold
-      const onList = localArtistList.has(a.name.toLowerCase());
-      const venueCount = new Set(a.upcomingEvents.map((e) => e.venueId)).size;
-      const meetsThreshold = a.upcomingEvents.length >= MIN_EVENTS && venueCount >= MIN_VENUES;
-      return onList || meetsThreshold;
+      return localArtistList.has(a.name.toLowerCase());
     });
 
     if (artistSearch.trim()) {
@@ -85,7 +78,7 @@ const LocalArtistsPage: React.FC = () => {
   }
 
   return (
-    <ContentArea title="Local Artists" subtitle={`${localArtists.length} artists playing 3+ shows across multiple venues`}>
+    <ContentArea title="Local Artists" subtitle={`${localArtists.length} verified Bay Area artists with upcoming shows`}>
       {/* Search */}
       <div className="relative mb-6">
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

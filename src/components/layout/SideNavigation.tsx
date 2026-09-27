@@ -28,9 +28,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
       if (a.upcomingEvents.length === 0) continue;
       if (localArtistExclude.has(a.name.toLowerCase())) continue;
       const onList = localArtistList.has(a.name.toLowerCase());
-      const venueCount = new Set(a.upcomingEvents.map((e) => e.venueId)).size;
-      const meetsThreshold = a.upcomingEvents.length >= 3 && venueCount >= 2;
-      if (onList || meetsThreshold) count++;
+      if (onList) count++;
     }
     return count;
   }, [artists, localArtistExclude, localArtistList]);

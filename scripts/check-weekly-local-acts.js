@@ -10,6 +10,7 @@ import {
   normalizeVerifiedArtistName,
   seedLocalArtistVerificationLedger,
   upsertLocalArtistVerification,
+  weeklyPerformanceEventIds,
 } from "../dist/lib/ingestion/local-artist-verification.js";
 
 const args = process.argv.slice(2);
@@ -17,6 +18,11 @@ let root = fileURLToPath(new URL("../", import.meta.url));
 let editionId;
 let method = "manual-weekly-review";
 let evidence;
+let startDate;
+let endDateExclusive;
+let location;
+let recheck = false;
+const sources = [];
 const records = [];
 
 for (let index = 0; index < args.length; index++) {
@@ -25,10 +31,16 @@ for (let index = 0; index < args.length; index++) {
   else if (arg === "--edition" && args[index + 1]) editionId = args[++index];
   else if (arg === "--method" && args[index + 1]) method = args[++index];
   else if (arg === "--evidence" && args[index + 1]) evidence = args[++index];
+  else if (arg === "--start" && args[index + 1]) startDate = args[++index];
+  else if (arg === "--end-exclusive" && args[index + 1])
+    endDateExclusive = args[++index];
+  else if (arg === "--location" && args[index + 1]) location = args[++index];
+  else if (arg === "--source" && args[index + 1]) sources.push(args[++index]);
+  else if (arg === "--recheck") recheck = true;
   else if (arg === "--record" && args[index + 1]) records.push(args[++index]);
   else {
     throw new Error(
-      `Unknown or incomplete argument: ${arg}\nUsage: node scripts/check-weekly-local-acts.js [--root PATH] [--edition ID] [--record "Artist=local|non-local"] [--method NAME] [--evidence TEXT]`
+      `Unknown or incomplete argument: ${arg}\nUsage: node scripts/check-weekly-local-acts.js [--root PATH] [--edition ID] [--start YYYY-MM-DD] [--end-exclusive YYYY-MM-DD] [--recheck] [--record "Artist=local|non-local|unresolved"] [--method NAME] [--evidence TEXT] [--location PLACE] [--source URL]`
     );
   }
 }
@@ -57,14 +69,18 @@ const editions = [...(weekly.editions ?? [])].sort(
 const edition = editionId
   ? editions.find((item) => item.editionId === editionId)
   : editions[0];
-if (!edition) throw new Error(`Unknown weekly edition: ${editionId ?? "latest"}`);
+if (!edition)
+  throw new Error(`Unknown weekly edition: ${editionId ?? "latest"}`);
 
 const verificationPath = resolve(dataDir, "local-artist-verification.json");
 let verification;
 if (existsSync(verificationPath)) {
   verification = readJson(verificationPath, "local artist verification ledger");
 } else {
-  const local = readJson(resolve(dataDir, "local-artists.json"), "local artist list");
+  const local = readJson(
+    resolve(dataDir, "local-artists.json"),
+    "local artist list"
+  );
   const nonLocal = readJson(
     resolve(dataDir, "local-artist-exclude.json"),
     "local artist exclude list"
@@ -77,11 +93,20 @@ if (existsSync(verificationPath)) {
   writeJson(verificationPath, verification);
 }
 
+startDate ??= edition.editionId;
+endDateExclusive ??= new Date(Date.parse(startDate) + 7 * 86400000)
+  .toISOString()
+  .slice(0, 10);
+const weeklyEventIds = weeklyPerformanceEventIds(
+  ledger.events,
+  startDate,
+  endDateExclusive
+);
 const candidates = collectUnverifiedWeeklyArtists(
   ledger.events,
   ledger.artists,
-  edition.eventIds,
-  verification
+  weeklyEventIds,
+  recheck ? emptyLocalArtistVerificationLedger() : verification
 );
 const candidateByName = new Map(
   candidates.map((candidate) => [candidate.normalizedName, candidate])
@@ -92,10 +117,22 @@ for (const record of records) {
   if (separator <= 0) throw new Error(`Invalid --record value: ${record}`);
   const name = record.slice(0, separator).trim();
   const status = record.slice(separator + 1).trim();
-  if (status !== "local" && status !== "non-local")
+  if (status !== "local" && status !== "non-local" && status !== "unresolved")
     throw new Error(`Invalid status for ${name}: ${status}`);
   const normalizedName = normalizeVerifiedArtistName(name);
   const candidate = candidateByName.get(normalizedName);
+  if (
+    status !== "unresolved" &&
+    (!evidence || (!sources.length && method !== "user-confirmed"))
+  ) {
+    throw new Error(
+      "Confirmed origins require evidence and a source URL (or method user-confirmed)"
+    );
+  }
+  for (const source of sources) {
+    if (!["https:", "http:"].includes(new URL(source).protocol))
+      throw new Error("Source must be an HTTP(S) URL");
+  }
   upsertLocalArtistVerification(verification, {
     name: candidate?.name ?? name,
     normalizedName,
@@ -103,6 +140,8 @@ for (const record of records) {
     verifiedAtEpochMs: Date.now(),
     method,
     ...(evidence ? { evidence } : {}),
+    ...(location ? { location } : {}),
+    ...(sources.length ? { sources } : {}),
     lastSeenEditionId: edition.editionId,
   });
 }
@@ -111,11 +150,11 @@ if (records.length > 0) {
   writeJson(verificationPath, verification);
   writeJson(
     resolve(dataDir, "local-artists.json"),
-    namesForVerificationStatus(verification, "local")
+    namesForVerificationStatus(verification, "local", ledger.artists)
   );
   writeJson(
     resolve(dataDir, "local-artist-exclude.json"),
-    namesForVerificationStatus(verification, "non-local")
+    namesForVerificationStatus(verification, "non-local", ledger.artists)
   );
 }
 
@@ -123,9 +162,22 @@ console.log(
   JSON.stringify(
     {
       editionId: edition.editionId,
-      weeklyEventCount: edition.eventIds.length,
-      unverifiedCount: candidates.length,
-      unverified: candidates,
+      startDate,
+      endDateExclusive,
+      weeklyEventCount: weeklyEventIds.length,
+      unverifiedCount: collectUnverifiedWeeklyArtists(
+        ledger.events,
+        ledger.artists,
+        weeklyEventIds,
+        verification
+      ).length,
+      unverified: collectUnverifiedWeeklyArtists(
+        ledger.events,
+        ledger.artists,
+        weeklyEventIds,
+        verification
+      ),
+      ...(recheck ? { reviewAll: candidates } : {}),
       recordedCount: records.length,
       verificationPath,
     },

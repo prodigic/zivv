@@ -14,8 +14,6 @@ import {
   isEventUpcoming,
 } from "@/lib/discovery.js";
 
-const MIN_EVENTS = 3;
-const MIN_VENUES = 2;
 const MAX_NAMES_SHOWN = 5;
 
 interface CityConfig {
@@ -358,25 +356,17 @@ export default function NewsletterPage() {
     return m;
   }, [events, artistMap]);
 
-  // Use the same local-artist rules for emphasis throughout the weekly shows
-  // list: explicitly listed locals, plus acts with enough upcoming shows
-  // across multiple venues, unless they are explicitly excluded.
+  // Geography is established by a recorded origin check, never show counts.
   const localArtistNames = useMemo(() => {
     const names = new Set<string>();
     for (const artist of artists.values()) {
       const normalizedName = artist.name.toLowerCase();
       if (localArtistExclude.has(normalizedName)) continue;
-      const upcoming = artist.upcomingEvents.filter((event) =>
-        isEventUpcoming(event, nowMs, DISCOVERY_TIME_ZONE)
-      );
-      const venueCount = new Set(upcoming.map((event) => event.venueId)).size;
       const onList = localArtistList.has(normalizedName);
-      const meetsThreshold =
-        upcoming.length >= MIN_EVENTS && venueCount >= MIN_VENUES;
-      if (onList || meetsThreshold) names.add(normalizedName);
+      if (onList) names.add(normalizedName);
     }
     return names;
-  }, [artists, localArtistExclude, localArtistList, nowMs]);
+  }, [artists, localArtistExclude, localArtistList]);
 
   // Local acts section — one row per physical show, not per artist. A bill
   // with multiple qualifying local acts (e.g. a big multi-band festival) is
@@ -531,7 +521,7 @@ export default function NewsletterPage() {
     lines.push("");
 
     if (localShowRows.length === 0) {
-      lines.push("*No local acts with 3+ shows across 2+ venues this week.*");
+      lines.push("*No verified local acts playing this week.*");
     } else {
       for (const row of localShowRows) {
         const price = fmtPrice(row.priceMin, row.priceMax, row.isFree);

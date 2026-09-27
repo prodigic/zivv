@@ -248,19 +248,24 @@ retry a failed edition with the same window and membership. A missed week uses
 the last successful cutoff, preventing a gap. Corrections to an already published
 edition require an explicit revision. No newsletter sending is implied here.
 
-After ingestion, run `npm run local-acts:check`. The command reads only the
-selected weekly edition, reports performer names missing from
-`data/local-artist-verification.json`, and skips names with a recorded local or
-non-local decision. Review each candidate on the web, preferring the act's
+After ingestion, run `npm run local-acts:check`. The command selects every
+performance dated within seven calendar days starting on the edition date,
+including shows imported in earlier editions. Override the window with
+`--start YYYY-MM-DD --end-exclusive YYYY-MM-DD`; use `--recheck` to audit all
+performers again. It reports performers without evidenced decisions in
+`data/local-artist-verification.json`. Legacy list membership and unresolved
+searches remain eligible for review. Review each candidate on the web, preferring the act's
 official site or profile and then a venue bill or reputable local press. Mark an
 act local only when the evidence identifies the Bay Area or Greater Bay Area
 (including a named city such as San Francisco, Oakland, Berkeley, or San Jose).
 Record the decision and source URL with `--method web-search`, for example
-`--record "Act=local" --evidence "https://example.org/bio"`; use
+`--record "Act=local" --location "Oakland, California" --source "https://example.org/bio" --evidence "Official biography identifies an Oakland band."`; use
 `--record "Act=non-local"` when the source identifies another home region. The
 decision is durable and updates the compatibility local-artist lists used by the
-browser. ETL no longer promotes artists into the local list from event-count
-heuristics without a verification decision.
+browser. Store inconclusive research as `unresolved`, never as a guessed visitor.
+ETL derives browser lists from evidenced decisions and includes role-marked
+aliases. The newsletter, directory, and navigation never infer locality from
+show counts or the number of venues played.
 
 Build weekly additions before applying presentation filters. Keep the full
 membership, including shows that happened before the digest ran; group those as
