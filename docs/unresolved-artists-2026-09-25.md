@@ -2,7 +2,7 @@
 
 Review window: September 25–October 4, 2026.
 
-Snapshot of the 154 unresolved entries shared in chat. Ana Lopez and Ick had classifications recorded after the original 156-entry audit.
+Snapshot of the unresolved entries shared in chat, with 144 remaining after excluding the 10 non-performer entries identified below. Ana Lopez and Ick had classifications recorded after the original 156-entry audit.
 
 Some entries are event titles, combined bills or parsing fragments rather than individual acts. Unresolved means that a confident local/visiting classification was not established.
 
@@ -13,7 +13,6 @@ Some entries are event titles, combined bills or parsing fragments rather than i
 - All Weekend Long
 - Amper&nd
 - Amy Cordova
-- and the Cast
 - Annecca
 - Attack Dog
 - Bela Ruino
@@ -29,7 +28,6 @@ Some entries are event titles, combined bills or parsing fragments rather than i
 - C U Next Tuesday
 - Can't
 - Casino Black Coffee
-- Castro Street Fair
 - Catfight
 - Cement Eater
 - Charlie Bishop
@@ -38,8 +36,6 @@ Some entries are event titles, combined bills or parsing fragments rather than i
 - Cici Chavez
 - Circuit Split
 - Contact Sports
-- Country Fair
-- crafts
 - Creekcide
 - Croissant
 - Crosby Collective
@@ -62,15 +58,11 @@ Some entries are event titles, combined bills or parsing fragments rather than i
 - Drop Step
 - Dust
 - Ear Brunello
-- Emo Night
-- Emo Nite
 - Everything Falls Into Place
 - Fatale
 - Felicity
-- Folsom Street Fair
 - Food Coma
 - Granny Nix
-- Hamdi FC vs. San Francisco
 - Hard Chiller
 - Hardly Strictly Bluegrass
 - Harf.
@@ -100,7 +92,6 @@ Some entries are event titles, combined bills or parsing fragments rather than i
 - Los Thuthanaka
 - Lust 4 Blood
 - Marcelle & The Heartbreak Kids
-- membership meeting
 - Michael Mouse
 - Mimi Byrn
 - Mind's Eye
@@ -135,7 +126,6 @@ Some entries are event titles, combined bills or parsing fragments rather than i
 - Stardog Champions
 - Steel Beams
 - Stefano Flia
-- Street
 - Studio Phoebe
 - Sundale
 - Sym
@@ -160,3 +150,18 @@ Some entries are event titles, combined bills or parsing fragments rather than i
 - Viola Swamp
 - Violent Handjob
 - Your Local Union
+
+## Excluded non-performer entries
+
+Identified by the user on September 27, 2026. These are event titles, activities or parsing fragments; they are excluded from artist origin checks and the artist directory.
+
+- and the Cast
+- Castro Street Fair
+- Country Fair
+- crafts
+- Emo Nite
+- Emo Night
+- Folsom Street Fair
+- Hamdi FC vs. San Francisco
+- membership meeting
+- Street

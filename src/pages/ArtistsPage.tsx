@@ -13,6 +13,7 @@ import { useAppStore } from "@/stores/appStore.js";
 import { useFilterStore } from "@/stores/filterStore.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
 import NewBadge from "@/components/ui/NewBadge.js";
+import { isNonPerformerArtistName } from "@/lib/etl/non-performer-artists.js";
 
 const ArtistsPage: React.FC = () => {
   const artists = useAppStore((state) => state.artists);
@@ -105,7 +106,9 @@ const ArtistsPage: React.FC = () => {
 
   // Filter artists based on upcoming events flag and toolbar filters
   const allArtistsArray = React.useMemo(() => {
-    let artistsArray = Array.from(artists.values());
+    let artistsArray = Array.from(artists.values()).filter(
+      (artist) => !isNonPerformerArtistName(artist.name)
+    );
 
     // Filter by upcoming events
     if (showUpcomingOnly) {
