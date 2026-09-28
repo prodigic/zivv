@@ -48,6 +48,7 @@ describe("weekly local artist verification", () => {
     const names = [
       "and the Cast", "Castro Street Fair", "Country Fair", " crafts ",
       "Emo Nite", "Emo Night", "Folsom Street Fair",
+      "Cholos vs. Vampires", "Cholos vs. Vampiers",
       "Hamdi FC vs. San Francisco", "membership meeting", "Street",
       "Street Eaters", "Hamdi",
     ];

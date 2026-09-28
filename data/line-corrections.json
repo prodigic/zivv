@@ -103,5 +103,25 @@
     "note": "Typo: 'Stay Gold Delik' → 'Stay Gold Deli'",
     "pattern": "\\bStay Gold Delik\\b",
     "replacement": "Stay Gold Deli"
+  },
+  {
+    "note": "Correct the Oct. 8 Paloma Morrhy typo to the artist’s official name, Paloma Morphy, as confirmed by the promoter ticket listing.",
+    "pattern": "^(oct 8\\s+(?:2026|[a-z]{2,4})\\s+)Paloma Morrhy at Rickshaw Stop, S\\.F\\.",
+    "replacement": "$1Paloma Morphy at Rickshaw Stop, S.F."
+  },
+  {
+    "note": "Typo in the Black Flag member name: Steve’s List says David Rodriquez; official band roster says bassist David Rodriguez.",
+    "pattern": "\\bDavid Rodriquez\\b",
+    "replacement": "David Rodriguez"
+  },
+  {
+    "note": "Typo in the Marty O’Reilly Trio Oct. 23 lineup: Pat NByrne is Pat Byrne, as confirmed by the artist’s official bio and tour date.",
+    "pattern": "\\bPat NByrne\\b",
+    "replacement": "Pat Byrne"
+  },
+  {
+    "note": "Correct the Oct. 23 Pouya support act typo PellingFlesh to its official billing PeelingFlesh.",
+    "pattern": "\\bPellingFlesh\\b",
+    "replacement": "PeelingFlesh"
   }
 ]
