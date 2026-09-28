@@ -5,7 +5,7 @@ import "@testing-library/jest-dom/vitest";
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 
 const mock = vi.hoisted(() => {
   const loadChunk = vi
@@ -130,5 +130,57 @@ describe("NewsletterPage chunk loading", () => {
     expect(
       screen.queryByRole("button", { name: "Copy for Reddit" })
     ).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ["bay-area", "Bay Area", [1, 2, 3, 4, 5]],
+    ["sf", "SF", [1]],
+    ["oakland", "Oakland", [2]],
+  ] as const)("applies %s geography consistently across newsletter sections", (slug, label, includedIds) => {
+    vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-09-27T18:00:00Z"));
+    mock.store.loadedChunks = new Set(["2026-09"]);
+    const cities = ["San Francisco", "Oakland", "Berkeley", "Petaluma", ""];
+    const shows = cities.map((city, index) => ({
+      id: index + 1,
+      date: "2026-09-28",
+      dateEpochMs: Date.parse("2026-09-29T03:00:00Z"),
+      venueId: index + 1,
+      venueName: `Venue ${index + 1}`,
+      venueCity: city,
+      artistIds: [10, 20],
+      headlinerArtistId: 10,
+      tags: [],
+      status: "confirmed",
+      createdAtEpochMs: Date.parse("2026-09-26T18:00:00Z"),
+      firstImportedAtEpochMs: Date.parse("2026-09-26T18:00:00Z"),
+    }));
+    const laterShow = {
+      ...shows[0], id: 6, venueId: 6, venueName: "Later Venue",
+      date: "2026-10-15", dateEpochMs: Date.parse("2026-10-16T03:00:00Z"),
+      createdAtEpochMs: 0, firstImportedAtEpochMs: 0,
+    };
+    const allShows = [...shows, laterShow];
+    mock.store.events = new Map(allShows.map((show) => [show.id, show]));
+    mock.store.venues = new Map(allShows.map((show) => [show.venueId, {name: show.venueName, city: show.venueCity}]));
+    mock.store.artists = new Map([
+      [10, {id: 10, name: "Visitor", upcomingEvents: allShows}],
+      [20, {id: 20, name: "Local Support", upcomingEvents: allShows}],
+    ]);
+    mock.store.localArtistList = new Set(["local support"]);
+    const {container} = render(
+      <MemoryRouter initialEntries={[`/newsletter/${slug}`]}>
+        <Routes><Route path="/newsletter/:city" element={<NewsletterPage />} /></Routes>
+      </MemoryRouter>
+    );
+    expect(screen.getByRole("link", {name: "Bay Area"})).toHaveAttribute("href", "/newsletter/bay-area");
+    expect(screen.getByRole("link", {name: label, exact: true})).toHaveAttribute("aria-current", "page");
+    expect(screen.getByText(`1 local acts · ${includedIds.length} recently added shows · ${includedIds.length} ${label} shows this week`)).toBeInTheDocument();
+    const articleText = container.querySelector("article")?.textContent ?? "";
+    for (const show of shows) {
+      const occurrences = articleText.split(show.venueName).length - 1;
+      expect(occurrences).toBe(includedIds.some((id) => id === show.id) ? 3 : 0);
+    }
+    expect(articleText).not.toContain("Later Venue");
+    expect(articleText).toContain(`All ${label} Shows This Week`);
   });
 });

@@ -22,6 +22,10 @@ interface CityConfig {
 }
 
 const CITY_CONFIGS: Record<string, CityConfig> = {
+  "bay-area": {
+    label: "Bay Area",
+    match: () => true,
+  },
   sf: {
     label: "SF",
     match: (c) => /^(?:s\.?f\.?|san francisco)(?:,.*)?$/i.test(c.trim()),
@@ -584,7 +588,7 @@ export default function NewsletterPage() {
     lines.push("");
 
     if (sfWeekEvents.length === 0) {
-      lines.push("*No SF shows found for this week.*");
+      lines.push(`*No ${cityConfig.label} shows found for this week.*`);
     } else {
       for (const ev of sfWeekEvents) {
         const venueName = venues.get(ev.venueId)?.name ?? "";
@@ -697,6 +701,7 @@ export default function NewsletterPage() {
               <Link
                 key={slug}
                 to={slug === "sf" ? "/newsletter" : `/newsletter/${slug}`}
+                aria-current={cityConfig === cfg ? "page" : undefined}
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                   citySlug === slug ||
                   (slug === "sf" && !CITY_CONFIGS[citySlug])
@@ -712,7 +717,7 @@ export default function NewsletterPage() {
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div className="text-sm text-gray-500 dark:text-gray-400">
               {localActCount} local acts · {justAddedEvents.length} recently
-              added shows · {sfWeekEvents.length} SF shows this week
+              added shows · {sfWeekEvents.length} {cityConfig.label} shows this week
             </div>
             <div className="flex items-center gap-2">
               <div
