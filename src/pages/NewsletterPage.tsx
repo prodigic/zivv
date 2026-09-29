@@ -37,7 +37,10 @@ const CITY_CONFIGS: Record<string, CityConfig> = {
   sfmusic: {
     label: "sfmusic",
     match: (c) => SF_CITY.match(c) || NEARBY_CITIES.match(c),
-    groups: [SF_CITY, NEARBY_CITIES],
+    groups: [
+      { ...SF_CITY, label: "San Francisco Events" },
+      { ...NEARBY_CITIES, label: "Nearby Events" },
+    ],
   },
   oakland: {
     label: "Oakland",
@@ -214,7 +217,7 @@ function MarkdownPreview({ markdown }: { markdown: string }) {
             );
           if (level === 4)
             return (
-              <h4 key={index} className="mb-2 text-base font-semibold">
+              <h4 key={index} className="mb-3 text-xl font-bold">
                 {children}
               </h4>
             );
@@ -514,6 +517,9 @@ export default function NewsletterPage() {
     const lines: string[] = [];
     const areaLabel = cityConfig.groups ? "SF & Nearby" : cityConfig.label;
 
+    const nearbyCitySuffix = (city: string) =>
+      cityConfig.groups && NEARBY_CITIES.match(city) ? `, ${city.trim()}` : "";
+
     function appendGroups<T>(
       rows: T[],
       getCity: (row: T) => string,
@@ -565,7 +571,7 @@ export default function NewsletterPage() {
           row.coActs.length > 0 ? ` w/ · ${joinCapped(row.coActs)}` : "";
         lines.push(`**${header}**${withPart}`);
         lines.push(
-          `- ${fmtDate(row.dateEpochMs)} · ${row.venueName}${pricePart}${soldOut}${multiplePart}`
+          `- ${fmtDate(row.dateEpochMs)} · ${row.venueName}${nearbyCitySuffix(row.venueCity)}${pricePart}${soldOut}${multiplePart}`
         );
         lines.push("");
       }
@@ -586,7 +592,7 @@ export default function NewsletterPage() {
         const headlinerName =
           artistMap.get(ev.headlinerArtistId as number) ?? "";
         const venueName = venues.get(ev.venueId)?.name ?? "";
-        const venueCity = venues.get(ev.venueId)?.city ?? "";
+        const venueCity = (venues.get(ev.venueId)?.city ?? "").trim();
         const price = fmtPrice(ev.priceMin, ev.priceMax, ev.isFree);
         const pricePart = price ? ` · ${price}` : "";
         const agePart =
@@ -622,6 +628,7 @@ export default function NewsletterPage() {
       "*No shows found for this week.*",
       (ev) => {
         const venueName = venues.get(ev.venueId)?.name ?? "";
+        const venueCity = venues.get(ev.venueId)?.city ?? "";
         const lineup =
           lineupMap.get(Number(ev.id)) ??
           [artistMap.get(ev.headlinerArtistId as number) ?? ""].filter(Boolean);
@@ -644,7 +651,7 @@ export default function NewsletterPage() {
           )
           .join(", ");
         lines.push(
-          `- ${fmtDate(ev.dateEpochMs)} · ${lineupText} at ${venueName}${pricePart}${agePart}${soldOut}${multiplePart}`
+          `- ${fmtDate(ev.dateEpochMs)} · ${lineupText} at ${venueName}${nearbyCitySuffix(venueCity)}${pricePart}${agePart}${soldOut}${multiplePart}`
         );
       }
     );

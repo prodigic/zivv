@@ -201,19 +201,28 @@ describe("NewsletterPage chunk loading", () => {
       [...container.querySelectorAll("article h4")].map(
         (node) => node.textContent
       )
-    ).toEqual(["SF", "Nearby", "SF", "Nearby", "SF", "Nearby"]);
+    ).toEqual([
+      "San Francisco Events",
+      "Nearby Events",
+      "San Francisco Events",
+      "Nearby Events",
+      "San Francisco Events",
+      "Nearby Events",
+    ]);
     fireEvent.click(screen.getByRole("button", { name: "raw" }));
     const markdown = (screen.getByRole("textbox") as HTMLTextAreaElement).value;
     const sections = markdown.split(/^### /m).slice(1);
     expect(sections).toHaveLength(3);
     for (const section of sections) {
-      const [, sf, nearby] = section.split(/#### (?:SF|Nearby)\n/);
+      const [, sf, nearby] = section.split(
+        /#### (?:San Francisco Events|Nearby Events)\n/
+      );
       for (const id of [1, 7]) {
         expect(sf).toContain(`Venue ${id}`);
         expect(nearby).not.toContain(`Venue ${id}`);
       }
       for (const id of [2, 3, 4, 8]) {
-        expect(nearby).toContain(`Venue ${id}`);
+        expect(nearby).toContain(`Venue ${id}, ${cities[id - 1].trim()}`);
         expect(sf).not.toContain(`Venue ${id}`);
       }
       expect(section).not.toMatch(/Venue [56]/);
@@ -239,10 +248,10 @@ describe("NewsletterPage chunk loading", () => {
       </MemoryRouter>
     );
     expect(
-      screen.getAllByRole("heading", { level: 4, name: "SF" })
+      screen.getAllByRole("heading", { level: 4, name: "San Francisco Events" })
     ).toHaveLength(3);
     expect(
-      screen.getAllByRole("heading", { level: 4, name: "Nearby" })
+      screen.getAllByRole("heading", { level: 4, name: "Nearby Events" })
     ).toHaveLength(3);
     expect(screen.getAllByText("No additions this week.")).toHaveLength(2);
   });
