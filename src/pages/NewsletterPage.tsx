@@ -19,12 +19,25 @@ const MAX_NAMES_SHOWN = 5;
 interface CityConfig {
   label: string;
   match: (city: string) => boolean;
+  groups?: CityConfig[];
 }
 
+const SF_CITY: CityConfig = {
+  label: "SF",
+  match: (c) => /^(?:s\.?f\.?|san francisco)(?:,.*)?$/i.test(c.trim()),
+};
+
+const NEARBY_CITIES: CityConfig = {
+  label: "Nearby",
+  match: (c) => /^(?:oakland|berkeley|albany)(?:,.*)?$/i.test(c.trim()),
+};
+
 const CITY_CONFIGS: Record<string, CityConfig> = {
-  sf: {
-    label: "SF",
-    match: (c) => /^(?:s\.?f\.?|san francisco)(?:,.*)?$/i.test(c.trim()),
+  sf: SF_CITY,
+  sfmusic: {
+    label: "sfmusic",
+    match: (c) => SF_CITY.match(c) || NEARBY_CITIES.match(c),
+    groups: [SF_CITY, NEARBY_CITIES],
   },
   oakland: {
     label: "Oakland",
@@ -198,6 +211,12 @@ function MarkdownPreview({ markdown }: { markdown: string }) {
               <h2 key={index} className={className}>
                 {children}
               </h2>
+            );
+          if (level === 4)
+            return (
+              <h4 key={index} className="mb-2 text-base font-semibold">
+                {children}
+              </h4>
             );
           return (
             <h3 key={index} className={className}>
@@ -378,6 +397,7 @@ export default function NewsletterPage() {
       dateEpochMs: number;
       venueId: number;
       venueName: string;
+      venueCity: string;
       priceMin?: number;
       priceMax?: number;
       isFree?: boolean;
@@ -406,6 +426,7 @@ export default function NewsletterPage() {
             dateEpochMs: ev.dateEpochMs,
             venueId: ev.venueId as number,
             venueName: ev.venueName,
+            venueCity: ev.venueCity,
             priceMin: ev.priceMin,
             priceMax: ev.priceMax,
             isFree: ev.isFree,
@@ -431,15 +452,7 @@ export default function NewsletterPage() {
         return { ...row, localNames, coActs };
       })
       .sort((a, b) => a.dateEpochMs - b.dateEpochMs);
-  }, [
-    artists,
-    events,
-    localArtistNames,
-    nowMs,
-    weekEndMs,
-    isCity,
-    lineupMap,
-  ]);
+  }, [artists, events, localArtistNames, nowMs, weekEndMs, isCity, lineupMap]);
 
   // Build additions from the frozen weekly membership when available. The
   // membership is intentionally retained even when a show has already
@@ -499,6 +512,24 @@ export default function NewsletterPage() {
 
   const text = useMemo(() => {
     const lines: string[] = [];
+    const areaLabel = cityConfig.groups ? "SF & Nearby" : cityConfig.label;
+
+    function appendGroups<T>(
+      rows: T[],
+      getCity: (row: T) => string,
+      emptyMessage: string,
+      appendRow: (row: T) => void
+    ) {
+      for (const group of cityConfig.groups ?? [cityConfig]) {
+        if (cityConfig.groups) lines.push(`#### ${group.label}`, "");
+        const groupRows = cityConfig.groups
+          ? rows.filter((row) => group.match(getCity(row)))
+          : rows;
+        if (groupRows.length === 0) lines.push(emptyMessage);
+        else groupRows.forEach(appendRow);
+        lines.push("");
+      }
+    }
 
     const weekStr =
       formatLocalDate(
@@ -517,13 +548,14 @@ export default function NewsletterPage() {
     // Section 1: Local acts
     lines.push("---");
     lines.push("");
-    lines.push(`### 🏠 Local Acts Playing ${cityConfig.label} This Week`);
+    lines.push(`### 🏠 Local Acts Playing ${areaLabel} This Week`);
     lines.push("");
 
-    if (localShowRows.length === 0) {
-      lines.push("*No verified local acts playing this week.*");
-    } else {
-      for (const row of localShowRows) {
+    appendGroups(
+      localShowRows,
+      (row) => row.venueCity,
+      "*No verified local acts playing this week.*",
+      (row) => {
         const price = fmtPrice(row.priceMin, row.priceMax, row.isFree);
         const pricePart = price ? ` · ${price}` : "";
         const soldOut = row.isSoldOut ? " ~~sold out~~" : "";
@@ -537,7 +569,7 @@ export default function NewsletterPage() {
         );
         lines.push("");
       }
-    }
+    );
 
     // Section 2: Recently added shows. Keep all frozen edition membership and mark
     // rows whose performance has already happened at render time.
@@ -546,10 +578,11 @@ export default function NewsletterPage() {
     lines.push("### ✦ Recently added shows");
     lines.push("");
 
-    if (justAddedEvents.length === 0) {
-      lines.push("*No additions this week.*");
-    } else {
-      for (const ev of justAddedEvents) {
+    appendGroups(
+      justAddedEvents,
+      (ev) => venues.get(ev.venueId)?.city ?? "",
+      "*No additions this week.*",
+      (ev) => {
         const headlinerName =
           artistMap.get(ev.headlinerArtistId as number) ?? "";
         const venueName = venues.get(ev.venueId)?.name ?? "";
@@ -574,19 +607,20 @@ export default function NewsletterPage() {
           `- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueName}, ${venueCity}${pricePart}${agePart}${soldOut}${multiplePart}${happened}`
         );
       }
-    }
+    );
     lines.push("");
 
     // Section 3: All SF shows this week
     lines.push("---");
     lines.push("");
-    lines.push(`### 📍 All ${cityConfig.label} Shows This Week`);
+    lines.push(`### 📍 All ${areaLabel} Shows This Week`);
     lines.push("");
 
-    if (sfWeekEvents.length === 0) {
-      lines.push("*No SF shows found for this week.*");
-    } else {
-      for (const ev of sfWeekEvents) {
+    appendGroups(
+      sfWeekEvents,
+      (ev) => venues.get(ev.venueId)?.city ?? "",
+      "*No shows found for this week.*",
+      (ev) => {
         const venueName = venues.get(ev.venueId)?.name ?? "";
         const lineup =
           lineupMap.get(Number(ev.id)) ??
@@ -613,7 +647,7 @@ export default function NewsletterPage() {
           `- ${fmtDate(ev.dateEpochMs)} · ${lineupText} at ${venueName}${pricePart}${agePart}${soldOut}${multiplePart}`
         );
       }
-    }
+    );
 
     lines.push("");
     lines.push(`-- event data sourced from ${eventSourceAttribution}`);
@@ -712,7 +746,9 @@ export default function NewsletterPage() {
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div className="text-sm text-gray-500 dark:text-gray-400">
               {localActCount} local acts · {justAddedEvents.length} recently
-              added shows · {sfWeekEvents.length} SF shows this week
+              added shows · {sfWeekEvents.length}{" "}
+              {cityConfig.groups ? "SF & Nearby" : cityConfig.label} shows this
+              week
             </div>
             <div className="flex items-center gap-2">
               <div
