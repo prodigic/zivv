@@ -33,30 +33,29 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 // Mock IntersectionObserver
-globalThis.IntersectionObserver = class MockIntersectionObserver
-  implements IntersectionObserver
-{
-  root: Element | null = null;
-  rootMargin: string = "0px";
-  thresholds: ReadonlyArray<number> = [];
+globalThis.IntersectionObserver =
+  class MockIntersectionObserver implements IntersectionObserver {
+    root: Element | null = null;
+    rootMargin: string = "0px";
+    thresholds: ReadonlyArray<number> = [];
 
-  constructor() {
-    // Mock implementation
-  }
+    constructor() {
+      // Mock implementation
+    }
 
-  observe() {
-    // Mock implementation
-  }
+    observe() {
+      // Mock implementation
+    }
 
-  unobserve() {
-    // Mock implementation
-  }
+    unobserve() {
+      // Mock implementation
+    }
 
-  disconnect() {
-    // Mock implementation
-  }
+    disconnect() {
+      // Mock implementation
+    }
 
-  takeRecords(): IntersectionObserverEntry[] {
-    return [];
-  }
-} as any;
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+  } as any;

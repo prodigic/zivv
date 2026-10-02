@@ -23,13 +23,13 @@ const createMockWorker = () => {
   mockWorkerConstructor = vi.fn(() => mockWorker);
 
   // Mock global Worker
-  Object.defineProperty(global, 'Worker', {
+  Object.defineProperty(global, "Worker", {
     value: mockWorkerConstructor,
     writable: true,
   });
 
   // Mock URL for worker creation
-  Object.defineProperty(global, 'URL', {
+  Object.defineProperty(global, "URL", {
     value: vi.fn((path) => ({ toString: () => path })),
     writable: true,
   });
@@ -161,9 +161,9 @@ describe("WorkerService", () => {
     it("should fall back when Worker is not supported", () => {
       // Create new mock constructor that hasn't been called
       const freshMockConstructor = vi.fn(() => mockWorker);
-      
+
       // Mock unsupported Worker environment
-      Object.defineProperty(global, 'Worker', {
+      Object.defineProperty(global, "Worker", {
         value: undefined,
         writable: true,
       });
@@ -227,7 +227,7 @@ describe("WorkerService", () => {
 
     it("should use main thread when worker not available", async () => {
       // Create service without worker
-      Object.defineProperty(global, 'Worker', {
+      Object.defineProperty(global, "Worker", {
         value: undefined,
         writable: true,
       });
@@ -243,7 +243,7 @@ describe("WorkerService", () => {
     });
 
     it("should handle JSON parsing errors in main thread", async () => {
-      Object.defineProperty(global, 'Worker', {
+      Object.defineProperty(global, "Worker", {
         value: undefined,
         writable: true,
       });
@@ -251,8 +251,9 @@ describe("WorkerService", () => {
       const noWorkerService = new WorkerService();
       const invalidJson = "{ invalid json }";
 
-      await expect(noWorkerService.parseJson(invalidJson, "events"))
-        .rejects.toThrow("JSON parsing failed");
+      await expect(
+        noWorkerService.parseJson(invalidJson, "events")
+      ).rejects.toThrow("JSON parsing failed");
 
       noWorkerService.dispose();
     });
@@ -307,7 +308,11 @@ describe("WorkerService", () => {
         }
       }, 0);
 
-      const result = await workerService.filterEvents(mockEvents, filters, searchQuery);
+      const result = await workerService.filterEvents(
+        mockEvents,
+        filters,
+        searchQuery
+      );
 
       expect(mockWorker.postMessage).toHaveBeenCalledWith({
         id: "req-1",
@@ -336,9 +341,7 @@ describe("WorkerService", () => {
 
       // The main thread fallback should filter for free events
       expect(result.events).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ isFree: true })
-        ])
+        expect.arrayContaining([expect.objectContaining({ isFree: true })])
       );
       expect(result.totalCount).toBeGreaterThanOrEqual(0);
     });
@@ -361,7 +364,11 @@ describe("WorkerService", () => {
         }
       }, 0);
 
-      const result = await workerService.sortEvents(mockEvents, sortField, sortOrder);
+      const result = await workerService.sortEvents(
+        mockEvents,
+        sortField,
+        sortOrder
+      );
 
       expect(mockWorker.postMessage).toHaveBeenCalledWith({
         id: "req-1",
@@ -387,20 +394,28 @@ describe("WorkerService", () => {
         }
       }, 0);
 
-      const result = await workerService.sortEvents(mockEvents, sortField, sortOrder);
+      const result = await workerService.sortEvents(
+        mockEvents,
+        sortField,
+        sortOrder
+      );
 
       expect(result.events).toBeDefined();
       expect(result.events.length).toBe(mockEvents.length);
     });
 
     it("should sort by price in main thread", async () => {
-      Object.defineProperty(global, 'Worker', {
+      Object.defineProperty(global, "Worker", {
         value: undefined,
         writable: true,
       });
 
       const noWorkerService = new WorkerService();
-      const result = await noWorkerService.sortEvents(mockEvents, "price", "asc");
+      const result = await noWorkerService.sortEvents(
+        mockEvents,
+        "price",
+        "asc"
+      );
 
       // Free event should come first when sorting by price ascending
       expect(result.events[0].isFree).toBe(true);
@@ -427,24 +442,36 @@ describe("WorkerService", () => {
         }
       }, 0);
 
-      const result = await workerService.buildSearchIndex(mockEvents, mockArtists, mockVenues);
+      const result = await workerService.buildSearchIndex(
+        mockEvents,
+        mockArtists,
+        mockVenues
+      );
 
       expect(mockWorker.postMessage).toHaveBeenCalledWith({
         id: "req-1",
         type: "BUILD_SEARCH_INDEX",
-        payload: { events: mockEvents, artists: mockArtists, venues: mockVenues },
+        payload: {
+          events: mockEvents,
+          artists: mockArtists,
+          venues: mockVenues,
+        },
       });
       expect(result).toEqual(expectedResult);
     });
 
     it("should fallback to main thread index building", async () => {
-      Object.defineProperty(global, 'Worker', {
+      Object.defineProperty(global, "Worker", {
         value: undefined,
         writable: true,
       });
 
       const noWorkerService = new WorkerService();
-      const result = await noWorkerService.buildSearchIndex(mockEvents, mockArtists, mockVenues);
+      const result = await noWorkerService.buildSearchIndex(
+        mockEvents,
+        mockArtists,
+        mockVenues
+      );
 
       expect(result).toHaveProperty("documents");
       expect(result).toHaveProperty("terms");
@@ -488,7 +515,7 @@ describe("WorkerService", () => {
     });
 
     it("should fallback to main thread stats calculation", async () => {
-      Object.defineProperty(global, 'Worker', {
+      Object.defineProperty(global, "Worker", {
         value: undefined,
         writable: true,
       });
@@ -498,7 +525,7 @@ describe("WorkerService", () => {
 
       expect(result).toHaveProperty("totalEvents", 2);
       // The implementation counts free events correctly - check actual count
-      const freeCount = mockEvents.filter(e => e.isFree).length;
+      const freeCount = mockEvents.filter((e) => e.isFree).length;
       expect(result).toHaveProperty("freeEvents", freeCount);
       expect(result).toHaveProperty("upcomingEvents");
       expect(result).toHaveProperty("pastEvents");
@@ -509,7 +536,9 @@ describe("WorkerService", () => {
 
   describe("error handling", () => {
     it("should handle unknown response ID", () => {
-      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const consoleWarn = vi
+        .spyOn(console, "warn")
+        .mockImplementation(() => {});
 
       // Send response with unknown ID
       if (mockWorker.onmessage) {
@@ -607,9 +636,9 @@ describe("WorkerService", () => {
       const parsePromise = workerService.parseJson('{"test": 1}', "events");
 
       expect(mockWorker.postMessage).toHaveBeenCalledWith(
-        expect.objectContaining({ 
+        expect.objectContaining({
           type: "PARSE_JSON",
-          payload: expect.any(Object)
+          payload: expect.any(Object),
         })
       );
 

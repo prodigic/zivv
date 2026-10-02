@@ -22,8 +22,7 @@ const ArtistsPage: React.FC = () => {
   const initialize = useAppStore((state) => state.initialize);
   const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
 
-  const { filters, setSearchQuery, clearSearch } =
-    useFilterStore();
+  const { filters, setSearchQuery, clearSearch } = useFilterStore();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -125,10 +124,16 @@ const ArtistsPage: React.FC = () => {
 
     // Filter by date range
     if (filters.dateRange?.startDate || filters.dateRange?.endDate) {
-      const start = filters.dateRange?.startDate ? new Date(filters.dateRange.startDate).setHours(0,0,0,0) : -Infinity;
-      const end = filters.dateRange?.endDate ? new Date(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
+      const start = filters.dateRange?.startDate
+        ? new Date(filters.dateRange.startDate).setHours(0, 0, 0, 0)
+        : -Infinity;
+      const end = filters.dateRange?.endDate
+        ? new Date(filters.dateRange.endDate).setHours(23, 59, 59, 999)
+        : Infinity;
       artistsArray = artistsArray.filter((a) =>
-        a.upcomingEvents.some((e) => e.dateEpochMs >= start && e.dateEpochMs <= end)
+        a.upcomingEvents.some(
+          (e) => e.dateEpochMs >= start && e.dateEpochMs <= end
+        )
       );
     }
 
@@ -145,16 +150,19 @@ const ArtistsPage: React.FC = () => {
     // Filter by local search input
     if (artistSearch.trim()) {
       const q = artistSearch.trim().toLowerCase();
-      artistsArray = artistsArray.filter((a) => a.name.toLowerCase().includes(q));
+      artistsArray = artistsArray.filter((a) =>
+        a.name.toLowerCase().includes(q)
+      );
     }
 
     // Sort: most discrete venues first, then lowest price, then earliest date
     artistsArray.sort((a, b) => {
-      const venueCount = (events: typeof a.upcomingEvents) => new Set(events.map((e) => e.venueId)).size;
+      const venueCount = (events: typeof a.upcomingEvents) =>
+        new Set(events.map((e) => e.venueId)).size;
       const va = venueCount(a.upcomingEvents);
       const vb = venueCount(b.upcomingEvents);
       if (vb !== va) return vb - va;
-      const priceOf = (ev: typeof a.upcomingEvents[0] | undefined) => {
+      const priceOf = (ev: (typeof a.upcomingEvents)[0] | undefined) => {
         if (!ev) return Infinity;
         if (ev.isFree) return 0;
         return ev.priceMin ?? ev.priceMax ?? Infinity;
@@ -162,7 +170,10 @@ const ArtistsPage: React.FC = () => {
       const pa = priceOf(a.upcomingEvents[0]);
       const pb = priceOf(b.upcomingEvents[0]);
       if (pa !== pb) return pa - pb;
-      return (a.upcomingEvents[0]?.dateEpochMs ?? Infinity) - (b.upcomingEvents[0]?.dateEpochMs ?? Infinity);
+      return (
+        (a.upcomingEvents[0]?.dateEpochMs ?? Infinity) -
+        (b.upcomingEvents[0]?.dateEpochMs ?? Infinity)
+      );
     });
 
     return artistsArray;
@@ -209,7 +220,6 @@ const ArtistsPage: React.FC = () => {
     }
   }, [artists.size, loading.artists, errors.artists, initialize]);
 
-
   if (loading.artists === "loading") {
     return (
       <ContentArea title="Artists">
@@ -246,7 +256,6 @@ const ArtistsPage: React.FC = () => {
     );
   }
 
-
   return (
     <ContentArea
       title="Artists"
@@ -260,7 +269,12 @@ const ArtistsPage: React.FC = () => {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
         </svg>
         <input
           type="text"
@@ -274,8 +288,18 @@ const ArtistsPage: React.FC = () => {
             onClick={() => setArtistSearch("")}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         )}
@@ -338,7 +362,10 @@ const ArtistsPage: React.FC = () => {
                           className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                           <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
-                            {new Date(event.dateEpochMs).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                            {new Date(event.dateEpochMs).toLocaleDateString(
+                              "en-US",
+                              { month: "short", day: "numeric" }
+                            )}
                           </span>
                           <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">
                             {event.venueName}

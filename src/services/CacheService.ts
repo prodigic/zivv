@@ -109,7 +109,8 @@ export class CacheService {
 
       request.onsuccess = () => {
         const result = request.result as
-          (CacheEntry<T> & { key: string }) | undefined;
+          | (CacheEntry<T> & { key: string })
+          | undefined;
 
         if (!result) {
           resolve(null);

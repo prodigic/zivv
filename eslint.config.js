@@ -11,6 +11,7 @@ import { globalIgnores } from 'eslint/config'
 export default tseslint.config([
   globalIgnores([
     'dist',
+    '.cache',
     'storybook-static',
     'src/devserver',
     'src/examples',

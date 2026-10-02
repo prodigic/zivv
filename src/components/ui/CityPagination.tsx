@@ -21,11 +21,36 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
   // Major Bay Area cities as requested
   const cities = useMemo(
     () => [
-      { name: "San Francisco", normalizedName: "S.f", slug: "sf", shortName: "SF" },
-      { name: "Oakland", normalizedName: "Oakland", slug: "oakland", shortName: "OAK" },
-      { name: "Berkeley", normalizedName: "Berkeley", slug: "berkeley", shortName: "BRK" },
-      { name: "Santa Cruz", normalizedName: "Santa", slug: "santa-cruz", shortName: "SCZ" },
-      { name: "Other", normalizedName: "Other", slug: "other", shortName: "OTHER" },
+      {
+        name: "San Francisco",
+        normalizedName: "S.f",
+        slug: "sf",
+        shortName: "SF",
+      },
+      {
+        name: "Oakland",
+        normalizedName: "Oakland",
+        slug: "oakland",
+        shortName: "OAK",
+      },
+      {
+        name: "Berkeley",
+        normalizedName: "Berkeley",
+        slug: "berkeley",
+        shortName: "BRK",
+      },
+      {
+        name: "Santa Cruz",
+        normalizedName: "Santa",
+        slug: "santa-cruz",
+        shortName: "SCZ",
+      },
+      {
+        name: "Other",
+        normalizedName: "Other",
+        slug: "other",
+        shortName: "OTHER",
+      },
     ],
     []
   );
@@ -139,7 +164,9 @@ export const CityPagination: React.FC<CityPaginationProps> = ({
                 >
                   <div className="leading-tight">
                     {/* Full name for large screens */}
-                    <span className="hidden sm:inline text-sm">{city.name}</span>
+                    <span className="hidden sm:inline text-sm">
+                      {city.name}
+                    </span>
                     {/* Abbreviated name for small/medium screens */}
                     <span className="sm:hidden text-sm">{city.shortName}</span>
                   </div>

@@ -55,7 +55,7 @@ const createMockIndexedDB = () => {
   };
 
   // Mock global indexedDB
-  Object.defineProperty(global, 'indexedDB', {
+  Object.defineProperty(global, "indexedDB", {
     value: {
       open: vi.fn(() => mockRequest),
     },
@@ -63,7 +63,7 @@ const createMockIndexedDB = () => {
   });
 
   // Mock IDBKeyRange
-  Object.defineProperty(global, 'IDBKeyRange', {
+  Object.defineProperty(global, "IDBKeyRange", {
     value: {
       only: vi.fn((value) => ({ value })),
     },
@@ -76,7 +76,7 @@ describe("CacheService", () => {
 
   beforeEach(() => {
     createMockIndexedDB();
-    
+
     cacheService = new CacheService({
       dbName: "test-db",
       dbVersion: 1,
@@ -119,7 +119,8 @@ describe("CacheService", () => {
       setTimeout(() => {
         mockRequest.result = mockDB;
         const upgradeEvent = { target: mockRequest };
-        if (mockRequest.onupgradeneeded) mockRequest.onupgradeneeded(upgradeEvent);
+        if (mockRequest.onupgradeneeded)
+          mockRequest.onupgradeneeded(upgradeEvent);
         if (mockRequest.onsuccess) mockRequest.onsuccess();
       }, 0);
 
@@ -128,7 +129,11 @@ describe("CacheService", () => {
       expect(mockDB.createObjectStore).toHaveBeenCalledWith("test-store", {
         keyPath: "key",
       });
-      expect(mockObjectStore.createIndex).toHaveBeenCalledWith("timestamp", "timestamp", { unique: false });
+      expect(mockObjectStore.createIndex).toHaveBeenCalledWith(
+        "timestamp",
+        "timestamp",
+        { unique: false }
+      );
     });
   });
 
@@ -218,7 +223,7 @@ describe("CacheService", () => {
 
     it("should return null for expired entries", async () => {
       const key = "expired-key";
-      const expiredTimestamp = Date.now() - (2 * 60 * 1000); // 2 minutes ago
+      const expiredTimestamp = Date.now() - 2 * 60 * 1000; // 2 minutes ago
 
       mockRequest.result = {
         key,
@@ -239,7 +244,7 @@ describe("CacheService", () => {
 
     it("should return valid data for non-expired entries", async () => {
       const key = "valid-key";
-      const validTimestamp = Date.now() - (30 * 1000); // 30 seconds ago
+      const validTimestamp = Date.now() - 30 * 1000; // 30 seconds ago
       const testData = { message: "Valid data" };
 
       mockRequest.result = {
@@ -350,7 +355,9 @@ describe("CacheService", () => {
         if (mockRequest.onerror) mockRequest.onerror();
       }, 0);
 
-      await expect(cacheService.set("test-key", { data: "test" }, "1.0.0")).rejects.toThrow();
+      await expect(
+        cacheService.set("test-key", { data: "test" }, "1.0.0")
+      ).rejects.toThrow();
     });
 
     it("should handle delete errors", async () => {

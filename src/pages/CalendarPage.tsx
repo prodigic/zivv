@@ -19,23 +19,31 @@ const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 // City color map — bg for button fill, text for venue label
 const CITY_COLORS: Record<string, { bg: string; text: string }> = {
-  "San Francisco": { bg: "bg-rose-600",    text: "text-rose-500 dark:text-rose-400" },
-  "Oakland":       { bg: "bg-amber-600",   text: "text-amber-500 dark:text-amber-400" },
-  "Berkeley":      { bg: "bg-green-600",   text: "text-green-500 dark:text-green-400" },
-  "San Jose":      { bg: "bg-sky-600",     text: "text-sky-500 dark:text-sky-400" },
-  "Santa Rosa":    { bg: "bg-violet-600",  text: "text-violet-500 dark:text-violet-400" },
-  "Napa":          { bg: "bg-pink-600",    text: "text-pink-500 dark:text-pink-400" },
-  "Petaluma":      { bg: "bg-teal-600",    text: "text-teal-500 dark:text-teal-400" },
-  "Felton":        { bg: "bg-lime-600",    text: "text-lime-500 dark:text-lime-400" },
-  "Santa Cruz":    { bg: "bg-cyan-600",    text: "text-cyan-500 dark:text-cyan-400" },
-  "Other":         { bg: "bg-gray-500",    text: "text-gray-500 dark:text-gray-400" },
+  "San Francisco": {
+    bg: "bg-rose-600",
+    text: "text-rose-500 dark:text-rose-400",
+  },
+  Oakland: { bg: "bg-amber-600", text: "text-amber-500 dark:text-amber-400" },
+  Berkeley: { bg: "bg-green-600", text: "text-green-500 dark:text-green-400" },
+  "San Jose": { bg: "bg-sky-600", text: "text-sky-500 dark:text-sky-400" },
+  "Santa Rosa": {
+    bg: "bg-violet-600",
+    text: "text-violet-500 dark:text-violet-400",
+  },
+  Napa: { bg: "bg-pink-600", text: "text-pink-500 dark:text-pink-400" },
+  Petaluma: { bg: "bg-teal-600", text: "text-teal-500 dark:text-teal-400" },
+  Felton: { bg: "bg-lime-600", text: "text-lime-500 dark:text-lime-400" },
+  "Santa Cruz": { bg: "bg-cyan-600", text: "text-cyan-500 dark:text-cyan-400" },
+  Other: { bg: "bg-gray-500", text: "text-gray-500 dark:text-gray-400" },
 };
 
 function normalizeCityName(city: string): string {
   const c = city?.toLowerCase().trim() ?? "";
-  if (c === "s.f" || c.startsWith("san francisco") || c === "sf") return "San Francisco";
+  if (c === "s.f" || c.startsWith("san francisco") || c === "sf")
+    return "San Francisco";
   if (c === "oakland" || c.startsWith("west oakland")) return "Oakland";
-  if (c === "berkeley" || c === "uc" || c.startsWith("uc berkeley")) return "Berkeley";
+  if (c === "berkeley" || c === "uc" || c.startsWith("uc berkeley"))
+    return "Berkeley";
   if (c === "santa cruz") return "Santa Cruz";
   if (c === "santa") return "Santa Rosa";
   if (c === "san" || c === "downtown") return "San Jose";
@@ -47,12 +55,43 @@ function normalizeCityName(city: string): string {
   if (c === "palo" || c === "stanford") return "Palo Alto";
   if (c === "mill") return "Mill Valley";
   if (c === "walnut") return "Walnut Creek";
-  if (/^\d/.test(city) || ["south","west","town","19th"].includes(c)) return "Other";
-  if (["novato","napa","albany","alameda","emeryville","hayward","vallejo","petaluma","concord","crockett","saratoga","richmond","sonoma","fairfield","felton","salinas","pacifica","alviso","piedmont"].includes(c)) return c.charAt(0).toUpperCase() + c.slice(1);
+  if (/^\d/.test(city) || ["south", "west", "town", "19th"].includes(c))
+    return "Other";
+  if (
+    [
+      "novato",
+      "napa",
+      "albany",
+      "alameda",
+      "emeryville",
+      "hayward",
+      "vallejo",
+      "petaluma",
+      "concord",
+      "crockett",
+      "saratoga",
+      "richmond",
+      "sonoma",
+      "fairfield",
+      "felton",
+      "salinas",
+      "pacifica",
+      "alviso",
+      "piedmont",
+    ].includes(c)
+  )
+    return c.charAt(0).toUpperCase() + c.slice(1);
   return city || "Other";
 }
-const FULL_DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
+const FULL_DAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 const CalendarPage: React.FC<CalendarPageProps> = () => {
   const events = useAppStore((state) => state.events);
@@ -73,18 +112,34 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
     updateFilter("venues", [venueName]);
     navigate("/shows");
   };
-  const [selectedCities, setSelectedCities] = React.useState<Set<string>>(new Set());
+  const [selectedCities, setSelectedCities] = React.useState<Set<string>>(
+    new Set()
+  );
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
   const [displayDays, setDisplayDays] = React.useState(14);
 
-  const ALLOWED_CITIES = ["San Francisco", "Oakland", "Berkeley", "San Jose", "Santa Cruz", "Other"];
+  const ALLOWED_CITIES = [
+    "San Francisco",
+    "Oakland",
+    "Berkeley",
+    "San Jose",
+    "Santa Cruz",
+    "Other",
+  ];
 
   // Load chunks needed for the current date range
   useEffect(() => {
     if (!manifest?.chunks?.events) return;
-    const parseLocal = (s: string) => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d); };
-    const start = filters.dateRange?.startDate ? parseLocal(filters.dateRange.startDate).getTime() : null;
-    const end = filters.dateRange?.endDate ? parseLocal(filters.dateRange.endDate).setHours(23,59,59,999) : null;
+    const parseLocal = (s: string) => {
+      const [y, m, d] = s.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    };
+    const start = filters.dateRange?.startDate
+      ? parseLocal(filters.dateRange.startDate).getTime()
+      : null;
+    const end = filters.dateRange?.endDate
+      ? parseLocal(filters.dateRange.endDate).setHours(23, 59, 59, 999)
+      : null;
     const chunksNeeded = manifest.chunks.events
       .filter((c) => {
         const [y, m] = c.chunkId.split("-").map(Number);
@@ -104,15 +159,28 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
   }, [loading.artists, initialize]);
 
   // Reset display days when filter changes
-  React.useEffect(() => { setDisplayDays(14); }, [filters.dateRange, selectedCities]);
+  React.useEffect(() => {
+    setDisplayDays(14);
+  }, [filters.dateRange, selectedCities]);
 
   // Build day-grouped events
   const dayGroups = React.useMemo(() => {
     const now = new Date();
-    const todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-    const parseLocal = (s: string) => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d); };
-    const rangeStart = filters.dateRange?.startDate ? parseLocal(filters.dateRange.startDate).setHours(0,0,0,0) : todayMs;
-    const rangeEnd = filters.dateRange?.endDate ? parseLocal(filters.dateRange.endDate).setHours(23,59,59,999) : Infinity;
+    const todayMs = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    ).getTime();
+    const parseLocal = (s: string) => {
+      const [y, m, d] = s.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    };
+    const rangeStart = filters.dateRange?.startDate
+      ? parseLocal(filters.dateRange.startDate).setHours(0, 0, 0, 0)
+      : todayMs;
+    const rangeEnd = filters.dateRange?.endDate
+      ? parseLocal(filters.dateRange.endDate).setHours(23, 59, 59, 999)
+      : Infinity;
 
     const filtered = Array.from(events.values()).filter((e) => {
       if (e.dateEpochMs < todayMs) return false;
@@ -144,46 +212,57 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
     const el = loadMoreRef.current;
     if (!el || dayGroups.length <= displayDays) return;
     const observer = new IntersectionObserver(
-      (entries) => { if (entries[0].isIntersecting) setDisplayDays((p) => p + 14); },
+      (entries) => {
+        if (entries[0].isIntersecting) setDisplayDays((p) => p + 14);
+      },
       { threshold: 0.1 }
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, [dayGroups.length, displayDays]);
 
-  const isLoading = loading.events === "loading" || loading.artists === "loading";
+  const isLoading =
+    loading.events === "loading" || loading.artists === "loading";
 
   return (
-    <ContentArea title="Calendar" subtitle={`${dayGroups.length} days with shows`}>
-
+    <ContentArea
+      title="Calendar"
+      subtitle={`${dayGroups.length} days with shows`}
+    >
       {/* City filter bar */}
       <div className="flex flex-wrap gap-1.5 mb-4 -mt-2">
-          {ALLOWED_CITIES.map((city) => {
-            const active = selectedCities.has(city);
-            const colors = CITY_COLORS[city] ?? CITY_COLORS["Other"];
-            return (
-              <button
-                key={city}
-                onClick={() => setSelectedCities((prev) => {
+        {ALLOWED_CITIES.map((city) => {
+          const active = selectedCities.has(city);
+          const colors = CITY_COLORS[city] ?? CITY_COLORS["Other"];
+          return (
+            <button
+              key={city}
+              onClick={() =>
+                setSelectedCities((prev) => {
                   const next = new Set(prev);
-                  if (active) next.delete(city); else next.add(city);
+                  if (active) next.delete(city);
+                  else next.add(city);
                   return next;
-                })}
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
-                  active
-                    ? `${colors.bg} text-white`
-                    : `bg-gray-100 dark:bg-gray-700 ${colors.text} hover:bg-gray-200 dark:hover:bg-gray-600`
-                }`}
-              >
-                {city}
-              </button>
-            );
-          })}
-          {selectedCities.size > 0 && (
-            <button onClick={() => setSelectedCities(new Set())} className="px-2.5 py-1 rounded text-xs font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-              Clear
+                })
+              }
+              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                active
+                  ? `${colors.bg} text-white`
+                  : `bg-gray-100 dark:bg-gray-700 ${colors.text} hover:bg-gray-200 dark:hover:bg-gray-600`
+              }`}
+            >
+              {city}
             </button>
-          )}
+          );
+        })}
+        {selectedCities.size > 0 && (
+          <button
+            onClick={() => setSelectedCities(new Set())}
+            className="px-2.5 py-1 rounded text-xs font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+          >
+            Clear
+          </button>
+        )}
       </div>
 
       {/* Date range slider */}
@@ -207,7 +286,7 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
         {visibleDays.map(([date, dayEvents]) => {
           const d = new Date(date + "T12:00:00");
           const now = new Date();
-          const localToday = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+          const localToday = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
           const isToday = date === localToday;
           const isWeekend = d.getDay() === 0 || d.getDay() === 6;
           const dayOfWeek = FULL_DAY_NAMES[d.getDay()];
@@ -220,8 +299,8 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
           const badgeBg = isToday
             ? "bg-purple-600"
             : isWeekend
-            ? "bg-blue-500"
-            : "bg-gray-500 dark:bg-gray-600";
+              ? "bg-blue-500"
+              : "bg-gray-500 dark:bg-gray-600";
 
           return (
             <div
@@ -241,10 +320,14 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-gray-900 dark:text-white">
                     {isToday ? "Today" : dayOfWeek},{" "}
-                    {d.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
+                    {d.toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </div>
                   <div className="text-xs text-gray-400 dark:text-gray-500">
-                    {dayEvents.length} show{dayEvents.length !== 1 ? "s" : ""} · {venueIds.size} venue{venueIds.size !== 1 ? "s" : ""}
+                    {dayEvents.length} show{dayEvents.length !== 1 ? "s" : ""} ·{" "}
+                    {venueIds.size} venue{venueIds.size !== 1 ? "s" : ""}
                     {freeCount > 0 && ` · ${freeCount} free`}
                   </div>
                 </div>
@@ -253,10 +336,15 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
               {/* Event rows */}
               <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
                 {dayEvents.map((event) => {
-                  const headliner = event.headlinerArtistId ? artists.get(event.headlinerArtistId) : null;
-                  const venue = event.venueId ? venues.get(event.venueId) : null;
+                  const headliner = event.headlinerArtistId
+                    ? artists.get(event.headlinerArtistId)
+                    : null;
+                  const venue = event.venueId
+                    ? venues.get(event.venueId)
+                    : null;
                   const venueCity = normalizeCityName(venue?.city ?? "");
-                  const venueColors = CITY_COLORS[venueCity] ?? CITY_COLORS["Other"];
+                  const venueColors =
+                    CITY_COLORS[venueCity] ?? CITY_COLORS["Other"];
                   const otherCount = event.artistIds.length - 1;
 
                   return (
@@ -268,14 +356,20 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
                       {/* Time */}
                       <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
                         {event.startTimeEpochMs
-                          ? new Date(event.startTimeEpochMs).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
+                          ? new Date(event.startTimeEpochMs).toLocaleTimeString(
+                              "en-US",
+                              { hour: "numeric", minute: "2-digit" }
+                            )
                           : "TBA"}
                       </span>
                       {/* Artist */}
                       <span className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate flex-1">
                         {headliner?.name ?? "Show"}
                         {otherCount > 0 && (
-                          <span className="text-gray-400 dark:text-gray-500 font-normal"> +{otherCount}</span>
+                          <span className="text-gray-400 dark:text-gray-500 font-normal">
+                            {" "}
+                            +{otherCount}
+                          </span>
                         )}
                       </span>
                       {/* Venue */}
@@ -288,7 +382,10 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
                       {/* Price */}
                       <PriceWidget
                         isFree={event.isFree}
-                        isSoldOut={event.status === "sold-out" || event.tags?.includes("sold-out")}
+                        isSoldOut={
+                          event.status === "sold-out" ||
+                          event.tags?.includes("sold-out")
+                        }
                         priceMin={event.priceMin}
                         priceMax={event.priceMax}
                         className="text-xs shrink-0"

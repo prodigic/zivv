@@ -13,11 +13,14 @@ import type { Event, Artist, Venue } from "@/types/events.js";
 
 export class WorkerService {
   private worker: Worker | null = null;
-  private pendingRequests = new Map<string, {
-    resolve: (value: unknown) => void;
-    reject: (error: Error) => void;
-    timeout: NodeJS.Timeout;
-  }>();
+  private pendingRequests = new Map<
+    string,
+    {
+      resolve: (value: unknown) => void;
+      reject: (error: Error) => void;
+      timeout: NodeJS.Timeout;
+    }
+  >();
   private requestIdCounter = 0;
   private isWorkerSupported = typeof Worker !== "undefined";
 
@@ -46,9 +49,11 @@ export class WorkerService {
         console.error("Worker error:", error);
         this.cleanup();
       };
-
     } catch (error) {
-      console.warn("Failed to initialize worker, falling back to main thread:", error);
+      console.warn(
+        "Failed to initialize worker, falling back to main thread:",
+        error
+      );
       this.worker = null;
     }
   }
@@ -58,7 +63,7 @@ export class WorkerService {
    */
   private handleWorkerMessage(response: WorkerResponse): void {
     const pending = this.pendingRequests.get(response.id);
-    
+
     if (!pending) {
       console.warn("Received response for unknown request:", response.id);
       return;
@@ -102,7 +107,11 @@ export class WorkerService {
       }, timeoutMs);
 
       // Store pending request
-      this.pendingRequests.set(id, { resolve: resolve as (value: unknown) => void, reject, timeout });
+      this.pendingRequests.set(id, {
+        resolve: resolve as (value: unknown) => void,
+        reject,
+        timeout,
+      });
 
       // Send message to worker
       this.worker!.postMessage(fullMessage);
@@ -127,10 +136,13 @@ export class WorkerService {
         type: "PARSE_JSON",
         payload,
       });
-      
+
       return result.data;
     } catch (error) {
-      console.warn("Worker parsing failed, falling back to main thread:", error);
+      console.warn(
+        "Worker parsing failed, falling back to main thread:",
+        error
+      );
       return this.parseJsonMainThread<T>(jsonString, expectedType);
     }
   }
@@ -155,7 +167,10 @@ export class WorkerService {
         payload,
       });
     } catch (error) {
-      console.warn("Worker filtering failed, falling back to main thread:", error);
+      console.warn(
+        "Worker filtering failed, falling back to main thread:",
+        error
+      );
       return this.filterEventsMainThread(events, filters, searchQuery);
     }
   }
@@ -180,7 +195,10 @@ export class WorkerService {
         payload,
       });
     } catch (error) {
-      console.warn("Worker sorting failed, falling back to main thread:", error);
+      console.warn(
+        "Worker sorting failed, falling back to main thread:",
+        error
+      );
       return this.sortEventsMainThread(events, sortField, sortOrder);
     }
   }
@@ -209,7 +227,10 @@ export class WorkerService {
         payload,
       });
     } catch (error) {
-      console.warn("Worker search index building failed, falling back to main thread:", error);
+      console.warn(
+        "Worker search index building failed, falling back to main thread:",
+        error
+      );
       return this.buildSearchIndexMainThread(events, artists, venues);
     }
   }
@@ -230,7 +251,10 @@ export class WorkerService {
         payload,
       });
     } catch (error) {
-      console.warn("Worker stats calculation failed, falling back to main thread:", error);
+      console.warn(
+        "Worker stats calculation failed, falling back to main thread:",
+        error
+      );
       return this.calculateStatsMainThread(events);
     }
   }
@@ -256,14 +280,14 @@ export class WorkerService {
   ): { events: Event[]; totalCount: number } {
     // Simple filtering implementation
     let filtered = [...events];
-    
+
     // Apply basic filters
     if (filters.isFree) {
-      filtered = filtered.filter(event => event.isFree);
+      filtered = filtered.filter((event) => event.isFree);
     }
-    
+
     // Add more filter logic as needed
-    
+
     return {
       events: filtered,
       totalCount: filtered.length,
@@ -278,27 +302,27 @@ export class WorkerService {
     const sorted = [...events].sort((a, b) => {
       let aValue: string | number;
       let bValue: string | number;
-      
+
       switch (sortField) {
         case "date":
           aValue = a.dateEpochMs;
           bValue = b.dateEpochMs;
           break;
         case "price":
-          aValue = a.isFree ? 0 : (a.priceMin || 0);
-          bValue = b.isFree ? 0 : (b.priceMin || 0);
+          aValue = a.isFree ? 0 : a.priceMin || 0;
+          bValue = b.isFree ? 0 : b.priceMin || 0;
           break;
         default:
           return 0;
       }
-      
+
       let comparison = 0;
       if (aValue < bValue) comparison = -1;
       else if (aValue > bValue) comparison = 1;
-      
+
       return sortOrder === "desc" ? -comparison : comparison;
     });
-    
+
     return { events: sorted };
   }
 
@@ -310,8 +334,8 @@ export class WorkerService {
     // Basic search index implementation
     const documents: unknown[] = [];
     const terms = new Set<string>();
-    
-    artists.forEach(artist => {
+
+    artists.forEach((artist) => {
       documents.push({
         id: `artist-${artist.id}`,
         type: "artist",
@@ -319,13 +343,16 @@ export class WorkerService {
         content: artist.name,
         boost: 1.0,
       });
-      
+
       // Extract terms
-      artist.name.toLowerCase().split(/\s+/).forEach(term => {
-        if (term.length > 2) terms.add(term);
-      });
+      artist.name
+        .toLowerCase()
+        .split(/\s+/)
+        .forEach((term) => {
+          if (term.length > 2) terms.add(term);
+        });
     });
-    
+
     return {
       documents,
       terms: Array.from(terms).sort(),
@@ -335,14 +362,14 @@ export class WorkerService {
 
   private calculateStatsMainThread(events: Event[]): Record<string, number> {
     const now = Date.now();
-    const upcoming = events.filter(event => event.dateEpochMs > now);
-    const past = events.filter(event => event.dateEpochMs <= now);
-    
+    const upcoming = events.filter((event) => event.dateEpochMs > now);
+    const past = events.filter((event) => event.dateEpochMs <= now);
+
     return {
       totalEvents: events.length,
       upcomingEvents: upcoming.length,
       pastEvents: past.length,
-      freeEvents: events.filter(event => event.isFree).length,
+      freeEvents: events.filter((event) => event.isFree).length,
     };
   }
 

@@ -11,10 +11,7 @@ import type {
   VenueId,
   EventFilters,
 } from "./events.js";
-import type {
-  DataManifest,
-  DataIndexes,
-} from "./data.js";
+import type { DataManifest, DataIndexes } from "./data.js";
 
 // Loading states
 export type LoadingState = "idle" | "loading" | "success" | "error";
@@ -270,11 +267,7 @@ export type {
   SearchQuery,
 } from "./events.js";
 
-export type {
-  DataManifest,
-  DataIndexes,
-  DataLoadError,
-} from "./data.js";
+export type { DataManifest, DataIndexes, DataLoadError } from "./data.js";
 
 export type {
   ProcessingResult,

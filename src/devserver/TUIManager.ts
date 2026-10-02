@@ -5,13 +5,13 @@
  * using the blessed library for rich terminal UI rendering.
  */
 
-import blessed from 'blessed';
-import { DevServerManager } from './DevServerManager.js';
-import type { DevServerProcess } from './types.js';
+import blessed from "blessed";
+import { DevServerManager } from "./DevServerManager.js";
+import type { DevServerProcess } from "./types.js";
 
 interface TUIState {
   servers: DevServerProcess[];
-  selectedServerIndex: number;  // Index into servers array, not list items
+  selectedServerIndex: number; // Index into servers array, not list items
   lastUpdate: Date;
   stats: {
     total: number;
@@ -38,7 +38,7 @@ export class DevServerTUI {
       servers: [],
       selectedServerIndex: 0,
       lastUpdate: new Date(),
-      stats: { total: 0, running: 0, stopped: 0, ports: [] }
+      stats: { total: 0, running: 0, stopped: 0, ports: [] },
     };
 
     this.screen = this.createScreen();
@@ -57,11 +57,11 @@ export class DevServerTUI {
   private createScreen(): blessed.Widgets.Screen {
     const screen = blessed.screen({
       smartCSR: true,
-      title: 'Zivv Dev Server Manager',
+      title: "Zivv Dev Server Manager",
       dockBorders: true,
       fullUnicode: true,
       autoPadding: true,
-      warnings: false,  // Suppress terminal capability warnings
+      warnings: false, // Suppress terminal capability warnings
     });
 
     return screen;
@@ -73,18 +73,18 @@ export class DevServerTUI {
   private createServerList(): blessed.Widgets.ListElement {
     const list = blessed.list({
       parent: this.screen,
-      label: ' Dev Servers ',
-      border: 'line',
+      label: " Dev Servers ",
+      border: "line",
       top: 0,
       left: 0,
-      width: '70%',
-      height: '93%',
-      keys: false,  // Disable built-in key handling
+      width: "70%",
+      height: "93%",
+      keys: false, // Disable built-in key handling
       mouse: true,
       style: {
-        border: { fg: 'cyan' },
-        item: { fg: 'white' },
-        selected: { bg: 'blue', fg: 'white', bold: true }
+        border: { fg: "cyan" },
+        item: { fg: "white" },
+        selected: { bg: "blue", fg: "white", bold: true },
       },
       scrollable: true,
       alwaysScroll: true,
@@ -99,18 +99,18 @@ export class DevServerTUI {
   private createInfoPanel(): blessed.Widgets.BoxElement {
     const panel = blessed.box({
       parent: this.screen,
-      label: ' Server Details ',
-      border: 'line',
+      label: " Server Details ",
+      border: "line",
       top: 0,
-      left: '70%',
-      width: '30%',
-      height: '93%',
+      left: "70%",
+      width: "30%",
+      height: "93%",
       style: {
-        border: { fg: 'yellow' },
-        header: { fg: 'white', bold: true }
+        border: { fg: "yellow" },
+        header: { fg: "white", bold: true },
       },
       scrollable: true,
-      content: 'Select a server to view details',
+      content: "Select a server to view details",
     });
 
     return panel;
@@ -124,11 +124,11 @@ export class DevServerTUI {
       parent: this.screen,
       bottom: 1, // Above status bar
       left: 0,
-      width: '100%',
+      width: "100%",
       height: 1,
       style: {
-        bg: 'gray',
-        fg: 'white'
+        bg: "gray",
+        fg: "white",
       },
       content: this.getHotkeyText(),
     });
@@ -144,13 +144,13 @@ export class DevServerTUI {
       parent: this.screen,
       bottom: 0,
       left: 0,
-      width: '100%',
+      width: "100%",
       height: 1,
       style: {
-        bg: 'blue',
-        fg: 'white'
+        bg: "blue",
+        fg: "white",
       },
-      content: 'Loading...',
+      content: "Loading...",
     });
 
     return statusBar;
@@ -161,46 +161,46 @@ export class DevServerTUI {
    */
   private setupKeyHandlers(): void {
     // Exit handlers
-    this.screen.key(['escape', 'q', 'C-c'], () => {
+    this.screen.key(["escape", "q", "C-c"], () => {
       this.stop();
     });
 
     // Navigation
-    this.screen.key(['up', 'k'], () => {
+    this.screen.key(["up", "k"], () => {
       this.selectPrevious();
     });
 
-    this.screen.key(['down', 'j'], () => {
+    this.screen.key(["down", "j"], () => {
       this.selectNext();
     });
 
     // Actions
-    this.screen.key(['enter', 'space'], () => {
+    this.screen.key(["enter", "space"], () => {
       this.showServerActions();
     });
 
-    this.screen.key(['K'], () => {
+    this.screen.key(["K"], () => {
       this.killSelectedServer();
     });
 
-    this.screen.key(['r'], () => {
+    this.screen.key(["r"], () => {
       this.restartSelectedServer();
     });
 
-    this.screen.key(['n'], () => {
+    this.screen.key(["n"], () => {
       this.startNewServer();
     });
 
-    this.screen.key(['c'], () => {
+    this.screen.key(["c"], () => {
       this.cleanup();
     });
 
-    this.screen.key(['f5', 'R'], () => {
+    this.screen.key(["f5", "R"], () => {
       this.refresh();
     });
 
     // List selection
-    this.serverList.on('select', (item, index) => {
+    this.serverList.on("select", (item, index) => {
       const serverIndex = this.listIndexToServerIndex(index);
       if (serverIndex >= 0) {
         this.state.selectedServerIndex = serverIndex;
@@ -223,7 +223,7 @@ export class DevServerTUI {
    * Get hotkey bar text content (single line like htop)
    */
   private getHotkeyText(): string {
-    return ' F5 Refresh   K Kill   r Restart   n New   c Cleanup   ↑↓ Navigate   Enter Actions   q Quit';
+    return " F5 Refresh   K Kill   r Restart   n New   c Cleanup   ↑↓ Navigate   Enter Actions   q Quit";
   }
 
   /**
@@ -240,13 +240,12 @@ export class DevServerTUI {
 
       // Setup auto-refresh
       this.updateInterval = setInterval(() => {
-        this.refresh().catch(error => {
+        this.refresh().catch((error) => {
           this.showError(`Auto-refresh failed: ${error.message}`);
         });
       }, 2000);
 
       this.screen.render();
-
     } catch (error) {
       this.showError(`TUI initialization failed: ${error}`);
     }
@@ -276,7 +275,7 @@ export class DevServerTUI {
     try {
       const [servers, stats] = await Promise.all([
         this.manager.status(),
-        this.manager.getStats()
+        this.manager.getStats(),
       ]);
 
       this.state.servers = servers;
@@ -309,7 +308,9 @@ export class DevServerTUI {
     }
     // Servers start at list index 2 (after header and empty line)
     const serverIndex = listIndex - 2;
-    return serverIndex >= 0 && serverIndex < this.state.servers.length ? serverIndex : -1;
+    return serverIndex >= 0 && serverIndex < this.state.servers.length
+      ? serverIndex
+      : -1;
   }
 
   /**
@@ -330,13 +331,15 @@ export class DevServerTUI {
     const items: string[] = [];
 
     if (this.state.servers.length === 0) {
-      items.push('  No dev servers currently running');
-      items.push('');
-      items.push('  Press \'n\' to start a new server');
+      items.push("  No dev servers currently running");
+      items.push("");
+      items.push("  Press 'n' to start a new server");
       this.state.selectedServerIndex = -1; // No servers to select
     } else {
-      items.push(`  ${this.state.servers.length} server${this.state.servers.length === 1 ? '' : 's'} running:`);
-      items.push('');
+      items.push(
+        `  ${this.state.servers.length} server${this.state.servers.length === 1 ? "" : "s"} running:`
+      );
+      items.push("");
 
       this.state.servers.forEach((server) => {
         const statusIcon = this.getStatusIcon(server.status);
@@ -352,7 +355,10 @@ export class DevServerTUI {
 
       // Ensure selectedServerIndex is valid
       if (this.state.selectedServerIndex >= this.state.servers.length) {
-        this.state.selectedServerIndex = Math.max(0, this.state.servers.length - 1);
+        this.state.selectedServerIndex = Math.max(
+          0,
+          this.state.servers.length - 1
+        );
       }
       if (this.state.selectedServerIndex < 0) {
         this.state.selectedServerIndex = 0;
@@ -377,13 +383,13 @@ export class DevServerTUI {
       this.infoPanel.setContent(`
   No server selected
 
-  ${this.state.servers.length === 0 ? 'No servers running' : 'Select a server from the list'}
+  ${this.state.servers.length === 0 ? "No servers running" : "Select a server from the list"}
 
   Statistics:
   • Total processes: ${this.state.stats.total}
   • Running: ${this.state.stats.running}
   • Stopped: ${this.state.stats.stopped}
-  • Active ports: ${this.state.stats.ports.join(', ') || 'none'}
+  • Active ports: ${this.state.stats.ports.join(", ") || "none"}
       `);
       return;
     }
@@ -405,8 +411,8 @@ export class DevServerTUI {
   • URL: ${url}
 
   Project Context:
-  • Project: ${selectedServer.projectName || 'Unknown'}
-  • Git Branch: ${selectedServer.gitBranch || 'Not a git repository'}
+  • Project: ${selectedServer.projectName || "Unknown"}
+  • Git Branch: ${selectedServer.gitBranch || "Not a git repository"}
   • Working Dir: ${selectedServer.workingDir}
   • Config: ${selectedServer.configFile}
     `);
@@ -418,7 +424,9 @@ export class DevServerTUI {
   private updateStatusBar(): void {
     const lastUpdate = this.state.lastUpdate.toLocaleTimeString();
     const serverCount = this.state.servers.length;
-    const runningCount = this.state.servers.filter(s => s.status === 'running').length;
+    const runningCount = this.state.servers.filter(
+      (s) => s.status === "running"
+    ).length;
 
     const status = `${serverCount} servers (${runningCount} running) | Last update: ${lastUpdate} | Press q to quit`;
     this.statusBar.setContent(status);
@@ -429,10 +437,14 @@ export class DevServerTUI {
    */
   private getStatusIcon(status: string): string {
     switch (status) {
-      case 'running': return '🟢';
-      case 'starting': return '🟡';
-      case 'stopped': return '🔴';
-      default: return '⚪';
+      case "running":
+        return "🟢";
+      case "starting":
+        return "🟡";
+      case "stopped":
+        return "🔴";
+      default:
+        return "⚪";
     }
   }
 
@@ -449,7 +461,7 @@ export class DevServerTUI {
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
     if (minutes > 0) return `${minutes}m ago`;
-    return 'now';
+    return "now";
   }
 
   /**
@@ -471,7 +483,7 @@ export class DevServerTUI {
    * Format memory usage
    */
   private formatMemory(bytes?: number): string {
-    if (!bytes) return 'N/A';
+    if (!bytes) return "N/A";
     const mb = Math.round(bytes / (1024 * 1024));
     return `${mb}MB`;
   }
@@ -480,7 +492,7 @@ export class DevServerTUI {
    * Format project information (name and git branch)
    */
   private formatProjectInfo(server: DevServerProcess): string {
-    const projectName = server.projectName || 'unknown';
+    const projectName = server.projectName || "unknown";
     const gitBranch = server.gitBranch;
 
     if (gitBranch) {
@@ -506,7 +518,9 @@ export class DevServerTUI {
     }
 
     // Calculate the correct list index and set selection
-    const listIndex = this.serverIndexToListIndex(this.state.selectedServerIndex);
+    const listIndex = this.serverIndexToListIndex(
+      this.state.selectedServerIndex
+    );
     if (listIndex >= 0) {
       this.serverList.select(listIndex);
     }
@@ -516,7 +530,10 @@ export class DevServerTUI {
    * Get currently selected server
    */
   private getSelectedServer(): DevServerProcess | null {
-    if (this.state.selectedServerIndex < 0 || this.state.selectedServerIndex >= this.state.servers.length) {
+    if (
+      this.state.selectedServerIndex < 0 ||
+      this.state.selectedServerIndex >= this.state.servers.length
+    ) {
       return null;
     }
     return this.state.servers[this.state.selectedServerIndex];
@@ -528,7 +545,10 @@ export class DevServerTUI {
   private selectPrevious(): void {
     if (this.state.servers.length === 0) return;
 
-    this.state.selectedServerIndex = Math.max(0, this.state.selectedServerIndex - 1);
+    this.state.selectedServerIndex = Math.max(
+      0,
+      this.state.selectedServerIndex - 1
+    );
     this.forceValidSelection();
     this.updateInfoPanel();
     this.screen.render();
@@ -540,7 +560,10 @@ export class DevServerTUI {
   private selectNext(): void {
     if (this.state.servers.length === 0) return;
 
-    this.state.selectedServerIndex = Math.min(this.state.servers.length - 1, this.state.selectedServerIndex + 1);
+    this.state.selectedServerIndex = Math.min(
+      this.state.servers.length - 1,
+      this.state.selectedServerIndex + 1
+    );
     this.forceValidSelection();
     this.updateInfoPanel();
     this.screen.render();
@@ -559,34 +582,41 @@ export class DevServerTUI {
     const actionMenu = blessed.list({
       parent: this.screen,
       label: ` Actions for Server ${server.port} `,
-      border: 'line',
-      top: 'center',
-      left: 'center',
+      border: "line",
+      top: "center",
+      left: "center",
       width: 50,
       height: 10,
       keys: true,
       mouse: true,
       style: {
-        border: { fg: 'cyan' },
-        selected: { bg: 'blue', fg: 'white' }
+        border: { fg: "cyan" },
+        selected: { bg: "blue", fg: "white" },
       },
       items: [
-        'Kill Server (K)',
-        'Restart Server (r)',
-        'View in Browser',
-        'Cancel'
-      ]
+        "Kill Server (K)",
+        "Restart Server (r)",
+        "View in Browser",
+        "Cancel",
+      ],
     });
 
-    actionMenu.on('select', (item, index) => {
+    actionMenu.on("select", (item, index) => {
       this.screen.remove(actionMenu);
       this.screen.render();
 
       switch (index) {
-        case 0: this.killSelectedServer(); break;
-        case 1: this.restartSelectedServer(); break;
-        case 2: this.openServerInBrowser(server); break;
-        case 3: break; // Cancel
+        case 0:
+          this.killSelectedServer();
+          break;
+        case 1:
+          this.restartSelectedServer();
+          break;
+        case 2:
+          this.openServerInBrowser(server);
+          break;
+        case 3:
+          break; // Cancel
       }
     });
 
@@ -641,7 +671,9 @@ export class DevServerTUI {
   /**
    * Suppress stdout/stderr temporarily to prevent TUI corruption
    */
-  private async suppressConsoleOutput<T>(operation: () => Promise<T>): Promise<T> {
+  private async suppressConsoleOutput<T>(
+    operation: () => Promise<T>
+  ): Promise<T> {
     // Save original stdout/stderr write functions
     const originalStdoutWrite = process.stdout.write.bind(process.stdout);
     const originalStderrWrite = process.stderr.write.bind(process.stderr);
@@ -655,7 +687,7 @@ export class DevServerTUI {
       const result = await operation();
 
       // Brief delay to ensure any async output is captured
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       return result;
     } finally {
@@ -670,14 +702,14 @@ export class DevServerTUI {
    */
   private async startNewServer(): Promise<void> {
     try {
-      this.showStatus('Starting new dev server...');
+      this.showStatus("Starting new dev server...");
 
       // Start server with suppressed output to prevent TUI corruption
       await this.suppressConsoleOutput(async () => {
         return this.manager.start({ background: true });
       });
 
-      this.showStatus('New dev server started successfully');
+      this.showStatus("New dev server started successfully");
       await this.refresh();
     } catch (error) {
       this.showError(`Failed to start new server: ${error}`);
@@ -689,7 +721,7 @@ export class DevServerTUI {
    */
   private async cleanup(): Promise<void> {
     try {
-      this.showStatus('Cleaning up orphaned processes...');
+      this.showStatus("Cleaning up orphaned processes...");
 
       // Cleanup with suppressed output to prevent TUI corruption
       const cleaned = await this.suppressConsoleOutput(async () => {
@@ -709,12 +741,14 @@ export class DevServerTUI {
   private openServerInBrowser(server: DevServerProcess): void {
     const url = `http://localhost:${server.port}`;
     // On macOS, use 'open' command
-    import('child_process').then(({ spawn }) => {
-      spawn('open', [url], { detached: true, stdio: 'ignore' });
-      this.showStatus(`Opening ${url} in browser...`);
-    }).catch(() => {
-      this.showStatus(`Server URL: ${url} (copy to browser)`);
-    });
+    import("child_process")
+      .then(({ spawn }) => {
+        spawn("open", [url], { detached: true, stdio: "ignore" });
+        this.showStatus(`Opening ${url} in browser...`);
+      })
+      .catch(() => {
+        this.showStatus(`Server URL: ${url} (copy to browser)`);
+      });
   }
 
   /**
@@ -731,15 +765,15 @@ export class DevServerTUI {
   private showError(message: string): void {
     const errorBox = blessed.message({
       parent: this.screen,
-      top: 'center',
-      left: 'center',
-      width: '50%',
-      height: 'shrink',
-      border: 'line',
+      top: "center",
+      left: "center",
+      width: "50%",
+      height: "shrink",
+      border: "line",
       style: {
-        border: { fg: 'red' }
+        border: { fg: "red" },
       },
-      label: ' Error '
+      label: " Error ",
     });
 
     errorBox.error(message, () => {

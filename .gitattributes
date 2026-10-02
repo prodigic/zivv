@@ -2,6 +2,11 @@
 # Use bd merge for beads JSONL files
 .beads/issues.jsonl merge=beads
 
+# Keep source formatting checks consistent across Windows and Linux checkouts.
+*.ts text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+
 # Manifest checksums describe exact served bytes on every platform.
 public/data/*.json text eol=lf
 data/ingestion/*.json text eol=lf

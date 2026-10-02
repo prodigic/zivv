@@ -10,9 +10,9 @@ interface DarkModeToggleProps {
   size?: "sm" | "md" | "lg";
 }
 
-export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({ 
-  className = "", 
-  size = "md" 
+export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
+  className = "",
+  size = "md",
 }) => {
   const { toggle, isDarkMode } = useDarkMode();
   const [isCurrentlyDark, setIsCurrentlyDark] = useState(false);
@@ -24,21 +24,29 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
   const handleToggle = () => {
     const componentStartTime = performance.now();
     console.log("🔘 Toggle button clicked");
-    
+
     toggle();
-    
+
     const stateUpdateTime = performance.now();
     setIsCurrentlyDark(!isCurrentlyDark);
-    console.log("🔘 React state update took:", performance.now() - stateUpdateTime, "ms");
-    console.log("🔘 Button component total time:", performance.now() - componentStartTime, "ms");
+    console.log(
+      "🔘 React state update took:",
+      performance.now() - stateUpdateTime,
+      "ms"
+    );
+    console.log(
+      "🔘 Button component total time:",
+      performance.now() - componentStartTime,
+      "ms"
+    );
   };
-  
+
   const sizeClasses = {
     sm: "h-5 w-9",
-    md: "h-6 w-11", 
+    md: "h-6 w-11",
     lg: "h-8 w-14",
   };
-  
+
   const knobSizes = {
     sm: "h-4 w-4",
     md: "h-5 w-5",
@@ -53,13 +61,16 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
         transition-colors duration-200 ease-in-out focus:outline-none 
         focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 
         focus:ring-offset-white dark:focus:ring-offset-gray-800
-        ${isCurrentlyDark 
-          ? "bg-primary-600 hover:bg-primary-700" 
-          : "bg-gray-200 hover:bg-gray-300"
+        ${
+          isCurrentlyDark
+            ? "bg-primary-600 hover:bg-primary-700"
+            : "bg-gray-200 hover:bg-gray-300"
         }
         ${className}
       `}
-      aria-label={isCurrentlyDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={
+        isCurrentlyDark ? "Switch to light mode" : "Switch to dark mode"
+      }
       role="switch"
       aria-checked={isCurrentlyDark}
     >
@@ -68,13 +79,14 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
         className={`
           inline-block ${knobSizes[size]} transform rounded-full bg-white 
           shadow-lg transition-transform duration-200 ease-in-out
-          ${isCurrentlyDark 
-            ? size === 'sm' 
-              ? 'translate-x-4' 
-              : size === 'md' 
-                ? 'translate-x-5' 
-                : 'translate-x-6'
-            : "translate-x-0"
+          ${
+            isCurrentlyDark
+              ? size === "sm"
+                ? "translate-x-4"
+                : size === "md"
+                  ? "translate-x-5"
+                  : "translate-x-6"
+              : "translate-x-0"
           }
         `}
       >
@@ -83,7 +95,7 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
           {isCurrentlyDark ? (
             // Moon icon
             <svg
-              className={`${size === 'sm' ? 'h-3 w-3' : size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} text-primary-600`}
+              className={`${size === "sm" ? "h-3 w-3" : size === "md" ? "h-3 w-3" : "h-4 w-4"} text-primary-600`}
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -96,7 +108,7 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
           ) : (
             // Sun icon
             <svg
-              className={`${size === 'sm' ? 'h-3 w-3' : size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} text-yellow-500`}
+              className={`${size === "sm" ? "h-3 w-3" : size === "md" ? "h-3 w-3" : "h-4 w-4"} text-yellow-500`}
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -114,8 +126,8 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
 };
 
 // Compact version for mobile/header use
-export const CompactDarkModeToggle: React.FC<{ className?: string }> = ({ 
-  className = "" 
+export const CompactDarkModeToggle: React.FC<{ className?: string }> = ({
+  className = "",
 }) => {
   const { toggle, isDarkMode } = useDarkMode();
   const [isCurrentlyDark, setIsCurrentlyDark] = useState(false);
@@ -127,26 +139,36 @@ export const CompactDarkModeToggle: React.FC<{ className?: string }> = ({
   const handleClick = () => {
     const componentStartTime = performance.now();
     console.log("🔘 Compact toggle button clicked");
-    
+
     toggle();
-    
+
     const stateUpdateTime = performance.now();
     setIsCurrentlyDark(!isCurrentlyDark);
-    console.log("🔘 Compact React state update took:", performance.now() - stateUpdateTime, "ms");
-    console.log("🔘 Compact button component total time:", performance.now() - componentStartTime, "ms");
+    console.log(
+      "🔘 Compact React state update took:",
+      performance.now() - stateUpdateTime,
+      "ms"
+    );
+    console.log(
+      "🔘 Compact button component total time:",
+      performance.now() - componentStartTime,
+      "ms"
+    );
   };
 
   return (
     <button
-        onClick={handleClick}
-        className={`
+      onClick={handleClick}
+      className={`
           p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100
           dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700
           transition-colors duration-200 focus:outline-none 
           ${className}
         `}
-        aria-label={isCurrentlyDark ? "Switch to light mode" : "Switch to dark mode"}
-      >
+      aria-label={
+        isCurrentlyDark ? "Switch to light mode" : "Switch to dark mode"
+      }
+    >
       {isCurrentlyDark ? (
         // Sun icon for light mode
         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">

@@ -41,7 +41,10 @@ export interface VenueCoverageReport {
   observedAtEpochMs: number;
   sourceStatus: "complete" | "partial";
   databaseStatus:
-    "up-to-date" | "gaps-found" | "review-required" | "not-verified";
+    | "up-to-date"
+    | "gaps-found"
+    | "review-required"
+    | "not-verified";
   horizon: { from: string | null; through: string | null };
   counts: Record<CoverageItem["outcome"], number> & { discovered: number };
   items: CoverageItem[];

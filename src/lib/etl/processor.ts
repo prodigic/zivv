@@ -76,7 +76,10 @@ export class ETLProcessor {
       this.validateReferences(events, artists, venues);
       this.populateSummaries(events, artists, venues, start);
       const indexes = DataIndexer.buildIndexes(events, artists, venues);
-      indexes.eventSlugRedirects = buildEventSlugRedirects(this.projectRoot, events);
+      indexes.eventSlugRedirects = buildEventSlugRedirects(
+        this.projectRoot,
+        events
+      );
       const { chunks, chunkInfos } = DataChunker.chunkEventsByMonth(events);
       const { documents, terms } = SearchIndexBuilder.buildSearchIndex(
         events,

@@ -165,6 +165,7 @@ const LocalArtistsPage: React.FC<{ embedded?: boolean }> = ({
           value={artistSearch}
           onChange={(e) => setArtistSearch(e.target.value)}
           placeholder="Search local artists..."
+          aria-label="Search local artists"
           className="w-full pl-9 pr-9 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
         {artistSearch && (

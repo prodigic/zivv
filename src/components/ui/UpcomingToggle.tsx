@@ -9,9 +9,11 @@ interface UpcomingToggleProps {
   className?: string;
 }
 
-export const UpcomingToggle: React.FC<UpcomingToggleProps> = ({ className = "" }) => {
-  const showUpcomingOnly = useAppStore(state => state.showUpcomingOnly);
-  const toggleUpcomingOnly = useAppStore(state => state.toggleUpcomingOnly);
+export const UpcomingToggle: React.FC<UpcomingToggleProps> = ({
+  className = "",
+}) => {
+  const showUpcomingOnly = useAppStore((state) => state.showUpcomingOnly);
+  const toggleUpcomingOnly = useAppStore((state) => state.toggleUpcomingOnly);
 
   return (
     <div className={`flex items-center space-x-2 ${className}`}>
@@ -29,9 +31,10 @@ export const UpcomingToggle: React.FC<UpcomingToggleProps> = ({ className = "" }
           className={`
             inline-block h-4 w-4 transform rounded-full shadow-lg border-2
             transition-all duration-200 ease-in-out
-            ${showUpcomingOnly 
-              ? "translate-x-4 bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400" 
-              : "translate-x-0 bg-white border-gray-300 dark:border-gray-500"
+            ${
+              showUpcomingOnly
+                ? "translate-x-4 bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400"
+                : "translate-x-0 bg-white border-gray-300 dark:border-gray-500"
             }
           `}
         />

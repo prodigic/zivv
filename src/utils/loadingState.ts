@@ -7,7 +7,9 @@ import type { AsyncState, LoadingState } from "@/types/frontend.js";
 /**
  * Create initial async state
  */
-export function createAsyncState<T>(initialData: T | null = null): AsyncState<T> {
+export function createAsyncState<T>(
+  initialData: T | null = null
+): AsyncState<T> {
   return {
     data: initialData,
     loading: false,
@@ -105,24 +107,18 @@ export function requireData<T>(state: AsyncState<T>): T {
 /**
  * Get data from async state with fallback
  */
-export function getDataOrDefault<T>(
-  state: AsyncState<T>,
-  defaultValue: T
-): T {
+export function getDataOrDefault<T>(state: AsyncState<T>, defaultValue: T): T {
   return state.data ?? defaultValue;
 }
 
 /**
  * Check if data is stale (older than specified age)
  */
-export function isStale<T>(
-  state: AsyncState<T>,
-  maxAgeMs: number
-): boolean {
+export function isStale<T>(state: AsyncState<T>, maxAgeMs: number): boolean {
   if (state.lastUpdated === null) {
     return true;
   }
-  
+
   return Date.now() - state.lastUpdated > maxAgeMs;
 }
 
@@ -179,14 +175,14 @@ export class LoadingStateManager {
    * Check if all specified keys are successful
    */
   areAllSuccessful(keys: string[]): boolean {
-    return keys.every(key => this.getState(key) === "success");
+    return keys.every((key) => this.getState(key) === "success");
   }
 
   /**
    * Check if any specified keys have errors
    */
   hasAnyErrors(keys: string[]): boolean {
-    return keys.some(key => this.getState(key) === "error");
+    return keys.some((key) => this.getState(key) === "error");
   }
 
   /**
@@ -196,12 +192,12 @@ export class LoadingStateManager {
     if (!this.subscribers.has(key)) {
       this.subscribers.set(key, new Set());
     }
-    
+
     this.subscribers.get(key)!.add(callback);
-    
+
     // Call immediately with current state
     callback(this.getState(key));
-    
+
     // Return unsubscribe function
     return () => {
       const keySubscribers = this.subscribers.get(key);
@@ -231,11 +227,11 @@ export class LoadingStateManager {
 
   private updateState(key: string, state: LoadingState): void {
     this.states.set(key, state);
-    
+
     // Notify subscribers
     const keySubscribers = this.subscribers.get(key);
     if (keySubscribers) {
-      keySubscribers.forEach(callback => callback(state));
+      keySubscribers.forEach((callback) => callback(state));
     }
   }
 }
@@ -324,11 +320,7 @@ export class RetryManager {
   private baseDelay: number;
   private maxDelay: number;
 
-  constructor(
-    maxAttempts = 3,
-    baseDelay = 1000,
-    maxDelay = 30000
-  ) {
+  constructor(maxAttempts = 3, baseDelay = 1000, maxDelay = 30000) {
     this.maxAttempts = maxAttempts;
     this.baseDelay = baseDelay;
     this.maxDelay = maxDelay;
@@ -356,7 +348,7 @@ export class RetryManager {
           this.maxDelay
         );
 
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 
@@ -387,7 +379,7 @@ export class BatchProcessor<T, R> {
     onProgress?: (completed: number, total: number) => void
   ): Promise<R[]> {
     const results: R[] = [];
-    
+
     for (let i = 0; i < items.length; i += this.batchSize) {
       const batch = items.slice(i, i + this.batchSize);
       const batchResults = await this.processor(batch);
@@ -399,7 +391,7 @@ export class BatchProcessor<T, R> {
 
       // Add delay between batches to prevent overwhelming
       if (i + this.batchSize < items.length && this.delay > 0) {
-        await new Promise(resolve => setTimeout(resolve, this.delay));
+        await new Promise((resolve) => setTimeout(resolve, this.delay));
       }
     }
 

@@ -129,10 +129,39 @@ npm run test:all:coverage
 ### Playwright Configuration (`playwright.config.ts`)
 
 - **Browsers**: Chrome, Firefox, Safari + Mobile variants
-- **Base URL**: `http://localhost:5173` (dev server)
+- **Base URL**: `http://localhost:5173/zivv/` (production preview)
 - **Reporters**: HTML, JSON, JUnit for CI integration
 - **Retries**: 2 on CI, 0 locally
 - **Tracing**: On first retry for debugging
+
+### Production and visual browser checks
+
+Playwright builds the production app and starts Vite preview on port 5173.
+Performance budgets measure the shipped app, including decoded JavaScript/CSS
+resource sizes; they do not include development transforms or HMR. Run browser
+checks sequentially so one invocation does not stop a server reused by another.
+Vite builds replace `dist`, so rebuild ETL before invoking ingestion tests directly;
+`npm run test:ingestion` already does this through its pretest hook.
+
+Mobile layout screenshots fix the date to October 2, 2026 and use the Bay Area
+timezone. They hide discovery content while retaining header and bottom navigation;
+modal screenshots retain the date controls. Linux and Windows baselines are
+platform-specific. To regenerate Linux images for review:
+
+```bash
+gh workflow run test.yml --ref YOUR_BRANCH -f update_snapshots=true
+# Download the linux-screenshots artifact, inspect each viewport, then commit it.
+```
+
+That manual generation run exercises only the screenshot E2E cases. The ordinary
+PR run must pass the entire suite without updating snapshots. macOS baselines
+must be refreshed and reviewed on macOS when used with this deterministic setup.
+
+The default Vitest project currently collects Storybook stories. Node ingestion
+and affected JSDOM components run through `npm run test:ingestion`. Legacy unit
+suite discovery and the ineffective nested global coverage setting are tracked
+in [issue #9](https://github.com/prodigic/zivv/issues/9); passing Storybook coverage
+does not establish the documented global coverage target.
 
 ## Writing Tests
 

@@ -11,7 +11,10 @@ import { useAppStore } from "@/stores/appStore.ts";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { PageLoading } from "@/components/ui/LoadingSpinner.tsx";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary.tsx";
-import { FilterModalProvider, FilterModal } from "@/components/filters/FilterModalContext";
+import {
+  FilterModalProvider,
+  FilterModal,
+} from "@/components/filters/FilterModalContext";
 import { SearchFilterToolbar } from "@/components/filters";
 
 export const AppShell: React.FC = () => {
@@ -69,7 +72,11 @@ export const AppShell: React.FC = () => {
 
   // Scroll to top on navigation to detail pages
   useEffect(() => {
-    if (location.pathname.startsWith("/events/") || location.pathname.startsWith("/artists/") || location.pathname.startsWith("/venues/")) {
+    if (
+      location.pathname.startsWith("/events/") ||
+      location.pathname.startsWith("/artists/") ||
+      location.pathname.startsWith("/venues/")
+    ) {
       document.querySelector("main")?.scrollTo({ top: 0 });
     }
   }, [location.pathname]);
@@ -122,61 +129,61 @@ export const AppShell: React.FC = () => {
       <div className="h-full bg-gray-50 dark:bg-gray-900">
         {/* Mobile-first layout */}
         <div className="flex flex-col h-full lg:flex-row">
-        {/* Side Navigation - Desktop */}
-        <SideNavigation
-          isOpen={isSideNavOpen}
-          onClose={() => setIsSideNavOpen(false)}
-          className="hidden lg:block lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-64 lg:z-30"
-        />
-
-        {/* Mobile Side Navigation Overlay */}
-        {isSideNavOpen && (
-          <div className="lg:hidden">
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40"
-              onClick={() => setIsSideNavOpen(false)}
-            />
-
-            {/* Side Navigation */}
-            <SideNavigation
-              isOpen={isSideNavOpen}
-              onClose={() => setIsSideNavOpen(false)}
-              className="fixed inset-y-0 left-0 w-64 z-50"
-            />
-          </div>
-        )}
-
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col h-full lg:ml-64">
-          {/* Header */}
-          <Header
-            onMenuToggle={() => setIsSideNavOpen(!isSideNavOpen)}
-            className="flex-shrink-0"
+          {/* Side Navigation - Desktop */}
+          <SideNavigation
+            isOpen={isSideNavOpen}
+            onClose={() => setIsSideNavOpen(false)}
+            className="hidden lg:block lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-64 lg:z-30"
           />
 
-          {/* Page Content */}
-          <main
-            className="flex-1 pb-16 lg:pb-0 overflow-auto [&::-webkit-scrollbar]:hidden"
-            style={{
-              scrollbarWidth: "none", // Firefox
-              msOverflowStyle: "none", // IE/Edge
-            }}
-          >
-            <ErrorBoundary>
-              <Outlet />
-            </ErrorBoundary>
-          </main>
+          {/* Mobile Side Navigation Overlay */}
+          {isSideNavOpen && (
+            <div className="lg:hidden">
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                onClick={() => setIsSideNavOpen(false)}
+              />
 
-          {/* Bottom Navigation - Mobile */}
-          <BottomNavigation className="lg:hidden" />
+              {/* Side Navigation */}
+              <SideNavigation
+                isOpen={isSideNavOpen}
+                onClose={() => setIsSideNavOpen(false)}
+                className="fixed inset-y-0 left-0 w-64 z-50"
+              />
+            </div>
+          )}
+
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col h-full lg:ml-64">
+            {/* Header */}
+            <Header
+              onMenuToggle={() => setIsSideNavOpen(!isSideNavOpen)}
+              className="flex-shrink-0"
+            />
+
+            {/* Page Content */}
+            <main
+              className="flex-1 pb-16 lg:pb-0 overflow-auto [&::-webkit-scrollbar]:hidden"
+              style={{
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE/Edge
+              }}
+            >
+              <ErrorBoundary>
+                <Outlet />
+              </ErrorBoundary>
+            </main>
+
+            {/* Bottom Navigation - Mobile */}
+            <BottomNavigation className="lg:hidden" />
+          </div>
         </div>
-      </div>
 
-      {/* Filter Modal — rendered at app level so mobile full-screen works */}
-      <FilterModal>
-        <SearchFilterToolbar />
-      </FilterModal>
+        {/* Filter Modal — rendered at app level so mobile full-screen works */}
+        <FilterModal>
+          <SearchFilterToolbar />
+        </FilterModal>
       </div>
     </FilterModalProvider>
   );

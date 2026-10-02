@@ -191,14 +191,12 @@ describe("Phase 4: Application Shell & Routing", () => {
       const Header = await import("../components/layout/Header.tsx");
       expect(Header.default).toBeDefined();
 
-      const SideNavigation = await import(
-        "../components/layout/SideNavigation.tsx"
-      );
+      const SideNavigation =
+        await import("../components/layout/SideNavigation.tsx");
       expect(SideNavigation.default).toBeDefined();
 
-      const BottomNavigation = await import(
-        "../components/layout/BottomNavigation.tsx"
-      );
+      const BottomNavigation =
+        await import("../components/layout/BottomNavigation.tsx");
       expect(BottomNavigation.default).toBeDefined();
     });
   });

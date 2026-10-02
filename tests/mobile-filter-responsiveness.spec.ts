@@ -20,6 +20,7 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
       test.beforeEach(async ({ page }) => {
         // Set viewport size
         await page.setViewportSize({ width, height });
+        await page.clock.setFixedTime(new Date("2026-10-02T19:00:00Z"));
 
         // Navigate to homepage
         await page.goto("/");
@@ -29,15 +30,21 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         await page.waitForTimeout(1000);
       });
 
-      test("should display all filter elements without horizontal overflow", async ({ page }) => {
+      test("should display all filter elements without horizontal overflow", async ({
+        page,
+      }) => {
         // Check that page doesn't have horizontal scrollbar
-        const bodyScrollWidth = await page.evaluate(() => document.body.scrollWidth);
+        const bodyScrollWidth = await page.evaluate(
+          () => document.body.scrollWidth
+        );
         const windowWidth = await page.evaluate(() => window.innerWidth);
 
         expect(bodyScrollWidth).toBeLessThanOrEqual(windowWidth + 5); // Allow 5px tolerance
 
         // Verify city filter elements are visible and clickable
-        const cityFilters = page.locator(".city-pagination button, [data-testid='city-filter'] button");
+        const cityFilters = page.locator(
+          ".city-pagination button, [data-testid='city-filter'] button"
+        );
         const cityFilterCount = await cityFilters.count();
 
         if (cityFilterCount > 0) {
@@ -49,19 +56,27 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
             // Button should have minimum touch target size (44px per WCAG)
             const boundingBox = await button.boundingBox();
             if (boundingBox) {
-              expect(Math.max(boundingBox.width, boundingBox.height)).toBeGreaterThanOrEqual(44);
+              expect(
+                Math.max(boundingBox.width, boundingBox.height)
+              ).toBeGreaterThanOrEqual(44);
             }
           }
         }
 
         // Verify date filter elements are visible
-        const dateFilters = page.locator(".date-pagination button, [data-testid='date-filter'] button");
+        const dateFilters = page.locator(
+          ".date-pagination button, [data-testid='date-filter'] button"
+        );
         const dateFilterCount = await dateFilters.count();
 
         if (dateFilterCount > 0) {
           // Check Today and Tomorrow buttons are always visible
-          const todayButton = dateFilters.filter({ hasText: /today|tod|t/i }).first();
-          const tomorrowButton = dateFilters.filter({ hasText: /tomorrow|tom|t/i }).first();
+          const todayButton = dateFilters
+            .filter({ hasText: /today|tod|t/i })
+            .first();
+          const tomorrowButton = dateFilters
+            .filter({ hasText: /tomorrow|tom|t/i })
+            .first();
 
           if (await todayButton.isVisible()) {
             await expect(todayButton).toBeVisible();
@@ -72,7 +87,9 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         }
       });
 
-      test("should handle progressive text abbreviation correctly", async ({ page }) => {
+      test("should handle progressive text abbreviation correctly", async ({
+        page,
+      }) => {
         // Test city filter text abbreviation
         const cityButtons = page.locator(".city-pagination button");
         const cityButtonCount = await cityButtons.count();
@@ -96,7 +113,9 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
 
         // Test date filter text abbreviation
         const dateButtons = page.locator(".date-pagination button");
-        const todayButton = dateButtons.filter({ hasText: /today|tod|t/i }).first();
+        const todayButton = dateButtons
+          .filter({ hasText: /today|tod|t/i })
+          .first();
 
         if (await todayButton.isVisible()) {
           const todayText = await todayButton.textContent();
@@ -114,9 +133,15 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         }
       });
 
-      test("should open and interact with filter modal properly", async ({ page }) => {
+      test("should open and interact with filter modal properly", async ({
+        page,
+      }) => {
         // Find and click the filter button
-        const filterButton = page.locator("button[aria-label*='filter' i], .filter-button, [data-testid='filter-button']").first();
+        const filterButton = page
+          .locator(
+            "button[aria-label*='filter' i], .filter-button, [data-testid='filter-button']"
+          )
+          .first();
 
         if (await filterButton.isVisible()) {
           await filterButton.click();
@@ -126,7 +151,9 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
 
           // Check mobile modal appears correctly (for mobile viewports)
           if (width < 768) {
-            const mobileModal = page.locator(".fixed.inset-x-0.bottom-0, [role='dialog']").first();
+            const mobileModal = page
+              .locator(".fixed.inset-x-0.bottom-0, [role='dialog']")
+              .first();
 
             if (await mobileModal.isVisible()) {
               await expect(mobileModal).toBeVisible();
@@ -135,17 +162,23 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
               const modalBox = await mobileModal.boundingBox();
               if (modalBox) {
                 expect(modalBox.x).toBeGreaterThanOrEqual(0);
-                expect(modalBox.x + modalBox.width).toBeLessThanOrEqual(width + 5);
+                expect(modalBox.x + modalBox.width).toBeLessThanOrEqual(
+                  width + 5
+                );
               }
 
               // Check that modal content is properly padded for ultra-small screens
-              const modalContent = mobileModal.locator(".p-4, .p-3, .p-2").first();
+              const modalContent = mobileModal
+                .locator(".p-4, .p-3, .p-2")
+                .first();
               if (await modalContent.isVisible()) {
                 await expect(modalContent).toBeVisible();
               }
 
               // Close modal
-              const closeButton = mobileModal.locator("button[aria-label*='close' i], .close-button").first();
+              const closeButton = mobileModal
+                .locator("button[aria-label*='close' i], .close-button")
+                .first();
               if (await closeButton.isVisible()) {
                 await closeButton.click();
                 await page.waitForTimeout(200);
@@ -159,31 +192,43 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         }
       });
 
-      test("should handle venue filter dropdown without overflow", async ({ page }) => {
+      test("should handle venue filter dropdown without overflow", async ({
+        page,
+      }) => {
         // Look for venue filter
-        const venueFilter = page.locator(".venue-filter, [data-testid='venue-filter']").first();
+        const venueFilter = page
+          .locator(".venue-filter, [data-testid='venue-filter']")
+          .first();
 
         if (await venueFilter.isVisible()) {
           // Click on venue search input to open dropdown
-          const venueInput = venueFilter.locator("input, .search-input").first();
+          const venueInput = venueFilter
+            .locator("input, .search-input")
+            .first();
 
           if (await venueInput.isVisible()) {
             await venueInput.click();
             await page.waitForTimeout(200);
 
             // Check if dropdown appears
-            const dropdown = page.locator(".absolute.z-50, .dropdown-menu, [role='listbox']").first();
+            const dropdown = page
+              .locator(".absolute.z-50, .dropdown-menu, [role='listbox']")
+              .first();
 
             if (await dropdown.isVisible()) {
               // Dropdown should not exceed viewport boundaries
               const dropdownBox = await dropdown.boundingBox();
               if (dropdownBox) {
                 expect(dropdownBox.x).toBeGreaterThanOrEqual(0);
-                expect(dropdownBox.x + dropdownBox.width).toBeLessThanOrEqual(width + 10); // 10px tolerance
+                expect(dropdownBox.x + dropdownBox.width).toBeLessThanOrEqual(
+                  width + 10
+                ); // 10px tolerance
               }
 
               // Check venue name truncation in chips
-              const venueChips = page.locator(".venue-filter .truncate, .venue-chip").first();
+              const venueChips = page
+                .locator(".venue-filter .truncate, .venue-chip")
+                .first();
               if (await venueChips.isVisible()) {
                 const chipBox = await venueChips.boundingBox();
                 if (chipBox && width < 375) {
@@ -200,7 +245,9 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         }
       });
 
-      test("should maintain filter functionality across breakpoints", async ({ page }) => {
+      test("should maintain filter functionality across breakpoints", async ({
+        page,
+      }) => {
         // Test city filter functionality
         const cityButtons = page.locator(".city-pagination button").first();
 
@@ -217,12 +264,18 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
           expect(newClass).not.toBe(initialClass);
 
           // Should show active styling
-          const isActive = newClass?.includes("bg-red-50") || newClass?.includes("selected") || newClass?.includes("active");
+          const isActive =
+            newClass?.includes("bg-red-50") ||
+            newClass?.includes("selected") ||
+            newClass?.includes("active");
           expect(isActive).toBeTruthy();
         }
 
         // Test date filter functionality
-        const todayButton = page.locator(".date-pagination button").filter({ hasText: /today|tod|t/i }).first();
+        const todayButton = page
+          .locator(".date-pagination button")
+          .filter({ hasText: /today|tod|t/i })
+          .first();
 
         if (await todayButton.isVisible()) {
           await todayButton.click();
@@ -230,7 +283,9 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
 
           // Should show active state
           const activeClass = await todayButton.getAttribute("class");
-          const isActive = activeClass?.includes("bg-red-50") || activeClass?.includes("selected");
+          const isActive =
+            activeClass?.includes("bg-red-50") ||
+            activeClass?.includes("selected");
           expect(isActive).toBeTruthy();
         }
       });
@@ -240,7 +295,9 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         const startTime = Date.now();
 
         // Perform a filter operation
-        const filterButton = page.locator(".city-pagination button, .date-pagination button").first();
+        const filterButton = page
+          .locator(".city-pagination button, .date-pagination button")
+          .first();
 
         if (await filterButton.isVisible()) {
           await filterButton.click();
@@ -256,7 +313,10 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         }
 
         // Test modal open performance
-        const modalButton = page.locator("button[aria-label*='filter' i]").first();
+        const modalButton = page.getByRole("button", {
+          name: "Open filters",
+          exact: true,
+        });
 
         if (await modalButton.isVisible()) {
           const modalStartTime = Date.now();
@@ -272,70 +332,72 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         }
       });
 
-      test("should be accessible with proper focus management", async ({ page }) => {
-        // Test keyboard navigation
+      test("should be accessible with proper focus management", async ({
+        page,
+      }) => {
+        const opener = page.getByRole("button", {
+          name: "Open filters",
+          exact: true,
+        });
+        // Start at the preceding navigation link, then reach the opener with Tab.
+        await page
+          .getByRole("navigation")
+          .filter({ has: opener })
+          .getByRole("link")
+          .last()
+          .focus();
         await page.keyboard.press("Tab");
-
-        // Find filter elements via keyboard navigation
-        let focusedElement = await page.locator(":focus");
-        let filterFound = false;
-
-        for (let i = 0; i < 15; i++) {
-          if (await focusedElement.isVisible()) {
-            const tagName = await focusedElement.evaluate(el => el.tagName.toLowerCase());
-            const classes = await focusedElement.getAttribute("class") || "";
-
-            // Check if this is a filter button
-            if (tagName === "button" && (classes.includes("city") || classes.includes("date") || classes.includes("filter"))) {
-              filterFound = true;
-
-              // Test keyboard activation
-              await page.keyboard.press("Enter");
-              await page.waitForTimeout(200);
-
-              // Should show active state after keyboard activation
-              const activeClasses = await focusedElement.getAttribute("class") || "";
-              const isActive = activeClasses.includes("bg-red-50") || activeClasses.includes("selected");
-
-              if (isActive) {
-                expect(isActive).toBeTruthy();
-                break;
-              }
-            }
-          }
-
-          await page.keyboard.press("Tab");
-          focusedElement = page.locator(":focus");
-        }
-
-        // Should be able to find focusable filter elements
-        expect(filterFound).toBeTruthy();
+        await expect(opener).toBeFocused();
+        await page.keyboard.press("Enter");
+        const dialog = page.getByRole("dialog", { name: "Filter options" });
+        await expect(dialog).toBeVisible();
+        await expect(
+          dialog.getByRole("button", { name: "Close filters" })
+        ).toBeFocused();
+        await page.keyboard.press("Shift+Tab");
+        expect(
+          await dialog.evaluate((el) => el.contains(document.activeElement))
+        ).toBe(true);
+        await page.keyboard.press("Escape");
+        await expect(dialog).toBeHidden();
+        await expect(opener).toBeFocused();
       });
 
-      test(`should take visual regression screenshot for ${name}`, async ({ page }) => {
-        // Take screenshot for visual regression testing
-        await expect(page).toHaveScreenshot(`filter-layout-${width}x${height}.png`, {
-          fullPage: false,
-          mask: [
-            // Mask dynamic content that changes between test runs
-            page.locator(".debug-info, .loading, .timestamp").first()
-          ],
-          threshold: 0.2
+      test(`should take visual regression screenshot for ${name}`, async ({
+        page,
+      }) => {
+        // Preserve navigation geometry while hiding variable discovery content.
+        await page.addStyleTag({
+          content: "main, main * { visibility: hidden !important; }",
         });
+        // Take screenshot for visual regression testing
+        await expect(page).toHaveScreenshot(
+          `filter-layout-${width}x${height}.png`,
+          {
+            fullPage: false,
+            threshold: 0.2,
+          }
+        );
 
         // Test with filter modal open (for mobile)
         if (width < 768) {
-          const filterButton = page.locator("button[aria-label*='filter' i]").first();
+          const filterButton = page.getByRole("button", {
+            name: "Open filters",
+            exact: true,
+          });
 
           if (await filterButton.isVisible()) {
             await filterButton.click();
             await page.waitForTimeout(300);
 
             // Screenshot with modal open
-            await expect(page).toHaveScreenshot(`filter-modal-${width}x${height}.png`, {
-              fullPage: false,
-              threshold: 0.2
-            });
+            await expect(page).toHaveScreenshot(
+              `filter-modal-${width}x${height}.png`,
+              {
+                fullPage: false,
+                threshold: 0.2,
+              }
+            );
           }
         }
       });
@@ -343,11 +405,14 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
   });
 
   test.describe("Cross-viewport Consistency", () => {
-    test("should maintain consistent filter behavior across all breakpoints", async ({ page }) => {
+    test("should maintain consistent filter behavior across all breakpoints", async ({
+      page,
+    }) => {
       const testResults: { viewport: string; success: boolean }[] = [];
 
       for (const { width, height, name } of viewports) {
         await page.setViewportSize({ width, height });
+        await page.clock.setFixedTime(new Date("2026-10-02T19:00:00Z"));
         await page.goto("/");
         await page.waitForLoadState("networkidle");
 
@@ -361,9 +426,11 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
             await page.waitForTimeout(200);
 
             const isActive = await cityButton.evaluate((el) => {
-              return el.classList.contains("bg-red-50") ||
-                     el.classList.contains("selected") ||
-                     el.classList.contains("active");
+              return (
+                el.classList.contains("bg-red-50") ||
+                el.classList.contains("selected") ||
+                el.classList.contains("active")
+              );
             });
 
             if (!isActive) {
@@ -378,7 +445,7 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
       }
 
       // All viewports should have successful filter interactions
-      const failedViewports = testResults.filter(r => !r.success);
+      const failedViewports = testResults.filter((r) => !r.success);
       expect(failedViewports).toHaveLength(0);
     });
   });
@@ -426,13 +493,18 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
   });
 
   test.describe("Filter Display & Positioning Fixes", () => {
-    test("venue dropdown displays completely within viewport", async ({ page }) => {
+    test("venue dropdown displays completely within viewport", async ({
+      page,
+    }) => {
       // Test on desktop viewport where dropdown issues are most visible
       await page.setViewportSize({ width: 1024, height: 768 });
       await page.goto("/");
 
       // Open filter modal
-      const filterButton = page.locator("button[aria-label*='filter' i]").first();
+      const filterButton = page.getByRole("button", {
+        name: "Open filters",
+        exact: true,
+      });
       await filterButton.click();
       await page.waitForTimeout(300);
 
@@ -450,7 +522,9 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
           const viewportWidth = page.viewportSize()?.width || 0;
 
           // Verify dropdown doesn't extend beyond viewport
-          expect(dropdownBox?.x + dropdownBox?.width).toBeLessThanOrEqual(viewportWidth);
+          expect(dropdownBox?.x + dropdownBox?.width).toBeLessThanOrEqual(
+            viewportWidth
+          );
 
           // Verify dropdown is properly positioned above modal
           expect(dropdownBox?.x).toBeGreaterThanOrEqual(0);
@@ -458,42 +532,48 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
       }
     });
 
-    test("mobile filter panel scrolls properly without hidden content", async ({ page }) => {
-      // Test on narrow mobile viewport where scrolling is critical
-      await page.setViewportSize({ width: 320, height: 568 });
+    test("mobile filter panel scrolls properly without hidden content", async ({
+      page,
+    }) => {
+      // A short mobile viewport forces overflow instead of skipping the scroll assertion.
+      await page.setViewportSize({ width: 320, height: 300 });
       await page.goto("/");
-
-      // Open mobile filter modal
-      const filterButton = page.locator("button[aria-label*='filter' i]").first();
-      await filterButton.click();
-      await page.waitForTimeout(300);
-
-      // Find the scrollable panel (should have overflow-y-auto now, not overflow-hidden)
-      const scrollablePanel = page.locator(".overflow-y-auto").first();
-
-      if (await scrollablePanel.isVisible()) {
-        await expect(scrollablePanel).toBeVisible();
-
-        // Test that content is scrollable, not hidden
-        const scrollHeight = await scrollablePanel.evaluate(el => el.scrollHeight);
-        const clientHeight = await scrollablePanel.evaluate(el => el.clientHeight);
-
-        // If content exceeds container, it should be scrollable
-        if (scrollHeight > clientHeight) {
-          // Test scrolling works
-          await scrollablePanel.evaluate(el => el.scrollTop = 50);
-          const scrollTop = await scrollablePanel.evaluate(el => el.scrollTop);
-          expect(scrollTop).toBeGreaterThan(0);
-        }
-      }
+      const opener = page.getByRole("button", {
+        name: "Open filters",
+        exact: true,
+      });
+      await opener.click();
+      const dialog = page.getByRole("dialog", { name: "Filter options" });
+      const panel = dialog.locator(".overflow-y-auto");
+      await expect(panel).toBeVisible();
+      const dimensions = await panel.evaluate((el) => ({
+        scroll: el.scrollHeight,
+        client: el.clientHeight,
+      }));
+      expect(dimensions.scroll).toBeGreaterThan(dimensions.client);
+      await panel.evaluate((el) => {
+        el.scrollTop = el.scrollHeight;
+      });
+      expect(await panel.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+      await expect(
+        dialog.getByRole("textbox", { name: /venue/i })
+      ).toBeInViewport();
+      await page.keyboard.press("Escape");
+      await expect(dialog).toBeHidden();
+      await expect(opener).toBeFocused();
     });
 
-    test("nested dropdowns maintain proper z-index hierarchy", async ({ page }) => {
+    test("nested dropdowns maintain proper z-index hierarchy", async ({
+      page,
+    }) => {
       await page.setViewportSize({ width: 1024, height: 768 });
       await page.goto("/");
 
       // Open filter modal (z-50)
-      const filterButton = page.locator("button[aria-label*='filter' i]").first();
+      const filterButton = page.getByRole("button", {
+        name: "Open filters",
+        exact: true,
+      });
       await filterButton.click();
       await page.waitForTimeout(300);
 
@@ -507,7 +587,7 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
         const modal = page.locator("[role='dialog']").first();
         const dropdown = page.locator(".absolute.z-60").first();
 
-        if (await modal.isVisible() && await dropdown.isVisible()) {
+        if ((await modal.isVisible()) && (await dropdown.isVisible())) {
           // Verify both are visible (proper z-index stacking)
           await expect(modal).toBeVisible();
           await expect(dropdown).toBeVisible();

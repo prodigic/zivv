@@ -343,34 +343,27 @@ test.describe("Performance Testing", () => {
   });
 
   test("should have minimal bundle size impact", async ({ page }) => {
-    // Monitor network requests
-    const networkRequests: { url: string; size: number; type: string }[] = [];
-
-    page.on("response", async (response) => {
-      const url = response.url();
-      const headers = response.headers();
-      const size = parseInt(headers["content-length"] || "0");
-
-      if (url.includes("localhost") && !url.includes("favicon")) {
-        networkRequests.push({
-          url,
-          size,
-          type: response.request().resourceType(),
-        });
-      }
-    });
-
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Calculate total bundle size
+    // Content-Length can be absent for compressed/chunked preview responses.
+    // Measure decoded browser resource sizes so zero headers cannot pass the gate.
+    const networkRequests = await page.evaluate(() =>
+      (performance.getEntriesByType("resource") as PerformanceResourceTiming[])
+        .filter((resource) => new URL(resource.name).origin === location.origin)
+        .map((resource) => ({
+          url: resource.name,
+          size: resource.decodedBodySize,
+        }))
+    );
     const jsSize = networkRequests
-      .filter((req) => req.type === "script")
+      .filter((req) => new URL(req.url).pathname.endsWith(".js"))
       .reduce((total, req) => total + req.size, 0);
-
     const cssSize = networkRequests
-      .filter((req) => req.type === "stylesheet")
+      .filter((req) => new URL(req.url).pathname.endsWith(".css"))
       .reduce((total, req) => total + req.size, 0);
+    expect(jsSize).toBeGreaterThan(0);
+    expect(cssSize).toBeGreaterThan(0);
 
     // JavaScript bundle should be reasonable (under 3MB total for feature-rich app)
     expect(jsSize).toBeLessThan(3 * 1024 * 1024);

@@ -1,5 +1,6 @@
 const LIST_BANNER = /^\s*THE LIST\s*$/i;
-const LIST_FOOTER = /^\s*Please feel free to forward The List on to your friends\.\s*$/i;
+const LIST_FOOTER =
+  /^\s*Please feel free to forward The List on to your friends\.\s*$/i;
 const DASH_SEPARATOR = /^\s*-+\s*$/;
 
 /**
@@ -26,7 +27,10 @@ export function normalizeLatestContent(content: string): string {
   );
   let end = footerIndex >= 0 ? footerIndex : lines.length;
 
-  while (end > start && (!lines[end - 1].trim() || DASH_SEPARATOR.test(lines[end - 1]))) {
+  while (
+    end > start &&
+    (!lines[end - 1].trim() || DASH_SEPARATOR.test(lines[end - 1]))
+  ) {
     end--;
   }
 

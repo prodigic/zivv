@@ -5,11 +5,11 @@
  * what's running and allowing user choice instead of force killing.
  */
 
-import { createInterface } from 'readline';
-import { createConnection } from 'net';
-import { execSync } from 'child_process';
-import type { ConflictResolution, DevServerProcess } from './types.js';
-import { DevServerProcessRegistry } from './ProcessRegistry.js';
+import { createInterface } from "readline";
+import { createConnection } from "net";
+import { execSync } from "child_process";
+import type { ConflictResolution, DevServerProcess } from "./types.js";
+import { DevServerProcessRegistry } from "./ProcessRegistry.js";
 
 export class DevServerPortManager {
   private registry: DevServerProcessRegistry;
@@ -29,7 +29,7 @@ export class DevServerPortManager {
         resolve(false);
       });
 
-      server.on('error', () => {
+      server.on("error", () => {
         // Connection failed = port is available
         resolve(true);
       });
@@ -45,14 +45,19 @@ export class DevServerPortManager {
   /**
    * Find the next available port starting from the given port
    */
-  async findNextAvailablePort(startPort: number, maxAttempts: number = 10): Promise<number> {
+  async findNextAvailablePort(
+    startPort: number,
+    maxAttempts: number = 10
+  ): Promise<number> {
     for (let port = startPort; port < startPort + maxAttempts; port++) {
       if (await this.isPortAvailable(port)) {
         return port;
       }
     }
 
-    throw new Error(`No available ports found in range ${startPort}-${startPort + maxAttempts - 1}`);
+    throw new Error(
+      `No available ports found in range ${startPort}-${startPort + maxAttempts - 1}`
+    );
   }
 
   /**
@@ -70,7 +75,7 @@ export class DevServerPortManager {
       return {
         isOccupied: false,
         isDevServer: false,
-        description: `Port ${port} is available`
+        description: `Port ${port} is available`,
       };
     }
 
@@ -84,14 +89,14 @@ export class DevServerPortManager {
         isOccupied: true,
         isDevServer: true,
         process: devServerProcess,
-        description: `Port ${port} occupied by dev server (PID ${devServerProcess.pid}, started ${timeAgo})`
+        description: `Port ${port} occupied by dev server (PID ${devServerProcess.pid}, started ${timeAgo})`,
       };
     }
 
     return {
       isOccupied: true,
       isDevServer: false,
-      description: `Port ${port} occupied by another process (not a tracked dev server)`
+      description: `Port ${port} occupied by another process (not a tracked dev server)`,
     };
   }
 
@@ -113,7 +118,7 @@ export class DevServerPortManager {
     } else if (minutes > 0) {
       return `${minutes}m ago`;
     } else {
-      return 'just now';
+      return "just now";
     }
   }
 
@@ -129,7 +134,7 @@ export class DevServerPortManager {
     return new Promise((resolve) => {
       const rl = createInterface({
         input: process.stdin,
-        output: process.stdout
+        output: process.stdout,
       });
 
       console.log(`\n⚠️  Port Conflict: ${portInfo.description}`);
@@ -148,43 +153,54 @@ export class DevServerPortManager {
       console.log(`  [C] Cancel operation`);
 
       const askQuestion = () => {
-        rl.question(`\nWhat would you like to do? [R/S/N/C] (default: R): `, (answer) => {
-          const choice = answer.trim().toLowerCase() || 'r';
+        rl.question(
+          `\nWhat would you like to do? [R/S/N/C] (default: R): `,
+          (answer) => {
+            const choice = answer.trim().toLowerCase() || "r";
 
-          switch (choice) {
-            case 'r':
-            case 'restart':
-              rl.close();
-              try { execSync('npm run dev:stop', { stdio: 'inherit' }); } catch { /* ignore */ }
-              resolve({ action: 'kill' });
-              break;
+            switch (choice) {
+              case "r":
+              case "restart":
+                rl.close();
+                try {
+                  execSync("npm run dev:stop", { stdio: "inherit" });
+                } catch {
+                  /* ignore */
+                }
+                resolve({ action: "kill" });
+                break;
 
-            case 's':
-            case 'stop':
-              rl.close();
-              try { execSync('npm run dev:stop', { stdio: 'inherit' }); } catch { /* ignore */ }
-              resolve({ action: 'cancel' });
-              break;
+              case "s":
+              case "stop":
+                rl.close();
+                try {
+                  execSync("npm run dev:stop", { stdio: "inherit" });
+                } catch {
+                  /* ignore */
+                }
+                resolve({ action: "cancel" });
+                break;
 
-            case 'n':
-            case 'new':
-            case 'new-port':
-              rl.close();
-              resolve({ action: 'new-port', newPort: nextPort });
-              break;
+              case "n":
+              case "new":
+              case "new-port":
+                rl.close();
+                resolve({ action: "new-port", newPort: nextPort });
+                break;
 
-            case 'c':
-            case 'cancel':
-              rl.close();
-              resolve({ action: 'cancel' });
-              break;
+              case "c":
+              case "cancel":
+                rl.close();
+                resolve({ action: "cancel" });
+                break;
 
-            default:
-              console.log('Invalid choice. Please enter R, S, N, or C.');
-              askQuestion();
-              break;
+              default:
+                console.log("Invalid choice. Please enter R, S, N, or C.");
+                askQuestion();
+                break;
+            }
           }
-        });
+        );
       };
 
       askQuestion();
@@ -203,7 +219,7 @@ export class DevServerPortManager {
     } = {}
   ): Promise<{
     port: number;
-    action: 'use-target' | 'use-alternative' | 'kill-existing' | 'cancelled';
+    action: "use-target" | "use-alternative" | "kill-existing" | "cancelled";
     killedProcess?: DevServerProcess;
   }> {
     const portInfo = await this.getPortInfo(targetPort);
@@ -212,7 +228,7 @@ export class DevServerPortManager {
     if (!portInfo.isOccupied) {
       return {
         port: targetPort,
-        action: 'use-target'
+        action: "use-target",
       };
     }
 
@@ -222,13 +238,15 @@ export class DevServerPortManager {
         await this.killProcess(portInfo.process);
         return {
           port: targetPort,
-          action: 'kill-existing',
-          killedProcess: portInfo.process
+          action: "kill-existing",
+          killedProcess: portInfo.process,
         };
       }
 
       // Can't force kill non-dev-server processes
-      throw new Error(`Cannot force kill non-dev-server process on port ${targetPort}`);
+      throw new Error(
+        `Cannot force kill non-dev-server process on port ${targetPort}`
+      );
     }
 
     // If non-interactive (background mode), automatically use next port
@@ -236,7 +254,7 @@ export class DevServerPortManager {
       const alternativePort = await this.findNextAvailablePort(targetPort + 1);
       return {
         port: alternativePort,
-        action: 'use-alternative'
+        action: "use-alternative",
       };
     }
 
@@ -245,15 +263,15 @@ export class DevServerPortManager {
       port: targetPort,
       isDevServer: portInfo.isDevServer,
       process: portInfo.process,
-      description: portInfo.description
+      description: portInfo.description,
     });
 
     switch (resolution.action) {
-      case 'kill': {
+      case "kill": {
         // dev:stop may have already freed the port — re-check before killing
         const stillOccupied = await this.getPortInfo(targetPort);
         if (!stillOccupied.isOccupied) {
-          return { port: targetPort, action: 'use-target' };
+          return { port: targetPort, action: "use-target" };
         }
         if (portInfo.isDevServer && portInfo.process) {
           try {
@@ -261,26 +279,37 @@ export class DevServerPortManager {
           } catch {
             // Process may have already exited — verify port is now free
             const afterKill = await this.getPortInfo(targetPort);
-            if (afterKill.isOccupied) throw new Error(`Port ${targetPort} still occupied after kill attempt.`);
+            if (afterKill.isOccupied)
+              throw new Error(
+                `Port ${targetPort} still occupied after kill attempt.`
+              );
           }
-          return { port: targetPort, action: 'kill-existing', killedProcess: portInfo.process };
+          return {
+            port: targetPort,
+            action: "kill-existing",
+            killedProcess: portInfo.process,
+          };
         } else {
-          throw new Error(`Cannot kill non-dev-server process on port ${targetPort}. Please stop it manually.`);
+          throw new Error(
+            `Cannot kill non-dev-server process on port ${targetPort}. Please stop it manually.`
+          );
         }
       }
 
-      case 'new-port': {
-        const newPort = resolution.newPort || await this.findNextAvailablePort(targetPort + 1);
+      case "new-port": {
+        const newPort =
+          resolution.newPort ||
+          (await this.findNextAvailablePort(targetPort + 1));
         return {
           port: newPort,
-          action: 'use-alternative'
+          action: "use-alternative",
         };
       }
 
-      case 'cancel':
+      case "cancel":
         return {
           port: targetPort,
-          action: 'cancelled'
+          action: "cancelled",
         };
 
       default:
@@ -294,18 +323,20 @@ export class DevServerPortManager {
   private async killProcess(process: DevServerProcess): Promise<void> {
     try {
       // Send SIGTERM first for graceful shutdown
-      global.process.kill(process.pid, 'SIGTERM');
+      global.process.kill(process.pid, "SIGTERM");
 
       // Wait a bit for graceful shutdown
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Check if process is still running
       try {
         global.process.kill(process.pid, 0); // Check if process exists
 
         // If still running, force kill with SIGKILL
-        console.log(`Process ${process.pid} didn't respond to SIGTERM, using SIGKILL...`);
-        global.process.kill(process.pid, 'SIGKILL');
+        console.log(
+          `Process ${process.pid} didn't respond to SIGTERM, using SIGKILL...`
+        );
+        global.process.kill(process.pid, "SIGKILL");
       } catch {
         // Process already terminated
       }
@@ -313,7 +344,9 @@ export class DevServerPortManager {
       // Remove from registry
       await this.registry.removeProcess(process.pid);
 
-      console.log(`✓ Killed dev server process ${process.pid} on port ${process.port}`);
+      console.log(
+        `✓ Killed dev server process ${process.pid} on port ${process.port}`
+      );
     } catch (error) {
       throw new Error(`Failed to kill process ${process.pid}: ${error}`);
     }
@@ -333,7 +366,7 @@ export class DevServerPortManager {
       return {
         port: preferredPort,
         isPreferred: true,
-        reason: `Port ${preferredPort} is available`
+        reason: `Port ${preferredPort} is available`,
       };
     }
 
@@ -342,20 +375,30 @@ export class DevServerPortManager {
     return {
       port: nextAvailable,
       isPreferred: false,
-      reason: `Port ${preferredPort} is occupied, recommending ${nextAvailable}`
+      reason: `Port ${preferredPort} is occupied, recommending ${nextAvailable}`,
     };
   }
 
   /**
    * Get summary of port usage
    */
-  async getPortSummary(startPort: number = 5173, count: number = 10): Promise<Array<{
-    port: number;
-    available: boolean;
-    isDevServer: boolean;
-    process?: DevServerProcess;
-  }>> {
-    const summary: Array<{ port: number; available: boolean; isDevServer: boolean; process?: DevServerProcess }> = [];
+  async getPortSummary(
+    startPort: number = 5173,
+    count: number = 10
+  ): Promise<
+    Array<{
+      port: number;
+      available: boolean;
+      isDevServer: boolean;
+      process?: DevServerProcess;
+    }>
+  > {
+    const summary: Array<{
+      port: number;
+      available: boolean;
+      isDevServer: boolean;
+      process?: DevServerProcess;
+    }> = [];
 
     for (let port = startPort; port < startPort + count; port++) {
       const portInfo = await this.getPortInfo(port);
@@ -363,7 +406,7 @@ export class DevServerPortManager {
         port,
         available: !portInfo.isOccupied,
         isDevServer: portInfo.isDevServer,
-        process: portInfo.process
+        process: portInfo.process,
       });
     }
 

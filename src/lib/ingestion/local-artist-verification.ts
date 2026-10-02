@@ -4,7 +4,9 @@ import { isNonPerformerArtistName } from "../etl/non-performer-artists.js";
 export const LOCAL_ARTIST_VERIFICATION_SCHEMA_VERSION = 1 as const;
 
 export type LocalArtistVerificationStatus =
-  "local" | "non-local" | "unresolved";
+  | "local"
+  | "non-local"
+  | "unresolved";
 
 export interface LocalArtistVerificationEntry {
   name: string;

@@ -7,12 +7,8 @@ export { CacheService } from "./CacheService.js";
 export { WorkerService } from "./WorkerService.js";
 
 // Type exports
-export type {
-  DataServiceConfig,
-} from "../types/frontend.js";
-export type {
-  CacheServiceConfig,
-} from "./CacheService.js";
+export type { DataServiceConfig } from "../types/frontend.js";
+export type { CacheServiceConfig } from "./CacheService.js";
 
 // Utility exports
 export {

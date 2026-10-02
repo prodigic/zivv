@@ -155,10 +155,21 @@ export interface Venue {
 
 // Enums and unions
 export type AgeRestriction =
-  "all-ages" | "18+" | "21+" | "16+" | "8+" | "5+" | "6+" | "unknown";
+  | "all-ages"
+  | "18+"
+  | "21+"
+  | "16+"
+  | "8+"
+  | "5+"
+  | "6+"
+  | "unknown";
 
 export type EventStatus =
-  "confirmed" | "sold-out" | "cancelled" | "postponed" | "rescheduled";
+  | "confirmed"
+  | "sold-out"
+  | "cancelled"
+  | "postponed"
+  | "rescheduled";
 
 export type EventTag =
   | "sold-out"
@@ -174,7 +185,12 @@ export type EventTag =
   | "multiple-show";
 
 export type VenueType =
-  "major" | "club" | "diy" | "outdoor" | "festival" | "unknown";
+  | "major"
+  | "club"
+  | "diy"
+  | "outdoor"
+  | "festival"
+  | "unknown";
 
 // Data chunk types
 export interface EventChunk {
