@@ -6458,41 +6458,9 @@
     "slug": "the-freak-accident",
     "normalizedName": "freak accident",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 14,
     "upcomingEvents": [
-      {
-        "id": 1193080359,
-        "slug": "2026-10-01-the-clarke-nova-the-ivy-room",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "The Clarke Nova",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1689618485,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:a0e5fb7691cd8274",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      },
       {
         "id": 1955271348,
         "slug": "2026-10-03-the-freak-accident-rain-dog-records",
@@ -6866,43 +6834,9 @@
     "slug": "plummet",
     "normalizedName": "plummet",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 5,
     "upcomingEvents": [
-      {
-        "id": 1258079155,
-        "slug": "2026-10-01-samuel-aaron-stay-gold-deli",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Samuel Aaron",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1217828948,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:4d94c3eccb46cf9d",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1217828948,
-        "venueName": "Stay Gold Deli",
-        "venueCity": "Oakland"
-      },
       {
         "id": 1955577694,
         "slug": "2026-10-03-salt-915pm-924-gilman-street",
@@ -12104,43 +12038,9 @@
     "slug": "yes-maam",
     "normalizedName": "yes ma'am",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 1942593419,
-        "slug": "2026-10-01-weedeater-the-ritz",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Weedeater",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 30,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1253820046,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:d5ab5a4075a0fafc",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1253820046,
-        "venueName": "Ritz",
-        "venueCity": "San"
-      },
       {
         "id": 806588631,
         "slug": "2026-10-29-bridge-city-sinners-the-uc-theater",
@@ -15572,42 +15472,9 @@
     "slug": "the-secretary",
     "normalizedName": "secretary",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 3,
-    "upcomingEvents": [
-      {
-        "id": 1641209056,
-        "slug": "2026-10-01-jesus-crist-taxi-driver-the-kilowatt",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Jesus Crist Taxi Driver",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:6408cab3a4010ce0",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1433810567,
-        "venueName": "Kilowatt",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360969686,
     "updatedAtEpochMs": 1787360969870
   },
@@ -20650,42 +20517,9 @@
     "slug": "steve-earle",
     "normalizedName": "steve earle",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360969699,
     "updatedAtEpochMs": 1787360969699
   },
@@ -21788,44 +21622,9 @@
     "slug": "miss-hits",
     "normalizedName": "miss hits",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 3,
-    "upcomingEvents": [
-      {
-        "id": 172840468,
-        "slug": "2026-10-01-miss-hits-the-rickshaw-stop",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Miss Hits",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 20,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 31041890,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:93926164968b9b45",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 31041890,
-        "venueName": "Rickshaw Stop",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360969701,
     "updatedAtEpochMs": 1787360969782
   },
@@ -22288,44 +22087,9 @@
     "slug": "swept-to-sea",
     "normalizedName": "swept to sea",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 4,
-    "upcomingEvents": [
-      {
-        "id": 875697863,
-        "slug": "2026-10-01-galactic-empire-neck-of-the-woods",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Galactic Empire",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 22,
-        "priceMax": 27,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1557090037,
-            "session": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:9712c84fc9de6a35",
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1557090037,
-        "venueName": "Neck of the Woods",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360969702,
     "updatedAtEpochMs": 1787360969709
   },
@@ -37290,43 +37054,9 @@
     "slug": "shark-in-the-water",
     "normalizedName": "shark in the water",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 6,
     "upcomingEvents": [
-      {
-        "id": 875697863,
-        "slug": "2026-10-01-galactic-empire-neck-of-the-woods",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Galactic Empire",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 22,
-        "priceMax": 27,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1557090037,
-            "session": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:9712c84fc9de6a35",
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1557090037,
-        "venueName": "Neck of the Woods",
-        "venueCity": "S.f"
-      },
       {
         "id": 1777556719,
         "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
@@ -40928,41 +40658,9 @@
     "slug": "electric-ex",
     "normalizedName": "electric ex",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 6,
     "upcomingEvents": [
-      {
-        "id": 1641209056,
-        "slug": "2026-10-01-jesus-crist-taxi-driver-the-kilowatt",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Jesus Crist Taxi Driver",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:6408cab3a4010ce0",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1433810567,
-        "venueName": "Kilowatt",
-        "venueCity": "S.f"
-      },
       {
         "id": 72836786,
         "slug": "2026-11-07-palina-and-the-cave-kilowatt",
@@ -56331,41 +56029,9 @@
     "slug": "molly-tuttle",
     "normalizedName": "molly tuttle",
     "aliases": [],
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "totalEventCount": 6,
     "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      },
       {
         "id": 287549458,
         "slug": "2026-10-02-larry-campbell-teresa-williams-hardly-strictly-bluegrass-at-golden-gate-park",
@@ -61032,44 +60698,9 @@
     "slug": "jel",
     "normalizedName": "jel",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 62542977,
-        "slug": "2026-10-01-msayyid-thee-stork-club",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "M.sayyid",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 20,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 873142532,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:1ff7145ef5e19ace",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 873142532,
-        "venueName": "Stork Club",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360969863,
     "updatedAtEpochMs": 1787360970171
   },
@@ -70410,44 +70041,9 @@
     "slug": "of-montreal",
     "normalizedName": "of montreal",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1717770341,
-        "slug": "2026-10-01-of-montreal-the-bottom-of-the-hill",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790911800000,
-        "headlinerName": "Of Montreal",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 30,
-        "priceMax": 35,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1016385760,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:d8ccf08b286d65a2",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1016385760,
-        "venueName": "Bottom of the Hill",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360969965,
     "updatedAtEpochMs": 1787360969965
   },
@@ -77604,44 +77200,9 @@
     "slug": "perhapsy",
     "normalizedName": "perhapsy",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1258079155,
-        "slug": "2026-10-01-samuel-aaron-stay-gold-deli",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Samuel Aaron",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1217828948,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:4d94c3eccb46cf9d",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1217828948,
-        "venueName": "Stay Gold Deli",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970008,
     "updatedAtEpochMs": 1787360970008
   },
@@ -78572,44 +78133,9 @@
     "slug": "mars-kumari",
     "normalizedName": "mars kumari",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 3,
-    "upcomingEvents": [
-      {
-        "id": 62542977,
-        "slug": "2026-10-01-msayyid-thee-stork-club",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "M.sayyid",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 20,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 873142532,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:1ff7145ef5e19ace",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 873142532,
-        "venueName": "Stork Club",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970014,
     "updatedAtEpochMs": 1787360970171
   },
@@ -92166,44 +91692,9 @@
     "slug": "healing-potpourri",
     "normalizedName": "healing potpourri",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1717770341,
-        "slug": "2026-10-01-of-montreal-the-bottom-of-the-hill",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790911800000,
-        "headlinerName": "Of Montreal",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 30,
-        "priceMax": 35,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1016385760,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:d8ccf08b286d65a2",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1016385760,
-        "venueName": "Bottom of the Hill",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970133,
     "updatedAtEpochMs": 1787360970133
   },
@@ -97849,42 +97340,9 @@
     "slug": "jack-johnson",
     "normalizedName": "jack johnson",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1493058643,
-        "slug": "2026-10-01-jack-johnson-the-greek-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790904600000,
-        "headlinerName": "Jack Johnson",
-        "isFree": false,
-        "isSoldOut": true,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 474218142,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:b36e7e18fbfc191a",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 474218142,
-        "venueName": "the Greek Theater",
-        "venueCity": "Uc"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970168,
     "updatedAtEpochMs": 1787360970170
   },
@@ -97894,42 +97352,9 @@
     "slug": "g-love",
     "normalizedName": "g. love",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1493058643,
-        "slug": "2026-10-01-jack-johnson-the-greek-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790904600000,
-        "headlinerName": "Jack Johnson",
-        "isFree": false,
-        "isSoldOut": true,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 474218142,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:b36e7e18fbfc191a",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 474218142,
-        "venueName": "the Greek Theater",
-        "venueCity": "Uc"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970168,
     "updatedAtEpochMs": 1787360970170
   },
@@ -98236,57 +97661,9 @@
     "slug": "fruit-bats",
     "normalizedName": "fruit bats",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 2,
     "upcomingEvents": [
-      {
-        "id": 1445802042,
-        "slug": "2026-10-01-fruit-bats-uc-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Fruit Bats",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 40,
-        "priceMax": 40,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2093769319,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:ce84ef13b9b1ddc1",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          },
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2093769319,
-            "session": null,
-            "firstSeenAtEpochMs": null,
-            "lastSeenAtEpochMs": null,
-            "contentHash": "fnv1a64:75694298ff87cf93",
-            "firstSeenRunId": null,
-            "lastSeenRunId": null,
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2093769319,
-        "venueName": "UC Theater",
-        "venueCity": "Berkeley"
-      },
       {
         "id": 1848000659,
         "slug": "2026-10-02-fruit-bats-the-rio-theater",
@@ -98345,43 +97722,9 @@
     "slug": "soda-blonde",
     "normalizedName": "soda blonde",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 2,
     "upcomingEvents": [
-      {
-        "id": 27677446,
-        "slug": "2026-10-01-soda-blonde-the-chapel",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Soda Blonde",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 29.69,
-        "priceMax": 29.69,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 680116887,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:d4af25496239cd74",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 680116887,
-        "venueName": "Chapel",
-        "venueCity": "S.f"
-      },
       {
         "id": 574250324,
         "slug": "2026-10-02-soda-blonde-the-crepe-place",
@@ -98426,44 +97769,9 @@
     "slug": "don-west",
     "normalizedName": "don west",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1340662498,
-        "slug": "2026-10-01-don-west-august-hall",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Don West",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 33.65,
-        "priceMax": 33.65,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 811075932,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:88e51699d451937a",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 811075932,
-        "venueName": "August Hall",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970170,
     "updatedAtEpochMs": 1787360970170
   },
@@ -98473,42 +97781,9 @@
     "slug": "lynyrd-skynyrd",
     "normalizedName": "lynyrd skynyrd",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 118208263,
-        "slug": "2026-10-01-lynyrd-skynyrd-the-mountain-winery",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790908200000,
-        "headlinerName": "Lynyrd Skynyrd",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2021730900,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:811796e898cadc7b",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2021730900,
-        "venueName": "Mountain Winery",
-        "venueCity": "Saratoga"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970170,
     "updatedAtEpochMs": 1787360970170
   },
@@ -98518,44 +97793,9 @@
     "slug": "suicideboys",
     "normalizedName": "suicideboys",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1812157367,
-        "slug": "2026-10-01-suicideboys-shoreline-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790904600000,
-        "headlinerName": "Suicideboys",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 67.2,
-        "priceMax": 67.2,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1931913617,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:0ff0b89f296c8ea4",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970170,
     "updatedAtEpochMs": 1787360970170
   },
@@ -98565,44 +97805,9 @@
     "slug": "shoreline-mafia",
     "normalizedName": "shoreline mafia",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1812157367,
-        "slug": "2026-10-01-suicideboys-shoreline-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790904600000,
-        "headlinerName": "Suicideboys",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 67.2,
-        "priceMax": 67.2,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1931913617,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:0ff0b89f296c8ea4",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970170,
     "updatedAtEpochMs": 1787360970170
   },
@@ -98612,44 +97817,9 @@
     "slug": "shakewell",
     "normalizedName": "shakewell",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1812157367,
-        "slug": "2026-10-01-suicideboys-shoreline-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790904600000,
-        "headlinerName": "Suicideboys",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 67.2,
-        "priceMax": 67.2,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1931913617,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:0ff0b89f296c8ea4",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -98659,44 +97829,9 @@
     "slug": "drain",
     "normalizedName": "drain",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1812157367,
-        "slug": "2026-10-01-suicideboys-shoreline-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790904600000,
-        "headlinerName": "Suicideboys",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 67.2,
-        "priceMax": 67.2,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1931913617,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:0ff0b89f296c8ea4",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -98706,44 +97841,9 @@
     "slug": "black-kray",
     "normalizedName": "black kray",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1812157367,
-        "slug": "2026-10-01-suicideboys-shoreline-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790904600000,
-        "headlinerName": "Suicideboys",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 67.2,
-        "priceMax": 67.2,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1931913617,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:0ff0b89f296c8ea4",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -98753,44 +97853,9 @@
     "slug": "slim-gucci",
     "normalizedName": "slim gucci",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1812157367,
-        "slug": "2026-10-01-suicideboys-shoreline-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790904600000,
-        "headlinerName": "Suicideboys",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 67.2,
-        "priceMax": 67.2,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1931913617,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:0ff0b89f296c8ea4",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -98800,44 +97865,9 @@
     "slug": "msayyid",
     "normalizedName": "m.sayyid",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 62542977,
-        "slug": "2026-10-01-msayyid-thee-stork-club",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "M.sayyid",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 20,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 873142532,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:1ff7145ef5e19ace",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 873142532,
-        "venueName": "Stork Club",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -98847,44 +97877,9 @@
     "slug": "heavy-arts-ensemble",
     "normalizedName": "heavy arts ensemble",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 62542977,
-        "slug": "2026-10-01-msayyid-thee-stork-club",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "M.sayyid",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 20,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 873142532,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:1ff7145ef5e19ace",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 873142532,
-        "venueName": "Stork Club",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -98894,42 +97889,9 @@
     "slug": "poison-girl-friend",
     "normalizedName": "poison girl friend",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 491568545,
-        "slug": "2026-10-01-poison-girl-friend-the-regency-ballroom",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Poison Girl Friend",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1782475200000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2133080253,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:50cb7f1f099b1550",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2133080253,
-        "venueName": "Regency Ballroom",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -98939,44 +97901,9 @@
     "slug": "los-thuthanaka",
     "normalizedName": "los thuthanaka",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1939672734,
-        "slug": "2026-10-01-los-thuthanaka-great-american-music-hall",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Los Thuthanaka",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 27.5,
-        "priceMax": 30,
-        "createdAtEpochMs": 1782475200000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 463728167,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:fd4e559583302359",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 463728167,
-        "venueName": "Great American Music Hall",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -98986,42 +97913,9 @@
     "slug": "pearl-the-oysters",
     "normalizedName": "pearl & the oysters",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 446800762,
-        "slug": "2026-10-01-pearl-the-oysters-the-crepe-place",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790881200000,
-        "headlinerName": "Pearl & The Oysters",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1782475200000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 135768954,
-            "session": null,
-            "firstSeenAtEpochMs": null,
-            "lastSeenAtEpochMs": null,
-            "contentHash": "fnv1a64:4b837a5b098b55a0",
-            "firstSeenRunId": null,
-            "lastSeenRunId": null,
-            "evidence": null
-          }
-        ],
-        "timeBasis": "legacy-wall-clock",
-        "venueId": 135768954,
-        "venueName": "Crepe Place",
-        "venueCity": "Santa"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -99031,43 +97925,9 @@
     "slug": "mamas-broke",
     "normalizedName": "mama's broke",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 2,
     "upcomingEvents": [
-      {
-        "id": 884674297,
-        "slug": "2026-10-01-mamas-broke-hopmonk-tavern",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Mama's Broke",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30.57,
-        "priceMax": 30.57,
-        "createdAtEpochMs": 1783080000000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1637782129,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:9a2c1f0dbb5836a9",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 410740820,
-        "venueName": "Hopmonk Tavern (Sebastopol)",
-        "venueCity": "Sebastopol"
-      },
       {
         "id": 287549458,
         "slug": "2026-10-02-larry-campbell-teresa-williams-hardly-strictly-bluegrass-at-golden-gate-park",
@@ -99109,44 +97969,9 @@
     "slug": "weedeater",
     "normalizedName": "weedeater",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1942593419,
-        "slug": "2026-10-01-weedeater-the-ritz",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Weedeater",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 30,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1253820046,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:d5ab5a4075a0fafc",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1253820046,
-        "venueName": "Ritz",
-        "venueCity": "San"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -99156,44 +97981,9 @@
     "slug": "zeke",
     "normalizedName": "zeke",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1942593419,
-        "slug": "2026-10-01-weedeater-the-ritz",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Weedeater",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 30,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1253820046,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:d5ab5a4075a0fafc",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1253820046,
-        "venueName": "Ritz",
-        "venueCity": "San"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -99203,44 +97993,9 @@
     "slug": "royal-thunder",
     "normalizedName": "royal thunder",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1942593419,
-        "slug": "2026-10-01-weedeater-the-ritz",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Weedeater",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 30,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1253820046,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:d5ab5a4075a0fafc",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1253820046,
-        "venueName": "Ritz",
-        "venueCity": "San"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -99250,41 +98005,9 @@
     "slug": "michelle-branch",
     "normalizedName": "michelle branch",
     "aliases": [],
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "totalEventCount": 2,
     "upcomingEvents": [
-      {
-        "id": 1022735115,
-        "slug": "2026-10-01-michelle-branch-the-castro",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Michelle Branch",
-        "isFree": false,
-        "isSoldOut": true,
-        "createdAtEpochMs": 1784289600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1383208152,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:8a5740e680ae411c",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1383208152,
-        "venueName": "Castro",
-        "venueCity": "S.f"
-      },
       {
         "id": 955728362,
         "slug": "2026-10-02-michelle-branch-the-castro",
@@ -99374,44 +98097,9 @@
     "slug": "carbon-leaf",
     "normalizedName": "carbon leaf",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1160082268,
-        "slug": "2026-10-01-carbon-leaf-brick-and-mortar",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Carbon Leaf",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 38.91,
-        "priceMax": 38.91,
-        "createdAtEpochMs": 1786104000000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1719765223,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:c9f5e9ddfaec96fe",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1719765223,
-        "venueName": "the Brick and Mortar",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970171,
     "updatedAtEpochMs": 1787360970171
   },
@@ -99812,44 +98500,9 @@
     "slug": "death-from-above",
     "normalizedName": "death from above",
     "aliases": [],
-    "upcomingEventCount": 1,
-    "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1992667217,
-        "slug": "2026-10-02-death-from-above-the-uc-theater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1791039600000,
-        "headlinerName": "Death From Above",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39.5,
-        "priceMax": 39.5,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2093769319,
-            "session": null,
-            "firstSeenAtEpochMs": null,
-            "lastSeenAtEpochMs": null,
-            "contentHash": "fnv1a64:1530c0105f260f6f",
-            "firstSeenRunId": null,
-            "lastSeenRunId": null,
-            "evidence": null
-          }
-        ],
-        "timeBasis": "legacy-wall-clock",
-        "venueId": 2093769319,
-        "venueName": "UC Theater",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "totalEventCount": 0,
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970172,
     "updatedAtEpochMs": 1787360970172
   },
@@ -99859,44 +98512,9 @@
     "slug": "1979",
     "normalizedName": "1979",
     "aliases": [],
-    "upcomingEventCount": 1,
-    "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1992667217,
-        "slug": "2026-10-02-death-from-above-the-uc-theater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1791039600000,
-        "headlinerName": "Death From Above",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39.5,
-        "priceMax": 39.5,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2093769319,
-            "session": null,
-            "firstSeenAtEpochMs": null,
-            "lastSeenAtEpochMs": null,
-            "contentHash": "fnv1a64:1530c0105f260f6f",
-            "firstSeenRunId": null,
-            "lastSeenRunId": null,
-            "evidence": null
-          }
-        ],
-        "timeBasis": "legacy-wall-clock",
-        "venueId": 2093769319,
-        "venueName": "UC Theater",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "totalEventCount": 0,
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970172,
     "updatedAtEpochMs": 1787360970172
   },
@@ -100045,23 +98663,37 @@
     "slug": "death-from-above-1979",
     "normalizedName": "death from above 1979",
     "aliases": [],
-    "upcomingEventCount": 2,
-    "totalEventCount": 2,
+    "upcomingEventCount": 1,
+    "totalEventCount": 1,
     "upcomingEvents": [
       {
-        "id": 1378399671,
-        "slug": "2026-10-02-death-from-above-1979-the-uc-theater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790996400000,
+        "id": 1992667217,
+        "slug": "2026-10-02-death-from-above-the-uc-theater",
+        "dateEpochMs": 1802347200000,
+        "startTimeEpochMs": 1802404800000,
         "headlinerName": "Death From Above 1979",
         "isFree": false,
         "isSoldOut": false,
-        "priceMin": 39.5,
-        "priceMax": 39.5,
-        "createdAtEpochMs": 1780660800000,
+        "priceMin": 44.45,
+        "priceMax": 44.45,
+        "createdAtEpochMs": 1778241600000,
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
+          {
+            "kind": "steveslist",
+            "sourceId": "steveslist",
+            "externalEventId": null,
+            "canonicalUrl": null,
+            "originalVenueId": 2093769319,
+            "session": null,
+            "firstSeenAtEpochMs": null,
+            "lastSeenAtEpochMs": null,
+            "contentHash": "fnv1a64:1530c0105f260f6f",
+            "firstSeenRunId": null,
+            "lastSeenRunId": null,
+            "evidence": null
+          },
           {
             "kind": "steveslist",
             "sourceId": "steveslist",
@@ -100075,27 +98707,7 @@
             "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
             "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
             "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2093769319,
-        "venueName": "UC Theater",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 190538854,
-        "slug": "2027-02-11-death-from-above-1979-august-hall",
-        "dateEpochMs": 1802347200000,
-        "startTimeEpochMs": 1802404800000,
-        "headlinerName": "Death From Above 1979",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 44.45,
-        "priceMax": 44.45,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
+          },
           {
             "kind": "steveslist",
             "sourceId": "steveslist",
@@ -100126,44 +98738,9 @@
     "slug": "rickshaw-billies-burger-patrol",
     "normalizedName": "rickshaw billie's burger patrol",
     "aliases": [],
-    "upcomingEventCount": 1,
-    "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1378399671,
-        "slug": "2026-10-02-death-from-above-1979-the-uc-theater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790996400000,
-        "headlinerName": "Death From Above 1979",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39.5,
-        "priceMax": 39.5,
-        "createdAtEpochMs": 1780660800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2093769319,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:31f7e2e1bac37b04",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2093769319,
-        "venueName": "UC Theater",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "totalEventCount": 0,
+    "upcomingEvents": [],
     "createdAtEpochMs": 1787360970172,
     "updatedAtEpochMs": 1787360970172
   },
@@ -101002,41 +99579,9 @@
     "slug": "gillian-welch-david-rawlings",
     "normalizedName": "gillian welch & david rawlings",
     "aliases": [],
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "totalEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      },
       {
         "id": 2031485497,
         "slug": "2026-10-02-gillian-welch-david-rawlings-the-fillmore",
@@ -104581,41 +103126,9 @@
     "slug": "buddy-miller",
     "normalizedName": "buddy miller",
     "aliases": [],
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "totalEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      },
       {
         "id": 2061146179,
         "slug": "2026-10-03-aaron-lee-tasjan-hardly-strictly-bluegrass-at-golden-gate-park",
@@ -104791,41 +103304,9 @@
     "slug": "elizabeth-cook",
     "normalizedName": "elizabeth cook",
     "aliases": [],
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "totalEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      },
       {
         "id": 2061146179,
         "slug": "2026-10-03-aaron-lee-tasjan-hardly-strictly-bluegrass-at-golden-gate-park",
@@ -104912,41 +103393,9 @@
     "slug": "emmylou-harris",
     "normalizedName": "emmylou harris",
     "aliases": [],
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "totalEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      },
       {
         "id": 1722951310,
         "slug": "2026-10-04-aj-lee-and-blue-summit-hardly-strictly-bluegrass",
@@ -105358,41 +103807,9 @@
     "slug": "larry-campbell-teresa-williams",
     "normalizedName": "larry campbell & teresa williams",
     "aliases": [],
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "totalEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      },
       {
         "id": 287549458,
         "slug": "2026-10-02-larry-campbell-teresa-williams-hardly-strictly-bluegrass-at-golden-gate-park",
@@ -105657,41 +104074,9 @@
     "slug": "stacey-earle",
     "normalizedName": "stacey earle",
     "aliases": [],
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "totalEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      },
       {
         "id": 287549458,
         "slug": "2026-10-02-larry-campbell-teresa-williams-hardly-strictly-bluegrass-at-golden-gate-park",
@@ -151662,58 +150047,9 @@
     "slug": "mathew-logan-vasquez",
     "normalizedName": "mathew logan vasquez",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1445802042,
-        "slug": "2026-10-01-fruit-bats-uc-theater",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Fruit Bats",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 40,
-        "priceMax": 40,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2093769319,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:ce84ef13b9b1ddc1",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          },
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2093769319,
-            "session": null,
-            "firstSeenAtEpochMs": null,
-            "lastSeenAtEpochMs": null,
-            "contentHash": "fnv1a64:75694298ff87cf93",
-            "firstSeenRunId": null,
-            "lastSeenRunId": null,
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2093769319,
-        "venueName": "UC Theater",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789179075112,
     "updatedAtEpochMs": 1789179075112
   },
@@ -151723,42 +150059,9 @@
     "slug": "the-clarke-nova",
     "normalizedName": "clarke nova",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1193080359,
-        "slug": "2026-10-01-the-clarke-nova-the-ivy-room",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "The Clarke Nova",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1689618485,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:a0e5fb7691cd8274",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789179075112,
     "updatedAtEpochMs": 1789179075112
   },
@@ -151768,42 +150071,9 @@
     "slug": "friendship-commanders",
     "normalizedName": "friendship commanders",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1193080359,
-        "slug": "2026-10-01-the-clarke-nova-the-ivy-room",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "The Clarke Nova",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1689618485,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:a0e5fb7691cd8274",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789179075112,
     "updatedAtEpochMs": 1789179075112
   },
@@ -151813,44 +150083,9 @@
     "slug": "little-debungus-album-release",
     "normalizedName": "little debungus (album release)",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 172840468,
-        "slug": "2026-10-01-miss-hits-the-rickshaw-stop",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Miss Hits",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 20,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 31041890,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:93926164968b9b45",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 31041890,
-        "venueName": "Rickshaw Stop",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789179075113,
     "updatedAtEpochMs": 1789179075113
   },
@@ -151860,44 +150095,9 @@
     "slug": "i-am-the-octopus",
     "normalizedName": "i am the octopus",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 172840468,
-        "slug": "2026-10-01-miss-hits-the-rickshaw-stop",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Miss Hits",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 20,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 31041890,
-            "session": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:93926164968b9b45",
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 31041890,
-        "venueName": "Rickshaw Stop",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789179075113,
     "updatedAtEpochMs": 1789179075113
   },
@@ -160202,44 +158402,9 @@
     "slug": "galactic-empire",
     "normalizedName": "galactic empire",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 875697863,
-        "slug": "2026-10-01-galactic-empire-neck-of-the-woods",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Galactic Empire",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 22,
-        "priceMax": 27,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1557090037,
-            "session": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:9712c84fc9de6a35",
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1557090037,
-        "venueName": "Neck of the Woods",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789179076859,
     "updatedAtEpochMs": 1789179076859
   },
@@ -166387,44 +164552,9 @@
     "slug": "bashforthe-world",
     "normalizedName": "bashforthe world",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 245518730,
-        "slug": "2026-10-01-bashforthe-world-crybaby",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790910000000,
-        "headlinerName": "Bashforthe World",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39.63,
-        "priceMax": 39.63,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 2137851775,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:0c2404d891e63694",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2137851775,
-        "venueName": "Crybaby",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789778766655,
     "updatedAtEpochMs": 1789778766655
   },
@@ -166434,42 +164564,9 @@
     "slug": "jackson-browne",
     "normalizedName": "jackson browne",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789778766657,
     "updatedAtEpochMs": 1789778766657
   },
@@ -166479,42 +164576,9 @@
     "slug": "hot-tuna",
     "normalizedName": "hot tuna",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789778766657,
     "updatedAtEpochMs": 1789778766657
   },
@@ -166524,42 +164588,9 @@
     "slug": "victoria-williams",
     "normalizedName": "victoria williams",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2095573674,
-        "slug": "2026-10-01-steve-earle-the-masonic",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Steve Earle",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1120524281,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:f177922c111299d2",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789778766657,
     "updatedAtEpochMs": 1789778766657
   },
@@ -166569,42 +164600,9 @@
     "slug": "jesus-crist-taxi-driver",
     "normalizedName": "jesus crist taxi driver",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1641209056,
-        "slug": "2026-10-01-jesus-crist-taxi-driver-the-kilowatt",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Jesus Crist Taxi Driver",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1789777368000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:6408cab3a4010ce0",
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1433810567,
-        "venueName": "Kilowatt",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1789778766658,
     "updatedAtEpochMs": 1789778766658
   },
@@ -176436,44 +174434,9 @@
     "slug": "samuel-aaron",
     "normalizedName": "samuel aaron",
     "aliases": [],
-    "upcomingEventCount": 1,
+    "upcomingEventCount": 0,
     "totalEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1258079155,
-        "slug": "2026-10-01-samuel-aaron-stay-gold-deli",
-        "dateEpochMs": 1790856000000,
-        "startTimeEpochMs": 1790906400000,
-        "headlinerName": "Samuel Aaron",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "kind": "steveslist",
-            "sourceId": "steveslist",
-            "externalEventId": null,
-            "canonicalUrl": null,
-            "originalVenueId": 1217828948,
-            "session": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "lastSeenAtEpochMs": 1790381132084,
-            "contentHash": "fnv1a64:4d94c3eccb46cf9d",
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "evidence": null
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1217828948,
-        "venueName": "Stay Gold Deli",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEvents": [],
     "createdAtEpochMs": 1790381132142,
     "updatedAtEpochMs": 1790381132142
   },

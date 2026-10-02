@@ -17,6 +17,7 @@ const EventDetailPage: React.FC = () => {
   const artists = useAppStore((s) => s.artists);
   const venues = useAppStore((s) => s.venues);
   const manifest = useAppStore((s) => s.manifest);
+  const indexes = useAppStore((s) => s.indexes);
   const initialize = useAppStore((s) => s.initialize);
   const loadChunk = useAppStore((s) => s.loadChunk);
   const loadedChunks = useAppStore((s) => s.loadedChunks);
@@ -28,13 +29,14 @@ const EventDetailPage: React.FC = () => {
   }, [loading.artists, initialize]);
 
   // Find event by slug
-  const event = slug ? Array.from(events.values()).find((e) => e.slug === slug) : undefined;
+  const redirect = slug ? indexes?.eventSlugRedirects?.[slug] : undefined;
+  const event = slug ? Array.from(events.values()).find((e) => e.slug === slug || e.id === redirect?.eventId) : undefined;
 
   // Load the right chunk if event not found yet
   useEffect(() => {
-    if (event || !slug || !manifest?.chunks?.events) return;
+    if (event || !slug || !manifest?.chunks?.events || loading.indexes === "idle" || loading.indexes === "loading") return;
     // Slug starts with YYYY-MM, use that to find the right chunk first
-    const chunkId = slug.slice(0, 7); // "YYYY-MM"
+    const chunkId = redirect?.chunkId ?? slug.slice(0, 7); // "YYYY-MM"
     const loadAll = async () => {
       // Try the matching month chunk first
       const prioritized = [
@@ -44,16 +46,17 @@ const EventDetailPage: React.FC = () => {
       for (const chunk of prioritized) {
         if (!loadedChunks.has(chunk.chunkId)) {
           await loadChunk(chunk.chunkId);
-          const found = Array.from(useAppStore.getState().events.values()).find((e) => e.slug === slug);
+          const found = Array.from(useAppStore.getState().events.values()).find((e) => e.slug === slug || e.id === redirect?.eventId);
           if (found) break;
         }
       }
     };
     loadAll().catch(console.error);
-  }, [event, slug, manifest, loadedChunks, loadChunk]);
+  }, [event, slug, manifest, loadedChunks, loadChunk, redirect, loading.indexes]);
 
   // Treat idle (not yet started) as loading — avoids false "not found" on cold load
   const isLoading =
+    loading.indexes === "idle" || loading.indexes === "loading" ||
     loading.artists === "idle" || loading.artists === "loading" ||
     loading.venues === "idle" || loading.venues === "loading" ||
     loading.events === "loading";

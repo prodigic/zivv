@@ -449,8 +449,8 @@
       "timeBasis": "instant"
     },
     {
-      "id": 190538854,
-      "slug": "2027-02-11-death-from-above-1979-august-hall",
+      "id": 1992667217,
+      "slug": "2026-10-02-death-from-above-the-uc-theater",
       "date": "2027-02-11",
       "dateEpochMs": 1802347200000,
       "startTimeEpochMs": 1802404800000,
@@ -467,16 +467,44 @@
       "status": "confirmed",
       "tags": [],
       "venueType": "major",
-      "createdAtEpochMs": 1790381132084,
-      "updatedAtEpochMs": 1790381132084,
+      "createdAtEpochMs": 1778241600000,
+      "updatedAtEpochMs": 1790912643225,
       "sourceLineNumber": 1160,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
-      "addedDateProvenance": "observed",
-      "firstObservedAtEpochMs": 1790381132084,
+      "addedDateProvenance": "legacy-batch",
+      "firstObservedAtEpochMs": null,
       "announcedAtEpochMs": null,
-      "firstImportRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+      "firstImportRunId": null,
       "sources": [
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2093769319,
+          "session": null,
+          "firstSeenAtEpochMs": null,
+          "lastSeenAtEpochMs": null,
+          "contentHash": "fnv1a64:1530c0105f260f6f",
+          "firstSeenRunId": null,
+          "lastSeenRunId": null,
+          "evidence": null
+        },
+        {
+          "kind": "steveslist",
+          "sourceId": "steveslist",
+          "externalEventId": null,
+          "canonicalUrl": null,
+          "originalVenueId": 2093769319,
+          "session": null,
+          "firstSeenAtEpochMs": 1790381132084,
+          "lastSeenAtEpochMs": 1790381132084,
+          "contentHash": "fnv1a64:31f7e2e1bac37b04",
+          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
+          "evidence": null
+        },
         {
           "kind": "steveslist",
           "sourceId": "steveslist",
@@ -492,7 +520,122 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": []
+      "provenanceConflicts": [
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1791039600000,
+          "incomingValue": 1790996400000,
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "steveslist:steveslist",
+          "incomingSource": "steveslist:steveslist",
+          "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "date",
+          "existingValue": "2026-10-02",
+          "incomingValue": "2027-02-11",
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "dateEpochMs",
+          "existingValue": 1790942400000,
+          "incomingValue": 1802347200000,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "venueId",
+          "existingValue": 2093769319,
+          "incomingValue": 811075932,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "headlinerArtistId",
+          "existingValue": 1788551002,
+          "incomingValue": 2084197820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "artistIds",
+          "existingValue": [
+            1788551002,
+            1973351587
+          ],
+          "incomingValue": [
+            2084197820
+          ],
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "startTimeEpochMs",
+          "existingValue": 1791039600000,
+          "incomingValue": 1802404800000,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "timeBasis",
+          "existingValue": "legacy-wall-clock",
+          "incomingValue": "instant",
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "priceMin",
+          "existingValue": 39.5,
+          "incomingValue": 44.45,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "priceMax",
+          "existingValue": 39.5,
+          "incomingValue": 44.45,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        },
+        {
+          "field": "ageRestriction",
+          "existingValue": "all-ages",
+          "incomingValue": "5+",
+          "existingSource": "legacy-catalog",
+          "incomingSource": "death-from-above-repair:https://www.theuctheatre.org/shows/death-from-above-1979-02-oct",
+          "detectedAtEpochMs": 1790912643225,
+          "reason": "source-linked-reschedule"
+        }
+      ],
+      "notes": "Moved from the UC Theatre on October 2, 2026. Original ticket purchases remain valid."
     },
     {
       "id": 31564672,

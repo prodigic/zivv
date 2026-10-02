@@ -14,6 +14,7 @@ export default defineConfig({
       "src/test/components/NewsletterPage.test.tsx",
       "src/test/components/HomePage.test.tsx",
       "src/test/components/EventsPage.test.tsx",
+      "src/test/components/EventDetailPage.test.tsx",
       "src/test/components/SavedDateFilters.test.tsx",
       "src/test/components/VenuesPage.test.tsx",
     ],

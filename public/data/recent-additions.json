@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "datasetVersion": "2026-10-02T00:27:42.545Z",
+  "datasetVersion": "2026-10-02T03:44:17.945Z",
   "events": [
     {
       "eventId": 919252920,
@@ -29914,7 +29914,7 @@
     },
     {
       "eventId": 1992667217,
-      "chunkId": "2026-10",
+      "chunkId": "2027-02",
       "createdAtEpochMs": 1778241600000,
       "addedDateProvenance": "legacy-batch",
       "firstImportedBy": "steveslist",
@@ -29936,16 +29936,6 @@
       "eventId": 990084393,
       "chunkId": "2026-10",
       "createdAtEpochMs": 1778241600000,
-      "addedDateProvenance": "legacy-batch",
-      "firstImportedBy": "steveslist",
-      "sourceKinds": [
-        "steveslist"
-      ]
-    },
-    {
-      "eventId": 1378399671,
-      "chunkId": "2026-10",
-      "createdAtEpochMs": 1780660800000,
       "addedDateProvenance": "legacy-batch",
       "firstImportedBy": "steveslist",
       "sourceKinds": [
@@ -43074,16 +43064,6 @@
     },
     {
       "eventId": 1692279657,
-      "chunkId": "2027-02",
-      "createdAtEpochMs": 1790381132084,
-      "addedDateProvenance": "observed",
-      "firstImportedBy": "steveslist",
-      "sourceKinds": [
-        "steveslist"
-      ]
-    },
-    {
-      "eventId": 190538854,
       "chunkId": "2027-02",
       "createdAtEpochMs": 1790381132084,
       "addedDateProvenance": "observed",

@@ -22,6 +22,7 @@ import type {
   SourceFileInfo,
 } from "../../types/data.js";
 import { loadLedger } from "../ingestion/ledger.js";
+import { buildEventSlugRedirects } from "../ingestion/event-slug-redirects.js";
 import { applyVenueLocationCorrections } from "../ingestion/venue-location-corrections.js";
 import { namesForVerificationStatus } from "../ingestion/local-artist-verification.js";
 import type { LocalArtistVerificationLedger } from "../ingestion/local-artist-verification.js";
@@ -75,6 +76,7 @@ export class ETLProcessor {
       this.validateReferences(events, artists, venues);
       this.populateSummaries(events, artists, venues, start);
       const indexes = DataIndexer.buildIndexes(events, artists, venues);
+      indexes.eventSlugRedirects = buildEventSlugRedirects(this.projectRoot, events);
       const { chunks, chunkInfos } = DataChunker.chunkEventsByMonth(events);
       const { documents, terms } = SearchIndexBuilder.buildSearchIndex(
         events,

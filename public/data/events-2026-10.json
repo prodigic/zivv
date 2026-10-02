@@ -1902,56 +1902,6 @@
       "priceMax": 73.25
     },
     {
-      "id": 1992667217,
-      "slug": "2026-10-02-death-from-above-the-uc-theater",
-      "date": "2026-10-02",
-      "dateEpochMs": 1790942400000,
-      "startTimeEpochMs": 1791039600000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 1788551002,
-      "artistIds": [
-        1788551002,
-        1973351587
-      ],
-      "venueId": 2093769319,
-      "priceMin": 39.5,
-      "priceMax": 39.5,
-      "isFree": false,
-      "ageRestriction": "all-ages",
-      "status": "confirmed",
-      "tags": [
-        "matinee",
-        "late-show"
-      ],
-      "venueType": "major",
-      "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970172,
-      "sourceLineNumber": 3731,
-      "firstImportedBy": "steveslist",
-      "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": null,
-      "announcedAtEpochMs": null,
-      "firstImportRunId": null,
-      "sources": [
-        {
-          "kind": "steveslist",
-          "sourceId": "steveslist",
-          "externalEventId": null,
-          "canonicalUrl": null,
-          "originalVenueId": 2093769319,
-          "session": null,
-          "firstSeenAtEpochMs": null,
-          "lastSeenAtEpochMs": null,
-          "contentHash": "fnv1a64:1530c0105f260f6f",
-          "firstSeenRunId": null,
-          "lastSeenRunId": null,
-          "evidence": null
-        }
-      ],
-      "provenanceConflicts": [],
-      "timeBasis": "legacy-wall-clock"
-    },
-    {
       "id": 37754218,
       "slug": "2026-10-02-hayley-williams-shoreline-amphitheater",
       "date": "2026-10-02",
@@ -2062,75 +2012,6 @@
       ],
       "provenanceConflicts": [],
       "timeBasis": "legacy-wall-clock"
-    },
-    {
-      "id": 1378399671,
-      "slug": "2026-10-02-death-from-above-1979-the-uc-theater",
-      "date": "2026-10-02",
-      "dateEpochMs": 1790942400000,
-      "startTimeEpochMs": 1790996400000,
-      "timezone": "America/Los_Angeles",
-      "headlinerArtistId": 2084197820,
-      "artistIds": [
-        2084197820,
-        656468937
-      ],
-      "venueId": 2093769319,
-      "priceMin": 39.5,
-      "priceMax": 39.5,
-      "isFree": false,
-      "ageRestriction": "all-ages",
-      "status": "confirmed",
-      "tags": [
-        "matinee",
-        "late-show"
-      ],
-      "venueType": "major",
-      "createdAtEpochMs": 1780660800000,
-      "updatedAtEpochMs": 1790381132084,
-      "sourceLineNumber": 173,
-      "firstImportedBy": "steveslist",
-      "addedDateProvenance": "legacy-batch",
-      "firstObservedAtEpochMs": 1790381132084,
-      "announcedAtEpochMs": null,
-      "firstImportRunId": null,
-      "sources": [
-        {
-          "kind": "steveslist",
-          "sourceId": "steveslist",
-          "externalEventId": null,
-          "canonicalUrl": null,
-          "originalVenueId": 2093769319,
-          "session": null,
-          "firstSeenAtEpochMs": 1790381132084,
-          "lastSeenAtEpochMs": 1790381132084,
-          "contentHash": "fnv1a64:31f7e2e1bac37b04",
-          "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-          "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-          "evidence": null
-        }
-      ],
-      "provenanceConflicts": [
-        {
-          "field": "startTimeEpochMs",
-          "existingValue": 1791039600000,
-          "incomingValue": 1790996400000,
-          "existingSource": "steveslist:steveslist",
-          "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1790381132084,
-          "reason": "source-update"
-        },
-        {
-          "field": "timeBasis",
-          "existingValue": "legacy-wall-clock",
-          "incomingValue": "instant",
-          "existingSource": "steveslist:steveslist",
-          "incomingSource": "steveslist:steveslist",
-          "detectedAtEpochMs": 1790381132084,
-          "reason": "source-update"
-        }
-      ],
-      "timeBasis": "instant"
     },
     {
       "id": 1238005859,

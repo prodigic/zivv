@@ -109,6 +109,40 @@ afterEach(() => {
 });
 
 describe("migration and ledger export", () => {
+  it("exports retired links to the surviving event's current month", async () => {
+    const { root, event } = setup();
+    await migrateExistingCatalog(root);
+    const oldSlug = "2026-10-02-test-band-old-hall";
+    writeFileSync(
+      join(root, "data/event-slug-redirects.json"),
+      JSON.stringify([
+        {
+          slug: oldSlug,
+          eventId: event.id,
+          source: "https://example.org/rescheduled",
+        },
+      ])
+    );
+    const result = await new ETLProcessor(root).processData();
+    expect(result.success).toBe(true);
+    const indexes = JSON.parse(
+      readFileSync(join(root, "public/data/indexes.json"), "utf8")
+    );
+    expect(indexes.eventSlugRedirects).toEqual({
+      [oldSlug]: { eventId: event.id, chunkId: "2026-12" },
+    });
+    writeFileSync(
+      join(root, "data/event-slug-redirects.json"),
+      JSON.stringify([
+        {
+          slug: oldSlug,
+          eventId: 999,
+          source: "https://example.org/rescheduled",
+        },
+      ])
+    );
+    expect((await new ETLProcessor(root).processData()).success).toBe(false);
+  });
   it("applies reviewed city corrections to venues, artist summaries, and indexes while preserving events", async () => {
     const { root, event } = setup();
     await migrateExistingCatalog(root);

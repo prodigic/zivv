@@ -1,5 +1,10 @@
 [
   {
+    "note": "The Oct. 2, 2026 UC Theatre Death From Above 1979 show moved to August Hall on Feb. 11, 2027, with original tickets valid (https://www.theuctheatre.org/shows/death-from-above-1979-02-oct). Replace only this stale bill, including its malformed name; retain other dates and standalone 1979 acts.",
+    "pattern": "^oct\\s+2\\s+(?:2026|fri)\\s+Death From Above(?:,\\s*1979|\\s+1979)?(?:,\\s*Rickshaw Billie's Burger Patrol)?\\s+at\\s+(?:the\\s+)?UC Theat(?:er|re),\\s*Berkeley[^\\n]*$",
+    "replacement": "feb 11 2027 Death From Above 1979 at August Hall, S.F. 5+ $44.45 7pm/8pm"
+  },
+  {
     "note": "Missing comma between venue and city — 'at Hopmonk Tavern Novato' → 'at Hopmonk Tavern, Novato'",
     "pattern": "\\bat (Hopmonk Tavern) (Novato|Sebastopol)\\b",
     "replacement": "at $1, $2"

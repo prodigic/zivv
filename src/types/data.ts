@@ -105,6 +105,8 @@ export interface SourceFileInfo {
 
 // Index structures for fast lookups and searches
 export interface DataIndexes {
+  /** Reviewed retired URLs point to a surviving event in its current month. */
+  eventSlugRedirects?: Record<string, { eventId: EventId; chunkId: string }>;
   // Primary lookups
   eventsByDate: Record<string, EventId[]>; // "2024-08-15" -> [event IDs]
   eventsByVenue: Record<VenueId, EventId[]>;
