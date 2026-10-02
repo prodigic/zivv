@@ -33,6 +33,10 @@ const NEARBY_CITIES: CityConfig = {
 };
 
 const CITY_CONFIGS: Record<string, CityConfig> = {
+  "bay-area": {
+    label: "Bay Area",
+    match: () => true,
+  },
   sf: SF_CITY,
   sfmusic: {
     label: "sfmusic",
@@ -625,7 +629,7 @@ export default function NewsletterPage() {
     appendGroups(
       sfWeekEvents,
       (ev) => venues.get(ev.venueId)?.city ?? "",
-      "*No shows found for this week.*",
+      `*No ${cityConfig.label} shows found for this week.*`,
       (ev) => {
         const venueName = venues.get(ev.venueId)?.name ?? "";
         const venueCity = venues.get(ev.venueId)?.city ?? "";
@@ -738,6 +742,7 @@ export default function NewsletterPage() {
               <Link
                 key={slug}
                 to={slug === "sf" ? "/newsletter" : `/newsletter/${slug}`}
+                aria-current={cityConfig === cfg ? "page" : undefined}
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                   citySlug === slug ||
                   (slug === "sf" && !CITY_CONFIGS[citySlug])

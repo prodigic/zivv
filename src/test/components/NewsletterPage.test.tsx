@@ -255,4 +255,66 @@ describe("NewsletterPage chunk loading", () => {
     ).toHaveLength(3);
     expect(screen.getAllByText("No additions this week.")).toHaveLength(2);
   });
+
+  it("shows every week's event on the Bay Area filter, including unlocated venues", () => {
+    const now = Date.parse("2026-09-27T18:00:00Z");
+    vi.spyOn(Date, "now").mockReturnValue(now);
+    mock.store.loadedChunks = new Set(["2026-09"]);
+    const cities = ["San Francisco", "Oakland", "Berkeley", "Petaluma", ""];
+    const shows = cities.map((city, index) => ({
+      id: index + 1,
+      date: "2026-09-28",
+      dateEpochMs: Date.parse("2026-09-29T03:00:00Z"),
+      venueId: index + 1,
+      venueName: `Venue ${index + 1}`,
+      venueCity: city,
+      artistIds: [index + 1],
+      headlinerArtistId: index + 1,
+      tags: [],
+      status: "confirmed",
+      createdAtEpochMs: now - 3600000,
+    }));
+    mock.store.events = new Map(shows.map((show) => [show.id, show]));
+    mock.store.venues = new Map(
+      shows.map((show) => [
+        show.venueId,
+        { name: show.venueName, city: show.venueCity },
+      ])
+    );
+    mock.store.artists = new Map(
+      shows.map((show) => [
+        show.id,
+        { id: show.id, name: `Act ${show.id}`, upcomingEvents: [show] },
+      ])
+    );
+    mock.store.localArtistList = new Set(shows.map((show) => `act ${show.id}`));
+
+    const { container } = render(
+      <MemoryRouter initialEntries={["/newsletter/bay-area"]}>
+        <Routes>
+          <Route path="/newsletter/:city?" element={<NewsletterPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("link", { name: "Bay Area" })).toHaveAttribute(
+      "href",
+      "/newsletter/bay-area"
+    );
+    expect(screen.getByRole("link", { name: "Bay Area" })).toHaveAttribute(
+      "aria-current",
+      "page"
+    );
+    expect(screen.getByText(/5 Bay Area shows this week/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: /All Bay Area Shows This Week/,
+      })
+    ).toBeInTheDocument();
+    const articleText = container.querySelector("article")?.textContent ?? "";
+    for (let id = 1; id <= 5; id++) {
+      expect(articleText).toContain(`Venue ${id}`);
+    }
+  });
 });
