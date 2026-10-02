@@ -71,7 +71,7 @@ const CalendarPage: React.FC<CalendarPageProps> = () => {
     e.preventDefault();
     e.stopPropagation();
     updateFilter("venues", [venueName]);
-    navigate("/");
+    navigate("/shows");
   };
   const [selectedCities, setSelectedCities] = React.useState<Set<string>>(new Set());
   const loadMoreRef = React.useRef<HTMLDivElement>(null);

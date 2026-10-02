@@ -15,7 +15,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = 
 
   const navigation = [
     {
-      name: "All",
+      name: "Week",
       to: "/",
       icon: (active: boolean) => (
         <svg className={`h-6 w-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,6 +70,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ className = 
             <NavLink
               key={item.name}
               to={item.to}
+              end={item.to === "/"}
               className={({ isActive }) => `
                 flex flex-col items-center justify-center space-y-1 transition-colors
                 ${isActive || active ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"}

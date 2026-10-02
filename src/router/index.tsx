@@ -10,6 +10,7 @@ import { PageWrapper } from "@/components/layout/PageWrapper.tsx";
 
 // Lazy load page components for code splitting
 const HomePage = lazy(() => import("@/pages/HomePage.tsx"));
+const EventsPage = lazy(() => import("@/pages/EventsPage.tsx"));
 const CalendarPage = lazy(() => import("@/pages/CalendarPage.tsx"));
 const ArtistsPage = lazy(() => import("@/pages/ArtistsPage.tsx"));
 const ArtistDetailPage = lazy(() => import("@/pages/ArtistDetailPage.tsx"));
@@ -32,6 +33,14 @@ export const router = createBrowserRouter(
       element: <AppShell />,
       errorElement: <RouterErrorBoundary />,
       children: [
+        {
+          path: "shows",
+          element: (
+            <PageWrapper>
+              <EventsPage />
+            </PageWrapper>
+          ),
+        },
         {
           index: true,
           element: (
@@ -175,7 +184,7 @@ export const router = createBrowserRouter(
     },
   ],
   {
-    basename: import.meta.env.PROD ? "/zivv" : "/",
+    basename: import.meta.env.PROD ? "/zivv/" : "/",
   }
 );
 

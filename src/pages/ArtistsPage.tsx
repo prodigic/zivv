@@ -100,8 +100,8 @@ const ArtistsPage: React.FC = () => {
   const handleArtistClick = (artistName: string) => {
     // Only set search query, keep other filters (cities, dates, etc.)
     setSearchQuery(artistName);
-    // Navigate to home page (events list)
-    navigate("/");
+    // Navigate to the full events list
+    navigate("/shows");
   };
 
   // Filter artists based on upcoming events flag and toolbar filters

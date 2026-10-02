@@ -1,91 +1,50 @@
 /** @vitest-environment jsdom */
 import "@testing-library/jest-dom/vitest";
 import React from "react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  act,
   cleanup,
   fireEvent,
   render,
   screen,
-  waitFor,
+  within,
 } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
+import HomePage from "@/pages/HomePage.tsx";
+import { SideNavigation } from "@/components/layout/SideNavigation.tsx";
 import { useAppStore } from "@/stores/appStore.ts";
 import { useFilterStore } from "@/stores/filterStore.ts";
-import type { Artist, Event, Venue } from "@/types/events.ts";
-import type { DataManifest } from "@/types/data.ts";
-
-vi.mock("@/components/layout/AppShell.tsx", () => ({
-  ContentArea: ({
-    children,
-    title,
-    subtitle,
-  }: {
-    children: React.ReactNode;
-    title?: string;
-    subtitle?: string;
-  }) => (
-    <main>
-      <h1>{title}</h1>
-      <p>{subtitle}</p>
-      {children}
-    </main>
-  ),
-}));
-
-import HomePage from "@/pages/HomePage.tsx";
+import type { Artist, ArtistUpcomingEvent, Venue } from "@/types/events.ts";
 
 const initialState = useAppStore.getState();
-const now = Date.parse("2026-09-27T19:00:00Z");
-const months = [
-  "2026-01",
-  "2026-04",
-  "2026-05",
-  "2026-06",
-  "2026-07",
-  "2026-08",
-  "2026-09",
-  "2027-05",
-];
-const fixture = (id: number, date: string, recent = false) =>
+const show = (id: number, date: string, venueId = 1): ArtistUpcomingEvent =>
   ({
     id,
     slug: `show-${id}`,
-    date,
-    dateEpochMs: Date.parse(`${date}T19:00:00Z`),
-    headlinerArtistId: id,
-    artistIds: [id],
-    venueId: 1,
+    dateEpochMs: Date.parse(`${date}T12:00:00Z`),
+    venueId,
+    venueName: venueId === 1 ? "Weekly Venue" : "Later Venue",
+    venueCity: "Oakland",
+    headlinerName: `Headliner ${id}`,
     isFree: false,
-    tags: [],
-    status: "confirmed",
-    timezone: "America/Los_Angeles",
-    createdAtEpochMs: recent ? now - 86400000 : now - 30 * 86400000,
+    isSoldOut: false,
+    createdAtEpochMs: Date.parse("2026-09-30T19:00:00Z"),
     addedDateProvenance: "observed",
-    timeBasis: "instant",
-  }) as Event;
-const past = fixture(1, "2026-08-15");
-const upcoming = fixture(2, "2026-09-28", true);
-const future = fixture(3, "2027-05-01");
-const loadChunk = vi.fn(async (id: string) => {
-  const rows =
-    id === "2026-08"
-      ? [past]
-      : id === "2026-09"
-        ? [upcoming]
-        : id === "2027-05"
-          ? [future]
-          : [];
-  useAppStore.setState((state) => ({
-    events: new Map([...state.events, ...rows.map((e) => [e.id, e] as const)]),
-    loadedChunks: new Set([...state.loadedChunks, id]),
-    loading: { ...state.loading, events: "success" },
-    errors: { ...state.errors, events: null },
-  }));
-});
+  }) as ArtistUpcomingEvent;
+const yesterday = show(10, "2026-09-30");
+const first = show(11, "2026-10-02");
+const boundary = show(12, "2026-10-08");
+const later = show(13, "2026-10-09", 2);
+const artist = (
+  id: number,
+  name: string,
+  upcomingEvents: ArtistUpcomingEvent[]
+) => ({ id, name, slug: `artist-${id}`, upcomingEvents }) as Artist;
 
 beforeEach(() => {
-  vi.spyOn(Date, "now").mockReturnValue(now);
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-10-01T19:00:00Z"));
   vi.stubGlobal(
     "IntersectionObserver",
     class {
@@ -93,49 +52,51 @@ beforeEach(() => {
       disconnect() {}
     }
   );
-  loadChunk.mockClear();
+  sessionStorage.clear();
   useFilterStore.getState().clearFilters();
+  useFilterStore.getState().clearSearch();
+  const artists = [
+    artist(1, "Local Support", [yesterday, first, boundary, later]),
+    artist(2, "Touring Act", [first]),
+    artist(3, "Later Local", [later]),
+    artist(4, "Excluded Act", [first]),
+  ];
+  const venues = [
+    {
+      id: 1,
+      name: "Weekly Venue",
+      city: "Oakland",
+      slug: "weekly-venue",
+      upcomingEvents: [yesterday, first, boundary],
+    } as Venue,
+    {
+      id: 2,
+      name: "Later Venue",
+      city: "Oakland",
+      slug: "later-venue",
+      upcomingEvents: [later],
+    } as Venue,
+  ];
   useAppStore.setState({
     ...initialState,
-    initialize: vi.fn().mockResolvedValue(undefined),
-    manifest: {
-      datasetVersion: "cold-start-test",
-      chunks: { events: months.map((chunkId) => ({ chunkId })) },
-    } as DataManifest,
-    artists: new Map(
-      [1, 2, 3].map((id) => [
-        id,
-        {
-          id,
-          name: ["", "Past Band", "Upcoming Band", "Future Band"][id],
-        } as Artist,
-      ])
-    ) as Map<Artist["id"], Artist>,
-    venues: new Map([
-      [1, { id: 1, name: "Test Venue", city: "San Francisco" } as Venue],
-    ]) as Map<Venue["id"], Venue>,
+    artists: new Map(artists.map((a) => [a.id, a])),
+    venues: new Map(venues.map((v) => [v.id, v])),
+    localArtistList: new Set(["local support", "later local", "excluded act"]),
+    localArtistExclude: new Set(["excluded act"]),
     events: new Map(),
-    loadedChunks: new Set(),
-    showUpcomingOnly: true,
-    loading: {
-      ...initialState.loading,
-      artists: "success",
-      manifest: "success",
-      venues: "success",
-      events: "idle",
-    },
-    errors: { ...initialState.errors, events: null },
-    loadChunk,
+    showUpcomingOnly: false,
+    loading: { ...initialState.loading, artists: "success", venues: "success" },
+    initialize: vi.fn().mockResolvedValue(undefined),
   });
 });
-
 afterEach(() => {
   cleanup();
   useAppStore.setState(initialState);
-  vi.restoreAllMocks();
+  useFilterStore.getState().clearFilters();
+  useFilterStore.getState().clearSearch();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
-
 const openHome = () =>
   render(
     <MemoryRouter>
@@ -143,101 +104,135 @@ const openHome = () =>
     </MemoryRouter>
   );
 
-describe("Homepage monthly event loading", () => {
-  it("recovers returning visitors whose saved date range ended last week", async () => {
-    localStorage.setItem(
-      "zivv-filters",
-      JSON.stringify({
-        state: {
-          filters: {
-            dateRange: { startDate: "2026-09-19", endDate: "2026-09-26" },
-          },
-        },
-        version: 0,
+describe("weekly landing page", () => {
+  it("shows upcoming acts in the sidebar before full event chunks have loaded", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <SideNavigation isOpen onClose={() => {}} />
+        <HomePage />
+      </MemoryRouter>
+    );
+    expect(useAppStore.getState().events.size).toBe(0);
+    expect(container.querySelector("aside")).toHaveTextContent("Headliner 11");
+    expect(container.querySelector("aside")).not.toHaveTextContent(
+      "No upcoming events"
+    );
+  });
+  it("defaults both sections to one week, shows verified local support artists first, and trims every card to that window", () => {
+    useFilterStore.getState().updateFilter("dateRange", {
+      startDate: "2026-09-01",
+      endDate: "2026-12-31",
+    });
+    const { container } = openHome();
+    expect(useFilterStore.getState().filters.dateRange).toEqual({
+      startDate: "2026-10-01",
+      endDate: "2026-10-08",
+    });
+    const locals = screen.getByRole("region", { name: "Local Artists" });
+    const venues = screen.getByRole("region", { name: "Venues" });
+    expect(
+      [...container.querySelectorAll("h2")].map((h) => h.textContent)
+    ).toEqual(["Local Artists", "Venues"]);
+    expect(
+      within(locals).getByRole("heading", { name: "Local Support" })
+    ).toBeInTheDocument();
+    expect(within(locals).getByText("2 shows · 1 venue")).toBeInTheDocument();
+    expect(
+      within(locals).queryByRole("heading", { name: "Touring Act" })
+    ).not.toBeInTheDocument();
+    expect(within(locals).queryByText("Later Local")).not.toBeInTheDocument();
+    expect(within(locals).queryByText("Excluded Act")).not.toBeInTheDocument();
+    expect(
+      within(venues).getByRole("heading", { name: "Weekly Venue" })
+    ).toBeInTheDocument();
+    expect(
+      within(venues).queryByRole("heading", { name: "Later Venue" })
+    ).not.toBeInTheDocument();
+    const links = [...container.querySelectorAll('a[href^="/events/"]')];
+    expect(links.length).toBeGreaterThan(0);
+    expect(
+      links.every((a) =>
+        ["/events/show-11", "/events/show-12"].includes(a.getAttribute("href")!)
+      )
+    ).toBe(true);
+    expect(within(venues).getAllByRole("link")[0]).toHaveAttribute(
+      "href",
+      "/events/show-11"
+    );
+    expect(
+      screen.getAllByRole("button", { name: "Clear date range" })
+    ).toHaveLength(1);
+    expect(screen.getByRole("link", { name: "All events →" })).toHaveAttribute(
+      "href",
+      "/shows"
+    );
+  });
+
+  it("updates artists and venues together when the shared range changes", () => {
+    openHome();
+    act(() =>
+      useFilterStore.getState().updateFilter("dateRange", {
+        startDate: "2026-10-09",
+        endDate: "2026-10-09",
       })
     );
-    await useFilterStore.persist.rehydrate();
-    openHome();
-    expect(await screen.findByText("Upcoming Band")).toBeInTheDocument();
-    expect(screen.getByText("2 events")).toBeInTheDocument();
+    const locals = screen.getByRole("region", { name: "Local Artists" });
+    const venues = screen.getByRole("region", { name: "Venues" });
+    expect(
+      within(locals).getByRole("heading", { name: "Later Local" })
+    ).toBeInTheDocument();
+    expect(
+      within(venues).getByRole("heading", { name: "Later Venue" })
+    ).toBeInTheDocument();
+    expect(
+      within(venues).queryByRole("heading", { name: "Weekly Venue" })
+    ).not.toBeInTheDocument();
+    act(() =>
+      useFilterStore.getState().updateFilter("dateRange", {
+        startDate: "2026-11-01",
+        endDate: "2026-11-07",
+      })
+    );
+    expect(
+      within(locals).getByText("No local artists playing in this date range.")
+    ).toBeInTheDocument();
+    expect(
+      within(venues).getByText("No venues with shows in this date range.")
+    ).toBeInTheDocument();
   });
 
-  it("lets visitors clear a restrictive filter directly from the empty list", async () => {
-    useFilterStore.getState().setFilters({ venues: ["No matching venue"] });
+  it("keeps venues reachable when the local artist list needs pagination", () => {
+    useAppStore.setState({
+      artists: new Map(
+        Array.from({ length: 31 }, (_, i) => {
+          const a = artist(i + 1, `Local ${i}`, [first]);
+          return [a.id, a];
+        })
+      ),
+      localArtistList: new Set(
+        Array.from({ length: 31 }, (_, i) => `local ${i}`)
+      ),
+    });
     openHome();
-    expect(
-      await screen.findByText("No events match your filters.")
-    ).toBeInTheDocument();
+    const locals = screen.getByRole("region", { name: "Local Artists" });
+    expect(within(locals).getAllByRole("heading", { level: 3 })).toHaveLength(
+      30
+    );
+    expect(screen.getByRole("region", { name: "Venues" })).toBeInTheDocument();
     fireEvent.click(
-      screen.getByRole("button", { name: "Clear filters and search" })
+      screen.getByRole("button", { name: "Show more local artists" })
     );
-    expect(await screen.findByText("Upcoming Band")).toBeInTheDocument();
-  });
-
-  it("applies venue filters to the loaded upcoming months", async () => {
-    useFilterStore.getState().setFilters({ venues: ["Test Venue"] });
-    openHome();
-    expect(await screen.findByText("Upcoming Band")).toBeInTheDocument();
-    expect(await screen.findByText("Future Band")).toBeInTheDocument();
-    expect(screen.getByText("2 events")).toBeInTheDocument();
-  });
-
-  it("loads upcoming shows on a cold visit when the first six chunks are historical", async () => {
-    openHome();
-    expect(await screen.findByText("Upcoming Band")).toBeInTheDocument();
-    expect(await screen.findByText("Future Band")).toBeInTheDocument();
-    expect(screen.getByText("2 events")).toBeInTheDocument();
-    expect(screen.queryByText("Past Band")).not.toBeInTheDocument();
-    expect(loadChunk.mock.calls.map(([id]) => id).sort()).toEqual([
-      "2026-09",
-      "2027-05",
-    ]);
-    expect(screen.getAllByRole("img", { name: "Recently added" })).toHaveLength(
-      1
-    );
-    expect(
-      screen.getByRole("img", { name: "Recently added" })
-    ).toHaveTextContent("🆕");
-  });
-
-  it("loads missing upcoming months even if another route already loaded past events", async () => {
-    useAppStore.setState((state) => ({
-      events: new Map([[past.id, past]]),
-      loading: { ...state.loading, events: "success" },
-    }));
-    openHome();
-    expect(await screen.findByText("Upcoming Band")).toBeInTheDocument();
-    expect(await screen.findByText("Future Band")).toBeInTheDocument();
-  });
-
-  it("loads historical months when the upcoming-only filter is disabled", async () => {
-    useAppStore.setState({ showUpcomingOnly: false });
-    openHome();
-    expect(await screen.findByText("Past Band")).toBeInTheDocument();
-    expect(await screen.findByText("Future Band")).toBeInTheDocument();
-    expect(loadChunk.mock.calls.map(([id]) => id).sort()).toEqual(
-      [...months].sort()
+    expect(within(locals).getAllByRole("heading", { level: 3 })).toHaveLength(
+      31
     );
   });
 
-  it("shows a failed month and retries it even when another month's request succeeds", async () => {
-    loadChunk.mockRejectedValueOnce(new Error("September download failed"));
+  it("keeps the full seven-day range across month boundaries", () => {
+    vi.setSystemTime(new Date("2026-10-31T19:00:00Z"));
     openHome();
-    expect(
-      await screen.findByText("September download failed")
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByText("No events match your filters.")
-    ).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Try Again" }));
-    await waitFor(() =>
-      expect(screen.getByText("Upcoming Band")).toBeInTheDocument()
-    );
-    expect(
-      screen.queryByText("September download failed")
-    ).not.toBeInTheDocument();
-    expect(
-      loadChunk.mock.calls.every(([id]) => id === "2026-09" || id === "2027-05")
-    ).toBe(true);
+    expect(useFilterStore.getState().filters.dateRange).toEqual({
+      startDate: "2026-10-31",
+      endDate: "2026-11-07",
+    });
   });
 });

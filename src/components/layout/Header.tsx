@@ -24,7 +24,7 @@ const ViewToggle: React.FC = () => {
 
   const toggleView = () => {
     if (isCalendarView) {
-      navigate("/");
+      navigate("/shows");
     } else {
       navigate("/calendar");
     }
@@ -180,7 +180,7 @@ export const Header: React.FC<HeaderProps> = ({
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/shows?q=${encodeURIComponent(searchQuery.trim())}`);
       setIsSearchFocused(false);
       setSearchResults([]);
     }
