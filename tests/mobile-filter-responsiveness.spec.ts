@@ -535,44 +535,32 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
     test("mobile filter panel scrolls properly without hidden content", async ({
       page,
     }) => {
-      // Test on narrow mobile viewport where scrolling is critical
-      await page.setViewportSize({ width: 320, height: 568 });
+      // A short mobile viewport forces overflow instead of skipping the scroll assertion.
+      await page.setViewportSize({ width: 320, height: 300 });
       await page.goto("/");
-
-      // Open mobile filter modal
-      const filterButton = page.getByRole("button", {
+      const opener = page.getByRole("button", {
         name: "Open filters",
         exact: true,
       });
-      await filterButton.click();
-      await page.waitForTimeout(300);
-
-      // Find the scrollable panel (should have overflow-y-auto now, not overflow-hidden)
-      const scrollablePanel = page
-        .getByRole("dialog", { name: "Filter options" })
-        .locator(".overflow-y-auto");
-
-      if (await scrollablePanel.isVisible()) {
-        await expect(scrollablePanel).toBeVisible();
-
-        // Test that content is scrollable, not hidden
-        const scrollHeight = await scrollablePanel.evaluate(
-          (el) => el.scrollHeight
-        );
-        const clientHeight = await scrollablePanel.evaluate(
-          (el) => el.clientHeight
-        );
-
-        // If content exceeds container, it should be scrollable
-        if (scrollHeight > clientHeight) {
-          // Test scrolling works
-          await scrollablePanel.evaluate((el) => (el.scrollTop = 50));
-          const scrollTop = await scrollablePanel.evaluate(
-            (el) => el.scrollTop
-          );
-          expect(scrollTop).toBeGreaterThan(0);
-        }
-      }
+      await opener.click();
+      const dialog = page.getByRole("dialog", { name: "Filter options" });
+      const panel = dialog.locator(".overflow-y-auto");
+      await expect(panel).toBeVisible();
+      const dimensions = await panel.evaluate((el) => ({
+        scroll: el.scrollHeight,
+        client: el.clientHeight,
+      }));
+      expect(dimensions.scroll).toBeGreaterThan(dimensions.client);
+      await panel.evaluate((el) => {
+        el.scrollTop = el.scrollHeight;
+      });
+      expect(await panel.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+      await expect(
+        dialog.getByRole("textbox", { name: /venue/i })
+      ).toBeInViewport();
+      await page.keyboard.press("Escape");
+      await expect(dialog).toBeHidden();
+      await expect(opener).toBeFocused();
     });
 
     test("nested dropdowns maintain proper z-index hierarchy", async ({

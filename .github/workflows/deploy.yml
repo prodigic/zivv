@@ -47,7 +47,7 @@ jobs:
         run: npm run format:check
 
       - name: Run type check
-        run: npx tsc --noEmit
+        run: npx tsc -b
 
       - name: Install test browser
         run: npx playwright install --with-deps chromium
