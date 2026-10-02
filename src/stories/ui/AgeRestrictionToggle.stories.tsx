@@ -311,4 +311,3 @@ export const LoadingState: Story = {
     },
   },
 };
-

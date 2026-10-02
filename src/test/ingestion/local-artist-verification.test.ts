@@ -46,20 +46,37 @@ const event = (id: number, artistIds: number[]) =>
 describe("weekly local artist verification", () => {
   it("excludes event labels and fragments without excluding similarly named performers", () => {
     const names = [
-      "and the Cast", "Castro Street Fair", "Country Fair", " crafts ",
-      "Emo Nite", "Emo Night", "Folsom Street Fair",
-      "Cholos vs. Vampires", "Cholos vs. Vampiers",
-      "Hamdi FC vs. San Francisco", "membership meeting", "Street",
-      "Street Eaters", "Hamdi",
+      "and the Cast",
+      "Castro Street Fair",
+      "Country Fair",
+      " crafts ",
+      "Emo Nite",
+      "Emo Night",
+      "Folsom Street Fair",
+      "Cholos vs. Vampires",
+      "Cholos vs. Vampiers",
+      "Hamdi FC vs. San Francisco",
+      "membership meeting",
+      "Street",
+      "Street Eaters",
+      "Hamdi",
     ];
     const artists = names.map((name, index) => artist(index + 1, name));
     const candidates = collectUnverifiedWeeklyArtists(
-      [event(10, artists.map((item) => item.id))],
+      [
+        event(
+          10,
+          artists.map((item) => item.id)
+        ),
+      ],
       artists,
       [10],
       seedLocalArtistVerificationLedger([], [], 100)
     );
-    expect(candidates.map((item) => item.name)).toEqual(["Hamdi", "Street Eaters"]);
+    expect(candidates.map((item) => item.name)).toEqual([
+      "Hamdi",
+      "Street Eaters",
+    ]);
   });
 
   it("uses one key for role-marked lineup revisions", () => {

@@ -36,7 +36,13 @@ const PriceWidget: React.FC<PriceWidgetProps> = ({
 
   const hasPrice = priceMin != null || priceMax != null;
   const price = priceMin ?? priceMax ?? 0;
-  const tier = isFree ? 0 : hasPrice && price === 0 ? 0 : hasPrice ? priceTier(price) : null;
+  const tier = isFree
+    ? 0
+    : hasPrice && price === 0
+      ? 0
+      : hasPrice
+        ? priceTier(price)
+        : null;
   const maxSigns = 4;
 
   if (tier === null) return null;
@@ -55,7 +61,11 @@ const PriceWidget: React.FC<PriceWidgetProps> = ({
   return (
     <span
       className={`inline-flex items-center font-semibold tabular-nums ${className}`}
-      title={priceMin != null ? `$${Math.ceil(priceMin)}${priceMax && priceMax !== priceMin ? `–$${Math.ceil(priceMax)}` : ""}` : ""}
+      title={
+        priceMin != null
+          ? `$${Math.ceil(priceMin)}${priceMax && priceMax !== priceMin ? `–$${Math.ceil(priceMax)}` : ""}`
+          : ""
+      }
     >
       {Array.from({ length: maxSigns }).map((_, i) => (
         <span

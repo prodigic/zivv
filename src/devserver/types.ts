@@ -16,7 +16,7 @@ export interface DevServerProcess {
   startTime: string;
 
   /** Current status of the server */
-  status: 'starting' | 'running' | 'stopped';
+  status: "starting" | "running" | "stopped";
 
   /** Vite config file being used */
   configFile: string;
@@ -81,7 +81,7 @@ export interface ServerInfo {
 
 export interface ConflictResolution {
   /** Action to take */
-  action: 'kill' | 'new-port' | 'cancel';
+  action: "kill" | "new-port" | "cancel";
 
   /** New port if using new-port action */
   newPort?: number;

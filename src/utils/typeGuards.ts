@@ -15,9 +15,7 @@ import type {
   ArtistId,
   VenueId,
 } from "@/types/events.js";
-import type {
-  DataManifest,
-} from "@/types/data.js";
+import type { DataManifest } from "@/types/data.js";
 import type { TypeGuardResult } from "@/types/frontend.js";
 
 /**
@@ -53,9 +51,9 @@ export function isVenueId(value: unknown): value is VenueId {
  */
 export function isISODate(value: unknown): value is string {
   if (typeof value !== "string") return false;
-  
+
   const date = new Date(value);
-  return !isNaN(date.getTime()) && value === date.toISOString().split('T')[0];
+  return !isNaN(date.getTime()) && value === date.toISOString().split("T")[0];
 }
 
 /**
@@ -66,7 +64,7 @@ export function isEpochTimestamp(value: unknown): value is number {
     typeof value === "number" &&
     Number.isInteger(value) &&
     value > 0 &&
-    value < Date.now() + (365 * 24 * 60 * 60 * 1000) // Not more than 1 year in future
+    value < Date.now() + 365 * 24 * 60 * 60 * 1000 // Not more than 1 year in future
   );
 }
 
@@ -75,9 +73,18 @@ export function isEpochTimestamp(value: unknown): value is number {
  */
 export function isAgeRestriction(value: unknown): value is AgeRestriction {
   const validAges: AgeRestriction[] = [
-    "all-ages", "18+", "21+", "16+", "8+", "5+", "6+", "unknown"
+    "all-ages",
+    "18+",
+    "21+",
+    "16+",
+    "8+",
+    "5+",
+    "6+",
+    "unknown",
   ];
-  return typeof value === "string" && validAges.includes(value as AgeRestriction);
+  return (
+    typeof value === "string" && validAges.includes(value as AgeRestriction)
+  );
 }
 
 /**
@@ -85,9 +92,15 @@ export function isAgeRestriction(value: unknown): value is AgeRestriction {
  */
 export function isEventStatus(value: unknown): value is EventStatus {
   const validStatuses: EventStatus[] = [
-    "confirmed", "sold-out", "cancelled", "postponed", "rescheduled"
+    "confirmed",
+    "sold-out",
+    "cancelled",
+    "postponed",
+    "rescheduled",
   ];
-  return typeof value === "string" && validStatuses.includes(value as EventStatus);
+  return (
+    typeof value === "string" && validStatuses.includes(value as EventStatus)
+  );
 }
 
 /**
@@ -95,8 +108,16 @@ export function isEventStatus(value: unknown): value is EventStatus {
  */
 export function isEventTag(value: unknown): value is EventTag {
   const validTags: EventTag[] = [
-    "sold-out", "free", "tribute", "hip-hop", "reggae", "festival",
-    "outdoor", "all-ages", "matinee", "late-show"
+    "sold-out",
+    "free",
+    "tribute",
+    "hip-hop",
+    "reggae",
+    "festival",
+    "outdoor",
+    "all-ages",
+    "matinee",
+    "late-show",
   ];
   return typeof value === "string" && validTags.includes(value as EventTag);
 }
@@ -106,7 +127,12 @@ export function isEventTag(value: unknown): value is EventTag {
  */
 export function isVenueType(value: unknown): value is VenueType {
   const validTypes: VenueType[] = [
-    "major", "club", "diy", "outdoor", "festival", "unknown"
+    "major",
+    "club",
+    "diy",
+    "outdoor",
+    "festival",
+    "unknown",
   ];
   return typeof value === "string" && validTypes.includes(value as VenueType);
 }
@@ -116,7 +142,7 @@ export function isVenueType(value: unknown): value is VenueType {
  */
 export function validateEvent(data: unknown): TypeGuardResult<Event> {
   const errors: string[] = [];
-  
+
   if (!data || typeof data !== "object") {
     return { isValid: false, errors: ["Event must be an object"] };
   }
@@ -161,15 +187,24 @@ export function validateEvent(data: unknown): TypeGuardResult<Event> {
   }
 
   // Optional fields validation
-  if (event.startTimeEpochMs !== undefined && !isEpochTimestamp(event.startTimeEpochMs)) {
+  if (
+    event.startTimeEpochMs !== undefined &&
+    !isEpochTimestamp(event.startTimeEpochMs)
+  ) {
     errors.push("Event startTimeEpochMs must be a valid timestamp if provided");
   }
 
-  if (event.priceMin !== undefined && (typeof event.priceMin !== "number" || event.priceMin < 0)) {
+  if (
+    event.priceMin !== undefined &&
+    (typeof event.priceMin !== "number" || event.priceMin < 0)
+  ) {
     errors.push("Event priceMin must be a non-negative number if provided");
   }
 
-  if (event.priceMax !== undefined && (typeof event.priceMax !== "number" || event.priceMax < 0)) {
+  if (
+    event.priceMax !== undefined &&
+    (typeof event.priceMax !== "number" || event.priceMax < 0)
+  ) {
     errors.push("Event priceMax must be a non-negative number if provided");
   }
 
@@ -177,7 +212,10 @@ export function validateEvent(data: unknown): TypeGuardResult<Event> {
     errors.push("Event status must be a valid EventStatus if provided");
   }
 
-  if (event.tags && (!Array.isArray(event.tags) || !event.tags.every(isEventTag))) {
+  if (
+    event.tags &&
+    (!Array.isArray(event.tags) || !event.tags.every(isEventTag))
+  ) {
     errors.push("Event tags must be an array of valid EventTags if provided");
   }
 
@@ -193,7 +231,7 @@ export function validateEvent(data: unknown): TypeGuardResult<Event> {
  */
 export function validateArtist(data: unknown): TypeGuardResult<Artist> {
   const errors: string[] = [];
-  
+
   if (!data || typeof data !== "object") {
     return { isValid: false, errors: ["Artist must be an object"] };
   }
@@ -217,15 +255,24 @@ export function validateArtist(data: unknown): TypeGuardResult<Artist> {
     errors.push("Artist must have a valid normalizedName string");
   }
 
-  if (!Array.isArray(artist.aliases) || !artist.aliases.every(alias => typeof alias === "string")) {
+  if (
+    !Array.isArray(artist.aliases) ||
+    !artist.aliases.every((alias) => typeof alias === "string")
+  ) {
     errors.push("Artist must have a valid array of alias strings");
   }
 
-  if (typeof artist.upcomingEventCount !== "number" || artist.upcomingEventCount < 0) {
+  if (
+    typeof artist.upcomingEventCount !== "number" ||
+    artist.upcomingEventCount < 0
+  ) {
     errors.push("Artist must have a valid non-negative upcomingEventCount");
   }
 
-  if (typeof artist.totalEventCount !== "number" || artist.totalEventCount < 0) {
+  if (
+    typeof artist.totalEventCount !== "number" ||
+    artist.totalEventCount < 0
+  ) {
     errors.push("Artist must have a valid non-negative totalEventCount");
   }
 
@@ -249,7 +296,7 @@ export function validateArtist(data: unknown): TypeGuardResult<Artist> {
  */
 export function validateVenue(data: unknown): TypeGuardResult<Venue> {
   const errors: string[] = [];
-  
+
   if (!data || typeof data !== "object") {
     return { isValid: false, errors: ["Venue must be an object"] };
   }
@@ -281,7 +328,10 @@ export function validateVenue(data: unknown): TypeGuardResult<Venue> {
     errors.push("Venue must have a valid ageRestriction");
   }
 
-  if (typeof venue.upcomingEventCount !== "number" || venue.upcomingEventCount < 0) {
+  if (
+    typeof venue.upcomingEventCount !== "number" ||
+    venue.upcomingEventCount < 0
+  ) {
     errors.push("Venue must have a valid non-negative upcomingEventCount");
   }
 
@@ -298,7 +348,10 @@ export function validateVenue(data: unknown): TypeGuardResult<Venue> {
     errors.push("Venue website must be a string if provided");
   }
 
-  if (venue.capacity !== undefined && (typeof venue.capacity !== "number" || venue.capacity <= 0)) {
+  if (
+    venue.capacity !== undefined &&
+    (typeof venue.capacity !== "number" || venue.capacity <= 0)
+  ) {
     errors.push("Venue capacity must be a positive number if provided");
   }
 
@@ -314,7 +367,7 @@ export function validateVenue(data: unknown): TypeGuardResult<Venue> {
  */
 export function validateManifest(data: unknown): TypeGuardResult<DataManifest> {
   const errors: string[] = [];
-  
+
   if (!data || typeof data !== "object") {
     return { isValid: false, errors: ["Manifest must be an object"] };
   }
@@ -351,19 +404,21 @@ export function validateManifest(data: unknown): TypeGuardResult<DataManifest> {
     errors.push("Manifest must have a valid dateRange object");
   } else {
     const dateRange = manifest.dateRange as Record<string, unknown>;
-    
+
     if (!isEpochTimestamp(dateRange.startEpochMs)) {
-      errors.push("Manifest dateRange must have a valid startEpochMs timestamp");
+      errors.push(
+        "Manifest dateRange must have a valid startEpochMs timestamp"
+      );
     }
-    
+
     if (!isEpochTimestamp(dateRange.endEpochMs)) {
       errors.push("Manifest dateRange must have a valid endEpochMs timestamp");
     }
-    
+
     if (!dateRange.startDate || typeof dateRange.startDate !== "string") {
       errors.push("Manifest dateRange must have a valid startDate string");
     }
-    
+
     if (!dateRange.endDate || typeof dateRange.endDate !== "string") {
       errors.push("Manifest dateRange must have a valid endDate string");
     }
@@ -371,7 +426,8 @@ export function validateManifest(data: unknown): TypeGuardResult<DataManifest> {
 
   return {
     isValid: errors.length === 0,
-    data: errors.length === 0 ? (manifest as unknown as DataManifest) : undefined,
+    data:
+      errors.length === 0 ? (manifest as unknown as DataManifest) : undefined,
     errors,
   };
 }
@@ -381,7 +437,7 @@ export function validateManifest(data: unknown): TypeGuardResult<DataManifest> {
  */
 export function validateEventChunk(data: unknown): TypeGuardResult<EventChunk> {
   const errors: string[] = [];
-  
+
   if (!data || typeof data !== "object") {
     return { isValid: false, errors: ["EventChunk must be an object"] };
   }
@@ -411,13 +467,17 @@ export function validateEventChunk(data: unknown): TypeGuardResult<EventChunk> {
       errors.push("EventChunk dateRange must be an object if provided");
     } else {
       const dateRange = chunk.dateRange as Record<string, unknown>;
-      
+
       if (!isEpochTimestamp(dateRange.startEpochMs)) {
-        errors.push("EventChunk dateRange must have a valid startEpochMs timestamp");
+        errors.push(
+          "EventChunk dateRange must have a valid startEpochMs timestamp"
+        );
       }
-      
+
       if (!isEpochTimestamp(dateRange.endEpochMs)) {
-        errors.push("EventChunk dateRange must have a valid endEpochMs timestamp");
+        errors.push(
+          "EventChunk dateRange must have a valid endEpochMs timestamp"
+        );
       }
     }
   }
@@ -434,13 +494,13 @@ export function validateEventChunk(data: unknown): TypeGuardResult<EventChunk> {
  */
 export function validateEventArray(data: unknown): TypeGuardResult<Event[]> {
   const errors: string[] = [];
-  
+
   if (!Array.isArray(data)) {
     return { isValid: false, errors: ["Must be an array"] };
   }
 
   const validEvents: Event[] = [];
-  
+
   for (let i = 0; i < data.length; i++) {
     const eventResult = validateEvent(data[i]);
     if (eventResult.isValid && eventResult.data) {
@@ -462,13 +522,13 @@ export function validateEventArray(data: unknown): TypeGuardResult<Event[]> {
  */
 export function validateArtistArray(data: unknown): TypeGuardResult<Artist[]> {
   const errors: string[] = [];
-  
+
   if (!Array.isArray(data)) {
     return { isValid: false, errors: ["Must be an array"] };
   }
 
   const validArtists: Artist[] = [];
-  
+
   for (let i = 0; i < data.length; i++) {
     const artistResult = validateArtist(data[i]);
     if (artistResult.isValid && artistResult.data) {
@@ -490,13 +550,13 @@ export function validateArtistArray(data: unknown): TypeGuardResult<Artist[]> {
  */
 export function validateVenueArray(data: unknown): TypeGuardResult<Venue[]> {
   const errors: string[] = [];
-  
+
   if (!Array.isArray(data)) {
     return { isValid: false, errors: ["Must be an array"] };
   }
 
   const validVenues: Venue[] = [];
-  
+
   for (let i = 0; i < data.length; i++) {
     const venueResult = validateVenue(data[i]);
     if (venueResult.isValid && venueResult.data) {

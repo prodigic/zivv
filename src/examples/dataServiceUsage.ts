@@ -3,7 +3,7 @@
  * Demonstrates how to integrate DataService, caching, workers, and error handling
  */
 
-import { 
+import {
   DataService,
   LoadingStateManager,
   globalErrorHandler,
@@ -52,22 +52,18 @@ export class ExampleApp {
 
     try {
       // Initialize data service with error handling and retry logic
-      await withRetry(
-        () => this.dataService.initialize(),
-        {
-          maxAttempts: 3,
-          delay: 1000,
-          onRetry: (error, attempt) => {
-            console.warn(`Initialization attempt ${attempt} failed:`, error);
-          },
-        }
-      );
+      await withRetry(() => this.dataService.initialize(), {
+        maxAttempts: 3,
+        delay: 1000,
+        onRetry: (error, attempt) => {
+          console.warn(`Initialization attempt ${attempt} failed:`, error);
+        },
+      });
 
       console.log("✅ Application initialized successfully");
 
       // Load initial data
       await this.loadInitialData();
-
     } catch (error) {
       globalErrorHandler.handleError(error as Error, {
         operation: "app_initialization",
@@ -104,7 +100,7 @@ export class ExampleApp {
   async loadArtists(): Promise<void> {
     const operation = async () => {
       this.loadingManager.setLoading("artists");
-      
+
       try {
         const artists = await this.dataService.loadArtists();
         this.artistState = {
@@ -113,17 +109,17 @@ export class ExampleApp {
           error: null,
           lastUpdated: Date.now(),
         };
-        
+
         this.loadingManager.setSuccess("artists");
         console.log(`📚 Loaded ${artists.length} artists`);
-        
       } catch (error) {
         this.artistState = {
           ...this.artistState,
           loading: false,
-          error: error instanceof Error ? error.message : "Failed to load artists",
+          error:
+            error instanceof Error ? error.message : "Failed to load artists",
         };
-        
+
         this.loadingManager.setError("artists");
         throw error;
       }
@@ -140,7 +136,7 @@ export class ExampleApp {
   async loadVenues(): Promise<void> {
     const operation = async () => {
       this.loadingManager.setLoading("venues");
-      
+
       try {
         const venues = await this.dataService.loadVenues();
         this.venueState = {
@@ -149,17 +145,17 @@ export class ExampleApp {
           error: null,
           lastUpdated: Date.now(),
         };
-        
+
         this.loadingManager.setSuccess("venues");
         console.log(`🏛️ Loaded ${venues.length} venues`);
-        
       } catch (error) {
         this.venueState = {
           ...this.venueState,
           loading: false,
-          error: error instanceof Error ? error.message : "Failed to load venues",
+          error:
+            error instanceof Error ? error.message : "Failed to load venues",
         };
-        
+
         this.loadingManager.setError("venues");
         throw error;
       }
@@ -176,34 +172,36 @@ export class ExampleApp {
   async loadRecentEvents(): Promise<void> {
     const operation = async () => {
       this.loadingManager.setLoading("events");
-      
+
       try {
         // Get current month chunk
         const now = new Date();
-        const chunkId = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-        
+        const chunkId = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
         const events = await this.dataService.loadChunk(chunkId);
-        
+
         // Filter to upcoming events only
-        const upcomingEvents = events.filter(event => event.dateEpochMs > Date.now());
-        
+        const upcomingEvents = events.filter(
+          (event) => event.dateEpochMs > Date.now()
+        );
+
         this.eventState = {
           data: upcomingEvents,
           loading: false,
           error: null,
           lastUpdated: Date.now(),
         };
-        
+
         this.loadingManager.setSuccess("events");
         console.log(`🎵 Loaded ${upcomingEvents.length} upcoming events`);
-        
       } catch (error) {
         this.eventState = {
           ...this.eventState,
           loading: false,
-          error: error instanceof Error ? error.message : "Failed to load events",
+          error:
+            error instanceof Error ? error.message : "Failed to load events",
         };
-        
+
         this.loadingManager.setError("events");
         throw error;
       }
@@ -236,16 +234,15 @@ export class ExampleApp {
 
       this.loadingManager.setSuccess("search");
       console.log(`🔍 Found ${results.length} events for query: "${query}"`);
-      
-      return results;
 
+      return results;
     } catch (error) {
       this.loadingManager.setError("search");
       globalErrorHandler.handleError(error as Error, {
         operation: "search_events",
         query,
       });
-      
+
       return [];
     }
   }
@@ -253,17 +250,24 @@ export class ExampleApp {
   /**
    * Load events for a specific date range
    */
-  async loadEventsForDateRange(startDate: string, endDate: string): Promise<Event[]> {
+  async loadEventsForDateRange(
+    startDate: string,
+    endDate: string
+  ): Promise<Event[]> {
     this.loadingManager.setLoading("date-range-events");
 
     try {
-      const events = await this.dataService.getEventsByDateRange(startDate, endDate);
-      
-      this.loadingManager.setSuccess("date-range-events");
-      console.log(`📅 Loaded ${events.length} events for ${startDate} to ${endDate}`);
-      
-      return events;
+      const events = await this.dataService.getEventsByDateRange(
+        startDate,
+        endDate
+      );
 
+      this.loadingManager.setSuccess("date-range-events");
+      console.log(
+        `📅 Loaded ${events.length} events for ${startDate} to ${endDate}`
+      );
+
+      return events;
     } catch (error) {
       this.loadingManager.setError("date-range-events");
       globalErrorHandler.handleError(error as Error, {
@@ -271,7 +275,7 @@ export class ExampleApp {
         startDate,
         endDate,
       });
-      
+
       return [];
     }
   }
@@ -295,12 +299,11 @@ export class ExampleApp {
         memory: memoryStats,
         loadingStates: this.loadingManager.getAllStates(),
       };
-
     } catch (error) {
       globalErrorHandler.handleError(error as Error, {
         operation: "get_app_stats",
       });
-      
+
       return {
         cache: null,
         memory: null,
@@ -320,16 +323,15 @@ export class ExampleApp {
     try {
       await this.dataService.refresh();
       await this.loadInitialData();
-      
+
       this.loadingManager.setSuccess("refresh");
       console.log("✅ Application data refreshed successfully");
-
     } catch (error) {
       this.loadingManager.setError("refresh");
       globalErrorHandler.handleError(error as Error, {
         operation: "refresh_data",
       });
-      
+
       throw error;
     }
   }
@@ -339,11 +341,11 @@ export class ExampleApp {
    */
   private setupLoadingSubscriptions(): void {
     const keys = ["artists", "venues", "events", "search", "refresh"];
-    
-    keys.forEach(key => {
+
+    keys.forEach((key) => {
       this.loadingManager.subscribe(key, (state) => {
         console.log(`Loading state changed: ${key} = ${state}`);
-        
+
         // Here you could emit events or update UI components
         // For example: this.emitStateChange(key, state);
       });
@@ -372,10 +374,10 @@ export class ExampleApp {
    */
   dispose(): void {
     console.log("🧹 Cleaning up application resources...");
-    
+
     this.loadingManager.clear();
     this.dataService.dispose();
-    
+
     console.log("✅ Application cleanup completed");
   }
 }
@@ -406,10 +408,13 @@ export async function exampleUsage(): Promise<void> {
     // Load events for next month
     const nextMonth = new Date();
     nextMonth.setMonth(nextMonth.getMonth() + 1);
-    const startDate = `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, '0')}-01`;
-    const endDate = `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, '0')}-31`;
-    
-    const nextMonthEvents = await app.loadEventsForDateRange(startDate, endDate);
+    const startDate = `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, "0")}-01`;
+    const endDate = `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, "0")}-31`;
+
+    const nextMonthEvents = await app.loadEventsForDateRange(
+      startDate,
+      endDate
+    );
     console.log(`Next month events: ${nextMonthEvents.length} events`);
 
     // Get application statistics
@@ -418,7 +423,6 @@ export async function exampleUsage(): Promise<void> {
 
     // Cleanup when done
     // app.dispose();
-
   } catch (error) {
     console.error("Application example failed:", error);
   }

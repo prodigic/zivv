@@ -98,7 +98,9 @@ export interface IngestionCandidateEvent extends IngestionCandidateMetadata {
 
 /** Adapters may pass a plain Event when no per-event source key exists. */
 export type IngestionEventInput =
-  Event | IngestionCandidateEvent | (Event & IngestionCandidateMetadata);
+  | Event
+  | IngestionCandidateEvent
+  | (Event & IngestionCandidateMetadata);
 
 export interface IngestionBatch {
   runId: string;
@@ -119,7 +121,10 @@ export interface IngestionMigration {
 }
 
 export type IngestionRunStatus =
-  "reconciled" | "committed" | "published" | "failed";
+  | "reconciled"
+  | "committed"
+  | "published"
+  | "failed";
 
 export interface IngestionRun {
   runId: string;
@@ -206,11 +211,17 @@ export interface ReconciliationResult {
 
 export class IngestionLedgerError extends Error {
   readonly code:
-    "invalid-input" | "missing-ledger" | "corrupt-ledger" | "replay-conflict";
+    | "invalid-input"
+    | "missing-ledger"
+    | "corrupt-ledger"
+    | "replay-conflict";
 
   constructor(
     code:
-      "invalid-input" | "missing-ledger" | "corrupt-ledger" | "replay-conflict",
+      | "invalid-input"
+      | "missing-ledger"
+      | "corrupt-ledger"
+      | "replay-conflict",
     message: string
   ) {
     super(message);

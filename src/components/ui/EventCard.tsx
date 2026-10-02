@@ -65,7 +65,9 @@ const EventCard: React.FC<EventCardProps> = ({
   const artists = event.artistIds
     ? event.artistIds
         .map((id: ArtistId) => getArtist(id))
-        .filter((artist): artist is Artist => artist !== null && artist !== undefined)
+        .filter(
+          (artist): artist is Artist => artist !== null && artist !== undefined
+        )
     : [];
   const headlinerArtist = event.headlinerArtistId
     ? getArtist(event.headlinerArtistId)
@@ -386,9 +388,11 @@ const EventCard: React.FC<EventCardProps> = ({
               <span className="text-blue-700 dark:text-blue-300 font-bold">
                 Tags:
               </span>{" "}
-                {event.tags
-                  .map((tag) => (tag === "multiple-show" ? "Multiple shows" : tag))
-                  .join(", ")}
+              {event.tags
+                .map((tag) =>
+                  tag === "multiple-show" ? "Multiple shows" : tag
+                )
+                .join(", ")}
             </div>
           )}
           <div>

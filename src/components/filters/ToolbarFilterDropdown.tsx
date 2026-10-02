@@ -170,7 +170,11 @@ export const ToolbarFilterDropdown: React.FC<ToolbarFilterDropdownProps> = ({
 
             {/* Filter Content - Full Screen Scrollable */}
             <div className="flex-1 overflow-y-auto p-4 xxs:p-2 xs:p-3">
-              <div style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>{children}</div>
+              <div
+                style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+              >
+                {children}
+              </div>
             </div>
           </div>
 

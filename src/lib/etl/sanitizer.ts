@@ -39,6 +39,9 @@ export class EventSanitizer {
   }
 
   private static join(parts: string[]): string {
-    return parts.join(" ").replace(/\s{2,}/g, " ").trim();
+    return parts
+      .join(" ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
   }
 }

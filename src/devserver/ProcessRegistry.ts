@@ -5,9 +5,9 @@
  * the beads daemon system for robust PID tracking and cleanup.
  */
 
-import { promises as fs } from 'fs';
-import { join } from 'path';
-import type { DevServerProcess, ProcessRegistry } from './types.js';
+import { promises as fs } from "fs";
+import { join } from "path";
+import type { DevServerProcess, ProcessRegistry } from "./types.js";
 
 export class DevServerProcessRegistry {
   private readonly registryDir: string;
@@ -15,9 +15,9 @@ export class DevServerProcessRegistry {
   private readonly currentPidFile: string;
 
   constructor(workingDir: string = process.cwd()) {
-    this.registryDir = join(workingDir, '.devserver');
-    this.registryFile = join(this.registryDir, 'processes.json');
-    this.currentPidFile = join(this.registryDir, 'current.pid');
+    this.registryDir = join(workingDir, ".devserver");
+    this.registryFile = join(this.registryDir, "processes.json");
+    this.currentPidFile = join(this.registryDir, "current.pid");
   }
 
   /**
@@ -34,7 +34,7 @@ export class DevServerProcessRegistry {
         await this.saveRegistry({
           processes: [],
           lastCleanup: new Date().toISOString(),
-          version: '1.0.0'
+          version: "1.0.0",
         });
       }
     } catch (error) {
@@ -47,14 +47,14 @@ export class DevServerProcessRegistry {
    */
   async loadRegistry(): Promise<ProcessRegistry> {
     try {
-      const content = await fs.readFile(this.registryFile, 'utf8');
+      const content = await fs.readFile(this.registryFile, "utf8");
       return JSON.parse(content);
     } catch {
       // Return empty registry if file doesn't exist or is corrupted
       return {
         processes: [],
         lastCleanup: new Date().toISOString(),
-        version: '1.0.0'
+        version: "1.0.0",
       };
     }
   }
@@ -65,7 +65,7 @@ export class DevServerProcessRegistry {
   private async saveRegistry(registry: ProcessRegistry): Promise<void> {
     try {
       const content = JSON.stringify(registry, null, 2);
-      await fs.writeFile(this.registryFile, content, 'utf8');
+      await fs.writeFile(this.registryFile, content, "utf8");
     } catch (error) {
       throw new Error(`Failed to save process registry: ${error}`);
     }
@@ -78,7 +78,9 @@ export class DevServerProcessRegistry {
     const registry = await this.loadRegistry();
 
     // Remove any existing entry for this PID
-    registry.processes = registry.processes.filter(p => p.pid !== process.pid);
+    registry.processes = registry.processes.filter(
+      (p) => p.pid !== process.pid
+    );
 
     // Add the new process
     registry.processes.push(process);
@@ -86,15 +88,18 @@ export class DevServerProcessRegistry {
     await this.saveRegistry(registry);
 
     // Update current PID file
-    await fs.writeFile(this.currentPidFile, process.pid.toString(), 'utf8');
+    await fs.writeFile(this.currentPidFile, process.pid.toString(), "utf8");
   }
 
   /**
    * Update an existing process in the registry
    */
-  async updateProcess(pid: number, updates: Partial<DevServerProcess>): Promise<boolean> {
+  async updateProcess(
+    pid: number,
+    updates: Partial<DevServerProcess>
+  ): Promise<boolean> {
     const registry = await this.loadRegistry();
-    const processIndex = registry.processes.findIndex(p => p.pid === pid);
+    const processIndex = registry.processes.findIndex((p) => p.pid === pid);
 
     if (processIndex === -1) {
       return false;
@@ -103,7 +108,7 @@ export class DevServerProcessRegistry {
     // Merge updates with existing process data
     registry.processes[processIndex] = {
       ...registry.processes[processIndex],
-      ...updates
+      ...updates,
     };
 
     await this.saveRegistry(registry);
@@ -117,7 +122,7 @@ export class DevServerProcessRegistry {
     const registry = await this.loadRegistry();
     const initialLength = registry.processes.length;
 
-    registry.processes = registry.processes.filter(p => p.pid !== pid);
+    registry.processes = registry.processes.filter((p) => p.pid !== pid);
 
     if (registry.processes.length < initialLength) {
       await this.saveRegistry(registry);
@@ -140,7 +145,7 @@ export class DevServerProcessRegistry {
    */
   async getProcess(pid: number): Promise<DevServerProcess | null> {
     const registry = await this.loadRegistry();
-    return registry.processes.find(p => p.pid === pid) || null;
+    return registry.processes.find((p) => p.pid === pid) || null;
   }
 
   /**
@@ -148,7 +153,7 @@ export class DevServerProcessRegistry {
    */
   async getProcessByPort(port: number): Promise<DevServerProcess | null> {
     const registry = await this.loadRegistry();
-    return registry.processes.find(p => p.port === port) || null;
+    return registry.processes.find((p) => p.port === port) || null;
   }
 
   /**
@@ -156,7 +161,7 @@ export class DevServerProcessRegistry {
    */
   async getCurrentProcess(): Promise<DevServerProcess | null> {
     try {
-      const pidContent = await fs.readFile(this.currentPidFile, 'utf8');
+      const pidContent = await fs.readFile(this.currentPidFile, "utf8");
       const pid = parseInt(pidContent.trim(), 10);
 
       if (isNaN(pid)) {
@@ -191,11 +196,13 @@ export class DevServerProcessRegistry {
     const initialCount = registry.processes.length;
 
     // Filter out processes that are no longer running
-    registry.processes = registry.processes.filter(proc => {
+    registry.processes = registry.processes.filter((proc) => {
       const isRunning = this.isProcessRunning(proc.pid);
 
       if (!isRunning) {
-        console.log(`Cleaning up stale process: PID ${proc.pid}, Port ${proc.port}`);
+        console.log(
+          `Cleaning up stale process: PID ${proc.pid}, Port ${proc.port}`
+        );
       }
 
       return isRunning;
@@ -227,7 +234,7 @@ export class DevServerProcessRegistry {
   async getRunningProcesses(): Promise<DevServerProcess[]> {
     const allProcesses = await this.getAllProcesses();
 
-    return allProcesses.filter(proc => this.isProcessRunning(proc.pid));
+    return allProcesses.filter((proc) => this.isProcessRunning(proc.pid));
   }
 
   /**
@@ -236,7 +243,7 @@ export class DevServerProcessRegistry {
   async getStoppedProcesses(): Promise<DevServerProcess[]> {
     const allProcesses = await this.getAllProcesses();
 
-    return allProcesses.filter(proc => !this.isProcessRunning(proc.pid));
+    return allProcesses.filter((proc) => !this.isProcessRunning(proc.pid));
   }
 
   /**
@@ -255,7 +262,7 @@ export class DevServerProcessRegistry {
       total: registry.processes.length,
       running: running.length,
       stopped: registry.processes.length - running.length,
-      lastCleanup: registry.lastCleanup
+      lastCleanup: registry.lastCleanup,
     };
   }
 
@@ -266,7 +273,7 @@ export class DevServerProcessRegistry {
     await this.saveRegistry({
       processes: [],
       lastCleanup: new Date().toISOString(),
-      version: '1.0.0'
+      version: "1.0.0",
     });
 
     // Remove current.pid file

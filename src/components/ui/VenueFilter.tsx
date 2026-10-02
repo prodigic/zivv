@@ -222,7 +222,7 @@ export const VenueFilter: React.FC<VenueFilterProps> = ({ className = "" }) => {
           style={{
             left: "2.5rem",
             right: "0.5rem",
-            maxWidth: "min(400px, calc(100vw - 3rem))"
+            maxWidth: "min(400px, calc(100vw - 3rem))",
           }}
         >
           {filteredVenues.length > 0 ? (

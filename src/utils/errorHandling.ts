@@ -136,7 +136,9 @@ export function isNetworkError(error: unknown): error is NetworkError {
   return error instanceof NetworkError;
 }
 
-export function isDataValidationError(error: unknown): error is DataValidationError {
+export function isDataValidationError(
+  error: unknown
+): error is DataValidationError {
   return error instanceof DataValidationError;
 }
 
@@ -154,7 +156,7 @@ export function isRetryableError(type: DataErrorType | string): boolean {
     "TIMEOUT_ERROR",
     "CACHE_ERROR",
   ];
-  
+
   return retryableTypes.includes(type as DataErrorType);
 }
 
@@ -176,23 +178,23 @@ export function getErrorSeverity(error: Error | AppError): ErrorSeverity {
       case "NETWORK_ERROR":
       case "TIMEOUT_ERROR":
         return ErrorSeverity.MEDIUM;
-      
+
       case "VALIDATION_ERROR":
       case "PARSE_ERROR":
         return ErrorSeverity.HIGH;
-      
+
       case "QUOTA_EXCEEDED":
         return ErrorSeverity.HIGH;
-      
+
       case "CACHE_ERROR":
       case "WORKER_ERROR":
         return ErrorSeverity.LOW;
-      
+
       default:
         return ErrorSeverity.MEDIUM;
     }
   }
-  
+
   return ErrorSeverity.MEDIUM;
 }
 
@@ -204,39 +206,39 @@ export function getUserFriendlyMessage(error: Error | AppError): string {
     switch (error.code) {
       case "NETWORK_ERROR":
         return "Unable to connect to the server. Please check your internet connection and try again.";
-      
+
       case "TIMEOUT_ERROR":
         return "The request took too long to complete. Please try again.";
-      
+
       case "VALIDATION_ERROR":
         return "The data received was invalid. Please refresh the page.";
-      
+
       case "PARSE_ERROR":
         return "There was a problem processing the data. Please try refreshing the page.";
-      
+
       case "CACHE_ERROR":
         return "There was a problem with local storage. The app may run slower than usual.";
-      
+
       case "QUOTA_EXCEEDED":
         return "Your device is running low on storage space. Please free up some space and try again.";
-      
+
       case "WORKER_ERROR":
         return "There was a problem with background processing. Some features may be slower than usual.";
-      
+
       default:
         return "An unexpected error occurred. Please try again.";
     }
   }
-  
+
   // Handle standard errors
   if (error.name === "AbortError") {
     return "The operation was cancelled.";
   }
-  
+
   if (error.name === "TypeError" && error.message.includes("fetch")) {
     return "Unable to connect to the server. Please check your internet connection.";
   }
-  
+
   return "An unexpected error occurred. Please try again.";
 }
 
@@ -245,7 +247,7 @@ export function getUserFriendlyMessage(error: Error | AppError): string {
  */
 export function getRecoverySuggestions(error: Error | AppError): string[] {
   const suggestions: string[] = [];
-  
+
   if (isAppError(error)) {
     switch (error.code) {
       case "NETWORK_ERROR":
@@ -253,28 +255,28 @@ export function getRecoverySuggestions(error: Error | AppError): string[] {
         suggestions.push("Try refreshing the page");
         suggestions.push("Wait a moment and try again");
         break;
-      
+
       case "TIMEOUT_ERROR":
         suggestions.push("Try again in a few moments");
         suggestions.push("Check your internet connection speed");
         break;
-      
+
       case "VALIDATION_ERROR":
       case "PARSE_ERROR":
         suggestions.push("Refresh the page");
         suggestions.push("Clear your browser cache");
         break;
-      
+
       case "QUOTA_EXCEEDED":
         suggestions.push("Free up storage space on your device");
         suggestions.push("Clear browser data for this site");
         break;
-      
+
       case "CACHE_ERROR":
         suggestions.push("Clear browser data for this site");
         suggestions.push("Try using an incognito/private window");
         break;
-      
+
       default:
         suggestions.push("Try refreshing the page");
         suggestions.push("Try again later");
@@ -283,7 +285,7 @@ export function getRecoverySuggestions(error: Error | AppError): string[] {
     suggestions.push("Try refreshing the page");
     suggestions.push("Try again later");
   }
-  
+
   return suggestions;
 }
 
@@ -296,7 +298,10 @@ export interface ErrorReporter {
 }
 
 export class ConsoleErrorReporter implements ErrorReporter {
-  reportError(error: Error | AppError, context?: Record<string, unknown>): void {
+  reportError(
+    error: Error | AppError,
+    context?: Record<string, unknown>
+  ): void {
     console.error("Application Error:", {
       message: error.message,
       code: isAppError(error) ? error.code : "UNKNOWN",
@@ -347,31 +352,31 @@ export class GlobalErrorHandler {
           recoverable: false,
         }
       );
-      
+
       this.handleError(error);
     });
 
     // Handle unhandled promise rejections
     window.addEventListener("unhandledrejection", (event) => {
-      const error = event.reason instanceof Error
-        ? event.reason
-        : new AppError(
-            "UNHANDLED_REJECTION",
-            "Unhandled promise rejection",
-            {
+      const error =
+        event.reason instanceof Error
+          ? event.reason
+          : new AppError("UNHANDLED_REJECTION", "Unhandled promise rejection", {
               context: { reason: event.reason },
               recoverable: false,
-            }
-          );
-      
+            });
+
       this.handleError(error);
     });
 
     this.isInitialized = true;
   }
 
-  handleError(error: Error | AppError, context?: Record<string, unknown>): void {
-    this.reporters.forEach(reporter => {
+  handleError(
+    error: Error | AppError,
+    context?: Record<string, unknown>
+  ): void {
+    this.reporters.forEach((reporter) => {
       try {
         reporter.reportError(error, context);
       } catch (reportingError) {
@@ -381,7 +386,7 @@ export class GlobalErrorHandler {
   }
 
   handleWarning(message: string, context?: Record<string, unknown>): void {
-    this.reporters.forEach(reporter => {
+    this.reporters.forEach((reporter) => {
       try {
         reporter.reportWarning(message, context);
       } catch (reportingError) {
@@ -407,7 +412,7 @@ export async function withErrorHandling<T>(
     } else {
       console.error("Operation failed:", error);
     }
-    
+
     return fallback;
   }
 }
@@ -425,7 +430,7 @@ export function safeJsonParse<T>(
     } else {
       console.warn("JSON parsing failed, using fallback:", error);
     }
-    
+
     return fallback;
   }
 }
@@ -443,7 +448,7 @@ export function createErrorBoundary<T>(
     } else {
       console.error("Operation failed, using fallback:", error);
     }
-    
+
     return fallback;
   }
 }
@@ -465,32 +470,33 @@ export async function withRetry<T>(
     maxAttempts = 3,
     delay = 1000,
     backoffFactor = 2,
-    shouldRetry = (error) => isRetryableError(isAppError(error) ? error.code : "UNKNOWN"),
+    shouldRetry = (error) =>
+      isRetryableError(isAppError(error) ? error.code : "UNKNOWN"),
     onRetry,
   } = options;
 
   let lastError: Error;
-  
+
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return await operation();
     } catch (error) {
       lastError = error as Error;
-      
+
       if (attempt === maxAttempts || !shouldRetry(lastError, attempt)) {
         throw lastError;
       }
-      
+
       if (onRetry) {
         onRetry(lastError, attempt);
       }
-      
+
       // Wait before retry with exponential backoff
       const waitTime = delay * Math.pow(backoffFactor, attempt - 1);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
     }
   }
-  
+
   throw lastError!;
 }
 

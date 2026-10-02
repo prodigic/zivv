@@ -563,12 +563,26 @@ describe("durable ingestion ledger", () => {
     const newSupport = makeArtist(5, "Added Support");
     const venue = makeVenue(2, "Stable Room");
     const start = Date.parse("2026-09-21T03:00:00.000Z");
-    const existing = makeEvent(10, headliner.id, venue.id, "2026-09-20", start, {
-      artistIds: [headliner.id, oldSupport.id],
-    });
-    const candidate = makeEvent(11, headliner.id, venue.id, "2026-09-20", start, {
-      artistIds: [headliner.id, newSupport.id],
-    });
+    const existing = makeEvent(
+      10,
+      headliner.id,
+      venue.id,
+      "2026-09-20",
+      start,
+      {
+        artistIds: [headliner.id, oldSupport.id],
+      }
+    );
+    const candidate = makeEvent(
+      11,
+      headliner.id,
+      venue.id,
+      "2026-09-20",
+      start,
+      {
+        artistIds: [headliner.id, newSupport.id],
+      }
+    );
 
     const result = reconcileCandidates(
       bootstrapLedger(
@@ -610,12 +624,29 @@ describe("durable ingestion ledger", () => {
     ];
     const venue = makeVenue(6, "Close Lineup Room");
     const start = Date.parse("2026-09-21T03:00:00.000Z");
-    const existing = makeEvent(10, firstHeadliner.id, venue.id, "2026-09-20", start, {
-      artistIds: [firstHeadliner.id, ...supports.map((artist) => artist.id)],
-    });
-    const candidate = makeEvent(11, revisedHeadliner.id, venue.id, "2026-09-20", start, {
-      artistIds: [revisedHeadliner.id, ...supports.map((artist) => artist.id)],
-    });
+    const existing = makeEvent(
+      10,
+      firstHeadliner.id,
+      venue.id,
+      "2026-09-20",
+      start,
+      {
+        artistIds: [firstHeadliner.id, ...supports.map((artist) => artist.id)],
+      }
+    );
+    const candidate = makeEvent(
+      11,
+      revisedHeadliner.id,
+      venue.id,
+      "2026-09-20",
+      start,
+      {
+        artistIds: [
+          revisedHeadliner.id,
+          ...supports.map((artist) => artist.id),
+        ],
+      }
+    );
 
     const result = reconcileCandidates(
       bootstrapLedger(
@@ -723,7 +754,12 @@ describe("durable ingestion ledger", () => {
       venue.id,
       "2026-09-20",
       Date.parse("2026-09-21T05:00:00.000Z"),
-      { artistIds: [revisedHeadliner.id, ...supports.map((artist) => artist.id)] }
+      {
+        artistIds: [
+          revisedHeadliner.id,
+          ...supports.map((artist) => artist.id),
+        ],
+      }
     );
 
     const result = reconcileCandidates(
@@ -881,12 +917,7 @@ describe("durable ingestion ledger", () => {
         timeBasis: "instant",
       }
     );
-    const artists = [
-      headliner,
-      sharedSupport,
-      formerSupport,
-      currentSupport,
-    ];
+    const artists = [headliner, sharedSupport, formerSupport, currentSupport];
 
     const result = reconcileCandidates(
       bootstrapLedger({ events: [existing], artists, venues: [venue] }, 1000),

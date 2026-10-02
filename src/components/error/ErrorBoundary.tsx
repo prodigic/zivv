@@ -5,11 +5,11 @@
 import React, { Component } from "react";
 import type { ErrorInfo, ReactNode } from "react";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
-import { 
-  globalErrorHandler, 
-  getUserFriendlyMessage, 
+import {
+  globalErrorHandler,
+  getUserFriendlyMessage,
   getRecoverySuggestions,
-  isAppError 
+  isAppError,
 } from "@/utils/errorHandling.ts";
 
 interface ErrorBoundaryState {
@@ -24,7 +24,10 @@ interface ErrorBoundaryProps {
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -37,7 +40,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     // Generate unique error ID for tracking
     const errorId = `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     return {
       hasError: true,
       error,
@@ -47,14 +50,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     const { errorId } = this.state;
-    
+
     // Report to global error handler
     globalErrorHandler.handleError(error, {
       componentStack: errorInfo.componentStack,
       errorBoundary: true,
       errorId,
     });
-    
+
     // Call custom error handler if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -73,12 +76,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (this.state.hasError && this.state.error && this.state.errorId) {
       // Use custom fallback if provided
       if (this.props.fallback) {
-        return this.props.fallback(this.state.error, this.state.errorId, this.retry);
+        return this.props.fallback(
+          this.state.error,
+          this.state.errorId,
+          this.retry
+        );
       }
-      
+
       // Default error UI
       return (
-        <ErrorFallback 
+        <ErrorFallback
           error={this.state.error}
           errorId={this.state.errorId}
           onRetry={this.retry}
@@ -97,7 +104,11 @@ interface ErrorFallbackProps {
   onRetry: () => void;
 }
 
-const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, errorId, onRetry }) => {
+const ErrorFallback: React.FC<ErrorFallbackProps> = ({
+  error,
+  errorId,
+  onRetry,
+}) => {
   const userMessage = getUserFriendlyMessage(error);
   const suggestions = getRecoverySuggestions(error);
   const isRecoverable = !isAppError(error) || error.recoverable;
@@ -129,9 +140,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, errorId, onRetry }
           </h1>
 
           {/* User-friendly message */}
-          <p className="text-gray-600 mb-4">
-            {userMessage}
-          </p>
+          <p className="text-gray-600 mb-4">{userMessage}</p>
 
           {/* Recovery suggestions */}
           {suggestions.length > 0 && (
@@ -160,9 +169,9 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, errorId, onRetry }
                 Try Again
               </button>
             )}
-            
+
             <button
-              onClick={() => window.location.href = "/"}
+              onClick={() => (window.location.href = "/")}
               className="w-full bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
             >
               Go Home
@@ -200,12 +209,12 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, errorId, onRetry }
 // Router Error Boundary for router-specific errors
 export const RouterErrorBoundary: React.FC = () => {
   const routeError = useRouteError();
-  const error = isRouteErrorResponse(routeError) 
+  const error = isRouteErrorResponse(routeError)
     ? new Error(`${routeError.status} ${routeError.statusText}`)
-    : routeError instanceof Error 
-      ? routeError 
+    : routeError instanceof Error
+      ? routeError
       : new Error("Unknown router error");
-  
+
   return (
     <ErrorFallback
       error={error}
@@ -214,4 +223,3 @@ export const RouterErrorBoundary: React.FC = () => {
     />
   );
 };
-

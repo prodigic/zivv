@@ -32,7 +32,8 @@ describe("normalizeLatestContent", () => {
   });
 
   it("leaves an already-trimmed latest file unchanged apart from line endings", () => {
-    const trimmed = "funk-punk-thrash-ska  Upcoming shows of Interest August 14, 2026\n";
+    const trimmed =
+      "funk-punk-thrash-ska  Upcoming shows of Interest August 14, 2026\n";
     expect(normalizeLatestContent(trimmed)).toBe(trimmed);
   });
 });
