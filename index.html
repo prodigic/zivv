@@ -10,6 +10,24 @@
       content="Discover punk and alternative music shows in the San Francisco Bay Area. Find concerts, venues, and artists with Zivv's comprehensive event listings."
     />
     <link rel="manifest" href="/manifest.json" />
+    <!-- Restore routes encoded by public/404.html before React Router starts. -->
+    <script>
+      (function (location) {
+        if (location.search.charAt(1) !== "/") return;
+        const route = location.search
+          .slice(1)
+          .split("&")
+          .map(function (part) {
+            return part.replace(/~and~/g, "&");
+          })
+          .join("?");
+        window.history.replaceState(
+          null,
+          "",
+          location.pathname.slice(0, -1) + route + location.hash
+        );
+      })(window.location);
+    </script>
     <!-- Prevent dark mode flash - runs before page render -->
     <script>
       (function () {
