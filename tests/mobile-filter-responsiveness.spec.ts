@@ -371,10 +371,9 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
           `filter-layout-${width}x${height}.png`,
           {
             fullPage: false,
-            mask: [
-              // Mask dynamic content that changes between test runs
-              page.locator("main"),
-            ],
+            // Hide changing discovery content while preserving the header and
+            // overlaid bottom navigation in this layout-specific screenshot.
+            style: "main { visibility: hidden; }",
             threshold: 0.2,
           }
         );
