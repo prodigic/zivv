@@ -1,0 +1,28 @@
+name: Consolidation Skill Checks
+
+on:
+  push:
+    paths:
+      - "docs/skills/zivv-consolidate/**"
+      - ".github/workflows/consolidation-skill.yml"
+  pull_request:
+    paths:
+      - "docs/skills/zivv-consolidate/**"
+      - ".github/workflows/consolidation-skill.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  ledger-guard:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.19.0"
+      - name: Check ledger preservation and expected changes
+        run: node --test docs/skills/zivv-consolidate/scripts/ledger-regression.test.mjs

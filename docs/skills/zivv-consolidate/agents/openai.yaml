@@ -1,0 +1,4 @@
+interface:
+  display_name: "Zivv Chat Consolidation"
+  short_description: "Reconcile chats with the shared ledger and check regressions"
+  default_prompt: "Use $zivv-consolidate to consolidate this chat with the shared ledger and verify that its changes do not regress existing data or behavior."

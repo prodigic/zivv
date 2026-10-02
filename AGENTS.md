@@ -172,6 +172,11 @@ By adhering to the information within this `AGENTS.md` file, you will be well-eq
 
 ### Shared ledger operations
 
+For chat/worktree consolidation, use the `zivv-consolidate` skill. Its versioned
+source is [docs/skills/zivv-consolidate/SKILL.md](docs/skills/zivv-consolidate/SKILL.md).
+It includes an encrypted baseline and a deterministic ledger regression check;
+verify affected application behavior separately.
+
 For imports, data repairs, ETL exports, encrypted backup conflicts, or recovery,
 read [docs/shared-ledger.md](docs/shared-ledger.md) first. Update older checkouts
 to the shared-store implementation and confirm `npm run ledger:status` before
@@ -198,6 +203,7 @@ private operator storage outside worktrees.
 7. **Hand off** - Provide context for next session
 
 **CRITICAL RULES:**
+
 - Work is NOT complete until `git push` succeeds
 - NEVER stop before pushing - that leaves work stranded locally
 - NEVER say "ready to push when you are" - YOU must push
