@@ -15,6 +15,7 @@ const NON_PERFORMER_ARTIST_NAMES = new Set([
   "craft brew",
   "crafts",
   "djs",
+  "divine offering (tribute)",
   "emo nite",
   "emo night",
   "fencing",
