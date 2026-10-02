@@ -2,32 +2,20 @@
  * Shared context for filter modal state - allows both header and bottom nav to control the same modal
  */
 
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FilterBadge } from "./FilterBadge";
 import { useFilterStore } from "@/stores/filterStore";
 
-interface FilterModalContextType {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  toggleModal: () => void;
-}
-
-const FilterModalContext = createContext<FilterModalContextType | undefined>(undefined);
-
-export const useFilterModal = () => {
-  const context = useContext(FilterModalContext);
-  if (context === undefined) {
-    throw new Error("useFilterModal must be used within a FilterModalProvider");
-  }
-  return context;
-};
+import { FilterModalContext, useFilterModal } from "./filterModalState";
 
 interface FilterModalProviderProps {
   children: React.ReactNode;
 }
 
-export const FilterModalProvider: React.FC<FilterModalProviderProps> = ({ children }) => {
+export const FilterModalProvider: React.FC<FilterModalProviderProps> = ({
+  children,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
@@ -84,10 +72,64 @@ interface FilterModalProps {
   className?: string;
 }
 
-export const FilterModal: React.FC<FilterModalProps> = ({ children, className = "" }) => {
+export const FilterModal: React.FC<FilterModalProps> = ({
+  children,
+  className = "",
+}) => {
   const { isOpen, setIsOpen } = useFilterModal();
   const { activeFilterCount } = useFilterStore();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileRef = useRef<HTMLDivElement>(null);
+
+  // Move focus into the visible dialog, keep keyboard navigation inside it,
+  // and return to the invoking control when the dialog closes.
+  useEffect(() => {
+    if (!isOpen) return;
+    const opener = document.activeElement;
+    const mobile = window.innerWidth < 768;
+    const dialog = mobile ? mobileRef.current : dropdownRef.current;
+    if (!dialog) return;
+    const main = document.querySelector("main");
+    const overflow = main?.style.overflow ?? "";
+    if (mobile && main) main.style.overflow = "hidden";
+
+    const focusable = () =>
+      Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((element) => element.getClientRects().length > 0);
+    focusable()[0]?.focus();
+
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const elements = focusable();
+      const first = elements[0];
+      const last = elements.at(-1);
+      if (!first || !last) return;
+      if (
+        event.shiftKey &&
+        (document.activeElement === first ||
+          !dialog.contains(document.activeElement))
+      ) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        (document.activeElement === last ||
+          !dialog.contains(document.activeElement))
+      ) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", trapFocus);
+    return () => {
+      document.removeEventListener("keydown", trapFocus);
+      if (mobile && main) main.style.overflow = overflow;
+      if (opener instanceof HTMLElement && opener.isConnected) opener.focus();
+    };
+  }, [isOpen]);
 
   // Handle click outside to close dropdown (desktop only)
   useEffect(() => {
@@ -97,7 +139,11 @@ export const FilterModal: React.FC<FilterModalProps> = ({ children, className = 
 
       // Only enable click-outside-to-close on desktop
       // Mobile full-screen modals should only close via X button or ESC key
-      if (!isMobile && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        !isMobile &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -118,7 +164,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({ children, className = 
       {/* Mobile/Small Screen Full Modal */}
       <div
         className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-white dark:bg-gray-800 md:hidden flex flex-col animate-slide-up"
-        style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100vw", height: "100dvh" }}
+        ref={mobileRef}
         role="dialog"
         aria-modal="true"
         aria-label="Filter options"
@@ -160,8 +207,10 @@ export const FilterModal: React.FC<FilterModalProps> = ({ children, className = 
         </div>
 
         {/* Filter Content - Full Screen Scrollable */}
-        <div className="flex-1 overflow-y-auto p-4 xxs:p-2 xs:p-3">
-          <div style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>{children}</div>
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 xxs:p-2 xs:p-3">
+          <div style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+            {children}
+          </div>
         </div>
       </div>
 
@@ -221,7 +270,10 @@ interface FilterButtonProps {
   isMobile?: boolean;
 }
 
-export const FilterButton: React.FC<FilterButtonProps> = ({ className = "", isMobile = false }) => {
+export const FilterButton: React.FC<FilterButtonProps> = ({
+  className = "",
+  isMobile = false,
+}) => {
   const { isOpen, toggleModal } = useFilterModal();
   const { hasActiveFilters, activeFilterCount } = useFilterStore();
 
@@ -276,7 +328,9 @@ export const FilterButton: React.FC<FilterButtonProps> = ({ className = "", isMo
 
       {/* Mobile label */}
       {isMobile && (
-        <span className={`text-xs font-medium ${hasActiveFilters || isOpen ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400"}`}>
+        <span
+          className={`text-xs font-medium ${hasActiveFilters || isOpen ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400"}`}
+        >
           Filters
         </span>
       )}

@@ -1,9 +1,10 @@
 import type { Preview } from "@storybook/react-vite";
-import React from 'react';
-import '../src/index.css'; // Import Tailwind CSS and global styles
+import React from "react";
+import "../src/index.css"; // Import Tailwind CSS and global styles
 
 // Import decorators and providers
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
+import { FilterModalProvider } from "../src/components/filters/FilterModalContext";
 
 // Store decorators
 const withMockStores = (Story) => {
@@ -17,7 +18,9 @@ const withMockStores = (Story) => {
 
 const withRouter = (Story) => (
   <BrowserRouter>
-    <Story />
+    <FilterModalProvider>
+      <Story />
+    </FilterModalProvider>
   </BrowserRouter>
 );
 
@@ -29,53 +32,53 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-    
+
     // Accessibility testing
     a11y: {
       test: "todo", // Show a11y violations in test UI
       config: {
         rules: [
           {
-            id: 'color-contrast',
+            id: "color-contrast",
             enabled: true,
           },
           {
-            id: 'focus-order-semantics',
+            id: "focus-order-semantics",
             enabled: true,
-          }
-        ]
-      }
+          },
+        ],
+      },
     },
 
     // Viewport addon configuration
     viewport: {
       viewports: {
         mobile: {
-          name: 'Mobile',
+          name: "Mobile",
           styles: {
-            width: '375px',
-            height: '667px',
+            width: "375px",
+            height: "667px",
           },
         },
         tablet: {
-          name: 'Tablet', 
+          name: "Tablet",
           styles: {
-            width: '768px',
-            height: '1024px',
+            width: "768px",
+            height: "1024px",
           },
         },
         desktop: {
-          name: 'Desktop',
+          name: "Desktop",
           styles: {
-            width: '1024px',
-            height: '768px',
+            width: "1024px",
+            height: "768px",
           },
         },
         largeDesktop: {
-          name: 'Large Desktop',
+          name: "Large Desktop",
           styles: {
-            width: '1440px',
-            height: '900px',
+            width: "1440px",
+            height: "900px",
           },
         },
       },
@@ -83,45 +86,42 @@ const preview: Preview = {
 
     // Backgrounds for dark/light mode testing
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
         {
-          name: 'light',
-          value: '#f9fafb',
+          name: "light",
+          value: "#f9fafb",
         },
         {
-          name: 'dark', 
-          value: '#111827',
+          name: "dark",
+          value: "#111827",
         },
       ],
     },
 
     // Layout configuration
-    layout: 'padded',
-    
+    layout: "padded",
+
     // Actions configuration
     actions: { argTypesRegex: "^on[A-Z].*" },
-    
+
     // Documentation
     docs: {
-      autodocs: 'tag',
+      autodocs: "tag",
     },
   },
 
-  decorators: [
-    withMockStores,
-    withRouter,
-  ],
+  decorators: [withMockStores, withRouter],
 
   // Global types for toolbar controls
   globalTypes: {
     theme: {
-      description: 'Global theme for components',
-      defaultValue: 'light',
+      description: "Global theme for components",
+      defaultValue: "light",
       toolbar: {
-        title: 'Theme',
-        icon: 'circlehollow',
-        items: ['light', 'dark'],
+        title: "Theme",
+        icon: "circlehollow",
+        items: ["light", "dark"],
         dynamicTitle: true,
       },
     },

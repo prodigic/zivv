@@ -1,6 +1,10 @@
 import type { ParseError, ParseWarning, RawEventData } from "@/types/events.js";
 import { EventParser, VenueParser } from "./parsers.js";
-import { VenueLineParser, StringNormalizer, DeduplicationUtils } from "./utils.js";
+import {
+  VenueLineParser,
+  StringNormalizer,
+  DeduplicationUtils,
+} from "./utils.js";
 
 export interface EventValidationIssue {
   severity: "error" | "warning";
@@ -31,9 +35,9 @@ export interface AddressOnlyVenue {
 }
 
 export interface VenueValidationResult {
-  nearDuplicates: NearDuplicateGroup[];        // unresolved — not yet in alias file
-  resolvedDuplicates: NearDuplicateGroup[];    // already covered by alias file
-  newMappings: Record<string, string>;         // alias key → canonical, ready to append
+  nearDuplicates: NearDuplicateGroup[]; // unresolved — not yet in alias file
+  resolvedDuplicates: NearDuplicateGroup[]; // already covered by alias file
+  newMappings: Record<string, string>; // alias key → canonical, ready to append
   addressOnlyVenues: AddressOnlyVenue[];
   venueParseErrors: EventValidationIssue[];
   venueParseWarnings: EventValidationIssue[];
@@ -77,8 +81,11 @@ export class LatestValidator {
   validateEvents(latestContent: string): EventValidationResult {
     const { eventsSection } = this.splitLatestFile(latestContent);
 
-    const { rawEvents, errors: parseErrors, warnings: parseWarnings } =
-      EventParser.parseEventsFile(eventsSection);
+    const {
+      rawEvents,
+      errors: parseErrors,
+      warnings: parseWarnings,
+    } = EventParser.parseEventsFile(eventsSection);
 
     const { errors: normErrors, warnings: normWarnings } =
       EventParser.normalizeEvents(rawEvents, new Map(), new Map());
@@ -246,7 +253,7 @@ export class LatestValidator {
     for (let i = 0; i < entries.length; i++) {
       if (assigned.has(i)) continue;
 
-      let group: number[] = [i];
+      const group: number[] = [i];
 
       for (let j = i + 1; j < entries.length; j++) {
         if (assigned.has(j)) continue;
@@ -272,7 +279,10 @@ export class LatestValidator {
               entries[gi][0],
               entries[k][0]
             );
-            if (score >= NEAR_DUPE_THRESHOLD && entries[gi][0] !== entries[k][0]) {
+            if (
+              score >= NEAR_DUPE_THRESHOLD &&
+              entries[gi][0] !== entries[k][0]
+            ) {
               group.push(k);
               changed = true;
               break;
@@ -381,9 +391,7 @@ export class LatestValidator {
     }
 
     // Number + word(s) + street suffix: "1220 4th Street" (no proper name before it)
-    if (
-      new RegExp(`^\\d+\\s+\\w+\\s+${streetSuffix}\\.?$`, "i").test(name)
-    ) {
+    if (new RegExp(`^\\d+\\s+\\w+\\s+${streetSuffix}\\.?$`, "i").test(name)) {
       return { isAddress: true, reason: "street address" };
     }
 

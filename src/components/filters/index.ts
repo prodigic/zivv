@@ -9,5 +9,5 @@ export {
   FilterModalProvider,
   FilterModal,
   FilterButton,
-  useFilterModal
 } from "./FilterModalContext";
+export { useFilterModal } from "./filterModalState";
