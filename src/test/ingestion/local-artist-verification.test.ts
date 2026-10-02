@@ -53,6 +53,7 @@ describe("weekly local artist verification", () => {
       "Emo Nite",
       "Emo Night",
       "Folsom Street Fair",
+      "Divine Offering (tribute)",
       "Cholos vs. Vampires",
       "Cholos vs. Vampiers",
       "Hamdi FC vs. San Francisco",
