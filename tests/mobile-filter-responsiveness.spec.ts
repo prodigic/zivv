@@ -366,14 +366,15 @@ test.describe("Mobile Filter Bar Responsiveness", () => {
       test(`should take visual regression screenshot for ${name}`, async ({
         page,
       }) => {
+        // Preserve navigation geometry while hiding variable discovery content.
+        await page.addStyleTag({
+          content: "main, main * { visibility: hidden !important; }",
+        });
         // Take screenshot for visual regression testing
         await expect(page).toHaveScreenshot(
           `filter-layout-${width}x${height}.png`,
           {
             fullPage: false,
-            // Hide changing discovery content while preserving the header and
-            // overlaid bottom navigation in this layout-specific screenshot.
-            style: "main { visibility: hidden; }",
             threshold: 0.2,
           }
         );
