@@ -185,6 +185,9 @@ const VenuesPage: React.FC = () => {
       const cityA = oa === -1 ? 999 : oa;
       const cityB = ob === -1 ? 999 : ob;
       if (cityA !== cityB) return cityA - cityB;
+      // Cities outside CITY_ORDER share a rank. Keep each city contiguous
+      // before sorting its venues, or the same section key appears twice.
+      if (ca !== cb) return ca.localeCompare(cb);
       const countInWindow = (v: typeof a) =>
         dateWindow
           ? v.upcomingEvents.filter((e) => e.dateEpochMs >= dateWindow.start && e.dateEpochMs <= dateWindow.end).length

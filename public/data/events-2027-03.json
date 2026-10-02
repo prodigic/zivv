@@ -381,7 +381,7 @@
       "artistIds": [
         1069048800
       ],
-      "venueId": 183693907,
+      "venueId": 410740820,
       "priceMin": 54.4,
       "priceMax": 54.4,
       "isFree": false,
@@ -392,7 +392,7 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1789777368000,
-      "updatedAtEpochMs": 1789777368000,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 1179,
       "timeBasis": "instant",
       "firstImportedBy": "steveslist",
@@ -416,7 +416,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": []
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 183693907,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:5251",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ]
     },
     {
       "id": 217064491,

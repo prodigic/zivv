@@ -14,6 +14,7 @@ import { EventParser } from "../etl/parsers.js";
 import { EventSanitizer } from "../etl/sanitizer.js";
 import { normalizeLatestContent } from "../etl/latest-content.js";
 import { legacyWallClockToInstant } from "../discovery.js";
+import { applyVenueLocationCorrections } from "./venue-location-corrections.js";
 
 /** Bump the importer version when parsing/normalization semantics change. */
 export function steveRunId(
@@ -21,12 +22,12 @@ export function steveRunId(
   aliases: Record<string, string>
 ): string {
   const identity = {
-    importer: "steveslist-v2",
+    importer: "steveslist-v3",
     schema: 1,
     content: normalizeLatestContent(content),
     aliases: Object.entries(aliases).sort(([a], [b]) => a.localeCompare(b)),
   };
-  return `steveslist-v2-${createHash("sha256").update(JSON.stringify(identity)).digest("hex")}`;
+  return `steveslist-v3-${createHash("sha256").update(JSON.stringify(identity)).digest("hex")}`;
 }
 
 /** Pure construction of a weekly candidate batch; shared reconciler owns acceptance. */
@@ -175,6 +176,7 @@ export async function importSteveContent(
 ): Promise<ReconciliationResult> {
   return withIngestionLock(root, async () => {
     const ledger = await loadLedger(join(root, "data/ingestion/ledger.json"));
+    applyVenueLocationCorrections(root, ledger.venues);
     const historical = findHistoricalSteveReceipt(root, content, ledger);
     if (historical)
       return {
@@ -295,6 +297,7 @@ export async function importVenueBatch(
         throw new Error("Venue event start time requires timeBasis: instant");
     }
     const ledger = await loadLedger(join(root, "data/ingestion/ledger.json"));
+    applyVenueLocationCorrections(root, ledger.venues);
     return commitResult(
       root,
       reconcileCandidates(ledger, batch),

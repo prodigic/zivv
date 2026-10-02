@@ -1416,7 +1416,7 @@
         923639604,
         241579447
       ],
-      "venueId": 1637782129,
+      "venueId": 410740820,
       "priceMin": 26.94,
       "priceMax": 26.94,
       "isFree": false,
@@ -1425,7 +1425,7 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360969659,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 35,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -1448,7 +1448,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:35",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -5359,7 +5369,7 @@
         638486083,
         873330965
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "priceMin": 30.05,
       "priceMax": 30.05,
       "isFree": false,
@@ -5369,7 +5379,7 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360969667,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 118,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -5392,7 +5402,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:118",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {

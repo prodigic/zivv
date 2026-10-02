@@ -1033,14 +1033,14 @@
       "artistIds": [
         2062617520
       ],
-      "venueId": 1637782129,
+      "venueId": 410740820,
       "isFree": false,
       "ageRestriction": "21+",
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1783080000000,
-      "updatedAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 1042,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -1080,6 +1080,15 @@
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
           "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:5076",
+          "detectedAtEpochMs": 1790900184993,
           "reason": "source-update"
         }
       ],
@@ -2133,7 +2142,7 @@
         782408075,
         1399036334
       ],
-      "venueId": 183693907,
+      "venueId": 410740820,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
@@ -2142,7 +2151,7 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1783684800000,
-      "updatedAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 1052,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -2182,6 +2191,15 @@
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
           "detectedAtEpochMs": 1788566700000,
+          "reason": "source-update"
+        },
+        {
+          "field": "venueId",
+          "existingValue": 183693907,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:5096",
+          "detectedAtEpochMs": 1790900184993,
           "reason": "source-update"
         }
       ],
@@ -5118,7 +5136,7 @@
         319094477,
         280517662
       ],
-      "venueId": 1637782129,
+      "venueId": 410740820,
       "priceMin": 53.37,
       "priceMax": 53.37,
       "isFree": false,
@@ -5127,7 +5145,7 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 1099,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -5167,6 +5185,15 @@
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
           "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:5157",
+          "detectedAtEpochMs": 1790900184993,
           "reason": "source-update"
         }
       ],
@@ -6161,7 +6188,7 @@
       "artistIds": [
         325805878
       ],
-      "venueId": 183693907,
+      "venueId": 1811398338,
       "priceMin": 3.57,
       "priceMax": 3.57,
       "isFree": false,
@@ -6171,7 +6198,7 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1787313600000,
-      "updatedAtEpochMs": 1790381132084,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 1116,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -6211,6 +6238,15 @@
           "existingSource": "steveslist:steveslist",
           "incomingSource": "steveslist:steveslist",
           "detectedAtEpochMs": 1790381132084,
+          "reason": "source-update"
+        },
+        {
+          "field": "venueId",
+          "existingValue": 183693907,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:5177",
+          "detectedAtEpochMs": 1790900184993,
           "reason": "source-update"
         }
       ],

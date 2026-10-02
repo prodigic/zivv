@@ -185,6 +185,7 @@ export class StringNormalizer {
     const cityMappings: Record<string, string> = {
       sf: "San Francisco",
       "s.f.": "San Francisco",
+      "s.f": "San Francisco",
       "san francisco": "San Francisco",
       "san fran": "San Francisco",
       oakland: "Oakland",
@@ -249,10 +250,19 @@ export class VenueLineParser {
     if (parts.length < 2) return null;
 
     const venue = parts[0].trim();
-    const locationPart = parts[1].trim();
-
-    // Extract city from location part
-    const city = StringNormalizer.normalizeCity(locationPart.split(/\s+/)[0]);
+    // Source rows may insert a numbered street address before the city.
+    // Keep multiword city names and stop before age, price, and time details.
+    const locationPart =
+      parts
+        .slice(1)
+        .map((part) => part.trim())
+        .find((part) => /^[a-z]/i.test(part)) ?? "";
+    const cityText = locationPart
+      .split(
+        /\s+(?=(?:\d{1,2}\+|a\/a\b|all[ -]ages\b|\?\/\?|\$|\d{1,2}(?::\d{2})?(?:am|pm)\b|free\b))/i
+      )[0]
+      .trim();
+    const city = StringNormalizer.normalizeCity(cityText);
 
     // Parse remaining parts for age, price, time
     const remainingText = parts.slice(1).join(" ");

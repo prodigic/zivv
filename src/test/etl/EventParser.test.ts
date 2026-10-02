@@ -4,9 +4,25 @@
 
 import { describe, it, expect } from "vitest";
 import { EventParser } from "@/lib/etl/parsers.js";
+import { VenueLineParser } from "@/lib/etl/utils.js";
 import type { RawEventData, Artist, Venue } from "@/types/events.js";
 
 describe("EventParser", () => {
+  it.each([
+    [
+      "at Feinstein's at the Nikko, 222 Mason Street, S.F. 18+ $30 8pm",
+      "San Francisco",
+    ],
+    ["at FML Studios, 2400 Filbert Street, Oakland a/a 7pm", "Oakland"],
+    [
+      "at Waterhawk Lake Club, 5000 Roberts Lake Rd., Rohnert Park ?/? free 4pm",
+      "Rohnert Park",
+    ],
+    ["at Test Room, San Jose 21+ $20 8pm", "San Jose"],
+    ["at Test Room, 123 Main Street", ""],
+  ])("extracts the city after an optional street address: %s", (line, city) => {
+    expect(VenueLineParser.parse(line)?.city).toBe(city);
+  });
   describe("parseEventsFile", () => {
     it("should parse valid event data", () => {
       const content = `aug 15 fri Test Artist
@@ -257,14 +273,18 @@ at The Fillmore, San Francisco 21+ $45`;
 
       const artistMap = new Map<string, Artist>();
       const venueMap = new Map<string, Venue>();
-      const result = EventParser.normalizeEvents(rawEvents, artistMap, venueMap);
+      const result = EventParser.normalizeEvents(
+        rawEvents,
+        artistMap,
+        venueMap
+      );
 
       expect(result.errors).toHaveLength(0);
       expect(result.events).toHaveLength(1);
       expect(result.events[0].artistIds).toHaveLength(1);
-      expect([...artistMap.values()].map((artist) => artist.normalizedName)).toEqual([
-        "headliner",
-      ]);
+      expect(
+        [...artistMap.values()].map((artist) => artist.normalizedName)
+      ).toEqual(["headliner"]);
     });
 
     it("should create and update venue entries", () => {

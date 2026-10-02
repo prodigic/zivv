@@ -16,7 +16,7 @@
       "artistIds": [
         760354070
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "priceMin": 42,
       "priceMax": 53,
       "isFree": false,
@@ -26,7 +26,7 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360969971,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2364,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -49,7 +49,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2381",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -716,7 +726,7 @@
         1375295124,
         1696691814
       ],
-      "venueId": 1637782129,
+      "venueId": 410740820,
       "priceMin": 38.86,
       "priceMax": 38.86,
       "isFree": false,
@@ -727,7 +737,7 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1783080000000,
-      "updatedAtEpochMs": 1787360969972,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2382,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -750,7 +760,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2382",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -2225,7 +2245,7 @@
       "artistIds": [
         392250824
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
@@ -2234,7 +2254,7 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360969979,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2418,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -2257,7 +2277,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2418",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -4874,14 +4904,14 @@
       "artistIds": [
         1540175317
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360969988,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2483,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -4904,7 +4934,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2496",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -5058,14 +5098,14 @@
         1929690201,
         1595126722
       ],
-      "venueId": 1637782129,
+      "venueId": 410740820,
       "isFree": false,
       "ageRestriction": "21+",
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360969989,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2487,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -5088,7 +5128,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2487",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -6574,14 +6624,14 @@
         1929690201,
         1114754330
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "21+",
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360969996,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2523,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -6604,7 +6654,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2523",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -6619,7 +6679,7 @@
         584869255,
         1267102423
       ],
-      "venueId": 1637782129,
+      "venueId": 410740820,
       "priceMin": 38.86,
       "priceMax": 38.86,
       "isFree": false,
@@ -6628,7 +6688,7 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360969997,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2524,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -6651,7 +6711,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2524",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -8255,7 +8325,7 @@
       "artistIds": [
         610064130
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
@@ -8264,7 +8334,7 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970005,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2562,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -8287,7 +8357,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2562",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -11266,14 +11346,14 @@
       "artistIds": [
         474263660
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970015,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2643,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -11296,7 +11376,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2659",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -18573,14 +18663,14 @@
       "artistIds": [
         2067431957
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970061,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2841,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -18603,7 +18693,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2902",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -21269,7 +21369,7 @@
       "artistIds": [
         553937631
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
@@ -21278,7 +21378,7 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970074,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2918,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -21301,7 +21401,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2929",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -23739,7 +23849,7 @@
       "artistIds": [
         1069286812
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "notes": "outdoors",
@@ -23747,7 +23857,7 @@
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970091,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 2984,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -23770,7 +23880,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:2984",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -27834,7 +27954,7 @@
         320574535,
         1928876836
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
@@ -27843,7 +27963,7 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970103,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 3096,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -27866,7 +27986,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:3096",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -28184,14 +28314,14 @@
         978220588,
         855974186
       ],
-      "venueId": 1637782129,
+      "venueId": 410740820,
       "isFree": false,
       "ageRestriction": "21+",
       "status": "confirmed",
       "tags": [],
       "venueType": "club",
       "createdAtEpochMs": 1782475200000,
-      "updatedAtEpochMs": 1787360970105,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 3103,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -28214,7 +28344,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 410740820,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:3103",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {
@@ -29395,7 +29535,7 @@
       "artistIds": [
         1632446606
       ],
-      "venueId": 1637782129,
+      "venueId": 1811398338,
       "isFree": false,
       "ageRestriction": "all-ages",
       "status": "confirmed",
@@ -29404,7 +29544,7 @@
       ],
       "venueType": "club",
       "createdAtEpochMs": 1778241600000,
-      "updatedAtEpochMs": 1787360970108,
+      "updatedAtEpochMs": 1790900184993,
       "sourceLineNumber": 3135,
       "firstImportedBy": "steveslist",
       "addedDateProvenance": "legacy-batch",
@@ -29427,7 +29567,17 @@
           "evidence": null
         }
       ],
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "field": "venueId",
+          "existingValue": 1637782129,
+          "incomingValue": 1811398338,
+          "existingSource": "legacy-catalog",
+          "incomingSource": "hopmonk-city-repair:data/events.txt:3135",
+          "detectedAtEpochMs": 1790900184993,
+          "reason": "source-update"
+        }
+      ],
       "timeBasis": "legacy-wall-clock"
     },
     {

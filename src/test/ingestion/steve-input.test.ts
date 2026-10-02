@@ -7,6 +7,24 @@ function emptyLedger() {
 }
 
 describe("Steve's List ingestion input", () => {
+  it("unifies Hopmonk aliases within a city while keeping Novato and Sebastopol separate", () => {
+    const batch = prepareSteveBatch(
+      emptyLedger(),
+      [
+        "oct 1 2026 First Band at Hopmonk Tavern, Sebastopol 21+ 8pm",
+        "oct 4 2026 Second Band at Hopmonk Tavern, Novato a/a 7pm",
+        "oct 8 2026 Third Band at Hopmonk, Novato a/a 6pm",
+      ].join("\n"),
+      Date.parse("2026-10-01T19:00:00Z")
+    );
+    expect(batch.venues.map((v) => [v.name, v.city])).toEqual([
+      ["Hopmonk Tavern (Sebastopol)", "Sebastopol"],
+      ["Hopmonk Tavern (Novato)", "Novato"],
+    ]);
+    expect(
+      batch.events.map((e) => ("event" in e ? e.event : e).venueId)
+    ).toEqual([batch.venues[0].id, batch.venues[1].id, batch.venues[1].id]);
+  });
   it("normalizes headers and multiline rows into a valid candidate batch", () => {
     const content = [
       "THE LIST",

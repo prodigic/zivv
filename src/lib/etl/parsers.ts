@@ -181,9 +181,9 @@ export class EventParser {
         }
 
         // Parse artists
-        const artistNames = this
-          .parseArtistNames(rawEvent.artistLine)
-          .filter((name) => !isNonPerformerArtistName(name));
+        const artistNames = this.parseArtistNames(rawEvent.artistLine).filter(
+          (name) => !isNonPerformerArtistName(name)
+        );
         if (artistNames.length === 0) {
           errors.push({
             line: rawEvent.lineNumber,
@@ -260,8 +260,18 @@ export class EventParser {
         }
 
         // Find or create venue — resolve alias first so variants map to canonical name/ID
-        const resolvedVenueName =
+        let resolvedVenueName =
           venueAliases[venueInfo.venue.toLowerCase()] ?? venueInfo.venue;
+        // This chain has distinct locations. Source aliases must resolve within
+        // their stated city before the name-based catalog lookup.
+        if (
+          /^hopmonk(?: tavern)?$/i.test(resolvedVenueName.trim()) &&
+          /^(novato|sebastopol)$/i.test(venueInfo.city.trim())
+        ) {
+          const city = venueInfo.city.trim().toLowerCase();
+          venueInfo.city = city === "novato" ? "Novato" : "Sebastopol";
+          resolvedVenueName = `Hopmonk Tavern (${venueInfo.city})`;
+        }
         const normalizedVenueName =
           StringNormalizer.normalizeName(resolvedVenueName);
         let venue = [...venueMap.values()].find(

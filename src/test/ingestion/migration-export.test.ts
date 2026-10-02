@@ -109,6 +109,70 @@ afterEach(() => {
 });
 
 describe("migration and ledger export", () => {
+  it("applies reviewed city corrections to venues, artist summaries, and indexes while preserving events", async () => {
+    const { root, event } = setup();
+    await migrateExistingCatalog(root);
+    const before = await loadLedger(join(root, "data/ingestion/ledger.json"));
+    writeFileSync(
+      join(root, "data/venue-location-corrections.json"),
+      JSON.stringify([
+        {
+          venueId: 301,
+          venueName: "Test Hall",
+          city: "Oakland",
+          sources: ["https://example.org/location"],
+        },
+      ])
+    );
+    const result = await new ETLProcessor(root).processData();
+    expect(result.success).toBe(true);
+    const venues = JSON.parse(
+      readFileSync(join(root, "public/data/venues.json"), "utf8")
+    );
+    const artists = JSON.parse(
+      readFileSync(join(root, "public/data/artists.json"), "utf8")
+    );
+    expect(venues[0]).toMatchObject({ id: 301, city: "Oakland" });
+    expect(artists[0].upcomingEvents[0]).toMatchObject({
+      id: event.id,
+      venueCity: "Oakland",
+      createdAtEpochMs: created,
+    });
+    const exported = JSON.parse(
+      readFileSync(join(root, "public/data/events-2026-12.json"), "utf8")
+    ).events;
+    expect(exported).toEqual(before.events);
+    const indexes = JSON.parse(
+      readFileSync(join(root, "public/data/indexes.json"), "utf8")
+    );
+    expect(JSON.stringify(indexes)).toContain("Oakland");
+    expect(
+      (await loadLedger(join(root, "data/ingestion/ledger.json"))).events
+    ).toEqual(before.events);
+  });
+
+  it("rejects a reviewed location entry targeting a different venue name", async () => {
+    const { root } = setup();
+    await migrateExistingCatalog(root);
+    writeFileSync(
+      join(root, "data/venue-location-corrections.json"),
+      JSON.stringify([
+        {
+          venueId: 301,
+          venueName: "Different Hall",
+          city: "Oakland",
+          sources: ["https://example.org/location"],
+        },
+      ])
+    );
+    const result = await new ETLProcessor(root).processData();
+    expect(result.success).toBe(false);
+    expect(result.errors[0].message).toMatch(/name mismatch/);
+    expect(
+      JSON.parse(readFileSync(join(root, "public/data/venues.json"), "utf8"))[0]
+        .city
+    ).toBe("S.f");
+  });
   it("rebuilds local lists from evidence instead of copying stale compatibility labels", async () => {
     const { root } = setup();
     await migrateExistingCatalog(root);

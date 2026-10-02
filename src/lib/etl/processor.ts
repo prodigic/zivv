@@ -22,6 +22,7 @@ import type {
   SourceFileInfo,
 } from "../../types/data.js";
 import { loadLedger } from "../ingestion/ledger.js";
+import { applyVenueLocationCorrections } from "../ingestion/venue-location-corrections.js";
 import { namesForVerificationStatus } from "../ingestion/local-artist-verification.js";
 import type { LocalArtistVerificationLedger } from "../ingestion/local-artist-verification.js";
 import { withIngestionLock } from "../ingestion/lock.js";
@@ -48,6 +49,7 @@ export class ETLProcessor {
       const events: Event[] = structuredClone(ledger.events);
       const artists = structuredClone(ledger.artists);
       const venues = structuredClone(ledger.venues);
+      applyVenueLocationCorrections(this.projectRoot, venues);
       const registryPath = join(this.projectRoot, "data/venue-sources.json");
       if (existsSync(registryPath)) {
         const registry = JSON.parse(readFileSync(registryPath, "utf8"));
