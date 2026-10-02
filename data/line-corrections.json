@@ -128,5 +128,10 @@
     "note": "Correct the Oct. 23 Pouya support act typo PellingFlesh to its official billing PeelingFlesh.",
     "pattern": "\\bPellingFlesh\\b",
     "replacement": "PeelingFlesh"
+  },
+  {
+    "note": "Restore the truncated Oct. 8 Rasmus support act name to Death Valley Dreams, confirmed by the August Hall date listing.",
+    "pattern": "^(oct\\s+8\\s+(?:2026|[a-z]{2,4})\\s+The Rasmus, Saint Agnes, Death Valley)(?=\\s+at August Hall|$)",
+    "replacement": "$1 Dreams"
   }
 ]

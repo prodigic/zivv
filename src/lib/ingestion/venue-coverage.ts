@@ -60,6 +60,26 @@ const normalized = (name: string) => StringNormalizer.normalizeName(name);
 const digest = (value: unknown) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
+function fillmoreTitlePerformer(title: string): string {
+  const text = title.trim();
+  const spacedDash = /^(.+?)\s+[-–—]\s+(.+)$/u.exec(text);
+  const colon = /^(.+?):\s+(.+)$/u.exec(text);
+  const parts = spacedDash ?? colon;
+  if (parts) return parts[1].trim();
+
+  const lastDash = text.lastIndexOf("-");
+  const prefix = lastDash >= 0 ? text.slice(0, lastDash).trim() : "";
+  return lastDash > 0 && /\s/u.test(prefix) ? prefix : text;
+}
+
+function normalizedTitleAct(name: string): string {
+  return normalized(name)
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/[^\p{L}\p{N}]/gu, "")
+    .replace(/^the/u, "");
+}
+
 /** Produce an import batch and a full accounting, without changing the ledger. */
 export function assessVenueCoverage(
   ledger: IngestionLedger,
@@ -106,6 +126,53 @@ export function assessVenueCoverage(
     if (duplicateKeys.has(listing.key)) {
       item.reason = "Conflicting occurrences share one source key";
       continue;
+    }
+    if (
+      source.sourceId === "fillmore-sf" &&
+      listing.kind === "review" &&
+      !listing.artists.length &&
+      /missing explicit performer markup/i.test(listing.reason ?? "") &&
+      !/package|pass/i.test(listing.reason ?? "")
+    ) {
+      const hintedAct = normalizedTitleAct(
+        fillmoreTitlePerformer(listing.title)
+      );
+      const hintDay = localWallClockToEpochMs(
+        listing.date,
+        12,
+        0,
+        0,
+        0,
+        source.timezone
+      );
+      const sameDayActMatches =
+        hintDay !== null && listing.date >= today
+          ? ledger.events.filter(
+              (event) =>
+                event.venueId === source.venueId &&
+                event.date === listing.date &&
+                event.artistIds.some(
+                  (id) =>
+                    normalizedTitleAct(
+                      ledger.artists.find((artist) => artist.id === id)?.name ??
+                        ""
+                    ) === hintedAct
+                )
+            )
+          : [];
+      if (sameDayActMatches.length === 1) {
+        item.outcome = "matched";
+        item.eventIds = [sameDayActMatches[0].id];
+        item.reason =
+          "Matched existing Zivv event by parsed title act, date, and venue";
+        continue;
+      }
+      if (sameDayActMatches.length > 1) {
+        item.eventIds = sameDayActMatches.map((event) => event.id);
+        item.reason =
+          "Parsed title act matches multiple same-day Zivv events; performance needs review";
+        continue;
+      }
     }
     if (listing.kind === "non-music" || listing.kind === "package") {
       item.outcome = "excluded";

@@ -145,6 +145,113 @@ describe("venue completeness and DB accounting", () => {
     expect(JSON.stringify(original)).toBe(snapshot);
   });
 
+  it("matches Fillmore title hints to an exact existing act, date, and venue", () => {
+    const input = result([
+      {
+        ...listing,
+        key: "fillmore-title-hint",
+        url: "https://venue.example/fillmore-title-hint",
+        title: "Example - A Headline Tour",
+        artists: [],
+        kind: "review",
+        reason: "listing is missing explicit performer markup",
+      },
+    ]);
+    input.sourceId = "fillmore-sf";
+    const assessment = assessVenueCoverage(
+      ledger(),
+      { ...source, sourceId: "fillmore-sf" },
+      input,
+      observed
+    );
+
+    expect(assessment.report.items[0]).toMatchObject({
+      outcome: "matched",
+      eventIds: [101],
+      reason: expect.stringContaining("parsed title act"),
+    });
+    expect(assessment.batch.events).toHaveLength(0);
+  });
+
+  it("keeps unmatched title hints and package listings in review", () => {
+    const input = result([
+      {
+        ...listing,
+        key: "unmatched-fillmore-title-hint",
+        url: "https://venue.example/unmatched-fillmore-title-hint",
+        title: "Unlisted Act - Tour",
+        artists: [],
+        kind: "review",
+        reason: "listing is missing explicit performer markup",
+      },
+      {
+        ...listing,
+        key: "fillmore-pass",
+        url: "https://venue.example/fillmore-pass",
+        title: "Example - Seven Show Ticket",
+        artists: [],
+        kind: "review",
+        reason: "package/pass listing is missing explicit performer markup",
+      },
+    ]);
+    input.sourceId = "fillmore-sf";
+    const assessment = assessVenueCoverage(
+      ledger(),
+      { ...source, sourceId: "fillmore-sf" },
+      input,
+      observed
+    );
+
+    expect(assessment.report.items.map((item) => item.outcome)).toEqual([
+      "review",
+      "review",
+    ]);
+    expect(assessment.batch.events).toHaveLength(0);
+  });
+
+  it("leaves multiple same-day Fillmore matches for performance review", () => {
+    const original = bootstrapLedger(
+      {
+        events: [
+          event,
+          {
+            ...event,
+            id: 102 as Event["id"],
+            slug: "second-example-performance",
+          },
+        ],
+        artists: [artist],
+        venues: [venue],
+      },
+      observed
+    );
+    const input = result([
+      {
+        ...listing,
+        key: "ambiguous-fillmore-title-hint",
+        url: "https://venue.example/ambiguous-fillmore-title-hint",
+        title: "Example - A Headline Tour",
+        artists: [],
+        kind: "review",
+        reason: "listing is missing explicit performer markup",
+      },
+    ]);
+    input.sourceId = "fillmore-sf";
+    const assessment = assessVenueCoverage(
+      original,
+      { ...source, sourceId: "fillmore-sf" },
+      input,
+      observed
+    );
+
+    expect(assessment.report.items[0]).toMatchObject({
+      outcome: "review",
+      eventIds: [101, 102],
+      reason: expect.stringContaining("multiple same-day"),
+    });
+    expect(assessment.batch.events).toHaveLength(0);
+  });
+
   it("never reports a truncated or unaccounted calendar as complete", () => {
     const input = result([listing]);
     input.inventories[0].keys.push("missing-card");
@@ -182,9 +289,9 @@ describe("venue completeness and DB accounting", () => {
 
     expect(assessment.batch.events).toHaveLength(1);
     expect(assessment.batch.events[0].event.artistIds).toHaveLength(1);
-    expect(assessment.batch.artists.map((artist) => artist.normalizedName)).toEqual([
-      "example",
-    ]);
+    expect(
+      assessment.batch.artists.map((artist) => artist.normalizedName)
+    ).toEqual(["example"]);
   });
 
   it("requires a valid horizon before claiming the DB is verified", () => {

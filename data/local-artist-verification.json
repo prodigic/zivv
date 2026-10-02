@@ -14463,13 +14463,13 @@
       "name": "Paloma Morphy",
       "normalizedName": "paloma morphy",
       "status": "non-local",
-      "verifiedAtEpochMs": 1790555730117,
+      "verifiedAtEpochMs": 1790556266201,
       "method": "web-origin-check",
-      "evidence": "Canonical act billed by Popscene as Paloma Morphy (Mexico) at Rickshaw Stop on Oct. 8; GRAMMY identifies the artist as Mexico City-based.",
+      "evidence": "Eventim’s exact Oct. 8 Rickshaw Stop listing bills Paloma Morphy (Mexico); GRAMMY identifies her as Mexico City-based. Steve’s List typo Morrhy is corrected to Morphy.",
       "location": "Mexico City, Mexico",
       "sources": [
-        "https://www.eventim.com/event/paloma-morphy-rickshaw-stop-21715780/",
-        "https://live.grammy.com/news/2025-latin-grammys-paloma-morphy-wins-best-new-artist"
+        "https://live.grammy.com/news/2025-latin-grammys-paloma-morphy-wins-best-new-artist",
+        "https://www.eventim.com/event/paloma-morphy-rickshaw-stop-21715780/"
       ]
     },
     {
@@ -14551,9 +14551,9 @@
       "name": "Pat NByrne",
       "normalizedName": "pat nbyrne",
       "status": "non-local",
-      "verifiedAtEpochMs": 1790555881921,
+      "verifiedAtEpochMs": 1790556266201,
       "method": "web-origin-check",
-      "evidence": "The Oct. 23 HopMonk listing bills Pat NByrne as Marty O’Reilly Trio opener; the artist’s official bio identifies Pat Byrne as from Borris, Ireland, now Austin-based, and Bandcamp lists the same date. NByrne is a source typo.",
+      "evidence": "The Oct. 23 HopMonk listing and Bandcamp show Pat Byrne as Marty O’Reilly’s opener; official bio says he hails from Ireland and moved to Austin. Steve’s List NByrne is a typo.",
       "location": "Borris, County Carlow, Ireland origin; Austin, Texas-based",
       "sources": [
         "https://kcturnerpresents.com/calendar?calendar_page=2",
@@ -14648,10 +14648,10 @@
       "name": "Pelling Flesh",
       "normalizedName": "pelling flesh",
       "status": "non-local",
-      "verifiedAtEpochMs": 1790555940152,
+      "verifiedAtEpochMs": 1790556266201,
       "method": "web-origin-check",
-      "evidence": "Live Nation bills PeelingFlesh on the Oct. 23 Fillmore lineup; official Bandcamp lists the act in Oklahoma. Steve’s List has the typo PellingFlesh, which the correction rule maps to the official billing.",
-      "location": "Oklahoma, United States",
+      "evidence": "Official Live Nation lineup spells the act PeelingFlesh; the band’s Bandcamp lists Oklahoma and Metal Archives gives OKC/Tulsa. Pelling Flesh is an ingestion typo.",
+      "location": "Oklahoma City and Tulsa, Oklahoma",
       "sources": [
         "https://www.livenation.com/event/G5vYZ_GKTQIqt/pouya-the-forever-glades-tour-2026",
         "https://peelingfleshok.bandcamp.com/community",
@@ -20263,9 +20263,15 @@
     {
       "name": "The Charities",
       "normalizedName": "the charities",
-      "status": "local",
-      "verifiedAtEpochMs": 1790406000000,
-      "method": "legacy-local-artist-list"
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556345789,
+      "method": "web-origin-check",
+      "evidence": "Official band bio calls The Charities a Southern California sweet soul six-piece formed by Brock Van Pelt in 2017; the exact Fillmore listing confirms the billed artist. This is outside the Bay Area.",
+      "location": "Southern California, including San Luis Obispo County",
+      "sources": [
+        "https://www.thecharitiesband.com/",
+        "https://www.bandsintown.com/e/108376052-the-charities-at-the-fillmore?came_from=900"
+      ]
     },
     {
       "name": "The Chats",
@@ -20329,9 +20335,15 @@
     {
       "name": "The Contraptions",
       "normalizedName": "the contraptions",
-      "status": "local",
-      "verifiedAtEpochMs": 1790406000000,
-      "method": "legacy-local-artist-list"
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556370350,
+      "method": "web-origin-check",
+      "evidence": "Official site identifies The Contraptions as a Sacramento punk band based downtown; its official shows page confirms the Oct. 10 Kilowatt Bar show in San Francisco. A local performance does not establish local origin.",
+      "location": "Downtown Sacramento, California",
+      "sources": [
+        "https://thecontraptions.com/",
+        "https://thecontraptions.com/shows"
+      ]
     },
     {
       "name": "The Control Freaks",
@@ -21981,6 +21993,334 @@
         "https://www.amny.com/entertainment/inside-zucasa-zulan-argentina-music-soccer/"
       ],
       "lastSeenEditionId": "2026-09-25"
+    },
+    {
+      "name": "Orca",
+      "normalizedName": "orca",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Bandcamp identifies Orca as from San Antonio, Texas.",
+      "location": "San Antonio, Texas",
+      "sources": [
+        "https://orcatexas.bandcamp.com/album/soren"
+      ]
+    },
+    {
+      "name": "Oromet",
+      "normalizedName": "oromet",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Metal Archives identifies Oromet in Sacramento; Sacramento is outside the user’s Greater Bay Area scope.",
+      "location": "Sacramento, California",
+      "sources": [
+        "https://www.metal-archives.com/bands/Oromet/3540525677"
+      ]
+    },
+    {
+      "name": "Orthodox",
+      "normalizedName": "orthodox",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Ticketmaster bio says the indie-metal quartet hails from Nashville.",
+      "location": "Nashville, Tennessee",
+      "sources": [
+        "https://www.ticketmaster.com/orthodox-tickets/artist/1746232?tt_scene=anchor_view"
+      ]
+    },
+    {
+      "name": "Oso Oso",
+      "normalizedName": "oso oso",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Bandcamp identifies Oso Oso as from Long Beach, New York.",
+      "location": "Long Beach, New York",
+      "sources": [
+        "https://osoosoband.bandcamp.com/music"
+      ]
+    },
+    {
+      "name": "Otha",
+      "normalizedName": "otha",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Artist bio says Othalie was born and raised on Norway’s west coast.",
+      "location": "Norway",
+      "sources": [
+        "https://assets.ctfassets.net/jukv47gj0hvo/6TSTgzFBBRBMIdsRG6ZzaO/a0f4978d8e1be3268bf4f5fdcb4e48d2/Otha_biography.pdf"
+      ]
+    },
+    {
+      "name": "Otoliths",
+      "normalizedName": "otoliths",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Bandcamp identifies Otoliths as Oakland-based.",
+      "location": "Oakland, California",
+      "sources": [
+        "https://otoliths.bandcamp.com/album/lithos"
+      ]
+    },
+    {
+      "name": "Outpatient X",
+      "normalizedName": "outpatient x",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Bandcamp calls the act a punk trio from Santa Cruz; Good Times corroborates.",
+      "location": "Santa Cruz, California",
+      "sources": [
+        "https://outpatientx.bandcamp.com/track/medless",
+        "https://www.goodtimes.sc/outpatient-x-santa-cruz-skate-punx/"
+      ]
+    },
+    {
+      "name": "Pacific Roots",
+      "normalizedName": "pacific roots",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official band biography says Pacific Roots is based in Santa Cruz.",
+      "location": "Santa Cruz, California",
+      "sources": [
+        "https://pacificrootsmusic.com/bio"
+      ]
+    },
+    {
+      "name": "Pain Of Truth",
+      "normalizedName": "pain of truth",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Booking/promoter bio calls the band Long Island-based.",
+      "location": "Long Island, New York",
+      "sources": [
+        "https://theduckclub.com/artist/pain-of-truth/"
+      ]
+    },
+    {
+      "name": "Palace",
+      "normalizedName": "palace",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Management bio says school friends from Dorset came together in London to form the band.",
+      "location": "Dorset origin; London, England formation/base",
+      "sources": [
+        "https://www.mbcpr.com/artists/palace/"
+      ]
+    },
+    {
+      "name": "Palina And The Cave",
+      "normalizedName": "palina and the cave",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official artist Linktree describes the group as dreamy indie rock from San Francisco, led by Palina Rawat.",
+      "location": "San Francisco, California",
+      "sources": [
+        "https://linktr.ee/palinaandthecave"
+      ]
+    },
+    {
+      "name": "Panhandlers Union",
+      "normalizedName": "panhandlers union",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Bandcamp lists Panhandlers Union in San Jose.",
+      "location": "San Jose, California",
+      "sources": [
+        "https://panhandlersunion.bandcamp.com/"
+      ]
+    },
+    {
+      "name": "Pansy Division",
+      "normalizedName": "pansy division",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official band bio says Pansy Division began in San Francisco in 1991.",
+      "location": "San Francisco, California",
+      "sources": [
+        "https://pansydivision.com/bio/"
+      ]
+    },
+    {
+      "name": "Parliament Of Trees",
+      "normalizedName": "parliament of trees",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Bandcamp lists Parliament Of Trees in Castro Valley.",
+      "location": "Castro Valley, California",
+      "sources": [
+        "https://parliamentoftrees1.bandcamp.com/track/taxi-to-the-front-2"
+      ]
+    },
+    {
+      "name": "Parra For Cuva",
+      "normalizedName": "parra for cuva",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Bandcamp lists Parra For Cuva in Berlin.",
+      "location": "Berlin, Germany",
+      "sources": [
+        "https://parraforcuva.bandcamp.com/"
+      ]
+    },
+    {
+      "name": "Parrotfish",
+      "normalizedName": "parrotfish",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Band interview says the members formed in Tampa before moving to Nashville; Tampa outlet describes the group as Tampa-born/Nashville-based.",
+      "location": "Tampa, Florida origin; Nashville, Tennessee base",
+      "sources": [
+        "https://domandoma.in/doman-documents/parrotfish",
+        "https://www.cltampa.com/music-2/interview-before-homecoming-show-parrotfish-talks-identity-personality-and-more/"
+      ]
+    },
+    {
+      "name": "Patrick Wolf",
+      "normalizedName": "patrick wolf",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Guardian profiles say he was raised in Clapham/South London and later moved from London to the Kent coast.",
+      "location": "South London origin; currently Kent coast",
+      "sources": [
+        "https://www.theguardian.com/music/2009/apr/19/patrick-wolf-interview",
+        "https://www.theguardian.com/music/2023/apr/11/patrick-wolf-addiction-bankruptcy-hit-and-run-night-safari"
+      ]
+    },
+    {
+      "name": "Pattie Gonia",
+      "normalizedName": "pattie gonia",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "AP reports Pattie Gonia was raised in Nebraska and lives in Bend.",
+      "location": "Lincoln, Nebraska origin; currently Bend, Oregon",
+      "sources": [
+        "https://apnews.com/article/568f444ea11736ac3b8f11d0ef1e5e71"
+      ]
+    },
+    {
+      "name": "Paul Cauthen",
+      "normalizedName": "paul cauthen",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Grand Ole Opry bio identifies Tyler as hometown and calls Paul Cauthen an East Texas native.",
+      "location": "Tyler, Texas / East Texas",
+      "sources": [
+        "https://www.opry.com/artists/paul-cauthen"
+      ]
+    },
+    {
+      "name": "Paul Collins (best of The Nerves and The Exploding Hearts)",
+      "normalizedName": "paul collins",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official bio says Collins was born in Manhattan, later settled in SF and formed The Nerves there; this show is billed as his solo act. Applying individual-origin classification, with SF band history noted.",
+      "location": "Manhattan, New York-born; later San Francisco-based",
+      "sources": [
+        "https://thepaulcollinsbeat.com/press-box"
+      ]
+    },
+    {
+      "name": "Paul Cook",
+      "normalizedName": "paul cook",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Sex Pistols bio identifies Cook as London-born and still living in London.",
+      "location": "London, England",
+      "sources": [
+        "https://www.sexpistolsofficial.com/bio/paul-cook/"
+      ]
+    },
+    {
+      "name": "Peach Tree Rascals",
+      "normalizedName": "peach tree rascals",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "AllMusic says Peach Tree Rascals formed in San Jose in 2018.",
+      "location": "San Jose, California",
+      "sources": [
+        "https://www.allmusic.com/artist/peach-tree-rascals-mn0003910797"
+      ]
+    },
+    {
+      "name": "Peaches",
+      "normalizedName": "peaches",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Apple Music bio says Peaches grew up in Toronto and later moved to Berlin.",
+      "location": "Toronto, Ontario, Canada origin; later Berlin-based",
+      "sources": [
+        "https://music.apple.com/us/artist/peaches/3028600"
+      ]
+    },
+    {
+      "name": "Pecado De Juana",
+      "normalizedName": "pecado de juana",
+      "status": "unresolved",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Bandcamp only lists California and the venue ticket bio says the group formed in 2023 without a city; an Oakland show does not establish origin.",
+      "location": "California; city/origin unconfirmed",
+      "sources": [
+        "https://elpecadodejuana.bandcamp.com/merch",
+        "https://tickets.venuepilot.com/e/mestizo-beat-el-pecado-de-juana-2025-05-29-ivy-room-albany-ecf2b1"
+      ]
+    },
+    {
+      "name": "Pedro The Lion",
+      "normalizedName": "pedro the lion",
+      "status": "non-local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Jade Tree label page places David Bazan / Pedro the Lion in Seattle.",
+      "location": "Seattle, Washington",
+      "sources": [
+        "https://jadetree.com/pedro-the-lion"
+      ]
+    },
+    {
+      "name": "Pendletons",
+      "normalizedName": "pendletons",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "Official Bandcamp identifies The Pendletons as from San Francisco.",
+      "location": "San Francisco, California",
+      "sources": [
+        "https://thependletonssf.bandcamp.com/"
+      ]
+    },
+    {
+      "name": "Penury",
+      "normalizedName": "penury",
+      "status": "local",
+      "verifiedAtEpochMs": 1790556266201,
+      "method": "web-origin-check",
+      "evidence": "CBS San Francisco calls Penury Oakland black metallers.",
+      "location": "Oakland, California",
+      "sources": [
+        "https://www.cbsnews.com/amp/sanfrancisco/news/reunited-sf-black-metal-band-ludicra-plays-final-show-oakland-festival/"
+      ]
     }
   ]
 }
