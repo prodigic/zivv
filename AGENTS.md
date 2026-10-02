@@ -32,7 +32,7 @@ The project has completed Phase 2 (ETL Pipeline), Phase 3 (Core Data Layer), Pha
 
 ## 2. Development Environment and Commands
 
-The project uses Node.js 18+ and npm/yarn.
+The project uses Node.js 24.19.0+ and npm/yarn. Shared ledger commands use Node's built-in SQLite adapter.
 
 ### Core Development
 
@@ -169,6 +169,15 @@ public/locales/
 By adhering to the information within this `AGENTS.md` file, you will be well-equipped to contribute effectively to the Zivv project.
 
 ## Landing the Plane (Session Completion)
+
+### Shared ledger operations
+
+For imports, data repairs, ETL exports, encrypted backup conflicts, or recovery,
+read [docs/shared-ledger.md](docs/shared-ledger.md) first. Update older checkouts
+to the shared-store implementation and confirm `npm run ledger:status` before
+importing. Publish the validated public export together with a refreshed encrypted
+ledger snapshot. Keep the authoritative database and recovery key in permanent
+private operator storage outside worktrees.
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
 

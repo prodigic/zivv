@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.86.1",
   "type": "module",
+  "engines": {
+    "node": ">=24.19.0"
+  },
   "scripts": {
     "predev": "test -f dist/devserver/DevServerManager.js || npm run build:etl",
     "dev": "node scripts/dev-server.js start",
@@ -29,6 +32,9 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,md}\"",
     "test": "vitest",
+    "pretest": "npm run build:etl",
+    "pretest:run": "npm run build:etl",
+    "pretest:ingestion": "npm run build:etl",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest --watch",
@@ -47,6 +53,13 @@
     "local-acts:check": "npm run build:etl && node scripts/check-weekly-local-acts.js",
     "etl:verbose": "npm run etl -- --verbose",
     "ingestion:migrate": "npm run build:etl && node scripts/migrate-ingestion.js",
+    "ledger:migrate": "npm run build:etl && node scripts/ledger-store.js migrate",
+    "ledger:status": "npm run build:etl && node scripts/ledger-store.js status",
+    "ledger:backup": "npm run build:etl && node scripts/ledger-store.js backup",
+    "ledger:verify": "npm run build:etl && node scripts/ledger-store.js verify",
+    "ledger:restore": "npm run build:etl && node scripts/ledger-store.js restore",
+    "ledger:export-key": "npm run build:etl && node scripts/ledger-store.js export-key",
+    "ledger:import-key": "npm run build:etl && node scripts/ledger-store.js import-key",
     "import:steveslist": "npm run build:etl && node scripts/import-events.js steveslist",
     "import:venue": "npm run build:etl && node scripts/import-events.js venue",
     "weekly:prepare": "npm run build:etl && node scripts/weekly-edition.js prepare",

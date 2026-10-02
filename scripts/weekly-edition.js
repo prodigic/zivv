@@ -17,6 +17,7 @@ import {
 } from "../dist/lib/ingestion/weekly.js";
 import { loadLedger } from "../dist/lib/ingestion/ledger.js";
 import { withIngestionLock } from "../dist/lib/ingestion/lock.js";
+import { ledgerLocation } from "../dist/lib/ingestion/store-location.js";
 import {
   closeSync,
   existsSync,
@@ -136,7 +137,7 @@ function writeAtomically(path, contents) {
 
 async function loadCanonicalLedger(root) {
   const ledgerPath = resolve(root, ...sourceLedgerRelativePath);
-  if (!existsSync(ledgerPath)) {
+  if (!existsSync(ledgerLocation(ledgerPath).path)) {
     throw new Error(`Canonical ingestion ledger is missing at ${ledgerPath}`);
   }
 

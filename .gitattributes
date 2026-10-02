@@ -6,3 +6,6 @@
 public/data/*.json text eol=lf
 data/ingestion/*.json text eol=lf
 data/ingestion/reports/*.json text eol=lf
+
+# Encrypted snapshots have no meaningful text diff or automatic merge.
+data/ingestion/backups/*.enc binary

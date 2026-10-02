@@ -3,6 +3,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadLedger } from "../dist/lib/ingestion/ledger.js";
 import {
   collectUnverifiedWeeklyArtists,
   emptyLocalArtistVerificationLedger,
@@ -55,10 +56,7 @@ function writeJson(path, value) {
 }
 
 const dataDir = resolve(root, "data");
-const ledger = readJson(
-  resolve(dataDir, "ingestion/ledger.json"),
-  "ingestion ledger"
-);
+const ledger = await loadLedger(resolve(dataDir, "ingestion/ledger.json"));
 const weekly = readJson(
   resolve(dataDir, "ingestion/weekly-editions.json"),
   "weekly edition ledger"

@@ -5,6 +5,7 @@ import type { Event, Artist, Venue } from "../../types/events.js";
 import { bootstrapLedger, loadLedger, saveLedgerAtomic } from "./ledger.js";
 import { withIngestionLock } from "./lock.js";
 import { writeJsonAtomic } from "./persistence.js";
+import { projectLedgerLocation } from "./store-location.js";
 
 /** Bootstrap only from the exact existing dataset; never reparse historical text. */
 export async function migrateExistingCatalog(
@@ -13,7 +14,7 @@ export async function migrateExistingCatalog(
 ) {
   return withIngestionLock(root, async () => {
     const path = join(root, "data/ingestion/ledger.json");
-    if (existsSync(path)) {
+    if (existsSync(projectLedgerLocation(root).path)) {
       const ledger = await loadLedger(path);
       if (!existsSync(join(root, "data/ingestion/migration.json")))
         throw new Error(

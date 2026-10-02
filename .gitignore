@@ -72,6 +72,15 @@ data/latest.txt
 data/ingestion/ledger.json
 data/ingestion/reports/
 
+# Only authenticated encrypted snapshots may be committed; operator keys stay private.
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.dpapi
+*.key
+backup-key.bin
+data/ingestion/backups/*.tmp
+
 # Build tool output
 *.suo
 *.ntvs*

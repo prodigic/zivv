@@ -1,5 +1,11 @@
 import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import { ledgerLocation } from "./store-location.js";
+import {
+  inheritStoreRevision,
+  readSqliteLedger,
+  writeSqliteLedger,
+} from "./sqlite-store.js";
 import type {
   Artist,
   ArtistId,
@@ -41,7 +47,7 @@ import type {
 /*
  * The ledger is deliberately implemented without a browser-side dependency.
  * It is a build-time/server-side persistence boundary, so the only filesystem
- * operations in this module are the small JSON load and atomic save helpers.
+ * operations in this module delegate to the configured durable store.
  */
 
 type JsonRecord = Record<string, unknown>;
@@ -599,7 +605,11 @@ function sameStableIdentity(
 
   const existingTime = eventTimeKey(existing);
   const candidateTime = eventTimeKey(candidate);
-  if (existingTime === null || candidateTime === null || existingTime !== candidateTime)
+  if (
+    existingTime === null ||
+    candidateTime === null ||
+    existingTime !== candidateTime
+  )
     return false;
 
   if (session !== null) {
@@ -619,7 +629,9 @@ function sameStableIdentity(
 function lineupArtistKey(name: string): string {
   // Parenthetical role/presentation markers should not block a near-duplicate
   // comparison (for example, "Kochina Rude (performance)").
-  return normalizeName(name).replace(/\s*\([^)]*\)\s*$/u, "").trim();
+  return normalizeName(name)
+    .replace(/\s*\([^)]*\)\s*$/u, "")
+    .trim();
 }
 
 function lineupSet(event: Event, artists: Artist[]): Set<string> {
@@ -652,7 +664,10 @@ function isStrictLineupSubset(
 ): boolean {
   const oldLineup = lineupSet(existing, artists);
   const newLineup = lineupSet(candidate, artists);
-  if (oldLineup.size === newLineup.size || Math.min(oldLineup.size, newLineup.size) < 2)
+  if (
+    oldLineup.size === newLineup.size ||
+    Math.min(oldLineup.size, newLineup.size) < 2
+  )
     return false;
   const smaller = oldLineup.size < newLineup.size ? oldLineup : newLineup;
   const larger = oldLineup.size < newLineup.size ? newLineup : oldLineup;
@@ -948,7 +963,10 @@ function matchEvent(
       };
     }
     return {
-      event: nearLineupCandidates.length === 1 ? nearLineupCandidates[0] ?? null : null,
+      event:
+        nearLineupCandidates.length === 1
+          ? (nearLineupCandidates[0] ?? null)
+          : null,
       sourceMatch: false,
       fingerprintMatch: false,
       ambiguousIds: [],
@@ -1437,7 +1455,7 @@ function validateRedirect(
   );
 }
 
-function validateLedger(
+export function validateLedger(
   ledger: unknown,
   code: "invalid-input" | "corrupt-ledger" = "invalid-input"
 ): asserts ledger is IngestionLedger {
@@ -2331,7 +2349,10 @@ export function reconcileCandidates(
         `Run ${batch.runId} was already recorded with different content`
       );
     }
-    return { ledger: cloneJson(ledger), report: replayReport(priorRun) };
+    return {
+      ledger: inheritStoreRevision(ledger, cloneJson(ledger)),
+      report: replayReport(priorRun),
+    };
   }
 
   const mergedEntities = buildEntityMaps(ledger, batch);
@@ -2467,7 +2488,9 @@ export function reconcileCandidates(
       fail(`Matched event ${match.event.id} disappeared during reconciliation`);
     const updated = eventUpdate(
       match.event,
-      match.multipleShow ? multipleShowCandidate(match.event, candidate) : candidate,
+      match.multipleShow
+        ? multipleShowCandidate(match.event, candidate)
+        : candidate,
       sourceKind,
       batch.sourceId,
       batch.observedAtEpochMs,
@@ -2511,7 +2534,7 @@ export function reconcileCandidates(
   nextLedger.runs.push(run);
   validateLedger(nextLedger);
   return {
-    ledger: nextLedger,
+    ledger: inheritStoreRevision(ledger, nextLedger),
     report: {
       runId: batch.runId,
       replay: false,
@@ -2580,6 +2603,12 @@ export function migrateLedger(
 /** Load and validate the durable ledger. Missing and corrupt files fail closed. */
 export async function loadLedger(path: string): Promise<IngestionLedger> {
   requireString(path, "ledger path");
+  const location = ledgerLocation(path);
+  if (location.backend === "sqlite") {
+    const ledger = readSqliteLedger(location.path);
+    validateLedger(ledger);
+    return ledger;
+  }
   let bytes: string;
   try {
     bytes = await readFile(path, "utf8");
@@ -2629,6 +2658,11 @@ export async function saveLedgerAtomic(
 ): Promise<void> {
   requireString(path, "ledger path");
   validateLedger(ledger);
+  const location = ledgerLocation(path);
+  if (location.backend === "sqlite") {
+    await writeSqliteLedger(location.path, ledger);
+    return;
+  }
   const parent = dirname(path);
   await mkdir(parent, { recursive: true });
   const temporaryPath = `${path}.tmp-${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`;

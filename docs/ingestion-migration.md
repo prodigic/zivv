@@ -1,5 +1,10 @@
 # Ingestion migration and local operations
 
+Current persistence and recovery are documented in [Shared ledger and encrypted
+recovery](shared-ledger.md). Configured checkouts now use one permanent SQLite
+ledger and commit authenticated encrypted snapshots. The JSON-ledger workflow
+below describes the original migration and remains supported for isolated fixtures.
+
 Implemented locally September 7, 2026 on `codex/daily-venue-import-plan`.
 The durable catalog and date-added discovery foundation are ready for local
 review. Live venue fetching, completeness auditing, daily scheduling, and
