@@ -1,0 +1,572 @@
+[
+  {
+    "venueId": 515371631,
+    "venueName": "the Blue Note",
+    "location": {
+      "latitude": 38.2469926,
+      "longitude": -122.2740121,
+      "precision": "area",
+      "sourceUrl": "https://www.bluenotejazz.com/napa/",
+      "matchedAddress": "850 Bordeaux Way, Napa, CA"
+    },
+    "notes": "Official Summer Sessions footer links Blue Note Napa Summer Sessions destination at Meritage; venue site point, not exact entry gate.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1645166229,
+    "venueName": "Notaflof Salon & Artspace",
+    "location": null,
+    "notes": "Historical NOTAFLOF address is known, but no owner coordinate-bearing map or identifiable OSM element was found. No coordinates inferred from nearby businesses.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1174541933,
+    "venueName": "Ocean Ciders",
+    "location": null,
+    "notes": "Official Ocean Ciders social page yielded no readable coordinate-bearing venue map. Harbor address alone does not identify its exact location; no generic harbor pin substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1583501852,
+    "venueName": "Discovery Museum",
+    "location": {
+      "latitude": 37.3267134,
+      "longitude": -121.8918327,
+      "precision": "site",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/25967349/full.json",
+      "matchedAddress": "180 Woz Way, San Jose, CA"
+    },
+    "notes": "Opened OSM way 25967349 identifies Children’s Discovery Museum, matched against official venue/address evidence. Geometry bounding-box center; building/site point, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1917856147,
+    "venueName": "Discovery Meadow",
+    "location": {
+      "latitude": 37.327867,
+      "longitude": -121.8923663,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/28517729/full.json",
+      "matchedAddress": "180 Woz Way, San Jose, CA"
+    },
+    "notes": "Opened OSM way 28517729 identifies Discovery Meadow, matched against official venue/address evidence. Geometry bounding-box center; campus/grounds estimate, not an entrance. Discovery Meadow is separate from the neighboring museum despite shared listed address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1241556794,
+    "venueName": "Montalvo Arts Center",
+    "location": {
+      "latitude": 37.240556,
+      "longitude": -122.030278,
+      "precision": "area",
+      "sourceUrl": "https://www.wikidata.org/wiki/Special:EntityData/Q7930443.json",
+      "matchedAddress": "15400 Montalvo Road, Saratoga, CA"
+    },
+    "notes": "Opened CC0 Wikidata entity identifies Montalvo Arts Center, links official montalvoarts.org, and publishes P625 coordinates. Estate/campus estimate; no specific auditorium or entrance claimed. Owner's shuttle parking point was excluded.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1472125422,
+    "venueName": "Papermill Creek Saloon",
+    "location": {
+      "latitude": 38.0148798,
+      "longitude": -122.6891213,
+      "precision": "site",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/968239186/full.json",
+      "matchedAddress": "1 Castro Avenue, Forest Knolls, CA"
+    },
+    "notes": "Opened OSM building geometry names Papermill Creek Saloon, its official website and 1 Castro Avenue address. Retained source calls this Castro Street; same named venue confirmed. Bounding-box site center, not entry door.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 909463411,
+    "venueName": "Rio Nido Roadhouse",
+    "location": {
+      "latitude": 38.5205084,
+      "longitude": -122.9785796,
+      "precision": "site",
+      "sourceUrl": "https://www.rionidoroadhouse.com/",
+      "matchedAddress": "14540 Canyon 2 Road, Rio Nido, CA"
+    },
+    "notes": "Official Rio Nido Roadhouse GeoCoordinates match the published 14540 Canyon 2 Road business address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1230421436,
+    "venueName": "2 Theater Square",
+    "location": {
+      "latitude": 37.8784327,
+      "longitude": -122.1823272,
+      "precision": "area",
+      "sourceUrl": "https://web9161.wixsite.com/the-fourth-bore/contact",
+      "matchedAddress": "2 Theater Square, Orinda, CA"
+    },
+    "notes": "Official Fourth Bore contact page links directions whose destination coordinates locate the Theater Square complex; suite entrance not established.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1697289869,
+    "venueName": "Fourth Bore",
+    "location": {
+      "latitude": 37.8784327,
+      "longitude": -122.1823272,
+      "precision": "area",
+      "sourceUrl": "https://web9161.wixsite.com/the-fourth-bore/contact",
+      "matchedAddress": "2 Theater Square, Orinda, CA"
+    },
+    "notes": "Official Fourth Bore contact page links directions whose destination coordinates locate the Theater Square complex; suite entrance not established.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 902621698,
+    "venueName": "Silver Oak Winery",
+    "location": {
+      "latitude": 38.4405556,
+      "longitude": -122.3811111,
+      "precision": "area",
+      "sourceUrl": "https://www.wikidata.org/wiki/Special:EntityData/Q7516217.json",
+      "matchedAddress": "915 Oakville Cross Road, Oakville, CA"
+    },
+    "notes": "Opened CC0 Wikidata entity identifies Silver Oak Cellars, official silveroak.com, and Napa Valley P625 location. Winery grounds estimate matched to verified Oakville venue identity; no tasting-room entrance claimed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1558756676,
+    "venueName": "Hotel Utah Saloon",
+    "location": {
+      "latitude": 37.7793978,
+      "longitude": -122.3980907,
+      "precision": "site",
+      "sourceUrl": "https://hotelutah.com/",
+      "matchedAddress": "500 4th Street, San Francisco, CA"
+    },
+    "notes": "Official Hotel Utah homepage map link resolves to the named saloon destination, resolving tied Census address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1406070469,
+    "venueName": "the 49'er Stadium",
+    "location": {
+      "latitude": 37.4029927,
+      "longitude": -121.9700565,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/296503400/full.json",
+      "matchedAddress": "4900 Marie P. DeBartolo Way, Santa Clara, CA"
+    },
+    "notes": "Opened OSM way 296503400 identifies Levi’s Stadium, matched against official venue/address evidence. Geometry bounding-box center; campus/grounds estimate, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1754792672,
+    "venueName": "the 49er's Stadium",
+    "location": {
+      "latitude": 37.4029927,
+      "longitude": -121.9700565,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/296503400/full.json",
+      "matchedAddress": "4900 Marie P. DeBartolo Way, Santa Clara, CA"
+    },
+    "notes": "Opened OSM way 296503400 identifies Levi’s Stadium, matched against official venue/address evidence. Geometry bounding-box center; campus/grounds estimate, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 867190630,
+    "venueName": "the 49'ers Stadium",
+    "location": {
+      "latitude": 37.4029927,
+      "longitude": -121.9700565,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/296503400/full.json",
+      "matchedAddress": "4900 Marie P. DeBartolo Way, Santa Clara, CA"
+    },
+    "notes": "Opened OSM way 296503400 identifies Levi’s Stadium, matched against official venue/address evidence. Geometry bounding-box center; campus/grounds estimate, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1188914662,
+    "venueName": "49ers Stadium",
+    "location": {
+      "latitude": 37.4029927,
+      "longitude": -121.9700565,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/296503400/full.json",
+      "matchedAddress": "4900 Marie P. DeBartolo Way, Santa Clara, CA"
+    },
+    "notes": "Opened OSM way 296503400 identifies Levi’s Stadium, matched against official venue/address evidence. Geometry bounding-box center; campus/grounds estimate, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1115904685,
+    "venueName": "Graton Resort",
+    "location": {
+      "latitude": 38.3605934,
+      "longitude": -122.7226392,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/240665375/full.json",
+      "matchedAddress": "288 Golf Course Drive West, Rohnert Park, CA"
+    },
+    "notes": "Opened OSM way 240665375 identifies Graton Resort and Casino, matched against official venue/address evidence. Geometry bounding-box center; campus/grounds estimate, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 474218142,
+    "venueName": "the Greek Theater",
+    "location": {
+      "latitude": 37.8735628,
+      "longitude": -122.2544473,
+      "precision": "site",
+      "sourceUrl": "https://thegreekberkeley.com/",
+      "matchedAddress": "2001 Gayley Road, Berkeley, CA"
+    },
+    "notes": "Official Greek Theatre homepage map link resolves to the named theatre destination, distinct from nearby street-address map point.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 31156335,
+    "venueName": "Temescal Arts Center",
+    "location": null,
+    "notes": "Official Temescal Art Center homepage confirms identity but publishes no usable coordinates. Search results confirm address without primary geometry; Census no-match remains unlocated.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 664752640,
+    "venueName": "Davies Symphony Hall",
+    "location": {
+      "latitude": 37.7776121,
+      "longitude": -122.420623,
+      "precision": "site",
+      "sourceUrl": "https://sfwarmemorial.org/davies-symphony-hall/",
+      "matchedAddress": "201 Van Ness Avenue, San Francisco, CA"
+    },
+    "notes": "Official War Memorial venue page links a Davies Symphony Hall map destination at 201 Van Ness Avenue; site location rather than entry door.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 361387977,
+    "venueName": "Jade Cathey Resturant",
+    "location": {
+      "latitude": 37.360526,
+      "longitude": -121.909116,
+      "precision": "site",
+      "sourceUrl": "https://www.jadecathaysanjose.com/",
+      "matchedAddress": "1339 North 1st Street, San Jose, CA"
+    },
+    "notes": "Official Jade Cathay Restaurant JSON-LD GeoCoordinates match 1339 North 1st Street.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 390079947,
+    "venueName": "Palace of Fine Arts",
+    "location": {
+      "latitude": 37.8018919,
+      "longitude": -122.4483578,
+      "precision": "site",
+      "sourceUrl": "https://www.palaceoffinearts.org/contact",
+      "matchedAddress": "3301 Lyon Street, San Francisco, CA"
+    },
+    "notes": "Official Palace of Fine Arts contact page GeoCoordinates and directions both identify the theater venue site.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1749114421,
+    "venueName": "Alameda County Fair",
+    "location": {
+      "latitude": 37.6600497,
+      "longitude": -121.8968548,
+      "precision": "area",
+      "sourceUrl": "https://alamedacountyfair.com/contact-us/",
+      "matchedAddress": "2005 Valley Avenue, Pleasanton, CA"
+    },
+    "notes": "Official fairground contact page directions identify the Alameda County Fairgrounds site. Gate 8/12 event entrance is separate; campus estimate.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1990731403,
+    "venueName": "Pro Arts Gallery",
+    "location": null,
+    "notes": "Historical Pro Arts gallery address is retained in venue research. Current official organization is decentralized and no longer identifies a central gallery; no current pin applied to its former address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1918643887,
+    "venueName": "Point San Pablo Harbor",
+    "location": {
+      "latitude": 37.9623052,
+      "longitude": -122.4188581,
+      "precision": "area",
+      "sourceUrl": "https://www.pspharbor.com/directions",
+      "matchedAddress": "1900 Stenmark Drive, Richmond, CA"
+    },
+    "notes": "Official harbor directions link destination at 1900 Stenmark Drive. Harbor campus point; restaurant and clubhouse locations need separate evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 747776193,
+    "venueName": "Knot Club",
+    "location": {
+      "latitude": 37.9623052,
+      "longitude": -122.4188581,
+      "precision": "area",
+      "sourceUrl": "https://www.pspharbor.com/directions",
+      "matchedAddress": "1900 Stenmark Drive, Richmond, CA"
+    },
+    "notes": "Official harbor directions establish the harbor address shared by the Knot Club. Harbor campus estimate only; clubhouse point is not separately established.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 748679117,
+    "venueName": "Sailing Goat",
+    "location": {
+      "latitude": 37.9622811,
+      "longitude": -122.4188566,
+      "precision": "area",
+      "sourceUrl": "https://www.sailinggoatrestaurant.com/",
+      "matchedAddress": "1900 Stenmark Drive, Richmond, CA"
+    },
+    "notes": "Official restaurant businessLocationCoordinates identifies its listed harbor campus address. Campus estimate; dockside restaurant entrance is not pinpointed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1942328111,
+    "venueName": "Long Haul",
+    "location": {
+      "latitude": 37.85261,
+      "longitude": -122.2663194,
+      "precision": "site",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/node/2830562678.json",
+      "matchedAddress": "3124 Shattuck Avenue, Berkeley, CA"
+    },
+    "notes": "Opened OSM node 2830562678 identifies Long Haul Infoshop, matched against official venue/address evidence. Mapped venue point; building/site point, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1630275026,
+    "venueName": "Meritage Resort",
+    "location": {
+      "latitude": 38.246123,
+      "longitude": -122.2741878,
+      "precision": "area",
+      "sourceUrl": "https://www.meritageresort.com/contact/",
+      "matchedAddress": "875 Bordeaux Way, Napa, CA"
+    },
+    "notes": "Official resort address links a Google Maps resort destination. Resort campus point; event entrance is not identified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1899550573,
+    "venueName": "Presidio Theater",
+    "location": {
+      "latitude": 37.7988741,
+      "longitude": -122.4605709,
+      "precision": "site",
+      "sourceUrl": "https://www.presidiotheatre.org/visit-us/",
+      "matchedAddress": "99 Moraga Avenue, San Francisco, CA"
+    },
+    "notes": "Official visit page map link and embedded map both identify the Presidio Theatre performing arts building; not Lombard Street cinema.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 687835040,
+    "venueName": "Siesta Valley Bowl",
+    "location": {
+      "latitude": 37.8700944,
+      "longitude": -122.2036918,
+      "precision": "site",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/256523104/full.json",
+      "matchedAddress": "100 Gateway Boulevard, Orinda, CA"
+    },
+    "notes": "Opened OSM Bruns Memorial Amphitheater building geometry. Official Siesta Valley Bowl About Us page explicitly identifies this as the former Bruns/Cal Shakes venue at 100 Gateway Boulevard. Building site center, not entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 595294036,
+    "venueName": "the Ferry Buiding",
+    "location": {
+      "latitude": 37.795661,
+      "longitude": -122.39345,
+      "precision": "area",
+      "sourceUrl": "https://www.ferrybuildingmarketplace.com/visit/",
+      "matchedAddress": "1 Ferry Building, San Francisco, CA"
+    },
+    "notes": "Official visitor page JavaScript publishes the building map marker. Building/site estimate, not market event entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1428948079,
+    "venueName": "San Mateo County Fair",
+    "location": {
+      "latitude": 37.546649,
+      "longitude": -122.3024258,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/27145292/full.json",
+      "matchedAddress": "1346 Saratoga Drive, San Mateo, CA"
+    },
+    "notes": "Opened OSM way 27145292 identifies San Mateo County Event Center, matched against official venue/address evidence. Geometry bounding-box center; campus/grounds estimate, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1975456497,
+    "venueName": "County Fair",
+    "location": {
+      "latitude": 37.546649,
+      "longitude": -122.3024258,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/27145292/full.json",
+      "matchedAddress": "1346 Saratoga Drive, San Mateo, CA"
+    },
+    "notes": "Opened OSM way 27145292 identifies San Mateo County Event Center, matched against official venue/address evidence. Geometry bounding-box center; campus/grounds estimate, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 564335400,
+    "venueName": "the New Farm",
+    "location": {
+      "latitude": 37.7408038,
+      "longitude": -122.3766793,
+      "precision": "area",
+      "sourceUrl": "https://www.thenewfarmsf.org/",
+      "matchedAddress": "10 Cargo Way, San Francisco, CA"
+    },
+    "notes": "Official New Farm homepage map link resolves to The New Farm site; outdoor campus point, not a performance stage entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1699354866,
+    "venueName": "Bay Area Makerfarm",
+    "location": null,
+    "notes": "Official Makerfarm homepage contains map metadata for an older 2388 Mariner Square location, conflicting with the reviewed 2700 Barbers Point Road venue address. Old coordinates were excluded; current site point not confirmed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2123046837,
+    "venueName": "Bay Area Maker Farm",
+    "location": null,
+    "notes": "Official Makerfarm homepage contains older 2388 Mariner Square map coordinates, conflicting with the reviewed 2700 Barbers Point Road address. Alias retained independently without applying the old location.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2037432326,
+    "venueName": "Bay Area Makers Farm",
+    "location": null,
+    "notes": "Official Makerfarm homepage contains older 2388 Mariner Square map coordinates, conflicting with the reviewed 2700 Barbers Point Road address. Alias retained independently without applying the old location.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 135789758,
+    "venueName": "Dance Palace",
+    "location": {
+      "latitude": 38.068602,
+      "longitude": -122.808893,
+      "precision": "site",
+      "sourceUrl": "https://www.nps.gov/planyourvisit/event-details.htm?id=387D743D-94A8-13DD-C203B59CB6C87B17",
+      "matchedAddress": "503 B Street, Point Reyes Station, CA"
+    },
+    "notes": "National Park Service partner-event page explicitly publishes latitude/longitude and Dance Palace address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1812657801,
+    "venueName": "the Ruins",
+    "location": null,
+    "notes": "Official Ruins venue page identifies 100 Ruins Court but yielded no coordinate-bearing map or GeoCoordinates. No site point inferred from unrelated ruins or nearby properties.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 798180248,
+    "venueName": "Washington Park",
+    "location": {
+      "latitude": 37.769321,
+      "longitude": -122.272842,
+      "precision": "area",
+      "sourceUrl": "https://www.alamedaca.gov/Departments/Recreation-Parks/Washington-Park",
+      "matchedAddress": "1300 8th Street, Alameda, CA"
+    },
+    "notes": "Official city park page publishes a static-map marker at this location for 1300 8th Street. Park location, not event stage or entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1147256587,
+    "venueName": "Hammer Theater Center",
+    "location": {
+      "latitude": 37.3337803,
+      "longitude": -121.8864568,
+      "precision": "site",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/26174501/full.json",
+      "matchedAddress": "101 Paseo de San Antonio, San Jose, CA"
+    },
+    "notes": "Opened OSM way 26174501 identifies Susan and Phil Hammer Theatre Center, matched against official venue/address evidence. Geometry bounding-box center; building/site point, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1041309861,
+    "venueName": "BR Cohn Winery",
+    "location": {
+      "latitude": 38.349362,
+      "longitude": -122.501764,
+      "precision": "area",
+      "sourceUrl": "https://brcohn.com/privacy",
+      "matchedAddress": "15000 Sonoma Highway, Glen Ellen, CA"
+    },
+    "notes": "Official winery footer map link resolves to B.R. Cohn Winery and Olive Oil Company. Grounds estimate; event stage or gate not specified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 735578676,
+    "venueName": "Menlo College",
+    "location": {
+      "latitude": 37.4569379,
+      "longitude": -122.1916154,
+      "precision": "area",
+      "sourceUrl": "https://www.menlo.edu/about/maps-directions/",
+      "matchedAddress": "1000 El Camino Real, Atherton, CA"
+    },
+    "notes": "Official Menlo College directions page links this destination with its 1000 El Camino Real address. Campus estimate; alternative embedded map points differ slightly.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 826017948,
+    "venueName": "Miner Auditorium (SF Jazz Center)",
+    "location": {
+      "latitude": 37.776378,
+      "longitude": -122.4215694,
+      "precision": "site",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/256720482/full.json",
+      "matchedAddress": "201 Franklin Street, San Francisco, CA"
+    },
+    "notes": "Opened OSM way 256720482 identifies SFJAZZ Center, matched against official venue/address evidence. Geometry bounding-box center; building/site point, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2084336383,
+    "venueName": "SF Jazz",
+    "location": {
+      "latitude": 37.776378,
+      "longitude": -122.4215694,
+      "precision": "site",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/256720482/full.json",
+      "matchedAddress": "201 Franklin Street, San Francisco, CA"
+    },
+    "notes": "Opened OSM way 256720482 identifies SFJAZZ Center, matched against official venue/address evidence. Geometry bounding-box center; building/site point, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1396518846,
+    "venueName": "SF Jazz Center",
+    "location": {
+      "latitude": 37.776378,
+      "longitude": -122.4215694,
+      "precision": "site",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/256720482/full.json",
+      "matchedAddress": "201 Franklin Street, San Francisco, CA"
+    },
+    "notes": "Opened OSM way 256720482 identifies SFJAZZ Center, matched against official venue/address evidence. Geometry bounding-box center; building/site point, not an entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 552601815,
+    "venueName": "the Treehouse",
+    "location": null,
+    "notes": "Treehouse Concerts official site yields no coordinate-bearing map. Census returns a tied match for 19950 Wright Drive; candidate coordinates were not selected without owner/venue corroboration.",
+    "checkedOn": "2026-10-02"
+  }
+]

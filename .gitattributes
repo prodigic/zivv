@@ -14,3 +14,6 @@ data/ingestion/reports/*.json text eol=lf
 
 # Encrypted snapshots have no meaningful text diff or automatic merge.
 data/ingestion/backups/*.enc binary
+
+# Preserve byte-for-byte Census evidence and its recorded SHA-256 receipts.
+data/research/venue-maps/census-*.csv -text

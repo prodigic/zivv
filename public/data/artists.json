@@ -12903,43 +12903,8 @@
     "normalizedName": "hayley williams",
     "slug": "hayley-williams",
     "totalEventCount": 4,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 37754218,
-        "slug": "2026-10-02-hayley-williams-shoreline-amphitheater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Hayley Williams",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 35,
-        "priceMax": 35,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c0ab094e79cc9e21",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1931913617,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain View"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970172
   },
   {
@@ -32624,41 +32589,8 @@
     "normalizedName": "dear motorist",
     "slug": "dear-motorist",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1726458519,
-        "slug": "2026-10-02-dear-motorist-spats",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Dear Motorist",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:340ca64e1cd69795",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 134509849,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 134509849,
-        "venueName": "Spats",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970174
   },
   {
@@ -32812,41 +32744,8 @@
     "normalizedName": "strangelight",
     "slug": "strangelight",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1726458519,
-        "slug": "2026-10-02-dear-motorist-spats",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Dear Motorist",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:340ca64e1cd69795",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 134509849,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 134509849,
-        "venueName": "Spats",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970174
   },
   {
@@ -101929,43 +101828,8 @@
     "normalizedName": "soda blonde",
     "slug": "soda-blonde",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 574250324,
-        "slug": "2026-10-02-soda-blonde-the-crepe-place",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Soda Blonde",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 23.6,
-        "priceMax": 23.6,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e52261e91ce7cd1f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 135768954,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 135768954,
-        "venueName": "Crepe Place",
-        "venueCity": "Santa Cruz"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970172
   },
   {
@@ -102663,43 +102527,8 @@
     "normalizedName": "magdalena bay",
     "slug": "magdalena-bay",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 37754218,
-        "slug": "2026-10-02-hayley-williams-shoreline-amphitheater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Hayley Williams",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 35,
-        "priceMax": 35,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c0ab094e79cc9e21",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1931913617,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain View"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970172
   },
   {
@@ -102710,43 +102539,8 @@
     "normalizedName": "rico nasty",
     "slug": "rico-nasty",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 37754218,
-        "slug": "2026-10-02-hayley-williams-shoreline-amphitheater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Hayley Williams",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 35,
-        "priceMax": 35,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c0ab094e79cc9e21",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1931913617,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1931913617,
-        "venueName": "Shoreline Amphitheater",
-        "venueCity": "Mountain View"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970172
   },
   {
@@ -102936,42 +102730,8 @@
     "normalizedName": "hasan minhaj",
     "slug": "hasan-minhaj",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1866953555,
-        "slug": "2026-10-02-hasan-minhaj-the-fox-theater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Hasan Minhaj",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 73,
-        "priceMax": 73,
-        "createdAtEpochMs": 1781265600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:49e7eb9fdf662d7e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 631118593,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 631118593,
-        "venueName": "Fox Theater",
-        "venueCity": "Oakland"
-      },
       {
         "id": 1897973362,
         "slug": "2026-10-03-hasan-minhaj-fox-theater",
@@ -103017,42 +102777,8 @@
     "normalizedName": "ronny chieng",
     "slug": "ronny-chieng",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1866953555,
-        "slug": "2026-10-02-hasan-minhaj-the-fox-theater",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Hasan Minhaj",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 73,
-        "priceMax": 73,
-        "createdAtEpochMs": 1781265600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:49e7eb9fdf662d7e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 631118593,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 631118593,
-        "venueName": "Fox Theater",
-        "venueCity": "Oakland"
-      },
       {
         "id": 1897973362,
         "slug": "2026-10-03-hasan-minhaj-fox-theater",
@@ -103813,41 +103539,8 @@
     "normalizedName": "yeoubi",
     "slug": "yeoubi",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1726458519,
-        "slug": "2026-10-02-dear-motorist-spats",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Dear Motorist",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:340ca64e1cd69795",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 134509849,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 134509849,
-        "venueName": "Spats",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970174
   },
   {
@@ -103858,41 +103551,8 @@
     "normalizedName": "hard chiller",
     "slug": "hard-chiller",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1726458519,
-        "slug": "2026-10-02-dear-motorist-spats",
-        "dateEpochMs": 1790942400000,
-        "startTimeEpochMs": 1790992800000,
-        "headlinerName": "Dear Motorist",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:340ca64e1cd69795",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 134509849,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 134509849,
-        "venueName": "Spats",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970174
   },
   {
