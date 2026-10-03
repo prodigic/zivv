@@ -1,6 +1,6 @@
 /**
- * THROWAWAY: seven structurally different single-tile show/map treatments.
- * Uses the existing event route and real data, selected with ?variant=1..7.
+ * THROWAWAY: thirteen single-tile show/map treatments.
+ * Uses the existing event route and real data, selected with ?variant=1..13.
  * Only rendered in the explicitly enabled prototype build.
  */
 import { useCallback, useEffect } from "react";
@@ -21,6 +21,27 @@ const treatments = [
     name: "Ticket Window",
     idea: "Clear surface · circular map · tear-off date",
   },
+  {
+    name: "Daylight Atlas",
+    idea: "From 02 · pale map wallpaper · frosted footer",
+  },
+  {
+    name: "Nightfall",
+    idea: "From 02 · open map above · type fading into ink",
+  },
+  {
+    name: "Riso Flyer",
+    idea: "From 04 · red ink · oversized date · paper map",
+  },
+  {
+    name: "Blackout Bill",
+    idea: "From 04 · stacked typography · electric map band",
+  },
+  {
+    name: "Route Board",
+    idea: "From 06 · panoramic map · two-stop show itinerary",
+  },
+  { name: "Platform Pass", idea: "From 06 · date spine · destination and map" },
 ];
 
 type Props = {
@@ -33,9 +54,11 @@ type Props = {
 function MapArtwork({
   venue,
   wallpaper = false,
+  focusMarker = false,
 }: {
   venue: Venue;
   wallpaper?: boolean;
+  focusMarker?: boolean;
 }) {
   const tile = getVenueMapTile(venue.mapLocation);
   if (!tile) return <div className="map-missing">Location not mapped</div>;
@@ -45,6 +68,11 @@ function MapArtwork({
         href={tile.mapUrl}
         aria-label={`Open map for ${venue.name}`}
         className="map-plane"
+        style={
+          focusMarker
+            ? { transform: `translateY(-${(tile.markerY / 256) * 100}%)` }
+            : undefined
+        }
       >
         <img
           src={tile.url}
@@ -128,7 +156,9 @@ export default function VenueTileTreatmentsPrototype(props: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const requested = Number(searchParams.get("variant") ?? 1);
   const active =
-    Number.isInteger(requested) && requested >= 1 && requested <= 7
+    Number.isInteger(requested) &&
+    requested >= 1 &&
+    requested <= treatments.length
       ? requested
       : 1;
   const study = treatments[active - 1];
@@ -151,7 +181,10 @@ export default function VenueTileTreatmentsPrototype(props: Props) {
   const choose = useCallback(
     (number: number) => {
       const next = new URLSearchParams(searchParams);
-      next.set("variant", String(((number + 6) % 7) + 1));
+      next.set(
+        "variant",
+        String(((number - 1 + treatments.length) % treatments.length) + 1)
+      );
       setSearchParams(next, { replace: true });
     },
     [searchParams, setSearchParams]
@@ -371,6 +404,197 @@ export default function VenueTileTreatmentsPrototype(props: Props) {
             </div>
           </article>
         )}
+        {active === 8 && (
+          <article
+            className="treatment daylight-atlas"
+            aria-label="Combined show and map tile"
+          >
+            <MapArtwork venue={venue} wallpaper />
+            <div className="daylight-wash" />
+            <div className="daylight-heading">
+              <div className="eyebrow">LIVE IN {venue.city}</div>
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+            </div>
+            <div className="daylight-footer">
+              <div className="daylight-date">
+                <strong>
+                  {month} {day}
+                </strong>
+                <span>
+                  {weekday} · {time}
+                </span>
+              </div>
+              <VenueAddress venue={venue} />
+              <Admission event={event} />
+              <MapCaption venue={venue} />
+            </div>
+          </article>
+        )}
+        {active === 9 && (
+          <article
+            className="treatment nightfall"
+            aria-label="Combined show and map tile"
+          >
+            <MapArtwork venue={venue} wallpaper />
+            <div className="nightfall-shade" />
+            <div className="nightfall-top">
+              <span className="eyebrow">{venue.city}</span>
+              <span className="nightfall-date">
+                {month}
+                <strong>{day}</strong>
+              </span>
+            </div>
+            <div className="nightfall-copy">
+              <div className="eyebrow">
+                {weekday} / {time}
+              </div>
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+              <div className="nightfall-bottom">
+                <VenueAddress venue={venue} />
+                <Admission event={event} />
+              </div>
+              <MapCaption venue={venue} />
+            </div>
+          </article>
+        )}
+        {active === 10 && (
+          <article
+            className="treatment riso-flyer"
+            aria-label="Combined show and map tile"
+          >
+            <div className="riso-masthead">
+              <span>ONE NIGHT ONLY</span>
+              <span>
+                {venue.city} / {date.getFullYear()}
+              </span>
+            </div>
+            <div className="riso-title">
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+            </div>
+            <div className="riso-grid">
+              <div className="riso-date">
+                <span>{month}</span>
+                <strong>{String(day).padStart(2, "0")}</strong>
+                <span>
+                  {weekday}
+                  <br />
+                  {time}
+                </span>
+              </div>
+              <div className="riso-map">
+                <MapArtwork venue={venue} />
+                <MapCaption venue={venue} />
+              </div>
+            </div>
+            <div className="riso-footer">
+              <VenueAddress venue={venue} />
+              <Admission event={event} />
+            </div>
+          </article>
+        )}
+        {active === 11 && (
+          <article
+            className="treatment blackout-bill"
+            aria-label="Combined show and map tile"
+          >
+            <div className="blackout-date">
+              <span>{weekday}</span>
+              <strong>
+                {month} {day}
+              </strong>
+              <span>{time}</span>
+            </div>
+            <div className="blackout-title">
+              <span className="eyebrow">TURN IT UP / {venue.city}</span>
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+            </div>
+            <div className="blackout-band">
+              <div className="blackout-venue">
+                <VenueAddress venue={venue} />
+                <MapCaption venue={venue} />
+              </div>
+              <MapArtwork venue={venue} />
+            </div>
+            <div className="blackout-footer">
+              <span>LIVE. LOUD. TOGETHER.</span>
+              <Admission event={event} />
+            </div>
+          </article>
+        )}
+        {active === 12 && (
+          <article
+            className="treatment route-board"
+            aria-label="Combined show and map tile"
+          >
+            <div className="route-header">
+              <span className="eyebrow">SHOW DESTINATION</span>
+              <span>{venue.city}</span>
+            </div>
+            <div className="route-map">
+              <MapArtwork venue={venue} wallpaper focusMarker />
+            </div>
+            <div className="route-copy">
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+              <div className="route-itinerary">
+                <div className="route-when">
+                  <span className="route-dot" />
+                  <span className="eyebrow">WHEN</span>
+                  <strong>
+                    {month} {day} <span>· {time}</span>
+                  </strong>
+                  <p>{weekday}</p>
+                </div>
+                <div className="route-where">
+                  <span className="route-dot" />
+                  <span className="eyebrow">WHERE</span>
+                  <VenueAddress venue={venue} />
+                </div>
+              </div>
+              <div className="route-footer">
+                <Admission event={event} />
+                <MapCaption venue={venue} />
+              </div>
+            </div>
+          </article>
+        )}
+        {active === 13 && (
+          <article
+            className="treatment platform-pass"
+            aria-label="Combined show and map tile"
+          >
+            <div className="platform-spine">
+              <span>{month}</span>
+              <strong>{String(day).padStart(2, "0")}</strong>
+              <span>{weekday.slice(0, 3)}</span>
+              <span className="platform-year">{date.getFullYear()}</span>
+            </div>
+            <div className="platform-main">
+              <div className="platform-header">
+                <span className="eyebrow">LIVE / {venue.city}</span>
+                <strong>{time}</strong>
+              </div>
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+              <div className="platform-destination">
+                <div>
+                  <span className="eyebrow">DESTINATION</span>
+                  <VenueAddress venue={venue} />
+                  <MapCaption venue={venue} />
+                </div>
+                <MapArtwork venue={venue} />
+              </div>
+              <div className="platform-footer">
+                <Admission event={event} />
+                <span className="platform-bars" aria-hidden="true" />
+              </div>
+            </div>
+          </article>
+        )}
       </div>
       <nav className="prototype-switcher" aria-label="Tile treatment switcher">
         <div className="switcher-main">
@@ -381,7 +605,9 @@ export default function VenueTileTreatmentsPrototype(props: Props) {
             ←
           </button>
           <div>
-            <span>EXPERIMENT · {active} / 7</span>
+            <span>
+              EXPERIMENT · {active} / {treatments.length}
+            </span>
             <strong>{study.name}</strong>
           </div>
           <button

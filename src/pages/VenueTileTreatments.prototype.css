@@ -586,6 +586,608 @@
   font-size: 15px;
 }
 
+/* 08–09. Two descendants of the map-wallpaper study. */
+.prototype-treatments .daylight-atlas {
+  background: #dce4d9;
+  color: #1c3534;
+  border: 1px solid #b9cbc2;
+  border-radius: 20px;
+}
+.prototype-treatments .daylight-atlas .map-art,
+.prototype-treatments .nightfall .map-art {
+  isolation: auto;
+}
+.prototype-treatments .daylight-atlas .map-plane img {
+  filter: grayscale(0.5) sepia(0.2);
+}
+.prototype-treatments .daylight-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, #e8efe4f5, #e8efe4b0 40%, #e8efe400 70%);
+}
+.prototype-treatments .daylight-heading {
+  position: relative;
+  padding: 28px 28px 80px;
+  pointer-events: none;
+}
+.prototype-treatments .daylight-heading h2 {
+  font-size: 54px;
+  max-width: 360px;
+  margin-top: 22px;
+}
+.prototype-treatments .daylight-heading .support {
+  opacity: 0.85;
+}
+.prototype-treatments .daylight-footer {
+  position: relative;
+  margin: 0 14px 25px;
+  padding: 20px;
+  background: #f9fff2c9;
+  backdrop-filter: blur(12px);
+  border: 1px solid #fff9;
+  border-radius: 12px;
+}
+.prototype-treatments .daylight-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.prototype-treatments .daylight-date strong {
+  font-size: 25px;
+  letter-spacing: -1px;
+}
+.prototype-treatments .daylight-date span {
+  font-size: 10px;
+}
+.prototype-treatments .daylight-footer .venue-address {
+  margin-top: 13px;
+}
+.prototype-treatments .daylight-atlas .sold {
+  color: #93532d;
+}
+.prototype-treatments .daylight-footer .admission {
+  margin-top: 12px;
+}
+.prototype-treatments .nightfall {
+  border-radius: 6px;
+  color: #f7f1e7;
+  background: #121d25;
+}
+.prototype-treatments .nightfall .map-plane img {
+  filter: grayscale(0.8) brightness(0.65) sepia(0.15);
+}
+.prototype-treatments .nightfall .map-wallpaper .map-plane {
+  top: 0;
+  transform: none;
+}
+.prototype-treatments .nightfall-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    #10202910,
+    #121d2520 18%,
+    #121d25e8 53%,
+    #121d25 78%
+  );
+}
+.prototype-treatments .nightfall-top {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  padding: 24px;
+  pointer-events: none;
+}
+.prototype-treatments .nightfall-top > .eyebrow {
+  background: #152530dd;
+  padding: 6px 10px;
+}
+.prototype-treatments .nightfall-date {
+  display: grid;
+  text-align: center;
+  font-size: 13px;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 12px 16px;
+  border: 1px solid #fff8;
+  background: #12202cb0;
+}
+.prototype-treatments .nightfall-date strong {
+  font-size: 51px;
+  font-weight: 500;
+}
+.prototype-treatments .nightfall-copy {
+  position: relative;
+  padding: 54px 28px 28px;
+  pointer-events: none;
+}
+.prototype-treatments .nightfall-copy a {
+  pointer-events: auto;
+}
+.prototype-treatments .nightfall-copy > .eyebrow {
+  color: #e7ad89;
+}
+.prototype-treatments .nightfall h2 {
+  font:
+    56px/0.95 Georgia,
+    serif;
+  letter-spacing: -2.5px;
+  margin-top: 13px;
+}
+.prototype-treatments .nightfall-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: end;
+}
+.prototype-treatments .nightfall-bottom .admission {
+  flex-shrink: 0;
+  max-width: 105px;
+}
+.prototype-treatments .nightfall-copy > .map-caption {
+  margin-top: 20px;
+}
+
+/* 10–11. Paper-and-ink posters with different information architecture. */
+.prototype-treatments .riso-flyer {
+  background: #f1e7d3;
+  color: #a22e20;
+  padding: 22px;
+  border: 1px solid #d5bfa2;
+}
+.prototype-treatments .riso-masthead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-block: 1px solid currentColor;
+  padding: 7px 0;
+  font:
+    9px ui-monospace,
+    monospace;
+  text-transform: uppercase;
+}
+.prototype-treatments .riso-title {
+  padding: 16px 0 18px;
+  border-bottom: 5px solid currentColor;
+}
+.prototype-treatments .riso-title h2 {
+  font:
+    59px/0.95 Impact,
+    "Arial Narrow",
+    sans-serif;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+}
+.prototype-treatments .riso-title .support {
+  opacity: 1;
+  font:
+    10px/1.7 ui-monospace,
+    monospace;
+  text-transform: uppercase;
+}
+.prototype-treatments .riso-grid {
+  display: grid;
+  grid-template-columns: 42% minmax(0, 1fr);
+  gap: 20px;
+  padding: 20px 0;
+}
+.prototype-treatments .riso-date {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-transform: uppercase;
+}
+.prototype-treatments .riso-date > span {
+  font:
+    12px/1.6 ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+}
+.prototype-treatments .riso-date strong {
+  font:
+    100px/0.95 Impact,
+    sans-serif;
+  letter-spacing: -4px;
+}
+.prototype-treatments .riso-map .map-art {
+  border: 1px solid #a22e2055;
+}
+.prototype-treatments .riso-map img {
+  filter: grayscale(1) sepia(0.5);
+}
+.prototype-treatments .riso-footer {
+  border-top: 1px solid currentColor;
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.prototype-treatments .riso-footer .venue-address,
+.prototype-treatments .riso-footer .admission {
+  margin-top: 0;
+}
+.prototype-treatments .riso-footer .sold {
+  color: inherit;
+  border: 2px solid;
+  transform: rotate(-5deg);
+}
+.prototype-treatments .blackout-bill {
+  background: #151615;
+  color: #f5f4df;
+  border: 1px solid #151615;
+}
+.prototype-treatments .blackout-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: #d8f348;
+  color: #151615;
+  text-transform: uppercase;
+  font:
+    10px ui-monospace,
+    monospace;
+}
+.prototype-treatments .blackout-date strong {
+  font-size: 19px;
+}
+.prototype-treatments .blackout-title {
+  padding: 23px 24px;
+}
+.prototype-treatments .blackout-title .eyebrow {
+  color: #d8f348;
+  font-size: 8px;
+}
+.prototype-treatments .blackout-title h2 {
+  font:
+    71px/0.9 Impact,
+    "Arial Narrow",
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-top: 17px;
+}
+.prototype-treatments .blackout-title .support {
+  text-transform: uppercase;
+  opacity: 0.85;
+  font-size: 11px;
+  margin-top: 18px;
+}
+.prototype-treatments .blackout-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40%;
+  background: #eeefdf;
+  color: #151615;
+}
+.prototype-treatments .blackout-venue {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 24px;
+}
+.prototype-treatments .blackout-venue .venue-address {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.25;
+}
+.prototype-treatments .blackout-band .map-art {
+  align-self: center;
+}
+.prototype-treatments .blackout-band img {
+  filter: grayscale(1) contrast(1.25);
+}
+.prototype-treatments .blackout-footer {
+  padding: 15px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+.prototype-treatments .blackout-footer > span {
+  font:
+    8px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+}
+.prototype-treatments .blackout-footer .admission {
+  margin: 0;
+}
+.prototype-treatments .blackout-bill .sold {
+  color: #d8f348;
+}
+
+/* 12–13. Transit structure, without implying an actual transport route. */
+.prototype-treatments .route-board {
+  border-radius: 14px;
+  border: 1px solid #b6cbbf;
+  background: #edf1e7;
+  color: #213e38;
+}
+.prototype-treatments .route-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 22px;
+  background: #25463c;
+  color: #e7f3d0;
+  align-items: center;
+}
+.prototype-treatments .route-header > span:last-child {
+  font-size: 10px;
+}
+.prototype-treatments .route-map {
+  position: relative;
+  height: 165px;
+  border-bottom: 4px solid #a6bf62;
+}
+.prototype-treatments .route-map img {
+  filter: sepia(0.2) saturate(0.6);
+}
+.prototype-treatments .route-copy {
+  padding: 23px;
+}
+.prototype-treatments .route-copy h2 {
+  font-size: 39px;
+}
+.prototype-treatments .route-copy .support {
+  margin-top: 7px;
+}
+.prototype-treatments .route-itinerary {
+  display: grid;
+  grid-template-columns: 40% minmax(0, 1fr);
+  gap: 15px;
+  margin-top: 28px;
+}
+.prototype-treatments .route-when,
+.prototype-treatments .route-where {
+  position: relative;
+  border-top: 2px solid #7c9d62;
+  padding-top: 16px;
+}
+.prototype-treatments .route-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #25463c;
+  border: 2px solid #edf1e7;
+  outline: 1px solid #25463c;
+  border-radius: 50%;
+  top: -6px;
+  left: 0;
+}
+.prototype-treatments .route-when > strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 20px;
+}
+.prototype-treatments .route-when strong > span {
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.prototype-treatments .route-when p {
+  margin-top: 5px;
+  font-size: 10px;
+  opacity: 0.7;
+}
+.prototype-treatments .route-where .venue-address {
+  margin-top: 6px;
+}
+.prototype-treatments .route-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+}
+.prototype-treatments .route-board .sold {
+  color: #954b35;
+}
+.prototype-treatments .platform-pass {
+  display: grid;
+  grid-template-columns: 75px minmax(0, 1fr);
+  border: 1px solid #4c6573;
+  border-radius: 10px;
+  background: #1f3340;
+  color: #e5eff2;
+}
+.prototype-treatments .platform-spine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 23px 10px;
+  border-right: 1px dashed #4b687b;
+  background: #172a36;
+  text-transform: uppercase;
+  font:
+    12px ui-monospace,
+    monospace;
+  color: #a3dbe5;
+}
+.prototype-treatments .platform-spine strong {
+  font-size: 43px;
+  letter-spacing: -3px;
+  padding: 10px 0;
+}
+.prototype-treatments .platform-year {
+  margin-top: auto;
+  padding-top: 25px;
+  writing-mode: vertical-rl;
+  letter-spacing: 4px;
+}
+.prototype-treatments .platform-main {
+  padding: 23px;
+  min-width: 0;
+}
+.prototype-treatments .platform-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  color: #a3dbe5;
+}
+.prototype-treatments .platform-header .eyebrow {
+  font-size: 8px;
+}
+.prototype-treatments .platform-header strong {
+  font:
+    13px ui-monospace,
+    monospace;
+}
+.prototype-treatments .platform-main h2 {
+  font-size: 40px;
+  margin-top: 21px;
+}
+.prototype-treatments .platform-destination {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42%;
+  gap: 16px;
+  align-items: center;
+  padding-block: 20px;
+  margin-top: 20px;
+  border-block: 1px solid #ffffff26;
+}
+.prototype-treatments .platform-destination .eyebrow {
+  font-size: 8px;
+  color: #a3dbe5;
+}
+.prototype-treatments .platform-destination .venue-address {
+  margin-top: 9px;
+}
+.prototype-treatments .platform-destination .map-art {
+  border-radius: 5px;
+}
+.prototype-treatments .platform-destination img {
+  filter: grayscale(0.6) saturate(0.5);
+}
+.prototype-treatments .platform-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 14px;
+}
+.prototype-treatments .platform-bars {
+  height: 28px;
+  width: 55px;
+  flex-shrink: 0;
+  opacity: 0.6;
+  background: repeating-linear-gradient(
+    90deg,
+    #a3dbe5 0 1px,
+    transparent 1px 3px,
+    #a3dbe5 3px 5px,
+    transparent 5px 8px
+  );
+}
+@media (max-width: 600px) {
+  .prototype-treatments .daylight-heading {
+    padding: 23px 23px 65px;
+  }
+  .prototype-treatments .daylight-heading h2 {
+    font-size: 43px;
+  }
+  .prototype-treatments .daylight-footer {
+    padding: 16px;
+  }
+  .prototype-treatments .daylight-date {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .prototype-treatments .nightfall-copy {
+    padding: 40px 22px 28px;
+  }
+  .prototype-treatments .nightfall h2 {
+    font-size: 46px;
+  }
+  .prototype-treatments .nightfall-bottom {
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .prototype-treatments .nightfall-bottom .admission {
+    max-width: none;
+  }
+  .prototype-treatments .riso-flyer {
+    padding: 18px;
+  }
+  .prototype-treatments .riso-title h2 {
+    font-size: 48px;
+  }
+  .prototype-treatments .riso-grid {
+    grid-template-columns: 38% minmax(0, 1fr);
+    gap: 14px;
+  }
+  .prototype-treatments .riso-date strong {
+    font-size: 80px;
+  }
+  .prototype-treatments .riso-footer {
+    flex-wrap: wrap;
+  }
+  .prototype-treatments .blackout-title h2 {
+    font-size: 55px;
+  }
+  .prototype-treatments .blackout-title {
+    padding: 22px 18px;
+  }
+  .prototype-treatments .blackout-venue {
+    padding: 18px;
+  }
+  .prototype-treatments .blackout-venue .venue-address {
+    font-size: 13px;
+  }
+  .prototype-treatments .blackout-footer {
+    padding-inline: 18px;
+  }
+  .prototype-treatments .route-copy {
+    padding: 20px;
+  }
+  .prototype-treatments .route-copy h2 {
+    font-size: 33px;
+  }
+  .prototype-treatments .route-itinerary {
+    grid-template-columns: 36% minmax(0, 1fr);
+  }
+  .prototype-treatments .route-when > strong {
+    font-size: 18px;
+  }
+  .prototype-treatments .route-when strong > span {
+    display: block;
+    margin-top: 5px;
+  }
+  .prototype-treatments .route-footer {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .prototype-treatments .platform-pass {
+    grid-template-columns: 53px minmax(0, 1fr);
+  }
+  .prototype-treatments .platform-spine {
+    font-size: 10px;
+    padding-inline: 5px;
+  }
+  .prototype-treatments .platform-spine strong {
+    font-size: 33px;
+  }
+  .prototype-treatments .platform-main {
+    padding: 18px 15px;
+  }
+  .prototype-treatments .platform-main h2 {
+    font-size: 31px;
+  }
+  .prototype-treatments .platform-destination {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+  .prototype-treatments .platform-destination .map-art {
+    max-width: 180px;
+  }
+}
+
 .prototype-switcher {
   position: fixed;
   z-index: 60;
@@ -629,9 +1231,10 @@
   font-size: 18px;
 }
 .prototype-switcher .switcher-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-items: center;
+  gap: 6px;
   margin-top: 7px;
 }
 .prototype-switcher .switcher-dots button {
