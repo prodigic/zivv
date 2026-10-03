@@ -59,6 +59,7 @@ describe("retired event links", () => {
             name: "August Hall",
             slug: "august-hall",
             city: "San Francisco",
+            website: "https://www.augusthallsf.com/",
             upcomingEvents: [],
           } as Venue,
         ],
@@ -94,5 +95,12 @@ describe("retired event links", () => {
       screen.queryByText("This event couldn't be found.")
     ).not.toBeInTheDocument();
     expect(screen.getAllByText("August Hall").length).toBeGreaterThan(0);
+    for (const link of screen.getAllByRole("link", { name: "August Hall" })) {
+      expect(link).toHaveAttribute("href", "https://www.augusthallsf.com/");
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      expect(link.querySelector("svg")).toBeInTheDocument();
+    }
+    expect(screen.queryByRole("link", { name: "Venue website" })).toBeNull();
   });
 });

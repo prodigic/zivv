@@ -109,6 +109,105 @@ afterEach(() => {
 });
 
 describe("migration and ledger export", () => {
+  it("exports reviewed map coordinates without changing IDs, first-added history, or events", async () => {
+    const { root } = setup();
+    await migrateExistingCatalog(root);
+    const ledgerPath = join(root, "data/ingestion/ledger.json");
+    const ledgerBefore = readFileSync(ledgerPath, "utf8");
+    const readExport = (file: string) =>
+      JSON.parse(readFileSync(join(root, "public/data", file), "utf8"));
+
+    // A catalog without the optional registry must still export normally.
+    expect((await new ETLProcessor(root).processData()).success).toBe(true);
+    const venuesBefore: Venue[] = readExport("venues.json");
+    const artistsBefore: Artist[] = readExport("artists.json");
+    const eventsBefore = readExport("events-2026-12.json").events;
+    expect(venuesBefore[0].mapLocation).toBeUndefined();
+    const location = {
+      latitude: 37.7749,
+      longitude: -122.4194,
+      precision: "address",
+      sourceUrl: "https://example.org/test-hall/location",
+      matchedAddress: "1 Mission Street, San Francisco, CA",
+    };
+    writeFileSync(
+      join(root, "data/venue-maps.json"),
+      JSON.stringify({
+        schemaVersion: 1,
+        venues: [
+          {
+            venueId: 301,
+            venueName: "Test Hall",
+            queryAddress: "1 Mission Street, San Francisco, CA",
+            location,
+            notes: "Synthetic reviewed address coordinate.",
+            checkedOn: "2026-10-02",
+          },
+        ],
+      })
+    );
+    const result = await new ETLProcessor(root).processData();
+    expect(result.success).toBe(true);
+    expect(readExport("venues.json")).toEqual([
+      { ...venuesBefore[0], mapLocation: location },
+    ]);
+    expect(readExport("artists.json")).toEqual(artistsBefore);
+    expect(readExport("events-2026-12.json").events).toEqual(eventsBefore);
+    expect(result.manifest).toMatchObject({
+      totalEvents: 1,
+      totalArtists: 1,
+      totalVenues: 1,
+    });
+    expect(readFileSync(ledgerPath, "utf8")).toBe(ledgerBefore);
+  });
+
+  it("exports reviewed venue details and city indexes without changing event identity", async () => {
+    const { root } = setup();
+    await migrateExistingCatalog(root);
+    const before = await loadLedger(join(root, "data/ingestion/ledger.json"));
+    writeFileSync(
+      join(root, "data/venue-details.json"),
+      JSON.stringify({
+        schemaVersion: 1,
+        venues: [
+          {
+            venueId: 301,
+            venueName: "Test Hall",
+            streetAddress: "123 Verified Street",
+            city: "San Francisco",
+            website: "https://example.org/test-hall/",
+            status: "verified",
+            sources: ["https://example.org/test-hall/contact"],
+            notes: "Synthetic official contact evidence.",
+            checkedOn: "2026-10-02",
+          },
+        ],
+      })
+    );
+    expect((await new ETLProcessor(root).processData()).success).toBe(true);
+    const venues = JSON.parse(
+      readFileSync(join(root, "public/data/venues.json"), "utf8")
+    );
+    expect(venues[0]).toMatchObject({
+      id: 301,
+      address: "123 Verified Street",
+      city: "San Francisco",
+      website: "https://example.org/test-hall/",
+      createdAtEpochMs: before.venues[0].createdAtEpochMs,
+    });
+    const artists = JSON.parse(
+      readFileSync(join(root, "public/data/artists.json"), "utf8")
+    );
+    expect(artists[0].upcomingEvents[0].venueCity).toBe("San Francisco");
+    const indexes = JSON.parse(
+      readFileSync(join(root, "public/data/indexes.json"), "utf8")
+    );
+    expect(indexes.eventsByCity["San Francisco"]).toContain(101);
+    expect(
+      (await loadLedger(join(root, "data/ingestion/ledger.json"))).events
+    ).toEqual(before.events);
+  });
+
   it("exports retired links to the surviving event's current month", async () => {
     const { root, event } = setup();
     await migrateExistingCatalog(root);

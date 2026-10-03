@@ -24,6 +24,8 @@ import type {
 import { loadLedger } from "../ingestion/ledger.js";
 import { buildEventSlugRedirects } from "../ingestion/event-slug-redirects.js";
 import { applyVenueLocationCorrections } from "../ingestion/venue-location-corrections.js";
+import { applyProjectVenueDetails } from "../ingestion/venue-details.js";
+import { applyProjectVenueMaps } from "../ingestion/venue-maps.js";
 import { namesForVerificationStatus } from "../ingestion/local-artist-verification.js";
 import type { LocalArtistVerificationLedger } from "../ingestion/local-artist-verification.js";
 import { withIngestionLock } from "../ingestion/lock.js";
@@ -73,6 +75,8 @@ export class ETLProcessor {
           venue.website = source.website;
         }
       }
+      applyProjectVenueDetails(this.projectRoot, venues);
+      applyProjectVenueMaps(this.projectRoot, venues);
       this.validateReferences(events, artists, venues);
       this.populateSummaries(events, artists, venues, start);
       const indexes = DataIndexer.buildIndexes(events, artists, venues);

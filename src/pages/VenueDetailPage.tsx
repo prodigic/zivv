@@ -6,6 +6,8 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import VenueMapPreview from "@/components/ui/VenueMapPreview.js";
+import VenueNameLink from "@/components/ui/VenueNameLink.js";
 import { useAppStore } from "@/stores/appStore.js";
 
 const VenueDetailPage: React.FC = () => {
@@ -76,65 +78,69 @@ const VenueDetailPage: React.FC = () => {
           Back
         </button>
 
-        {/* Venue header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 space-y-3">
-          <div className="flex items-start gap-4">
-            <div className="h-14 w-14 bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900 dark:to-green-900 rounded-full flex items-center justify-center shrink-0">
-              <svg
-                className="h-7 w-7 text-blue-600 dark:text-blue-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </div>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                {venue.name}
-              </h1>
-              {venue.address && (
-                <div className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                  {venue.address}
-                </div>
-              )}
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                {venue.city}
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_16rem] gap-5 items-start">
+          {/* Venue header */}
+          <div className="min-w-0 space-y-3">
+            <div className="flex items-start gap-4">
+              <div className="h-14 w-14 bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900 dark:to-green-900 rounded-full flex items-center justify-center shrink-0">
+                <svg
+                  className="h-7 w-7 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
               </div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                  <VenueNameLink venue={venue} className="hover:underline" />
+                </h1>
+                {venue.address && (
+                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    {venue.address}
+                  </div>
+                )}
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  {venue.city}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 pt-1">
+              {venue.ageRestriction && (
+                <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">
+                  {venue.ageRestriction}
+                </span>
+              )}
+              {venue.capacity && (
+                <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">
+                  Cap: {venue.capacity}
+                </span>
+              )}
+              {venue.phone && (
+                <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">
+                  {venue.phone}
+                </span>
+              )}
+              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-2 py-1 rounded">
+                {venue.upcomingEventCount} upcoming shows
+              </span>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 pt-1">
-            {venue.ageRestriction && (
-              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">
-                {venue.ageRestriction}
-              </span>
-            )}
-            {venue.capacity && (
-              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">
-                Cap: {venue.capacity}
-              </span>
-            )}
-            {venue.phone && (
-              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">
-                {venue.phone}
-              </span>
-            )}
-            <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-2 py-1 rounded">
-              {venue.upcomingEventCount} upcoming shows
-            </span>
-          </div>
+          <VenueMapPreview venue={venue} embedded />
         </div>
 
         {/* Upcoming shows */}
