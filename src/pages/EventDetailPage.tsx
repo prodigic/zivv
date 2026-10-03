@@ -7,6 +7,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
 import VenueMapPreview from "@/components/ui/VenueMapPreview.js";
+import VenueNameLink from "@/components/ui/VenueNameLink.js";
 import { useAppStore } from "@/stores/appStore.js";
 import { formatAddedDateLabel } from "@/lib/discovery.js";
 
@@ -296,12 +297,10 @@ const EventDetailPage: React.FC = () => {
         {venue && (
           <>
             <span className="text-gray-300 dark:text-gray-600 shrink-0">·</span>
-            <Link
-              to={`/venues/${venue.slug}`}
+            <VenueNameLink
+              venue={venue}
               className="text-xl font-bold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white truncate"
-            >
-              {venue.name}
-            </Link>
+            />
           </>
         )}
         {event.status && event.status !== "confirmed" && (
@@ -318,9 +317,9 @@ const EventDetailPage: React.FC = () => {
         {/* Event summary + artist cards — col-span-2, visually on the right */}
         <div className="md:col-span-2 md:order-last space-y-4 md:sticky md:top-4 md:self-start">
           {/* Show information and venue map, above the artist cards. */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
             {/* Event summary card */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-3">
+            <div className="min-w-0 space-y-3">
               {/* Supporting artists */}
               {supportingArtists.length > 0 && (
                 <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -359,7 +358,7 @@ const EventDetailPage: React.FC = () => {
                     {dateStr}
                   </span>
                   {timeStr && (
-                    <span className="text-gray-500 dark:text-gray-400">
+                    <span className="text-gray-500 dark:text-gray-400 whitespace-nowrap">
                       · {timeStr}
                     </span>
                   )}
@@ -386,12 +385,10 @@ const EventDetailPage: React.FC = () => {
                       />
                     </svg>
                     <div>
-                      <Link
-                        to={`/venues/${venue.slug}`}
+                      <VenueNameLink
+                        venue={venue}
                         className="font-medium text-gray-900 dark:text-white hover:underline"
-                      >
-                        {venue.name}
-                      </Link>
+                      />
                       <div className="text-gray-500 dark:text-gray-400 text-xs">
                         {venue.address}
                         {venue.city ? `, ${venue.city}` : ""}
@@ -468,7 +465,7 @@ const EventDetailPage: React.FC = () => {
               )}
             </div>
             {/* end event summary card */}
-            {venue && <VenueMapPreview venue={venue} />}
+            {venue && <VenueMapPreview venue={venue} embedded />}
           </div>
 
           {/* Artist cards — 2-col inside left column */}
@@ -543,10 +540,7 @@ const EventDetailPage: React.FC = () => {
         {/* Venue card — col 1, visually on the left via order */}
         {venue && (
           <div className="md:order-first bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
-            <Link
-              to={`/venues/${venue.slug}`}
-              className="flex items-center gap-3 mb-2.5 group"
-            >
+            <div className="flex items-center gap-3 mb-2.5 group">
               <div className="h-10 w-10 bg-gradient-to-br from-blue-100 to-green-100 dark:from-blue-900 dark:to-green-900 rounded-full flex items-center justify-center shrink-0">
                 <svg
                   className="h-5 w-5 text-blue-600 dark:text-blue-400"
@@ -569,9 +563,10 @@ const EventDetailPage: React.FC = () => {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-gray-900 dark:text-white truncate group-hover:underline">
-                  {venue.name}
-                </div>
+                <VenueNameLink
+                  venue={venue}
+                  className="text-sm font-semibold text-gray-900 dark:text-white hover:underline"
+                />
                 <div className="text-xs text-gray-500 dark:text-gray-400">
                   {venue.city}
                   {venue.ageRestriction
@@ -579,7 +574,7 @@ const EventDetailPage: React.FC = () => {
                     : ""} · {venue.upcomingEvents.length} shows
                 </div>
               </div>
-            </Link>
+            </div>
             {venueMonthEvents.length > 0 && (
               <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
                 {venueMonthEvents.map((ev) => {

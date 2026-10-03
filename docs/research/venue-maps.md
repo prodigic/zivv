@@ -8,8 +8,10 @@ Several venues can share one map tile; their marker pixels differ.
 
 The application shows a small linked map preview beside the venue information
 on venue detail pages, and beside the show summary above artist cards on show
-detail pages. Narrow screens stack the preview below the summary. A separate
-outbound link opens the venue's website in a new tab when one is recorded.
+detail pages, sharing one information tile. Narrow screens stack the preview
+below the summary. The venue name opens its recorded website in a new tab,
+with an external-link icon at the end; names without a website retain their
+venue directory link.
 It requests one 256-pixel tile only when the preview is viewed, preserves normal
 browser caching and Referer behavior, and displays visible OpenStreetMap
 attribution. Image failure leaves a usable map link. Records without supported
