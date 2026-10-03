@@ -6,7 +6,10 @@ The catalog includes coordinates, precision, an OpenStreetMap viewing link,
 the corresponding Slippy tile URL, source evidence and remaining limitations.
 Several venues can share one map tile; their marker pixels differ.
 
-The application shows a small linked map preview on each venue detail page.
+The application shows a small linked map preview beside the venue information
+on venue detail pages, and beside the show summary above artist cards on show
+detail pages. Narrow screens stack the preview below the summary. A separate
+outbound link opens the venue's website in a new tab when one is recorded.
 It requests one 256-pixel tile only when the preview is viewed, preserves normal
 browser caching and Referer behavior, and displays visible OpenStreetMap
 attribution. Image failure leaves a usable map link. Records without supported

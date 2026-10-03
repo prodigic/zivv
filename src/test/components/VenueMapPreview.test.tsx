@@ -12,6 +12,7 @@ const venue = {
   name: "Test Hall",
   address: "123 Main Street",
   city: "San Francisco",
+  website: "https://example.com/test-hall",
   mapLocation: {
     latitude: 37.77,
     longitude: -122.42,
@@ -60,6 +61,10 @@ it("renders one lazy tile with accurate within-tile marker and visible attributi
   expect(
     screen.getByRole("link", { name: "View on OpenStreetMap" })
   ).toHaveAttribute("href", tile.mapUrl);
+  const website = screen.getByRole("link", { name: "Venue website" });
+  expect(website).toHaveAttribute("href", venue.website);
+  expect(website).toHaveAttribute("target", "_blank");
+  expect(website).toHaveAttribute("rel", "noopener noreferrer");
 });
 
 it("offers an address search without an image or pin when coordinates are unknown", () => {
@@ -71,6 +76,10 @@ it("offers an address search without an image or pin when coordinates are unknow
     "Test Hall, 123 Main Street, San Francisco"
   );
   expect(screen.getByText(/Location has not been mapped/)).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Venue website" })).toHaveAttribute(
+    "href",
+    venue.website
+  );
 });
 
 it("keeps map navigation after image failure and retries for a different venue", () => {
