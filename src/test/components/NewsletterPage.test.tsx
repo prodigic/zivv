@@ -260,7 +260,7 @@ describe("NewsletterPage chunk loading", () => {
     {
       slug: "bay-area",
       label: "Bay Area",
-      cities: ["San Francisco", "Oakland", "Berkeley", "Petaluma", ""],
+      cities: ["San Francisco", "Oakland", "Berkeley", "Petaluma", "", "549"],
     },
     {
       slug: "sfmusic",
@@ -348,7 +348,7 @@ describe("NewsletterPage chunk loading", () => {
       ).toBeInTheDocument();
       const articleText = container.querySelector("article")?.textContent ?? "";
       for (const [index, city] of cities.entries()) {
-        const location = `Venue ${index + 1}, ${city || "City TBA"}`;
+        const location = `Venue ${index + 1}, ${!city || city === "549" ? "City TBA" : city}`;
         expect(articleText.split(location)).toHaveLength(4);
       }
       fireEvent.click(screen.getByRole("button", { name: "raw" }));
@@ -357,7 +357,7 @@ describe("NewsletterPage chunk loading", () => {
       for (const section of markdown.split(/^### /m).slice(1)) {
         for (const [index, city] of cities.entries()) {
           expect(section).toContain(
-            `Venue ${index + 1}, ${city || "City TBA"}`
+            `Venue ${index + 1}, ${!city || city === "549" ? "City TBA" : city}`
           );
         }
       }

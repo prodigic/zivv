@@ -531,7 +531,11 @@ export default function NewsletterPage() {
       name: string,
       city: string,
       includeCity = cityConfig.showCity ?? false
-    ) => (includeCity ? `${name}, ${city.trim() || "City TBA"}` : name);
+    ) => {
+      const label = city.trim();
+      const cityLabel = label && !/^\d+$/.test(label) ? label : "City TBA";
+      return includeCity ? `${name}, ${cityLabel}` : name;
+    };
 
     function appendGroups<T>(
       rows: T[],
