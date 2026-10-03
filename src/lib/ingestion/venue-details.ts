@@ -42,6 +42,14 @@ function isWebAddress(value: unknown): value is string {
   }
 }
 
+function isEvidenceSource(value: unknown): value is string {
+  return (
+    isWebAddress(value) ||
+    value === "data/events.txt" ||
+    value === "data/venues.txt"
+  );
+}
+
 /** Validate the complete research registry before changing any venue metadata. */
 export function decodeVenueDetails(value: unknown): VenueDetailsRegistry {
   if (
@@ -64,7 +72,7 @@ export function decodeVenueDetails(value: unknown): VenueDetailsRegistry {
       ) ||
       (row.website !== null && !isWebAddress(row.website)) ||
       !Array.isArray(row.sources) ||
-      !row.sources.every(isWebAddress) ||
+      !row.sources.every(isEvidenceSource) ||
       typeof row.notes !== "string" ||
       typeof row.checkedOn !== "string" ||
       !/^\d{4}-\d{2}-\d{2}$/.test(row.checkedOn) ||
@@ -72,7 +80,8 @@ export function decodeVenueDetails(value: unknown): VenueDetailsRegistry {
       (row.status === "verified" &&
         (!isText(row.streetAddress) ||
           !isText(row.city) ||
-          !isWebAddress(row.website)))
+          !isWebAddress(row.website) ||
+          !row.sources.some(isWebAddress)))
     )
       throw new Error(
         `Invalid venue details entry: ${String(isRecord(row) ? row.venueId : "unknown")}`
