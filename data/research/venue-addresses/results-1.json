@@ -1,0 +1,2815 @@
+[
+  {
+    "venueId": 365094640,
+    "venueName": "1234 Go! Records",
+    "streetAddress": "420 40th Street #5",
+    "city": "Oakland",
+    "website": "https://1234gorecords.com/contact",
+    "status": "verified",
+    "sources": [
+      "https://1234gorecords.com/contact"
+    ],
+    "notes": "Official contact page; current shop address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1535527108,
+    "venueName": "9 Lives Warehouse",
+    "streetAddress": "7650 Hawley Street",
+    "city": "Oakland",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt",
+      "data/venues.txt"
+    ],
+    "notes": "Raw-only address: actual shared-ledger linked2026 shows match published9 Lives listings at7650 Hawley, Oakland (Hive TyrantJul18, On A War PathJul25, Bone ThistleJul26, Stand TallAug2, VangozeerSep19). Other linked listings give Oakland without another street. Old venues.txt435 23nd Avenue conflicts and is not independent confirmation; historical relocation remains pending owner verification.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 934031822,
+    "venueName": "Almost Famous Wine Lounge",
+    "streetAddress": "2271 S Vasco Road",
+    "city": "Livermore",
+    "website": "https://almostfamous.wine/venue-information/",
+    "status": "verified",
+    "sources": [
+      "https://almostfamous.wine/venue-information/"
+    ],
+    "notes": "Official venue FAQ confirms address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2013304995,
+    "venueName": "Amoeba Music",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [
+      "https://www.amoeba.com/our-stores/"
+    ],
+    "notes": "Inventory retains Berkeley address 2455 Telegraph Avenue, while raw events include both San Francisco and Berkeley branches. Official store page confirms two distinct locations. Cannot assign one address to this ID safely.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1210289743,
+    "venueName": "Ashkenaz",
+    "streetAddress": "1317 San Pablo Avenue",
+    "city": "Berkeley",
+    "website": "https://www.ashkenaz.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.ashkenaz.com/"
+    ],
+    "notes": "Official venue website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1834523627,
+    "venueName": "Bal Theater",
+    "streetAddress": "14808 East 14th Street",
+    "city": "San Leandro",
+    "website": "https://www.baltheatre.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://www.baltheatre.com/contact/"
+    ],
+    "notes": "Official address corrects inventory's 14804.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 697962111,
+    "venueName": "Bimbo's 365 Club",
+    "streetAddress": "1025 Columbus Avenue",
+    "city": "San Francisco",
+    "website": "https://bimbos365club.com/",
+    "status": "verified",
+    "sources": [
+      "https://bimbos365club.com/tm-venue/bimbos-365-club/"
+    ],
+    "notes": "Official venue page.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1372815670,
+    "venueName": "the Blue Lagoon",
+    "streetAddress": "923 Pacific Avenue",
+    "city": "Santa Cruz",
+    "website": "https://www.thebluelagoon.com/",
+    "status": "partial",
+    "sources": [
+      "https://www.santacruz.org/listings/the-blue-lagoon/"
+    ],
+    "notes": "Official tourism page confirms address and links owner site; owner site could not be opened.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1016385760,
+    "venueName": "Bottom of the Hill",
+    "streetAddress": "1233 17th Street",
+    "city": "San Francisco",
+    "website": "https://www.bottomofthehill.com/calendar.html",
+    "status": "verified",
+    "sources": [
+      "https://bottomofthehill.com/info.html",
+      "https://www.bottomofthehill.com/calendar.html"
+    ],
+    "notes": "Official club info confirms address; current calendar is preferred website because info page contains injected spam.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 735156024,
+    "venueName": "Bridge Artspace",
+    "streetAddress": "23 Maine Avenue",
+    "city": "Richmond",
+    "website": "https://www.bridgestorage.com/pages/map",
+    "status": "verified",
+    "sources": [
+      "https://www.bridgestorage.com/pages/map"
+    ],
+    "notes": "Official Bridge Storage, Arts and Events.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1550837691,
+    "venueName": "Cafe Du Nord",
+    "streetAddress": "2174 Market Street",
+    "city": "San Francisco",
+    "website": "https://cafedunord.com/",
+    "status": "verified",
+    "sources": [
+      "https://cafedunord.com/"
+    ],
+    "notes": "Official footer.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 680116887,
+    "venueName": "Chapel",
+    "streetAddress": "777 Valencia Street",
+    "city": "San Francisco",
+    "website": "https://thechapelsf.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://thechapelsf.com/contact/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1172166010,
+    "venueName": "City Winery",
+    "streetAddress": "1030 Main Street",
+    "city": "Napa",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt"
+    ],
+    "notes": "Raw-only historical City Winery address/city retained from complete venues.txt entry. Closed2015 per researched history; no opened owner archive or current venue website verified. No replacement Blue Note business assigned.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2137851775,
+    "venueName": "Crybaby",
+    "streetAddress": "1928 Telegraph Avenue",
+    "city": "Oakland",
+    "website": "https://crybaby.live/support/",
+    "status": "verified",
+    "sources": [
+      "https://crybaby.live/support/"
+    ],
+    "notes": "Official directions.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 850321337,
+    "venueName": "Cow Palace",
+    "streetAddress": "2600 Geneva Avenue",
+    "city": "Daly City",
+    "website": "https://www.cowpalace.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.cowpalace.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1189056044,
+    "venueName": "Depot",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": "https://asi.sfsu.edu/the-depot",
+    "status": "partial",
+    "sources": [
+      "https://asi.sfsu.edu/the-depot",
+      "https://lca.sfsu.edu/event/take-place-reading-series"
+    ],
+    "notes": "Opened operator page identifies Depot in lower level Cesar Chavez Student Center. University campus mailing address1600 Holloway not automatically substituted for specific venue entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 405307007,
+    "venueName": "DNA Lounge",
+    "streetAddress": "375 11th Street",
+    "city": "San Francisco",
+    "website": "https://www.dnalounge.com/",
+    "status": "partial",
+    "sources": [
+      "https://www.sf.gov/sites/default/files/2024-11/item_3d._lbr-2017-18-007_dna_lounge.pdf"
+    ],
+    "notes": "Official city legacy-business report indexed address; PDF open produced redirect content and owner site robots blocked. Live readable primary address incomplete.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 645156289,
+    "venueName": "El Rincon",
+    "streetAddress": "2700 16th Street",
+    "city": "San Francisco",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://www.sfbos.org/ftp/uploadedfiles/bdsupvrs/committees/materials/ps111510_091225.pdf"
+    ],
+    "notes": "Historical venue address confirmed by city's 2010 Entertainment Commission report; official venue website not verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1368465968,
+    "venueName": "Eli's Mile High Club",
+    "streetAddress": "3629 Martin Luther King Jr Way",
+    "city": "Oakland",
+    "website": "https://www.elismilehighclub.com/contact-us",
+    "status": "verified",
+    "sources": [
+      "https://www.elismilehighclub.com/contact-us"
+    ],
+    "notes": "Official contact.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1059439298,
+    "venueName": "Faction Brewing",
+    "streetAddress": "2501 Monarch Street",
+    "city": "Alameda",
+    "website": "https://www.factionbrewing.com/contact",
+    "status": "verified",
+    "sources": [
+      "https://www.factionbrewing.com/contact"
+    ],
+    "notes": "Official contact.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1136597428,
+    "venueName": "Fillmore",
+    "streetAddress": "1805 Geary Boulevard",
+    "city": "San Francisco",
+    "website": "https://www.thefillmore.com/visit",
+    "status": "verified",
+    "sources": [
+      "https://www.thefillmore.com/visit"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 631118593,
+    "venueName": "Fox Theater",
+    "streetAddress": "1807 Telegraph Avenue",
+    "city": "Oakland",
+    "website": "https://thefoxoakland.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://thefoxoakland.com/contact/"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1885092734,
+    "venueName": "Gilman",
+    "streetAddress": "924 Gilman Street",
+    "city": "Berkeley",
+    "website": "https://924gilman.org/",
+    "status": "verified",
+    "sources": [
+      "https://arts.ca.gov/grantee/alternative-music-foundation/"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 794236492,
+    "venueName": "Great America",
+    "streetAddress": "4701 Great America Parkway",
+    "city": "Santa Clara",
+    "website": "https://www.sixflags.com/cagreatamerica/directions",
+    "status": "verified",
+    "sources": [
+      "https://www.sixflags.com/cagreatamerica/directions"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1115904685,
+    "venueName": "Graton Resort",
+    "streetAddress": "288 Golf Course Drive West",
+    "city": "Rohnert Park",
+    "website": "https://www.gratonresortcasino.com/",
+    "status": "partial",
+    "sources": [
+      "https://www.gratonresortcasino.com/"
+    ],
+    "notes": "Official indexed owner page confirms full address; repeated source opens failed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 78032630,
+    "venueName": "Henfling's Firehouse Tavern",
+    "streetAddress": "9450 Highway 9",
+    "city": "Ben Lomond",
+    "website": "https://www.henflingsslv.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.henflingsslv.com/"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1488360326,
+    "venueName": "Honey Hive",
+    "streetAddress": "4117 Judah Street",
+    "city": "San Francisco",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://sfbos.org/sites/default/files/FileCenter/Documents/53100-Supervisor%20Tang%20July%20Newsletter.pdf"
+    ],
+    "notes": "Historical Honey Hive Gallery indexed city's July2015 newsletter confirms address; direct PDF fetch failed. Official social page not readable, no current website verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 929862156,
+    "venueName": "House of Rock",
+    "streetAddress": "3410–3440 Industrial Drive",
+    "city": "Santa Rosa",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://santa-rosa.legistar.com/View.ashx?GUID=5DAE5F0F-33E6-40AF-8802-FE4D31051561&ID=14023115&M=F"
+    ],
+    "notes": "City planning document identifies former House of Rock property; historical venue website not verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1689618485,
+    "venueName": "Ivy Room",
+    "streetAddress": "860 San Pablo Avenue",
+    "city": "Albany",
+    "website": "https://www.ivyroom.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.ivyroom.com/"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 679424983,
+    "venueName": "Jerry Garcia Amphitheater",
+    "streetAddress": "40 John F Shelley Drive",
+    "city": "San Francisco",
+    "website": "https://www.sfrecpark.org/Facilities/Facility/Details/Jerry-Garcia-Amphitheater-421",
+    "status": "verified",
+    "sources": [
+      "https://www.sfrecpark.org/Facilities/Facility/Details/Jerry-Garcia-Amphitheater-421"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1190204401,
+    "venueName": "Jury Room",
+    "streetAddress": "712 Ocean Street",
+    "city": "Santa Cruz",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt",
+      "data/events.txt"
+    ],
+    "notes": "Raw-only complete venues.txt address/city; linked Jury Room events consistently Santa Cruz. Owner Facebook page blocked; website null pending independent confirmation.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1378636720,
+    "venueName": "Kuumbwa Jazz Center",
+    "streetAddress": "320-2 Cedar Street",
+    "city": "Santa Cruz",
+    "website": "https://www.kuumbwajazz.org/contact/",
+    "status": "verified",
+    "sources": [
+      "https://www.kuumbwajazz.org/contact/"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2031130888,
+    "venueName": "Legionnaire Salon",
+    "streetAddress": "2272 Telegraph Avenue",
+    "city": "Oakland",
+    "website": "https://legionnairesaloon.com/come-see-us",
+    "status": "verified",
+    "sources": [
+      "https://legionnairesaloon.com/come-see-us"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 401462974,
+    "venueName": "Longboard Margarita Bar",
+    "streetAddress": "180 Eureka Square",
+    "city": "Pacifica",
+    "website": "https://www.longboardbar.com/contact",
+    "status": "verified",
+    "sources": [
+      "https://www.longboardbar.com/contact"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 234494996,
+    "venueName": "Luther Burbank Center for the Arts",
+    "streetAddress": "50 Mark West Springs Road",
+    "city": "Santa Rosa",
+    "website": "https://lutherburbankcenter.org/about/general-information/faqs/",
+    "status": "verified",
+    "sources": [
+      "https://lutherburbankcenter.org/about/general-information/faqs/"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1120524281,
+    "venueName": "Masonic Center",
+    "streetAddress": "1111 California Street",
+    "city": "San Francisco",
+    "website": "https://www.livenation.com/venue/KovZpZAJ6nlA/the-masonic-events",
+    "status": "verified",
+    "sources": [
+      "https://www.livenation.com/venue/KovZpZAJ6nlA/the-masonic-events"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1630275026,
+    "venueName": "Meritage Resort",
+    "streetAddress": "875 Bordeaux Way",
+    "city": "Napa",
+    "website": "https://www.meritageresort.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://www.meritageresort.com/contact/"
+    ],
+    "notes": "Current official address differs from inventory's historic 850 Bordeaux Way; resort campus identity preserved.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2078810884,
+    "venueName": "Milk Bar",
+    "streetAddress": "1840 Haight Street",
+    "city": "San Francisco",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt"
+    ],
+    "notes": "Raw-only historical Milk Bar address/city from complete venues.txt entry. Former milksf.com inaccessible; now-indexed dairy business unrelated. No current replacement occupant assigned.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1439874346,
+    "venueName": "Monarch",
+    "streetAddress": "101 6th Street",
+    "city": "San Francisco",
+    "website": "https://www.monarchsf.com/contact-us",
+    "status": "verified",
+    "sources": [
+      "https://www.monarchsf.com/contact-us"
+    ],
+    "notes": "Official contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1386365370,
+    "venueName": "Music City",
+    "streetAddress": "1355 Bush Street",
+    "city": "San Francisco",
+    "website": "https://musiccitysf.com/about-us/contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://musiccitysf.com/about-us/contact-us/"
+    ],
+    "notes": "Contact page's Find Us address; hotel component also uses 1353 Bush.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 442432003,
+    "venueName": "New Parish",
+    "streetAddress": "1743 San Pablo Avenue",
+    "city": "Oakland",
+    "website": "https://thenewparish.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://thenewparish.com/contact/"
+    ],
+    "notes": "Same corner as inventory's 579 18th Street; official entrance address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1657529229,
+    "venueName": "Oakland Secret Gallery",
+    "streetAddress": "577 5th Street",
+    "city": "Oakland",
+    "website": "https://www.oaklandsecret.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.oaklandsecret.com/"
+    ],
+    "notes": "Official .org mirror says indefinite hiatus.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1090707904,
+    "venueName": "Oxbow RiverStage",
+    "streetAddress": "1268 McKinstry Street",
+    "city": "Napa",
+    "website": "https://www.oxbowriverstage.com/faq/",
+    "status": "verified",
+    "sources": [
+      "https://www.oxbowriverstage.com/faq/"
+    ],
+    "notes": "Performance site per official FAQ; 1100 West Street is box office per same source. Official HTML directly fetched successfully by coordinating researcher and read in cached source evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 485759302,
+    "venueName": "Parkside",
+    "streetAddress": "1600 17th Street",
+    "city": "San Francisco",
+    "website": "https://www.theeparkside.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.theeparkside.com/"
+    ],
+    "notes": "Official contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1810219236,
+    "venueName": "Phoenix Hotel",
+    "streetAddress": "601 Eddy Street",
+    "city": "San Francisco",
+    "website": "https://www.phoenixhotelsf.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.phoenixhotelsf.com/"
+    ],
+    "notes": "Official contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1918643887,
+    "venueName": "Point San Pablo Harbor",
+    "streetAddress": "1900 Stenmark Drive",
+    "city": "Richmond",
+    "website": "https://www.pspharbor.com/directions",
+    "status": "verified",
+    "sources": [
+      "https://www.pspharbor.com/directions"
+    ],
+    "notes": "Official contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 755151683,
+    "venueName": "Public Works",
+    "streetAddress": "161 Erie Street",
+    "city": "San Francisco",
+    "website": "https://publicsf.com/connect/",
+    "status": "verified",
+    "sources": [
+      "https://publicsf.com/connect/"
+    ],
+    "notes": "Official contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 625980050,
+    "venueName": "Radium Runway",
+    "streetAddress": "2151-B Ferry Point",
+    "city": "Alameda",
+    "website": "https://www.radiumarts.org/radium-runway",
+    "status": "verified",
+    "sources": [
+      "https://www.radiumarts.org/radium-runway"
+    ],
+    "notes": "Officially nearest access address to outdoor arts hub.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2133080253,
+    "venueName": "Regency Ballroom",
+    "streetAddress": "1300 Van Ness Avenue",
+    "city": "San Francisco",
+    "website": "https://www.theregencyballroom.com/faq/",
+    "status": "verified",
+    "sources": [
+      "https://www.theregencyballroom.com/faq/"
+    ],
+    "notes": "Official contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2141325231,
+    "venueName": "Rio Theater",
+    "streetAddress": "1205 Soquel Avenue",
+    "city": "Santa Cruz",
+    "website": "https://www.riotheatre.com/contact",
+    "status": "verified",
+    "sources": [
+      "https://www.riotheatre.com/contact"
+    ],
+    "notes": "Official contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1135677119,
+    "venueName": "Rock Shop",
+    "streetAddress": "30 North 3rd Street",
+    "city": "San Jose",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://www.sjsu.edu/urbanplanning/docs/honors-reports/890_McAlister_Michael.pdf"
+    ],
+    "notes": "Historical Rock Shop address indexed in SJSU research report. PDF exceeded10 MB extraction limit; current venue website not verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1428948079,
+    "venueName": "San Mateo County Fair",
+    "streetAddress": "1346 Saratoga Drive",
+    "city": "San Mateo",
+    "website": "https://sanmateocountyfair.com/contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://sanmateocountyfair.com/contact-us/"
+    ],
+    "notes": "Fair visitor entrance; 2495 South Delaware Street is mailing address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1381824618,
+    "venueName": "the Shark Tank",
+    "streetAddress": "525 West Santa Clara Street",
+    "city": "San Jose",
+    "website": "https://www.sapcenter.com/contact-us",
+    "status": "verified",
+    "sources": [
+      "https://www.sapcenter.com/contact-us"
+    ],
+    "notes": "Shark Tank is SAP Center nickname.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 549325977,
+    "venueName": "Social Hall",
+    "streetAddress": "1270 Sutter Street",
+    "city": "San Francisco",
+    "website": "https://www.theregencyballroom.com/",
+    "status": "partial",
+    "sources": [
+      "https://www.theregencyballroom.com/",
+      "https://aeg-ms1-prod.trafficmanager.net/venues/venue-detail/index.php?venue=regency-social-hall"
+    ],
+    "notes": "Opened official Regency site identifies Social Hall SF as distinct on-site room. AEG indexed venue page confirms1270 Sutter; direct AEG page failed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 423857938,
+    "venueName": "the Starry Plough",
+    "streetAddress": "3101 Shattuck Avenue",
+    "city": "Berkeley",
+    "website": "https://thestarryplough.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://thestarryplough.com/contact/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1276498217,
+    "venueName": "Stern Grove",
+    "streetAddress": "19th Avenue and Sloat Boulevard",
+    "city": "San Francisco",
+    "website": "https://www.sterngrove.org/getting-here",
+    "status": "verified",
+    "sources": [
+      "https://www.sterngrove.org/getting-here"
+    ],
+    "notes": "Festival entrance/intersection.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1180284286,
+    "venueName": "Subrosa Community Space",
+    "streetAddress": "703 Pacific Avenue",
+    "city": "Santa Cruz",
+    "website": "https://www.subrosaproject.org/",
+    "status": "partial",
+    "sources": [
+      "https://www.subrosaproject.org/p/contact.html"
+    ],
+    "notes": "Official indexed contact page confirms address; direct open redirected to Google blocking page.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1896275571,
+    "venueName": "Tamarack",
+    "streetAddress": "1501 Harrison Street",
+    "city": "Oakland",
+    "website": "https://www.toasttab.com/local/tamarack-1501-harrison-st/r-8b5eb2a9-de69-4bc9-9304-8e91cb9507f8",
+    "status": "verified",
+    "sources": [
+      "https://www.toasttab.com/local/tamarack-1501-harrison-st/r-8b5eb2a9-de69-4bc9-9304-8e91cb9507f8"
+    ],
+    "notes": "Merchant-operated ordering page confirms address; dedicated official site unavailable.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 92252189,
+    "venueName": "Toot's Tavern",
+    "streetAddress": "627 2nd Avenue",
+    "city": "Crockett",
+    "website": "https://www.tootstavern.com/locations",
+    "status": "verified",
+    "sources": [
+      "https://www.tootstavern.com/locations"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 793025194,
+    "venueName": "Warriors Stadium",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Generic Warriors Stadium ID retains300 16th Street. Chase Center uses1 Warriors Way, but no event linkage proves this record refers to that arena; do not rewrite historical/generic identity.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 631577836,
+    "venueName": "Winters Tavern Motherlode",
+    "streetAddress": "275 South Washington Street",
+    "city": "Sonora",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt"
+    ],
+    "notes": "Raw-only historical Motherlode venue address/city explicitly in venues.txt. Not Winters Tavern Pacifica. Owner historical web presence unverified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 864185171,
+    "venueName": "Urbani Cellar",
+    "streetAddress": "140 Encinal Street",
+    "city": "Santa Cruz",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://www.simpletix.com/e/stoner-with-yawning-man-tickets-100848"
+    ],
+    "notes": "Owner-published historical 2022 ticket page confirms Urbani Bocci's Cellar address. Current official venue website not verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1850130272,
+    "venueName": "Vets Hall",
+    "streetAddress": "846 Front Street",
+    "city": "Santa Cruz",
+    "website": "https://www.veteranshall.org/contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://www.veteranshall.org/contact-us/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 872047208,
+    "venueName": "Vitus",
+    "streetAddress": "201 Broadway",
+    "city": "Oakland",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt"
+    ],
+    "notes": "Raw-only historical Vitus address/city explicitly in venues.txt (at2nd Street). Former vitusoakland.com unavailable; no current occupant substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 174354249,
+    "venueName": "Yoshi's",
+    "streetAddress": "510 Embarcadero West",
+    "city": "Oakland",
+    "website": "https://yoshis.com/venue",
+    "status": "verified",
+    "sources": [
+      "https://yoshis.com/venue"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 888749966,
+    "venueName": "924 Gilman Street",
+    "streetAddress": "924 Gilman Street",
+    "city": "Berkeley",
+    "website": "https://924gilman.org/",
+    "status": "verified",
+    "sources": [
+      "https://arts.ca.gov/grantee/alternative-music-foundation/"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 540891176,
+    "venueName": "Bait And Tackle Art Gallery",
+    "streetAddress": "2221 San Pablo Avenue",
+    "city": null,
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt"
+    ],
+    "notes": "Raw-only street retained from venues.txt arts-gallery entry, which supplies no complete city. Independent owner identity and city unresolved; unrelated marina fishing shop not substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 500917824,
+    "venueName": "Bolinas Mesa Park",
+    "streetAddress": "100 Mesa Road",
+    "city": "Bolinas",
+    "website": "https://bolinasparks.org/welcome",
+    "status": "verified",
+    "sources": [
+      "https://bolinasparks.org/welcome"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1080825327,
+    "venueName": "Catalyst Atrium",
+    "streetAddress": "1011 Pacific Avenue",
+    "city": "Santa Cruz",
+    "website": "https://catalystclub.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://catalystclub.com/contact/"
+    ],
+    "notes": "Atrium explicitly named by official contact.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 779096257,
+    "venueName": "El Infierno",
+    "streetAddress": "120 5th Street",
+    "city": "Santa Rosa",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://www.santarosasalsa.com/"
+    ],
+    "notes": "Organizer's first-party event page confirms El Infierno Cantina address; dedicated venue website not verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 486753773,
+    "venueName": "Gerstle Park",
+    "streetAddress": "239 San Rafael Avenue",
+    "city": "San Rafael",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/04/CPRMP-Appendices.pdf"
+    ],
+    "notes": "Official city parks master-plan indexed address; 14 MB PDF exceeded browser extraction limit. Neighborhood association indexed park on San Rafael Avenue between Lodge Lane and Clark; its page now404. No current dedicated official park page verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 474218142,
+    "venueName": "the Greek Theater",
+    "streetAddress": "2001 Gayley Road",
+    "city": "Berkeley",
+    "website": "https://thegreekberkeley.com/",
+    "status": "verified",
+    "sources": [
+      "https://thegreekberkeley.com/"
+    ],
+    "notes": "Official operator website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1868963076,
+    "venueName": "Hibernia Bank",
+    "streetAddress": "1 Jones Street",
+    "city": "San Francisco",
+    "website": "https://thehiberniasf.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://thehiberniasf.com/contact/"
+    ],
+    "notes": "Official venue contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 361387977,
+    "venueName": "Jade Cathey Resturant",
+    "streetAddress": "1339 North 1st Street",
+    "city": "San Jose",
+    "website": "https://www.jadecathaysanjose.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.jadecathaysanjose.com/"
+    ],
+    "notes": "Source typo Jade Cathey Resturant resolves to Jade Cathay.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2041667798,
+    "venueName": "Main",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Bare street/name token in parsed inventory; no unambiguous full venue identity or linked address-bearing primary source located. First substring event occurrence does not establish identity.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2011645013,
+    "venueName": "Mayes Oyster House",
+    "streetAddress": "1233 Polk Street",
+    "city": "San Francisco",
+    "website": "https://www.mayessf.com/about",
+    "status": "verified",
+    "sources": [
+      "https://www.mayessf.com/about"
+    ],
+    "notes": "Inventory's 106 Fern Street is unrelated; raw event explicitly 1233 Polk.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1498339130,
+    "venueName": "Mosswood Park",
+    "streetAddress": "3612 Webster Street",
+    "city": "Oakland",
+    "website": "https://www.oaklandca.gov/Community/Parks-Facilities/Parks",
+    "status": "verified",
+    "sources": [
+      "https://www.oaklandca.gov/Community/Parks-Facilities/Parks"
+    ],
+    "notes": "Official park directory.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1871216664,
+    "venueName": "Open Gallery",
+    "streetAddress": "38 South Second Street",
+    "city": "San Jose",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt"
+    ],
+    "notes": "Raw-only address/city: actual linked Open Gallery shows (Jul21 A November Morning, Aug18Holder, Sep5FieldOfFlames, Sep13DivisionOfMind) publish same address/city. No independent owner website verified; former Works/San Jose site not substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1167888962,
+    "venueName": "Park Place",
+    "streetAddress": "Park Place and Washington Avenue",
+    "city": "Richmond",
+    "website": "https://pointrichmondmusic.org/",
+    "status": "verified",
+    "sources": [
+      "https://pointrichmondmusic.org/"
+    ],
+    "notes": "Official outdoor concert intersection.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1985171621,
+    "venueName": "Pomona",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Bare street/name token in parsed inventory; no unambiguous full venue identity or linked address-bearing primary source located. First substring event occurrence does not establish identity.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 581867015,
+    "venueName": "Rain Dog Studios",
+    "streetAddress": "1010 Petaluma Boulevard North",
+    "city": "Petaluma",
+    "website": "https://www.raindogrecords.net/",
+    "status": "partial",
+    "sources": [
+      "https://www.raindogrecords.net/location/"
+    ],
+    "notes": "Owner confirms Rain Dog Records at retained address; raw events use Records, while this ID says Studios. Alias not independently proven.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 948038773,
+    "venueName": "San Pablo Avenue",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Bare street/name token in parsed inventory; no unambiguous full venue identity or linked address-bearing primary source located. First substring event occurrence does not establish identity.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 881223519,
+    "venueName": "Tamer Room",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Bare street/name token in parsed inventory; no unambiguous full venue identity or linked address-bearing primary source located. First substring event occurrence does not establish identity.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1804000273,
+    "venueName": "the Hub",
+    "streetAddress": "2650 Broadway",
+    "city": "Redwood City",
+    "website": "https://www.thehubrwc.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.thehubrwc.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1374894183,
+    "venueName": "Toots Tavern",
+    "streetAddress": "627 2nd Avenue",
+    "city": "Crockett",
+    "website": "https://www.tootstavern.com/locations",
+    "status": "verified",
+    "sources": [
+      "https://www.tootstavern.com/locations"
+    ],
+    "notes": "Alias preserved as separate ID.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1252164155,
+    "venueName": "Van Ness",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Bare street/name token in parsed inventory; no unambiguous full venue identity or linked address-bearing primary source located. First substring event occurrence does not establish identity.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1230421436,
+    "venueName": "2 Theater Square",
+    "streetAddress": "2 Theater Square #134",
+    "city": "Orinda",
+    "website": "https://web9161.wixsite.com/the-fourth-bore/contact",
+    "status": "verified",
+    "sources": [
+      "https://web9161.wixsite.com/the-fourth-bore/contact"
+    ],
+    "notes": "Malformed address-only alias resolves from matching suite to Fourth Bore.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1243828408,
+    "venueName": "Balboa Cafe",
+    "streetAddress": "3199 Fillmore Street",
+    "city": "San Francisco",
+    "website": "https://www.balboacafesf.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.balboacafesf.com/"
+    ],
+    "notes": "Official venue contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1614652189,
+    "venueName": "Brava Theatre",
+    "streetAddress": "2781 24th Street",
+    "city": "San Francisco",
+    "website": "https://www.brava.org/contact",
+    "status": "verified",
+    "sources": [
+      "https://www.brava.org/contact"
+    ],
+    "notes": "Official venue contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2116358741,
+    "venueName": "California Theater",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [
+      "https://www.caltheatre.com/"
+    ],
+    "notes": "Raw events use California Theater for BOTH Santa Rosa (528 7th Street) and San Jose (345 South First Street). Shared ID's branch cannot be proved; do not choose either city.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 810435029,
+    "venueName": "Creekside",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [
+      "https://www.sanjosecreekside.com/events"
+    ],
+    "notes": "Raw exact occurrence is band Creekside playing Arlene Francis Center, not venue. Inventory San Jose address might belong to unrelated Creekside district; do not assign district website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 393699117,
+    "venueName": "Degrees Plato Taproom",
+    "streetAddress": "4251 MacArthur Boulevard",
+    "city": "Oakland",
+    "website": "https://www.degreesplato.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.degreesplato.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 210190477,
+    "venueName": "Hopmok Tavern",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [
+      "https://www.hopmonk.com/"
+    ],
+    "notes": "Likely misspelling of HopMonk, whose owner operates multiple locations. No unambiguous event/city linkage; no branch chosen.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1697256819,
+    "venueName": "La Pena Center",
+    "streetAddress": "3105 Shattuck Avenue",
+    "city": "Berkeley",
+    "website": "https://lapena.org/contact/",
+    "status": "verified",
+    "sources": [
+      "https://lapena.org/contact/"
+    ],
+    "notes": "Official venue contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1625417326,
+    "venueName": "Mercury Cafe",
+    "streetAddress": "201 Octavia Boulevard",
+    "city": "San Francisco",
+    "website": "https://www.mercurycafe.net/about",
+    "status": "verified",
+    "sources": [
+      "https://www.mercurycafe.net/about"
+    ],
+    "notes": "Official venue contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 139826169,
+    "venueName": "North Berkeley Bart Station Parking Lot",
+    "streetAddress": "1750 Sacramento Street",
+    "city": "Berkeley",
+    "website": "https://www.bart.gov/stations/nbrk",
+    "status": "verified",
+    "sources": [
+      "https://www.bart.gov/stations/nbrk"
+    ],
+    "notes": "Station/parking campus address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 622407558,
+    "venueName": "Redwood Cafe",
+    "streetAddress": "8240 Old Redwood Highway",
+    "city": "Cotati",
+    "website": "https://redwoodcafecotati.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://redwoodcafecotati.com/contact/"
+    ],
+    "notes": "Official venue contact/location information. Official HTML directly fetched successfully by coordinating researcher and read in cached source evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 107186942,
+    "venueName": "Shoreline Amphitheaer",
+    "streetAddress": "One Amphitheatre Parkway",
+    "city": "Mountain View",
+    "website": "https://www.shorelineamphitheatre.com/visit",
+    "status": "verified",
+    "sources": [
+      "https://www.shorelineamphitheatre.com/visit"
+    ],
+    "notes": "Typographical alias; address reused from teammate's official live verification.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 85503897,
+    "venueName": "TDX Frat House",
+    "streetAddress": "2647 Durant Avenue",
+    "city": "Berkeley",
+    "website": "https://www.mytdx.org/deltadeuteron/index.php",
+    "status": "verified",
+    "sources": [
+      "https://lead.berkeley.edu/cal-greeks/find-a-chapter/",
+      "https://www.mytdx.org/deltadeuteron/index.php"
+    ],
+    "notes": "University chapter directory confirms Theta Delta Chi house address; opened official Delta Deuteron chapter website. Private fraternity facility.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 399495229,
+    "venueName": "a house",
+    "streetAddress": null,
+    "city": "Sebastopol",
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "May3 raw private house show says 'message bands for location'. No published public venue address or website; city spelling normalized.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1805757855,
+    "venueName": "the Civic Audtorium",
+    "streetAddress": "99 Grove Street",
+    "city": "San Francisco",
+    "website": "https://billgrahamcivic.com/venue-info/",
+    "status": "verified",
+    "sources": [
+      "https://billgrahamcivic.com/venue-info/"
+    ],
+    "notes": "Source Civic Auditorium typo.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1982409086,
+    "venueName": "the Hub RWC",
+    "streetAddress": "2650 Broadway",
+    "city": "Redwood City",
+    "website": "https://www.thehubrwc.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.thehubrwc.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 747776193,
+    "venueName": "Knot Club",
+    "streetAddress": "1900 Stenmark Drive",
+    "city": "Richmond",
+    "website": "https://www.pspharbor.com/the-knot-yacht-club",
+    "status": "verified",
+    "sources": [
+      "https://www.pspharbor.com/the-knot-yacht-club",
+      "https://www.pspharbor.com/directions"
+    ],
+    "notes": "Official harbor identifies The Knot Yacht Club as on-site space and directions confirms harbor entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1783397328,
+    "venueName": "the Rickshw Stop",
+    "streetAddress": "155 Fell Street",
+    "city": "San Francisco",
+    "website": "https://rickshawstop.com/",
+    "status": "verified",
+    "sources": [
+      "https://rickshawstop.com/contact/"
+    ],
+    "notes": "Misspelled Rickshaw Stop alias; official contact address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 392702093,
+    "venueName": "4-Star Theater",
+    "streetAddress": "2200 Clement Street",
+    "city": "San Francisco",
+    "website": "https://www.4-star-movies.com/contact",
+    "status": "verified",
+    "sources": [
+      "https://www.4-star-movies.com/contact"
+    ],
+    "notes": "Official venue contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1255375338,
+    "venueName": "Continetal Club",
+    "streetAddress": "1658 12th Street",
+    "city": "Oakland",
+    "website": "https://oaklandcontinentalclub.com/",
+    "status": "verified",
+    "sources": [
+      "https://oaklandcontinentalclub.com/"
+    ],
+    "notes": "Source spelling error retained.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1389315022,
+    "venueName": "KQED Commons",
+    "streetAddress": "2601 Mariposa Street",
+    "city": "San Francisco",
+    "website": "https://www.kqed.org/about/visit",
+    "status": "verified",
+    "sources": [
+      "https://www.kqed.org/about/visit"
+    ],
+    "notes": "Official venue contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1763173665,
+    "venueName": "Lucca Beer Garden",
+    "streetAddress": "439 First Street",
+    "city": "Benicia",
+    "website": "https://www.luccabar.com/custom/page/home",
+    "status": "verified",
+    "sources": [
+      "https://www.luccabar.com/custom/page/home"
+    ],
+    "notes": "Official venue contact/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 556379562,
+    "venueName": "Pure Metal Gym",
+    "streetAddress": "315 Martha Street",
+    "city": null,
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt"
+    ],
+    "notes": "Raw-only street retained from venues.txt. This ID has no actual linked events and entry does not give complete city; independently verified city and owner website remain null.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1396518846,
+    "venueName": "SF Jazz Center",
+    "streetAddress": "201 Franklin Street",
+    "city": "San Francisco",
+    "website": "https://www.sfjazz.org/visit/first-timer-guide/",
+    "status": "verified",
+    "sources": [
+      "https://www.sfjazz.org/visit/first-timer-guide/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 31156335,
+    "venueName": "Temescal Arts Center",
+    "streetAddress": "511 48th Street",
+    "city": "Oakland",
+    "website": "https://www.temescalartcenter.org/",
+    "status": "verified",
+    "sources": [
+      "https://www.temescalartcenter.org/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1957795861,
+    "venueName": "the Big Easy",
+    "streetAddress": "128 American Alley",
+    "city": "Petaluma",
+    "website": "https://bigeasypetaluma.com/",
+    "status": "verified",
+    "sources": [
+      "https://bigeasypetaluma.com/contact/"
+    ],
+    "notes": "Opened owner contact page confirms address; site home includes stale template events, so address sourced from contact page.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1697837308,
+    "venueName": "the Nikko",
+    "streetAddress": "222 Mason Street",
+    "city": "San Francisco",
+    "website": "https://www.feinsteinssf.com/about/",
+    "status": "verified",
+    "sources": [
+      "https://www.feinsteinssf.com/about/"
+    ],
+    "notes": "Raw events say Feinstein's at the Nikko.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 487816665,
+    "venueName": "1491 Hope Street",
+    "streetAddress": "1491 Hope Street",
+    "city": "Alviso",
+    "website": "https://southbayyachtclub.org/contact-us",
+    "status": "verified",
+    "sources": [
+      "https://southbayyachtclub.org/contact-us"
+    ],
+    "notes": "Address-only record resolves to South Bay Yacht Club.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 45837167,
+    "venueName": "Canyon Club Brewery",
+    "streetAddress": "204 Sycamore Valley Road West",
+    "city": "Danville",
+    "website": "https://canyonclub.works/location/danville/",
+    "status": "verified",
+    "sources": [
+      "https://canyonclub.works/location/danville/"
+    ],
+    "notes": "Official number 204 differs from inventory 206.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 907513889,
+    "venueName": "Danny Murray's",
+    "streetAddress": "1680 Washington Avenue",
+    "city": "San Leandro",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt",
+      "data/events.txt"
+    ],
+    "notes": "Raw-only address/city assembled from venues.txt complete Danny Murray's Pub street (Wasington typo normalized) and published Danny Murry's San Leandro listings. Clear Murray/Murry spelling variants, but owner website/address not independently opened.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1547203889,
+    "venueName": "Down Home Music",
+    "streetAddress": "10341 San Pablo Avenue",
+    "city": "El Cerrito",
+    "website": "https://www.downhomemusic.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.downhomemusic.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 971270129,
+    "venueName": "Lesher Center",
+    "streetAddress": "1601 Civic Drive",
+    "city": "Walnut Creek",
+    "website": "https://www.lesherartscenter.org/plan-your-visit",
+    "status": "verified",
+    "sources": [
+      "https://www.lesherartscenter.org/plan-your-visit"
+    ],
+    "notes": "Raw events and official page agree; inventory's Tice Valley address rejected. Official HTML directly fetched successfully by coordinating researcher and read in cached source evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 568422652,
+    "venueName": "Marin Civic Exhibit Hall",
+    "streetAddress": "10 Avenue of the Flags",
+    "city": "San Rafael",
+    "website": "https://www.marincenter.marincounty.gov/facilities-rental/exhibit-hall",
+    "status": "verified",
+    "sources": [
+      "https://www.marincenter.marincounty.gov/facilities-rental/exhibit-hall"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1980623387,
+    "venueName": "Shoreline Amphteater",
+    "streetAddress": "One Amphitheatre Parkway",
+    "city": "Mountain View",
+    "website": "https://www.shorelineamphitheatre.com/visit",
+    "status": "verified",
+    "sources": [
+      "https://www.shorelineamphitheatre.com/visit"
+    ],
+    "notes": "Raw event explicitly Mountain View; typo alias.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 86221432,
+    "venueName": "Woodhouse Brewing",
+    "streetAddress": "119 Madrone Street",
+    "city": "Santa Cruz",
+    "website": "https://www.woodhousebrews.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.santacruz.org/listings/woodhouse/",
+      "https://www.woodhousebrews.com/"
+    ],
+    "notes": "Official tourism address links to opened owner website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 186436097,
+    "venueName": "the Black Cat S.F.",
+    "streetAddress": "400 Eddy Street",
+    "city": "San Francisco",
+    "website": "https://blackcatsf.com/",
+    "status": "verified",
+    "sources": [
+      "https://blackcatsf.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1616367641,
+    "venueName": "the Cow Palace Warehouse",
+    "streetAddress": "2600 Geneva Avenue",
+    "city": "Daly City",
+    "website": "https://www.cowpalace.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.cowpalace.com/"
+    ],
+    "notes": "Cow Palace complex address; warehouse is subspace and no separate street number verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 905826547,
+    "venueName": "the the Castro Theater",
+    "streetAddress": "429 Castro Street",
+    "city": "San Francisco",
+    "website": "https://thecastro.com/contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://thecastro.com/contact-us/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 678550912,
+    "venueName": "28 South 7th Street",
+    "streetAddress": "28 South 7th Street",
+    "city": "San Jose",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt"
+    ],
+    "notes": "Raw-only address/city in exact linked Apr24 Natasha Sandworm/Wither/Thelves listing. Address-only venue name; no named owner or official website verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 945952968,
+    "venueName": "Beauty Shop above Tay Ho",
+    "streetAddress": "344 12th Street",
+    "city": "Oakland",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt"
+    ],
+    "notes": "Raw-only address/city in exact linked May16SoftieCute/JadeSilverLoveChains/00Raiser listing. Performance is upstairs Beauty Shop above Tay Ho; restaurant website is not venue owner evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 413292306,
+    "venueName": "Bric-A-Brac",
+    "streetAddress": "178 Leland Avenue",
+    "city": "San Francisco",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://evaaine.com/news"
+    ],
+    "notes": "Performer Eva Aine's indexed June3 event gives Bric a Brac address, agreeing raw listings; current opened news page has rolled forward and no venue owner site found.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1431582132,
+    "venueName": "Danny Murry's",
+    "streetAddress": "1680 Washington Avenue",
+    "city": "San Leandro",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/venues.txt",
+      "data/events.txt"
+    ],
+    "notes": "Raw-only address/city assembled from venues.txt complete Danny Murray's Pub street (Wasington typo normalized) and published Danny Murry's San Leandro listings. Clear Murray/Murry spelling variants, but owner website/address not independently opened.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 181456851,
+    "venueName": "Forest Meadows",
+    "streetAddress": "890 Belle Avenue",
+    "city": "San Rafael",
+    "website": "https://www.marinshakespeare.org/",
+    "status": "verified",
+    "sources": [
+      "https://www.marinshakespeare.org/behind-the-scenes-2010/antony-and-cleopatra-2010-production/"
+    ],
+    "notes": "Operator identifies Forest Meadows Amphitheatre at Dominican University; raw 'Bell' spelling corrected.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 896198252,
+    "venueName": "Godspeed Tattoo",
+    "streetAddress": "620 South Norfolk Street",
+    "city": "San Mateo",
+    "website": "https://godspeedtattoo.com/",
+    "status": "verified",
+    "sources": [
+      "https://godspeedtattoo.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1769347402,
+    "venueName": "Jax Vineyards",
+    "streetAddress": "326 Brannan Street",
+    "city": "San Francisco",
+    "website": "https://jaxvineyards.com/san-francisco-tasting-room/",
+    "status": "verified",
+    "sources": [
+      "https://jaxvineyards.com/san-francisco-tasting-room/"
+    ],
+    "notes": "SF tasting room, not Napa vineyard.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 972191157,
+    "venueName": "La Onda",
+    "streetAddress": "575 3rd Street",
+    "city": "Napa",
+    "website": "https://laonda.frontgatetickets.com/event/lrph8h1j3a8fu78q/passcode/",
+    "status": "verified",
+    "sources": [
+      "https://laonda.frontgatetickets.com/event/lrph8h1j3a8fu78q/passcode/"
+    ],
+    "notes": "Official festival ticketing page identifies event at Napa Valley Expo.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 949582250,
+    "venueName": "Moe' Alley",
+    "streetAddress": "1535 Commercial Way",
+    "city": "Santa Cruz",
+    "website": "https://moesalley.com/venue-info/",
+    "status": "verified",
+    "sources": [
+      "https://moesalley.com/venue-info/"
+    ],
+    "notes": "Typographical alias; official venue page.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1215370269,
+    "venueName": "Old Greenwood Golf Course",
+    "streetAddress": "1010 South Wolfe Road",
+    "city": "Sunnyvale",
+    "website": "https://oldgreenwoodbbq.com/",
+    "status": "verified",
+    "sources": [
+      "https://oldgreenwoodbbq.com/"
+    ],
+    "notes": "Source mislabels restaurant at Sunken Gardens Golf Course; not Truckee's Old Greenwood course. Source street number 101 omits final zero.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2038900398,
+    "venueName": "Pomona St.",
+    "streetAddress": null,
+    "city": "Crockett",
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Pomona St. is part of raw Sugartown Fest location 'Rolph Street at Pomona St.', not permanent named venue. Current official festival footprint not independently opened.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 32234871,
+    "venueName": "Question Mark Bar",
+    "streetAddress": "312 Harriet Street",
+    "city": "San Francisco",
+    "website": "https://questionmarkbarsf.com/contact-2/",
+    "status": "verified",
+    "sources": [
+      "https://questionmarkbarsf.com/contact-2/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 122639215,
+    "venueName": "Santa Cruz Civic Cener",
+    "streetAddress": "307 Church Street",
+    "city": "Santa Cruz",
+    "website": "https://www.santacruzca.gov/Government/City-Departments/Parks-Recreation/Civic-Auditorium",
+    "status": "partial",
+    "sources": [
+      "https://www.santacruzca.gov/Government/City-Departments/Parks-Recreation/Civic-Auditorium/Box-Office/Show-Ticket-Policies"
+    ],
+    "notes": "Civic Auditorium typo alias; official indexed city ticket policies confirms address, direct page403.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1489670725,
+    "venueName": "Shorline Amphitheater",
+    "streetAddress": "One Amphitheatre Parkway",
+    "city": "Mountain View",
+    "website": "https://www.shorelineamphitheatre.com/visit",
+    "status": "verified",
+    "sources": [
+      "https://www.shorelineamphitheatre.com/visit"
+    ],
+    "notes": "Raw event explicitly Mountain View; typo alias.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 889140970,
+    "venueName": "Solano Fairgrounds",
+    "streetAddress": "900 Fairgrounds Drive",
+    "city": "Vallejo",
+    "website": "https://scfair.org/",
+    "status": "verified",
+    "sources": [
+      "https://scfair.org/"
+    ],
+    "notes": "Official footer.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1817412579,
+    "venueName": "Synygy",
+    "streetAddress": "395 South Van Ness Avenue",
+    "city": "San Francisco",
+    "website": "https://syzygysf.com/",
+    "status": "verified",
+    "sources": [
+      "https://syzygysf.com/"
+    ],
+    "notes": "Source misspelling Synygy resolves by exact address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 95939520,
+    "venueName": "Towne Cycles Backyard",
+    "streetAddress": "3137 Adeline Street",
+    "city": "Oakland",
+    "website": "https://www.townecycles.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.townecycles.com/"
+    ],
+    "notes": "Official city Oakland corrects source's Berkeley.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 413331686,
+    "venueName": "West Portal Branch Library",
+    "streetAddress": "190 Lenox Way",
+    "city": "San Francisco",
+    "website": "https://sfpl.org/locations/west-portal",
+    "status": "verified",
+    "sources": [
+      "https://sfpl.org/locations/west-portal"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 867190630,
+    "venueName": "the 49'ers Stadium",
+    "streetAddress": "4900 Marie P. DeBartolo Way",
+    "city": "Santa Clara",
+    "website": "https://levisstadium.com/contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://levisstadium.com/contact-us/"
+    ],
+    "notes": "49ers Stadium nickname.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1956100968,
+    "venueName": "the Castro)",
+    "streetAddress": null,
+    "city": null,
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Malformed token comes from parenthetical 'moved from the Castro' notices. It is not the actual event venue; preserve null identity fields.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1140492065,
+    "venueName": "Giants Ballpark",
+    "streetAddress": "24 Willie Mays Plaza",
+    "city": "San Francisco",
+    "website": "https://www.mlb.com/giants/ballpark",
+    "status": "verified",
+    "sources": [
+      "https://www.mlb.com/giants/ballpark"
+    ],
+    "notes": "Oracle Park.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 398859205,
+    "venueName": "Make Out Room",
+    "streetAddress": "3225 22nd Street",
+    "city": "San Francisco",
+    "website": "https://www.makeoutroom.com/contact.html",
+    "status": "verified",
+    "sources": [
+      "https://www.makeoutroom.com/contact.html"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1392713409,
+    "venueName": "the Planetarium",
+    "streetAddress": "5327 Jacuzzi Street",
+    "city": "Richmond",
+    "website": "https://ragtagshows.com/",
+    "status": "verified",
+    "sources": [
+      "https://ragtagshows.com/"
+    ],
+    "notes": "Venue operator Ragtag Shows confirms The Planetarium address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 652332053,
+    "venueName": "the Spire",
+    "streetAddress": "825 Athens Avenue",
+    "city": "Oakland",
+    "website": "https://www.spirethechurch.com/events-2",
+    "status": "verified",
+    "sources": [
+      "https://www.spirethechurch.com/events-2"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 492088316,
+    "venueName": "the Jack London Lodge",
+    "streetAddress": "13740 Arnold Drive",
+    "city": "Glen Ellen",
+    "website": "https://www.jacklondonlodge.com/contact-us",
+    "status": "partial",
+    "sources": [
+      "https://www.jacklondonlodge.com/contact-us"
+    ],
+    "notes": "Official venue/location information. Official search extract contains address, but direct source open failed in this run; verification incomplete.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1188914662,
+    "venueName": "49ers Stadium",
+    "streetAddress": "4900 Marie P. DeBartolo Way",
+    "city": "Santa Clara",
+    "website": "https://levisstadium.com/contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://levisstadium.com/contact-us/"
+    ],
+    "notes": "49ers Stadium nickname.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1975456497,
+    "venueName": "County Fair",
+    "streetAddress": "1346 Saratoga Drive",
+    "city": "San Mateo",
+    "website": "https://sanmateocountyfair.com/contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://sanmateocountyfair.com/contact-us/"
+    ],
+    "notes": "Raw event explicitly gives San Mateo fair address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1291359065,
+    "venueName": "Embarcadero Plaza",
+    "streetAddress": "Steuart Street and Market Street",
+    "city": "San Francisco",
+    "website": "https://sfrecpark.org/Facilities/Facility/Details/Embarcadero-Plaza-347",
+    "status": "verified",
+    "sources": [
+      "https://sfrecpark.org/Facilities/Facility/Details/Embarcadero-Plaza-347"
+    ],
+    "notes": "Official plaza intersection.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 745745800,
+    "venueName": "Noble Cinema Studios",
+    "streetAddress": "1509 Solano Avenue",
+    "city": "Vallejo",
+    "website": "https://www.eventbrite.com/o/68231408763",
+    "status": "partial",
+    "sources": [
+      "https://www.eventbrite.com/o/68231408763"
+    ],
+    "notes": "Owner's official Eventbrite organizer page indexed current shows at address; source open rate limited. No dedicated site independently verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 157991490,
+    "venueName": "the Roxie Movie House",
+    "streetAddress": "3117 16th Street",
+    "city": "San Francisco",
+    "website": "https://roxie.com/plan-your-visit/how-to-get-here/",
+    "status": "verified",
+    "sources": [
+      "https://roxie.com/plan-your-visit/how-to-get-here/"
+    ],
+    "notes": "Official venue/location information. Official HTML directly fetched successfully by coordinating researcher and read in cached source evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 445731900,
+    "venueName": "22nd & Bartlett",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": "https://www.sfporchfest.org/",
+    "status": "partial",
+    "sources": [
+      "https://www.sfporchfest.org/"
+    ],
+    "notes": "Raw May30 SF Porchfest performance location; organizer website now shows October HSB partnership and no May street map. No exact porch/intersection assigned without archived organizer evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 713594331,
+    "venueName": "Athen's",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": "https://www.sfporchfest.org/",
+    "status": "partial",
+    "sources": [
+      "https://www.sfporchfest.org/"
+    ],
+    "notes": "Raw May30 SF Porchfest performance location; organizer website now shows October HSB partnership and no May street map. No exact porch/intersection assigned without archived organizer evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1950476525,
+    "venueName": "Community Music Center",
+    "streetAddress": "544 Capp Street",
+    "city": "San Francisco",
+    "website": "https://sfcmc.org/about/locations-contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://sfcmc.org/about/locations-contact-us/"
+    ],
+    "notes": "Mission branch explicitly event address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1697289869,
+    "venueName": "Fourth Bore",
+    "streetAddress": "2 Theater Square #134",
+    "city": "Orinda",
+    "website": "https://web9161.wixsite.com/the-fourth-bore/contact",
+    "status": "verified",
+    "sources": [
+      "https://web9161.wixsite.com/the-fourth-bore/contact"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1584439587,
+    "venueName": "Hook & Ladder Vineyards",
+    "streetAddress": "2134 Olivet Road",
+    "city": "Santa Rosa",
+    "website": "https://www.hookandladderwinery.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.hookandladderwinery.com/"
+    ],
+    "notes": "Official winery address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1621831563,
+    "venueName": "Mid Bartlett",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": "https://www.sfporchfest.org/",
+    "status": "partial",
+    "sources": [
+      "https://www.sfporchfest.org/"
+    ],
+    "notes": "Raw May30 SF Porchfest performance location; organizer website now shows October HSB partnership and no May street map. No exact porch/intersection assigned without archived organizer evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1055458173,
+    "venueName": "Shuggies",
+    "streetAddress": "3349 23rd Street",
+    "city": "San Francisco",
+    "website": "https://shuggies.world/",
+    "status": "verified",
+    "sources": [
+      "https://shuggies.world/info"
+    ],
+    "notes": "Official current Info page confirms address; former pizza domain redirects to this owner site.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1211018360,
+    "venueName": "ht Civic Auditorium",
+    "streetAddress": "99 Grove Street",
+    "city": "San Francisco",
+    "website": "https://billgrahamcivic.com/venue-info/",
+    "status": "verified",
+    "sources": [
+      "https://billgrahamcivic.com/venue-info/"
+    ],
+    "notes": "Raw event explicitly S.F.; malformed ht prefix.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 89847210,
+    "venueName": "Feinstein's at the Nikko",
+    "streetAddress": "222 Mason Street",
+    "city": "San Francisco",
+    "website": "https://www.feinsteinssf.com/about/",
+    "status": "verified",
+    "sources": [
+      "https://www.feinsteinssf.com/about/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 761666194,
+    "venueName": "Park Station",
+    "streetAddress": "1200 Park Street",
+    "city": "Alameda",
+    "website": "https://parkstation.beer/",
+    "status": "verified",
+    "sources": [
+      "https://parkstation.beer/"
+    ],
+    "notes": "Owner and downtown business association confirm address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 545895587,
+    "venueName": "the Pioneer Saloon",
+    "streetAddress": "2925 Woodside Road",
+    "city": "Woodside",
+    "website": "https://www.pioneersaloonmusic.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.pioneersaloonmusic.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2132930386,
+    "venueName": "Finnish Hall",
+    "streetAddress": "1970 Chestnut Street",
+    "city": "Berkeley",
+    "website": "https://www.finnishhall.org/about",
+    "status": "verified",
+    "sources": [
+      "https://www.finnishhall.org/about"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 125036029,
+    "venueName": "Salesforce Park",
+    "streetAddress": "425 Mission Street",
+    "city": "San Francisco",
+    "website": "https://www.tjpa.org/salesforce-transit-center/faq",
+    "status": "verified",
+    "sources": [
+      "https://www.tjpa.org/salesforce-transit-center/faq"
+    ],
+    "notes": "Official park entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1350182346,
+    "venueName": "Used Dreams Night Market",
+    "streetAddress": "499 Embarcadero West",
+    "city": "Oakland",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt"
+    ],
+    "notes": "Raw-only event-specific address/city in exact linked May30SuperApes/HoboGoblins UsedDreamsNightMarket listing. No permanent business identity or organizer website fabricated.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2123046837,
+    "venueName": "Bay Area Maker Farm",
+    "streetAddress": "2700 Barbers Point Road",
+    "city": "Alameda",
+    "website": "https://bayareamaker.farm/",
+    "status": "verified",
+    "sources": [
+      "https://bayareamaker.farm/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1567494397,
+    "venueName": "Lane Splitters Pizza",
+    "streetAddress": "3645 San Pablo Avenue",
+    "city": "Emeryville",
+    "website": "https://lanesplitterpizzapub.com/",
+    "status": "verified",
+    "sources": [
+      "https://lanesplitterpizzapub.com/our-story"
+    ],
+    "notes": "Official Emeryville pub address; raw 2645 number is a typo.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 909463411,
+    "venueName": "Rio Nido Roadhouse",
+    "streetAddress": "14540 Canyon 2 Road",
+    "city": "Rio Nido",
+    "website": "https://www.rionidoroadhouse.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.rionidoroadhouse.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1664632966,
+    "venueName": "Taqueria Mila",
+    "streetAddress": "2790 Santa Rosa Avenue Suite N",
+    "city": "Santa Rosa",
+    "website": "https://taqueriamilaca.com/taqueria-mila/menu/2790-Santa-Rosa-Ave-ste-n/",
+    "status": "verified",
+    "sources": [
+      "https://taqueriamilaca.com/taqueria-mila/menu/2790-Santa-Rosa-Ave-ste-n/"
+    ],
+    "notes": "Merchant ordering page.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 894444233,
+    "venueName": "Woodacre Improvement Club",
+    "streetAddress": "1 Garden Way",
+    "city": "Woodacre",
+    "website": "https://www.woodacreimprovementclub.com/calendar",
+    "status": "verified",
+    "sources": [
+      "https://www.woodacreimprovementclub.com/calendar"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 611352376,
+    "venueName": "Degrees Plato",
+    "streetAddress": "4251 MacArthur Boulevard",
+    "city": "Oakland",
+    "website": "https://www.degreesplato.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.degreesplato.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1217182281,
+    "venueName": "the Natural",
+    "streetAddress": "358 Brannan Street",
+    "city": "San Francisco",
+    "website": "https://www.thenaturalsf.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.thenaturalsf.com/"
+    ],
+    "notes": "Back alley entrance on Varney Place.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2025029583,
+    "venueName": "Grand Avenue and Wood Street",
+    "streetAddress": "Grand Avenue and Wood Street",
+    "city": "Oakland",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt"
+    ],
+    "notes": "Raw-only geographic intersection in exact linked Jul11Stillyoung/RottenCharms/TheCruelty/SpeakSoftly listing, explicitly WestOakland. No mailing address or nearby WoodStreetMusicHall identity substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1886139640,
+    "venueName": "Rats Backwards",
+    "streetAddress": "1220 4th Street",
+    "city": "Berkeley",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt",
+      "data/venues.txt"
+    ],
+    "notes": "Raw-only address: actual linked Jul25SterileEyes/Vexxyl/Cobweb/Aphid listing uses RatsBackwards, Berkeley; other published same-city RatsBackwardsWarehouse listing gives1220 4thStreet. Short-name alias retained pending independent owner confirmation.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1730214750,
+    "venueName": "950 Pomona Avenue",
+    "streetAddress": "950 Pomona Avenue",
+    "city": "El Cerrito",
+    "website": "https://elcerrito.gov/Facilities/Facility/Details/Cerrito-Vista-Park-10",
+    "status": "verified",
+    "sources": [
+      "https://elcerrito.gov/Facilities/Facility/Details/Cerrito-Vista-Park-10"
+    ],
+    "notes": "Address-only venue is official Cerrito Vista Park.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 413979258,
+    "venueName": "Keys Jazz Bistro",
+    "streetAddress": "498 Broadway",
+    "city": "San Francisco",
+    "website": "https://keysjazzbistro.com/",
+    "status": "verified",
+    "sources": [
+      "https://keysjazzbistro.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1168810431,
+    "venueName": "Plaza Park",
+    "streetAddress": "200 Warm Springs Road",
+    "city": "Kenwood",
+    "website": "https://parks.sonomacounty.ca.gov/Visit/Kenwood-Plaza-Park/",
+    "status": "partial",
+    "sources": [
+      "https://www.sonomacounty.com/outdoor-activities/kenwood-plaza-park/"
+    ],
+    "notes": "Official county tourism identifies Kenwood Plaza Park and links parks department page; department open failed. Raw 198 corrected to tourism's 200.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1019076274,
+    "venueName": "38 South Second Street",
+    "streetAddress": "38 South Second Street",
+    "city": "San Jose",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt"
+    ],
+    "notes": "Raw-only address/city in exact linked Jul21A NovemberMorning/Avulsion/ALifeSpent/Altar listing. Address-only venue identity; no former Works/SanJose owner website substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1774955152,
+    "venueName": "Haight Ashbury Street Fair",
+    "streetAddress": "Haight Street between Masonic Avenue and Stanyan Street",
+    "city": "San Francisco",
+    "website": "https://www.haightashburystreetfair.org/",
+    "status": "verified",
+    "sources": [
+      "https://www.sfmta.com/travel-updates/haight-ashbury-street-fair-sunday-september-20-2026",
+      "https://www.haightashburystreetfair.org/"
+    ],
+    "notes": "2026 event footprint confirmed by official SFMTA advisory; geographic festival location, not mailing address.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 165412478,
+    "venueName": "Napa County Fair",
+    "streetAddress": "575 Third Street",
+    "city": "Napa",
+    "website": "https://www.napavalleyexpo.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.napavalleyexpo.com/event-details/napa-town-and-country-fair-3"
+    ],
+    "notes": "Raw Napa punk showcase location matches official Napa Town and Country Fair at Expo. Name 'Napa County Fair' is imprecise; do not substitute Calistoga fairgrounds.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 506133276,
+    "venueName": "the Chapel Outdoor State",
+    "streetAddress": "777 Valencia Street",
+    "city": "San Francisco",
+    "website": "https://thechapelsf.com/contact/",
+    "status": "verified",
+    "sources": [
+      "https://thechapelsf.com/contact/"
+    ],
+    "notes": "Outdoor stage at same venue.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 892740079,
+    "venueName": "Black & Brown Vintage",
+    "streetAddress": "751 West San Carlos Street",
+    "city": "San Jose",
+    "website": "https://shopblackandbrown.com/",
+    "status": "verified",
+    "sources": [
+      "https://shopblackandbrown.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1186573856,
+    "venueName": "Pocket Park",
+    "streetAddress": "540 South 1st Street",
+    "city": "San Jose",
+    "website": "https://www.westartgardens.com/events",
+    "status": "verified",
+    "sources": [
+      "https://www.westartgardens.com/events"
+    ],
+    "notes": "Operator event page.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 318791909,
+    "venueName": "S.F. Mass",
+    "streetAddress": "995 Market Street, 6th Floor",
+    "city": "San Francisco",
+    "website": "https://www.sfmass.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.sfmass.com/"
+    ],
+    "notes": "Official MASS Arts address corrects raw/inventory's 955.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 478586995,
+    "venueName": "Spanky's Bar",
+    "streetAddress": "8201 Old Redwood Highway",
+    "city": "Cotati",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://cotati.org/uploads/content/CAG3_Web.pdf"
+    ],
+    "notes": "Historical chamber directory indexed Spanky's at this address, agreeing raw events. PDF opened but extracted text omitted entry; owner domain inaccessible.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 133807587,
+    "venueName": "X Sports Bar",
+    "streetAddress": "20990 Homestead Road",
+    "city": "Cupertino",
+    "website": "https://www.thex.bar/",
+    "status": "verified",
+    "sources": [
+      "https://www.thex.bar/"
+    ],
+    "notes": "X-Bar at Homestead Bowl.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1306836772,
+    "venueName": "Golden Gate Park",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": "https://sfrecpark.org/770/Golden-Gate-Park",
+    "status": "partial",
+    "sources": [
+      "https://sfrecpark.org/770/Golden-Gate-Park"
+    ],
+    "notes": "Opened official park page. Raw events span Bandshell, Outside Lands and Hardly Strictly Bluegrass; no single stage entrance suitable for all. Department office501 Stanyan not substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1056440065,
+    "venueName": "the Roxie Theater",
+    "streetAddress": "3117 16th Street",
+    "city": "San Francisco",
+    "website": "https://roxie.com/plan-your-visit/how-to-get-here/",
+    "status": "verified",
+    "sources": [
+      "https://roxie.com/plan-your-visit/how-to-get-here/"
+    ],
+    "notes": "Official venue/location information. Official HTML directly fetched successfully by coordinating researcher and read in cached source evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1384743074,
+    "venueName": "Koret Auditorium",
+    "streetAddress": "100 Larkin Street",
+    "city": "San Francisco",
+    "website": "https://sfpl.org/quickview/118167",
+    "status": "verified",
+    "sources": [
+      "https://sfpl.org/quickview/118167"
+    ],
+    "notes": "Koret Auditorium in Main Library; explicitly matched by music-festival raw event.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 912425084,
+    "venueName": "4th Corner Speakeasy",
+    "streetAddress": "431 Georgia Street",
+    "city": "Vallejo",
+    "website": "https://redmenshallvallejo.com/home/",
+    "status": "verified",
+    "sources": [
+      "https://redmenshallvallejo.com/home/"
+    ],
+    "notes": "Official host Red Men's Hall identifies the 4th Corner Speakeasy at this address. Dedicated speakeasy domain inaccessible.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2001321933,
+    "venueName": "Chromatic Coffee",
+    "streetAddress": "460 Lincoln Avenue Suite 10",
+    "city": "San Jose",
+    "website": "https://www.chromaticcoffee.com/pages/visit",
+    "status": "verified",
+    "sources": [
+      "https://www.chromaticcoffee.com/pages/visit"
+    ],
+    "notes": "Official page also mentions roastery Suite 20; Suite 10 matches source performance event and business address section.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1168861476,
+    "venueName": "Derby Skatepark",
+    "streetAddress": "508 Woodland Way",
+    "city": "Santa Cruz",
+    "website": "https://www.santacruzca.gov/Government/City-Departments/Parks-Recreation/Parks-Beaches-Open-Spaces/Parks/Sergeant-Derby-Park",
+    "status": "verified",
+    "sources": [
+      "https://www.santacruzca.gov/Government/City-Departments/Parks-Recreation/Parks-Beaches-Open-Spaces/Parks/Sergeant-Derby-Park"
+    ],
+    "notes": "Official venue/location information. Official HTML directly fetched successfully by coordinating researcher and read in cached source evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1839724360,
+    "venueName": "Mildred Owen Hall",
+    "streetAddress": "1220 Linda Mar Boulevard",
+    "city": "Pacifica",
+    "website": "https://pacificaperformances.org/directions-contact-us/",
+    "status": "verified",
+    "sources": [
+      "https://pacificaperformances.org/directions-contact-us/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 775368371,
+    "venueName": "Saratoga Library",
+    "streetAddress": "13650 Saratoga Avenue",
+    "city": "Saratoga",
+    "website": "https://www.saratoga.ca.us/706/Saratoga-Library",
+    "status": "verified",
+    "sources": [
+      "https://www.saratoga.ca.us/706/Saratoga-Library"
+    ],
+    "notes": "Official city source.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 358459691,
+    "venueName": "the Back Room",
+    "streetAddress": "1984 Bonita Avenue",
+    "city": "Berkeley",
+    "website": "https://backroommusic.com/",
+    "status": "verified",
+    "sources": [
+      "https://backroommusic.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 753223192,
+    "venueName": "924 Gilman and Gilman Brewing",
+    "streetAddress": null,
+    "city": "Berkeley",
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Combined listing names separate924 Gilman Street and Gilman Brewing locations. No single address or owner website can represent both; preserve event-specific venue split.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1964305801,
+    "venueName": "Kuumbwa Center",
+    "streetAddress": "320-2 Cedar Street",
+    "city": "Santa Cruz",
+    "website": "https://www.kuumbwajazz.org/contact/",
+    "status": "verified",
+    "sources": [
+      "https://www.kuumbwajazz.org/contact/"
+    ],
+    "notes": "Official venue/operator or government source confirms address and official website.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1510199156,
+    "venueName": "On Broadway",
+    "streetAddress": "435 Broadway",
+    "city": "San Francisco",
+    "website": "https://themab.org/",
+    "status": "verified",
+    "sources": [
+      "https://themab.org/"
+    ],
+    "notes": "Official current combined venue calls itself Mabuhay Gardens on Broadway. Official HTML directly fetched successfully by coordinating researcher and read in cached source evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1891659404,
+    "venueName": "2708 Channing Way",
+    "streetAddress": "2708 Channing Way",
+    "city": "Berkeley",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "data/events.txt"
+    ],
+    "notes": "Raw-only published house/DIY address/city in exact linked Sep19Playground/Despire/Splendor/SeeADoctor listing. No public official owner website verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 747832776,
+    "venueName": "Iron Ox Brewing Company",
+    "streetAddress": "3334 Industrial Drive",
+    "city": "Santa Rosa",
+    "website": "https://ironoxbeer.com/",
+    "status": "verified",
+    "sources": [
+      "https://ironoxbeer.com/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1158870445,
+    "venueName": "Santa Cruz Revival Church",
+    "streetAddress": null,
+    "city": "Santa Cruz",
+    "website": "https://www.santacruzrevival.tv/",
+    "status": "partial",
+    "sources": [
+      "https://www.santacruzrevival.tv/about_us"
+    ],
+    "notes": "Opened official church about page; event instructions use parking at New Leaf650 River then footbridge. Mailing office/property addresses do not prove event entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 288601293,
+    "venueName": "Sunset Village Music Hall",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": null,
+    "status": "partial",
+    "sources": [
+      "https://akaisolo.bandcamp.com/",
+      "https://www.alexandrapink.com/performance"
+    ],
+    "notes": "Performer-owned pages identify Sunset Village Music Hall, but no address-bearing official hall source verified. Inventory4114 Judah retained as hint only; nearby Sunset Variety retail not substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 210680279,
+    "venueName": "Dolan's Den",
+    "streetAddress": "995 Piner Road",
+    "city": "Santa Rosa",
+    "website": "https://www.dolansden.com/",
+    "status": "verified",
+    "sources": [
+      "https://www.dolansden.com/"
+    ],
+    "notes": "Official owner location.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1578696718,
+    "venueName": "Levi's Plaza",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": "https://www.levisplaza.com/about",
+    "status": "partial",
+    "sources": [
+      "https://www.levisplaza.com/about"
+    ],
+    "notes": "Official plaza management uses 1105 Battery Street; raw performance lists 1125 Battery Street. Specific performance access location cannot be independently resolved; no office mailing address substituted.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 326664506,
+    "venueName": "USF's McLaren Center",
+    "streetAddress": "2130 Fulton Street",
+    "city": "San Francisco",
+    "website": "https://www.usfca.edu/",
+    "status": "partial",
+    "sources": [
+      "https://www.usfca.edu/"
+    ],
+    "notes": "Opened university home page confirms main campus address and McLaren Conference Center identity. Campus entrance retained; building-specific entrance not verified.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 239483291,
+    "venueName": "someplace",
+    "streetAddress": null,
+    "city": "Santa Cruz",
+    "website": null,
+    "status": "unresolved",
+    "sources": [],
+    "notes": "Sep26 Derby Skatepark fundraiser explicitly lists 'someplace'. Event identity/location not yet public; do not equate fundraiser venue with skatepark.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2037432326,
+    "venueName": "Bay Area Makers Farm",
+    "streetAddress": "2700 Barbers Point Road",
+    "city": "Alameda",
+    "website": "https://bayareamaker.farm/",
+    "status": "verified",
+    "sources": [
+      "https://bayareamaker.farm/"
+    ],
+    "notes": "Official venue/location information.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 315738847,
+    "venueName": "Golden Gate Park Bandshell",
+    "streetAddress": "John F. Kennedy Drive and Hagiwara Tea Garden Drive",
+    "city": "San Francisco",
+    "website": "https://sfrecpark.org/870/Golden-Gate-Park---Bandshell",
+    "status": "verified",
+    "sources": [
+      "https://sfrecpark.org/870/Golden-Gate-Park---Bandshell"
+    ],
+    "notes": "Official intersection identifies outdoor bandshell.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 619729370,
+    "venueName": "Lake Cunningham Skate Park",
+    "streetAddress": "2305 South White Road",
+    "city": "San Jose",
+    "website": "https://www.sanjoseca.gov/Home/Components/FacilityDirectory/FacilityDirectory/2251/2028",
+    "status": "verified",
+    "sources": [
+      "https://www.sanjoseca.gov/Home/Components/FacilityDirectory/FacilityDirectory/2251/2028"
+    ],
+    "notes": "Lake Cunningham Action Sports Park. Official HTML directly fetched successfully by coordinating researcher and read in cached source evidence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1113680004,
+    "venueName": "the Mabuhay Gardens/on Broadway",
+    "streetAddress": null,
+    "city": "San Francisco",
+    "website": "https://themab.org/",
+    "status": "partial",
+    "sources": [
+      "https://themab.org/"
+    ],
+    "notes": "Opened owner HTML explicitly lists both 435 and 443 Broadway and separate upstairs/downstairs rooms. Combined venue ID has no safe single street number.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 450920379,
+    "venueName": "Donut Farm",
+    "streetAddress": "3278 Adeline Street",
+    "city": "Berkeley",
+    "website": "https://donutfarmberkeley.com/",
+    "status": "verified",
+    "sources": [
+      "https://donutfarmberkeley.com/"
+    ],
+    "notes": "Official city Berkeley, not event's Oakland.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 165368460,
+    "venueName": "Webster Park",
+    "streetAddress": "1435 Webster Street",
+    "city": "Alameda",
+    "website": "https://foodbankplayers.org/healing-garden-alameda",
+    "status": "verified",
+    "sources": [
+      "https://foodbankplayers.org/healing-garden-alameda"
+    ],
+    "notes": "Resident theater organizer's own venue page identifies Webster Park, formerly Healing Garden; address agrees raw lotfest.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 855121402,
+    "venueName": "19 Broadway",
+    "streetAddress": "19 Broadway",
+    "city": "Fairfax",
+    "website": "https://macsat19broadway.com/",
+    "status": "verified",
+    "sources": [
+      "https://macsat19broadway.com/tickets/",
+      "https://www.eventbrite.com/e/alvie-the-breakfast-pigs-skip-the-needle-punk-rock-tickets-2002654154486"
+    ],
+    "notes": "Owner site confirms Mac's at 19 Broadway. Owner-published Alvie & Breakfast Pigs/Skip the Needle event matches raw listing; raw 17 Broadway is incorrect.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1699183410,
+    "venueName": "Irelands 32",
+    "streetAddress": "3920 Geary Boulevard",
+    "city": "San Francisco",
+    "website": "https://linktr.ee/irelands32sf",
+    "status": "verified",
+    "sources": [
+      "https://linktr.ee/irelands32sf"
+    ],
+    "notes": "Owner's current official Linktree; legacy domains are unsuitable.",
+    "checkedOn": "2026-10-02"
+  }
+]

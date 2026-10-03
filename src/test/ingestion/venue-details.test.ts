@@ -117,4 +117,24 @@ describe("reviewed venue details", () => {
       decodeVenueDetails({ schemaVersion: 1, venues: [detail(), detail()] })
     ).toThrow("Invalid venue details entry");
   });
+
+  it("allows explicitly partial retained-source addresses without calling them verified", () => {
+    const row = {
+      ...detail(),
+      status: "partial",
+      website: null,
+      sources: ["data/events.txt"],
+      notes:
+        "Street address stated in the retained event listing; no owner page found.",
+    };
+    expect(
+      decodeVenueDetails({ schemaVersion: 1, venues: [row] }).venues
+    ).toEqual([row]);
+    expect(() =>
+      decodeVenueDetails({
+        schemaVersion: 1,
+        venues: [{ ...row, status: "verified", website: detail().website }],
+      })
+    ).toThrow("Invalid venue details entry");
+  });
 });
