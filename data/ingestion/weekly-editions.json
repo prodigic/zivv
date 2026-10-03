@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "publishedCutoffEpochMs": 1790406000000,
+  "publishedCutoffEpochMs": 1791011128000,
   "editions": [
     {
       "editionId": "2026-09-11",
@@ -621,7 +621,7 @@
         1404270879
       ],
       "datasetVersion": "ingestion-v12.hopmonk-city-repair.death-from-above-repair.oct2-reviewed-time-repair.5.oct2-fred-time-repair",
-      "status": "draft"
+      "status": "published"
     }
   ]
 }

@@ -65,3 +65,16 @@ The initial unpublished export was rolled back using the verified encrypted
 pre-import snapshot and an exact shared-revision guard after validation exposed
 year drift. The corrected import, repairs and export were then rerun. No faulty
 export was published.
+
+## Verified publication
+
+Publication commit:
+[`4c6472f`](https://github.com/prodigic/zivv/commit/4c6472f1dfebd87efb943b18fb86b848ef224c9c).
+The [Pages deployment](https://github.com/prodigic/zivv/actions/runs/37080803437)
+succeeded. At 5:11 p.m. Pacific on October 2, the live manifest and all 22 listed
+files matched export version `2026-10-03T00:05:32.592Z`, with 4,495 total events
+and 177 October 2 additions. The live homepage and newsletter rendered without
+browser errors. The weekly edition was marked published after this verification.
+
+Live results: [Zivv](https://www.prodigic.com/zivv/) and
+[Bay Area newsletter](https://www.prodigic.com/zivv/newsletter/bay-area).
