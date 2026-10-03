@@ -1,0 +1,409 @@
+/**
+ * THROWAWAY: seven structurally different single-tile show/map treatments.
+ * Uses the existing event route and real data, selected with ?variant=1..7.
+ * Only rendered in the explicitly enabled prototype build.
+ */
+import { useCallback, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import VenueNameLink from "@/components/ui/VenueNameLink.js";
+import type { Event, Venue } from "@/types/events.js";
+import { getVenueMapTile } from "@/utils/venue-map.js";
+import "./VenueTileTreatments.prototype.css";
+
+const treatments = [
+  { name: "Clean Split", idea: "Quiet hierarchy · one shared surface" },
+  { name: "Transparent Atlas", idea: "Map wallpaper · floating typography" },
+  { name: "Night Glass", idea: "Transparent glass · luminous wallpaper" },
+  { name: "Gig Poster", idea: "Big type · ink and paper · map sticker" },
+  { name: "Editorial", idea: "Serif headline · generous map · warm paper" },
+  { name: "Transit Strip", idea: "Map first · compact itinerary" },
+  {
+    name: "Ticket Window",
+    idea: "Clear surface · circular map · tear-off date",
+  },
+];
+
+type Props = {
+  event: Event;
+  venue: Venue;
+  headlinerName: string;
+  supportNames: string[];
+};
+
+function MapArtwork({
+  venue,
+  wallpaper = false,
+}: {
+  venue: Venue;
+  wallpaper?: boolean;
+}) {
+  const tile = getVenueMapTile(venue.mapLocation);
+  if (!tile) return <div className="map-missing">Location not mapped</div>;
+  return (
+    <div className={`map-art ${wallpaper ? "map-wallpaper" : ""}`}>
+      <a
+        href={tile.mapUrl}
+        aria-label={`Open map for ${venue.name}`}
+        className="map-plane"
+      >
+        <img
+          src={tile.url}
+          alt={`Street map around ${venue.name}`}
+          width="256"
+          height="256"
+          loading="lazy"
+        />
+        <span
+          className="map-marker"
+          aria-hidden="true"
+          style={{
+            left: `${(tile.markerX / 256) * 100}%`,
+            top: `${(tile.markerY / 256) * 100}%`,
+          }}
+        />
+      </a>
+      <a className="map-credit" href="https://www.openstreetmap.org/copyright">
+        © OpenStreetMap contributors
+      </a>
+    </div>
+  );
+}
+
+function MapCaption({ venue }: { venue: Venue }) {
+  const tile = getVenueMapTile(venue.mapLocation);
+  return (
+    <a
+      className="map-caption"
+      href={
+        tile?.mapUrl ??
+        `https://www.openstreetmap.org/search?query=${encodeURIComponent(`${venue.name}, ${venue.address}, ${venue.city}`)}`
+      }
+    >
+      {tile ? "Approximate location · open map ↗" : "Search location ↗"}
+    </a>
+  );
+}
+
+function Support({ names }: { names: string[] }) {
+  return names.length ? (
+    <p className="support">with {names.join(" + ")}</p>
+  ) : null;
+}
+
+function VenueAddress({ venue }: { venue: Venue }) {
+  return (
+    <div className="venue-address">
+      <VenueNameLink venue={venue} className="venue-name" />
+      <p>{[venue.address, venue.city].filter(Boolean).join(", ")}</p>
+    </div>
+  );
+}
+
+function Admission({ event }: { event: Event }) {
+  const soldOut =
+    event.status === "sold-out" || event.tags?.includes("sold-out");
+  return (
+    <div className="admission">
+      <span className={soldOut ? "admission-status sold" : "admission-status"}>
+        {soldOut
+          ? "SOLD OUT"
+          : event.isFree
+            ? "FREE SHOW"
+            : event.priceMin != null
+              ? `$${event.priceMin}`
+              : "LIVE SHOW"}
+      </span>
+      {event.ageRestriction && <span>{event.ageRestriction}</span>}
+      {event.ticketUrl && (
+        <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer">
+          Tickets ↗
+        </a>
+      )}
+    </div>
+  );
+}
+
+export default function VenueTileTreatmentsPrototype(props: Props) {
+  const { event, venue, headlinerName, supportNames } = props;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requested = Number(searchParams.get("variant") ?? 1);
+  const active =
+    Number.isInteger(requested) && requested >= 1 && requested <= 7
+      ? requested
+      : 1;
+  const study = treatments[active - 1];
+  const date = new Date(event.dateEpochMs);
+  const month = date.toLocaleDateString("en-US", { month: "short" });
+  const day = date.getDate();
+  const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
+  const dateLabel = date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const time = event.startTimeEpochMs
+    ? new Date(event.startTimeEpochMs).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    : null;
+  const choose = useCallback(
+    (number: number) => {
+      const next = new URLSearchParams(searchParams);
+      next.set("variant", String(((number + 6) % 7) + 1));
+      setSearchParams(next, { replace: true });
+    },
+    [searchParams, setSearchParams]
+  );
+  useEffect(() => {
+    const cycle = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      if (
+        e.target instanceof HTMLElement &&
+        (e.target.isContentEditable ||
+          ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName))
+      )
+        return;
+      e.preventDefault();
+      choose(active + (e.key === "ArrowRight" ? 1 : -1));
+    };
+    window.addEventListener("keydown", cycle);
+    return () => window.removeEventListener("keydown", cycle);
+  }, [active, choose]);
+
+  return (
+    <div className="prototype-treatments">
+      <div className="study-label">
+        <span>STUDY {String(active).padStart(2, "0")}</span>
+        <strong>{study.name}</strong>
+        <span>{study.idea}</span>
+      </div>
+      <div className={`prototype-stage stage-${active}`}>
+        {active === 1 && (
+          <article
+            className="treatment clean-split"
+            aria-label="Combined show and map tile"
+          >
+            <div className="split-copy">
+              <div className="eyebrow">
+                {dateLabel}
+                {time ? ` · ${time}` : ""}
+              </div>
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+              <VenueAddress venue={venue} />
+              <Admission event={event} />
+            </div>
+            <div className="split-map">
+              <MapArtwork venue={venue} />
+              <MapCaption venue={venue} />
+            </div>
+          </article>
+        )}
+
+        {active === 2 && (
+          <article
+            className="treatment transparent-atlas"
+            aria-label="Combined show and map tile"
+          >
+            <MapArtwork venue={venue} wallpaper />
+            <div className="atlas-shade" />
+            <div className="atlas-copy">
+              <div className="eyebrow">
+                {weekday} / {month} {day} / {time}
+              </div>
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+              <div className="atlas-bottom">
+                <VenueAddress venue={venue} />
+                <Admission event={event} />
+              </div>
+            </div>
+            <MapCaption venue={venue} />
+          </article>
+        )}
+
+        {active === 3 && (
+          <article
+            className="treatment night-glass"
+            aria-label="Combined show and map tile"
+          >
+            <div className="glass-top">
+              <span className="eyebrow">ONE NIGHT / SAN FRANCISCO</span>
+              <span>
+                {month} {day}
+              </span>
+            </div>
+            <div className="glass-body">
+              <div>
+                <h2>{headlinerName}</h2>
+                <Support names={supportNames} />
+                <VenueAddress venue={venue} />
+                <div className="glass-time">
+                  {weekday} · {time}
+                </div>
+                <Admission event={event} />
+              </div>
+              <div className="glass-map">
+                <MapArtwork venue={venue} />
+                <MapCaption venue={venue} />
+              </div>
+            </div>
+          </article>
+        )}
+
+        {active === 4 && (
+          <article
+            className="treatment gig-poster"
+            aria-label="Combined show and map tile"
+          >
+            <div className="poster-date">
+              <span>{weekday.toUpperCase()}</span>
+              <strong>
+                {month.toUpperCase()} {day}
+              </strong>
+              <span>{time}</span>
+            </div>
+            <h2>{headlinerName}</h2>
+            <Support names={supportNames} />
+            <div className="poster-bottom">
+              <div>
+                <VenueAddress venue={venue} />
+                <Admission event={event} />
+                <p className="poster-note">LOUD MUSIC. GOOD COMPANY.</p>
+              </div>
+              <div className="poster-map">
+                <MapArtwork venue={venue} />
+                <MapCaption venue={venue} />
+              </div>
+            </div>
+          </article>
+        )}
+
+        {active === 5 && (
+          <article
+            className="treatment editorial"
+            aria-label="Combined show and map tile"
+          >
+            <div className="editorial-line">
+              <span>A NIGHT IN THE CITY</span>
+              <span>{date.getFullYear()}</span>
+            </div>
+            <h2>{headlinerName}</h2>
+            <Support names={supportNames} />
+            <div className="editorial-body">
+              <div className="editorial-calendar">
+                <span>{month}</span>
+                <strong>{day}</strong>
+                <p>
+                  {weekday}
+                  <br />
+                  {time}
+                </p>
+                <Admission event={event} />
+              </div>
+              <div>
+                <MapArtwork venue={venue} />
+                <MapCaption venue={venue} />
+              </div>
+            </div>
+            <VenueAddress venue={venue} />
+          </article>
+        )}
+
+        {active === 6 && (
+          <article
+            className="treatment transit-strip"
+            aria-label="Combined show and map tile"
+          >
+            <div className="transit-map">
+              <MapArtwork venue={venue} wallpaper />
+              <span className="transit-stop">SF</span>
+            </div>
+            <div className="transit-copy">
+              <div className="eyebrow">NEXT STOP / LIVE MUSIC</div>
+              <h2>{headlinerName}</h2>
+              <Support names={supportNames} />
+              <div className="transit-date">
+                <strong>
+                  {month} {day}
+                </strong>
+                <span>
+                  {weekday}
+                  <br />
+                  {time}
+                </span>
+              </div>
+              <VenueAddress venue={venue} />
+              <Admission event={event} />
+              <MapCaption venue={venue} />
+            </div>
+          </article>
+        )}
+
+        {active === 7 && (
+          <article
+            className="treatment ticket-window"
+            aria-label="Combined show and map tile"
+          >
+            <div className="ticket-top">
+              <span className="eyebrow">AN EVENING WITH</span>
+              <Admission event={event} />
+            </div>
+            <div className="ticket-body">
+              <div>
+                <h2>{headlinerName}</h2>
+                <Support names={supportNames} />
+                <VenueAddress venue={venue} />
+              </div>
+              <div className="ticket-map">
+                <MapArtwork venue={venue} />
+                <MapCaption venue={venue} />
+              </div>
+            </div>
+            <div className="ticket-stub">
+              <strong>
+                {month} {day}
+              </strong>
+              <span>{weekday}</span>
+              <strong>{time}</strong>
+            </div>
+          </article>
+        )}
+      </div>
+      <nav className="prototype-switcher" aria-label="Tile treatment switcher">
+        <div className="switcher-main">
+          <button
+            onClick={() => choose(active - 1)}
+            aria-label="Previous treatment"
+          >
+            ←
+          </button>
+          <div>
+            <span>EXPERIMENT · {active} / 7</span>
+            <strong>{study.name}</strong>
+          </div>
+          <button
+            onClick={() => choose(active + 1)}
+            aria-label="Next treatment"
+          >
+            →
+          </button>
+        </div>
+        <div className="switcher-dots">
+          {treatments.map((treatment, index) => (
+            <button
+              key={treatment.name}
+              onClick={() => choose(index + 1)}
+              aria-label={`${index + 1}: ${treatment.name}`}
+              aria-pressed={active === index + 1}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      </nav>
+    </div>
+  );
+}

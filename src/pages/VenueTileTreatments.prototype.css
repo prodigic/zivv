@@ -1,0 +1,760 @@
+/* THROWAWAY: scoped treatments for the existing show tile. */
+.prototype-treatments {
+  color: #e9eaf4;
+  padding-bottom: 10px;
+}
+.prototype-treatments a {
+  color: inherit;
+}
+.prototype-treatments .study-label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+  align-items: baseline;
+  margin: 0 0 12px;
+  font-size: 11px;
+  color: #6c7588;
+}
+.prototype-treatments .study-label strong {
+  font-size: 13px;
+  color: #626b7e;
+}
+.prototype-treatments .study-label > span:first-child {
+  font:
+    10px ui-monospace,
+    monospace;
+  letter-spacing: 1.5px;
+  color: #bd9dff;
+}
+.prototype-treatments .treatment {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+.prototype-treatments h2 {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+}
+.prototype-treatments p {
+  margin: 0;
+}
+.prototype-treatments .eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  font-weight: 650;
+  line-height: 1.7;
+}
+.prototype-treatments .support {
+  font-size: 12px;
+  line-height: 1.65;
+  opacity: 0.68;
+  margin-top: 12px;
+}
+.prototype-treatments .venue-address {
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 28px;
+}
+.prototype-treatments .venue-name {
+  font-weight: 750;
+  text-decoration: none;
+}
+.prototype-treatments .venue-name:hover {
+  text-decoration: underline;
+}
+.prototype-treatments .venue-address p {
+  opacity: 0.64;
+  font-size: 10px;
+  margin-top: 5px;
+}
+.prototype-treatments .admission {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-size: 10px;
+}
+.prototype-treatments .admission-status {
+  font-size: 9px;
+  letter-spacing: 1.1px;
+  font-weight: 800;
+  padding: 5px 8px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+}
+.prototype-treatments .sold {
+  color: #ffaca1;
+}
+.prototype-treatments .map-art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  isolation: isolate;
+}
+.prototype-treatments .map-plane {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  aspect-ratio: 1;
+}
+.prototype-treatments .map-plane img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.prototype-treatments .map-marker {
+  width: 13px;
+  height: 13px;
+  background: #7542ea;
+  border: 2px solid white;
+  border-radius: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 4px #7542ea35;
+}
+.prototype-treatments a.map-credit {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  font:
+    9px/1.3 Arial,
+    sans-serif;
+  color: #17202d;
+  background: #fff;
+  padding: 2px 3px;
+  text-decoration: underline;
+}
+.prototype-treatments .map-wallpaper {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  aspect-ratio: auto;
+}
+.prototype-treatments .map-wallpaper .map-plane {
+  inset: auto 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.prototype-treatments .map-caption {
+  display: block;
+  margin-top: 9px;
+  font-size: 9px;
+  opacity: 0.68;
+  text-decoration: none;
+}
+.prototype-treatments .map-caption:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+.prototype-treatments .map-missing {
+  display: grid;
+  place-items: center;
+  background: #ffffff12;
+  min-height: 180px;
+}
+
+/* 01. Balanced, restrained, one surface. */
+.prototype-treatments .clean-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 22px;
+  padding: 24px;
+  border: 1px solid #344054;
+  background: #1b2636;
+  border-radius: 15px;
+}
+.prototype-treatments .clean-split h2 {
+  font-size: clamp(23px, 2.7vw, 38px);
+  margin-top: 22px;
+}
+.prototype-treatments .clean-split .eyebrow {
+  color: #b9c8da;
+  letter-spacing: 0.8px;
+}
+.prototype-treatments .clean-split .map-art {
+  border-radius: 8px;
+}
+.prototype-treatments .clean-split .venue-address {
+  margin-top: 32px;
+}
+
+/* 02. The map is the wallpaper. Text floats directly on the shared surface. */
+.prototype-treatments .transparent-atlas {
+  min-height: 410px;
+  border: 1px solid #ffffff40;
+  border-radius: 18px;
+  background: transparent;
+}
+.prototype-treatments .transparent-atlas .map-plane img {
+  filter: grayscale(0.6) contrast(0.9) brightness(0.58) saturate(0.55);
+}
+.prototype-treatments .transparent-atlas .map-art {
+  isolation: auto;
+}
+.prototype-treatments .transparent-atlas .map-marker {
+  background: #c3ffce;
+  box-shadow: 0 0 0 5px #c3ffce35;
+}
+.prototype-treatments .atlas-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(100deg, #0b162ce8 5%, #13244180 60%, #0f172a18),
+    linear-gradient(0deg, #0b1428e0, transparent 55%);
+  pointer-events: none;
+}
+.prototype-treatments .atlas-copy {
+  position: relative;
+  z-index: 1;
+  padding: 30px;
+  pointer-events: none;
+}
+.prototype-treatments .atlas-copy a {
+  pointer-events: auto;
+}
+.prototype-treatments .atlas-copy h2 {
+  max-width: 310px;
+  font-size: 54px;
+  margin-top: 25px;
+  text-shadow: 0 2px 18px #071325;
+}
+.prototype-treatments .atlas-copy .eyebrow {
+  color: #c3ffce;
+}
+.prototype-treatments .atlas-bottom {
+  margin-top: 50px;
+}
+.prototype-treatments .atlas-bottom .venue-address {
+  margin-top: 0;
+}
+.prototype-treatments .transparent-atlas > .map-caption {
+  position: absolute;
+  right: 15px;
+  bottom: 26px;
+  z-index: 2;
+  color: #fff;
+  opacity: 0.9;
+}
+
+/* 03. Glass over a purely CSS wallpaper, map given a crisp corner. */
+.prototype-treatments .stage-3 {
+  padding: 22px;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 15% 10%, #725cffbd, transparent 55%),
+    radial-gradient(ellipse at 95% 90%, #23bbdba8, transparent 65%),
+    repeating-linear-gradient(135deg, #192741 0 3px, #182137 3px 16px);
+}
+.prototype-treatments .night-glass {
+  background: #101b3040;
+  border: 1px solid #ffffff38;
+  border-radius: 17px;
+  padding: 21px;
+  backdrop-filter: blur(15px);
+  box-shadow:
+    0 16px 40px #090e2938,
+    inset 0 1px #ffffff17;
+}
+.prototype-treatments .glass-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 10px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #ffffff26;
+  color: #d6e9ff;
+}
+.prototype-treatments .glass-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 18px;
+  padding-top: 22px;
+}
+.prototype-treatments .night-glass h2 {
+  font-size: 35px;
+  color: #fff;
+}
+.prototype-treatments .night-glass .venue-address {
+  margin-top: 22px;
+}
+.prototype-treatments .glass-time {
+  font-size: 10px;
+  margin-top: 16px;
+  color: #bce4ff;
+}
+.prototype-treatments .glass-map .map-art {
+  border-radius: 50% 50% 8px 8px;
+}
+.prototype-treatments .glass-map .map-plane img {
+  filter: saturate(0.65);
+}
+
+/* 04. Gig poster: emphatic hierarchy, no conventional two-column card. */
+.prototype-treatments .gig-poster {
+  padding: 25px;
+  background: #e6ec32;
+  color: #151719;
+  border-radius: 2px;
+  border: 2px solid #101416;
+  box-shadow: 7px 7px 0 #090c15;
+}
+.prototype-treatments .poster-date {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 9px;
+  font-weight: 750;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 8px;
+}
+.prototype-treatments .poster-date strong {
+  font-size: 20px;
+}
+.prototype-treatments .gig-poster h2 {
+  font-size: 62px;
+  text-transform: uppercase;
+  margin-top: 20px;
+  line-height: 0.89;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  font-family: Impact, "Arial Narrow", sans-serif;
+}
+.prototype-treatments .gig-poster .support {
+  opacity: 1;
+  font-weight: 650;
+  text-transform: uppercase;
+  font-size: 11px;
+  margin-top: 18px;
+}
+.prototype-treatments .poster-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 155px);
+  gap: 15px;
+  align-items: end;
+  margin-top: 25px;
+}
+.prototype-treatments .gig-poster .venue-address {
+  margin-top: 0;
+  font-size: 14px;
+}
+.prototype-treatments .gig-poster .sold {
+  color: #151719;
+  background: #151719;
+  color: #e6ec32;
+  border-radius: 0;
+}
+.prototype-treatments .poster-map {
+  transform: rotate(-4deg);
+}
+.prototype-treatments .poster-map .map-art {
+  border: 5px solid #f9f9ed;
+  box-shadow: 0 2px 7px #0003;
+}
+.prototype-treatments .poster-map img {
+  filter: grayscale(1) contrast(1.15);
+}
+.prototype-treatments .poster-note {
+  font:
+    9px ui-monospace,
+    monospace;
+  margin-top: 25px;
+  letter-spacing: 0.5px;
+}
+
+/* 05. Editorial: typography above a date rail and a larger map. */
+.prototype-treatments .editorial {
+  background: #eee8df;
+  color: #292820;
+  padding: 26px;
+  border-radius: 2px;
+}
+.prototype-treatments .editorial-line {
+  display: flex;
+  justify-content: space-between;
+  font:
+    9px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #29282040;
+}
+.prototype-treatments .editorial h2 {
+  font:
+    47px/0.98 Georgia,
+    "Times New Roman",
+    serif;
+  letter-spacing: -0.055em;
+  margin-top: 18px;
+}
+.prototype-treatments .editorial .support {
+  font-size: 11px;
+  margin-top: 9px;
+}
+.prototype-treatments .editorial-body {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 25px;
+  margin-top: 23px;
+}
+.prototype-treatments .editorial-calendar > span {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+.prototype-treatments .editorial-calendar > strong {
+  display: block;
+  font:
+    84px/1 Georgia,
+    serif;
+  letter-spacing: -7px;
+}
+.prototype-treatments .editorial-calendar p {
+  font-size: 10px;
+  line-height: 1.8;
+  margin-top: 10px;
+}
+.prototype-treatments .editorial .sold {
+  color: #a34b33;
+}
+.prototype-treatments .editorial .map-art img {
+  filter: sepia(0.3) saturate(0.6);
+}
+.prototype-treatments .editorial > .venue-address {
+  padding-top: 15px;
+  border-top: 1px solid #29282035;
+  margin-top: 20px;
+}
+
+/* 06. Transit: the map becomes the left rail rather than an accessory. */
+.prototype-treatments .transit-strip {
+  display: grid;
+  grid-template-columns: 35% minmax(0, 1fr);
+  border-radius: 14px;
+  background: #203238;
+  color: #ddf0eb;
+  border: 1px solid #68837766;
+}
+.prototype-treatments .transit-map {
+  position: relative;
+  min-height: 320px;
+  border-right: 4px solid #b9f56e;
+}
+.prototype-treatments .transit-map img {
+  filter: grayscale(0.3) sepia(0.3) saturate(0.6);
+}
+.prototype-treatments .transit-map .map-plane {
+  width: auto;
+  height: 100%;
+  aspect-ratio: 1;
+  top: 0;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+}
+.prototype-treatments .transit-stop {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 2;
+  padding: 9px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 850;
+  background: #203238;
+  border: 2px solid #b9f56e;
+}
+.prototype-treatments .transit-copy {
+  padding: 26px;
+}
+.prototype-treatments .transit-copy .eyebrow {
+  color: #b9f56e;
+}
+.prototype-treatments .transit-strip h2 {
+  font-size: 36px;
+  margin-top: 15px;
+}
+.prototype-treatments .transit-date {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-top: 23px;
+  padding: 12px 0;
+  border-top: 1px solid #adc6be40;
+  border-bottom: 1px solid #adc6be40;
+}
+.prototype-treatments .transit-date > strong {
+  font-size: 24px;
+  letter-spacing: -0.5px;
+}
+.prototype-treatments .transit-date > span {
+  font-size: 10px;
+  line-height: 1.6;
+}
+.prototype-treatments .transit-strip .venue-address {
+  margin-top: 17px;
+}
+.prototype-treatments .transit-strip .map-caption {
+  margin-top: 20px;
+}
+
+/* 07. A ticket silhouette, transparent over a softer wallpaper. */
+.prototype-treatments .stage-7 {
+  padding: 22px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 75% 25%, #d4a3dc66, transparent 50%),
+    radial-gradient(ellipse at 0 100%, #647dc7bb, transparent 65%),
+    repeating-radial-gradient(circle at 10% 0, #2c365b 0 1px, #26314d 1px 18px);
+}
+.prototype-treatments .ticket-window {
+  background: #151c3540;
+  backdrop-filter: blur(4px);
+  border: 1px solid #ffffff40;
+  border-radius: 16px;
+  color: #eee9ff;
+}
+.prototype-treatments .ticket-top {
+  padding: 18px 22px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+.prototype-treatments .ticket-top .admission {
+  margin: 0;
+}
+.prototype-treatments .ticket-top .admission > span:not(.admission-status) {
+  display: none;
+}
+.prototype-treatments .ticket-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 22px;
+  padding: 25px 22px;
+  align-items: center;
+}
+.prototype-treatments .ticket-window h2 {
+  font:
+    39px/1.1 Georgia,
+    serif;
+  letter-spacing: -1.5px;
+}
+.prototype-treatments .ticket-window .venue-address {
+  margin-top: 22px;
+}
+.prototype-treatments .ticket-map .map-art {
+  border-radius: 0;
+}
+.prototype-treatments .ticket-map .map-plane {
+  border-radius: 50%;
+  overflow: hidden;
+}
+.prototype-treatments .ticket-map img {
+  filter: grayscale(0.65) saturate(0.4);
+}
+.prototype-treatments .ticket-map .map-credit {
+  left: auto;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  font-size: 9px;
+}
+.prototype-treatments .ticket-map .map-caption {
+  text-align: center;
+  font-size: 8px;
+}
+.prototype-treatments .ticket-stub {
+  border-top: 1px dashed #ffffff60;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  text-transform: uppercase;
+  font:
+    10px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+}
+.prototype-treatments .ticket-stub strong {
+  font-size: 15px;
+}
+
+.prototype-switcher {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  width: 290px;
+  border: 1px solid #ffffff40;
+  border-radius: 18px;
+  background: #0d1124f2;
+  color: #f7f5ff;
+  padding: 8px 12px 10px;
+  box-shadow: 0 8px 40px #0009;
+  backdrop-filter: blur(18px);
+}
+.prototype-switcher .switcher-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.prototype-switcher .switcher-main > div {
+  text-align: center;
+}
+.prototype-switcher .switcher-main span {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: #b5a6ed;
+}
+.prototype-switcher .switcher-main strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+}
+.prototype-switcher .switcher-main > button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #ffffff25;
+  font-size: 18px;
+}
+.prototype-switcher .switcher-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 7px;
+}
+.prototype-switcher .switcher-dots button {
+  width: 23px;
+  height: 23px;
+  font:
+    10px ui-monospace,
+    monospace;
+  border-radius: 50%;
+  color: #b8b3cb;
+  background: #ffffff08;
+}
+.prototype-switcher .switcher-dots button[aria-pressed="true"] {
+  color: #fff;
+  background: #815be5;
+}
+.prototype-switcher button:hover {
+  background: #ffffff20;
+}
+.prototype-switcher button:focus-visible {
+  outline: 2px solid #b69cff;
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .prototype-treatments .clean-split {
+    gap: 16px;
+    padding: 18px;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+  .prototype-treatments .clean-split h2 {
+    font-size: 28px;
+  }
+  .prototype-treatments .clean-split .eyebrow {
+    font-size: 8px;
+  }
+  .prototype-treatments .clean-split .venue-address {
+    margin-top: 20px;
+  }
+  .prototype-treatments .split-map {
+    align-self: center;
+  }
+  .prototype-treatments .atlas-copy {
+    padding: 25px;
+  }
+  .prototype-treatments .atlas-copy h2 {
+    font-size: 48px;
+    max-width: 280px;
+  }
+  .prototype-treatments .transparent-atlas > .map-caption {
+    left: 25px;
+    right: auto;
+    bottom: 25px;
+  }
+  .prototype-treatments .stage-3,
+  .prototype-treatments .stage-7 {
+    padding: 12px;
+  }
+  .prototype-treatments .night-glass {
+    padding: 16px;
+  }
+  .prototype-treatments .glass-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .prototype-treatments .glass-map {
+    max-width: 180px;
+    justify-self: end;
+    margin-top: -10px;
+  }
+  .prototype-treatments .night-glass h2 {
+    font-size: 36px;
+  }
+  .prototype-treatments .gig-poster {
+    padding: 20px;
+  }
+  .prototype-treatments .gig-poster h2 {
+    font-size: 54px;
+  }
+  .prototype-treatments .poster-bottom {
+    grid-template-columns: minmax(0, 1fr) 110px;
+    gap: 10px;
+  }
+  .prototype-treatments .editorial {
+    padding: 20px;
+  }
+  .prototype-treatments .editorial h2 {
+    font-size: 42px;
+  }
+  .prototype-treatments .editorial-body {
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 15px;
+  }
+  .prototype-treatments .editorial-calendar > strong {
+    font-size: 65px;
+  }
+  .prototype-treatments .transit-strip {
+    grid-template-columns: 30% minmax(0, 1fr);
+  }
+  .prototype-treatments .transit-copy {
+    padding: 18px;
+  }
+  .prototype-treatments .transit-strip h2 {
+    font-size: 30px;
+  }
+  .prototype-treatments .transit-date {
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .prototype-treatments .ticket-body {
+    padding: 20px 16px;
+    gap: 12px;
+  }
+  .prototype-treatments .ticket-window h2 {
+    font-size: 32px;
+  }
+  .prototype-treatments .ticket-top {
+    padding: 16px 16px 0;
+  }
+  .prototype-treatments .ticket-stub {
+    padding: 14px 16px;
+    gap: 5px;
+    font-size: 8px;
+  }
+  .prototype-treatments .ticket-stub strong {
+    font-size: 12px;
+  }
+}
