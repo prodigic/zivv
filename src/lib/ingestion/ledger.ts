@@ -872,6 +872,58 @@ function matchEvent(
     };
   }
 
+  // Weekly Steve's List observations sometimes omit a previously listed time,
+  // or add one to an untimed bill. Match only a unique identical full lineup
+  // without provider/session identity; preserve known times when omitted.
+  if (
+    sourceKind === "steveslist" &&
+    candidate.session === null &&
+    candidate.externalEventId === null &&
+    candidate.canonicalUrl === null
+  ) {
+    const incomingLineup = lineupFingerprint(candidate.event, artists);
+    const untimedCandidates = events.filter((event) => {
+      if (
+        event.venueId !== candidate.event.venueId ||
+        event.date !== candidate.event.date ||
+        (eventTimeKey(event) !== null &&
+          eventTimeKey(candidate.event) !== null) ||
+        sourceSessions(event, sourceKind, sourceId).length > 0 ||
+        event.tags.includes("multiple-show") ||
+        candidate.event.tags.includes("multiple-show") ||
+        !event.sources.some(
+          (source) => source.kind === sourceKind && source.sourceId === sourceId
+        ) ||
+        conflictsWithExistingSourceIdentity(
+          event,
+          candidate,
+          sourceKind,
+          sourceId
+        )
+      )
+        return false;
+      const existingLineup = lineupFingerprint(event, artists);
+      return (
+        incomingLineup.headliner !== null &&
+        incomingLineup.headliner === existingLineup.headliner &&
+        canonicalize(incomingLineup.lineup) ===
+          canonicalize(existingLineup.lineup)
+      );
+    });
+    if (untimedCandidates.length > 0) {
+      return {
+        event: untimedCandidates.length === 1 ? untimedCandidates[0] : null,
+        sourceMatch: false,
+        fingerprintMatch: untimedCandidates.length === 1,
+        ambiguousIds:
+          untimedCandidates.length > 1
+            ? untimedCandidates.map((event) => event.id)
+            : [],
+        legacyTimeUncertainIds: [],
+      };
+    }
+  }
+
   // A same-day bill can be rewritten with a different headliner, reordered
   // acts, or role markers while remaining the same show. Compare the shared
   // lineup against all rows, including earlier candidates in this batch; a

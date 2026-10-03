@@ -22,12 +22,12 @@ export function steveRunId(
   aliases: Record<string, string>
 ): string {
   const identity = {
-    importer: "steveslist-v3",
+    importer: "steveslist-v4",
     schema: 1,
     content: normalizeLatestContent(content),
     aliases: Object.entries(aliases).sort(([a], [b]) => a.localeCompare(b)),
   };
-  return `steveslist-v3-${createHash("sha256").update(JSON.stringify(identity)).digest("hex")}`;
+  return `steveslist-v4-${createHash("sha256").update(JSON.stringify(identity)).digest("hex")}`;
 }
 
 /** Pure construction of a weekly candidate batch; shared reconciler owns acceptance. */
@@ -70,9 +70,13 @@ export function prepareSteveBatch(
       (_, month: string, day: string) => {
         const monthIndex = months.indexOf(month.toLowerCase());
         let year = reference.getUTCFullYear();
+        // Dated issues list upcoming shows. A spring/summer date before the
+        // issue belongs to next year even when it is less than six months ago.
         if (
           Date.UTC(year, monthIndex, Number(day)) <
-          reference.getTime() - 180 * 86400000
+          (headerDate
+            ? Date.UTC(year, reference.getUTCMonth(), reference.getUTCDate())
+            : reference.getTime() - 180 * 86400000)
         )
           year++;
         return `${month} ${day} ${year} `;

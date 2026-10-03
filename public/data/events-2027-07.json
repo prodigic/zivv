@@ -1,0 +1,57 @@
+{
+  "chunkId": "2027-07",
+  "dateRange": {
+    "startEpochMs": 1815480000000,
+    "endEpochMs": 1815480000000
+  },
+  "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1560513848,
+        1141199221,
+        981725751
+      ],
+      "createdAtEpochMs": 1790985835628,
+      "date": "2027-07-13",
+      "dateEpochMs": 1815480000000,
+      "firstImportRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1790985835628,
+      "headlinerArtistId": 1560513848,
+      "id": 660201289,
+      "isFree": false,
+      "priceMax": 46.5,
+      "priceMin": 46.5,
+      "provenanceConflicts": [],
+      "slug": "2027-07-13-lizzy-mcalpine-the-warriors-stadium",
+      "sourceLineNumber": 1202,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:b4c45c59d28ac45f",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1790985835628,
+          "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1790985835628,
+          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "originalVenueId": 793025194,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1815530400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1790985835628,
+      "venueId": 793025194,
+      "venueType": "major"
+    }
+  ]
+}

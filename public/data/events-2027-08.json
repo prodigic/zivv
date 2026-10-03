@@ -1,0 +1,61 @@
+{
+  "chunkId": "2027-08",
+  "dateRange": {
+    "startEpochMs": 1818331200000,
+    "endEpochMs": 1818331200000
+  },
+  "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1132912997,
+        632071429,
+        339982188,
+        569996282
+      ],
+      "createdAtEpochMs": 1790985835628,
+      "date": "2027-08-15",
+      "dateEpochMs": 1818331200000,
+      "firstImportRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1790985835628,
+      "headlinerArtistId": 1132912997,
+      "id": 1404270879,
+      "isFree": false,
+      "notes": "$399 vip",
+      "priceMax": 179,
+      "priceMin": 179,
+      "provenanceConflicts": [],
+      "slug": "2027-08-15-slipknot-golden-gate-park",
+      "sourceLineNumber": 1203,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:7995b167891233af",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1790985835628,
+          "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1790985835628,
+          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "originalVenueId": 1306836772,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1818370800000,
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1790985835628,
+      "venueId": 1306836772,
+      "venueType": "club"
+    }
+  ]
+}

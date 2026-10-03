@@ -66,12 +66,12 @@
   },
   {
     "note": "The Castro Street Fair row omits its self-named venue; make the non-music event explicit for exclusion.",
-    "pattern": "^(oct\\s+4\\s+\\w{3}\\s+Castro Street Fair),\\s+S\\.F\\.\\s+a/a$",
-    "replacement": "$1 at Castro Street Fair, S.F. a/a"
+    "pattern": "^(oct\\s+4\\s+(?:\\w{3}|2026)\\s+Castro Street Fair),\\s+S\\.F\\.\\s+a/a(.*)$",
+    "replacement": "$1 at Castro Street Fair, S.F. a/a$2"
   },
   {
     "note": "Restore the missing separator before the Ivy Room venue and correct the source typo Albanu to Albany.",
-    "pattern": "dj Misfailed Bday\\s+Partyat Ivy Room, Albanu\\b",
+    "pattern": "dj Misfailed Bday\\s+Partyat Ivy Room, Alban[uy]\\b",
     "replacement": "dj Misfailed Bday Party at Ivy Room, Albany"
   },
   {
@@ -133,5 +133,15 @@
     "note": "Restore the truncated Oct. 8 Rasmus support act name to Death Valley Dreams, confirmed by the August Hall date listing.",
     "pattern": "^(oct\\s+8\\s+(?:2026|[a-z]{2,4})\\s+The Rasmus, Saint Agnes, Death Valley)(?=\\s+at August Hall|$)",
     "replacement": "$1 Dreams"
+  },
+  {
+    "note": "October 2 edition omits the weekday before Sackerson's December 5 bill. Restore the date separator; December 5, 2026 is Saturday.",
+    "pattern": "^dec\\s+5\\s+sackerson,",
+    "replacement": "dec 5 sat Sackerson,"
+  },
+  {
+    "note": "October 2 edition omits the slash between Fred Armisen's October 28 doors and show times.",
+    "pattern": "^(oct\\s+28\\s+(?:wed|2026)\\s+Fred Armisen[^\\n]*)7pm8pm",
+    "replacement": "$17pm/8pm"
   }
 ]

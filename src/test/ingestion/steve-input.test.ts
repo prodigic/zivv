@@ -7,6 +7,22 @@ function emptyLedger() {
 }
 
 describe("Steve's List ingestion input", () => {
+  it("keeps upcoming dates beyond six months in the year after the issue", () => {
+    const batch = prepareSteveBatch(
+      emptyLedger(),
+      [
+        "funk-punk-thrash-ska Upcoming shows of Interest October 2, 2026",
+        "oct 2 fri Current Band at Test Room, Oakland a/a 8pm",
+        "apr 6 tue Spring Band at Test Room, Oakland a/a 8pm",
+        "jun 4 fri Summer Band at Test Room, Oakland a/a 8pm",
+        "aug 15 sun Late Summer Band at Test Room, Oakland a/a 8pm",
+      ].join("\n"),
+      Date.parse("2026-10-02T23:43:30Z")
+    );
+    expect(
+      batch.events.map((event) => ("event" in event ? event.event : event).date)
+    ).toEqual(["2026-10-02", "2027-04-06", "2027-06-04", "2027-08-15"]);
+  });
   it("unifies Hopmonk aliases within a city while keeping Novato and Sebastopol separate", () => {
     const batch = prepareSteveBatch(
       emptyLedger(),

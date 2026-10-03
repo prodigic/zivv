@@ -118,6 +118,99 @@ function batch(
 }
 
 describe("durable ingestion ledger", () => {
+  it.each(["existing", "incoming"] as const)(
+    "preserves one Steve's List identity when the %s observation omits the show time",
+    (missing) => {
+      const artist = makeArtist(1, "Jessie Ware");
+      const venue = makeVenue(2, "Warfield");
+      const time = Date.parse("2026-10-17T03:00:00Z");
+      const first = reconcileCandidates(
+        emptyLedger(),
+        batch(
+          "first",
+          "steveslist",
+          "steveslist",
+          1000,
+          makeEvent(
+            3,
+            1,
+            2,
+            "2026-10-16",
+            missing === "existing" ? undefined : time,
+            { timeBasis: "instant" }
+          ),
+          [artist],
+          [venue]
+        )
+      );
+      const next = reconcileCandidates(
+        first.ledger,
+        batch(
+          "second",
+          "steveslist",
+          "steveslist",
+          2000,
+          makeEvent(
+            4,
+            1,
+            2,
+            "2026-10-16",
+            missing === "incoming" ? undefined : time,
+            { timeBasis: "instant" }
+          ),
+          [artist],
+          [venue]
+        )
+      );
+      expect(next.report.review).toEqual([]);
+      expect(next.report.newEventIds).toEqual([]);
+      expect(next.ledger.events).toHaveLength(1);
+      expect(next.ledger.events[0]).toMatchObject({
+        id: 3,
+        createdAtEpochMs: 1000,
+        startTimeEpochMs: time,
+      });
+    }
+  );
+
+  it("reviews an untimed Steve's List row when two performances share the same bill", () => {
+    const artist = makeArtist(1, "Jessie Ware");
+    const venue = makeVenue(2, "Warfield");
+    const firstBatch = batch(
+      "first",
+      "steveslist",
+      "steveslist",
+      1000,
+      makeEvent(3, 1, 2, "2026-10-16", Date.parse("2026-10-17T01:00:00Z"), {
+        timeBasis: "instant",
+      }),
+      [artist],
+      [venue]
+    );
+    firstBatch.events.push(
+      makeEvent(4, 1, 2, "2026-10-16", Date.parse("2026-10-17T04:00:00Z"), {
+        timeBasis: "instant",
+      })
+    );
+    const first = reconcileCandidates(emptyLedger(), firstBatch);
+    const next = reconcileCandidates(
+      first.ledger,
+      batch(
+        "second",
+        "steveslist",
+        "steveslist",
+        2000,
+        makeEvent(5, 1, 2, "2026-10-16", undefined, { timeBasis: "instant" }),
+        [artist],
+        [venue]
+      )
+    );
+    expect(next.report.newEventIds).toEqual([]);
+    expect(next.report.review).toMatchObject([
+      { reason: "ambiguous-match", existingEventIds: [3, 4] },
+    ]);
+    expect(next.ledger.events).toHaveLength(2);
+  });
   it("bootstraps all historical events as Steve's List without changing identity or date added", () => {
     const artist = makeArtist(1, "The Example");
     const venue = makeVenue(2, "The Test Room");
