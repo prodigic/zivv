@@ -22,6 +22,37 @@ afterEach(() => {
   cache.get.mockResolvedValue(null);
 });
 describe("migration client loading", () => {
+  it("revalidates HTTP-cached manifests and entities after a publication", async () => {
+    let publishedVersion = "old";
+    const httpCache = new Map<string, unknown>();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, options: RequestInit = {}) => {
+        const current = url.endsWith("manifest.json")
+          ? { datasetVersion: publishedVersion, chunks: {} }
+          : [
+              {
+                id: 1,
+                name: "Sweetwater Music Hall",
+                city: publishedVersion === "old" ? "Mill" : "Mill Valley",
+              },
+            ];
+        const data =
+          options.cache === "no-cache" || !httpCache.has(url)
+            ? current
+            : httpCache.get(url);
+        httpCache.set(url, data);
+        return { ok: true, json: async () => data };
+      })
+    );
+    const service = new DataService({ baseUrl: "/data", retryAttempts: 1 });
+    expect((await service.loadVenues())[0].city).toBe("Mill");
+    publishedVersion = "new";
+    await service.loadManifest();
+    expect((await service.loadVenues())[0].city).toBe("Mill Valley");
+    expect(cache.clearVersion).toHaveBeenCalledWith("old");
+  });
+
   it("uses the manifest version for cached data and rejects a mismatched additions index", async () => {
     const fetch = vi.fn(async (url: string) => ({
       ok: true,

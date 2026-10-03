@@ -36,3 +36,11 @@ reconciliation. Streetlight has no upcoming events on October 2. Vets Hall shows
 `City TBA` until the individual locations are reconciled.
 
 Requested work is tracked in [issue #11](https://github.com/prodigic/zivv/issues/11).
+
+Live browser verification also exposed the browser's ten-minute HTTP cache
+retaining a previous export even when new application code had loaded. Network
+data requests now revalidate HTTP cache entries; IndexedDB continues to reuse
+entities for the matching dataset version. A regression simulates an HTTP cache
+and verifies that a newly published manifest reloads corrected city metadata.
+The test failed with the previous behavior and passed after the fix. The export
+was refreshed to invalidate any previously cached mixture of versions.

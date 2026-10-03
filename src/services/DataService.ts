@@ -505,6 +505,8 @@ export class DataService {
     for (let attempt = 1; attempt <= this.config.retryAttempts; attempt++) {
       try {
         const response = await fetch(url, {
+          // Revalidate published files; HTTP caching can outlive a deployment.
+          cache: "no-cache",
           ...options,
           headers: {
             Accept: "application/json",
