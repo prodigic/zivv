@@ -1,0 +1,878 @@
+[
+  {
+    "venueId": 1673709304,
+    "venueName": "Quarry Amphitheater",
+    "location": {
+      "latitude": 36.99879795,
+      "longitude": -122.05660625,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/way/668326761",
+      "matchedAddress": "Quarry Amphitheater, University of California Santa Cruz"
+    },
+    "notes": "Operator confirms UCSC Quarry Amphitheater; cited OSM named amphitheater polygon locates actual grounds, rather than remote Bay/High campus entry. Coordinate is polygon bounding-box center; no exact stage/gate claimed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1739693421,
+    "venueName": "Shoreline Amphitheatre",
+    "location": {
+      "latitude": 37.426718,
+      "longitude": -122.080722,
+      "precision": "site",
+      "sourceUrl": "https://www.shorelineamphitheatre.com/",
+      "matchedAddress": "One Amphitheatre Parkway, Mountain View"
+    },
+    "notes": "Official owner GeoCoordinates metadata; proven Shoreline spelling aliases retain separate IDs.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 882308789,
+    "venueName": "Yerba Buena Gardens",
+    "location": {
+      "latitude": 37.784773,
+      "longitude": -122.402658,
+      "precision": "area",
+      "sourceUrl": "https://ybgfestival.org/"
+    },
+    "notes": "Official event GeoCoordinates explicitly identify Great Lawn, Yerba Buena Gardens, matching Mission between 3rd/4th. Garden performance area, not stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 374946520,
+    "venueName": "Civic Center Plaza",
+    "location": {
+      "latitude": 37.779472222222225,
+      "longitude": -122.41761111111111,
+      "precision": "area",
+      "sourceUrl": "https://sfrecpark.org/866/Civic-Center-Plaza-Joseph-Alioto-Piazza"
+    },
+    "notes": "Official embedded map pin label 37°46′46.1″N 122°25′03.4″W. Plaza area.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 778116947,
+    "venueName": "Hardly Stricty Bluegrass",
+    "location": {
+      "latitude": 37.7704966,
+      "longitude": -122.4799241,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/3713966077",
+      "matchedAddress": "John F. Kennedy Promenade and Transverse Drive, San Francisco"
+    },
+    "notes": "Official festival access intersection is now named JFK Promenade in OSM. Festival spans multiple meadows; area access only. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1533734128,
+    "venueName": "Jack Kerouac Alley",
+    "location": {
+      "latitude": 37.7974797,
+      "longitude": -122.406964,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65305761",
+      "matchedAddress": "Jack Kerouac Alley and Grant Avenue, San Francisco"
+    },
+    "notes": "Grant-side alley endpoint; alley performance area. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1167888962,
+    "venueName": "Park Place",
+    "location": {
+      "latitude": 37.9270117,
+      "longitude": -122.3849292,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/4384834601",
+      "matchedAddress": "Park Place and Washington Avenue, Richmond"
+    },
+    "notes": "Official Point Richmond Music identifies Park Place/Washington. OSM shared named-street node. Public street-concert area, not exact stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1303522840,
+    "venueName": "Clarion Alley Mission Stage",
+    "location": {
+      "latitude": 37.7630497,
+      "longitude": -122.4194975,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65302921",
+      "matchedAddress": "Clarion Alley and Mission Street, San Francisco"
+    },
+    "notes": "Mission-side Clarion Alley access; exact stage position is not claimed. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1503344643,
+    "venueName": "Clarion Alley Valencia Stage",
+    "location": {
+      "latitude": 37.762927,
+      "longitude": -122.4217151,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/12809540185",
+      "matchedAddress": "Clarion Alley and Valencia Street, San Francisco"
+    },
+    "notes": "Valencia-side Clarion Alley access; exact stage position is not claimed. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1512685125,
+    "venueName": "Robin Williams Meadow",
+    "location": {
+      "latitude": 37.769194444444445,
+      "longitude": -122.45747222222222,
+      "precision": "area",
+      "sourceUrl": "https://sfrecpark.org/879/Golden-Gate-Park---Robin-Williams-Meadow"
+    },
+    "notes": "Official embedded map pin label 37°46′09.1″N 122°27′26.9″W. Meadow area; no exact stage or entrance claimed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 107186942,
+    "venueName": "Shoreline Amphitheaer",
+    "location": {
+      "latitude": 37.426718,
+      "longitude": -122.080722,
+      "precision": "site",
+      "sourceUrl": "https://www.shorelineamphitheatre.com/",
+      "matchedAddress": "One Amphitheatre Parkway, Mountain View"
+    },
+    "notes": "Official owner GeoCoordinates metadata; proven Shoreline spelling aliases retain separate IDs.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1931913617,
+    "venueName": "Shoreline Amphitheater",
+    "location": {
+      "latitude": 37.426718,
+      "longitude": -122.080722,
+      "precision": "site",
+      "sourceUrl": "https://www.shorelineamphitheatre.com/",
+      "matchedAddress": "One Amphitheatre Parkway, Mountain View"
+    },
+    "notes": "Official owner GeoCoordinates metadata; proven Shoreline spelling aliases retain separate IDs.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1980623387,
+    "venueName": "Shoreline Amphteater",
+    "location": {
+      "latitude": 37.426718,
+      "longitude": -122.080722,
+      "precision": "site",
+      "sourceUrl": "https://www.shorelineamphitheatre.com/",
+      "matchedAddress": "One Amphitheatre Parkway, Mountain View"
+    },
+    "notes": "Official owner GeoCoordinates metadata; proven Shoreline spelling aliases retain separate IDs.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2023698434,
+    "venueName": "Concord Skatepark",
+    "location": {
+      "latitude": 37.9681374,
+      "longitude": -122.0316068,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/230901996/full.json"
+    },
+    "notes": "Direct primary OpenStreetMap way 230901996 geometry confirms the named feature. Bounding-box center is an approximate area, not a venue entrance or event stage. Opened OSM-derived map identifies Concord Skatepark way 230901996 in Contra Costa County, matching official Cowell/San Miguel park. Skatepark area, not exact entry/stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1146900097,
+    "venueName": "Point Emery",
+    "location": {
+      "latitude": 37.8462584,
+      "longitude": -122.3011371,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/28406132/full.json"
+    },
+    "notes": "Direct primary OpenStreetMap way 28406132 geometry confirms the named feature. Bounding-box center is an approximate area, not a venue entrance or event stage. Opened OSM-derived map identifies Point Emery Park way 28406132, matching official Emeryville park. Park area, not shoreline/stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 507235645,
+    "venueName": "Shoreline Ampheater",
+    "location": {
+      "latitude": 37.426718,
+      "longitude": -122.080722,
+      "precision": "site",
+      "sourceUrl": "https://www.shorelineamphitheatre.com/",
+      "matchedAddress": "One Amphitheatre Parkway, Mountain View"
+    },
+    "notes": "Official owner GeoCoordinates metadata; proven Shoreline spelling aliases retain separate IDs.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 427675501,
+    "venueName": "Shoreline Theater",
+    "location": {
+      "latitude": 37.426718,
+      "longitude": -122.080722,
+      "precision": "site",
+      "sourceUrl": "https://www.shorelineamphitheatre.com/",
+      "matchedAddress": "One Amphitheatre Parkway, Mountain View"
+    },
+    "notes": "Official owner GeoCoordinates metadata; proven Shoreline spelling aliases retain separate IDs.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1489670725,
+    "venueName": "Shorline Amphitheater",
+    "location": {
+      "latitude": 37.426718,
+      "longitude": -122.080722,
+      "precision": "site",
+      "sourceUrl": "https://www.shorelineamphitheatre.com/",
+      "matchedAddress": "One Amphitheatre Parkway, Mountain View"
+    },
+    "notes": "Official owner GeoCoordinates metadata; proven Shoreline spelling aliases retain separate IDs.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1873078626,
+    "venueName": "Zellerbach Hall",
+    "location": {
+      "latitude": 37.8691,
+      "longitude": -122.260838,
+      "precision": "site",
+      "sourceUrl": "https://calperformances.org/visit/venues/zellerbach-hall/"
+    },
+    "notes": "Operator links a named Zellerbach Hall map at these coordinates. Hall building vicinity, not the unrelated Bancroft/Telegraph transit intersection.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1471035891,
+    "venueName": "the Bandshell",
+    "location": {
+      "latitude": 37.77063888888889,
+      "longitude": -122.4675,
+      "precision": "site",
+      "sourceUrl": "https://sfrecpark.org/870/Golden-Gate-Park---Bandshell"
+    },
+    "notes": "Official embedded map pin label 37°46′14.3″N 122°28′03.0″W decoded from base 64; not the shifted viewport center. Bandshell site, not a specific door.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 577028098,
+    "venueName": "Rolph Street at Pomona St.",
+    "location": {
+      "latitude": 38.0523801,
+      "longitude": -122.2200066,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/2532019677",
+      "matchedAddress": "Pomona Street and Rolph Avenue, Crockett"
+    },
+    "notes": "Official Sugartown Festival identifies Pomona/Rolph; OSM labels the road Rolph Avenue. Public access intersection area, not exact stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1291359065,
+    "venueName": "Embarcadero Plaza",
+    "location": {
+      "latitude": 37.7944461,
+      "longitude": -122.3948315,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/1723739166",
+      "matchedAddress": "Steuart Street and Market Street, San Francisco"
+    },
+    "notes": "Official named plaza access intersection; plaza area. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 674532354,
+    "venueName": "Civic Center and Market Street Parade",
+    "location": null,
+    "notes": "Combined moving Market Street parade and Civic Center celebration; no single site point represents both. Coordinates deliberately unset.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 181982577,
+    "venueName": "Willow's",
+    "location": {
+      "latitude": 37.7569732,
+      "longitude": -122.4200211,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65302196",
+      "matchedAddress": "21st Street and Bartlett Street, San Francisco"
+    },
+    "notes": "Published listing gives this intersection/nearby porch vicinity. Marker represents intersection area only, not a private residence. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1272982754,
+    "venueName": "Pacifica's Fogfist Parade",
+    "location": {
+      "latitude": 37.6352708,
+      "longitude": -122.492082,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65440909",
+      "matchedAddress": "Palmetto Avenue and Santa Maria Avenue, Pacifica"
+    },
+    "notes": "Official parade page confirms Palmetto route and identifies center-stage awards at Santa Maria/Palmetto. OSM intersection gives representative public festival/route area; not parade start/end or moving performer location.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1113366560,
+    "venueName": "Gouth Street Stage",
+    "location": {
+      "latitude": 37.7981396,
+      "longitude": -122.4272876,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65312695",
+      "matchedAddress": "Union Street and Gough Street, San Francisco"
+    },
+    "notes": "Official fair/performer evidence identifies Gough and Union despite Gouth typo. OSM shared named-street node; street-stage vicinity, not exact platform.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 980508599,
+    "venueName": "Sub Zero Festival",
+    "location": {
+      "latitude": 37.328605,
+      "longitude": -121.884915,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/5872385656",
+      "matchedAddress": "South 1st Street and West William Street, San Jose"
+    },
+    "notes": "Official festival names South First/William at Parque de los Pobladores. OSM shared named-street node labels William road West William Street. Festival access area, not stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1811760683,
+    "venueName": "corner of Park Place and Washington",
+    "location": {
+      "latitude": 37.9270117,
+      "longitude": -122.3849292,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/4384834601",
+      "matchedAddress": "Park Place and Washington Avenue, Richmond"
+    },
+    "notes": "Official Point Richmond Music identifies Park Place/Washington. OSM shared named-street node. Public street-concert area, not exact stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1781054735,
+    "venueName": "Ellis Street between Powell and Stockton",
+    "location": {
+      "latitude": 37.7855002,
+      "longitude": -122.4078674,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65332806",
+      "matchedAddress": "Ellis Street and Powell Street, San Francisco"
+    },
+    "notes": "Western end of listed Ellis street segment; block event area only. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 508217774,
+    "venueName": "Mountain Theater",
+    "location": {
+      "latitude": 37.9127055,
+      "longitude": -122.6087542,
+      "precision": "area",
+      "sourceUrl": "https://mountainplay.org/2026-season-events/mountainvisit/",
+      "matchedAddress": "Cushing Memorial Amphitheater, Mount Tamalpais"
+    },
+    "notes": "Operator links named Cushing Memorial Amphitheater Google map with these coordinates. Actual amphitheater vicinity; retained street field describes Rock Spring access parking elsewhere. No exact stage/entrance claimed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2025029583,
+    "venueName": "Grand Avenue and Wood Street",
+    "location": {
+      "latitude": 37.8187361,
+      "longitude": -122.2934654,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/99537269",
+      "matchedAddress": "West Grand Avenue and Wood Street, Oakland"
+    },
+    "notes": "Retained listing identifies Grand/Wood Oakland; OSM shared named-street node labels road West Grand Avenue. Intersection area, not a stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1620325708,
+    "venueName": "Marina Way and MacDonald Avenue",
+    "location": {
+      "latitude": 37.9357052,
+      "longitude": -122.3562063,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/57855526",
+      "matchedAddress": "Marina Way and Macdonald Avenue, Richmond"
+    },
+    "notes": "Retained listing identifies Marina/MacDonald Richmond; OSM shared named-street node labels road Macdonald Avenue. Intersection area.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1788570251,
+    "venueName": "Grinstead Amphitheater",
+    "location": {
+      "latitude": 38.292809649999995,
+      "longitude": -122.4576888,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/way/27498206",
+      "matchedAddress": "Sonoma Plaza, Sonoma"
+    },
+    "notes": "Official Sonoma event page identifies Grinstead Amphitheater within Sonoma Plaza. Named OSM plaza polygon bounding-box center gives plaza area; exact amphitheater position is not claimed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1774955152,
+    "venueName": "Haight Ashbury Street Fair",
+    "location": {
+      "latitude": 37.7702176,
+      "longitude": -122.44536,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65327923",
+      "matchedAddress": "Haight Street and Masonic Avenue, San Francisco"
+    },
+    "notes": "Eastern access end of official Haight fair extent Masonic–Stanyan; festival area. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 723101454,
+    "venueName": "Larkin Street at Eddy Street",
+    "location": {
+      "latitude": 37.7833151,
+      "longitude": -122.417548,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65354421",
+      "matchedAddress": "Larkin Street and Eddy Street, San Francisco"
+    },
+    "notes": "Published street-event intersection area. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 407232772,
+    "venueName": "Railroad Square",
+    "location": {
+      "latitude": 38.437380149999996,
+      "longitude": -122.7200327,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/way/699519898",
+      "matchedAddress": "Railroad Square Historic District, Santa Rosa"
+    },
+    "notes": "Official festival directions link Historic Railroad Square, Santa Rosa. OSM historic-district polygon bounding-box center represents district area; not a specific stage or Wilson/Davis gate.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1001737767,
+    "venueName": "Point Emery Park",
+    "location": {
+      "latitude": 37.8462584,
+      "longitude": -122.3011371,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/28406132/full.json"
+    },
+    "notes": "Direct primary OpenStreetMap way 28406132 geometry confirms the named feature. Bounding-box center is an approximate area, not a venue entrance or event stage. Opened OSM-derived map identifies Point Emery Park way 28406132, matching official Emeryville park. Park area, not shoreline/stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1340123468,
+    "venueName": "Hardly Strictly Bluegrass",
+    "location": {
+      "latitude": 37.7704966,
+      "longitude": -122.4799241,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/3713966077",
+      "matchedAddress": "John F. Kennedy Promenade and Transverse Drive, San Francisco"
+    },
+    "notes": "Official festival access intersection is now named JFK Promenade in OSM. Festival spans multiple meadows; area access only. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 145266702,
+    "venueName": "Post Street Fair",
+    "location": {
+      "latitude": 37.3352739,
+      "longitude": -121.8899604,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65574516",
+      "matchedAddress": "Post Street and South 1st Street, San Jose"
+    },
+    "notes": "Retained published listing identifies Post/1st in San Jose. OSM shared named-street node. Street-event area.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 818756583,
+    "venueName": "the Plaza",
+    "location": {
+      "latitude": 37.3321436,
+      "longitude": -121.8894677,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/25774716/full.json"
+    },
+    "notes": "Direct primary OpenStreetMap way 25774716 geometry confirms the named feature. Bounding-box center is an approximate area, not a venue entrance or event stage. Opened OSM-derived map identifies Plaza de César Chávez way 25774716, matching official Music in the Park venue. Plaza area, not stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 368186123,
+    "venueName": "Folsom Street Fair",
+    "location": {
+      "latitude": 37.7728201,
+      "longitude": -122.4128343,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65317570",
+      "matchedAddress": "Folsom Street and 10th Street, San Francisco"
+    },
+    "notes": "Representative intersection within official Folsom 7th–13th festival extent; area only, not official entrance/stage. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 467396903,
+    "venueName": "Castro Street Fair",
+    "location": {
+      "latitude": 37.76271,
+      "longitude": -122.4352027,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65296324",
+      "matchedAddress": "Castro Street and Market Street, San Francisco"
+    },
+    "notes": "Official fair intersection; street fair area, not stage. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 315738847,
+    "venueName": "Golden Gate Park Bandshell",
+    "location": {
+      "latitude": 37.77063888888889,
+      "longitude": -122.4675,
+      "precision": "site",
+      "sourceUrl": "https://sfrecpark.org/870/Golden-Gate-Park---Bandshell"
+    },
+    "notes": "Official embedded map pin label 37°46′14.3″N 122°28′03.0″W decoded from base 64; not the shifted viewport center. Bandshell site, not a specific door.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1362359479,
+    "venueName": "S.F. Zoo",
+    "location": {
+      "latitude": 37.7328979,
+      "longitude": -122.5023202,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/404847048/full.json"
+    },
+    "notes": "Direct primary OpenStreetMap way 404847048 geometry confirms the named feature. Bounding-box center is an approximate area, not a venue entrance or event stage. Opened OSM-derived map identifies San Francisco Zoo way 404847048. Zoo grounds area, not event-specific entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1879705643,
+    "venueName": "Hardly Strictly Bluegrass at Golden Gate Park",
+    "location": {
+      "latitude": 37.7704966,
+      "longitude": -122.4799241,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/3713966077",
+      "matchedAddress": "John F. Kennedy Promenade and Transverse Drive, San Francisco"
+    },
+    "notes": "Official festival access intersection is now named JFK Promenade in OSM. Festival spans multiple meadows; area access only. Coordinates read from OSM API vector data at the shared named-street node; no raster tiles or Nominatim used.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1969986404,
+    "venueName": "Dunphy Park",
+    "location": {
+      "latitude": 37.86115035,
+      "longitude": -122.4883181,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/way/377542150",
+      "matchedAddress": "Dunphy Park, Sausalito"
+    },
+    "notes": "Official city identifies Dunphy Park at Bridgeway/Napa. Named OSM park polygon bounding-box center locates park area, not a particular event stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1276498217,
+    "venueName": "Stern Grove",
+    "location": {
+      "latitude": 37.7347305,
+      "longitude": -122.4752293,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65316139",
+      "matchedAddress": "19th Avenue and Sloat Boulevard, San Francisco"
+    },
+    "notes": "Official Stern Grove Festival entrance at 19th/Sloat. OSM shared named-street node supports coordinates. Park access intersection, not concert stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1094184065,
+    "venueName": "Stern Grove Festival",
+    "location": {
+      "latitude": 37.7347305,
+      "longitude": -122.4752293,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65316139",
+      "matchedAddress": "19th Avenue and Sloat Boulevard, San Francisco"
+    },
+    "notes": "Official Stern Grove Festival entrance at 19th/Sloat. OSM shared named-street node supports coordinates. Park access intersection, not concert stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 578805190,
+    "venueName": "Snow Park",
+    "location": {
+      "latitude": 37.8070818,
+      "longitude": -122.2644019,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/22672037/full.json"
+    },
+    "notes": "Direct primary OpenStreetMap way 22672037 geometry confirms the named feature. Bounding-box center is an approximate area, not a venue entrance or event stage. Opened OSM-derived map identifies Snow Park way 22672037 in Oakland. Park area, not specific event stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 988969630,
+    "venueName": "Michelle's",
+    "location": {
+      "latitude": 37.7569732,
+      "longitude": -122.4200211,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65302196",
+      "matchedAddress": "21st Street and Bartlett Street, San Francisco"
+    },
+    "notes": "Published listing gives intersection vicinity; marker represents public intersection area only, not a private residence.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1602290234,
+    "venueName": "Oakland Pride",
+    "location": {
+      "latitude": 37.8043196,
+      "longitude": -122.2711889,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/3244767454",
+      "matchedAddress": "14th Street and Broadway, Oakland"
+    },
+    "notes": "Official Oakland Pride festival entrance vicinity at 14th/Broadway; OSM shared named-street node. Area only, not exact gate.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1344278433,
+    "venueName": "Outside Lands",
+    "location": {
+      "latitude": 37.7702099,
+      "longitude": -122.4946532,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/4026938895",
+      "matchedAddress": "36th Avenue and John F Kennedy Drive, San Francisco"
+    },
+    "notes": "Official Outside Lands accessibility page identifies 36th/JFK park access. OSM shared named-street node (John F Kennedy Drive). Festival access area, not stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1189056044,
+    "venueName": "Depot",
+    "checkedOn": "2026-10-02",
+    "location": {
+      "latitude": 37.7223453,
+      "longitude": -122.4786254,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/relation/4793449",
+      "matchedAddress": "Cesar Chavez Student Center, San Francisco State University"
+    },
+    "notes": "Official ASI page identifies Depot in lower level Cesar Chavez Student Center. OSM named building-relation bounding-box center locates campus building area; floor and door are not encoded."
+  },
+  {
+    "venueId": 1578696718,
+    "venueName": "Levi's Plaza",
+    "checkedOn": "2026-10-02",
+    "location": {
+      "latitude": 37.80236,
+      "longitude": -122.4022114,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/25751236/full.json",
+      "matchedAddress": "Levi’s Plaza, San Francisco"
+    },
+    "notes": "Direct primary OpenStreetMap way 25751236 geometry confirms the named feature. Bounding-box center is an approximate area, not a venue entrance or event stage. Official plaza identity confirmed; opened OSM-derived map explicitly identifies Levi’s Plaza pedestrian zone way 25751236. Plaza area only; management office and particular performance access remain distinct."
+  },
+  {
+    "venueId": 1306836772,
+    "venueName": "Golden Gate Park",
+    "checkedOn": "2026-10-02",
+    "location": {
+      "latitude": 37.7693969,
+      "longitude": -122.4820237,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/158602261/full.json",
+      "matchedAddress": "Golden Gate Park, San Francisco"
+    },
+    "notes": "Direct primary OpenStreetMap way 158602261 geometry confirms the named feature. Bounding-box center is an approximate area, not a venue entrance or event stage. Official park identity confirmed; opened OSM-derived map explicitly identifies Golden Gate Park way 158602261. Very broad park area across Bandshell/Outside Lands/HSB events; no single stage or entrance claimed."
+  },
+  {
+    "venueId": 822625010,
+    "venueName": "Moscone Center",
+    "checkedOn": "2026-10-02",
+    "location": {
+      "latitude": 37.784173,
+      "longitude": -122.401557,
+      "precision": "area",
+      "sourceUrl": "https://www.moscone.com/directions-and-parking-moscone-center",
+      "matchedAddress": "Moscone Center complex, San Francisco"
+    },
+    "notes": "Operator publishes these GeoCoordinates as EventVenue Moscone Center. Complex-area pin only; generic venue ID does not identify North/South/West hall, and 747 Howard office is not assigned as an event entrance."
+  },
+  {
+    "venueId": 398286726,
+    "venueName": "Mabuhay Gardens (21+) and On Broadway (a/a)",
+    "checkedOn": "2026-10-02",
+    "location": {
+      "latitude": 37.7979793,
+      "longitude": -122.4045323,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/2166014679",
+      "matchedAddress": "435–443 Broadway venue complex, San Francisco"
+    },
+    "notes": "Opened owner themab.org explicitly identifies 435&443 Broadway and upstairs/downstairs rooms. Named OSM Broadway Studios node locates shared venue complex area; neither one street number nor one room is selected."
+  },
+  {
+    "venueId": 1113680004,
+    "venueName": "the Mabuhay Gardens/on Broadway",
+    "checkedOn": "2026-10-02",
+    "location": {
+      "latitude": 37.7979793,
+      "longitude": -122.4045323,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/2166014679",
+      "matchedAddress": "435–443 Broadway venue complex, San Francisco"
+    },
+    "notes": "Opened owner themab.org explicitly identifies 435&443 Broadway and upstairs/downstairs rooms. Named OSM Broadway Studios node locates shared venue complex area; neither one street number nor one room is selected."
+  },
+  {
+    "venueId": 1094129374,
+    "venueName": "Mabuhay Gardens and on Broadway",
+    "checkedOn": "2026-10-02",
+    "location": {
+      "latitude": 37.7979793,
+      "longitude": -122.4045323,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/2166014679",
+      "matchedAddress": "435–443 Broadway venue complex, San Francisco"
+    },
+    "notes": "Opened owner themab.org explicitly identifies 435&443 Broadway and upstairs/downstairs rooms. Named OSM Broadway Studios node locates shared venue complex area; neither one street number nor one room is selected."
+  },
+  {
+    "venueId": 445731900,
+    "venueName": "22nd & Bartlett",
+    "location": null,
+    "notes": "Retained SF Porchfest listing identifies 22nd/Bartlett, but opened organizer no longer supplies the corresponding porch map. No verified exact public performance site assigned.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 713594331,
+    "venueName": "Athen's",
+    "location": null,
+    "notes": "Retained SF Porchfest listing identifies a 21st Street segment and private porch alias. Opened organizer no longer supplies the corresponding porch map; private home location is not inferred.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1009706718,
+    "venueName": "above DNA Lounge",
+    "location": null,
+    "notes": "Owner homepage confirms DNA Lounge 375 Eleventh, but no opened owner room-specific evidence identifies Above DNA’s separate access/site. Generic parent venue point is not assigned to this room.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1158870445,
+    "venueName": "Santa Cruz Revival Church",
+    "location": null,
+    "notes": "Church event instructions use parking and footbridge access; owner’s office/property address does not establish the actual performance entrance. No coordinates assigned.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1367234521,
+    "venueName": "Porchfest",
+    "location": null,
+    "notes": "Official San Rafael Porchfest identifies Gerstle Park neighborhood, but linked Teen Stage’s location is not established. A neighborhood-center point would obscure the specific stage.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1375030109,
+    "venueName": "Streetlight Records",
+    "location": null,
+    "notes": "Linked events span San Jose and Santa Cruz Streetlight branches. Brand website supplies no single branch for this merged ID; no coordinates assigned.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1621831563,
+    "venueName": "Mid Bartlett",
+    "location": null,
+    "notes": "Retained SF Porchfest listing identifies Bartlett between 21st/22nd, but opened organizer no longer supplies a corresponding porch map. Performance site remains unconfirmed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1378636720,
+    "venueName": "Kuumbwa Jazz Center",
+    "location": {
+      "latitude": 36.9698618,
+      "longitude": -122.0260514,
+      "precision": "site",
+      "sourceUrl": "https://www.kuumbwajazz.org/contact/",
+      "matchedAddress": "320-2 Cedar Street, Santa Cruz"
+    },
+    "notes": "Opened operator contact page links Google map embed; fetched embed explicitly names Kuumbwa Jazz Center,320-2 CedarStreet and its place pin coordinates. Both proven aliases retain separate IDs; not a fabricated suite entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1964305801,
+    "venueName": "Kuumbwa Center",
+    "location": {
+      "latitude": 36.9698618,
+      "longitude": -122.0260514,
+      "precision": "site",
+      "sourceUrl": "https://www.kuumbwajazz.org/contact/",
+      "matchedAddress": "320-2 Cedar Street, Santa Cruz"
+    },
+    "notes": "Opened operator contact page links Google map embed; fetched embed explicitly names Kuumbwa Jazz Center,320-2 CedarStreet and its place pin coordinates. Both proven aliases retain separate IDs; not a fabricated suite entrance.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 625980050,
+    "venueName": "Radium Runway",
+    "location": {
+      "latitude": 37.7814506,
+      "longitude": -122.2991807,
+      "precision": "area",
+      "sourceUrl": "https://maps.app.goo.gl/Cf1uDAwzAWmWVpww9",
+      "matchedAddress": "2151-B Ferry Point, Alameda"
+    },
+    "notes": "Official Radium Runway page links this map as its closest address 2151-BFerryPoint. Resolved URL contains explicit place pin 3d/4d coordinates. Outdoor venue access area adjacent Seaplane Lagoon Promenade; no exact stage claimed.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 1611053286,
+    "venueName": "the Faight",
+    "location": {
+      "latitude": 37.7720643,
+      "longitude": -122.4299862,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/5175561848",
+      "matchedAddress": "473A/475 Haight Street, San Francisco"
+    },
+    "notes": "Opened operator about page identifies 473 A/475 Haight. Primary OSM node names The Faight Collective, amenity arts_centre, at 473 AHaight (separate from adjacent Sparc cannabis node at 473). Shared venue area; no one room/door chosen.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 929862156,
+    "venueName": "House of Rock",
+    "location": {
+      "latitude": 38.476628399999996,
+      "longitude": -122.7395799,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/way/958890213",
+      "matchedAddress": "3410–3440 Industrial Drive, Santa Rosa"
+    },
+    "notes": "Opened Santa Rosa planning narrative identifies former House of Rock building at 3410 and 3440 Industrial Drive. Primary OSM full-way geometry names Rock Star University - House of Rock at 3410 Industrial Drive. Building bounding-box center represents historical property area; no claim venue remains open or one exact room assigned. Official historical-property source is listed in the report.",
+    "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 2038208300,
+    "venueName": "Harrison between 16th and 24th",
+    "location": {
+      "latitude": 37.7641045,
+      "longitude": -122.4130255,
+      "precision": "area",
+      "sourceUrl": "https://www.openstreetmap.org/node/65317371",
+      "matchedAddress": "17th Street and Harrison Street, San Francisco"
+    },
+    "notes": "Official Carnaval festival page identifies 17th/Harrison stage vicinity. Primary OSM vector extract gives this shared named-street intersection node. Festival extends over multiple Harrison blocks; marker is access/stage vicinity area, not exact platform.",
+    "checkedOn": "2026-10-02"
+  }
+]

@@ -124,6 +124,15 @@ export interface VenueUpcomingEvent extends EventProvenance {
   createdAtEpochMs: number;
 }
 
+/** Reviewed coordinates with precision and a public evidence source. */
+export interface VenueMapLocation {
+  latitude: number;
+  longitude: number;
+  precision: "address" | "site" | "area";
+  sourceUrl: string;
+  matchedAddress?: string;
+}
+
 export interface Venue {
   id: VenueId;
   name: string;
@@ -135,6 +144,7 @@ export interface Venue {
   city: string;
   neighborhood?: string;
   zipCode?: string;
+  mapLocation?: VenueMapLocation;
 
   // Details
   ageRestriction: AgeRestriction;

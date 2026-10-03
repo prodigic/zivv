@@ -17,6 +17,7 @@ export default defineConfig({
       "src/test/components/EventDetailPage.test.tsx",
       "src/test/components/SavedDateFilters.test.tsx",
       "src/test/components/VenuesPage.test.tsx",
+      "src/test/components/VenueMapPreview.test.tsx",
     ],
     reporters: ["default"],
   },

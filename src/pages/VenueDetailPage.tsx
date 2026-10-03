@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import VenueMapPreview from "@/components/ui/VenueMapPreview.js";
 import { useAppStore } from "@/stores/appStore.js";
 
 const VenueDetailPage: React.FC = () => {
@@ -116,6 +117,14 @@ const VenueDetailPage: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap gap-2 pt-1">
+            {venue.website && (
+              <a
+                href={venue.website}
+                className="text-sm text-purple-700 dark:text-purple-300 underline"
+              >
+                Venue website
+              </a>
+            )}
             {venue.ageRestriction && (
               <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">
                 {venue.ageRestriction}
@@ -136,6 +145,8 @@ const VenueDetailPage: React.FC = () => {
             </span>
           </div>
         </div>
+
+        <VenueMapPreview venue={venue} />
 
         {/* Upcoming shows */}
         {venue.upcomingEvents.length > 0 && (

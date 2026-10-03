@@ -31,6 +31,18 @@
       "@/pages/*": ["./src/pages/*"]
     }
   },
-  "include": ["src/types/**/*", "src/lib/**/*", "src/devserver/**/*"],
-  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/*.test.tsx", "src/devserver/TUIManager.ts"]
+  "include": [
+    "src/types/**/*",
+    "src/lib/**/*",
+    "src/devserver/**/*",
+    "src/utils/venue-map.ts",
+    "src/vite-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/devserver/TUIManager.ts"
+  ]
 }

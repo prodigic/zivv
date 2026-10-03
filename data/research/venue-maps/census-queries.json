@@ -1,0 +1,3995 @@
+{
+  "endpoint": "https://geocoding.geo.census.gov/geocoder/locations/addressbatch",
+  "benchmark": "Public_AR_Current",
+  "inputDigest": "bce3223f43afaab60ab3caca7460a9efb81ffd1b73498e95e104cefc9312ab1d",
+  "queries": [
+    {
+      "id": "365094640",
+      "street": "420 40th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        365094640
+      ]
+    },
+    {
+      "id": "639052476",
+      "street": "501 Mendocino Avenue",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        639052476,
+        209605697
+      ]
+    },
+    {
+      "id": "89816907",
+      "street": "2200 Clement Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        89816907,
+        392702093
+      ]
+    },
+    {
+      "id": "1535527108",
+      "street": "7650 Hawley Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1535527108
+      ]
+    },
+    {
+      "id": "1749114421",
+      "street": "2005 Valley Avenue",
+      "city": "Pleasanton",
+      "state": "CA",
+      "venueIds": [
+        1749114421
+      ]
+    },
+    {
+      "id": "379445320",
+      "street": "555 Waverley Street",
+      "city": "Palo Alto",
+      "state": "CA",
+      "venueIds": [
+        379445320
+      ]
+    },
+    {
+      "id": "934031822",
+      "street": "2271 S Vasco Road",
+      "city": "Livermore",
+      "state": "CA",
+      "venueIds": [
+        934031822
+      ]
+    },
+    {
+      "id": "826658255",
+      "street": "998 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        826658255
+      ]
+    },
+    {
+      "id": "1908553417",
+      "street": "853 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1908553417
+      ]
+    },
+    {
+      "id": "1515729640",
+      "street": "99 6th Street",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        1515729640
+      ]
+    },
+    {
+      "id": "1077391929",
+      "street": "2905 Shattuck Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1077391929
+      ]
+    },
+    {
+      "id": "1210289743",
+      "street": "1317 San Pablo Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1210289743
+      ]
+    },
+    {
+      "id": "915438229",
+      "street": "316 11th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        915438229
+      ]
+    },
+    {
+      "id": "811075932",
+      "street": "420 Mason Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        811075932,
+        590909310
+      ]
+    },
+    {
+      "id": "1834523627",
+      "street": "14808 East 14th Street",
+      "city": "San Leandro",
+      "state": "CA",
+      "venueIds": [
+        1834523627
+      ]
+    },
+    {
+      "id": "280552261",
+      "street": "1901 Broadway",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        280552261
+      ]
+    },
+    {
+      "id": "418122002",
+      "street": "806 South Van Ness Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        418122002,
+        757102003
+      ]
+    },
+    {
+      "id": "697962111",
+      "street": "1025 Columbus Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        697962111,
+        1038387369
+      ]
+    },
+    {
+      "id": "1815330766",
+      "street": "1001 B Street",
+      "city": "Hayward",
+      "state": "CA",
+      "venueIds": [
+        1815330766
+      ]
+    },
+    {
+      "id": "1082531611",
+      "street": "400 Eddy Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1082531611,
+        186436097
+      ]
+    },
+    {
+      "id": "1372815670",
+      "street": "923 Pacific Avenue",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        1372815670
+      ]
+    },
+    {
+      "id": "515371631",
+      "street": "850 Bordeaux Way",
+      "city": "Napa",
+      "state": "CA",
+      "venueIds": [
+        515371631
+      ]
+    },
+    {
+      "id": "1125299906",
+      "street": "1601 Fillmore Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1125299906
+      ]
+    },
+    {
+      "id": "1016385760",
+      "street": "1233 17th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1016385760,
+        181566439
+      ]
+    },
+    {
+      "id": "1041309861",
+      "street": "15000 Sonoma Highway",
+      "city": "Glen Ellen",
+      "state": "CA",
+      "venueIds": [
+        1041309861
+      ]
+    },
+    {
+      "id": "1719765223",
+      "street": "1710 Mission Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1719765223
+      ]
+    },
+    {
+      "id": "735156024",
+      "street": "23 Maine Avenue",
+      "city": "Richmond",
+      "state": "CA",
+      "venueIds": [
+        735156024
+      ]
+    },
+    {
+      "id": "44015086",
+      "street": "14455 Highway 16",
+      "city": "Brooks",
+      "state": "CA",
+      "venueIds": [
+        44015086
+      ]
+    },
+    {
+      "id": "1296228040",
+      "street": "650 Indiana Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1296228040
+      ]
+    },
+    {
+      "id": "1550837691",
+      "street": "2174 Market Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1550837691,
+        927889318
+      ]
+    },
+    {
+      "id": "1229703691",
+      "street": "98 South Almaden Avenue",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1229703691,
+        1884206801
+      ]
+    },
+    {
+      "id": "1020462721",
+      "street": "1220 Broadway",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1020462721
+      ]
+    },
+    {
+      "id": "680116887",
+      "street": "777 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        680116887,
+        506133276
+      ]
+    },
+    {
+      "id": "1529826054",
+      "street": "2800 Main Street",
+      "city": "St. Helena",
+      "state": "CA",
+      "venueIds": [
+        1529826054
+      ]
+    },
+    {
+      "id": "824077350",
+      "street": "135 West San Carlos Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        824077350,
+        561553329,
+        1197166862,
+        1414808200
+      ]
+    },
+    {
+      "id": "1172166010",
+      "street": "1030 Main Street",
+      "city": "Napa",
+      "state": "CA",
+      "venueIds": [
+        1172166010,
+        2131949227,
+        933841045,
+        476970951
+      ]
+    },
+    {
+      "id": "1648637995",
+      "street": "99 Grove Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1648637995,
+        1805757855,
+        1211018360
+      ]
+    },
+    {
+      "id": "135768954",
+      "street": "1134 Soquel Avenue",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        135768954
+      ]
+    },
+    {
+      "id": "2137851775",
+      "street": "1928 Telegraph Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        2137851775
+      ]
+    },
+    {
+      "id": "1333542935",
+      "street": "420 14th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1333542935
+      ]
+    },
+    {
+      "id": "1393740940",
+      "street": "2367 Shattuck Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1393740940
+      ]
+    },
+    {
+      "id": "850321337",
+      "street": "2600 Geneva Avenue",
+      "city": "Daly City",
+      "state": "CA",
+      "venueIds": [
+        850321337,
+        1616367641
+      ]
+    },
+    {
+      "id": "705503013",
+      "street": "775 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        705503013
+      ]
+    },
+    {
+      "id": "664752640",
+      "street": "201 Van Ness Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        664752640
+      ]
+    },
+    {
+      "id": "1227581691",
+      "street": "610 3rd Street",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        1227581691
+      ]
+    },
+    {
+      "id": "884606152",
+      "street": "1225 Folsom Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        884606152
+      ]
+    },
+    {
+      "id": "405307007",
+      "street": "375 11th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        405307007,
+        447883166
+      ]
+    },
+    {
+      "id": "321425008",
+      "street": "398 12th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        321425008
+      ]
+    },
+    {
+      "id": "1220592213",
+      "street": "950 Geary Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1220592213
+      ]
+    },
+    {
+      "id": "645156289",
+      "street": "2700 16th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        645156289
+      ]
+    },
+    {
+      "id": "1925979067",
+      "street": "3158 Mission Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1925979067
+      ]
+    },
+    {
+      "id": "188686622",
+      "street": "311 Broadway",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        188686622
+      ]
+    },
+    {
+      "id": "1368465968",
+      "street": "3629 Martin Luther King Jr Way",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1368465968
+      ]
+    },
+    {
+      "id": "968714901",
+      "street": "330 Virginia Street",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        968714901
+      ]
+    },
+    {
+      "id": "1613108720",
+      "street": "290 South 7th Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1613108720
+      ]
+    },
+    {
+      "id": "1059439298",
+      "street": "2501 Monarch Street",
+      "city": "Alameda",
+      "state": "CA",
+      "venueIds": [
+        1059439298
+      ]
+    },
+    {
+      "id": "613737360",
+      "street": "2601 Adeline Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        613737360
+      ]
+    },
+    {
+      "id": "992774973",
+      "street": "6275 Highway 9",
+      "city": "Felton",
+      "state": "CA",
+      "venueIds": [
+        992774973
+      ]
+    },
+    {
+      "id": "1136597428",
+      "street": "1805 Geary Boulevard",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1136597428
+      ]
+    },
+    {
+      "id": "1902350253",
+      "street": "1453 Webster Street",
+      "city": "Alameda",
+      "state": "CA",
+      "venueIds": [
+        1902350253
+      ]
+    },
+    {
+      "id": "556515310",
+      "street": "1304 Lincoln Avenue",
+      "city": "Alameda",
+      "state": "CA",
+      "venueIds": [
+        556515310
+      ]
+    },
+    {
+      "id": "631118593",
+      "street": "1807 Telegraph Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        631118593
+      ]
+    },
+    {
+      "id": "1917914969",
+      "street": "2020 Addison Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1917914969,
+        784839189
+      ]
+    },
+    {
+      "id": "283436496",
+      "street": "351 Lasuen Street",
+      "city": "Stanford",
+      "state": "CA",
+      "venueIds": [
+        283436496
+      ]
+    },
+    {
+      "id": "1885092734",
+      "street": "924 Gilman Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1885092734,
+        888749966
+      ]
+    },
+    {
+      "id": "1807239360",
+      "street": "412 14th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1807239360
+      ]
+    },
+    {
+      "id": "1996487210",
+      "street": "2665 Mission Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1996487210,
+        2036943294
+      ]
+    },
+    {
+      "id": "794236492",
+      "street": "4701 Great America Parkway",
+      "city": "Santa Clara",
+      "state": "CA",
+      "venueIds": [
+        794236492
+      ]
+    },
+    {
+      "id": "463728167",
+      "street": "859 O'Farrell Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        463728167
+      ]
+    },
+    {
+      "id": "549865205",
+      "street": "119 Utah Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        549865205
+      ]
+    },
+    {
+      "id": "1115904685",
+      "street": "288 Golf Course Drive West",
+      "city": "Rohnert Park",
+      "state": "CA",
+      "venueIds": [
+        1115904685
+      ]
+    },
+    {
+      "id": "112130441",
+      "street": "949 El Camino Real",
+      "city": "Menlo Park",
+      "state": "CA",
+      "venueIds": [
+        112130441,
+        522950407
+      ]
+    },
+    {
+      "id": "1762929864",
+      "street": "2000 Denmark Street",
+      "city": "Sonoma",
+      "state": "CA",
+      "venueIds": [
+        1762929864
+      ]
+    },
+    {
+      "id": "78032630",
+      "street": "9450 Highway 9",
+      "city": "Ben Lomond",
+      "state": "CA",
+      "venueIds": [
+        78032630
+      ]
+    },
+    {
+      "id": "1931690015",
+      "street": "401 Van Ness Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1931690015
+      ]
+    },
+    {
+      "id": "1859422971",
+      "street": "20990 Homestead Road",
+      "city": "Cupertino",
+      "state": "CA",
+      "venueIds": [
+        1859422971,
+        918876551,
+        133807587
+      ]
+    },
+    {
+      "id": "1488360326",
+      "street": "4117 Judah Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1488360326
+      ]
+    },
+    {
+      "id": "1558756676",
+      "street": "500 4th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1558756676
+      ]
+    },
+    {
+      "id": "515101024",
+      "street": "628 Divisadero Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        515101024,
+        1292097351,
+        498805266
+      ]
+    },
+    {
+      "id": "504160766",
+      "street": "444 Harrison Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        504160766
+      ]
+    },
+    {
+      "id": "1689618485",
+      "street": "860 San Pablo Avenue",
+      "city": "Albany",
+      "state": "CA",
+      "venueIds": [
+        1689618485
+      ]
+    },
+    {
+      "id": "1935435606",
+      "street": "1600 Holloway Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1935435606
+      ]
+    },
+    {
+      "id": "679424983",
+      "street": "40 John F Shelley Drive",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        679424983
+      ]
+    },
+    {
+      "id": "984695167",
+      "street": "243 O'Farrell Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        984695167
+      ]
+    },
+    {
+      "id": "281407589",
+      "street": "31 East Santa Clara Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        281407589
+      ]
+    },
+    {
+      "id": "1190204401",
+      "street": "712 Ocean Street",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        1190204401
+      ]
+    },
+    {
+      "id": "1433810567",
+      "street": "3160 16th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1433810567
+      ]
+    },
+    {
+      "id": "793956182",
+      "street": "3223 Mission Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        793956182,
+        1301386092
+      ]
+    },
+    {
+      "id": "1652761549",
+      "street": "2948 16th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1652761549
+      ]
+    },
+    {
+      "id": "1524469680",
+      "street": "1280 North McDowell Boulevard",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        1524469680,
+        4482554
+      ]
+    },
+    {
+      "id": "2031130888",
+      "street": "2272 Telegraph Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        2031130888
+      ]
+    },
+    {
+      "id": "598804186",
+      "street": "916 Grant Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        598804186
+      ]
+    },
+    {
+      "id": "1391050710",
+      "street": "10753 San Pablo Avenue",
+      "city": "El Cerrito",
+      "state": "CA",
+      "venueIds": [
+        1391050710
+      ]
+    },
+    {
+      "id": "401462974",
+      "street": "180 Eureka Square",
+      "city": "Pacifica",
+      "state": "CA",
+      "venueIds": [
+        401462974
+      ]
+    },
+    {
+      "id": "698121015",
+      "street": "988 Columbus Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        698121015
+      ]
+    },
+    {
+      "id": "250199871",
+      "street": "302 12th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        250199871
+      ]
+    },
+    {
+      "id": "234494996",
+      "street": "50 Mark West Springs Road",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        234494996,
+        1139783094,
+        609976920
+      ]
+    },
+    {
+      "id": "1966034770",
+      "street": "500 Divisadero Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1966034770
+      ]
+    },
+    {
+      "id": "337931090",
+      "street": "3225 22nd Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        337931090,
+        398859205
+      ]
+    },
+    {
+      "id": "1120524281",
+      "street": "1111 California Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1120524281
+      ]
+    },
+    {
+      "id": "954167517",
+      "street": "1150 25th Street, Building B",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        954167517
+      ]
+    },
+    {
+      "id": "1090061775",
+      "street": "401 2nd Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1090061775,
+        242611093
+      ]
+    },
+    {
+      "id": "1630275026",
+      "street": "875 Bordeaux Way",
+      "city": "Napa",
+      "state": "CA",
+      "venueIds": [
+        1630275026
+      ]
+    },
+    {
+      "id": "798787109",
+      "street": "444 Jessie Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        798787109
+      ]
+    },
+    {
+      "id": "343961277",
+      "street": "900 Marin Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        343961277,
+        235316584
+      ]
+    },
+    {
+      "id": "2078810884",
+      "street": "1840 Haight Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        2078810884,
+        117533728,
+        1856455989
+      ]
+    },
+    {
+      "id": "826017948",
+      "street": "201 Franklin Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        826017948,
+        2084336383,
+        1396518846
+      ]
+    },
+    {
+      "id": "1002839764",
+      "street": "1535 Commercial Way",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        1002839764,
+        949582250
+      ]
+    },
+    {
+      "id": "1439874346",
+      "street": "101 6th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1439874346
+      ]
+    },
+    {
+      "id": "2021730900",
+      "street": "14831 Pierce Road",
+      "city": "Saratoga",
+      "state": "CA",
+      "venueIds": [
+        2021730900
+      ]
+    },
+    {
+      "id": "1241556794",
+      "street": "15400 Montalvo Road",
+      "city": "Saratoga",
+      "state": "CA",
+      "venueIds": [
+        1241556794
+      ]
+    },
+    {
+      "id": "1386365370",
+      "street": "1355 Bush Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1386365370,
+        1051500561
+      ]
+    },
+    {
+      "id": "269944746",
+      "street": "23 Petaluma Boulevard North",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        269944746
+      ]
+    },
+    {
+      "id": "1557090037",
+      "street": "406 Clement Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1557090037
+      ]
+    },
+    {
+      "id": "442432003",
+      "street": "1743 San Pablo Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        442432003
+      ]
+    },
+    {
+      "id": "513710571",
+      "street": "2169 Mission Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        513710571
+      ]
+    },
+    {
+      "id": "1645166229",
+      "street": "5653 San Pablo Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1645166229
+      ]
+    },
+    {
+      "id": "1657529229",
+      "street": "577 5th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1657529229,
+        1900692829,
+        1166870039
+      ]
+    },
+    {
+      "id": "246147025",
+      "street": "460 Capistrano Road",
+      "city": "Half Moon Bay",
+      "state": "CA",
+      "venueIds": [
+        246147025
+      ]
+    },
+    {
+      "id": "1090707904",
+      "street": "1268 McKinstry Street",
+      "city": "Napa",
+      "state": "CA",
+      "venueIds": [
+        1090707904
+      ]
+    },
+    {
+      "id": "390079947",
+      "street": "3301 Lyon Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        390079947
+      ]
+    },
+    {
+      "id": "1275253527",
+      "street": "2025 Broadway",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1275253527,
+        1776673623
+      ]
+    },
+    {
+      "id": "485759302",
+      "street": "1600 17th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        485759302
+      ]
+    },
+    {
+      "id": "1185666454",
+      "street": "552 Haight Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1185666454
+      ]
+    },
+    {
+      "id": "598854079",
+      "street": "29 Broadway Boulevard",
+      "city": "Fairfax",
+      "state": "CA",
+      "venueIds": [
+        598854079
+      ]
+    },
+    {
+      "id": "1810219236",
+      "street": "601 Eddy Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1810219236
+      ]
+    },
+    {
+      "id": "1375571612",
+      "street": "201 Washington Street",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        1375571612
+      ]
+    },
+    {
+      "id": "1282095081",
+      "street": "116 Clement Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1282095081
+      ]
+    },
+    {
+      "id": "1918643887",
+      "street": "1900 Stenmark Drive",
+      "city": "Richmond",
+      "state": "CA",
+      "venueIds": [
+        1918643887,
+        747776193,
+        748679117
+      ]
+    },
+    {
+      "id": "1258312646",
+      "street": "90 West Pozo Road",
+      "city": "Santa Margarita",
+      "state": "CA",
+      "venueIds": [
+        1258312646
+      ]
+    },
+    {
+      "id": "1990731403",
+      "street": "150 Frank H. Ogawa Plaza",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1990731403
+      ]
+    },
+    {
+      "id": "755151683",
+      "street": "161 Erie Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        755151683
+      ]
+    },
+    {
+      "id": "1655849135",
+      "street": "1109 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1655849135
+      ]
+    },
+    {
+      "id": "62283194",
+      "street": "2401 Telegraph Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        62283194
+      ]
+    },
+    {
+      "id": "427667661",
+      "street": "1695 Polk Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        427667661
+      ]
+    },
+    {
+      "id": "2133080253",
+      "street": "1300 Van Ness Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        2133080253
+      ]
+    },
+    {
+      "id": "1663255521",
+      "street": "2112 North Main Street",
+      "city": "Walnut Creek",
+      "state": "CA",
+      "venueIds": [
+        1663255521
+      ]
+    },
+    {
+      "id": "31041890",
+      "street": "155 Fell Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        31041890,
+        1614077014,
+        1783397328,
+        1965011223,
+        1826340425
+      ]
+    },
+    {
+      "id": "2141325231",
+      "street": "1205 Soquel Avenue",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        2141325231
+      ]
+    },
+    {
+      "id": "2113527323",
+      "street": "2099 Folsom Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        2113527323
+      ]
+    },
+    {
+      "id": "1253820046",
+      "street": "400 South 1st Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1253820046
+      ]
+    },
+    {
+      "id": "1135677119",
+      "street": "30 North 3rd Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1135677119
+      ]
+    },
+    {
+      "id": "1428948079",
+      "street": "1346 Saratoga Drive",
+      "city": "San Mateo",
+      "state": "CA",
+      "venueIds": [
+        1428948079,
+        1975456497
+      ]
+    },
+    {
+      "id": "1927224070",
+      "street": "476 1st Street East",
+      "city": "Sonoma",
+      "state": "CA",
+      "venueIds": [
+        1927224070
+      ]
+    },
+    {
+      "id": "386050308",
+      "street": "420 First Street",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        386050308
+      ]
+    },
+    {
+      "id": "1381824618",
+      "street": "525 West Santa Clara Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1381824618,
+        1389229404
+      ]
+    },
+    {
+      "id": "1739693421",
+      "street": "1 Amphitheatre Parkway",
+      "city": "Mountain View",
+      "state": "CA",
+      "venueIds": [
+        1739693421,
+        107186942,
+        1931913617,
+        1980623387,
+        507235645,
+        427675501,
+        1489670725
+      ]
+    },
+    {
+      "id": "1572625358",
+      "street": "1600 Atlas Peak Road",
+      "city": "Napa",
+      "state": "CA",
+      "venueIds": [
+        1572625358
+      ]
+    },
+    {
+      "id": "549325977",
+      "street": "1270 Sutter Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        549325977
+      ]
+    },
+    {
+      "id": "228173384",
+      "street": "900 Fairgrounds Drive",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        228173384,
+        889140970
+      ]
+    },
+    {
+      "id": "854469226",
+      "street": "825 Athens Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        854469226,
+        652332053
+      ]
+    },
+    {
+      "id": "423857938",
+      "street": "3101 Shattuck Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        423857938
+      ]
+    },
+    {
+      "id": "1422247605",
+      "street": "2232 Martin Luther King Jr. Way",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1422247605
+      ]
+    },
+    {
+      "id": "1217828948",
+      "street": "2635 San Pablo Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1217828948,
+        378790023
+      ]
+    },
+    {
+      "id": "873142532",
+      "street": "2330 Telegraph Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        873142532,
+        2059320332,
+        673512683
+      ]
+    },
+    {
+      "id": "1180284286",
+      "street": "703 Pacific Avenue",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        1180284286
+      ]
+    },
+    {
+      "id": "647735412",
+      "street": "19 Corte Madera Avenue",
+      "city": "Mill Valley",
+      "state": "CA",
+      "venueIds": [
+        647735412
+      ]
+    },
+    {
+      "id": "1896275571",
+      "street": "1501 Harrison Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1896275571
+      ]
+    },
+    {
+      "id": "740798689",
+      "street": "100 Yacht Club Drive",
+      "city": "San Rafael",
+      "state": "CA",
+      "venueIds": [
+        740798689
+      ]
+    },
+    {
+      "id": "735357859",
+      "street": "3422 Mission Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        735357859
+      ]
+    },
+    {
+      "id": "92252189",
+      "street": "627 2nd Avenue",
+      "city": "Crockett",
+      "state": "CA",
+      "venueIds": [
+        92252189,
+        1374894183
+      ]
+    },
+    {
+      "id": "1327234872",
+      "street": "1337 Grant Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1327234872
+      ]
+    },
+    {
+      "id": "1531618194",
+      "street": "982 Market Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1531618194
+      ]
+    },
+    {
+      "id": "598126717",
+      "street": "6551 Telegraph Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        598126717
+      ]
+    },
+    {
+      "id": "170296881",
+      "street": "1522 Francisco Boulevard",
+      "city": "Pacifica",
+      "state": "CA",
+      "venueIds": [
+        170296881
+      ]
+    },
+    {
+      "id": "631577836",
+      "street": "275 South Washington Street",
+      "city": "Sonora",
+      "state": "CA",
+      "venueIds": [
+        631577836
+      ]
+    },
+    {
+      "id": "2093769319",
+      "street": "2036 University Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        2093769319
+      ]
+    },
+    {
+      "id": "1711400117",
+      "street": "1350 Third Street",
+      "city": "Napa",
+      "state": "CA",
+      "venueIds": [
+        1711400117
+      ]
+    },
+    {
+      "id": "864185171",
+      "street": "140 Encinal Street",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        864185171
+      ]
+    },
+    {
+      "id": "1019665867",
+      "street": "336 Georgia Street",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        1019665867
+      ]
+    },
+    {
+      "id": "415372741",
+      "street": "2424 Mariposa Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        415372741
+      ]
+    },
+    {
+      "id": "1850130272",
+      "street": "846 Front Street",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        1850130272
+      ]
+    },
+    {
+      "id": "321779358",
+      "street": "2328 San Pablo Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        321779358
+      ]
+    },
+    {
+      "id": "216332997",
+      "street": "3800 Mill Road",
+      "city": "Paso Robles",
+      "state": "CA",
+      "venueIds": [
+        216332997
+      ]
+    },
+    {
+      "id": "872047208",
+      "street": "201 Broadway",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        872047208
+      ]
+    },
+    {
+      "id": "174354249",
+      "street": "510 Embarcadero West",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        174354249
+      ]
+    },
+    {
+      "id": "1183655994",
+      "street": "199 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1183655994
+      ]
+    },
+    {
+      "id": "1740241181",
+      "street": "240 Front Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1740241181
+      ]
+    },
+    {
+      "id": "2128628460",
+      "street": "3130 24th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        2128628460
+      ]
+    },
+    {
+      "id": "1887679738",
+      "street": "7000 Coliseum Way",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1887679738
+      ]
+    },
+    {
+      "id": "1682611483",
+      "street": "496 14th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1682611483
+      ]
+    },
+    {
+      "id": "500917824",
+      "street": "100 Mesa Road",
+      "city": "Bolinas",
+      "state": "CA",
+      "venueIds": [
+        500917824
+      ]
+    },
+    {
+      "id": "700079780",
+      "street": "229 Water Street",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        700079780
+      ]
+    },
+    {
+      "id": "1720239941",
+      "street": "178 Leland Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1720239941,
+        413292306
+      ]
+    },
+    {
+      "id": "1080825327",
+      "street": "1011 Pacific Avenue",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        1080825327,
+        942128687
+      ]
+    },
+    {
+      "id": "2063568438",
+      "street": "1933 Davis Street",
+      "city": "San Leandro",
+      "state": "CA",
+      "venueIds": [
+        2063568438
+      ]
+    },
+    {
+      "id": "779096257",
+      "street": "120 5th Street",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        779096257,
+        548658025
+      ]
+    },
+    {
+      "id": "486753773",
+      "street": "239 San Rafael Avenue",
+      "city": "San Rafael",
+      "state": "CA",
+      "venueIds": [
+        486753773
+      ]
+    },
+    {
+      "id": "648572129",
+      "street": "1 Taylor Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        648572129
+      ]
+    },
+    {
+      "id": "1141446017",
+      "street": "125 North Livermore Avenue",
+      "city": "Livermore",
+      "state": "CA",
+      "venueIds": [
+        1141446017
+      ]
+    },
+    {
+      "id": "474218142",
+      "street": "2001 Gayley Road",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        474218142
+      ]
+    },
+    {
+      "id": "940678917",
+      "street": "10 10th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        940678917,
+        726597303
+      ]
+    },
+    {
+      "id": "1868963076",
+      "street": "1 Jones Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1868963076,
+        1164291462
+      ]
+    },
+    {
+      "id": "1960158119",
+      "street": "27826 Mission Boulevard",
+      "city": "Hayward",
+      "state": "CA",
+      "venueIds": [
+        1960158119,
+        557850360
+      ]
+    },
+    {
+      "id": "361387977",
+      "street": "1339 North 1st Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        361387977
+      ]
+    },
+    {
+      "id": "1121690827",
+      "street": "1899 9th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1121690827,
+        96918471
+      ]
+    },
+    {
+      "id": "1419356603",
+      "street": "443 Broadway",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1419356603
+      ]
+    },
+    {
+      "id": "1745359648",
+      "street": "609 Sutter Street, 2nd Floor",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1745359648
+      ]
+    },
+    {
+      "id": "2011645013",
+      "street": "1233 Polk Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        2011645013
+      ]
+    },
+    {
+      "id": "374820780",
+      "street": "215 East 4th Avenue",
+      "city": "San Mateo",
+      "state": "CA",
+      "venueIds": [
+        374820780
+      ]
+    },
+    {
+      "id": "1498339130",
+      "street": "3612 Webster Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1498339130
+      ]
+    },
+    {
+      "id": "564335400",
+      "street": "10 Cargo Way",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        564335400
+      ]
+    },
+    {
+      "id": "1871216664",
+      "street": "38 South Second Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1871216664,
+        1019076274
+      ]
+    },
+    {
+      "id": "1310486709",
+      "street": "1 West Orange Avenue",
+      "city": "South San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1310486709
+      ]
+    },
+    {
+      "id": "168996922",
+      "street": "875 Rincon Avenue",
+      "city": "Livermore",
+      "state": "CA",
+      "venueIds": [
+        168996922
+      ]
+    },
+    {
+      "id": "369795101",
+      "street": "351 Railroad Avenue",
+      "city": "Pittsburg",
+      "state": "CA",
+      "venueIds": [
+        369795101
+      ]
+    },
+    {
+      "id": "581867015",
+      "street": "1010 Petaluma Boulevard North",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        581867015,
+        1953779877
+      ]
+    },
+    {
+      "id": "1241927296",
+      "street": "1610 7th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1241927296
+      ]
+    },
+    {
+      "id": "209865609",
+      "street": "86 2nd Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        209865609
+      ]
+    },
+    {
+      "id": "1804000273",
+      "street": "2650 Broadway",
+      "city": "Redwood City",
+      "state": "CA",
+      "venueIds": [
+        1804000273,
+        1982409086
+      ]
+    },
+    {
+      "id": "1065848862",
+      "street": "2271 Shattuck Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1065848862
+      ]
+    },
+    {
+      "id": "851634690",
+      "street": "295 Day Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        851634690
+      ]
+    },
+    {
+      "id": "748733908",
+      "street": "1680 Washington Avenue",
+      "city": "San Leandro",
+      "state": "CA",
+      "venueIds": [
+        748733908,
+        1720002741,
+        907513889,
+        1431582132
+      ]
+    },
+    {
+      "id": "1230421436",
+      "street": "2 Theater Square",
+      "city": "Orinda",
+      "state": "CA",
+      "venueIds": [
+        1230421436,
+        1697289869
+      ]
+    },
+    {
+      "id": "564779164",
+      "street": "3437 Haven Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        564779164
+      ]
+    },
+    {
+      "id": "1243828408",
+      "street": "3199 Fillmore Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1243828408
+      ]
+    },
+    {
+      "id": "1699354866",
+      "street": "2700 Barbers Point Road",
+      "city": "Alameda",
+      "state": "CA",
+      "venueIds": [
+        1699354866,
+        2123046837,
+        2037432326
+      ]
+    },
+    {
+      "id": "1539515319",
+      "street": "327 Lasuen Street",
+      "city": "Stanford",
+      "state": "CA",
+      "venueIds": [
+        1539515319
+      ]
+    },
+    {
+      "id": "1614652189",
+      "street": "2781 24th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1614652189
+      ]
+    },
+    {
+      "id": "405754367",
+      "street": "20 Pimentel Court",
+      "city": "Novato",
+      "state": "CA",
+      "venueIds": [
+        405754367
+      ]
+    },
+    {
+      "id": "1733030352",
+      "street": "1736 Franklin Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1733030352
+      ]
+    },
+    {
+      "id": "779020287",
+      "street": "371 O'Connor Street",
+      "city": "Menlo Park",
+      "state": "CA",
+      "venueIds": [
+        779020287
+      ]
+    },
+    {
+      "id": "393699117",
+      "street": "4251 MacArthur Boulevard",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        393699117,
+        611352376
+      ]
+    },
+    {
+      "id": "1912559",
+      "street": "206 Broadway",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1912559,
+        1633867196,
+        1809055121
+      ]
+    },
+    {
+      "id": "183693907",
+      "street": "230 Petaluma Avenue",
+      "city": "Sebastopol",
+      "state": "CA",
+      "venueIds": [
+        183693907,
+        410740820
+      ]
+    },
+    {
+      "id": "1697256819",
+      "street": "3105 Shattuck Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1697256819
+      ]
+    },
+    {
+      "id": "2087584222",
+      "street": "3645 San Pablo Avenue",
+      "city": "Emeryville",
+      "state": "CA",
+      "venueIds": [
+        2087584222,
+        1567494397,
+        1031217323
+      ]
+    },
+    {
+      "id": "1625417326",
+      "street": "201 Octavia Boulevard",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1625417326
+      ]
+    },
+    {
+      "id": "1082111394",
+      "street": "860 Willow Street,",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1082111394
+      ]
+    },
+    {
+      "id": "139826169",
+      "street": "1750 Sacramento Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        139826169
+      ]
+    },
+    {
+      "id": "562689079",
+      "street": "518 South 11th Street",
+      "city": "Richmond",
+      "state": "CA",
+      "venueIds": [
+        562689079
+      ]
+    },
+    {
+      "id": "622407558",
+      "street": "8240 Old Redwood Highway",
+      "city": "Cotati",
+      "state": "CA",
+      "venueIds": [
+        622407558
+      ]
+    },
+    {
+      "id": "112600851",
+      "street": "567 5th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        112600851
+      ]
+    },
+    {
+      "id": "85503897",
+      "street": "2647 Durant Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        85503897
+      ]
+    },
+    {
+      "id": "75637003",
+      "street": "2045 Mount Diablo Street",
+      "city": "Concord",
+      "state": "CA",
+      "venueIds": [
+        75637003,
+        576953933,
+        738046668
+      ]
+    },
+    {
+      "id": "881479351",
+      "street": "429 Castro Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        881479351,
+        1383208152,
+        1730654249,
+        905826547
+      ]
+    },
+    {
+      "id": "584051763",
+      "street": "1630 J Street",
+      "city": "Sacramento",
+      "state": "CA",
+      "venueIds": [
+        584051763
+      ]
+    },
+    {
+      "id": "1902290222",
+      "street": "1192 Market Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1902290222
+      ]
+    },
+    {
+      "id": "2145099318",
+      "street": "3482 Loma Vista Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        2145099318
+      ]
+    },
+    {
+      "id": "1187935127",
+      "street": "2317 Central Avenue",
+      "city": "Alameda",
+      "state": "CA",
+      "venueIds": [
+        1187935127
+      ]
+    },
+    {
+      "id": "1255375338",
+      "street": "1658 12th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1255375338
+      ]
+    },
+    {
+      "id": "355618120",
+      "street": "1824 West San Carlos Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        355618120
+      ]
+    },
+    {
+      "id": "360529898",
+      "street": "413 Haight Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        360529898
+      ]
+    },
+    {
+      "id": "1389315022",
+      "street": "2601 Mariposa Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1389315022,
+        1370602424
+      ]
+    },
+    {
+      "id": "1446728831",
+      "street": "270 Rianda Street",
+      "city": "Salinas",
+      "state": "CA",
+      "venueIds": [
+        1446728831
+      ]
+    },
+    {
+      "id": "1763173665",
+      "street": "439 First Street",
+      "city": "Benicia",
+      "state": "CA",
+      "venueIds": [
+        1763173665,
+        2111700508
+      ]
+    },
+    {
+      "id": "595196916",
+      "street": "2230 Livingston Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        595196916
+      ]
+    },
+    {
+      "id": "1003407314",
+      "street": "1940 Taraval Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1003407314
+      ]
+    },
+    {
+      "id": "1367690567",
+      "street": "1 Old Rancheria Road",
+      "city": "Nicasio",
+      "state": "CA",
+      "venueIds": [
+        1367690567
+      ]
+    },
+    {
+      "id": "31156335",
+      "street": "511 48th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        31156335
+      ]
+    },
+    {
+      "id": "879738797",
+      "street": "5891 San Pablo Avenue",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        879738797
+      ]
+    },
+    {
+      "id": "1169427229",
+      "street": "1035 22nd Avenue,",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1169427229,
+        265366914
+      ]
+    },
+    {
+      "id": "1957795861",
+      "street": "128 American Alley",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        1957795861
+      ]
+    },
+    {
+      "id": "1697837308",
+      "street": "222 Mason Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1697837308,
+        89847210
+      ]
+    },
+    {
+      "id": "1274279930",
+      "street": "1035 Texas Street",
+      "city": "Fairfield",
+      "state": "CA",
+      "venueIds": [
+        1274279930
+      ]
+    },
+    {
+      "id": "487816665",
+      "street": "1491 Hope Street",
+      "city": "Alviso",
+      "state": "CA",
+      "venueIds": [
+        487816665
+      ]
+    },
+    {
+      "id": "1034390208",
+      "street": "600 Broadway",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        1034390208
+      ]
+    },
+    {
+      "id": "115632481",
+      "street": "1231 9th Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        115632481
+      ]
+    },
+    {
+      "id": "45837167",
+      "street": "204 Sycamore Valley Road West",
+      "city": "Danville",
+      "state": "CA",
+      "venueIds": [
+        45837167
+      ]
+    },
+    {
+      "id": "804038598",
+      "street": "2209 Broadway Street",
+      "city": "Redwood City",
+      "state": "CA",
+      "venueIds": [
+        804038598
+      ]
+    },
+    {
+      "id": "1485757142",
+      "street": "1340 5th Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1485757142
+      ]
+    },
+    {
+      "id": "1588350147",
+      "street": "10550 Albion Road",
+      "city": "San Ramon",
+      "state": "CA",
+      "venueIds": [
+        1588350147
+      ]
+    },
+    {
+      "id": "1547203889",
+      "street": "10341 San Pablo Avenue",
+      "city": "El Cerrito",
+      "state": "CA",
+      "venueIds": [
+        1547203889
+      ]
+    },
+    {
+      "id": "2089821524",
+      "street": "912 Gilman Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        2089821524,
+        2086074371
+      ]
+    },
+    {
+      "id": "971270129",
+      "street": "1601 Civic Drive",
+      "city": "Walnut Creek",
+      "state": "CA",
+      "venueIds": [
+        971270129
+      ]
+    },
+    {
+      "id": "988266275",
+      "street": "25 North Street",
+      "city": "Healdsburg",
+      "state": "CA",
+      "venueIds": [
+        988266275
+      ]
+    },
+    {
+      "id": "568422652",
+      "street": "10 Avenue of the Flags",
+      "city": "San Rafael",
+      "state": "CA",
+      "venueIds": [
+        568422652
+      ]
+    },
+    {
+      "id": "222096883",
+      "street": "312 Harriet Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        222096883,
+        32234871
+      ]
+    },
+    {
+      "id": "134509849",
+      "street": "1974 Shattuck Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        134509849
+      ]
+    },
+    {
+      "id": "86221432",
+      "street": "119 Madrone Street",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        86221432
+      ]
+    },
+    {
+      "id": "1406070469",
+      "street": "4900 Marie P. DeBartolo Way",
+      "city": "Santa Clara",
+      "state": "CA",
+      "venueIds": [
+        1406070469,
+        1754792672,
+        867190630,
+        1188914662
+      ]
+    },
+    {
+      "id": "1274037551",
+      "street": "2000 Kirker Pass Road",
+      "city": "Concord",
+      "state": "CA",
+      "venueIds": [
+        1274037551
+      ]
+    },
+    {
+      "id": "1237996847",
+      "street": "1015 Folsom Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1237996847,
+        132433457
+      ]
+    },
+    {
+      "id": "1838937815",
+      "street": "1100 Valley House Drive",
+      "city": "Rohnert Park",
+      "state": "CA",
+      "venueIds": [
+        1838937815
+      ]
+    },
+    {
+      "id": "678550912",
+      "street": "28 South 7th Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        678550912
+      ]
+    },
+    {
+      "id": "1327146532",
+      "street": "7495 Stage Road",
+      "city": "San Gregorio",
+      "state": "CA",
+      "venueIds": [
+        1327146532
+      ]
+    },
+    {
+      "id": "945952968",
+      "street": "344 12th Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        945952968,
+        84554242,
+        1806895465
+      ]
+    },
+    {
+      "id": "72150299",
+      "street": "344 12th Street, above Tay Ho",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        72150299
+      ]
+    },
+    {
+      "id": "1410720824",
+      "street": "575 3rd Street",
+      "city": "Napa",
+      "state": "CA",
+      "venueIds": [
+        1410720824,
+        972191157
+      ]
+    },
+    {
+      "id": "1049518242",
+      "street": "1557 Healdsburg Avenue",
+      "city": "Healdsburg",
+      "state": "CA",
+      "venueIds": [
+        1049518242
+      ]
+    },
+    {
+      "id": "367044423",
+      "street": "1229 Court Street",
+      "city": "Martinez",
+      "state": "CA",
+      "venueIds": [
+        367044423
+      ]
+    },
+    {
+      "id": "1915521169",
+      "street": "600 Homer Avenue",
+      "city": "Palo Alto",
+      "state": "CA",
+      "venueIds": [
+        1915521169
+      ]
+    },
+    {
+      "id": "181456851",
+      "street": "890 Belle Avenue",
+      "city": "San Rafael",
+      "state": "CA",
+      "venueIds": [
+        181456851
+      ]
+    },
+    {
+      "id": "1327740859",
+      "street": "7948 Yosemite Boulevard",
+      "city": "Modesto",
+      "state": "CA",
+      "venueIds": [
+        1327740859
+      ]
+    },
+    {
+      "id": "896198252",
+      "street": "620 South Norfolk Street",
+      "city": "San Mateo",
+      "state": "CA",
+      "venueIds": [
+        896198252
+      ]
+    },
+    {
+      "id": "1917599447",
+      "street": "447 South First Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1917599447
+      ]
+    },
+    {
+      "id": "1147256587",
+      "street": "101 Paseo de San Antonio",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1147256587
+      ]
+    },
+    {
+      "id": "1769347402",
+      "street": "326 Brannan Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1769347402
+      ]
+    },
+    {
+      "id": "76452734",
+      "street": "226 Shoreline Highway",
+      "city": "Mill Valley",
+      "state": "CA",
+      "venueIds": [
+        76452734
+      ]
+    },
+    {
+      "id": "825183386",
+      "street": "1015 Walnut Avenue",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        825183386
+      ]
+    },
+    {
+      "id": "1710454576",
+      "street": "995 Market Street, 6th Floor",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1710454576,
+        318791909
+      ]
+    },
+    {
+      "id": "60834384",
+      "street": "425 Seventh Street",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        60834384
+      ]
+    },
+    {
+      "id": "1215370269",
+      "street": "1010 South Wolfe Road",
+      "city": "Sunnyvale",
+      "state": "CA",
+      "venueIds": [
+        1215370269
+      ]
+    },
+    {
+      "id": "968700038",
+      "street": "428 3rd Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        968700038
+      ]
+    },
+    {
+      "id": "1159871074",
+      "street": "988 Market Street,",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1159871074
+      ]
+    },
+    {
+      "id": "1190835917",
+      "street": "1220 4th Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1190835917,
+        1886139640
+      ]
+    },
+    {
+      "id": "122639215",
+      "street": "307 Church Street",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        122639215
+      ]
+    },
+    {
+      "id": "902621698",
+      "street": "915 Oakville Cross Road",
+      "city": "Oakville",
+      "state": "CA",
+      "venueIds": [
+        902621698
+      ]
+    },
+    {
+      "id": "2001765841",
+      "street": "41 Wharf Road",
+      "city": "Bolinas",
+      "state": "CA",
+      "venueIds": [
+        2001765841
+      ]
+    },
+    {
+      "id": "816267139",
+      "street": "625 Nelson Road",
+      "city": "Stanford",
+      "state": "CA",
+      "venueIds": [
+        816267139
+      ]
+    },
+    {
+      "id": "1817412579",
+      "street": "395 South Van Ness Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1817412579
+      ]
+    },
+    {
+      "id": "2124628181",
+      "street": "43737 Boscell Road",
+      "city": "Fremont",
+      "state": "CA",
+      "venueIds": [
+        2124628181
+      ]
+    },
+    {
+      "id": "95939520",
+      "street": "3137 Adeline Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        95939520
+      ]
+    },
+    {
+      "id": "2115869685",
+      "street": "5000 Roberts Lake Road",
+      "city": "Rohnert Park",
+      "state": "CA",
+      "venueIds": [
+        2115869685
+      ]
+    },
+    {
+      "id": "413331686",
+      "street": "190 Lenox Way",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        413331686
+      ]
+    },
+    {
+      "id": "188856204",
+      "street": "17533 Santa Cruz Highway",
+      "city": "Los Gatos",
+      "state": "CA",
+      "venueIds": [
+        188856204
+      ]
+    },
+    {
+      "id": "217949417",
+      "street": "24 Willie Mays Plaza",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        217949417,
+        1140492065
+      ]
+    },
+    {
+      "id": "2075126408",
+      "street": "1435 Webster Street",
+      "city": "Alameda",
+      "state": "CA",
+      "venueIds": [
+        2075126408,
+        165368460
+      ]
+    },
+    {
+      "id": "623175657",
+      "street": "358 Brannan Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        623175657,
+        1217182281
+      ]
+    },
+    {
+      "id": "815443139",
+      "street": "350 Georgia Street",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        815443139
+      ]
+    },
+    {
+      "id": "1392713409",
+      "street": "5327 Jacuzzi Street",
+      "city": "Richmond",
+      "state": "CA",
+      "venueIds": [
+        1392713409
+      ]
+    },
+    {
+      "id": "392447539",
+      "street": "1214 Apollo Way",
+      "city": "Sunnyvale",
+      "state": "CA",
+      "venueIds": [
+        392447539
+      ]
+    },
+    {
+      "id": "1174541933",
+      "street": "2 Pillar Point Harbor Boulevard",
+      "city": "Half Moon Bay",
+      "state": "CA",
+      "venueIds": [
+        1174541933
+      ]
+    },
+    {
+      "id": "1765671950",
+      "street": "221 Washington Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1765671950
+      ]
+    },
+    {
+      "id": "492088316",
+      "street": "13740 Arnold Drive",
+      "city": "Glen Ellen",
+      "state": "CA",
+      "venueIds": [
+        492088316
+      ]
+    },
+    {
+      "id": "1812657801",
+      "street": "100 Ruins Court",
+      "city": "American Canyon",
+      "state": "CA",
+      "venueIds": [
+        1812657801
+      ]
+    },
+    {
+      "id": "289243276",
+      "street": "518 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        289243276
+      ]
+    },
+    {
+      "id": "1583501852",
+      "street": "180 Woz Way",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1583501852,
+        1917856147
+      ]
+    },
+    {
+      "id": "242508849",
+      "street": "428 Waller Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        242508849
+      ]
+    },
+    {
+      "id": "1937523578",
+      "street": "3359 26th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1937523578,
+        1141595758
+      ]
+    },
+    {
+      "id": "745745800",
+      "street": "1509 Solano Avenue",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        745745800
+      ]
+    },
+    {
+      "id": "336166085",
+      "street": "1129 Sebastopol Road",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        336166085
+      ]
+    },
+    {
+      "id": "733225744",
+      "street": "2042 Mount Diablo Boulevard",
+      "city": "Walnut Creek",
+      "state": "CA",
+      "venueIds": [
+        733225744
+      ]
+    },
+    {
+      "id": "157991490",
+      "street": "3117 16th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        157991490,
+        1056440065
+      ]
+    },
+    {
+      "id": "697988159",
+      "street": "1801 Green Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        697988159
+      ]
+    },
+    {
+      "id": "1299863522",
+      "street": "3565 20th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1299863522
+      ]
+    },
+    {
+      "id": "1732604937",
+      "street": "319 Lexington Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1732604937
+      ]
+    },
+    {
+      "id": "626006669",
+      "street": "2512 Mission Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        626006669
+      ]
+    },
+    {
+      "id": "664660939",
+      "street": "3115 22nd Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        664660939
+      ]
+    },
+    {
+      "id": "1950476525",
+      "street": "544 Capp Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1950476525
+      ]
+    },
+    {
+      "id": "135789758",
+      "street": "503 B Street",
+      "city": "Point Reyes Station",
+      "state": "CA",
+      "venueIds": [
+        135789758
+      ]
+    },
+    {
+      "id": "756094939",
+      "street": "3542 24th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        756094939
+      ]
+    },
+    {
+      "id": "327602376",
+      "street": "951 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        327602376
+      ]
+    },
+    {
+      "id": "1584439587",
+      "street": "2134 Olivet Road",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        1584439587
+      ]
+    },
+    {
+      "id": "978018774",
+      "street": "1169 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        978018774
+      ]
+    },
+    {
+      "id": "724689189",
+      "street": "990 Valencia Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        724689189
+      ]
+    },
+    {
+      "id": "1055458173",
+      "street": "3349 23rd Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1055458173
+      ]
+    },
+    {
+      "id": "410740649",
+      "street": "3464 19th Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        410740649
+      ]
+    },
+    {
+      "id": "621911290",
+      "street": "180 Camino Alto",
+      "city": "Mill Valley",
+      "state": "CA",
+      "venueIds": [
+        621911290
+      ]
+    },
+    {
+      "id": "1199992168",
+      "street": "224 Vintage Way",
+      "city": "Novato",
+      "state": "CA",
+      "venueIds": [
+        1199992168,
+        1811398338
+      ]
+    },
+    {
+      "id": "761666194",
+      "street": "1200 Park Street",
+      "city": "Alameda",
+      "state": "CA",
+      "venueIds": [
+        761666194
+      ]
+    },
+    {
+      "id": "357511832",
+      "street": "1401 Macdonald Avenue",
+      "city": "Richmond",
+      "state": "CA",
+      "venueIds": [
+        357511832
+      ]
+    },
+    {
+      "id": "545895587",
+      "street": "2925 Woodside Road",
+      "city": "Woodside",
+      "state": "CA",
+      "venueIds": [
+        545895587
+      ]
+    },
+    {
+      "id": "1806612737",
+      "street": "1232 Grant Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1806612737
+      ]
+    },
+    {
+      "id": "1827901318",
+      "street": "100 Gregory Lane",
+      "city": "Pleasant Hill",
+      "state": "CA",
+      "venueIds": [
+        1827901318
+      ]
+    },
+    {
+      "id": "2132930386",
+      "street": "1970 Chestnut Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        2132930386
+      ]
+    },
+    {
+      "id": "125036029",
+      "street": "425 Mission Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        125036029,
+        1871078609
+      ]
+    },
+    {
+      "id": "1517149099",
+      "street": "1200 Athens Avenue",
+      "city": "Lincoln",
+      "state": "CA",
+      "venueIds": [
+        1517149099,
+        185134508
+      ]
+    },
+    {
+      "id": "1350182346",
+      "street": "499 Embarcadero West",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1350182346
+      ]
+    },
+    {
+      "id": "655578766",
+      "street": "175 Fairgrounds Drive",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        655578766
+      ]
+    },
+    {
+      "id": "681839466",
+      "street": "634 San Anselmo Avenue",
+      "city": "San Anselmo",
+      "state": "CA",
+      "venueIds": [
+        681839466
+      ]
+    },
+    {
+      "id": "1400383054",
+      "street": "1314 Ocean Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1400383054
+      ]
+    },
+    {
+      "id": "1796106085",
+      "street": "11201 Highway 1",
+      "city": "Point Reyes Station",
+      "state": "CA",
+      "venueIds": [
+        1796106085
+      ]
+    },
+    {
+      "id": "909463411",
+      "street": "14540 Canyon 2 Road",
+      "city": "Rio Nido",
+      "state": "CA",
+      "venueIds": [
+        909463411
+      ]
+    },
+    {
+      "id": "687835040",
+      "street": "100 Gateway Boulevard",
+      "city": "Orinda",
+      "state": "CA",
+      "venueIds": [
+        687835040
+      ]
+    },
+    {
+      "id": "1664632966",
+      "street": "2790 Santa Rosa Avenue",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        1664632966
+      ]
+    },
+    {
+      "id": "2124529002",
+      "street": "333 Post Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        2124529002
+      ]
+    },
+    {
+      "id": "1367443519",
+      "street": "22737 Main Street",
+      "city": "Hayward",
+      "state": "CA",
+      "venueIds": [
+        1367443519
+      ]
+    },
+    {
+      "id": "894444233",
+      "street": "1 Garden Way",
+      "city": "Woodacre",
+      "state": "CA",
+      "venueIds": [
+        894444233
+      ]
+    },
+    {
+      "id": "50762562",
+      "street": "708 Railroad Avenue",
+      "city": "Winters",
+      "state": "CA",
+      "venueIds": [
+        50762562
+      ]
+    },
+    {
+      "id": "1072765563",
+      "street": "905 Tennessee Street",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        1072765563
+      ]
+    },
+    {
+      "id": "1269742592",
+      "street": "636 Jackson Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1269742592
+      ]
+    },
+    {
+      "id": "1572399683",
+      "street": "3901 Noriega Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1572399683
+      ]
+    },
+    {
+      "id": "595294036",
+      "street": "1 Ferry Building",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        595294036
+      ]
+    },
+    {
+      "id": "1730214750",
+      "street": "950 Pomona Avenue",
+      "city": "El Cerrito",
+      "state": "CA",
+      "venueIds": [
+        1730214750
+      ]
+    },
+    {
+      "id": "1206249551",
+      "street": "435 Broadway",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1206249551,
+        1510199156
+      ]
+    },
+    {
+      "id": "192152317",
+      "street": "10 Geary Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        192152317
+      ]
+    },
+    {
+      "id": "413979258",
+      "street": "498 Broadway",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        413979258
+      ]
+    },
+    {
+      "id": "1270795673",
+      "street": "151 Third Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1270795673
+      ]
+    },
+    {
+      "id": "1168810431",
+      "street": "200 Warm Springs Road",
+      "city": "Kenwood",
+      "state": "CA",
+      "venueIds": [
+        1168810431
+      ]
+    },
+    {
+      "id": "2042019123",
+      "street": "150 Felker Street,",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        2042019123
+      ]
+    },
+    {
+      "id": "1791753994",
+      "street": "445 Geary Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1791753994
+      ]
+    },
+    {
+      "id": "797279152",
+      "street": "2367 Telegraph Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        797279152
+      ]
+    },
+    {
+      "id": "1167496603",
+      "street": "315 Montford Avenue",
+      "city": "Mill Valley",
+      "state": "CA",
+      "venueIds": [
+        1167496603
+      ]
+    },
+    {
+      "id": "165412478",
+      "street": "575 Third Street",
+      "city": "Napa",
+      "state": "CA",
+      "venueIds": [
+        165412478
+      ]
+    },
+    {
+      "id": "1660756928",
+      "street": "3022 Broadway",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1660756928
+      ]
+    },
+    {
+      "id": "892740079",
+      "street": "751 West San Carlos Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        892740079
+      ]
+    },
+    {
+      "id": "1942328111",
+      "street": "3124 Shattuck Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1942328111
+      ]
+    },
+    {
+      "id": "1186573856",
+      "street": "540 South 1st Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1186573856,
+        1622392653
+      ]
+    },
+    {
+      "id": "1411317987",
+      "street": "616 E Street",
+      "city": "Union City",
+      "state": "CA",
+      "venueIds": [
+        1411317987
+      ]
+    },
+    {
+      "id": "697893890",
+      "street": "138 Fern Street",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        697893890
+      ]
+    },
+    {
+      "id": "478586995",
+      "street": "8201 Old Redwood Highway",
+      "city": "Cotati",
+      "state": "CA",
+      "venueIds": [
+        478586995
+      ]
+    },
+    {
+      "id": "1979676890",
+      "street": "525 San Anselmo Avenue",
+      "city": "San Anselmo",
+      "state": "CA",
+      "venueIds": [
+        1979676890
+      ]
+    },
+    {
+      "id": "798180248",
+      "street": "1300 8th Street",
+      "city": "Alameda",
+      "state": "CA",
+      "venueIds": [
+        798180248
+      ]
+    },
+    {
+      "id": "700307194",
+      "street": "5716 Genoa Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        700307194
+      ]
+    },
+    {
+      "id": "1602380134",
+      "street": "100 South Sacramento Street",
+      "city": "Lodi",
+      "state": "CA",
+      "venueIds": [
+        1602380134
+      ]
+    },
+    {
+      "id": "527022144",
+      "street": "401 Mason Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        527022144
+      ]
+    },
+    {
+      "id": "653703997",
+      "street": "838 Geary Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        653703997
+      ]
+    },
+    {
+      "id": "1384743074",
+      "street": "100 Larkin Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1384743074
+      ]
+    },
+    {
+      "id": "1654049206",
+      "street": "140 Second Street",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        1654049206
+      ]
+    },
+    {
+      "id": "912425084",
+      "street": "431 Georgia Street",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        912425084
+      ]
+    },
+    {
+      "id": "2073345895",
+      "street": "663 South 9th Street",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        2073345895
+      ]
+    },
+    {
+      "id": "2001321933",
+      "street": "460 Lincoln Avenue",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        2001321933
+      ]
+    },
+    {
+      "id": "894079874",
+      "street": "2523 Broadway",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        894079874
+      ]
+    },
+    {
+      "id": "1123039647",
+      "street": "2305 South White Road",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1123039647,
+        619729370
+      ]
+    },
+    {
+      "id": "1168861476",
+      "street": "508 Woodland Way",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        1168861476
+      ]
+    },
+    {
+      "id": "1187845636",
+      "street": "3425 Balboa Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1187845636
+      ]
+    },
+    {
+      "id": "1616660773",
+      "street": "2400 Filbert Street",
+      "city": "Oakland",
+      "state": "CA",
+      "venueIds": [
+        1616660773
+      ]
+    },
+    {
+      "id": "1839724360",
+      "street": "1220 Linda Mar Boulevard",
+      "city": "Pacifica",
+      "state": "CA",
+      "venueIds": [
+        1839724360
+      ]
+    },
+    {
+      "id": "1899550573",
+      "street": "99 Moraga Avenue",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1899550573
+      ]
+    },
+    {
+      "id": "91824912",
+      "street": "246 Kearny Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        91824912
+      ]
+    },
+    {
+      "id": "775368371",
+      "street": "13650 Saratoga Avenue",
+      "city": "Saratoga",
+      "state": "CA",
+      "venueIds": [
+        775368371
+      ]
+    },
+    {
+      "id": "1958317139",
+      "street": "401A Georgia Street",
+      "city": "Vallejo",
+      "state": "CA",
+      "venueIds": [
+        1958317139
+      ]
+    },
+    {
+      "id": "358459691",
+      "street": "1984 Bonita Avenue",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        358459691
+      ]
+    },
+    {
+      "id": "1217383003",
+      "street": "3273 South White Road",
+      "city": "San Jose",
+      "state": "CA",
+      "venueIds": [
+        1217383003
+      ]
+    },
+    {
+      "id": "1885324526",
+      "street": "13 Pacific Avenue",
+      "city": "Rodeo",
+      "state": "CA",
+      "venueIds": [
+        1885324526
+      ]
+    },
+    {
+      "id": "1584639341",
+      "street": "575 Ross Street",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        1584639341
+      ]
+    },
+    {
+      "id": "624684535",
+      "street": "24176 Mission Boulevard",
+      "city": "Hayward",
+      "state": "CA",
+      "venueIds": [
+        624684535
+      ]
+    },
+    {
+      "id": "973723977",
+      "street": "155 South River Street",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        973723977
+      ]
+    },
+    {
+      "id": "1891659404",
+      "street": "2708 Channing Way",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1891659404
+      ]
+    },
+    {
+      "id": "367184186",
+      "street": "8790 La Honda Road",
+      "city": "La Honda",
+      "state": "CA",
+      "venueIds": [
+        367184186
+      ]
+    },
+    {
+      "id": "747832776",
+      "street": "3334 Industrial Drive",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        747832776
+      ]
+    },
+    {
+      "id": "1075478617",
+      "street": "701 Amador Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1075478617
+      ]
+    },
+    {
+      "id": "1735735149",
+      "street": "224 B Street",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        1735735149
+      ]
+    },
+    {
+      "id": "552601815",
+      "street": "19950 Wright Drive",
+      "city": "Los Gatos",
+      "state": "CA",
+      "venueIds": [
+        552601815
+      ]
+    },
+    {
+      "id": "210680279",
+      "street": "995 Piner Road",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        210680279
+      ]
+    },
+    {
+      "id": "1715701439",
+      "street": "1 The Plaza",
+      "city": "Sonoma",
+      "state": "CA",
+      "venueIds": [
+        1715701439
+      ]
+    },
+    {
+      "id": "326664506",
+      "street": "2130 Fulton Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        326664506
+      ]
+    },
+    {
+      "id": "1472125422",
+      "street": "1 Castro Street",
+      "city": "Forest Knolls",
+      "state": "CA",
+      "venueIds": [
+        1472125422
+      ]
+    },
+    {
+      "id": "735578676",
+      "street": "1000 El Camino Real",
+      "city": "Atherton",
+      "state": "CA",
+      "venueIds": [
+        735578676
+      ]
+    },
+    {
+      "id": "321104510",
+      "street": "3901 Montgomery Drive",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "venueIds": [
+        321104510
+      ]
+    },
+    {
+      "id": "450920379",
+      "street": "3278 Adeline Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        450920379
+      ]
+    },
+    {
+      "id": "1613700430",
+      "street": "470 Parker Avenue",
+      "city": "Rodeo",
+      "state": "CA",
+      "venueIds": [
+        1613700430
+      ]
+    },
+    {
+      "id": "1390493234",
+      "street": "149 Peyton Street",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "venueIds": [
+        1390493234
+      ]
+    },
+    {
+      "id": "1852858383",
+      "street": "924 Gilman Street; 912 Gilman Street",
+      "city": "Berkeley",
+      "state": "CA",
+      "venueIds": [
+        1852858383
+      ]
+    },
+    {
+      "id": "1829915689",
+      "street": "1345 Bush Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1829915689
+      ]
+    },
+    {
+      "id": "855121402",
+      "street": "19 Broadway",
+      "city": "Fairfax",
+      "state": "CA",
+      "venueIds": [
+        855121402
+      ]
+    },
+    {
+      "id": "1699183410",
+      "street": "3920 Geary Boulevard",
+      "city": "San Francisco",
+      "state": "CA",
+      "venueIds": [
+        1699183410
+      ]
+    },
+    {
+      "id": "2046948382",
+      "street": "6210 Bethel Island Road",
+      "city": "Bethel Island",
+      "state": "CA",
+      "venueIds": [
+        2046948382
+      ]
+    },
+    {
+      "id": "60101400",
+      "street": "301 Petaluma Boulevard North",
+      "city": "Petaluma",
+      "state": "CA",
+      "venueIds": [
+        60101400
+      ]
+    }
+  ]
+}
