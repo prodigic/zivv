@@ -7450,6 +7450,20 @@
       "lastSeenEditionId": "2026-09-25"
     },
     {
+      "name": "Geographer",
+      "normalizedName": "geographer",
+      "status": "local",
+      "verifiedAtEpochMs": 1790987627395,
+      "method": "user-confirmed",
+      "evidence": "User confirms Geographer as a local act. The artist-owned Bandcamp profile identifies San Francisco, and their label biography records the project forming there in 2007.",
+      "location": "San Francisco, California",
+      "sources": [
+        "https://geographer.bandcamp.com/",
+        "https://www.tricyclerecords.com/artist/geographer/"
+      ],
+      "lastSeenEditionId": "2026-10-02"
+    },
+    {
       "name": "Geordie Greep",
       "normalizedName": "geordie greep",
       "status": "non-local",

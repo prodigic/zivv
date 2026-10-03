@@ -19,6 +19,8 @@ const MAX_NAMES_SHOWN = 5;
 interface CityConfig {
   label: string;
   match: (city: string) => boolean;
+  /** Regional newsletters need a city on every listing. */
+  showCity?: boolean;
   groups?: CityConfig[];
 }
 
@@ -36,10 +38,12 @@ const CITY_CONFIGS: Record<string, CityConfig> = {
   "bay-area": {
     label: "Bay Area",
     match: () => true,
+    showCity: true,
   },
   sf: SF_CITY,
   sfmusic: {
     label: "sfmusic",
+    showCity: true,
     match: (c) => SF_CITY.match(c) || NEARBY_CITIES.match(c),
     groups: [
       { ...SF_CITY, label: "San Francisco Events" },
@@ -61,6 +65,7 @@ const CITY_CONFIGS: Record<string, CityConfig> = {
   },
   "east-bay": {
     label: "East Bay",
+    showCity: true,
     match: (c) =>
       [
         "Oakland",
@@ -73,6 +78,7 @@ const CITY_CONFIGS: Record<string, CityConfig> = {
   },
   "south-bay": {
     label: "South Bay",
+    showCity: true,
     match: (c) =>
       [
         "San Jose",
@@ -521,8 +527,11 @@ export default function NewsletterPage() {
     const lines: string[] = [];
     const areaLabel = cityConfig.groups ? "SF & Nearby" : cityConfig.label;
 
-    const nearbyCitySuffix = (city: string) =>
-      cityConfig.groups && NEARBY_CITIES.match(city) ? `, ${city.trim()}` : "";
+    const venueLocation = (
+      name: string,
+      city: string,
+      includeCity = cityConfig.showCity ?? false
+    ) => (includeCity ? `${name}, ${city.trim() || "City TBA"}` : name);
 
     function appendGroups<T>(
       rows: T[],
@@ -575,7 +584,7 @@ export default function NewsletterPage() {
           row.coActs.length > 0 ? ` w/ · ${joinCapped(row.coActs)}` : "";
         lines.push(`**${header}**${withPart}`);
         lines.push(
-          `- ${fmtDate(row.dateEpochMs)} · ${row.venueName}${nearbyCitySuffix(row.venueCity)}${pricePart}${soldOut}${multiplePart}`
+          `- ${fmtDate(row.dateEpochMs)} · ${venueLocation(row.venueName, row.venueCity)}${pricePart}${soldOut}${multiplePart}`
         );
         lines.push("");
       }
@@ -614,7 +623,7 @@ export default function NewsletterPage() {
           ? ""
           : " · already happened";
         lines.push(
-          `- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueName}, ${venueCity}${pricePart}${agePart}${soldOut}${multiplePart}${happened}`
+          `- ${fmtDate(ev.dateEpochMs)} · **${headlinerName}** at ${venueLocation(venueName, venueCity, true)}${pricePart}${agePart}${soldOut}${multiplePart}${happened}`
         );
       }
     );
@@ -655,7 +664,7 @@ export default function NewsletterPage() {
           )
           .join(", ");
         lines.push(
-          `- ${fmtDate(ev.dateEpochMs)} · ${lineupText} at ${venueName}${nearbyCitySuffix(venueCity)}${pricePart}${agePart}${soldOut}${multiplePart}`
+          `- ${fmtDate(ev.dateEpochMs)} · ${lineupText} at ${venueLocation(venueName, venueCity)}${pricePart}${agePart}${soldOut}${multiplePart}`
         );
       }
     );
