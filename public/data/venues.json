@@ -4683,7 +4683,7 @@
       }
     ],
     "updatedAtEpochMs": 1790992500236,
-    "website": "https://www.bottomofthehill.com/"
+    "website": "https://www.bottomofthehill.com/calendar.html"
   },
   {
     "address": "15000 Sonoma Highway",
@@ -11551,7 +11551,7 @@
       }
     ],
     "updatedAtEpochMs": 1790992500236,
-    "website": "https://www.thefillmore.com/"
+    "website": "https://www.thefillmore.com/visit"
   },
   {
     "address": "1453 Webster Street",
@@ -42433,7 +42433,7 @@
   {
     "address": "625 Nelson Road",
     "ageRestriction": "all-ages",
-    "city": "Palo Alto",
+    "city": "Stanford",
     "createdAtEpochMs": 1787360969701,
     "id": 816267139,
     "mapLocation": {
@@ -43202,7 +43202,7 @@
     "slug": "the-planetarium",
     "sourceLineNumber": 9,
     "totalEventCount": 28,
-    "upcomingEventCount": 13,
+    "upcomingEventCount": 12,
     "upcomingEvents": [
       {
         "id": 80633464,
@@ -43225,37 +43225,6 @@
             "kind": "steveslist",
             "lastSeenAtEpochMs": 1790985835628,
             "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1392713409,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
-      {
-        "id": 1699661422,
-        "slug": "2026-10-09-bones-shredder-the-planetarium",
-        "dateEpochMs": 1791547200000,
-        "startTimeEpochMs": 1791595800000,
-        "headlinerName": "Bones Shredder",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:2149d5b74123eedc",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
             "originalVenueId": 1392713409,
             "session": null,
             "sourceId": "steveslist"

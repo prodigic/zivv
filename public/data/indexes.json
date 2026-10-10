@@ -44301,6 +44301,8 @@
       932800884,
       963820691,
       1674120700,
+      322968599,
+      1715087690,
       513753513,
       864553450,
       621677093,
@@ -44518,9 +44520,7 @@
       1169888814
     ],
     "Palo Alto": [
-      1743965765,
-      322968599,
-      1715087690
+      1743965765
     ],
     "Hayward": [
       595702643,
@@ -54532,8 +54532,7 @@
     ],
     "Palo Alto": [
       379445320,
-      1915521169,
-      816267139
+      1915521169
     ],
     "Livermore": [
       934031822,
@@ -54727,7 +54726,8 @@
     ],
     "Stanford": [
       283436496,
-      1539515319
+      1539515319,
+      816267139
     ],
     "Santa Clara": [
       794236492,
@@ -55232,6 +55232,13 @@
       "upcomingEventCount": 2
     },
     {
+      "name": "Stanford",
+      "slug": "stanford",
+      "eventCount": 12,
+      "venueCount": 3,
+      "upcomingEventCount": 2
+    },
+    {
       "name": "Emeryville",
       "slug": "emeryville",
       "eventCount": 12,
@@ -55251,13 +55258,6 @@
       "eventCount": 11,
       "venueCount": 5,
       "upcomingEventCount": 0
-    },
-    {
-      "name": "Stanford",
-      "slug": "stanford",
-      "eventCount": 10,
-      "venueCount": 2,
-      "upcomingEventCount": 2
     },
     {
       "name": "Santa",
@@ -55365,13 +55365,6 @@
       "upcomingEventCount": 0
     },
     {
-      "name": "Palo Alto",
-      "slug": "palo-alto",
-      "eventCount": 3,
-      "venueCount": 3,
-      "upcomingEventCount": 0
-    },
-    {
       "name": "Sunnyvale",
       "slug": "sunnyvale",
       "eventCount": 3,
@@ -55417,6 +55410,13 @@
       "name": "Rodeo",
       "slug": "rodeo",
       "eventCount": 2,
+      "venueCount": 2,
+      "upcomingEventCount": 0
+    },
+    {
+      "name": "Palo Alto",
+      "slug": "palo-alto",
+      "eventCount": 1,
       "venueCount": 2,
       "upcomingEventCount": 0
     },
@@ -55743,7 +55743,7 @@
     }
   },
   "searchIndex": {
-    "indexedAt": 1791595473723,
+    "indexedAt": 1791596994268,
     "totalDocuments": 13975,
     "fields": [
       "name",

@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "schemaVersion": "2.0.0",
-  "datasetVersion": "2026-10-10T01:24:33.441Z",
-  "lastUpdated": 1791595473441,
-  "processedAt": 1791595473441,
+  "datasetVersion": "2026-10-10T01:49:53.924Z",
+  "lastUpdated": 1791596993924,
+  "processedAt": 1791596993924,
   "latestIngestionDate": "2026-10-09",
   "totalEvents": 4641,
   "totalArtists": 8678,
@@ -217,48 +217,48 @@
     ],
     "artists": {
       "filename": "artists.json",
-      "size": 5968241,
-      "checksum": "sha256-62168042133abb96ec9bc16d8f49616eac1dfb8d7042ff9dcf3538ab0b5333e4",
+      "size": 5963169,
+      "checksum": "sha256-8c083b4d94b16a1a1b3621dcbe3d3bc629efe0cebb25e81a9a044934d11b0940",
       "recordCount": 8678
     },
     "venues": {
       "filename": "venues.json",
-      "size": 1909789,
-      "checksum": "sha256-7bf569cba0098677c672e80c4e79fc30c5dc82f255fc740965fa419c3b2234bd",
+      "size": 1908644,
+      "checksum": "sha256-551ef5cf21a4bba40aad0efe2fc72f0bd1a90c3b5a750a67c86470365503f440",
       "recordCount": 656
     },
     "indexes": {
       "filename": "indexes.json",
       "size": 1022666,
-      "checksum": "sha256-d3399fec67101c038d0167a7b98bceb3ca0488853af1d2e278a75ed772f268c1"
+      "checksum": "sha256-ab4dd55f25c9da295076adbc4f62886f80c36064bccbb2160237f20218821e56"
     },
     "recentAdditions": {
       "filename": "recent-additions.json",
       "size": 1140017,
-      "checksum": "sha256-af1ed8f32e329e4762b40eab36db420b18f75c5d7a7609d3b1e661cb803966b4"
+      "checksum": "sha256-73639581f2037711ef8db83d45a52ffc3bcefb5df077a7bbb6c3fb53481948b2"
     }
   },
   "sourceFiles": {
     "events": {
       "filename": "events.txt",
-      "size": 564051,
-      "checksum": "sha256-16f6edc9c5ad6a0294a3d92dc640b277f83ca591ae0c66ac6544afa7dc2f6dd5",
-      "lineCount": 5664,
-      "lastModified": 1791595472090.2488
+      "size": 533891,
+      "checksum": "sha256-86699967d839716564b9933c699f6733a4f50222d6c0dd87ae7bfe7e642316a3",
+      "lineCount": 5290,
+      "lastModified": 1790988729681.2712
     },
     "venues": {
       "filename": "venues.txt",
-      "size": 28418,
-      "checksum": "sha256-ed7b076080c574038a01efe3b98268ad1a7631f76f0ebf46498bbf630818cca4",
-      "lineCount": 782,
-      "lastModified": 1791595472016.016
+      "size": 29075,
+      "checksum": "sha256-5efbe627d7ecc1c234518c5ed93f3824711d9b9c58401d311f5fd647d1ccceab",
+      "lineCount": 776,
+      "lastModified": 1790988729697.2717
     },
     "venueSources": {
       "filename": "venue-sources.json",
       "size": 31835,
       "checksum": "sha256-b71e1a7e64b25d66812ef5f97557fb2081e4f42d51d28367ddb95a27e24ba631",
       "lineCount": 785,
-      "lastModified": 1790982490537.0188
+      "lastModified": 1790988729696.272
     }
   },
   "weeklyEdition": {

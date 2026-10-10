@@ -88,7 +88,10 @@ describe("retired event links", () => {
         </Routes>
       </MemoryRouter>
     );
-    await screen.findByRole("heading", { name: "Death From Above 1979" });
+    await screen.findByRole("heading", {
+      name: "Death From Above 1979",
+      level: 1,
+    });
     await waitFor(() => expect(loadChunk).toHaveBeenCalledTimes(1));
     expect(loadChunk).toHaveBeenCalledWith("2027-02");
     expect(
