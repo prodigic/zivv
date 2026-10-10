@@ -2,13 +2,14 @@
  * Event detail page
  */
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
 import EventAtlasCard from "@/components/ui/EventAtlasCard.js";
 import VenueNameLink from "@/components/ui/VenueNameLink.js";
 import { useAppStore } from "@/stores/appStore.js";
+import { isEventUpcoming } from "@/lib/discovery.js";
 
 const EventDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -102,26 +103,57 @@ const EventDetailPage: React.FC = () => {
       ? venueMonthEvents[currentIndex + 1]
       : null;
 
-  // Use refs so the keydown handler always has fresh values without re-registering
-  const prevEventRef = useRef(prevEvent);
-  const nextEventRef = useRef(nextEvent);
-  prevEventRef.current = prevEvent;
-  nextEventRef.current = nextEvent;
+  const venueStops = useMemo(() => {
+    const now = Date.now();
+    return Array.from(venues.values())
+      .map((candidate) => ({
+        venue: candidate,
+        show: candidate.upcomingEvents.find((show) =>
+          isEventUpcoming(show, now)
+        ),
+      }))
+      .filter((stop) => stop.show || stop.venue.id === event?.venueId)
+      .sort(
+        (a, b) =>
+          a.venue.name.localeCompare(b.venue.name) || a.venue.id - b.venue.id
+      );
+  }, [venues, event?.venueId]);
+  const venueIndex = venueStops.findIndex(
+    (stop) => stop.venue.id === venue?.id
+  );
+  const prevVenue = venueIndex > 0 ? venueStops[venueIndex - 1] : undefined;
+  const nextVenue = venueIndex >= 0 ? venueStops[venueIndex + 1] : undefined;
+
+  // Keep all four directions current as navigation changes the selected show.
+  const navigationRef = useRef<Record<string, string | undefined>>({});
+  navigationRef.current = {
+    ArrowUp: prevEvent?.slug,
+    ArrowDown: nextEvent?.slug,
+    ArrowLeft: prevVenue?.show?.slug,
+    ArrowRight: nextVenue?.show?.slug,
+  };
 
   // Keyboard nav — registered once, reads from refs to avoid stale closure
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+      if (!(e.key in navigationRef.current)) return;
       if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
+        e.defaultPrevented ||
+        e.altKey ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.shiftKey
+      )
+        return;
+      if (
+        e.target instanceof HTMLElement &&
+        (e.target.isContentEditable ||
+          e.target.closest("input, textarea, select, [role='textbox']"))
       )
         return;
       e.preventDefault();
-      if (e.key === "ArrowUp" && prevEventRef.current)
-        navigate(`/events/${prevEventRef.current.slug}`);
-      if (e.key === "ArrowDown" && nextEventRef.current)
-        navigate(`/events/${nextEventRef.current.slug}`);
+      const target = navigationRef.current[e.key];
+      if (target) navigate(`/events/${target}`);
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
@@ -171,6 +203,21 @@ const EventDetailPage: React.FC = () => {
   };
 
   const allArtists = [headliner, ...supportingArtists].filter(Boolean);
+  const price =
+    event.isFree || (event.priceMin === 0 && !event.priceMax)
+      ? "Free"
+      : event.priceMin != null
+        ? `$${event.priceMin}${event.priceMax != null && event.priceMax !== event.priceMin ? `–$${event.priceMax}` : ""}`
+        : event.priceMax != null
+          ? `Up to $${event.priceMax}`
+          : "Price TBA";
+  const time =
+    event.startTimeEpochMs != null
+      ? new Date(event.startTimeEpochMs).toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      : "Time TBA";
 
   return (
     <ContentArea title="" subtitle="">
@@ -250,7 +297,7 @@ const EventDetailPage: React.FC = () => {
         </div>
       )}
 
-      {/* Single-row header: back · artist · venue */}
+      {/* Center alignment keeps status badges from changing the title row height. */}
       <div className="flex items-center gap-3 mb-5">
         <button
           onClick={() => navigate(-1)}
@@ -275,15 +322,10 @@ const EventDetailPage: React.FC = () => {
         <h1 className="text-xl font-bold text-gray-900 dark:text-white truncate">
           {headliner?.name ?? "Show"}
         </h1>
-        {venue && (
-          <>
-            <span className="text-gray-300 dark:text-gray-600 shrink-0">·</span>
-            <VenueNameLink
-              venue={venue}
-              className="text-xl font-bold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white truncate"
-            />
-          </>
-        )}
+        <span className="text-gray-300 dark:text-gray-600 shrink-0">·</span>
+        <span className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap shrink-0">
+          {price} · {time}
+        </span>
         {event.status && event.status !== "confirmed" && (
           <span
             className={`text-xs font-semibold px-2 py-1 rounded shrink-0 ml-auto ${statusColors[event.status] ?? ""}`}
@@ -409,6 +451,36 @@ const EventDetailPage: React.FC = () => {
                     ? ` · ${venue.ageRestriction}`
                     : ""} · {venue.upcomingEvents.length} shows
                 </div>
+              </div>
+              <div className="flex shrink-0 gap-1">
+                {[
+                  {
+                    stop: prevVenue,
+                    label: "Previous venue",
+                    key: "ArrowLeft",
+                    arrow: "←",
+                  },
+                  {
+                    stop: nextVenue,
+                    label: "Next venue",
+                    key: "ArrowRight",
+                    arrow: "→",
+                  },
+                ].map(({ stop, label, key, arrow }) => (
+                  <button
+                    key={key}
+                    aria-label={label}
+                    aria-keyshortcuts={key}
+                    title={`${label}${stop ? `: ${stop.venue.name}` : ""} (${arrow})`}
+                    disabled={!stop?.show}
+                    onClick={() =>
+                      stop?.show && navigate(`/events/${stop.show.slug}`)
+                    }
+                    className="p-1 rounded text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-default"
+                  >
+                    {arrow}
+                  </button>
+                ))}
               </div>
             </div>
             {venueMonthEvents.length > 0 && (

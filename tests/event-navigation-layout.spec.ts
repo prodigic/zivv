@@ -8,6 +8,7 @@ const events = ["confirmed", "sold-out", "confirmed"].map((status, index) => ({
   slug: `2027-01-0${index + 1}-layout-show`,
   date: `2027-01-0${index + 1}`,
   dateEpochMs: Date.parse(`2027-01-0${index + 1}T20:00:00-08:00`),
+  startTimeEpochMs: Date.parse(`2027-01-0${index + 1}T19:00:00-08:00`),
   headlinerArtistId: 1,
   artistIds: [1],
   venueId: 2,
@@ -27,19 +28,34 @@ test("stepping through sold-out shows keeps the header and show tile steady", as
     headlinerName: "Layout Test Artist",
     venueName: "Layout Test Venue",
   }));
+  const previous = {
+    ...events[0],
+    id: 10,
+    venueId: 3,
+    slug: "2027-01-01-previous-venue",
+  };
+  const next = {
+    ...events[0],
+    id: 20,
+    venueId: 4,
+    slug: "2027-01-01-next-venue",
+  };
   const fixtures: Record<string, unknown> = {
     "manifest.json": {
       ...manifest,
       datasetVersion: "event-navigation-layout-test",
-      totalEvents: 3,
+      totalEvents: 5,
       totalArtists: 1,
-      totalVenues: 1,
+      totalVenues: 4,
       chunks: {
         ...manifest.chunks,
         events: [{ chunkId: "2027-01", filename: "events-2027-01.json" }],
       },
     },
-    "events-2027-01.json": { chunkId: "2027-01", events },
+    "events-2027-01.json": {
+      chunkId: "2027-01",
+      events: [...events, previous, next],
+    },
     "artists.json": [
       {
         id: 1,
@@ -49,6 +65,8 @@ test("stepping through sold-out shows keeps the header and show tile steady", as
       },
     ],
     "venues.json": [
+      { id: 4, name: "Z Venue", upcomingEvents: [next] },
+      { id: 5, name: "M Empty Venue", upcomingEvents: [] },
       {
         id: 2,
         name: "Layout Test Venue",
@@ -56,6 +74,7 @@ test("stepping through sold-out shows keeps the header and show tile steady", as
         city: "San Francisco",
         upcomingEvents,
       },
+      { id: 3, name: "A Venue", upcomingEvents: [previous] },
     ],
     "indexes.json": { ...indexes, eventSlugRedirects: {} },
   };
@@ -74,6 +93,8 @@ test("stepping through sold-out shows keeps the header and show tile steady", as
   });
   await expect(heading).toBeVisible();
   await expect(tile).toBeVisible();
+  await expect(heading.locator("..")).toContainText("$25 · 7:00 PM");
+  await expect(heading.locator("..")).not.toContainText("Layout Test Venue");
   const geometry = () =>
     heading.evaluate((element) => ({
       headerHeight: element.parentElement!.getBoundingClientRect().height,
@@ -95,4 +116,33 @@ test("stepping through sold-out shows keeps the header and show tile steady", as
     ).toHaveCount(index === 1 ? 1 : 0);
     expect(await geometry()).toEqual(initial);
   }
+
+  // Venue order is independent of JSON insertion order and skips empty venues.
+  await page.keyboard.press("ArrowRight");
+  await expect(page).toHaveURL(new RegExp(`${next.slug}$`));
+  await expect(
+    page.getByRole("button", { name: "Next venue", exact: true })
+  ).toBeDisabled();
+  await page.keyboard.press("ArrowRight");
+  await expect(page).toHaveURL(new RegExp(`${next.slug}$`));
+  await page.keyboard.press("ArrowLeft");
+  await expect(page).toHaveURL(new RegExp(`${events[0].slug}$`));
+  await page.keyboard.press("ArrowLeft");
+  await expect(page).toHaveURL(new RegExp(`${previous.slug}$`));
+  await expect(
+    page.getByRole("button", { name: "Previous venue", exact: true })
+  ).toBeDisabled();
+
+  const search = page.getByRole("textbox", {
+    name: "Search artists, venues, and events",
+  });
+  await search.fill("Layout");
+  await search.press("ArrowRight");
+  await expect(page).toHaveURL(new RegExp(`${previous.slug}$`));
+  await search.fill("");
+  await page.getByRole("button", { name: "Next venue", exact: true }).focus();
+  await page.keyboard.press("Shift+ArrowRight");
+  await expect(page).toHaveURL(new RegExp(`${previous.slug}$`));
+  await page.getByRole("button", { name: "Next venue", exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`${events[0].slug}$`));
 });
