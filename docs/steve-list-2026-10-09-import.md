@@ -55,3 +55,17 @@ Existing follow-ups remain in issues #5 and #12 for ambiguous venue identities,
 Two previously existing same-date bill groups remain; this import adds none.
 Publication is tracked in [issue #15](https://github.com/prodigic/zivv/issues/15).
 The weekly edition is marked published only after deployment and live checks.
+
+## Verified publication
+
+Publication commit:
+[`1363355`](https://github.com/prodigic/zivv/commit/1363355db6b87641c71dd3f23b2941079fbe95b4).
+The [Pages deployment](https://github.com/prodigic/zivv/actions/runs/38013167121)
+succeeded. At 6:28 p.m. Pacific on October 9, all 22 live files matched export
+`2026-10-10T01:24:33.441Z`, including 4,641 events and 146 weekly additions.
+The rendered Bay Area newsletter shows the October 9 heading and the correct
+Felton, Shed A and Undergarden cities. The weekly edition was then marked
+published, retaining the same cutoff and public membership.
+
+Live results: [Zivv](https://www.prodigic.com/zivv/) and the
+[Bay Area newsletter](https://www.prodigic.com/zivv/newsletter/bay-area).
