@@ -44,4 +44,12 @@ locations remain tracked in `zivv-unlocated-venue-maps`.
 - Desktop and 390px mobile reviewed with a loaded map, readable attribution,
   venue website/icon and no tile overflow.
 
-Publication is complete only after the main deployment and live verification.
+## Publication
+
+Published main commit `06d1c41`; GitHub Pages deployment
+`38015023786` completed successfully. Live verification at
+`https://www.prodigic.com/zivv/events/2026-10-06-the-menzingers-great-american-music-hall`
+confirmed the Atlas tile, loaded map, attribution and venue website/icon.
+The live manifest matches export `2026-10-10T01:49:53.924Z`, retains the
+October 9 ingestion date and has all 4,641 events. The release automation
+bumped the version to 0.89.0 at `f69c1c0`.
