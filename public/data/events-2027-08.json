@@ -1,10 +1,57 @@
 {
   "chunkId": "2027-08",
   "dateRange": {
-    "startEpochMs": 1818331200000,
+    "startEpochMs": 1818072000000,
     "endEpochMs": 1818331200000
   },
   "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1854706375,
+        1996868622
+      ],
+      "createdAtEpochMs": 1791595464839,
+      "date": "2027-08-12",
+      "dateEpochMs": 1818072000000,
+      "firstImportRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1791595464839,
+      "headlinerArtistId": 1854706375,
+      "id": 417683181,
+      "isFree": false,
+      "priceMax": 67.75,
+      "priceMin": 67.75,
+      "provenanceConflicts": [],
+      "slug": "2027-08-12-red-clay-strays-the-greek-theater",
+      "sourceLineNumber": 1166,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:8b1689525737a1ae",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1791595464839,
+          "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 474218142,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1818122400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1791595464839,
+      "venueId": 474218142,
+      "venueType": "major"
+    },
     {
       "addedDateProvenance": "observed",
       "ageRestriction": "all-ages",
@@ -29,7 +76,7 @@
       "priceMin": 179,
       "provenanceConflicts": [],
       "slug": "2027-08-15-slipknot-golden-gate-park",
-      "sourceLineNumber": 1203,
+      "sourceLineNumber": 1167,
       "sources": [
         {
           "canonicalUrl": null,
@@ -39,8 +86,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 1306836772,
           "session": null,
           "sourceId": "steveslist"

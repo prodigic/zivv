@@ -1,10 +1,53 @@
 {
   "chunkId": "2027-05",
   "dateRange": {
-    "startEpochMs": 1809432000000,
+    "startEpochMs": 1809172800000,
     "endEpochMs": 1810814400000
   },
   "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        809288771
+      ],
+      "createdAtEpochMs": 1791595464839,
+      "date": "2027-05-01",
+      "dateEpochMs": 1809172800000,
+      "firstImportRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1791595464839,
+      "headlinerArtistId": 809288771,
+      "id": 1700507240,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-05-01-lola-young-the-civic-auditorium",
+      "sourceLineNumber": 1152,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:97d181d0194fcc8b",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1791595464839,
+          "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 1648637995,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1791595464839,
+      "venueId": 1648637995,
+      "venueType": "major"
+    },
     {
       "addedDateProvenance": "observed",
       "ageRestriction": "all-ages",
@@ -23,7 +66,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-05-04-jean-michel-blais-the-chapel",
-      "sourceLineNumber": 1191,
+      "sourceLineNumber": 1153,
       "sources": [
         {
           "canonicalUrl": null,
@@ -33,8 +76,8 @@
           "firstSeenAtEpochMs": 1789777368000,
           "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -106,7 +149,7 @@
         }
       ],
       "slug": "2027-05-06-french-79-the-fillmore",
-      "sourceLineNumber": 1192,
+      "sourceLineNumber": 1154,
       "sources": [
         {
           "canonicalUrl": null,
@@ -116,8 +159,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -152,7 +195,7 @@
       "priceMin": 48,
       "provenanceConflicts": [],
       "slug": "2027-05-09-alaska-thunderfuck-the-castro",
-      "sourceLineNumber": 1193,
+      "sourceLineNumber": 1155,
       "sources": [
         {
           "canonicalUrl": null,
@@ -162,8 +205,8 @@
           "firstSeenAtEpochMs": 1789777368000,
           "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 1383208152,
           "session": null,
           "sourceId": "steveslist"
@@ -196,7 +239,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-05-09-too-many-zooz-the-independent",
-      "sourceLineNumber": 1194,
+      "sourceLineNumber": 1156,
       "sources": [
         {
           "canonicalUrl": null,
@@ -206,8 +249,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 515101024,
           "session": null,
           "sourceId": "steveslist"
@@ -241,7 +284,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-05-12-fontaines-dc-the-civic-auditorium",
-      "sourceLineNumber": 1195,
+      "sourceLineNumber": 1158,
       "sources": [
         {
           "canonicalUrl": null,
@@ -251,8 +294,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 1648637995,
           "session": null,
           "sourceId": "steveslist"
@@ -264,6 +307,53 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790985835628,
       "venueId": 1648637995,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        739229063,
+        883900028
+      ],
+      "createdAtEpochMs": 1791595464839,
+      "date": "2027-05-12",
+      "dateEpochMs": 1810123200000,
+      "firstImportRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1791595464839,
+      "headlinerArtistId": 739229063,
+      "id": 305818474,
+      "isFree": false,
+      "priceMax": 48,
+      "priceMin": 48,
+      "provenanceConflicts": [],
+      "slug": "2027-05-12-palaye-royale-the-castro-theater",
+      "sourceLineNumber": 1157,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:a75303608aea2e98",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1791595464839,
+          "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 881479351,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1810177200000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1791595464839,
+      "venueId": 881479351,
       "venueType": "major"
     },
     {
@@ -287,7 +377,7 @@
       "priceMin": 30,
       "provenanceConflicts": [],
       "slug": "2027-05-15-the-liminanas-the-chapel",
-      "sourceLineNumber": 1196,
+      "sourceLineNumber": 1159,
       "sources": [
         {
           "canonicalUrl": null,
@@ -297,8 +387,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -411,7 +501,7 @@
         }
       ],
       "slug": "2027-05-16-valery-meladze-the-warfield",
-      "sourceLineNumber": 1197,
+      "sourceLineNumber": 1160,
       "sources": [
         {
           "canonicalUrl": null,
@@ -421,8 +511,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 1531618194,
           "session": null,
           "sourceId": "steveslist"
@@ -455,7 +545,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-05-20-agnes-obel-the-castro",
-      "sourceLineNumber": 1198,
+      "sourceLineNumber": 1161,
       "sources": [
         {
           "canonicalUrl": null,
@@ -465,8 +555,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1790985835628,
-          "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "originalVenueId": 1383208152,
           "session": null,
           "sourceId": "steveslist"

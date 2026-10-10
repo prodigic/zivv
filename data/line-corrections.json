@@ -1,5 +1,45 @@
 [
   {
+    "note": "October 9 edition misspells Volunteer Orientation; normalize the programming label for audited non-performer exclusion.",
+    "pattern": "\\bVoluneer Orentation\\b",
+    "replacement": "Volunteer Orientation"
+  },
+  {
+    "note": "October 9 edition misspells Emo Night; normalize the programming label for audited non-performer exclusion.",
+    "pattern": "\\bEmno Night\\b",
+    "replacement": "Emo Night"
+  },
+  {
+    "note": "The source explicitly places Music Hall in Felton; resolve that venue before the generic Music Hall alias can select Napa.",
+    "pattern": "\\bat (?:the )?Music Hall, Felton\\b",
+    "replacement": "at Felton Music Hall, Felton"
+  },
+  {
+    "note": "October 9 edition's October 11 Gilman Brewing bill uses noon; express the same source time as 12pm for the clock parser.",
+    "pattern": "^(oct\\s+11\\s+sun\\s+Jack Killed Jill[^\\n]*at Gilman Brewing Company[^\\n]*)\\bnoon\\b",
+    "replacement": "$1 12pm"
+  },
+  {
+    "note": "The October 11 Gilman Brewing lineup joins its final act with 'and'; retain the existing Hemmed Up artist identity.",
+    "pattern": "Nixed, and Hemmed Up",
+    "replacement": "Nixed, Hemmed Up"
+  },
+  {
+    "note": "October 9 edition gives Shed A's pier before the city; keep San Francisco in the city field rather than parsing Pier 48 as a city.",
+    "pattern": "\\bat Shed A, Pier 48, S\\.F\\.",
+    "replacement": "at Shed A, S.F."
+  },
+  {
+    "note": "October 9 edition omits the venue separator after Joseph Dee Bradshaw in the November 5 Stork Club listing; preserve the complete lineup.",
+    "pattern": "Joseph Dee Bradshaw\\s+thee Stork Club, Oakland",
+    "replacement": "Joseph Dee Bradshaw at thee Stork Club, Oakland"
+  },
+  {
+    "note": "October 9 edition has a two-letter Friday token on November 13; restore it before collapsing wrapped source rows.",
+    "pattern": "^nov\\s+13\\s+ri\\s+Other Lives",
+    "replacement": "nov 13 fri Other Lives"
+  },
+  {
     "note": "The Oct. 2, 2026 UC Theatre Death From Above 1979 show moved to August Hall on Feb. 11, 2027, with original tickets valid (https://www.theuctheatre.org/shows/death-from-above-1979-02-oct). Replace only this stale bill, including its malformed name; retain other dates and standalone 1979 acts.",
     "pattern": "^oct\\s+2\\s+(?:2026|fri)\\s+Death From Above(?:,\\s*1979|\\s+1979)?(?:,\\s*Rickshaw Billie's Burger Patrol)?\\s+at\\s+(?:the\\s+)?UC Theat(?:er|re),\\s*Berkeley[^\\n]*$",
     "replacement": "feb 11 2027 Death From Above 1979 at August Hall, S.F. 5+ $44.45 7pm/8pm"
