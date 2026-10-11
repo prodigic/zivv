@@ -1,0 +1,4239 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-10",
+  "scope": "Artists displayed by the published Local Artists directory, using public/data local lists and nonempty exported upcomingEvents. This is a partial research pass, not complete coverage.",
+  "stats": {
+    "totalArtists": 288,
+    "photosFound": 67,
+    "identityReviewNeeded": 3,
+    "checkedWithoutPhoto": 35,
+    "notResearched": 183
+  },
+  "entries": [
+    {
+      "artistId": 1472734308,
+      "name": "Abracadabra (ep release)",
+      "slug": "abracadabra-ep-release",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 39550773,
+      "name": "Adrian West Band",
+      "slug": "adrian-west-band",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 39550773,
+          "name": "Adrian West Band",
+          "slug": "adrian-west-band",
+          "sourceUrl": "https://adrianwest.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:27.250Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0045527914_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0045527914_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "Adrian West image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1646320518,
+      "name": "Agony Aunts",
+      "slug": "agony-aunts",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1646320518,
+          "name": "Agony Aunts",
+          "slug": "agony-aunts",
+          "sourceUrl": "https://agony-aunts.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:25.854Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0001620709_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0001620709_21.jpg",
+          "originalDimensions": "1200,800",
+          "sourceAlt": "Agony Aunts image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 800,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0001620709_10.jpg"
+    },
+    {
+      "artistId": 1205990207,
+      "name": "AJ Lee & Blue Summit",
+      "slug": "aj-lee-blue-summit",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 887358534,
+      "name": "Allure",
+      "slug": "allure",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 768613345,
+      "name": "Alvie & The Breakfast Pigs",
+      "slug": "alvie-the-breakfast-pigs",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://www.alvieandthebreakfastpigs.com/about",
+          "imageUrl": "https://images.squarespace-cdn.com/content/v1/675b83928d76b211eca41d06/6015cd4c-ae7c-43f6-a702-6d3f193d2a37/Alvie-and-the-Breakfast-Pigs-Promo-1351-Edit.jpg",
+          "kind": "performer-photo",
+          "subject": "Four musicians with guitar/drumsticks against a yellow background; official biography image.",
+          "credit": "Unknown",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        }
+      ],
+      "selectedImageUrl": "https://images.squarespace-cdn.com/content/v1/675b83928d76b211eca41d06/6015cd4c-ae7c-43f6-a702-6d3f193d2a37/Alvie-and-the-Breakfast-Pigs-Promo-1351-Edit.jpg"
+    },
+    {
+      "artistId": 1711681656,
+      "name": "Amanda Magana",
+      "slug": "amanda-magana",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1907695647,
+      "name": "Analog Dog",
+      "slug": "analog-dog",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "name": "Analog Dog",
+          "sourceUrl": "https://www.analogdogband.com/",
+          "imageUrl": "https://images.squarespace-cdn.com/content/v1/5d1139776ee6af00019d5ac1/85aaa0b3-5c40-43ae-95fb-ade49d66fa77/AnalogDog_Rickshaw_07152023-16.jpg",
+          "subject": "Official band Media gallery; Rickshaw performance photograph, filename dates it to July 2023.",
+          "credit": "Not stated",
+          "reuseTerms": "Not stated",
+          "kind": "live-photo",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true
+        }
+      ],
+      "selectedImageUrl": "https://images.squarespace-cdn.com/content/v1/5d1139776ee6af00019d5ac1/85aaa0b3-5c40-43ae-95fb-ade49d66fa77/AnalogDog_Rickshaw_07152023-16.jpg"
+    },
+    {
+      "artistId": 1518269575,
+      "name": "Ancestors Wrath",
+      "slug": "ancestors-wrath",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 204656376,
+      "name": "Ancient Rage",
+      "slug": "ancient-rage",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1436564669,
+      "name": "Andre Nickatina",
+      "slug": "andre-nickatina",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://music.apple.com/us/artist/andre-nickatina/4623529",
+          "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/16/4f/9d/164f9da6-de07-473c-ee22-d11a24993628/pr_source.png/380x380cc-60.jpg",
+          "kind": "performer-photo",
+          "subject": "Artist profile portrait: Nickatina in a burgundy hat, city backdrop. Extracted from the artist portrait picture element, not a release tile. Catalog-hosted fallback, rather than an artist-hosted press download.",
+          "credit": "Unknown",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        }
+      ],
+      "selectedImageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/16/4f/9d/164f9da6-de07-473c-ee22-d11a24993628/pr_source.png/380x380cc-60.jpg"
+    },
+    {
+      "artistId": 805848113,
+      "name": "Andrew St. James",
+      "slug": "andrew-st-james",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://andrewstjames.bandcamp.com/album/doldrums",
+          "imageUrl": "https://f4.bcbits.com/img/0016357202_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Solo portrait by a sunlit window, holding sunglasses. The sidebar identifies it as Andrew St. James and links to the full photograph.",
+          "credit": "Unknown",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        },
+        {
+          "artistId": 805848113,
+          "name": "Andrew St. James",
+          "slug": "andrew-st-james",
+          "sourceUrl": "https://andrewstjames.bandcamp.com/album/doldrums",
+          "checkedAt": "2026-10-11T00:02:26.004Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0016357202_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0016357202_21.jpg",
+          "originalDimensions": "802,1200",
+          "sourceAlt": "Andrew St. James image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 802,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0016357202_10.jpg"
+    },
+    {
+      "artistId": 1618842881,
+      "name": "Apraxia",
+      "slug": "apraxia",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1926351334,
+      "name": "Apricot Court",
+      "slug": "apricot-court",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1955834751,
+      "name": "April Magazine",
+      "slug": "april-magazine",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 551807401,
+      "name": "Archer Monk",
+      "slug": "archer-monk",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 551807401,
+          "name": "Archer Monk",
+          "slug": "archer-monk",
+          "sourceUrl": "https://archermonk.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:33.866Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0038387216_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0038387216_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "Archer Monk image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0038387216_10.jpg"
+    },
+    {
+      "artistId": 612628700,
+      "name": "Arnocorps",
+      "slug": "arnocorps",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 612628700,
+          "name": "Arnocorps",
+          "slug": "arnocorps",
+          "sourceUrl": "https://arnocorps.bandcamp.com/album/welcome-to-the-gym",
+          "checkedAt": "2026-10-11T00:02:30.993Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0011307276_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0011307276_21.jpg",
+          "originalDimensions": "640,480",
+          "sourceAlt": "ArnoCorps image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 640,
+          "height": 480,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0011307276_10.jpg"
+    },
+    {
+      "artistId": 1065340426,
+      "name": "Arsonists Get All The Girls",
+      "slug": "arsonists-get-all-the-girls",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 987468020,
+      "name": "Astrozombies SF (tribute)",
+      "slug": "astrozombies-sf-tribute",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 999387295,
+      "name": "B.F.H",
+      "slug": "bfh",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 999387295,
+          "name": "B.F.H",
+          "slug": "bfh",
+          "sourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+          "checkedAt": "2026-10-11T00:02:31.430Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0045829145_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0045829145_21.jpg",
+          "originalDimensions": "1065,1200",
+          "sourceAlt": "B.F.H. image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1065,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 916235027,
+      "name": "B.F.H.",
+      "slug": "bfh",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 916235027,
+          "name": "B.F.H.",
+          "slug": "bfh",
+          "sourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+          "checkedAt": "2026-10-11T00:02:29.222Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0045829145_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0045829145_21.jpg",
+          "originalDimensions": "1065,1200",
+          "sourceAlt": "B.F.H. image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1065,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 236813179,
+      "name": "Bad Angle",
+      "slug": "bad-angle",
+      "status": "photo-still-needed",
+      "candidates": [],
+      "notes": "See primary-source research reports for rejected artwork, identity collisions, and official leads."
+    },
+    {
+      "artistId": 216455356,
+      "name": "Bad World",
+      "slug": "bad-world",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 216455356,
+          "name": "Bad World",
+          "slug": "bad-world",
+          "sourceUrl": "https://badworldhc.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.472Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0038779465_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0038779465_21.jpg",
+          "originalDimensions": "800,1200",
+          "sourceAlt": "Bad World image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 800,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0038779465_10.jpg"
+    },
+    {
+      "artistId": 1173085903,
+      "name": "Badvril",
+      "slug": "badvril",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1173085903,
+          "name": "Badvril",
+          "slug": "badvril",
+          "sourceUrl": "https://badvril.bandcamp.com/merch",
+          "checkedAt": "2026-10-11T00:02:28.227Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0035000766_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0035000766_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "BADVRIL image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0035000766_10.jpg"
+    },
+    {
+      "artistId": 587440292,
+      "name": "Band Of Orcs",
+      "slug": "band-of-orcs",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 587440292,
+          "name": "Band Of Orcs",
+          "slug": "band-of-orcs",
+          "sourceUrl": "https://abandoforcs.bandcamp.com/music",
+          "checkedAt": "2026-10-11T00:02:33.023Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0038573793_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0038573793_21.jpg",
+          "originalDimensions": "689,576",
+          "sourceAlt": "A Band of Orcs image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 689,
+          "height": 576,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1620162896,
+      "name": "Barfight",
+      "slug": "barfight",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1810516670,
+      "name": "Battlehooch",
+      "slug": "battlehooch",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1810516670,
+          "name": "Battlehooch",
+          "slug": "battlehooch",
+          "sourceUrl": "https://battlehooch.bandcamp.com/music",
+          "checkedAt": "2026-10-11T00:02:33.280Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0005156002_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0005156002_21.jpg",
+          "originalDimensions": "1200,796",
+          "sourceAlt": "Battlehooch image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 796,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0005156002_10.jpg"
+    },
+    {
+      "artistId": 26042234,
+      "name": "Bella D. & Friends",
+      "slug": "bella-d-friends",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1112178484,
+      "name": "Bernal Equinox",
+      "slug": "bernal-equinox",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 943859335,
+      "name": "Big Boy",
+      "slug": "big-boy",
+      "status": "photo-still-needed",
+      "candidates": [],
+      "notes": "See primary-source research reports for rejected artwork, identity collisions, and official leads."
+    },
+    {
+      "artistId": 1442690916,
+      "name": "Big Tractor",
+      "slug": "big-tractor",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 1442690916,
+          "name": "Big Tractor",
+          "slug": "big-tractor",
+          "sourceUrl": "https://folkpunkkesha.bandcamp.com/track/grow-a-pear",
+          "checkedAt": "2026-10-11T00:02:24.769Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0040045033_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0040045033_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "Folk Punk Kesha image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null,
+      "notes": "See primary-source research reports for rejected artwork, identity collisions, and official leads."
+    },
+    {
+      "artistId": 1088101832,
+      "name": "BigEmptyZero",
+      "slug": "bigemptyzero",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1971843765,
+      "name": "Bite",
+      "slug": "bite",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 860804136,
+      "name": "Bl'ast",
+      "slug": "blast",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 860804136,
+          "name": "Bl'ast",
+          "slug": "blast",
+          "sourceUrl": "https://blastsl.bandcamp.com/album/the-expression-of-power",
+          "checkedAt": "2026-10-11T00:02:33.073Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0019611485_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0019611485_21.jpg",
+          "originalDimensions": "750,500",
+          "sourceAlt": "BL'AST! image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 750,
+          "height": 500,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0019611485_10.jpg"
+    },
+    {
+      "artistId": 506542070,
+      "name": "Blood Compact",
+      "slug": "blood-compact",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1945125271,
+      "name": "Blood Rave",
+      "slug": "blood-rave",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 766968921,
+      "name": "Blunt Force Karma",
+      "slug": "blunt-force-karma",
+      "status": "photo-still-needed",
+      "candidates": [],
+      "notes": "See primary-source research reports for rejected artwork, identity collisions, and official leads."
+    },
+    {
+      "artistId": 1628928232,
+      "name": "Bone Diggers",
+      "slug": "bone-diggers",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 762513206,
+      "name": "Bonnie Raitt",
+      "slug": "bonnie-raitt",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 21503629,
+      "name": "Brassica a/a $20 8pm",
+      "slug": "brassica-aa-20-8pm",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 997350907,
+      "name": "Bromf",
+      "slug": "bromf",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1252805274,
+      "name": "Browntown West",
+      "slug": "browntown-west",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 298454227,
+      "name": "Butter Phunk",
+      "slug": "butter-phunk",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 350860843,
+      "name": "Buzzed Lightbeer",
+      "slug": "buzzed-lightbeer",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://buzzedlightbeer.bandcamp.com/",
+          "imageUrl": "https://f4.bcbits.com/img/0046005127_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Color portrait of two people leaning over palm foliage. Linked from the band's official sidebar image; represents the profile subject, not necessarily every current member.",
+          "credit": "Unknown",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        },
+        {
+          "artistId": 350860843,
+          "name": "Buzzed Lightbeer",
+          "slug": "buzzed-lightbeer",
+          "sourceUrl": "https://buzzedlightbeer.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:25.227Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0046005127_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0046005127_21.jpg",
+          "originalDimensions": "480,445",
+          "sourceAlt": "Buzzed Lightbeer image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 480,
+          "height": 445,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0046005127_10.jpg"
+    },
+    {
+      "artistId": 2028346343,
+      "name": "Can Of Bliss",
+      "slug": "can-of-bliss",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 2028346343,
+          "name": "Can Of Bliss",
+          "slug": "can-of-bliss",
+          "sourceUrl": "https://canofblissmusic.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:34.011Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0039184553_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0039184553_21.jpg",
+          "originalDimensions": "1200,1091",
+          "sourceAlt": "Can of Bliss image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1091,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1950440468,
+      "name": "Cardboard People",
+      "slug": "cardboard-people",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1950440468,
+          "name": "Cardboard People",
+          "slug": "cardboard-people",
+          "sourceUrl": "https://cardboardpeople.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:31.456Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0043227509_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0043227509_21.jpg",
+          "originalDimensions": "574,578",
+          "sourceAlt": "Cardboard People image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "photo-composite",
+          "width": 574,
+          "height": 578,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0043227509_10.jpg"
+    },
+    {
+      "artistId": 2070792215,
+      "name": "Carlton Melton",
+      "slug": "carlton-melton",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 2070792215,
+          "name": "Carlton Melton",
+          "slug": "carlton-melton",
+          "sourceUrl": "https://meltoncarlton.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.264Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0033142586_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0033142586_21.jpg",
+          "originalDimensions": "1200,900",
+          "sourceAlt": "CARLTON MELTON image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 900,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0033142586_10.jpg"
+    },
+    {
+      "artistId": 781285369,
+      "name": "Carmensixteen",
+      "slug": "carmensixteen",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1185102123,
+      "name": "Carpool Tunnel",
+      "slug": "carpool-tunnel",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 840051573,
+      "name": "Castle",
+      "slug": "castle",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 840051573,
+          "name": "Castle",
+          "slug": "castle",
+          "sourceUrl": "https://castlesf.bandcamp.com/music",
+          "checkedAt": "2026-10-11T00:02:31.723Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0034853156_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0034853156_21.jpg",
+          "originalDimensions": "598,598",
+          "sourceAlt": "Castle image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 598,
+          "height": 598,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0034853156_10.jpg"
+    },
+    {
+      "artistId": 840027630,
+      "name": "Catnip",
+      "slug": "catnip",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1328436747,
+      "name": "Celestial Hotties",
+      "slug": "celestial-hotties",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 623101611,
+      "name": "Ceremony",
+      "slug": "ceremony",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1977324350,
+      "name": "Charger (record release)",
+      "slug": "charger-record-release",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 970903978,
+      "name": "Charm World",
+      "slug": "charm-world",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 970903978,
+          "name": "Charm World",
+          "slug": "charm-world",
+          "sourceUrl": "https://charmworld.bandcamp.com/track/lost-loser",
+          "checkedAt": "2026-10-11T00:02:25.252Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0031802959_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0031802959_21.jpg",
+          "originalDimensions": "1200,800",
+          "sourceAlt": "Charm World image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 800,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0031802959_10.jpg"
+    },
+    {
+      "artistId": 84737197,
+      "name": "Cheflee",
+      "slug": "cheflee",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1136314362,
+      "name": "Christian Francisco",
+      "slug": "christian-francisco",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1580758131,
+      "name": "Christina's Trip",
+      "slug": "christinas-trip",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 482808684,
+      "name": "Circle Of Ruin",
+      "slug": "circle-of-ruin",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1188494457,
+      "name": "Class of '77",
+      "slug": "class-of-77",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 930284663,
+      "name": "Clencher",
+      "slug": "clencher",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 398892145,
+      "name": "Clitflicker",
+      "slug": "clitflicker",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 2027726098,
+      "name": "Cold Water Law Firm",
+      "slug": "cold-water-law-firm",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1922317239,
+      "name": "Cole Berliner",
+      "slug": "cole-berliner",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 984768231,
+      "name": "Colleen Morton Busch",
+      "slug": "colleen-morton-busch",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1203932246,
+      "name": "Concision",
+      "slug": "concision",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1203932246,
+          "name": "Concision",
+          "slug": "concision",
+          "sourceUrl": "https://concision510.bandcamp.com/album/fall-promo",
+          "checkedAt": "2026-10-11T00:02:27.663Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0045442735_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0045442735_21.jpg",
+          "originalDimensions": "901,1200",
+          "sourceAlt": "Concision image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 901,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0045442735_10.jpg"
+    },
+    {
+      "artistId": 477444689,
+      "name": "Consolidated Electric",
+      "slug": "consolidated-electric",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 858642401,
+      "name": "Couldn't Deal",
+      "slug": "couldnt-deal",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 2077294941,
+      "name": "Country Risqué (record release)",
+      "slug": "country-risqu-record-release",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1558245890,
+      "name": "Courtney Jean",
+      "slug": "courtney-jean",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1182342962,
+      "name": "Cowboy Beauty Queen",
+      "slug": "cowboy-beauty-queen",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 2048473448,
+      "name": "Crop Top",
+      "slug": "crop-top",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1933281492,
+      "name": "Cross Checked",
+      "slug": "cross-checked",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1971805359,
+      "name": "CRSB",
+      "slug": "crsb",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 325805878,
+      "name": "Crying Uncle Bluegrass Band",
+      "slug": "crying-uncle-bluegrass-band",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 692912443,
+      "name": "Cult Mind",
+      "slug": "cult-mind",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 692912443,
+          "name": "Cult Mind",
+          "slug": "cult-mind",
+          "sourceUrl": "https://cultmind.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:25.458Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0042094589_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0042094589_21.jpg",
+          "originalDimensions": "1200,798",
+          "sourceAlt": "Cult Mind image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 798,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0042094589_10.jpg"
+    },
+    {
+      "artistId": 1802819611,
+      "name": "Cut-Rate Druggist",
+      "slug": "cut-rate-druggist",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1802819611,
+          "name": "Cut-Rate Druggist",
+          "slug": "cut-rate-druggist",
+          "sourceUrl": "https://cutratedruggist.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:27.518Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0045526620_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0045526620_21.jpg",
+          "originalDimensions": "1200,912",
+          "sourceAlt": "Cut-Rate Druggist image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 912,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0045526620_10.jpg"
+    },
+    {
+      "artistId": 13127646,
+      "name": "Cutting Up The Elephant",
+      "slug": "cutting-up-the-elephant",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 13127646,
+          "name": "Cutting Up The Elephant",
+          "slug": "cutting-up-the-elephant",
+          "sourceUrl": "https://cuttinguptheelephant.bandcamp.com/album/cutting-up-the-elephant",
+          "checkedAt": "2026-10-11T00:02:29.469Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0046634631_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0046634631_21.jpg",
+          "originalDimensions": "1200,900",
+          "sourceAlt": "cutting up the elephant image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 900,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0046634631_10.jpg"
+    },
+    {
+      "artistId": 952091815,
+      "name": "Cuva Bimo",
+      "slug": "cuva-bimo",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 952091815,
+          "name": "Cuva Bimo",
+          "slug": "cuva-bimo",
+          "sourceUrl": "https://cuvabimo.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:29.048Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0033758114_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0033758114_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "CuVa Bimö image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1699921692,
+      "name": "Dalmatia",
+      "slug": "dalmatia",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1818373536,
+      "name": "Dan Lebowitz",
+      "slug": "dan-lebowitz",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 887255271,
+      "name": "Dark N Stormy",
+      "slug": "dark-n-stormy",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 113812060,
+      "name": "Dark Satellite",
+      "slug": "dark-satellite",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 113812060,
+          "name": "Dark Satellite",
+          "slug": "dark-satellite",
+          "sourceUrl": "https://darksatellite.bandcamp.com/album/splitting-image",
+          "checkedAt": "2026-10-11T00:02:30.565Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0026555113_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0026555113_21.jpg",
+          "originalDimensions": "1200,900",
+          "sourceAlt": "Dark Satellite image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 900,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 624348240,
+      "name": "Dawg Fight",
+      "slug": "dawg-fight",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1159440154,
+      "name": "Dead River Rebels",
+      "slug": "dead-river-rebels",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 1159440154,
+          "name": "Dead River Rebels",
+          "slug": "dead-river-rebels",
+          "sourceUrl": "https://deadriverrebelssf.bandcamp.com/album/exeter",
+          "checkedAt": "2026-10-11T00:02:29.878Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0010254315_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0010254315_21.jpg",
+          "originalDimensions": "1200,1195",
+          "sourceAlt": "Dead River Rebels image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1195,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1029472089,
+      "name": "Dead Souls (tribute)",
+      "slug": "dead-souls-tribute",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 824976364,
+      "name": "Deafheaven",
+      "slug": "deafheaven",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1144396706,
+      "name": "Death Angel",
+      "slug": "death-angel",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1315292097,
+      "name": "Debased (tribute)",
+      "slug": "debased-tribute",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 111312157,
+      "name": "Electric Ex",
+      "slug": "electric-ex",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 550132579,
+      "name": "Elegant Trash",
+      "slug": "elegant-trash",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://eleganttrash.net/photography/",
+          "imageUrl": "https://eleganttrash.net/wordpress/wp-content/uploads/2023/09/elegant-trash-group-photo-1024x614.jpg",
+          "kind": "performer-photo",
+          "subject": "Black-and-white montage of five performers playing instruments; actual photography, though a composite rather than a single posed group portrait. Official site is linked from the Oakland Bandcamp profile.",
+          "credit": "No photographer credit or image reuse grant stated in gallery text; unknown.",
+          "reuseTerms": "Unknown; see source report for attribution qualifications.",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-priority.md"
+        },
+        {
+          "artistId": 550132579,
+          "name": "Elegant Trash",
+          "slug": "elegant-trash",
+          "sourceUrl": "https://eleganttrash.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:24.560Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0017715633_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0017715633_21.jpg",
+          "originalDimensions": "1200,1198",
+          "sourceAlt": "Elegant Trash image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1198,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://eleganttrash.net/wordpress/wp-content/uploads/2023/09/elegant-trash-group-photo-1024x614.jpg"
+    },
+    {
+      "artistId": 460824948,
+      "name": "Euthanized",
+      "slug": "euthanized",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 460824948,
+          "name": "Euthanized",
+          "slug": "euthanized",
+          "sourceUrl": "https://euthanizedsf.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:27.429Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0041295244_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0041295244_21.jpg",
+          "originalDimensions": "575,391",
+          "sourceAlt": "EUTHANIZED image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 575,
+          "height": 391,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1048759589,
+      "name": "Fake Your Own Death",
+      "slug": "fake-your-own-death",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://fakeyourowndeath.bandcamp.com/",
+          "imageUrl": "https://f4.bcbits.com/img/0043049747_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Black-and-white live photo of four musicians onstage; linked from the band's profile image.",
+          "credit": "Alien Bass Photography, visible image watermark; no additional page credit found",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        },
+        {
+          "artistId": 1048759589,
+          "name": "Fake Your Own Death",
+          "slug": "fake-your-own-death",
+          "sourceUrl": "https://fakeyourowndeath.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:26.591Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0043049747_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0043049747_21.jpg",
+          "originalDimensions": "1150,767",
+          "sourceAlt": "Fake Your Own Death image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1150,
+          "height": 767,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0043049747_10.jpg"
+    },
+    {
+      "artistId": 1843844733,
+      "name": "Friday Night Nutz",
+      "slug": "friday-night-nutz",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1843844733,
+          "name": "Friday Night Nutz",
+          "slug": "friday-night-nutz",
+          "sourceUrl": "https://fridaynightnutz.bandcamp.com/album/friday-night-nutz-2",
+          "checkedAt": "2026-10-11T00:02:28.623Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0028941277_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0028941277_21.jpg",
+          "originalDimensions": "1200,900",
+          "sourceAlt": "Friday Night Nutz image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 900,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0028941277_10.jpg"
+    },
+    {
+      "artistId": 2052758322,
+      "name": "Friendship Games",
+      "slug": "friendship-games",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 2052758322,
+          "name": "Friendship Games",
+          "slug": "friendship-games",
+          "sourceUrl": "https://friendshipgames.bandcamp.com/merch",
+          "checkedAt": "2026-10-11T00:02:28.803Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0037828523_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0037828523_21.jpg",
+          "originalDimensions": "1200,900",
+          "sourceAlt": "friendship games image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 900,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0037828523_10.jpg"
+    },
+    {
+      "artistId": 734343046,
+      "name": "Fuzz Attack",
+      "slug": "fuzz-attack",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 734343046,
+          "name": "Fuzz Attack",
+          "slug": "fuzz-attack",
+          "sourceUrl": "https://fuzzattack.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:29.288Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0037925400_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0037925400_21.jpg",
+          "originalDimensions": "1200,675",
+          "sourceAlt": "Fuzz Attack image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 675,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0037925400_10.jpg"
+    },
+    {
+      "artistId": 1614441443,
+      "name": "Geographer",
+      "slug": "geographer",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1974107502,
+      "name": "Greyhound",
+      "slug": "greyhound",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1656376636,
+      "name": "Heartless Folk",
+      "slug": "heartless-folk",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 1656376636,
+          "name": "Heartless Folk",
+          "slug": "heartless-folk",
+          "sourceUrl": "https://heartlessfolk.bandcamp.com/album/tired-anxious-hands",
+          "checkedAt": "2026-10-11T00:02:31.084Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0001470145_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0001470145_21.jpg",
+          "originalDimensions": "981,1200",
+          "sourceAlt": "heartless folk image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 981,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1520581414,
+      "name": "Hell Bound Pound",
+      "slug": "hell-bound-pound",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://hellboundpound.bandcamp.com/",
+          "imageUrl": "https://f4.bcbits.com/img/0040668887_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Black-and-white posed group photo; five people. Profile identifies Richmond and East Bay skate/speed punk and names the members. Separate from release covers.",
+          "credit": "Photographer and photo license not stated on inspected page; unknown.",
+          "reuseTerms": "Unknown; see source report for attribution qualifications.",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-priority.md"
+        },
+        {
+          "artistId": 1520581414,
+          "name": "Hell Bound Pound",
+          "slug": "hell-bound-pound",
+          "sourceUrl": "https://hellboundpound.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:24.285Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0040668887_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0040668887_21.jpg",
+          "originalDimensions": "1076,1200",
+          "sourceAlt": "HELL BOUND POUND image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1076,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0040668887_10.jpg"
+    },
+    {
+      "artistId": 1058435412,
+      "name": "Imperial Teen",
+      "slug": "imperial-teen",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1058435412,
+          "name": "Imperial Teen",
+          "slug": "imperial-teen",
+          "sourceUrl": "https://imperialteen.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:30.956Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0046512088_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0046512088_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "Imperial Teen image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0046512088_10.jpg"
+    },
+    {
+      "artistId": 1370194942,
+      "name": "Indianna Hale And The Dust Collector",
+      "slug": "indianna-hale-and-the-dust-collector",
+      "status": "identity-review-needed",
+      "candidates": [
+        {
+          "artistId": 1370194942,
+          "name": "Indianna Hale And The Dust Collector",
+          "slug": "indianna-hale-and-the-dust-collector",
+          "sourceUrl": "https://indiannahale.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:31.698Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0028605678_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0028605678_21.jpg",
+          "originalDimensions": "648,648",
+          "sourceAlt": "Indianna Hale image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 648,
+          "height": 648,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1490853023,
+      "name": "Infinite Bits",
+      "slug": "infinite-bits",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 849055827,
+      "name": "Inspector Gadje Balkan Brass Band",
+      "slug": "inspector-gadje-balkan-brass-band",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 103257405,
+      "name": "Irrevria",
+      "slug": "irrevria",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://irrevria.bandcamp.com/album/under-the-blue-of-the-ivy-room",
+          "imageUrl": "https://f4.bcbits.com/img/0038763962_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Performer silhouette holding microphone against vivid green background. Artist profile identifies San Jose and solo SF Bay Area performance. A clear performer image, but heavily stylized.",
+          "credit": "Profile-photo photographer/license unknown. Release credits album photography to Outpatient X and artwork design to DCYDesign; do not transfer those credits to this profile image without confirmation.",
+          "reuseTerms": "Unknown; see source report for attribution qualifications.",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-priority.md"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0038763962_10.jpg"
+    },
+    {
+      "artistId": 1114772948,
+      "name": "Jack Killed Jill",
+      "slug": "jack-killed-jill",
+      "status": "photo-still-needed",
+      "candidates": [],
+      "notes": "See primary-source research reports for rejected artwork, identity collisions, and official leads."
+    },
+    {
+      "artistId": 1242908238,
+      "name": "Jackson Saints",
+      "slug": "jackson-saints",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1921911176,
+      "name": "Jaded Justice",
+      "slug": "jaded-justice",
+      "status": "photo-still-needed",
+      "candidates": [],
+      "notes": "See primary-source research reports for rejected artwork, identity collisions, and official leads."
+    },
+    {
+      "artistId": 990476277,
+      "name": "Jahan",
+      "slug": "jahan",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1998164648,
+      "name": "Jane Wiedlin (record release)",
+      "slug": "jane-wiedlin-record-release",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 22280874,
+      "name": "Jayski And The Dawn",
+      "slug": "jayski-and-the-dawn",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 880276804,
+      "name": "Jed Riffe",
+      "slug": "jed-riffe",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1513440131,
+      "name": "Kelly McFarling",
+      "slug": "kelly-mcfarling",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1163926876,
+      "name": "Key Change",
+      "slug": "key-change",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1612943353,
+      "name": "Kids On A Crime Spree",
+      "slug": "kids-on-a-crime-spree",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1612943353,
+          "name": "Kids On A Crime Spree",
+          "slug": "kids-on-a-crime-spree",
+          "sourceUrl": "https://kidsonacrimespree.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:30.732Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0026614264_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0026614264_21.jpg",
+          "originalDimensions": "1087,1077",
+          "sourceAlt": "kids on a crime spree image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "photo-composite",
+          "width": 1087,
+          "height": 1077,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0026614264_10.jpg"
+    },
+    {
+      "artistId": 1000690644,
+      "name": "Kill Mary Kill",
+      "slug": "kill-mary-kill",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 303699463,
+      "name": "King Most",
+      "slug": "king-most",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 355660200,
+      "name": "Kishi Bashi",
+      "slug": "kishi-bashi",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1526868612,
+      "name": "Knights Of Molino",
+      "slug": "knights-of-molino",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1296939799,
+      "name": "Knights Of Molino (album release)",
+      "slug": "knights-of-molino-album-release",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 502880580,
+      "name": "Krome Addikt",
+      "slug": "krome-addikt",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 584870179,
+      "name": "La Kwa",
+      "slug": "la-kwa",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1624302326,
+      "name": "Lady Starbeast",
+      "slug": "lady-starbeast",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 337393826,
+      "name": "Larisa Roberts",
+      "slug": "larisa-roberts",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 165679862,
+      "name": "Lauren Oraange And The Cuties",
+      "slug": "lauren-oraange-and-the-cuties",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 776246143,
+      "name": "Leaving",
+      "slug": "leaving",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 776246143,
+          "name": "Leaving",
+          "slug": "leaving",
+          "sourceUrl": "https://leavingmusic.bandcamp.com/album/liminal",
+          "checkedAt": "2026-10-11T00:02:32.223Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0036750960_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0036750960_21.jpg",
+          "originalDimensions": "1200,1027",
+          "sourceAlt": "Leaving image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1027,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0036750960_10.jpg"
+    },
+    {
+      "artistId": 1971550247,
+      "name": "Lebo",
+      "slug": "lebo",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 575041253,
+      "name": "Liris'",
+      "slug": "liris",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1664380859,
+      "name": "Little Oil",
+      "slug": "little-oil",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1664380859,
+          "name": "Little Oil",
+          "slug": "little-oil",
+          "sourceUrl": "https://littleoil.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:29.082Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0034169509_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0034169509_21.jpg",
+          "originalDimensions": "1200,900",
+          "sourceAlt": "Little Oil image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "photo-composite",
+          "width": 1200,
+          "height": 900,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0034169509_10.jpg"
+    },
+    {
+      "artistId": 577195974,
+      "name": "Living Eyes",
+      "slug": "living-eyes",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1012144279,
+      "name": "Lonely Parrots",
+      "slug": "lonely-parrots",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 569518867,
+      "name": "Loquat",
+      "slug": "loquat",
+      "status": "no-photo-at-checked-source",
+      "candidates": [],
+      "notes": "no-profile-image-found"
+    },
+    {
+      "artistId": 1644617293,
+      "name": "Loser Soup",
+      "slug": "loser-soup",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1644617293,
+          "name": "Loser Soup",
+          "slug": "loser-soup",
+          "sourceUrl": "https://losersoup.bandcamp.com/album/demo-jail",
+          "checkedAt": "2026-10-11T00:02:33.577Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0034997004_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0034997004_21.jpg",
+          "originalDimensions": "1200,1081",
+          "sourceAlt": "Loser Soup image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1081,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0034997004_10.jpg"
+    },
+    {
+      "artistId": 1235413682,
+      "name": "Lost Puppy Forever",
+      "slug": "lost-puppy-forever",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://lostpuppyforever.bandcamp.com/album/year-of-the-dog",
+          "imageUrl": "https://f4.bcbits.com/img/0028294989_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Live performer in dog costume playing bass under purple stage lights. Actual performance photography; not a face portrait or full duo shot. San Francisco identity and official site link shown beside it.",
+          "credit": "Photographer and profile-photo license unknown.",
+          "reuseTerms": "Unknown; see source report for attribution qualifications.",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-priority.md"
+        },
+        {
+          "artistId": 1235413682,
+          "name": "Lost Puppy Forever",
+          "slug": "lost-puppy-forever",
+          "sourceUrl": "https://lostpuppyforever.bandcamp.com/album/year-of-the-dog",
+          "checkedAt": "2026-10-11T00:02:24.825Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0028294989_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0028294989_21.jpg",
+          "originalDimensions": "1080,1080",
+          "sourceAlt": "Lost Puppy Forever image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1080,
+          "height": 1080,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0028294989_10.jpg"
+    },
+    {
+      "artistId": 651248617,
+      "name": "Loud Graves",
+      "slug": "loud-graves",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://www.loudgraves.com/",
+          "imageUrl": "https://images.squarespace-cdn.com/content/v1/684290fa72074847e560fc1b/6678071d-0c1c-45d0-95db-1e82d0ea3568/LoudGravesSpotifyHeader.jpg",
+          "kind": "performer-photo",
+          "subject": "Black-and-white wide onstage image; vocalist and three instrumentalists visible. File observed on official site; album-cover, logo, and merch files excluded.",
+          "credit": "Unknown; music-video director credits do not identify the still photographer",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        }
+      ],
+      "selectedImageUrl": "https://images.squarespace-cdn.com/content/v1/684290fa72074847e560fc1b/6678071d-0c1c-45d0-95db-1e82d0ea3568/LoudGravesSpotifyHeader.jpg"
+    },
+    {
+      "artistId": 485762038,
+      "name": "Louie Louies",
+      "slug": "louie-louies",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1193134411,
+      "name": "Low Plateau",
+      "slug": "low-plateau",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 1193134411,
+          "name": "Low Plateau",
+          "slug": "low-plateau",
+          "sourceUrl": "https://lowplateau.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:33.840Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0025866283_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0025866283_21.jpg",
+          "originalDimensions": "1080,1080",
+          "sourceAlt": "Low Plateau image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1080,
+          "height": 1080,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1828663685,
+      "name": "LSD And The Search For God",
+      "slug": "lsd-and-the-search-for-god",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 889659039,
+      "name": "Lucky Drive",
+      "slug": "lucky-drive",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 949330996,
+      "name": "Lumanoid",
+      "slug": "lumanoid",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 461324222,
+      "name": "Lyrics Born",
+      "slug": "lyrics-born",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1907689663,
+      "name": "M.U.T.T.",
+      "slug": "mutt",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1260718863,
+      "name": "Mae Powell",
+      "slug": "mae-powell",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1260718863,
+          "name": "Mae Powell",
+          "slug": "mae-powell",
+          "sourceUrl": "https://maepowell.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:27.191Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0040387894_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0040387894_21.jpg",
+          "originalDimensions": "796,1200",
+          "sourceAlt": "Mae Powell image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 796,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0040387894_10.jpg"
+    },
+    {
+      "artistId": 1241639012,
+      "name": "Maiden Mare",
+      "slug": "maiden-mare",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 130784585,
+      "name": "Mala Grena",
+      "slug": "mala-grena",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 109609658,
+      "name": "Malinformants",
+      "slug": "malinformants",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 559551564,
+      "name": "ManifestV",
+      "slug": "manifestv",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1121745422,
+      "name": "Marc Lesser",
+      "slug": "marc-lesser",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 373345406,
+      "name": "Maria BC",
+      "slug": "maria-bc",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 793757372,
+      "name": "Mars Hotel",
+      "slug": "mars-hotel",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1246448768,
+      "name": "Matt Hansen",
+      "slug": "matt-hansen",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 27955541,
+      "name": "Maureen Gosling",
+      "slug": "maureen-gosling",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1579724050,
+      "name": "Maus Haus",
+      "slug": "maus-haus",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 963733414,
+      "name": "Mayday Mae!",
+      "slug": "mayday-mae",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 963733414,
+          "name": "Mayday Mae!",
+          "slug": "mayday-mae",
+          "sourceUrl": "https://maydaymae.bandcamp.com/album/my-post-desert-hearts-renaissance",
+          "checkedAt": "2026-10-11T00:02:30.115Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0044631504_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0044631504_21.jpg",
+          "originalDimensions": "800,1200",
+          "sourceAlt": "mayday mae! image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "photo-composite",
+          "width": 800,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0044631504_10.jpg"
+    },
+    {
+      "artistId": 6335091,
+      "name": "mc Lars",
+      "slug": "mc-lars",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1169158587,
+      "name": "Melvin Seals And JGB. Grahame Lesh",
+      "slug": "melvin-seals-and-jgb-grahame-lesh",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1254864435,
+      "name": "Metal Church",
+      "slug": "metal-church",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 944920347,
+      "name": "Middle-Aged Queers",
+      "slug": "middle-aged-queers",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1015395607,
+      "name": "Midnight Dumpster Fire",
+      "slug": "midnight-dumpster-fire",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1313644304,
+      "name": "Mikayla McVey (duo)",
+      "slug": "mikayla-mcvey-duo",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 653404473,
+      "name": "Miko Marks",
+      "slug": "miko-marks",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 607986142,
+      "name": "Mild Universe",
+      "slug": "mild-universe",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 607986142,
+          "name": "Mild Universe",
+          "slug": "mild-universe",
+          "sourceUrl": "https://milduniverse.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:29.342Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0039198632_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0039198632_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "Mild Universe image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0039198632_10.jpg"
+    },
+    {
+      "artistId": 1083087255,
+      "name": "Milk For The Angry",
+      "slug": "milk-for-the-angry",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1083087255,
+          "name": "Milk For The Angry",
+          "slug": "milk-for-the-angry",
+          "sourceUrl": "https://milkfortheangry.bandcamp.com/album/hand-fed-fruit-2",
+          "checkedAt": "2026-10-11T00:02:30.195Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0042922007_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0042922007_21.jpg",
+          "originalDimensions": "974,1200",
+          "sourceAlt": "Milk For The Angry. image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 974,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0042922007_10.jpg"
+    },
+    {
+      "artistId": 198376055,
+      "name": "Mimic Velour",
+      "slug": "mimic-velour",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 587101986,
+      "name": "Mistah Fab",
+      "slug": "mistah-fab",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1096136938,
+      "name": "Mitch Rocket",
+      "slug": "mitch-rocket",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 78581369,
+      "name": "Modern Monsters",
+      "slug": "modern-monsters",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 406585374,
+      "name": "Mokosos",
+      "slug": "mokosos",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1424007461,
+      "name": "Mommy Mommy",
+      "slug": "mommy-mommy",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 1424007461,
+          "name": "Mommy Mommy",
+          "slug": "mommy-mommy",
+          "sourceUrl": "https://mommymommy.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:27.765Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0036327774_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0036327774_21.jpg",
+          "originalDimensions": "918,1188",
+          "sourceAlt": "Mommy Mommy image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 918,
+          "height": 1188,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 574778807,
+      "name": "Mugslug",
+      "slug": "mugslug",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 986975722,
+      "name": "Mywtr",
+      "slug": "mywtr",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 986975722,
+          "name": "Mywtr",
+          "slug": "mywtr",
+          "sourceUrl": "https://mywtr.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.637Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0041780221_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0041780221_21.jpg",
+          "originalDimensions": "1024,1024",
+          "sourceAlt": "The Armor Of My Youth Worn To Rust image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1024,
+          "height": 1024,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1465899381,
+      "name": "NEUROSIS",
+      "slug": "neurosis",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://www.neurotrecordings.com/full-roster/neurosis",
+          "imageUrl": "https://images.squarespace-cdn.com/content/v1/58098c72d1758e62219951f8/210c69c6-05bd-4bc0-890e-376620e7568e/DSC04390-Edit-2-.jpg",
+          "kind": "performer-photo",
+          "subject": "Five members in a forest, with multiple-exposure effect. Current roster page discusses Aaron Turner joining and provides this photograph under its media section.",
+          "credit": "Bobby Cochran, explicitly credited adjacent to image",
+          "reuseTerms": "Unknown; high-resolution press download offered",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        }
+      ],
+      "selectedImageUrl": "https://images.squarespace-cdn.com/content/v1/58098c72d1758e62219951f8/210c69c6-05bd-4bc0-890e-376620e7568e/DSC04390-Edit-2-.jpg"
+    },
+    {
+      "artistId": 1482605896,
+      "name": "Neverlyn",
+      "slug": "neverlyn",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 285672359,
+      "name": "New Earth Farmers",
+      "slug": "new-earth-farmers",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 285672359,
+          "name": "New Earth Farmers",
+          "slug": "new-earth-farmers",
+          "sourceUrl": "https://newearthfarmers.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.679Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0046220672_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0046220672_21.jpg",
+          "originalDimensions": "1200,767",
+          "sourceAlt": "New Earth Farmers image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 767,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0046220672_10.jpg"
+    },
+    {
+      "artistId": 629140220,
+      "name": "NFG",
+      "slug": "nfg",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 986528375,
+      "name": "Nixed",
+      "slug": "nixed",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://nixed.bandcamp.com/album/nixed-paranoid-visions",
+          "imageUrl": "https://f4.bcbits.com/img/0035595066_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Black-and-white posed four-person group photo. Oakland identity and official nixed.org / nixedband social links shown beside it. Separate from split-release artwork.",
+          "credit": "Photographer and profile-photo license unknown. Release says all rights reserved.",
+          "reuseTerms": "Unknown; see source report for attribution qualifications.",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-priority.md"
+        },
+        {
+          "artistId": 986528375,
+          "name": "Nixed",
+          "slug": "nixed",
+          "sourceUrl": "https://nixed.bandcamp.com/album/nixed-paranoid-visions",
+          "checkedAt": "2026-10-11T00:02:24.315Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0035595066_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0035595066_21.jpg",
+          "originalDimensions": "1080,688",
+          "sourceAlt": "NIXED image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1080,
+          "height": 688,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0035595066_10.jpg"
+    },
+    {
+      "artistId": 736971163,
+      "name": "No Captains",
+      "slug": "no-captains",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1330077038,
+      "name": "Noah Georgeson",
+      "slug": "noah-georgeson",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 935367972,
+      "name": "Noelle & THe Deserters",
+      "slug": "noelle-the-deserters",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://www.speakeasystudiossf.com/collections/noelle-the-deserters",
+          "imageUrl": "https://cdn.shopify.com/s/files/1/0646/1358/1031/files/Noelle_The_Deserters_-_Bethany_Weiss_a77c2baf-8bf8-477e-9fe6-d5dc9c324f26.jpg?v=1710805392",
+          "kind": "performer-photo",
+          "subject": "Noelle singing/playing guitar with band members partially visible; black-and-white performance photo, watermarked Visions of Johanna. Label page explicitly identifies the act. Inventory spells artist `Noelle & THe Deserters`; ID above preserves that record identity.",
+          "credit": "Bethany Weiss, named in label image filename; watermark says Visions of Johanna. Treat the filename attribution as provisional, rather than a visible written credit.",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        }
+      ],
+      "selectedImageUrl": "https://cdn.shopify.com/s/files/1/0646/1358/1031/files/Noelle_The_Deserters_-_Bethany_Weiss_a77c2baf-8bf8-477e-9fe6-d5dc9c324f26.jpg?v=1710805392"
+    },
+    {
+      "artistId": 1520186490,
+      "name": "Non Plus Temps (album release)",
+      "slug": "non-plus-temps-album-release",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1277221292,
+      "name": "Normal Weirds",
+      "slug": "normal-weirds",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 819175111,
+      "name": "Oakland Interfaith Gospel Choir (two shows)",
+      "slug": "oakland-interfaith-gospel-choir-two-shows",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 836098101,
+      "name": "Otoliths",
+      "slug": "otoliths",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 836098101,
+          "name": "Otoliths",
+          "slug": "otoliths",
+          "sourceUrl": "https://otoliths.bandcamp.com/album/lithos",
+          "checkedAt": "2026-10-11T00:02:33.485Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0042359208_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0042359208_21.jpg",
+          "originalDimensions": "960,1200",
+          "sourceAlt": "Otoliths image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 960,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0042359208_10.jpg"
+    },
+    {
+      "artistId": 1198182370,
+      "name": "Outpatient X",
+      "slug": "outpatient-x",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1198182370,
+          "name": "Outpatient X",
+          "slug": "outpatient-x",
+          "sourceUrl": "https://outpatientx.bandcamp.com/track/medless",
+          "checkedAt": "2026-10-11T00:02:25.205Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0047165416_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0047165416_21.jpg",
+          "originalDimensions": "1200,800",
+          "sourceAlt": "Outpatient X image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 800,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0047165416_10.jpg"
+    },
+    {
+      "artistId": 622594183,
+      "name": "Pacific Roots",
+      "slug": "pacific-roots",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 375205455,
+      "name": "Palina And The Cave",
+      "slug": "palina-and-the-cave",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 925702850,
+      "name": "Panhandlers Union",
+      "slug": "panhandlers-union",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 925702850,
+          "name": "Panhandlers Union",
+          "slug": "panhandlers-union",
+          "sourceUrl": "https://panhandlersunion.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:26.892Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0030923833_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0030923833_21.jpg",
+          "originalDimensions": "720,716",
+          "sourceAlt": "Panhandlers Union image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 720,
+          "height": 716,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 32402685,
+      "name": "Pansy Division",
+      "slug": "pansy-division",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 276364424,
+      "name": "Parliament Of Trees",
+      "slug": "parliament-of-trees",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 276364424,
+          "name": "Parliament Of Trees",
+          "slug": "parliament-of-trees",
+          "sourceUrl": "https://parliamentoftrees1.bandcamp.com/track/taxi-to-the-front-2",
+          "checkedAt": "2026-10-11T00:02:31.514Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0019683696_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0019683696_21.jpg",
+          "originalDimensions": "1200,1086",
+          "sourceAlt": "Parliament of Trees image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1086,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 814886295,
+      "name": "Peach Tree Rascals",
+      "slug": "peach-tree-rascals",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 633595575,
+      "name": "Pendletons",
+      "slug": "pendletons",
+      "status": "identity-review-needed",
+      "candidates": [
+        {
+          "artistId": 633595575,
+          "name": "Pendletons",
+          "slug": "pendletons",
+          "sourceUrl": "https://thependletonssf.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.291Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0012818004_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0012818004_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "The Pendletons image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 464326314,
+      "name": "Penury",
+      "slug": "penury",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 566282897,
+      "name": "Pete Floyd (tribute)",
+      "slug": "pete-floyd-tribute",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 418624961,
+      "name": "Poor Man's Whiskey",
+      "slug": "poor-mans-whiskey",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 693749938,
+      "name": "Powerhouse",
+      "slug": "powerhouse",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 693749938,
+          "name": "Powerhouse",
+          "slug": "powerhouse",
+          "sourceUrl": "https://powerhouseobhc.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:24.853Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0026304195_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0026304195_21.jpg",
+          "originalDimensions": "600,926",
+          "sourceAlt": "PowerhouseOBHC image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 600,
+          "height": 926,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 623252851,
+      "name": "R50 (tribute",
+      "slug": "r50-tribute",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1041918691,
+      "name": "Randy Savages",
+      "slug": "randy-savages",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 74030279,
+      "name": "Reducers SF",
+      "slug": "reducers-sf",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 564261811,
+      "name": "Reed Mathis",
+      "slug": "reed-mathis",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1652880344,
+      "name": "Reggae Angels",
+      "slug": "reggae-angels",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 149139217,
+      "name": "Rexx Life Raj",
+      "slug": "rexx-life-raj",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 361592218,
+      "name": "Rhymies",
+      "slug": "rhymies",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 37803580,
+      "name": "Richard Tripps",
+      "slug": "richard-tripps",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 37803580,
+          "name": "Richard Tripps",
+          "slug": "richard-tripps",
+          "sourceUrl": "https://richardtripps.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:26.322Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0038873315_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0038873315_21.jpg",
+          "originalDimensions": "720,725",
+          "sourceAlt": "Richard Tripps image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 720,
+          "height": 725,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0038873315_10.jpg"
+    },
+    {
+      "artistId": 950244474,
+      "name": "Right To Remain",
+      "slug": "right-to-remain",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1145672726,
+      "name": "Rio Amor",
+      "slug": "rio-amor",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1469902866,
+      "name": "Rip Florence",
+      "slug": "rip-florence",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1469902866,
+          "name": "Rip Florence",
+          "slug": "rip-florence",
+          "sourceUrl": "https://ripflorence.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.586Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0031905810_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0031905810_21.jpg",
+          "originalDimensions": "801,1200",
+          "sourceAlt": "Rip Florence image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 801,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0031905810_10.jpg"
+    },
+    {
+      "artistId": 1116535211,
+      "name": "Rip Room",
+      "slug": "rip-room",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 795919909,
+      "name": "Ritmos Tropicosmos",
+      "slug": "ritmos-tropicosmos",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 795919909,
+          "name": "Ritmos Tropicosmos",
+          "slug": "ritmos-tropicosmos",
+          "sourceUrl": "https://ritmostropicosmos.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:27.223Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0040512012_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0040512012_21.jpg",
+          "originalDimensions": "960,960",
+          "sourceAlt": "Ritmos Tropicosmos image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 960,
+          "height": 960,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0040512012_10.jpg"
+    },
+    {
+      "artistId": 1461065623,
+      "name": "Roger Hillyard",
+      "slug": "roger-hillyard",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1971361560,
+      "name": "Rome",
+      "slug": "rome",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1467670752,
+      "name": "Rose Chamber",
+      "slug": "rose-chamber",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 2062617520,
+      "name": "Roy Rogers & The Delta Rhythm Kings",
+      "slug": "roy-rogers-the-delta-rhythm-kings",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1258651762,
+      "name": "Rusty Chains (tribute)",
+      "slug": "rusty-chains-tribute",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1484209424,
+      "name": "Sachi's Mirror",
+      "slug": "sachis-mirror",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1484209424,
+          "name": "Sachi's Mirror",
+          "slug": "sachis-mirror",
+          "sourceUrl": "https://sachis-mirror.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:26.658Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0045223618_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0045223618_21.jpg",
+          "originalDimensions": "795,1200",
+          "sourceAlt": "sachi's mirror image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 795,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0045223618_10.jpg"
+    },
+    {
+      "artistId": 1686441063,
+      "name": "Sadie Alan",
+      "slug": "sadie-alan",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 801378070,
+      "name": "Sam Grisman Project",
+      "slug": "sam-grisman-project",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1186823471,
+      "name": "Sam Reider",
+      "slug": "sam-reider",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 462914984,
+      "name": "Sasquatch Borracho",
+      "slug": "sasquatch-borracho",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 549423659,
+      "name": "Scam Likely",
+      "slug": "scam-likely",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 549423659,
+          "name": "Scam Likely",
+          "slug": "scam-likely",
+          "sourceUrl": "https://scamlikely510.bandcamp.com/album/good-grief",
+          "checkedAt": "2026-10-11T00:02:25.514Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0044473942_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0044473942_21.jpg",
+          "originalDimensions": "912,1200",
+          "sourceAlt": "Scam Likely image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 912,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0044473942_10.jpg"
+    },
+    {
+      "artistId": 1401146735,
+      "name": "Scott Rager",
+      "slug": "scott-rager",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1268825088,
+      "name": "Sean Hayes",
+      "slug": "sean-hayes",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 37103366,
+      "name": "Second Coming",
+      "slug": "second-coming",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1493068446,
+      "name": "Secret Chiefs 3",
+      "slug": "secret-chiefs-3",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 1493068446,
+          "name": "Secret Chiefs 3",
+          "slug": "secret-chiefs-3",
+          "sourceUrl": "https://secretchiefsthree.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:31.239Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0012115269_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0012115269_21.jpg",
+          "originalDimensions": "1024,768",
+          "sourceAlt": "Secret Chiefs 3 image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1024,
+          "height": 768,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 648696801,
+      "name": "Secret Family",
+      "slug": "secret-family",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 648696801,
+          "name": "Secret Family",
+          "slug": "secret-family",
+          "sourceUrl": "https://secretfamilyband.bandcamp.com/album/secret-family-ep",
+          "checkedAt": "2026-10-11T00:02:27.591Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0047470723_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0047470723_21.jpg",
+          "originalDimensions": "900,1200",
+          "sourceAlt": "Secret Family image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 900,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 205041702,
+      "name": "Seized Up",
+      "slug": "seized-up",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://piratespressrecords.com/seized-up-epk/",
+          "imageUrl": "https://piratespressrecords.com/PPR/wp-content/uploads/2024/08/Seized-Up-Photo-2024-by-Keith-Meek-RGB-72dpi-01-scaled.jpg",
+          "kind": "performer-photo",
+          "subject": "Four band members outdoors beside a chain-link fence; black-and-white group portrait. EPK identifies the image as a 2024 photograph and provides print/web download links.",
+          "credit": "Keith Meek, explicitly credited in EPK",
+          "reuseTerms": "Unknown; press download offered",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        }
+      ],
+      "selectedImageUrl": "https://piratespressrecords.com/PPR/wp-content/uploads/2024/08/Seized-Up-Photo-2024-by-Keith-Meek-RGB-72dpi-01-scaled.jpg"
+    },
+    {
+      "artistId": 971193508,
+      "name": "Set Your Goals",
+      "slug": "set-your-goals",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 919747078,
+      "name": "SF Rejects",
+      "slug": "sf-rejects",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1099439835,
+      "name": "Shark In The Water",
+      "slug": "shark-in-the-water",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 685545723,
+      "name": "Short Dogs Grow",
+      "slug": "short-dogs-grow",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://www.shortdogsgrow.com/photos",
+          "imageUrl": "https://static.wixstatic.com/media/1d9453_9c910df1915b4a3b8779cc2c079c627b~mv2.jpg/v1/fill/w_1265,h_610,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/1d9453_9c910df1915b4a3b8779cc2c079c627b~mv2.jpg",
+          "kind": "performer-photo",
+          "subject": "Current site header montage of four live musician photographs. Wide montage, not one group portrait. Site also hosts historical group photographs; avoid silently presenting a historical lineup as current.",
+          "credit": "Unknown",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        }
+      ],
+      "selectedImageUrl": "https://static.wixstatic.com/media/1d9453_9c910df1915b4a3b8779cc2c079c627b~mv2.jpg/v1/fill/w_1265,h_610,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/1d9453_9c910df1915b4a3b8779cc2c079c627b~mv2.jpg"
+    },
+    {
+      "artistId": 1734115327,
+      "name": "Sick Behavior",
+      "slug": "sick-behavior",
+      "status": "photo-still-needed",
+      "candidates": [],
+      "notes": "See primary-source research reports for rejected artwork, identity collisions, and official leads."
+    },
+    {
+      "artistId": 1520007631,
+      "name": "Side Tangent",
+      "slug": "side-tangent",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1520007631,
+          "name": "Side Tangent",
+          "slug": "side-tangent",
+          "sourceUrl": "https://sidetangent.bandcamp.com/album/side-tangent",
+          "checkedAt": "2026-10-11T00:02:29.553Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0039394455_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0039394455_21.jpg",
+          "originalDimensions": "902,1200",
+          "sourceAlt": "Side Tangent image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "photo-composite",
+          "width": 902,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0039394455_10.jpg"
+    },
+    {
+      "artistId": 417806897,
+      "name": "Silver Fuzz",
+      "slug": "silver-fuzz",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 417806897,
+          "name": "Silver Fuzz",
+          "slug": "silver-fuzz",
+          "sourceUrl": "https://silverfuzz.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:34.089Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0037156626_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0037156626_21.jpg",
+          "originalDimensions": "1200,646",
+          "sourceAlt": "Silver Fuzz image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 646,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0037156626_10.jpg"
+    },
+    {
+      "artistId": 1994420492,
+      "name": "Sisto (midnight)",
+      "slug": "sisto-midnight",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1258008020,
+      "name": "Skip The Needle",
+      "slug": "skip-the-needle",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1258008020,
+          "name": "Skip The Needle",
+          "slug": "skip-the-needle",
+          "sourceUrl": "https://skiptheneedle.bandcamp.com/music",
+          "checkedAt": "2026-10-11T00:02:28.042Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0036067948_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0036067948_21.jpg",
+          "originalDimensions": "1200,990",
+          "sourceAlt": "Skip The Needle image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 990,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0036067948_10.jpg"
+    },
+    {
+      "artistId": 243692885,
+      "name": "Skip The Needle (5pm)",
+      "slug": "skip-the-needle-5pm",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 373047413,
+      "name": "Skitzo",
+      "slug": "skitzo",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 373047413,
+          "name": "Skitzo",
+          "slug": "skitzo",
+          "sourceUrl": "https://skitzo3.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.844Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0013812028_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0013812028_21.jpg",
+          "originalDimensions": "837,960",
+          "sourceAlt": "SKITZO - Thrash Metal 80's style. image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 837,
+          "height": 960,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 981859608,
+      "name": "Skolp",
+      "slug": "skolp",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 981859608,
+          "name": "Skolp",
+          "slug": "skolp",
+          "sourceUrl": "https://skolp.bandcamp.com/album/wading-through-flesh-and-bone",
+          "checkedAt": "2026-10-11T00:02:26.158Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0044192985_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0044192985_21.jpg",
+          "originalDimensions": "1200,900",
+          "sourceAlt": "Skólp image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 900,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 835946885,
+      "name": "Skyway Man",
+      "slug": "skyway-man",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 835946885,
+          "name": "Skyway Man",
+          "slug": "skyway-man",
+          "sourceUrl": "https://skywayman.bandcamp.com/album/flight-of-the-long-distance-healer",
+          "checkedAt": "2026-10-11T00:02:33.146Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0033182146_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0033182146_21.jpg",
+          "originalDimensions": "1200,800",
+          "sourceAlt": "Skyway Man image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 800,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0033182146_10.jpg"
+    },
+    {
+      "artistId": 1348864035,
+      "name": "Slinger",
+      "slug": "slinger",
+      "status": "no-photo-at-checked-source",
+      "candidates": [],
+      "notes": "no-profile-image-found"
+    },
+    {
+      "artistId": 1359925131,
+      "name": "Slumped",
+      "slug": "slumped",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1359925131,
+          "name": "Slumped",
+          "slug": "slumped",
+          "sourceUrl": "https://slumped.bandcamp.com/merch",
+          "checkedAt": "2026-10-11T00:02:30.617Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0044322283_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0044322283_21.jpg",
+          "originalDimensions": "1200,846",
+          "sourceAlt": "Slumped image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 846,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0044322283_10.jpg"
+    },
+    {
+      "artistId": 885750070,
+      "name": "Sola Guinto",
+      "slug": "sola-guinto",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1748947658,
+      "name": "Sonny & His Rhinestone Sunsets",
+      "slug": "sonny-his-rhinestone-sunsets",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 311999428,
+      "name": "Souls Of Mischief",
+      "slug": "souls-of-mischief",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 36869837,
+      "name": "Sour Widows",
+      "slug": "sour-widows",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 36869837,
+          "name": "Sour Widows",
+          "slug": "sour-widows",
+          "sourceUrl": "https://sourwidows.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:28.067Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0046325988_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0046325988_21.jpg",
+          "originalDimensions": "1200,800",
+          "sourceAlt": "Sour Widows image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 800,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0046325988_10.jpg"
+    },
+    {
+      "artistId": 2133815207,
+      "name": "Sourflower",
+      "slug": "sourflower",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 272191537,
+      "name": "Spencer Noble",
+      "slug": "spencer-noble",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1930046509,
+      "name": "Spencer Noble (2pm)",
+      "slug": "spencer-noble-2pm",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 828828209,
+      "name": "Spider Garage",
+      "slug": "spider-garage",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 629145353,
+      "name": "Spy",
+      "slug": "spy",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 629145353,
+          "name": "Spy",
+          "slug": "spy",
+          "sourceUrl": "https://spyhc.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:29.551Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0020779713_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0020779713_21.jpg",
+          "originalDimensions": "679,496",
+          "sourceAlt": "SPY image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 679,
+          "height": 496,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1807643850,
+      "name": "Stand Tall",
+      "slug": "stand-tall",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1807643850,
+          "name": "Stand Tall",
+          "slug": "stand-tall",
+          "sourceUrl": "https://standtallsxe.bandcamp.com/track/understand",
+          "checkedAt": "2026-10-11T00:02:26.831Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0042728442_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0042728442_21.jpg",
+          "originalDimensions": "882,1200",
+          "sourceAlt": "Stand Tall image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 882,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0042728442_10.jpg"
+    },
+    {
+      "artistId": 1857740455,
+      "name": "Starzdust",
+      "slug": "starzdust",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1857740455,
+          "name": "Starzdust",
+          "slug": "starzdust",
+          "sourceUrl": "https://starzdust.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:26.275Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0041408045_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0041408045_21.jpg",
+          "originalDimensions": "1200,800",
+          "sourceAlt": "Starzdust image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 800,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0041408045_10.jpg"
+    },
+    {
+      "artistId": 1449194458,
+      "name": "Stay Out",
+      "slug": "stay-out",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://stayout.bandcamp.com/",
+          "imageUrl": "https://f4.bcbits.com/img/0045459266_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Three band members on a fenced pedestrian bridge; group portrait. Linked from the Stay Out sidebar profile image.",
+          "credit": "Unknown",
+          "reuseTerms": "Unknown",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-press.md"
+        },
+        {
+          "artistId": 1449194458,
+          "name": "Stay Out",
+          "slug": "stay-out",
+          "sourceUrl": "https://stayout.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:26.543Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0045459266_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0045459266_21.jpg",
+          "originalDimensions": "1200,903",
+          "sourceAlt": "Stay Out image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 903,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0045459266_10.jpg"
+    },
+    {
+      "artistId": 334968663,
+      "name": "Steilacoom",
+      "slug": "steilacoom",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 334968663,
+          "name": "Steilacoom",
+          "slug": "steilacoom",
+          "sourceUrl": "https://steilacoomsf.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.006Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0033896944_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0033896944_21.jpg",
+          "originalDimensions": "750,944",
+          "sourceAlt": "steilacoom image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 750,
+          "height": 944,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0033896944_10.jpg"
+    },
+    {
+      "artistId": 1574195004,
+      "name": "Step Up",
+      "slug": "step-up",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 745218816,
+      "name": "Strange Cities",
+      "slug": "strange-cities",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 745218816,
+          "name": "Strange Cities",
+          "slug": "strange-cities",
+          "sourceUrl": "https://strangecities.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:29.779Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0027448874_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0027448874_21.jpg",
+          "originalDimensions": "800,800",
+          "sourceAlt": "Strange Cities image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 800,
+          "height": 800,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 992591292,
+      "name": "Strange Ones",
+      "slug": "strange-ones",
+      "status": "identity-review-needed",
+      "candidates": [
+        {
+          "artistId": 992591292,
+          "name": "Strange Ones",
+          "slug": "strange-ones",
+          "sourceUrl": "https://wearethestrangeones.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:25.819Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0038616534_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0038616534_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "The Strange Ones image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 319688041,
+      "name": "Strange Remedy",
+      "slug": "strange-remedy",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 232551367,
+      "name": "Strawberry Panic",
+      "slug": "strawberry-panic",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 232551367,
+          "name": "Strawberry Panic",
+          "slug": "strawberry-panic",
+          "sourceUrl": "https://cherubdreamrecords.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:25.542Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0028687338_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0028687338_21.jpg",
+          "originalDimensions": "1200,1094",
+          "sourceAlt": "Cherub Dream Records image",
+          "status": "profile-image-candidate",
+          "identityMatches": false,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1094,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 368245032,
+      "name": "Street Eaters",
+      "slug": "street-eaters",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 368245032,
+          "name": "Street Eaters",
+          "slug": "street-eaters",
+          "sourceUrl": "https://streeteaters.bandcamp.com/music",
+          "checkedAt": "2026-10-11T00:02:28.594Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0040637174_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0040637174_21.jpg",
+          "originalDimensions": "960,1200",
+          "sourceAlt": "Street Eaters image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 960,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0040637174_10.jpg"
+    },
+    {
+      "artistId": 1605073060,
+      "name": "Sunblind",
+      "slug": "sunblind",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "sourceUrl": "https://sunblindhc.bandcamp.com/track/imitation-2",
+          "imageUrl": "https://f4.bcbits.com/img/0045628516_10.jpg",
+          "kind": "performer-photo",
+          "subject": "Black-and-white posed five-person group photo. Oakland identity, Indecision Records affiliation and official sunblindhc Instagram shown beside it. Excludes unrelated trance and Netherlands artists named Sunblind.",
+          "credit": "Photographer and photo reuse grant not stated on inspected primary page; unknown. Release says all rights reserved.",
+          "reuseTerms": "Unknown; see source report for attribution qualifications.",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true,
+          "report": "local-band-image-sources-priority.md"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0045628516_10.jpg"
+    },
+    {
+      "artistId": 1375198389,
+      "name": "Super Apes",
+      "slug": "super-apes",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 1375198389,
+          "name": "Super Apes",
+          "slug": "super-apes",
+          "sourceUrl": "https://superapes2.bandcamp.com/album/kill-the-humans",
+          "checkedAt": "2026-10-11T00:02:28.560Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0039095431_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0039095431_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "Super Apes image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1928912694,
+      "name": "Super Cassette",
+      "slug": "super-cassette",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 646907806,
+      "name": "Super Diamond (tribute)",
+      "slug": "super-diamond-tribute",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 363486761,
+      "name": "Sutros",
+      "slug": "sutros",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 385622827,
+      "name": "Sweet Chariot",
+      "slug": "sweet-chariot",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1666496635,
+      "name": "Sweet Lew",
+      "slug": "sweet-lew",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 121913892,
+      "name": "Sweet Plot",
+      "slug": "sweet-plot",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 121913892,
+          "name": "Sweet Plot",
+          "slug": "sweet-plot",
+          "sourceUrl": "https://sweetplotmusic.bandcamp.com/album/interstate-plot",
+          "checkedAt": "2026-10-11T00:02:33.525Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0004760455_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0004760455_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "Sweet Plot image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1810144124,
+      "name": "Swell Foop",
+      "slug": "swell-foop",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 708820545,
+      "name": "Swingin Utters",
+      "slug": "swingin-utters",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "name": "Swingin Utters",
+          "sourceUrl": "https://swinginutters.bandcamp.com/music",
+          "imageUrl": "https://f4.bcbits.com/img/0013823801_21.jpg",
+          "subject": "Official artist profile photograph. Fat Wreck press download returned HTTP 403, so it was not selected.",
+          "credit": "Not stated",
+          "reuseTerms": "Not stated",
+          "kind": "profile-photo",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0013823801_21.jpg"
+    },
+    {
+      "artistId": 198316976,
+      "name": "Switch Crooks",
+      "slug": "switch-crooks",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 815103516,
+      "name": "System 86",
+      "slug": "system-86",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1271418108,
+      "name": "Tainted Love",
+      "slug": "tainted-love",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 664636855,
+      "name": "Tanukichan",
+      "slug": "tanukichan",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 664636855,
+          "name": "Tanukichan",
+          "slug": "tanukichan",
+          "sourceUrl": "https://tanukichan.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:32.915Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0036620147_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0036620147_21.jpg",
+          "originalDimensions": "1200,795",
+          "sourceAlt": "Tanukichan image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 795,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0036620147_10.jpg"
+    },
+    {
+      "artistId": 916042580,
+      "name": "Taylor Rae",
+      "slug": "taylor-rae",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1500327557,
+      "name": "Tectonics",
+      "slug": "tectonics",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1757781445,
+      "name": "Tehmodhjin",
+      "slug": "tehmodhjin",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 349885143,
+      "name": "Teleco",
+      "slug": "teleco",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1384360827,
+      "name": "Tell Me Tell Me",
+      "slug": "tell-me-tell-me",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "artistId": 1384360827,
+          "name": "Tell Me Tell Me",
+          "slug": "tell-me-tell-me",
+          "sourceUrl": "https://tellmetellme.bandcamp.com/",
+          "checkedAt": "2026-10-11T00:02:28.267Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0042566022_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0042566022_21.jpg",
+          "originalDimensions": "1200,1200",
+          "sourceAlt": "Tell Me Tell Me image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "performer-photo",
+          "width": 1200,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": "https://f4.bcbits.com/img/0042566022_10.jpg"
+    },
+    {
+      "artistId": 763080758,
+      "name": "Temptation (tribute)",
+      "slug": "temptation-tribute",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1779359385,
+      "name": "Terror Reid",
+      "slug": "terror-reid",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 518699673,
+      "name": "Terry Gross",
+      "slug": "terry-gross",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 2024850192,
+      "name": "The Avengers",
+      "slug": "the-avengers",
+      "status": "photo-found",
+      "candidates": [
+        {
+          "name": "The Avengers",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Avengers.JPG",
+          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0b/The_Avengers.JPG",
+          "subject": "Live at the Abbey Pub in Chicago, October 2012; archival lineup.",
+          "credit": "Robman94",
+          "reuseTerms": "CC BY-SA 3.0: credit Robman94, link source/license, identify changes, retain compatible share-alike terms for adaptations.",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+          "kind": "licensed-live-photo",
+          "visualReview": "reviewed-2026-10-10",
+          "identityMatches": true
+        }
+      ],
+      "selectedImageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0b/The_Avengers.JPG"
+    },
+    {
+      "artistId": 278833674,
+      "name": "The Coffis Brothers",
+      "slug": "the-coffis-brothers",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 601465179,
+      "name": "The Creepy Crawlies",
+      "slug": "the-creepy-crawlies",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1007446825,
+      "name": "The Seagulls",
+      "slug": "the-seagulls",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 363675172,
+      "name": "The Young Barons",
+      "slug": "the-young-barons",
+      "status": "not-researched",
+      "candidates": []
+    },
+    {
+      "artistId": 1420265099,
+      "name": "UFO Baby",
+      "slug": "ufo-baby",
+      "status": "photo-still-needed",
+      "candidates": [
+        {
+          "artistId": 1420265099,
+          "name": "UFO Baby",
+          "slug": "ufo-baby",
+          "sourceUrl": "https://ufo-baby.bandcamp.com/album/ufo-baby-ep",
+          "checkedAt": "2026-10-11T00:02:26.920Z",
+          "credit": null,
+          "reuseTerms": "Not stated; source discovery is not a reuse license.",
+          "httpStatus": 200,
+          "imageUrl": "https://f4.bcbits.com/img/0033546932_10.jpg",
+          "thumbnailUrl": "https://f4.bcbits.com/img/0033546932_21.jpg",
+          "originalDimensions": "1058,1200",
+          "sourceAlt": "UFO Baby image",
+          "status": "profile-image-candidate",
+          "identityMatches": true,
+          "visualReview": "reviewed-2026-10-10",
+          "kind": "logo-artwork-or-nonperformer-image",
+          "width": 1058,
+          "height": 1200,
+          "dimensionSource": "artist-page-original-image-metadata"
+        }
+      ],
+      "selectedImageUrl": null
+    },
+    {
+      "artistId": 1966402843,
+      "name": "Used To Be Valentines",
+      "slug": "used-to-be-valentines",
+      "status": "not-researched",
+      "candidates": []
+    }
+  ]
+}
