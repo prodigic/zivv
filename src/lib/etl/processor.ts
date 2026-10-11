@@ -28,6 +28,7 @@ import { applyProjectVenueDetails } from "../ingestion/venue-details.js";
 import { applyProjectVenueMaps } from "../ingestion/venue-maps.js";
 import { applyProjectEventPosters } from "../ingestion/event-posters.js";
 import { applyProjectArtistReviews } from "../ingestion/artist-reviews.js";
+import { applyProjectArtistLinks } from "../ingestion/artist-links.js";
 import { namesForVerificationStatus } from "../ingestion/local-artist-verification.js";
 import type { LocalArtistVerificationLedger } from "../ingestion/local-artist-verification.js";
 import { withIngestionLock } from "../ingestion/lock.js";
@@ -87,6 +88,10 @@ export class ETLProcessor {
       );
       this.validateReferences(events, artists, venues);
       const staleReviews = applyProjectArtistReviews(this.projectRoot, artists);
+      const staleArtistLinks = applyProjectArtistLinks(
+        this.projectRoot,
+        artists
+      );
       this.populateSummaries(events, artists, venues, start);
       const indexes = DataIndexer.buildIndexes(events, artists, venues);
       indexes.eventSlugRedirects = buildEventSlugRedirects(
@@ -175,6 +180,9 @@ export class ETLProcessor {
           events: this.sourceInfo("events.txt"),
           venues: this.sourceInfo("venues.txt"),
           venueSources: this.sourceInfo("venue-sources.json"),
+          ...(existsSync(join(this.projectRoot, "data/artist-links.json"))
+            ? { artistLinks: this.sourceInfo("artist-links.json") }
+            : {}),
           ...(existsSync(join(this.projectRoot, "data/artist-reviews.json"))
             ? { artistReviews: this.sourceInfo("artist-reviews.json") }
             : {}),
@@ -245,6 +253,10 @@ export class ETLProcessor {
         manifest,
         errors: [],
         warnings: [
+          ...staleArtistLinks.map((artistId) => ({
+            type: "data-quality" as const,
+            message: `Links skipped because artist identity changed: ${artistId}`,
+          })),
           ...posters.stale.map((eventId) => ({
             type: "data-quality" as const,
             message: `Poster skipped because show identity changed: ${eventId}`,

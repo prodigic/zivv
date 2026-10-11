@@ -21,6 +21,7 @@ export default defineConfig({
       "src/test/components/EventAtlasCard.test.tsx",
       "src/test/components/EventPosterLink.test.tsx",
       "src/test/components/ArtistVibeCard.test.tsx",
+      "src/test/components/ArtistLinks.test.tsx",
     ],
     reporters: ["default"],
   },

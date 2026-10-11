@@ -109,6 +109,48 @@ afterEach(() => {
 });
 
 describe("migration and ledger export", () => {
+  it("exports artist links without a review and leaves canonical history untouched", async () => {
+    const { root } = setup();
+    await migrateExistingCatalog(root);
+    const ledgerPath = join(root, "data/ingestion/ledger.json");
+    const before = readFileSync(ledgerPath, "utf8");
+    const link = { kind: "bandcamp", url: "https://testband.bandcamp.com/" };
+    writeFileSync(
+      join(root, "data/artist-links.json"),
+      JSON.stringify({
+        schemaVersion: 1,
+        artists: [
+          {
+            artistId: 201,
+            artistName: "Test Band",
+            links: [
+              {
+                ...link,
+                sourceUrl: link.url,
+                checkedOn: "2026-10-10",
+                evidence: "Synthetic artist profile identity.",
+              },
+            ],
+          },
+        ],
+      })
+    );
+    const result = await new ETLProcessor(root).processData();
+    expect(result.success).toBe(true);
+    const [artist] = JSON.parse(
+      readFileSync(join(root, "public/data/artists.json"), "utf8")
+    );
+    expect(artist).toMatchObject({
+      id: 201,
+      name: "Test Band",
+      createdAtEpochMs: created,
+      links: [link],
+    });
+    expect(artist.vibe).toBeUndefined();
+    expect(result.manifest?.sourceFiles.artistLinks).toBeDefined();
+    expect(readFileSync(ledgerPath, "utf8")).toBe(before);
+  });
+
   it("exports attributed artist reviews without changing ledger identities or history", async () => {
     const { root } = setup();
     await migrateExistingCatalog(root);

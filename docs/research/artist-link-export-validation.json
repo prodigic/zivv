@@ -1,0 +1,16 @@
+{
+  "checkedOn": "2026-10-10",
+  "baselineCommit": "62ce0998b385d773a9fa3cd9f9984d2f0dd5be55",
+  "events": 4641,
+  "artists": 8678,
+  "venues": 656,
+  "artistLinkRecords": 298,
+  "links": 725,
+  "allEventsAndPriorPosterMetadataUnchanged": true,
+  "canonicalEntitiesAndPriorVibesUnchanged": true,
+  "manifestChunkChecksumsValid": true,
+  "allowedDifferences": [
+    "reviewed artist links",
+    "time-filtered upcoming summaries"
+  ]
+}

@@ -4,6 +4,7 @@ import type {
   SourceLink,
 } from "./ingestion.js";
 import type { ArtistVibe } from "./artist-reviews.js";
+import type { ArtistLink } from "./artist-links.js";
 
 /** Provenance is optional only for legacy JSON and transient parser results. */
 export interface EventProvenance {
@@ -112,6 +113,7 @@ export interface Artist {
   normalizedName: string; // For deduplication
   aliases: string[]; // Alternative names/spellings
   vibe?: ArtistVibe;
+  links?: ArtistLink[];
   upcomingEventCount: number;
   totalEventCount: number;
 
