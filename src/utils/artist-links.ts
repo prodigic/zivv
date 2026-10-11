@@ -27,6 +27,18 @@ export function isArtistLink(value: unknown): value is ArtistLink {
   )
     return false;
   const url = new URL(link.url!);
+  if (link.embed !== undefined) {
+    if (
+      link.kind !== "bandcamp" ||
+      !link.embed ||
+      typeof link.embed.albumId !== "string" ||
+      !/^[1-9]\d{0,14}$/.test(link.embed.albumId) ||
+      typeof link.embed.title !== "string" ||
+      !link.embed.title.trim() ||
+      !url.pathname.startsWith("/album/")
+    )
+      return false;
+  }
   const host = url.hostname.toLowerCase();
   if (
     host === "localhost" ||

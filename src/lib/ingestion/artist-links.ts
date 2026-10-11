@@ -75,7 +75,13 @@ export function applyArtistLinks(artists: Artist[], value: unknown): number[] {
       stale.push(row.artistId);
       continue;
     }
-    artist.links = row.links.map(({ kind, url }) => ({ kind, url }));
+    artist.links = row.links.map(({ kind, url, embed }) => ({
+      kind,
+      url,
+      ...(embed
+        ? { embed: { albumId: embed.albumId, title: embed.title } }
+        : {}),
+    }));
   }
   return stale;
 }

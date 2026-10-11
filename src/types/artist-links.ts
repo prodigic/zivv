@@ -20,4 +20,6 @@ export type ArtistLinkKind = keyof typeof artistLinkLabels;
 export interface ArtistLink {
   kind: ArtistLinkKind;
   url: string;
+  /** Reviewed album identity used to construct the official Bandcamp iframe. */
+  embed?: { albumId: string; title: string };
 }

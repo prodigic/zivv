@@ -59,6 +59,17 @@
           "sourceUrl": "https://sourwidows.bandcamp.com/",
           "checkedOn": "2026-10-10",
           "evidence": "Reviewed exact-act Bandcamp artist sites field and destination identity; no label/member/vendor scope conflict observed."
+        },
+        {
+          "kind": "bandcamp",
+          "url": "https://sourwidows.bandcamp.com/album/revival-of-a-friend",
+          "sourceUrl": "https://sourwidows.bandcamp.com/album/revival-of-a-friend",
+          "checkedOn": "2026-10-10",
+          "evidence": "Official album page names Sour Widows and Revival Of A Friend, lists ten tracks, and publishes og:video Bandcamp EmbeddedPlayer album=1637895938. Single-artist player pilot.",
+          "embed": {
+            "albumId": "1637895938",
+            "title": "Revival Of A Friend"
+          }
         }
       ]
     },

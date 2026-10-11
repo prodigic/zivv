@@ -114,7 +114,11 @@ describe("migration and ledger export", () => {
     await migrateExistingCatalog(root);
     const ledgerPath = join(root, "data/ingestion/ledger.json");
     const before = readFileSync(ledgerPath, "utf8");
-    const link = { kind: "bandcamp", url: "https://testband.bandcamp.com/" };
+    const link = {
+      kind: "bandcamp",
+      url: "https://testband.bandcamp.com/album/demo",
+      embed: { albumId: "12345", title: "Demo" },
+    };
     writeFileSync(
       join(root, "data/artist-links.json"),
       JSON.stringify({

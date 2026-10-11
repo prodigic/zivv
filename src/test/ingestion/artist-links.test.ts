@@ -24,6 +24,15 @@ const artist = () =>
   }) as Artist;
 
 describe("reviewed artist links", () => {
+  it("exports the reviewed album identity with its release link", () => {
+    const a = artist();
+    const embed = { albumId: "1637895938", title: "Verified album" };
+    applyArtistLinks([a], {
+      schemaVersion: 1,
+      artists: [{ ...row, links: [{ ...link, embed }] }],
+    });
+    expect(a.links).toEqual([{ kind: "bandcamp", url: link.url, embed }]);
+  });
   it("adds links without requiring a review or changing identity and history", () => {
     const a = artist();
     const before = structuredClone(a);
@@ -52,6 +61,13 @@ describe("reviewed artist links", () => {
     { ...link, kind: "x", url: "https://twitter.com/intent/tweet" },
     { ...link, sourceUrl: "data:text/html,unsafe" },
     { ...link, checkedOn: "2026-02-30" },
+    { ...link, embed: { albumId: "123/track=456", title: "Unsafe ID" } },
+    { ...link, embed: { albumId: "123", title: " " } },
+    {
+      ...link,
+      url: "https://exampleband.bandcamp.com/",
+      embed: { albumId: "123", title: "Unmatched profile" },
+    },
   ])("rejects malformed links before any artist changes", (bad) => {
     const a = artist();
     expect(() =>

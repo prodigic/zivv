@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId, useState } from "react";
 import { artistLinkLabels, type ArtistLink } from "@/types/artist-links.js";
 import { isArtistLink } from "@/utils/artist-links.js";
 
@@ -17,18 +17,48 @@ export default function ArtistLinks({
       return 0;
     return /\/(album|track|watch|release)(?:\/|$)/.test(path) ? 2 : 1;
   };
+  const researched = links?.filter(isArtistLink) ?? [];
   const byPlatform = new Map<ArtistLink["kind"], ArtistLink>();
-  for (const link of links?.filter(isArtistLink) ?? []) {
+  for (const link of researched) {
     const current = byPlatform.get(link.kind);
     if (!current || preference(link) < preference(current))
       byPlatform.set(link.kind, link);
   }
   const valid = [...byPlatform.values()];
   if (!valid.length) return null;
+  const album = researched.find(
+    (link) =>
+      link.kind === "bandcamp" &&
+      link.embed &&
+      /^\d+$/.test(link.embed.albumId) &&
+      link.embed.title.trim()
+  );
+  return (
+    <ArtistLinkList
+      key={`${artistName}:${album?.embed?.albumId ?? "links"}`}
+      links={valid}
+      artistName={artistName}
+      album={album}
+    />
+  );
+}
+
+/** Mount the official player only after the listener chooses to load it. */
+function ArtistLinkList({
+  links,
+  artistName,
+  album,
+}: {
+  links: ArtistLink[];
+  artistName: string;
+  album?: ArtistLink;
+}): React.JSX.Element {
+  const [listening, setListening] = useState(false);
+  const playerId = useId();
   return (
     <nav aria-label={`${artistName} links`} className="my-3">
       <ul className="flex flex-wrap gap-x-3 gap-y-2 text-xs">
-        {valid.map((link) => (
+        {links.map((link) => (
           <li key={link.url}>
             <a
               href={link.url}
@@ -50,9 +80,48 @@ export default function ArtistLinks({
                 <path d="M14 3h7v7M21 3 10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" />
               </svg>
             </a>
+            {link.kind === "bandcamp" && album?.embed && (
+              <button
+                type="button"
+                aria-expanded={listening}
+                aria-controls={playerId}
+                aria-label={`${listening ? "Close" : "Listen to"} ${album.embed.title} player`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setListening((current) => !current);
+                }}
+                className="ml-2 rounded border border-purple-300 px-2 py-1 text-purple-700 hover:bg-purple-50 focus-visible:outline focus-visible:outline-2 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950"
+              >
+                {listening ? "Close player" : "Listen"}
+              </button>
+            )}
           </li>
         ))}
       </ul>
+      {listening && album?.embed && (
+        <section
+          id={playerId}
+          aria-label={`${album.embed.title} album player`}
+          onClick={(event) => event.stopPropagation()}
+          className="mt-3 w-full max-w-[420px]"
+        >
+          <p className="mb-2 text-sm font-semibold">{album.embed.title}</p>
+          <iframe
+            title={`${artistName} — ${album.embed.title} on Bandcamp`}
+            src={`https://bandcamp.com/EmbeddedPlayer/album=${album.embed.albumId}/size=large/bgcol=ffffff/linkcol=7137dc/artwork=small/tracklist=true/transparent=true/`}
+            className="block h-[420px] w-full border-0"
+            loading="lazy"
+          />
+          <a
+            href={album.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-block text-xs text-purple-700 underline dark:text-purple-300"
+          >
+            Open {album.embed.title} on Bandcamp (opens in a new tab)
+          </a>
+        </section>
+      )}
     </nav>
   );
 }
