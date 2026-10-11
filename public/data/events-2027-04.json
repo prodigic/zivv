@@ -68,7 +68,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790381132084,
       "venueId": 811075932,
-      "venueType": "major"
+      "venueType": "major",
+      "poster": {
+        "imageUrl": "https://s1.ticketm.net/dam/a/5f2/5d38b222-0252-465f-81b5-7f8800a905f2_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+        "eventUrl": "https://www.augusthallsf.com/tm-event/the-mary-wallopers/",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -884,7 +890,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790985835628,
       "venueId": 1383208152,
-      "venueType": "major"
+      "venueType": "major",
+      "poster": {
+        "imageUrl": "https://thecastro.com/wp-content/uploads/2026/09/1024_LEAD-PHOTO-Mei-Semones-credit-Saeka-Shimada.jpg",
+        "eventUrl": "https://thecastro.com/events/mei-semones-270424",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -996,7 +1008,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1788566700000,
       "venueId": 2133080253,
-      "venueType": "major"
+      "venueType": "major",
+      "poster": {
+        "imageUrl": "https://images.discovery-prod.axs.com/2026/08/mass-of-the-fermenting-dregs-tickets_04-27-27_86_6a74b7cab2bff.jpg",
+        "eventUrl": "https://www.axs.com/events/1551450/mass-of-the-fermenting-dregs-tickets",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -1045,7 +1063,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790381132084,
       "venueId": 2133080253,
-      "venueType": "diy"
+      "venueType": "diy",
+      "poster": {
+        "imageUrl": "https://images.discovery-prod.axs.com/2026/09/the-interrupters-tickets_04-28-27_86_6ab2c2345412b.jpg",
+        "eventUrl": "https://www.axs.com/events/1607316/the-interrupters-tickets",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "observed",

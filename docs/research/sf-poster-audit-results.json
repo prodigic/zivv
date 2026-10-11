@@ -1,0 +1,1396 @@
+{
+  "checkedOn": "2026-10-10",
+  "scope": "Blinded batches 1,2,3,4,5",
+  "selection": [
+    {
+      "batch": 2,
+      "seed": "zivv-2026-10-10-posters-2",
+      "totalAccepted": 152,
+      "randomCount": 16,
+      "acceptedSample": 38,
+      "negativeSample": 3
+    },
+    {
+      "batch": 3,
+      "seed": "zivv-2026-10-10-posters-3",
+      "totalAccepted": 123,
+      "randomCount": 13,
+      "acceptedSample": 15,
+      "negativeSample": 3
+    },
+    {
+      "batch": 1,
+      "seed": "zivv-2026-10-10-posters-1",
+      "totalAccepted": 107,
+      "randomCount": 11,
+      "acceptedSample": 19,
+      "negativeSample": 3
+    },
+    {
+      "batch": 4,
+      "seed": "zivv-2026-10-10-posters-4",
+      "totalAccepted": 25,
+      "randomCount": 3,
+      "acceptedSample": 3,
+      "negativeSample": 3
+    },
+    {
+      "batch": 5,
+      "seed": "zivv-2026-10-10-posters-5",
+      "totalAccepted": 8,
+      "randomCount": 3,
+      "acceptedSample": 3,
+      "negativeSample": 2
+    }
+  ],
+  "summary": {
+    "accepted": 78,
+    "acceptedPass": 75,
+    "acceptedMinor": 3,
+    "fail": 0,
+    "negativeSamples": 14,
+    "omissions": 7,
+    "withheld": 2
+  },
+  "records": [
+    {
+      "batch": 2,
+      "eventId": 1638239162,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.sfmasonic.com/shows"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 2,
+      "eventId": 426193766,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.thefillmore.com/shows"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 2,
+      "eventId": 2067800795,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/"
+      ],
+      "reason": "Official calendar October 2026, day 14; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 1923695896,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/"
+      ],
+      "reason": "Official calendar October 2026, day 15; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 986991242,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 558819311,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.4-star-movies.com/calendar-of-events/live-music-elanor-moss",
+        "https://www.eventbrite.com/e/1993414158409?aff=oddtdtcreator"
+      ],
+      "reason": "Live CinemaSF show JSON-LD independently confirms full date and exact artwork; live officially linked Eventbrite page confirms 4 Star Theater, 2200 Clement St. Blank CinemaSF location object was not treated as venue proof."
+    },
+    {
+      "batch": 2,
+      "eventId": 217961239,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=2&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar November 2026, day 01; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 1996527936,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=3&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar November 2026, day 16; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 580436608,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 1048073029,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=4&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar November 2026, day 18; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 878572110,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.4-star-movies.com/calendar-of-events/live-music-resavoir",
+        "https://www.eventbrite.com/e/1993322730947?aff=oddtdtcreator"
+      ],
+      "reason": "Live CinemaSF show JSON-LD independently confirms full date and exact artwork; live officially linked Eventbrite page confirms 4 Star Theater, 2200 Clement St. Blank CinemaSF location object was not treated as venue proof."
+    },
+    {
+      "batch": 2,
+      "eventId": 1651652527,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.thefillmore.com/shows"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 2,
+      "eventId": 1361030306,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.4-star-movies.com/calendar-of-events/live-music-wildwoods"
+      ],
+      "reason": "Live 4 Star official show page independently confirms Wildwoods and Oct 28 2026; image matches after HTTP-to-HTTPS normalization. Official ticket link uses same 4 Star Veezi site token, but Veezi detail returned 403."
+    },
+    {
+      "batch": 2,
+      "eventId": 164914657,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.sfmasonic.com/shows"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 2,
+      "eventId": 1284159851,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 2093986986,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.thefillmore.com/shows"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 2,
+      "eventId": 1492272987,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.thewarfieldtheatre.com/events/detail/1541701"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 2,
+      "eventId": 1306495898,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.palaceoffinearts.org/event/the-tallest-man-on-earth/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 2,
+      "eventId": 6317689,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://hotelutah.com/calendar/"
+      ],
+      "reason": "Official calendar October 2026, day 15; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 853846258,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "cached-page/live-image",
+      "sourceUrls": [
+        "https://www.dnalounge.com/calendar/2026/10-20d.html",
+        "https://cdn.dnalounge.com/flyers/2026/10/20d-1.jpg"
+      ],
+      "reason": "Live event page returned 403. Independently inspected saved official HTML title/date, Above DNA room and og:image; live flyer visually matches artist/date/DNA Lounge. Keep Above DNA qualification."
+    },
+    {
+      "batch": 2,
+      "eventId": 1999159148,
+      "selection": "flagged room identity or cross-year date",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://themab.org/events/2026-11-06-knights-of-molino-record-release-party/",
+        "https://themab.org/media/responsive/11-06-2026-knights-of-molino-2556d0e400-561.webp"
+      ],
+      "reason": "Correct Nov 6 2026 Knights of Molino release show and same-page responsive poster. Official HTML says 435 Broadway, but visually checked flyer says 443 Broadway. Preserve source conflict; do not assert exact room/address equivalence.",
+      "withheld": true
+    },
+    {
+      "batch": 2,
+      "eventId": 602289354,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://sfpl.org/events/2026/10/24/performance-bay-beats-launch-party"
+      ],
+      "reason": "Live SFPL presenter page independently states Oct 24 2026 Bandshell launch party, Skip the Needle at 5pm; image belongs to this multi-act event."
+    },
+    {
+      "batch": 2,
+      "eventId": 1077982516,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thechapelsf.com/calendar/"
+      ],
+      "reason": "Official calendar October 2026, day 18; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred. Live list card explicitly says The Chapel Outdoor Stage; input State is a typo."
+    },
+    {
+      "batch": 2,
+      "eventId": 1671620196,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "cached-page/live-image",
+      "sourceUrls": [
+        "https://www.dnalounge.com/calendar/2026/10-13d.html",
+        "https://cdn.dnalounge.com/flyers/2026/10/13d-1.jpg"
+      ],
+      "reason": "Live event page returned 403. Independently inspected saved official HTML title/date, Above DNA room and og:image; live flyer visually matches artist/date/DNA Lounge. Keep Above DNA qualification."
+    },
+    {
+      "batch": 2,
+      "eventId": 209457424,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 397194489,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 1081281739,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 134644876,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 1535516437,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 544953193,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://aegwebprod.blob.core.windows.net/json/events/9/events.json"
+      ],
+      "reason": "Live official AEG event record independently matches full local date, exact performer, The Regency Ballroom, observed AXS URL and event media (not venue media)."
+    },
+    {
+      "batch": 2,
+      "eventId": 307448836,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=6&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar January 2027, day 14; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 1211927921,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=6&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar January 2027, day 15; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 1820004784,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=6&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar January 2027, day 16; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 1140419873,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=6&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar January 2027, day 19; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 1109271821,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=6&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar February 2027, day 04; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 983828466,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=6&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar February 2027, day 07; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 1749965874,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=6&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar March 2027, day 18; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 2,
+      "eventId": 2113417285,
+      "selection": "flagged room identity or cross-year date",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://gamh.com/calendar/",
+        "https://gamh.com/wp-admin/admin-ajax.php?action=get_seetickets_events&seeAjaxPage=5&listType=list&nonce=ee7c6858db"
+      ],
+      "reason": "Official calendar January 2027, day 09; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 3,
+      "eventId": 81269123,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thecastro.com/events/sienna-spiro-261109"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 511167869,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.brickandmortarmusic.com/tm-event/cardinal-bloom/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 70173636,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.augusthallsf.com/tm-event/slift/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 32394198,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.theindependentsf.com/tm-event/gilla-band/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 1841568250,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.theindependentsf.com/tm-event/king-buffalo/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 815353941,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thechapelsf.com/calendar/"
+      ],
+      "reason": "Official calendar October 2026, day 22; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 3,
+      "eventId": 490016457,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.augusthallsf.com/tm-event/dj-raphi-hype-tour-usa-2-0/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 157694747,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.theindependentsf.com/tm-event/weston-estate/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 1953701846,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.theindependentsf.com/tm-event/automatic/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 1083200566,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.theindependentsf.com/tm-event/the-buttertones/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 427699581,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thechapelsf.com/calendar/"
+      ],
+      "reason": "Official calendar December 2026, day 19; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 3,
+      "eventId": 139191346,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thechapelsf.com/calendar/"
+      ],
+      "reason": "Official calendar October 2026, day 16; exact artist or billing, image and outbound show URL share the same event card. Full year read from this table header, not inferred."
+    },
+    {
+      "batch": 3,
+      "eventId": 1165208094,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.theindependentsf.com/tm-event/odezenne/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 119437742,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://themab.org/events/2026-12-19-vio-lence-a-thrashing-christmas-in-s-f/"
+      ],
+      "reason": "Exact performer/date/venue and same-event artwork independently confirmed in live official structured data or event page; show URL observed in original evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 855619388,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://buildingresources.org/event/free-outdoor-punk-rock-show/"
+      ],
+      "reason": "Live official show page and visually opened flyer independently match Bite, Oct 10 2026, noon–3pm and 701 Amador Street. Genuine show flyer."
+    },
+    {
+      "batch": 2,
+      "eventId": 126222165,
+      "selection": "negative sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.thenewfarmsf.org/"
+      ],
+      "reason": "Bounded live official New Farm homepage and exact lineup search did not establish original official show artwork. Third-party match alone is insufficient; gap remains explicit."
+    },
+    {
+      "batch": 2,
+      "eventId": 1518222921,
+      "selection": "negative sample",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.thefillmore.com/shows/calendar/2026-12"
+      ],
+      "reason": "Avoidable omission: live official source contains exact show artwork. See omittedMatches for title/billing/date/image evidence."
+    },
+    {
+      "batch": 2,
+      "eventId": 1214794765,
+      "selection": "negative sample",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.thefillmore.com/shows/calendar/2026-12"
+      ],
+      "reason": "Avoidable omission: live official source contains exact show artwork. See omittedMatches for title/billing/date/image evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 1329779416,
+      "selection": "negative sample",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thechapelsf.com/calendar/"
+      ],
+      "reason": "Avoidable omission: live official source contains exact show artwork. See omittedMatches for title/billing/date/image evidence."
+    },
+    {
+      "batch": 3,
+      "eventId": 56227335,
+      "selection": "negative sample",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://kilowattbar.com/",
+        "https://partners-endpoint.dice.fm/api/v2/events?page%5Bsize%5D=100&types=linkout%2Cevent&filter%5Bvenues%5D%5B%5D=Kilowatt"
+      ],
+      "reason": "Original dynamic-source omission now resolved: independently fetched DICE feed contains Mala Greña/Suika T/DJ Lizzy Al Toque, Oct23 local date, Kilowatt and same-record artwork. Covered by parent batch4; avoid duplicate candidate."
+    },
+    {
+      "batch": 3,
+      "eventId": 734712249,
+      "selection": "negative sample",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thechapelsf.com/calendar/"
+      ],
+      "reason": "Avoidable omission: live official source contains exact show artwork. See omittedMatches for title/billing/date/image evidence."
+    },
+    {
+      "batch": 1,
+      "eventId": 134214569,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live venue + web-retrieved official ticket inventory",
+      "sourceUrls": [
+        "https://bimbos365club.com/tm-event/jd-mcpherson-socks-a-rock-n-roll-christmas-tour-with-special-guest-melissa-carper/",
+        "https://bimbos365club.com/shows/",
+        "https://www.ticketmaster.com/JD-McPherson-tickets/artist/1599483?msockid=0cbe7c9e8ad061f611446a238bed6048&tt_scene=anchor_view"
+      ],
+      "reason": "Live venue detail and calendar show exact performer/month/day, observed Twitter image and ticket link. Opened official Ticketmaster inventory independently supplies explicit 2026 date. Direct Ticketweb returned 530. Visually checked image is promotional photography, correctly event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 244897538,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thecastro.com/events/jorja-smith-261116"
+      ],
+      "reason": "Independent live official detail confirms exact title, full local date, venue and same-show image; observed detail URL. Promotional artwork conservatively labelled event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 444334350,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live venue + web-retrieved official ticket inventory",
+      "sourceUrls": [
+        "https://bimbos365club.com/tm-event/murray-hill/",
+        "https://bimbos365club.com/shows/",
+        "https://www.ticketmaster.com/search?q=bimbo&tt_scene=anchor_view"
+      ],
+      "reason": "Live venue detail and calendar show exact performer/month/day, observed Twitter image and ticket link. Opened official Ticketmaster inventory independently supplies explicit 2026 date. Direct Ticketweb returned 530. Visually checked image is promotional photography, correctly event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 898829137,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live venue + web-retrieved official ticket inventory",
+      "sourceUrls": [
+        "https://bimbos365club.com/tm-event/mustache-harbor-9/",
+        "https://bimbos365club.com/shows/",
+        "https://www.ticketmaster.com/search?q=bimbo&tt_scene=anchor_view"
+      ],
+      "reason": "Live venue detail and calendar show exact performer/month/day, observed Twitter image and ticket link. Opened official Ticketmaster inventory independently supplies explicit 2026 date. Direct Ticketweb returned 530. Visually checked image is promotional photography, correctly event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 903525436,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live venue + web-retrieved official ticket inventory",
+      "sourceUrls": [
+        "https://bimbos365club.com/tm-event/tainted-love-8/",
+        "https://bimbos365club.com/shows/",
+        "https://www.ticketmaster.com/search?q=bimbo&tt_scene=anchor_view"
+      ],
+      "reason": "Live venue detail and calendar show exact performer/month/day, observed Twitter image and ticket link. Opened official Ticketmaster inventory independently supplies explicit 2026 date. Direct Ticketweb returned 530. Visually checked image is promotional photography, correctly event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 1922716992,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.bottomofthehill.com/20261127.html"
+      ],
+      "reason": "Live official detail explicitly names exact artist, venue and full 2026 date; exact linked flyer (HTTP source upgraded to verified HTTPS) visually checked for performers/date/Bottom of the Hill. Genuine flyer."
+    },
+    {
+      "batch": 1,
+      "eventId": 1501711198,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thecastro.com/events/pj-morton-261107"
+      ],
+      "reason": "Independent live official detail confirms exact title, full local date, venue and same-show image; observed detail URL. Promotional artwork conservatively labelled event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 679454224,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thecastro.com/events/alyssa-edwards-271220"
+      ],
+      "reason": "Live official page explicitly says Sunday Dec 20 2026, Alyssa Edwards and Castro. The observed slug contains 271220 but page date and ticket URL both say 2026; do not derive year from slug. Exact image appears in event body."
+    },
+    {
+      "batch": 1,
+      "eventId": 642018244,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thecastro.com/events/george-clanton-261022"
+      ],
+      "reason": "Independent live official detail confirms exact title, full local date, venue and same-show image; observed detail URL. Promotional artwork conservatively labelled event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 208238779,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thecastro.com/events/hamilton-leithauser-and-rostam-261118"
+      ],
+      "reason": "Independent live official detail confirms exact title, full local date, venue and same-show image; observed detail URL. Promotional artwork conservatively labelled event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 2089567281,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://thecastro.com/events/tiny-habits-261212"
+      ],
+      "reason": "Independent live official detail confirms exact title, full local date, venue and same-show image; observed detail URL. Promotional artwork conservatively labelled event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 1721705824,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://cafedunord.com/tm-event/isabel-larosa-dollparts-tour/"
+      ],
+      "reason": "Independent live official detail confirms exact title, full local date, venue and same-show image; observed detail URL. Promotional artwork conservatively labelled event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 1845397224,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://billgrahamcivic.com/events/bonnie-raitt-261010"
+      ],
+      "reason": "Independent live official detail confirms exact title, full local date, venue and same-show image; observed detail URL. Promotional artwork conservatively labelled event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 1622045573,
+      "selection": "venue method coverage",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.feinsteinssf.com/tm-event/carol-luckenbach-under-the-influence/"
+      ],
+      "reason": "Exact Carol Luckenbach Oct 22 2026 show/venue confirmed through page and Google Calendar link. Live event image now has v=8; packet v=7 is stale. Refresh to currently observed v=8 before integration."
+    },
+    {
+      "batch": 1,
+      "eventId": 1918421092,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://theknockoutsf.com/events-2-1/uqlc0dsmod3j6iijh1ujrhc5jh1fd9"
+      ],
+      "reason": "Live Knockout event JSON-LD confirms Oct 10 2026; same-page CDN image visually checked: Junkyard Cat + American Woman, Oct 10, Knockout/3223 Mission. Genuine flyer despite unofficial in filename."
+    },
+    {
+      "batch": 1,
+      "eventId": 1059927272,
+      "selection": "venue method coverage",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.neckofthewoodssf.com/tm-event/d-r-i-scattered-guts-tba/"
+      ],
+      "reason": "Independent live official detail confirms exact title, full local date, venue and same-show image; observed detail URL. Promotional artwork conservatively labelled event-artwork."
+    },
+    {
+      "batch": 1,
+      "eventId": 2128022671,
+      "selection": "venue method coverage",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://themab.org/events/2026-11-06-knights-of-molino-record-release-party/"
+      ],
+      "reason": "Withhold exact-room association: same Nov 6 act/show, but official page says Mabuhay Gardens/435 Broadway while responsive flyer says443 Broadway (On Broadway). Parent must arbitrate; shared address alone is not room identity.",
+      "withheld": true
+    },
+    {
+      "batch": 1,
+      "eventId": 1715609513,
+      "selection": "flyer classification",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.bottomofthehill.com/20261010.html"
+      ],
+      "reason": "Live official detail explicitly names exact artist, venue and full 2026 date; exact linked flyer (HTTP source upgraded to verified HTTPS) visually checked for performers/date/Bottom of the Hill. Genuine flyer."
+    },
+    {
+      "batch": 1,
+      "eventId": 2136268934,
+      "selection": "flyer classification",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://www.bottomofthehill.com/20261011.html"
+      ],
+      "reason": "Live official detail explicitly names exact artist, venue and full 2026 date; exact linked flyer (HTTP source upgraded to verified HTTPS) visually checked for performers/date/Bottom of the Hill. Genuine flyer."
+    },
+    {
+      "batch": 1,
+      "eventId": 629720055,
+      "selection": "negative sample",
+      "status": "pass",
+      "evidenceMode": "live blocked + web official calendar",
+      "sourceUrls": [
+        "https://rickshawstop.com/calendar/"
+      ],
+      "reason": "Rickshaw direct HTTP remains403; independent web retrieval of official monthly calendar confirms exact performer/date, but exposes no usable image URL. Retain source-access gap, not no-artwork claim."
+    },
+    {
+      "batch": 1,
+      "eventId": 1084979261,
+      "selection": "negative sample",
+      "status": "pass",
+      "evidenceMode": "live blocked + web official calendar",
+      "sourceUrls": [
+        "https://rickshawstop.com/calendar/"
+      ],
+      "reason": "Rickshaw direct HTTP remains403; independent web retrieval of official monthly calendar confirms exact performer/date, but exposes no usable image URL. Retain source-access gap, not no-artwork claim."
+    },
+    {
+      "batch": 1,
+      "eventId": 1922284935,
+      "selection": "negative sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://theknockoutsf.com/events-2-1"
+      ],
+      "reason": "Independent live calendar places Croissant Sept 30 2026, not Oct17; no exact Oct17 artwork established. Exclusion appropriate."
+    },
+    {
+      "batch": 4,
+      "eventId": 926470308,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://kilowattbar.com/events",
+        "https://partners-endpoint.dice.fm/api/v2/events?page%5Bsize%5D=100&types=linkout%2Cevent&filter%5Bvenues%5D%5B%5D=Kilowatt",
+        "https://link.dice.fm/K27c39683771"
+      ],
+      "reason": "Independently fetched published DICE feed: Project Mayhem, B.F.H. and Tehmodhjin; 2026-10-11T20:00:00Z -> 2026-10-11 in America/Los_Angeles; Kilowatt/3160 16th St; exact image and observed outbound link from same record. Project Mayhem is explicit in source title; empty artists array is not treated as negative."
+    },
+    {
+      "batch": 4,
+      "eventId": 1784755669,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://kilowattbar.com/events",
+        "https://partners-endpoint.dice.fm/api/v2/events?page%5Bsize%5D=100&types=linkout%2Cevent&filter%5Bvenues%5D%5B%5D=Kilowatt",
+        "https://link.dice.fm/v2424cdc5951"
+      ],
+      "reason": "Independently fetched published DICE feed: Elephant Stone and Stevenson Ranch Davidians; 2027-02-01T03:00:00Z -> 2027-01-31 in America/Los_Angeles; Kilowatt/3160 16th St; exact image and observed outbound link from same record. "
+    },
+    {
+      "batch": 4,
+      "eventId": 1310137317,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://kilowattbar.com/events",
+        "https://partners-endpoint.dice.fm/api/v2/events?page%5Bsize%5D=100&types=linkout%2Cevent&filter%5Bvenues%5D%5B%5D=Kilowatt",
+        "https://link.dice.fm/n9d535b776ef"
+      ],
+      "reason": "Independently fetched published DICE feed: FVR WLD FEST feat. Mugger, Monk, Ingrata and Scam Likely; 2026-11-15T02:00:00Z -> 2026-11-14 in America/Los_Angeles; Kilowatt/3160 16th St; exact image and observed outbound link from same record. "
+    },
+    {
+      "batch": 4,
+      "eventId": 51525736,
+      "selection": "negative sample",
+      "status": "pass",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://kilowattbar.com/events",
+        "https://partners-endpoint.dice.fm/api/v2/events?page%5Bsize%5D=100&types=linkout%2Cevent&filter%5Bvenues%5D%5B%5D=Kilowatt",
+        "https://link.dice.fm/a15c54dde28a"
+      ],
+      "reason": "Independent live record explicitly status cancelled and cancelled flag; omission from active artwork enrichment is appropriate."
+    },
+    {
+      "batch": 4,
+      "eventId": 1232090382,
+      "selection": "negative sample",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://kilowattbar.com/events",
+        "https://partners-endpoint.dice.fm/api/v2/events?page%5Bsize%5D=100&types=linkout%2Cevent&filter%5Bvenues%5D%5B%5D=Kilowatt",
+        "https://link.dice.fm/n5f4a9d2fc5a"
+      ],
+      "reason": "Exact date/venue/support lineup matches Imaad Wasif; catalog Imadd is a spelling variant requiring explicit parent identity arbitration. Source artwork candidate supplied; do not silently rename canonical artist."
+    },
+    {
+      "batch": 4,
+      "eventId": 423616750,
+      "selection": "negative sample",
+      "status": "minor",
+      "evidenceMode": "live",
+      "sourceUrls": [
+        "https://kilowattbar.com/events",
+        "https://partners-endpoint.dice.fm/api/v2/events?page%5Bsize%5D=100&types=linkout%2Cevent&filter%5Bvenues%5D%5B%5D=Kilowatt",
+        "https://link.dice.fm/w3131436e392"
+      ],
+      "reason": "Long parenthetical label caused avoidable omission. Exact Nov20 local date, Kilowatt and Paul Collins/Exploding Hearts billing in live source; candidate supplied."
+    },
+    {
+      "batch": 5,
+      "eventId": 437606751,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "independent live rendered browser",
+      "sourceUrls": [
+        "https://blackcatsf.turntabletickets.com/",
+        "https://blackcatsf.turntabletickets.com/shows/12863/2026-10-28",
+        "https://assets-prod.turntabletickets.com/media/blackcatsf/show-12863/The-Soul-Sessions-10-28.jpg"
+      ],
+      "reason": "Fresh official calendar → SHOWS UI independently confirms artist, full 2026 date, observed detail href and exact same-card image URL. Conservative event-artwork label passes."
+    },
+    {
+      "batch": 5,
+      "eventId": 597630731,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "independent live rendered browser",
+      "sourceUrls": [
+        "https://blackcatsf.turntabletickets.com/",
+        "https://blackcatsf.turntabletickets.com/shows/13010/2026-10-16",
+        "https://assets-prod.turntabletickets.com/media/blackcatsf/show-13010/JOEBLOCK-CAL.jpg"
+      ],
+      "reason": "Fresh official calendar → SHOWS UI independently confirms artist, full 2026 date, observed detail href and exact same-card image URL. Conservative event-artwork label passes."
+    },
+    {
+      "batch": 5,
+      "eventId": 1341736002,
+      "selection": "deterministic random sample",
+      "status": "pass",
+      "evidenceMode": "independent live rendered browser",
+      "sourceUrls": [
+        "https://blackcatsf.turntabletickets.com/",
+        "https://blackcatsf.turntabletickets.com/shows/13009/2026-10-10",
+        "https://assets-prod.turntabletickets.com/media/blackcatsf/show-13008/Edgargz.com-cal.jpg"
+      ],
+      "reason": "Fresh official calendar → SHOWS UI independently confirms artist, full 2026 date, observed detail href and exact same-card image URL. Conservative event-artwork label passes. Image directory show-13008 differs from detail show-13009 but official card explicitly pairs them; valid shared residency art."
+    },
+    {
+      "batch": 5,
+      "eventId": 1022407896,
+      "selection": "negative sample",
+      "status": "minor",
+      "evidenceMode": "independent live rendered browser",
+      "sourceUrls": [
+        "https://blackcatsf.turntabletickets.com/r/benito-gonzalez-trio-ft-drummer-living-legend-jeff-tain-watts"
+      ],
+      "reason": "Official linked residency states October 8–10 2026 and three-night run, exact artist/Black Cat with linked artwork. October9 absent from upcoming list but recoverable via residency. Candidate supplied with observed residency URL, no invented past detail URL."
+    },
+    {
+      "batch": 5,
+      "eventId": 222835919,
+      "selection": "negative sample",
+      "status": "pass",
+      "evidenceMode": "live rendered Black Cat plus web-retrieved original UC Theatre",
+      "sourceUrls": [
+        "https://blackcatsf.turntabletickets.com/",
+        "https://www.theuctheatre.org/shows/dragonforce-12-dec"
+      ],
+      "reason": "No exact official Black Cat match. Original UC Theatre lists DragonForce/Ensiferum/Rhapsody of Fire December12 2026 in Berkeley, a venue conflict. Correct to withhold artwork for Black Cat catalog ID; parent should arbitrate venue separately."
+    }
+  ],
+  "omittedMatches": [
+    {
+      "eventId": 1329779416,
+      "venueId": 680116887,
+      "date": "2027-01-07",
+      "eventSlug": "2027-01-07-the-loved-ones-record-release-the-chapel",
+      "headlinerArtistId": 859944037,
+      "headlinerName": "The Loved Ones (record release)",
+      "artistNames": [
+        "The Loved Ones (record release)",
+        "The Vesuvians",
+        "dj Russell Quan"
+      ],
+      "existingSources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:0c84e93c4320ff19",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1791595464839,
+          "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 680116887,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "venueName": "Chapel",
+      "website": "https://thechapelsf.com/contact/",
+      "calendarUrls": [
+        "https://thechapelsf.com/calendar/"
+      ],
+      "eventUrl": "https://wl.seetickets.us/event/the-loved-ones-latest-hits-record-release/707499?afflky=TheChapel",
+      "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZTQ4MzFlNDAtMGE2OC00ZGMxLWJlMmQtMzhmNzlmOTU5NzNjIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MDB9LCJqcGVnIjp7InF1YWxpdHkiOjYwfSwicG5nIjp7ImNvbXByZXNzaW9uTGV2ZWwiOjksInF1YWxpdHkiOjYwfSwid2VicCI6eyJxdWFsaXR5Ijo2MH19fQ==",
+      "kind": "event-artwork",
+      "checkedOn": "2026-10-10",
+      "evidence": "Independent live official calendar: January 2027, day 07; The Loved Ones - Latest Hits Record Release!Supporting Talent: The Vesuvians, Karina Deniké, Russell QuanShow at 8:00PMDoors at 7:00PMBuy Tickets. Same-card image and observed outbound URL."
+    },
+    {
+      "eventId": 734712249,
+      "venueId": 680116887,
+      "date": "2026-10-23",
+      "eventSlug": "2026-10-23-aroma-the-chapel",
+      "headlinerArtistId": 998274433,
+      "headlinerName": "AroMa",
+      "artistNames": [
+        "AroMa",
+        "Frightwig",
+        "scary story time"
+      ],
+      "existingSources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:3966662e0e8c86e5",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1791595464839,
+          "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 680116887,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "venueName": "Chapel",
+      "website": "https://thechapelsf.com/contact/",
+      "calendarUrls": [
+        "https://thechapelsf.com/calendar/"
+      ],
+      "eventUrl": "https://www.tixr.com/groups/kqed/events/haunted-riot-with-frightwig-an-alt-punk-show-204363",
+      "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiOGIwMzA1NzEtZWE1ZS00YzNkLTkxNzQtY2IxNzU0NmQzN2I0IiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MDB9LCJqcGVnIjp7InF1YWxpdHkiOjYwfSwicG5nIjp7ImNvbXByZXNzaW9uTGV2ZWwiOjksInF1YWxpdHkiOjYwfSwid2VicCI6eyJxdWFsaXR5Ijo2MH19fQ==",
+      "kind": "event-artwork",
+      "checkedOn": "2026-10-10",
+      "evidence": "Independent live official calendar: October 2026, day 23; Haunted Riot with FrightwigSupporting Talent: AroMa, Scary Story Time with Bay CuriousShow at 8:00PMDoors at 7:00PMMore Info. Same-card image and observed outbound URL. AroMa is supporting artist, not headliner; no role mutation proposed."
+    },
+    {
+      "eventId": 1214794765,
+      "venueId": 1136597428,
+      "date": "2026-12-19",
+      "eventSlug": "2026-12-19-allman-betts-family-revival-the-fillmore",
+      "headlinerArtistId": 907362243,
+      "headlinerName": "Allman Betts Family Revival",
+      "artistNames": [
+        "Allman Betts Family Revival"
+      ],
+      "existingSources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:2c87654dd3c681dd",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1788566700000,
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 1136597428,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "venueName": "Fillmore",
+      "website": "https://www.thefillmore.com/visit",
+      "calendarUrls": [
+        "https://www.thefillmore.com/shows"
+      ],
+      "eventUrl": "https://www.ticketmaster.com/allman-betts-family-revival-a-decade-san-francisco-california-12-19-2026/event/1C00650AA46AAECE",
+      "imageUrl": "https://s1.ticketm.net/dam/a/553/366e2b6b-4ef2-418c-b9af-88a8aad58553_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+      "kind": "event-artwork",
+      "checkedOn": "2026-10-10",
+      "evidence": "Independent live December calendar embedded official event JSON: Allman Betts Family Revival: A DECADE OF REVIVAL; 2026-12-19T19:30:00-08:00; The Fillmore, 1805 Geary Boulevard, San Francisco; event image and observed ticket URL. Source https://www.thefillmore.com/shows/calendar/2026-12. Ticketmaster direct returned 401; official calendar is evidence."
+    },
+    {
+      "eventId": 1518222921,
+      "venueId": 1136597428,
+      "date": "2026-12-20",
+      "eventSlug": "2026-12-20-allman-betts-family-revival-the-fillmore",
+      "headlinerArtistId": 907362243,
+      "headlinerName": "Allman Betts Family Revival",
+      "artistNames": [
+        "Allman Betts Family Revival"
+      ],
+      "existingSources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:2691d34ed433bc0a",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1788566700000,
+          "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 1136597428,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "venueName": "Fillmore",
+      "website": "https://www.thefillmore.com/visit",
+      "calendarUrls": [
+        "https://www.thefillmore.com/shows"
+      ],
+      "eventUrl": "https://www.ticketmaster.com/allman-betts-family-revival-a-decade-san-francisco-california-12-20-2026/event/1C00650AA46EAEDA",
+      "imageUrl": "https://s1.ticketm.net/dam/a/553/366e2b6b-4ef2-418c-b9af-88a8aad58553_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+      "kind": "event-artwork",
+      "checkedOn": "2026-10-10",
+      "evidence": "Independent live December calendar embedded official event JSON: Allman Betts Family Revival: A DECADE OF REVIVAL; 2026-12-20T19:30:00-08:00; The Fillmore, 1805 Geary Boulevard, San Francisco; event image and observed ticket URL. Source https://www.thefillmore.com/shows/calendar/2026-12. Ticketmaster direct returned 401; official calendar is evidence."
+    },
+    {
+      "eventId": 1232090382,
+      "venueId": 1433810567,
+      "date": "2026-10-18",
+      "eventSlug": "2026-10-18-imadd-wasif-kilowatt",
+      "headlinerArtistId": 2122166576,
+      "headlinerName": "Imadd Wasif",
+      "artistNames": [
+        "Imadd Wasif",
+        "Black Thumb and Phipps Pt.",
+        "Joel St. Julien"
+      ],
+      "existingSources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:9624dee892458528",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1789777368000,
+          "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 1433810567,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "venueName": "Kilowatt",
+      "website": "https://kilowattbar.com/",
+      "calendarUrls": [
+        "https://kilowattbar.com/events"
+      ],
+      "eventUrl": "https://link.dice.fm/n5f4a9d2fc5a",
+      "imageUrl": "https://dice-media.imgix.net/attachments/2026-08-26/2d937e17-c927-49de-8e88-90c777b09657.jpg",
+      "kind": "event-artwork",
+      "checkedOn": "2026-10-10",
+      "needsIdentityArbitration": true,
+      "evidence": "Independent live published DICE feed: Imaad Wasif, Black Thumb and Phipps Pt. w/ Joel St. Julien; 2026-10-18T20:00:00Z, America/Los_Angeles local 2026-10-18; Kilowatt, 3160 16th Street, San Francisco, California 94103, United States; exact image and outbound URL from same record. Exact date/venue/support lineup matches Imaad Wasif; catalog Imadd is a spelling variant requiring explicit parent identity arbitration. Source artwork candidate supplied; do not silently rename canonical artist."
+    },
+    {
+      "eventId": 423616750,
+      "venueId": 1433810567,
+      "date": "2026-11-20",
+      "eventSlug": "2026-11-20-paul-collins-best-of-the-nerves-and-the-exploding-hearts-the-kilowatt",
+      "headlinerArtistId": 230324244,
+      "headlinerName": "Paul Collins (best of The Nerves and The Exploding Hearts)",
+      "artistNames": [
+        "Paul Collins (best of The Nerves and The Exploding Hearts)"
+      ],
+      "existingSources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:0a5c14897c95ce0a",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1789777368000,
+          "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 1433810567,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "venueName": "Kilowatt",
+      "website": "https://kilowattbar.com/",
+      "calendarUrls": [
+        "https://kilowattbar.com/events"
+      ],
+      "eventUrl": "https://link.dice.fm/w3131436e392",
+      "imageUrl": "https://dice-media.imgix.net/attachments/2026-07-15/fc9c324d-cc61-462d-9c42-3c1b4fbb9f5a.jpg",
+      "kind": "event-artwork",
+      "checkedOn": "2026-10-10",
+      "needsIdentityArbitration": false,
+      "evidence": "Independent live published DICE feed: Paul Collins The Best of The Nerves and The Beat and The Exploding Hearts: Night 1 ; 2026-11-21T03:00:00Z, America/Los_Angeles local 2026-11-20; Kilowatt, 3160 16th Street, San Francisco, California 94103, United States; exact image and outbound URL from same record. Long parenthetical label caused avoidable omission. Exact Nov20 local date, Kilowatt and Paul Collins/Exploding Hearts billing in live source; candidate supplied."
+    },
+    {
+      "eventId": 1022407896,
+      "venueId": 1082531611,
+      "date": "2026-10-09",
+      "eventSlug": "2026-10-09-benito-gonzalez-the-black-cat",
+      "headlinerArtistId": 1799633576,
+      "headlinerName": "Benito Gonzalez",
+      "artistNames": [
+        "Benito Gonzalez"
+      ],
+      "existingSources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:097ff451cd2f6db3",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1791595464839,
+          "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1791595464839,
+          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "originalVenueId": 1082531611,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "venueName": "the Black Cat",
+      "website": "https://blackcatsf.com/",
+      "calendarUrls": [
+        "https://blackcatsf.turntabletickets.com/calendar"
+      ],
+      "eventUrl": "https://blackcatsf.turntabletickets.com/r/benito-gonzalez-trio-ft-drummer-living-legend-jeff-tain-watts",
+      "imageUrl": "https://assets-prod.turntabletickets.com/media/blackcatsf/show-13008/Edgargz.com-cal.jpg-rectXl.webp?version=46f7b8be",
+      "kind": "event-artwork",
+      "checkedOn": "2026-10-10",
+      "evidence": "Independent live residency page explicitly Thu Oct08 2026–Sat Oct10 2026 and three-night run, Benito Gonzalez/Jeff Tain Watts/Stefano Battaglia at Black Cat; displayed exact artist image. October9 inferred within continuous three-night range, corroborated by listings. Observed residency URL retained; no guessed detail path.",
+      "needsParentReview": true
+    }
+  ],
+  "withheldEventIds": [
+    1999159148,
+    2128022671
+  ],
+  "corrections": [
+    {
+      "eventId": 1622045573,
+      "imageUrl": "https://i.ticketweb.com/i/00/12/99/65/44_Edp.jpg?v=8",
+      "reason": "Current official event-img URL independently observed live."
+    }
+  ]
+}

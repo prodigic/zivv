@@ -46,7 +46,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1791595464839,
       "venueId": 1648637995,
-      "venueType": "major"
+      "venueType": "major",
+      "poster": {
+        "imageUrl": "https://billgrahamcivic.com/wp-content/uploads/2026/10/1024_LolaYoung.jpg",
+        "eventUrl": "https://billgrahamcivic.com/events/lola-young-270501",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -90,7 +96,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1789777368000,
       "venueId": 680116887,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYTMyNDE3NzMtOTZjOC00OTUzLTg5MTMtMjk1YTk5M2JkMzFkIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MDB9LCJqcGVnIjp7InF1YWxpdHkiOjYwfSwicG5nIjp7ImNvbXByZXNzaW9uTGV2ZWwiOjksInF1YWxpdHkiOjYwfSwid2VicCI6eyJxdWFsaXR5Ijo2MH19fQ==",
+        "eventUrl": "https://wl.seetickets.us/event/jean-michel-blais/705097?afflky=TheChapel",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "legacy-batch",
@@ -263,7 +275,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790381132084,
       "venueId": 515101024,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://i.ticketweb.com/i/00/13/04/72/24_Edp.jpg?v=7",
+        "eventUrl": "https://www.theindependentsf.com/tm-event/too-many-zooz-2/",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -307,7 +325,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790985835628,
       "venueId": 1648637995,
-      "venueType": "major"
+      "venueType": "major",
+      "poster": {
+        "imageUrl": "https://billgrahamcivic.com/wp-content/uploads/2026/09/1024_FontainesDC.jpg",
+        "eventUrl": "https://billgrahamcivic.com/events/fontaines-dc-270512",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -354,7 +378,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1791595464839,
       "venueId": 881479351,
-      "venueType": "major"
+      "venueType": "major",
+      "poster": {
+        "imageUrl": "https://thecastro.com/wp-content/uploads/2026/10/1024_PalayeRoyale.jpg",
+        "eventUrl": "https://thecastro.com/events/palaye-royale-270512",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -401,7 +431,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1788566700000,
       "venueId": 680116887,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYzhhYWY4MTMtZmE3Zi00NGRmLTk3NGMtMTdjMTYxY2Y0MjFmIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MDB9LCJqcGVnIjp7InF1YWxpdHkiOjYwfSwicG5nIjp7ImNvbXByZXNzaW9uTGV2ZWwiOjksInF1YWxpdHkiOjYwfSwid2VicCI6eyJxdWFsaXR5Ijo2MH19fQ==",
+        "eventUrl": "https://wl.seetickets.us/event/the-liminanas/686832?afflky=TheChapel",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     },
     {
       "addedDateProvenance": "legacy-batch",
@@ -569,7 +605,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790381132084,
       "venueId": 1383208152,
-      "venueType": "major"
+      "venueType": "major",
+      "poster": {
+        "imageUrl": "https://thecastro.com/wp-content/uploads/2026/09/1024_Agnes-Obel.jpg",
+        "eventUrl": "https://thecastro.com/events/agnes-obel-270520",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-10"
+      }
     }
   ]
 }

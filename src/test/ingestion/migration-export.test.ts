@@ -109,6 +109,102 @@ afterEach(() => {
 });
 
 describe("migration and ledger export", () => {
+  it("exports attributed artist reviews without changing ledger identities or history", async () => {
+    const { root } = setup();
+    await migrateExistingCatalog(root);
+    const ledgerPath = join(root, "data/ingestion/ledger.json");
+    const before = readFileSync(ledgerPath, "utf8");
+    const vibe = {
+      summary: "Loud guitars and patient arrangements.",
+      basis: "release",
+      checkedOn: "2026-10-10",
+      reviews: [
+        {
+          url: "https://example.org/review",
+          title: "Album review",
+          publication: "Music Journal",
+          author: null,
+          publishedOn: null,
+          kind: "release",
+          reviewedWork: "Album",
+        },
+      ],
+    };
+    writeFileSync(
+      join(root, "data/artist-reviews.json"),
+      JSON.stringify({
+        schemaVersion: 1,
+        artists: [
+          {
+            ...vibe,
+            artistId: 201,
+            artistName: "Test Band",
+            identityEvidence:
+              "Synthetic original review links to the official artist.",
+          },
+        ],
+      })
+    );
+    const result = await new ETLProcessor(root).processData();
+    expect(result.success).toBe(true);
+    const artists = JSON.parse(
+      readFileSync(join(root, "public/data/artists.json"), "utf8")
+    );
+    expect(artists[0]).toMatchObject({
+      id: 201,
+      name: "Test Band",
+      createdAtEpochMs: created,
+      vibe,
+    });
+    expect(result.manifest?.sourceFiles.artistReviews).toBeDefined();
+    expect(readFileSync(ledgerPath, "utf8")).toBe(before);
+  });
+
+  it("exports reviewed show artwork into events and summaries without changing the ledger", async () => {
+    const { root, event } = setup();
+    await migrateExistingCatalog(root);
+    const ledgerPath = join(root, "data/ingestion/ledger.json");
+    const before = readFileSync(ledgerPath, "utf8");
+    const poster = {
+      imageUrl: "https://example.org/flyer.jpg",
+      eventUrl: "https://example.org/show",
+      kind: "poster",
+      checkedOn: "2026-10-10",
+    };
+    writeFileSync(
+      join(root, "data/event-posters.json"),
+      JSON.stringify({
+        schemaVersion: 1,
+        events: [
+          {
+            ...poster,
+            eventId: 101,
+            eventSlug: event.slug,
+            date: event.date,
+            venueId: 301,
+            venueName: "Test Hall",
+            headlinerArtistId: 201,
+            headlinerName: "Test Band",
+            evidence: "Synthetic official listing.",
+          },
+        ],
+      })
+    );
+    const result = await new ETLProcessor(root).processData();
+    expect(result.success).toBe(true);
+    const read = (file: string) =>
+      JSON.parse(readFileSync(join(root, "public/data", file), "utf8"));
+    expect(read("events-2026-12.json").events[0]).toMatchObject({
+      id: 101,
+      createdAtEpochMs: created,
+      poster,
+    });
+    expect(read("venues.json")[0].upcomingEvents[0].poster).toEqual(poster);
+    expect(read("artists.json")[0].upcomingEvents[0].poster).toEqual(poster);
+    expect(result.manifest?.sourceFiles.eventPosters).toBeDefined();
+    expect(readFileSync(ledgerPath, "utf8")).toBe(before);
+  });
+
   it("exports reviewed map coordinates without changing IDs, first-added history, or events", async () => {
     const { root } = setup();
     await migrateExistingCatalog(root);

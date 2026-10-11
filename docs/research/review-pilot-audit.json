@@ -1,0 +1,387 @@
+{
+  "researchedOn": "2026-10-10",
+  "timezone": "America/Los_Angeles",
+  "blinded": true,
+  "producerModelsInferred": false,
+  "scope": {
+    "outputs": [
+      "a",
+      "b",
+      "c"
+    ],
+    "recordCount": 9,
+    "selection": "entire pilot",
+    "selectionSeed": null,
+    "criteriaFiles": [
+      "docs/research/enrichment-quality-protocol.md",
+      ".cache/review-pilot-task.md"
+    ]
+  },
+  "verdictDefinitions": {
+    "pass": "Meets source/content requirements as supplied.",
+    "minor-fix": "Supported record with a bounded provenance or independence qualification needed.",
+    "fail": "Unsupported claim or release/live boundary violation; block affected output until corrected and re-audited."
+  },
+  "metrics": {
+    "auditWebInvocations": 7,
+    "auditSearchQueryEntries": 3,
+    "auditWebOpenOrClickEntries": 24,
+    "auditDistinctWebUrls": 15,
+    "auditShellHttpAttempts": 1,
+    "auditShellHttpFailures": 1,
+    "tokenUsage": null,
+    "producerCountsIndependentlyMeasured": false,
+    "notes": "Counts are observed audit tool operations. Worker fields are self-reports only; elapsed time and token/cost efficiency were not certified."
+  },
+  "sourceChecks": [
+    {
+      "key": "modern2021",
+      "url": "https://metalheadcommunity.com/modern-monsters-modern-monsters-album-review/",
+      "opened": true,
+      "identityConfirmed": true,
+      "metadataConfirmed": true,
+      "kind": "release",
+      "originalCriticism": true,
+      "independence": "External reviewer, self-described independent publication; undisclosed arrangements not established.",
+      "notes": "Supports A/B core description except A's hook/set wording."
+    },
+    {
+      "key": "pitchfork2024",
+      "url": "https://pitchfork.com/reviews/albums/sour-widows-revival-of-a-friend/",
+      "opened": true,
+      "identityConfirmed": true,
+      "metadataConfirmed": true,
+      "kind": "release",
+      "originalCriticism": true,
+      "independence": "Original external reviewer; no artist/label affiliation found.",
+      "notes": "All supplied author/title/date fields verified."
+    },
+    {
+      "key": "ink2000",
+      "url": "https://ink19.com/2000/12/magazine/music-reviews/vhmd55-swingin-utters",
+      "opened": true,
+      "identityConfirmed": true,
+      "metadataConfirmed": true,
+      "kind": "release",
+      "originalCriticism": true,
+      "independence": "Original external reviewer.",
+      "notes": "Both 2000-12-26 and 2023-01-03 appear. Earliest date reasonable but HTML date-role semantics were not established."
+    },
+    {
+      "key": "scene2013",
+      "url": "https://www.scenepointblank.com/reviews/swingina-utters/poorly-formed/",
+      "opened": true,
+      "identityConfirmed": true,
+      "metadataConfirmed": true,
+      "kind": "release",
+      "originalCriticism": true,
+      "independence": "Original external reviewer.",
+      "notes": "All supplied author/title/date fields verified; San Francisco link is in same-page related review excerpt."
+    },
+    {
+      "key": "modern2023",
+      "url": "https://metalheadcommunity.com/modern-monsters-malice-album-review/",
+      "opened": true,
+      "identityConfirmed": true,
+      "metadataConfirmed": true,
+      "kind": "release",
+      "originalCriticism": true,
+      "independence": "External reviewer, self-described independent publication; undisclosed arrangements not established.",
+      "notes": "Recording evaluation includes reservations; performance-like language remains a recording description."
+    },
+    {
+      "key": "temple2023",
+      "url": "https://metal-temple.com/review/modern-monsters-malice/",
+      "opened": true,
+      "identityConfirmed": true,
+      "metadataConfirmed": true,
+      "kind": "release",
+      "originalCriticism": true,
+      "independence": "Original external reviewer; record-label field Independent does not certify editorial independence.",
+      "notes": "All supplied author/title/date fields verified."
+    },
+    {
+      "key": "post2020",
+      "url": "https://post-trash.com/news/2020/5/3/sour-widows-sour-widows-album-review",
+      "opened": true,
+      "identityConfirmed": true,
+      "metadataConfirmed": true,
+      "kind": "release",
+      "originalCriticism": true,
+      "independence": "Qualified: author runs artist's later label. Historical relationship as of 2020 unestablished.",
+      "notes": "Displayed publication date is May 4, despite May 3 URL."
+    }
+  ],
+  "additionalUrlsOpened": [
+    "https://sourwidows.bandcamp.com/",
+    "https://modernmonstersmusic.com/",
+    "https://www.rebelnoise.com/reviews/swingin-utters",
+    "https://metalheadcommunity.com/about-us/",
+    "https://post-trash.com/about",
+    "https://post-trash.com/news/2026/7/20/fuzzy-meadows-the-weeks-best-new-music-assorted-selections-from-july",
+    "https://sourwidows.bandcamp.com/album/sour-widows",
+    "https://www.explodinginsoundrecords.com/products/790291-sour-widows-revival-of-a-friend"
+  ],
+  "outputs": [
+    {
+      "output": "a",
+      "selfReportedSearchQueries": 3,
+      "selfReportedPageOpens": 4,
+      "tokenUsage": null,
+      "counts": {
+        "pass": 1,
+        "minorFix": 1,
+        "fail": 1,
+        "acceptedUnchanged": 1,
+        "recoverableAfterFix": 3
+      },
+      "batchAcceptance": "blocked-until-correction-and-reaudit",
+      "records": [
+        {
+          "artistId": "78581369",
+          "artistName": "Modern Monsters",
+          "verdict": "fail",
+          "vibeWordCount": 42,
+          "sources": [
+            "modern2021"
+          ],
+          "identity": "confirmed",
+          "metadata": "confirmed",
+          "schemaDefects": [],
+          "factualFindings": [
+            {
+              "severity": "fail",
+              "field": "vibe",
+              "text": "big guitar hooks",
+              "finding": "No support in actual cited text; discussion of a solo and genre influences does not establish hook character.",
+              "minimalFix": "Delete 'with big guitar hooks'."
+            }
+          ],
+          "boundaryFindings": [
+            {
+              "severity": "fail",
+              "field": "vibe",
+              "text": "heavy-rock set",
+              "finding": "Suggests concert performance from a recording; closing disclaimer does not remove ambiguity.",
+              "minimalFix": "Replace 'set' with 'recording'."
+            }
+          ],
+          "claimCoverage": "Remaining genre, era, mood and energy language is supported.",
+          "sourceAge": "2021 recording review; no current-show evidence.",
+          "suggestedVibe": "Release-only inference: this self-titled EP suggests a loud, nostalgic heavy-rock recording with an upbeat charge, drawing on 1990s alternative and metal colors. That description reflects one reviewer's account of the recording, not a promise about current live shows."
+        },
+        {
+          "artistId": "36869837",
+          "artistName": "Sour Widows",
+          "verdict": "pass",
+          "vibeWordCount": 44,
+          "sources": [
+            "pitchfork2024"
+          ],
+          "identity": "confirmed",
+          "metadata": "confirmed",
+          "schemaDefects": [],
+          "factualFindings": [],
+          "boundaryFindings": [],
+          "claimCoverage": "Every musical/theme phrase maps to the cited review; no added performance claim.",
+          "sourceAge": "2024 release; retain historical context.",
+          "minimalFix": null
+        },
+        {
+          "artistId": "708820545",
+          "artistName": "Swingin Utters",
+          "verdict": "minor-fix",
+          "vibeWordCount": 42,
+          "sources": [
+            "ink2000"
+          ],
+          "identity": "confirmed",
+          "metadata": "earliest displayed date is reasonable; later displayed date omitted",
+          "schemaDefects": [],
+          "factualFindings": [],
+          "provenanceFindings": [
+            {
+              "field": "identityEvidence",
+              "finding": "Unnamed Rebel Noise source lacks URL in artifact; audit found the claimed official link.",
+              "minimalFix": "Add https://www.rebelnoise.com/reviews/swingin-utters."
+            },
+            {
+              "field": "gaps",
+              "finding": "Second displayed Ink19 date not documented.",
+              "minimalFix": "Note both displayed dates and unspecified role of 2023 date."
+            }
+          ],
+          "boundaryFindings": [],
+          "claimCoverage": "All musical statements supported by the primary review.",
+          "sourceAge": "Self-titled release from 2000; expose older-recording context.",
+          "minimalFix": "Add missing identity-source URL and date/age caveat."
+        }
+      ]
+    },
+    {
+      "output": "b",
+      "selfReportedSearchQueries": 3,
+      "selfReportedPageOpens": 4,
+      "tokenUsage": null,
+      "counts": {
+        "pass": 3,
+        "minorFix": 0,
+        "fail": 0,
+        "acceptedUnchanged": 3,
+        "recoverableAfterFix": 3
+      },
+      "batchAcceptance": "accepted",
+      "records": [
+        {
+          "artistId": "78581369",
+          "artistName": "Modern Monsters",
+          "verdict": "pass",
+          "vibeWordCount": 40,
+          "sources": [
+            "modern2021"
+          ],
+          "identity": "confirmed",
+          "metadata": "confirmed",
+          "schemaDefects": [],
+          "factualFindings": [],
+          "boundaryFindings": [],
+          "claimCoverage": "Description and reviewer reservation supported. Funding-independence caveat appropriately limited.",
+          "sourceAge": "2021 release; no current-show inference.",
+          "minimalFix": null
+        },
+        {
+          "artistId": "36869837",
+          "artistName": "Sour Widows",
+          "verdict": "pass",
+          "vibeWordCount": 37,
+          "sources": [
+            "pitchfork2024"
+          ],
+          "identity": "confirmed",
+          "metadata": "confirmed",
+          "schemaDefects": [],
+          "factualFindings": [],
+          "boundaryFindings": [],
+          "claimCoverage": "All descriptive clauses supported; canonical Bandcamp supports identity and genre.",
+          "sourceAge": "2024 release limitation recorded.",
+          "minimalFix": null
+        },
+        {
+          "artistId": "708820545",
+          "artistName": "Swingin' Utters",
+          "verdict": "pass",
+          "vibeWordCount": 36,
+          "sources": [
+            "scene2013"
+          ],
+          "identity": "confirmed",
+          "metadata": "confirmed",
+          "schemaDefects": [],
+          "factualFindings": [],
+          "boundaryFindings": [],
+          "claimCoverage": "All descriptive clauses supported. Communal-chorus language summarizes recorded singalong writing, not observed audience behavior.",
+          "sourceAge": "2013 release limitation recorded.",
+          "minimalFix": null
+        }
+      ]
+    },
+    {
+      "output": "c",
+      "selfReportedSearchQueries": 5,
+      "selfReportedPageOpens": 8,
+      "tokenUsage": null,
+      "counts": {
+        "pass": 2,
+        "minorFix": 1,
+        "fail": 0,
+        "acceptedUnchanged": 2,
+        "recoverableAfterFix": 3
+      },
+      "batchAcceptance": "needs-provenance-qualification",
+      "records": [
+        {
+          "artistId": "78581369",
+          "artistName": "Modern Monsters",
+          "verdict": "pass",
+          "vibeWordCount": 43,
+          "sources": [
+            "modern2023",
+            "temple2023"
+          ],
+          "identity": "confirmed",
+          "metadata": "confirmed",
+          "schemaDefects": [],
+          "factualFindings": [],
+          "boundaryFindings": [],
+          "claimCoverage": "All musical descriptors supported across the two cited reviews; canonical homepage corroborates work.",
+          "sourceAge": "2023 release, newer than A/B; no current-show evidence.",
+          "minimalFix": null
+        },
+        {
+          "artistId": "36869837",
+          "artistName": "Sour Widows",
+          "verdict": "minor-fix",
+          "vibeWordCount": 45,
+          "sources": [
+            "pitchfork2024",
+            "post2020"
+          ],
+          "identity": "confirmed",
+          "metadata": "confirmed",
+          "schemaDefects": [],
+          "factualFindings": [],
+          "boundaryFindings": [],
+          "claimCoverage": "All phrases grounded in actual review text. Independent-source counting needs qualification.",
+          "provenanceFindings": [
+            {
+              "field": "gaps",
+              "finding": "Dan Goldin runs Exploding In Sound, which released the artist's later album. No evidence establishes relationship timing as of 2020 or proves the review was promotion.",
+              "minimalFix": "Disclose later label affiliation; count Post-Trash as qualified supplemental criticism and Pitchfork as the independent basis."
+            }
+          ],
+          "sourceAge": "2020/2024 releases; no current-show evidence.",
+          "minimalFix": "Add affiliation caveat, or omit Post-Trash and its unique folk characterization."
+        },
+        {
+          "artistId": "708820545",
+          "artistName": "Swingin' Utters",
+          "verdict": "pass",
+          "vibeWordCount": 46,
+          "sources": [
+            "ink2000",
+            "scene2013"
+          ],
+          "identity": "confirmed",
+          "metadata": "confirmed with explicit date-role caveat",
+          "schemaDefects": [],
+          "factualFindings": [],
+          "boundaryFindings": [],
+          "claimCoverage": "Combined synthesis supported; all added traits have source coverage.",
+          "sourceAge": "2000/2013 releases explicitly called older recordings.",
+          "minimalFix": null
+        }
+      ]
+    }
+  ],
+  "crossOutputSchemaNotes": [
+    "All required fields/enums present, JSON parses, 25-50 word bounds met.",
+    "ID string/number difference is normalization work, not a violation of a specified scalar type.",
+    "Research date recoverable from timestamps in task timezone; explicit researchedOn advisable for future schema.",
+    "Markdown counterparts and producer execution traces not included in audit input; neither certified."
+  ],
+  "accessFailures": [
+    {
+      "url": "https://ink19.com/2000/12/magazine/music-reviews/vhmd55-swingin-utters",
+      "channel": "shell Invoke-WebRequest",
+      "error": "No such host is known.",
+      "effect": "Supplementary date-markup check failed. Successful web-open text remains evidence; no fabricated markup or absence claim."
+    }
+  ],
+  "comparison": {
+    "preferredForCleanAcceptedCoverage": "b",
+    "reason": "Three accepted records at requested review-count threshold. C adds source richness but not artist coverage and needs affiliation qualification. A needs narrow content/provenance repair.",
+    "noUniversalModelRanking": true,
+    "noTokenEfficiencyConclusion": true
+  },
+  "integrationInstruction": "Do not import A until correction and independent re-audit. Qualify C Sour Widows before counting all sources as independent. Parent owns correction and integration."
+}

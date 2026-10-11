@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import ArtistVibeCard from "@/components/ui/ArtistVibeCard.js";
 import { useAppStore } from "@/stores/appStore.js";
 
 const ArtistDetailPage: React.FC = () => {
@@ -113,6 +114,7 @@ const ArtistDetailPage: React.FC = () => {
         </div>
 
         {/* Upcoming shows */}
+        <ArtistVibeCard vibe={artist.vibe} />
         {artist.upcomingEvents.length > 0 && (
           <div className="space-y-2">
             <h2 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">

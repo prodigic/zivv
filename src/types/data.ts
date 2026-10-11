@@ -70,6 +70,8 @@ export interface DataManifest {
     venues: SourceFileInfo;
     ingestion?: SourceFileInfo;
     venueSources?: SourceFileInfo;
+    eventPosters?: SourceFileInfo;
+    artistReviews?: SourceFileInfo;
   };
 
   // Schema version for compatibility

@@ -26,6 +26,8 @@ import { buildEventSlugRedirects } from "../ingestion/event-slug-redirects.js";
 import { applyVenueLocationCorrections } from "../ingestion/venue-location-corrections.js";
 import { applyProjectVenueDetails } from "../ingestion/venue-details.js";
 import { applyProjectVenueMaps } from "../ingestion/venue-maps.js";
+import { applyProjectEventPosters } from "../ingestion/event-posters.js";
+import { applyProjectArtistReviews } from "../ingestion/artist-reviews.js";
 import { namesForVerificationStatus } from "../ingestion/local-artist-verification.js";
 import type { LocalArtistVerificationLedger } from "../ingestion/local-artist-verification.js";
 import { withIngestionLock } from "../ingestion/lock.js";
@@ -77,7 +79,14 @@ export class ETLProcessor {
       }
       applyProjectVenueDetails(this.projectRoot, venues);
       applyProjectVenueMaps(this.projectRoot, venues);
+      const posters = applyProjectEventPosters(
+        this.projectRoot,
+        events,
+        venues,
+        artists
+      );
       this.validateReferences(events, artists, venues);
+      const staleReviews = applyProjectArtistReviews(this.projectRoot, artists);
       this.populateSummaries(events, artists, venues, start);
       const indexes = DataIndexer.buildIndexes(events, artists, venues);
       indexes.eventSlugRedirects = buildEventSlugRedirects(
@@ -166,6 +175,12 @@ export class ETLProcessor {
           events: this.sourceInfo("events.txt"),
           venues: this.sourceInfo("venues.txt"),
           venueSources: this.sourceInfo("venue-sources.json"),
+          ...(existsSync(join(this.projectRoot, "data/artist-reviews.json"))
+            ? { artistReviews: this.sourceInfo("artist-reviews.json") }
+            : {}),
+          ...(existsSync(join(this.projectRoot, "data/event-posters.json"))
+            ? { eventPosters: this.sourceInfo("event-posters.json") }
+            : {}),
         },
       };
       const weeklyPath = join(
@@ -229,7 +244,16 @@ export class ETLProcessor {
         success: true,
         manifest,
         errors: [],
-        warnings: [],
+        warnings: [
+          ...posters.stale.map((eventId) => ({
+            type: "data-quality" as const,
+            message: `Poster skipped because show identity changed: ${eventId}`,
+          })),
+          ...staleReviews.map((artistId) => ({
+            type: "data-quality" as const,
+            message: `Review skipped because artist identity changed: ${artistId}`,
+          })),
+        ],
         stats: {
           sourceEvents: events.length,
           sourceVenues: venues.length,
@@ -338,6 +362,7 @@ export class ETLProcessor {
         priceMin: e.priceMin,
         priceMax: e.priceMax,
         createdAtEpochMs: e.createdAtEpochMs,
+        ...(e.poster ? { poster: e.poster } : {}),
         ...provenance,
       };
       venue.upcomingEventCount++;

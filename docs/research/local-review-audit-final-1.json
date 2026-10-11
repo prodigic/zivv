@@ -1,0 +1,248 @@
+{
+  "checkedOn": "2026-10-10",
+  "seed": "zivv-reviews-final-1-20261010",
+  "completed": 163,
+  "randomCount": 17,
+  "summary": {
+    "sampled": 20,
+    "pass": 13,
+    "minor": 7,
+    "fail": 0,
+    "acceptedSummaries": 7,
+    "acceptedSummariesPass": 7
+  },
+  "records": [
+    {
+      "artistId": 1945125271,
+      "artistName": "Blood Rave",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.idieyoudie.com/2025/01/29/blood-rave-exponential-decay/"
+      ],
+      "reason": "Reused unchanged checkpoint1 independent original check: exact California project/Bandcamp; darkwave/EBM, vocals, synths, percussion and reservation faithfully summarized.",
+      "evidenceMode": "reused unchanged independent checkpoint1",
+      "evidenceFile": ".cache/sf-poster-audit-live/6031d356b651.html"
+    },
+    {
+      "artistId": 1277221292,
+      "artistName": "Normal Weirds",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.destroyexist.com/2025/01/normal-weirds-peter-frantic.html"
+      ],
+      "reason": "Live original: East Bay Justin/Merry duo, ZR/January12 2025, single Peter Frantic. Genres, pace, humor and alter ego all supported.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/40757eecbba9.html"
+    },
+    {
+      "artistId": 1576228084,
+      "artistName": "Victim Nation & The Radishes",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [],
+      "reason": "Narrow combined-billing query did not establish original criticism. Do not apply a solo Radishes review to the combined catalog act.",
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null
+    },
+    {
+      "artistId": 1933281492,
+      "artistName": "Cross Checked",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://www.sacramentopunkshows.com/p/words-on-sounds-summer-2026.html"
+      ],
+      "reason": "Missed live original Words on Sounds Summer2026 entry9/24 reviews Demo26: fast youth-crew hardcore, bass/drum breaks, tension and breakdowns; identifies NorthernCalifornia members Whoreified/Panic. Author/day not established; parent should retain uncertainty rather than invent metadata.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/830300f76219.html"
+    },
+    {
+      "artistId": 28712912,
+      "artistName": "dj Wonway Posibul",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [],
+      "reason": "Narrow query found radio interviews, releases and promotional performance listings; no sufficient original criticism established. Retain bounded negative.",
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null
+    },
+    {
+      "artistId": 196814077,
+      "artistName": "Hailey Picardi",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://www.melodicmag.com/news/new-music/hailey-picardi-is-reminded-of-what-once-was-on-losing-u/"
+      ],
+      "reason": "Missed original Melodic single criticism: Christine Sloman/September18 2026, losing u. Acoustic strumming and soft disappointed vocals directly described. Identity/discography agrees with AllMusic anchor; promotional context does not erase the short original sonic assessment.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/0156dead20b9.html"
+    },
+    {
+      "artistId": 1971361560,
+      "artistName": "Rome",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.sputnikmusic.com/review/55045/Rome-Ramirez-Dedication-EP/"
+      ],
+      "reason": "Live original tmagistrelli/February13 2013 review supports instrumentation, genre blend and production criticism. Assigned Rock Cellar identity anchor independently opened and confirms Rome Ramirez/Sublime With Rome, resolving short-name ambiguity.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/b2ae81ed3dc2.html"
+    },
+    {
+      "artistId": 1235413682,
+      "artistName": "Lost Puppy Forever",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://allmusicmagazine.com/the-dickies-invade-the-ivy-room-in-albany-california-november-13-2021/"
+      ],
+      "reason": "Missed original live review: Matte Erickson/November18 2021, Ivy Room November13 2021; exact assigned Year of the Dog Bandcamp linked. Bass/drums duo, energetic vocals/set and crowd reaction supported.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/98fef2a6b803.html"
+    },
+    {
+      "artistId": 375205455,
+      "artistName": "Palina And The Cave",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [],
+      "reason": "Bounded exact-name query did not establish attributable original criticism; retain null.",
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null
+    },
+    {
+      "artistId": 692912443,
+      "artistName": "Cult Mind",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.maximumrocknroll.com/band/cult-mind/"
+      ],
+      "reason": "Live original Eric Anderson identifies San Jose Cult Mind/Infected, rumbling bass/thrashy guitars/forceful vocals and lack of innovation. MRR506 July2025; null exact day correct.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/18ed1c4d268b.html"
+    },
+    {
+      "artistId": 276364424,
+      "artistName": "Parliament Of Trees",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [],
+      "reason": "Narrow query returns Canadian label and unrelated Missing Earth song, not the assigned artist; correct to withhold namesakes.",
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null
+    },
+    {
+      "artistId": 376956363,
+      "artistName": "The Ink Bats",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://www.stereoembersmagazine.com/the-fifteenth-next-twenty-current-post-punk-bands-you-should-know-about/"
+      ],
+      "reason": "Original Stereo Embers critical roundup found, Dave Cantrell: exact Oakland band and matching members/Loss, evaluates psych-tinged darkwave repertoire. General critical profile, not a specific live show; parent must decide schema basis before adding summary.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/ce59f5e143ea.html"
+    },
+    {
+      "artistId": 862305137,
+      "artistName": "Miss Hits",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.metrosiliconvalley.com/miss-hits-being-misfits/"
+      ],
+      "reason": "Opened Metro original: June28 2023 Jeanette Prather piece previews Night Market, rather than reviewing a specific work/performance. Retaining no-review status is reasonable under current review-only boundary.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/2fde01f3e9f5.html"
+    },
+    {
+      "artistId": 781285369,
+      "artistName": "Carmensixteen",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://www.sfgate.com/sf-culture/article/quintessential-tv-actor-sf-crowd-character-20040697.php"
+      ],
+      "reason": "Assigned SFGate anchor itself contains Timothy Karoff first-person Carmen Sixteen/Neck of the Woods paragraph: repeat listening to three songs, energetic audience/moshing. January21 2025 article; narrow live-context summary possible, but no unsupported instrumental claims.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/33ce512af51c.html"
+    },
+    {
+      "artistId": 1267102423,
+      "artistName": "Spacemoth",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.undertheradarmag.com/reviews/inward_eye_spacemoth"
+      ],
+      "reason": "Direct HTTP403; web-retrieved original full review confirms Matt the Raven/July6 2026, Maryam Qudus, Inward Eye and every sonic claim. Correct release basis.",
+      "evidenceMode": "web-retrieved original; direct HTTP403",
+      "evidenceFile": null
+    },
+    {
+      "artistId": 739164244,
+      "artistName": "Mourning Mountains",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://glassefactory.com/familydaycation-21/"
+      ],
+      "reason": "Original Glasse Factory review found: Helana Michelle/August6 2021, Family Daycation performance. Describes melancholy two-piece and emotive vocals. Assigned Bandcamp confirms BayArea sad-pop/indie-hardcore, but historic venue anchor lists four members; retain as identity-arbitration candidate until performance lineup bridged.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/3dc445676ae8.html"
+    },
+    {
+      "artistId": 149139217,
+      "artistName": "Rexx Life Raj",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.kqed.org/arts/13936865/berkeleys-rexx-life-raj-administers-medicine-for-the-soul-on-california-poppy-3"
+      ],
+      "reason": "Live original Alan Chazaro/October24 2023 explicitly identifies Berkeley artist; acoustic textures, subdued vocals and emotionally reflective soulful rap supported. Updated2025 not confused with publication.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/46a62fdd764e.html"
+    },
+    {
+      "artistId": 995732140,
+      "artistName": "Chuck Johnson",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://beatsperminute.com/album-review-chuck-johnson-the-cinder-grove/"
+      ],
+      "reason": "Live original Chase McMullen/February19 2021 confirms same pedal-steel artist and Cinder Grove; meditative ambient/drone, pulsing tones and deliberate twang supported.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/7cb99c64ad02.html"
+    },
+    {
+      "artistId": 333150571,
+      "artistName": "SF Symphony",
+      "inputStatus": "blocked",
+      "status": "minor",
+      "sourceUrls": [
+        "https://classicalvoiceamerica.org/2026/06/29/as-gallic-spirit-chases-clouds-sf-symphony-patrons-revel-in-light/"
+      ],
+      "reason": "SFCV indexed host times out/canonical403, confirming reported access gap. Alternative live original Classical Voice North America Richard S.Ginell/June29 2026 evaluates June25 Davies Hall performance under Deneve: brisk transparent textures and organ finale. Exact orchestra; can resolve blocked status with this source.",
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/c9f5f368cd7b.html"
+    },
+    {
+      "artistId": 1370194942,
+      "artistName": "Indianna Hale And The Dust Collector",
+      "inputStatus": "identity-uncertain",
+      "status": "pass",
+      "sourceUrls": [],
+      "reason": "Focused ensemble query finds solo/collaborative credits but no review of this exact billed ensemble. Correct to withhold solo Indianna Hale summary from combined act.",
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null
+    }
+  ],
+  "method": "17 seeded random plus3 status/positive-floor additions. Reuse unchanged BloodRave check; six other original positives opened independently. Negatives each received bounded exact/locality query and direct original followup where located. No producer identity used.",
+  "methodCorrection": "Accepted claim quality passes; negative recall remains weak. Open assigned evidence anchors and perform a locality or release-title followup; do not generalize one-query not-found to no review exists. Original critical roundups and personnel differences require parent arbitration; no registry mutation made."
+}

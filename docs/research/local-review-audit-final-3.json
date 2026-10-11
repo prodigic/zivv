@@ -1,0 +1,215 @@
+{
+  "checkedOn": "2026-10-10",
+  "seed": "zivv-reviews-final-3-20261010",
+  "completed": 163,
+  "randomCount": 17,
+  "summary": {
+    "sampled": 17,
+    "pass": 12,
+    "minor": 5,
+    "fail": 0,
+    "acceptedSummaries": 8,
+    "acceptedClaimsPass": 8,
+    "acceptedRecordPass": 7,
+    "acceptedMetadataMinor": 1,
+    "negativeRecoveries": 4
+  },
+  "records": [
+    {
+      "artistId": 1539683138,
+      "artistName": "The Green Door",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://usrockermusic.com/2017/11/21/green-door-scores-with-wolf-in-the-fold/"
+      ],
+      "evidenceMode": "web-retrieved original; direct HTTP403",
+      "evidenceFile": null,
+      "reason": "Web-retrieved original (direct HTTP403) confirms Donna Balancia/November21 2017, SF band and Carnahan/Abell lineup. Punk psychedelia, surf, fuzzy title song, rhythm, western elements and slower EP tracks supported."
+    },
+    {
+      "artistId": 2133815207,
+      "artistName": "Sourflower",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [],
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null,
+      "reason": "Locality-qualified search confirms official SF Bay Area band, but no matching original criticism. Unrelated Sourflower results withheld; bounded negative remains appropriate."
+    },
+    {
+      "artistId": 792649992,
+      "artistName": "O'Craven",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://scoundrelsinn.com/2018/08/27/album-review-resurrection/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/b077fcc3ec7f.html",
+      "reason": "Official press page directly links an accessible original album review: Scoundrels Inn, jackgonzo/August27 2018, Resurrection. Exact SanJose band and official website; full recovery row supplied."
+    },
+    {
+      "artistId": 363486761,
+      "artistName": "Sutros",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.maximumrocknroll.com/band/sutros/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/01275b0a500c.html",
+      "reason": "Live original explicitly identifies SF trio/Acrid Tongue, Biff Bifaro, MRR492 May2024. Genres, playing/recording praise and qualified length/free-jazz reservations faithfully represented; null exact date appropriate."
+    },
+    {
+      "artistId": 1173085903,
+      "artistName": "Badvril",
+      "inputStatus": "review-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://notransmission.com/single-reviews-3-july-2022-ultraflex-foreign-television-public-circuit-badvril-gemma-rogers/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/d595e8ea07c0.html",
+      "reason": "All sonic claims and July3 2022 date pass; original identifies California artist and links exact Tall Sam Bandcamp. Visible byline No Transmission is available, while packet author is null. Metadata correction supplied."
+    },
+    {
+      "artistId": 757443420,
+      "artistName": "Look Away",
+      "inputStatus": "blocked",
+      "status": "minor",
+      "sourceUrls": [
+        "https://diyconspiracy.net/one-paragraph-reviews-vol-1/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/182564fcd05e.html",
+      "reason": "Previously blocked original now opens live: DIY Conspiracy, Mittens XVX/January30 2026, Oakland Look Away Demo. Assigned NoEcho original independently confirms Oakland band/November2025 demo. Recovery row supplied."
+    },
+    {
+      "artistId": 1656376636,
+      "artistName": "Heartless Folk",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://thebadcopy.com/show-reviews/heartless-folk-false-positives-ash-williams-baron-bandini-dearly-divided-in-oakland/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/c40d2d762b31.html",
+      "reason": "Focused release-title query found original Bad Copy news page linking an original live review, July12 2017 Jen Louie. Exact assigned Bandcamp linked; July8 Night Light performance includes energetic short three-piece set and shared-mic ending. Recovery row supplied."
+    },
+    {
+      "artistId": 205041702,
+      "artistName": "Seized Up",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.maximumrocknroll.com/band/seized-up/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/a2d602d1a14d.html",
+      "reason": "Live original confirms Clifford Dinsmore/BLAST/Good Riddance/Nerve Agents/All You Can Eat identity, Matt McCracken, MRR456 May2021. Bass-driven anger, fast straightforward hardcore and enthusiastic recommendation supported."
+    },
+    {
+      "artistId": 1241639012,
+      "artistName": "Maiden Mare",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [],
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null,
+      "reason": "Bounded name/music query returned unrelated fiction/horse results, no matching original criticism. Retain null, not a claim that none exists."
+    },
+    {
+      "artistId": 103257405,
+      "artistName": "Irrevria",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [],
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null,
+      "reason": "Narrow query found assigned Apple Music artist description, not original criticism. No unsupported summary added."
+    },
+    {
+      "artistId": 1577663035,
+      "artistName": "Blue Zero",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://thefirenote.com/reviews/blue-zero-colder-shade-blue-album-review/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/7193ea535c6b.html",
+      "reason": "Live original Thomas Wilde/October11 2024 identifies Oakland Chris Natividad and links exact BlueZero Bandcamp; chiming/fuzzy guitars, propulsive rhythms, submerged vocals and spacious introspection all supported."
+    },
+    {
+      "artistId": 1907727683,
+      "artistName": "Hollow Minds",
+      "inputStatus": "not-found",
+      "status": "minor",
+      "sourceUrls": [
+        "https://loudwomen.org/2026/05/31/hollow-minds-take-a-promising-first-step-with-kiss-me-goodnight/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/696e41685041.html",
+      "reason": "Missed accessible original: LOUD WOMEN, Ana/May31 2026, Kiss Me Goodnight. Explicit SF identity and hollowminds.band social link agree with assigned anchor. Detailed original instrumentation/arrangement criticism; recovery supplied."
+    },
+    {
+      "artistId": 1144396706,
+      "artistName": "Death Angel",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://www.angrymetalguy.com/death-angel-humanicide-review/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/43557629c78b.html",
+      "reason": "Live original Steel Druhm/May30 2019 identifies exact BayArea lineup/Humanicide. Thrash riffs, traditional harmonies, vocal range, blastbeats and restrained piano all supported; release scope retained."
+    },
+    {
+      "artistId": 1189105728,
+      "artistName": "Kreayshawn",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://pitchfork.com/reviews/albums/16912-somethin-bout-kreay/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/8adf60439dd6.html",
+      "reason": "Live original Carrie Battan/September21 2012 explicitly identifies Oakland Natassia Zolot. Half-sung/spoken delivery, fizzy electronic beats and strongly negative assessment with Gucci Gucci exception accurately retained."
+    },
+    {
+      "artistId": 1169158587,
+      "artistName": "Melvin Seals And JGB. Grahame Lesh",
+      "inputStatus": "identity-uncertain",
+      "status": "pass",
+      "sourceUrls": [],
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null,
+      "reason": "Narrow joint-name query found festival coverage and other collaborations, not review of this exact Melvin Seals/JGB/Grahame Lesh catalog configuration. Conservative withholding remains justified."
+    },
+    {
+      "artistId": 1645732093,
+      "artistName": "Liz Lewis & Crying Uncle",
+      "inputStatus": "not-found",
+      "status": "pass",
+      "sourceUrls": [],
+      "evidenceMode": "bounded independent search",
+      "evidenceFile": null,
+      "reason": "Narrow joint-name query did not establish original criticism of this exact Liz Lewis/Crying Uncle configuration. Do not apply one constituent act review."
+    },
+    {
+      "artistId": 836098101,
+      "artistName": "Otoliths",
+      "inputStatus": "review-found",
+      "status": "pass",
+      "sourceUrls": [
+        "https://rosyoverdrive.com/2026/03/19/pressing-concerns-gladie-otoliths-this-house-filth-is-eternal/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/614d2a8352d5.html",
+      "reason": "Live original March19 2026 identifies Oakland Tom Smith ensemble and links exact Lithos Bandcamp. Jangle/fuzz pop, spacier second side, melodic guitars/choruses and restrained builds all supported."
+    }
+  ],
+  "method": "All eight cited originals opened independently; US Rocker via web original after direct403, other seven via live HTTP. Each negative received bounded name/locality/release query, with directly linked original followup where available. No producer model inferred.",
+  "methodCorrection": "Accepted identity and claim accuracy passes. Negative recall remains weak: four of nine negative samples yielded usable original criticism after bounded followup. Check official press pages, linked related original reviews, and direct HTTP when web opening fails. Combined-artist configurations remain withheld."
+}
