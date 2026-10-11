@@ -1,0 +1,2952 @@
+[
+  {
+    "artistId": 1420265099,
+    "name": "UFO Baby",
+    "sourceUrl": "https://ufo-baby.bandcamp.com/album/ufo-baby-ep",
+    "imageUrl": "https://f4.bcbits.com/img/0033546932_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band's Bandcamp profile identifies UFO Baby as San Francisco, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://ufo-baby.bandcamp.com/album/ufo-baby-ep"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://ufo-baby.bandcamp.com/album/ufo-baby-ep",
+    "priorImageUrl": "https://f4.bcbits.com/img/0033546932_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://ufo-baby.bandcamp.com/album/ufo-baby-ep",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://ufo-baby.bandcamp.com/album/ufo-baby-ep",
+        "imageUrl": "https://f4.bcbits.com/img/0033546932_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 693749938,
+    "name": "Powerhouse",
+    "sourceUrl": "https://powerhouseobhc.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0026304195_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist biography/profile identifies Oakland, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://powerhouseobhc.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://powerhouseobhc.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0026304195_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://powerhouseobhc.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.instagram.com/powerhouseobhc/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://powerhouseobhc.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0026304195_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "http://www.instagram.com/powerhouseobhc/",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-19/273202567_531033975025900_1018660837580951132_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=106&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy41OTcuQzMifQ%3D%3D&_nc_ohc=3lDGD9zKtjMQ7kNvwFu5JHP&_nc_oc=AdqyYr_3WIf1YsluzUW54DVLHK02jqgmodwHLXQ2Io50weE7q9VNwbHPYyXeu3o6474&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQOx0n-CZXKrPdeMoVbN71d2yt-T-7vcsI2YPYHclGTDrA&oe=6AD0D1A5",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 39550773,
+    "name": "Adrian West Band",
+    "sourceUrl": "https://www.adrianwest.com/",
+    "imageUrl": "http://www.adrianwest.com/Photos/IMG_7011_20pct_crop.jpg",
+    "kind": "bandleader-portrait",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist profile explicitly describes an Oakland ensemble.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://www.adrianwest.com/. Browser review confirms a photographic performer image.",
+      "identitySources": ["https://adrianwest.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Selected image is Adrian West with guitar, not a full-band photo. Caption as bandleader portrait; the official website is directly linked from the band profile.",
+    "priorSourceUrl": "https://adrianwest.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0045527914_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://adrianwest.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.adrianwest.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.facebook.com/adrianwestband",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/adrianwestband",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://adrianwest.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0045527914_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/adrianwestband",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-19/131485826_2938901776367958_772622793987946404_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=103&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4zODMuQzMifQ%3D%3D&_nc_ohc=X13uk3i78KQQ7kNvwEOmlpU&_nc_oc=AdpFCKQ1tSgGdtbZ1YV72Wz1dKAn58vy93hf5XsNqNQUQgZqqV8NGmjTABN170BcRC4&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQMM4xfwX6J4uNjwGIQ452tRCPjkCxGYgyXylo6N8IqAIA&oe=6AD0D2F2",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.adrianwest.com/",
+        "imageUrl": "http://www.adrianwest.com/Photos/IMG_7011_20pct_crop.jpg",
+        "origin": "official-site-photo",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 460824948,
+    "name": "Euthanized",
+    "sourceUrl": "https://euthanizedsf.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0041295244_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band's Bandcamp bio describes Euthanized as fuzzy hardcore punk from San Francisco.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://euthanizedsf.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://euthanizedsf.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0041295244_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://euthanizedsf.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://euthanizedsf.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0041295244_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 479257201,
+    "name": "Otioxi",
+    "sourceUrl": "https://otioxi.bandcamp.com/album/demos-25",
+    "imageUrl": null,
+    "kind": "none",
+    "visualReview": "No image candidate rendered/identified in checked sources; HTML/source metadata reviewed.",
+    "identityEvidence": {
+      "catalogEvidence": "Otioxi’s official Bandcamp profile lists San Francisco, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://otioxi.bandcamp.com/album/demos-25"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "no-photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://otioxi.bandcamp.com/album/demos-25",
+    "priorImageUrl": null,
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://otioxi.bandcamp.com/album/demos-25",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": []
+  },
+  {
+    "artistId": 648696801,
+    "name": "Secret Family",
+    "sourceUrl": "http://secretfamilytime.com/photos",
+    "imageUrl": "http://images.zoogletools.com/s:bzglfiles/u/1082333/0f40aff3e015cf21f210d4bc9514ad9d7d53b09d/original/img-4348.jpeg/!!/b%3AW1sicmVzaXplIiw2NDBdLFsibWF4Il0sWyJ3ZSJdXQ%3D%3D/meta%3AeyJzcmNCdWNrZXQiOiJiemdsZmlsZXMifQ%3D%3D.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "The band’s Bandcamp profile identifies Secret Family with Oakland. https://secretfamilyband.bandcamp.com/album/secret-family-ep",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page http://secretfamilytime.com/photos. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://secretfamilyband.bandcamp.com/album/secret-family-ep"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://secretfamilyband.bandcamp.com/album/secret-family-ep",
+    "priorImageUrl": "https://f4.bcbits.com/img/0047470723_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://secretfamilyband.bandcamp.com/album/secret-family-ep",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://secretfamilytime.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://secretfamilytime.com/photos",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://secretfamilyband.bandcamp.com/album/secret-family-ep",
+        "imageUrl": "https://f4.bcbits.com/img/0047470723_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "http://secretfamilytime.com/",
+        "imageUrl": "https://images.zoogletools.com/s:bzglfiles/u/1082333/ec7e55da41879c24f5a066e5da173f8a26d458f3/original/img-1810.jpg/!!/meta%3AeyJzcmNCdWNrZXQiOiJiemdsZmlsZXMifQ%3D%3D.jpg",
+        "origin": "official-site-photo",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "http://secretfamilytime.com/photos",
+        "imageUrl": "http://images.zoogletools.com/s:bzglfiles/u/1082333/0f40aff3e015cf21f210d4bc9514ad9d7d53b09d/original/img-4348.jpeg/!!/b%3AW1sicmVzaXplIiw2NDBdLFsibWF4Il0sWyJ3ZSJdXQ%3D%3D/meta%3AeyJzcmNCdWNrZXQiOiJiemdsZmlsZXMifQ%3D%3D.jpg",
+        "origin": "final-followup",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 1442690916,
+    "name": "Big Tractor",
+    "sourceUrl": "https://folkpunkkesha.bandcamp.com/track/grow-a-pear",
+    "imageUrl": "https://f4.bcbits.com/img/0040045033_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The artist’s Bandcamp describes Big Tractor as San Francisco farmer-folk-punk. https://folkpunkkesha.bandcamp.com/track/grow-a-pear",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://folkpunkkesha.bandcamp.com/track/grow-a-pear"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://folkpunkkesha.bandcamp.com/track/grow-a-pear",
+    "priorImageUrl": "https://f4.bcbits.com/img/0040045033_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://folkpunkkesha.bandcamp.com/track/grow-a-pear",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://folkpunkkesha.bandcamp.com/track/grow-a-pear",
+        "imageUrl": "https://f4.bcbits.com/img/0040045033_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1424007461,
+    "name": "Mommy Mommy",
+    "sourceUrl": "https://www.instagram.com/m0mmym0mmy/",
+    "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-19/731045038_18058975709746205_6672120676579802965_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=102&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=uTSSAQdjmUkQ7kNvwFtMLW7&_nc_oc=AdorRL9ZsV0snvq-bbJ8ZHxN5aBVNF58AhldyLxI56-zvpuGEUAh6ZW24-oNiV-3mSY&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=9tAz2yVd9_S2iz5xPgsOig&_nc_ss=7c60f&oh=00_AQMVlBc40y3ciV_Ysdb7cKGyRx3DhVWoxGRP9C8YjGSEYw&oe=6AD0BA41",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Band’s own Bandcamp says the act is based in Oakland; supports inherited local label.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://www.instagram.com/m0mmym0mmy/. Browser review confirms a photographic performer image.",
+      "identitySources": ["https://mommymommy.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Selected official Instagram avatar is a band photograph, but only the observed 100x100 URL is available. Signed social-CDN URLs are temporary and should be re-resolved before use.",
+    "priorSourceUrl": "https://mommymommy.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0036327774_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://mommymommy.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/m0mmym0mmy/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://mommymommy.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0036327774_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/m0mmym0mmy/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-19/731045038_18058975709746205_6672120676579802965_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=102&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=uTSSAQdjmUkQ7kNvwFtMLW7&_nc_oc=AdorRL9ZsV0snvq-bbJ8ZHxN5aBVNF58AhldyLxI56-zvpuGEUAh6ZW24-oNiV-3mSY&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=9tAz2yVd9_S2iz5xPgsOig&_nc_ss=7c60f&oh=00_AQMVlBc40y3ciV_Ysdb7cKGyRx3DhVWoxGRP9C8YjGSEYw&oe=6AD0BA41",
+        "origin": "linked-profile",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 540860894,
+    "name": "Mortal",
+    "sourceUrl": "https://mortaldeth.bandcamp.com/merch",
+    "imageUrl": "https://f4.bcbits.com/img/0036971245_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The current death-metal band billed with Brujeria lists San Jose, California on its official Bandcamp and is identified as San Jose-based in Metal Archives.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://mortaldeth.bandcamp.com/merch",
+        "https://www.metal-archives.com/bands/Mortal/3540550106"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://mortaldeth.bandcamp.com/merch",
+    "priorImageUrl": "https://f4.bcbits.com/img/0036971245_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://www.metal-archives.com/bands/Mortal/3540550106",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "Response status code does not indicate success: 403 (Forbidden)."
+      },
+      {
+        "sourceUrl": "https://mortaldeth.bandcamp.com/merch",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/mortaldeathmetal?igsh=MzRlODBiNWFlZA==",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://mortaldeth.bandcamp.com/merch",
+        "imageUrl": "https://f4.bcbits.com/img/0036971245_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/mortaldeathmetal?igsh=MzRlODBiNWFlZA==",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/398362899_321938387136500_5937864622900379290_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=102&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=29NvtkLIJU8Q7kNvwHy5KxD&_nc_oc=Adoh5i-yT-JXYgv4kJmCsz-vax68gm5taKlb7xbv4vDXtTCquZW3soRZpR8beaTbKT4&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQPcTY2Bcq2PxN_b_PfP96sCzV6iMdJ6KEtEvkXarFCYZA&oe=6AD0C004",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 232551367,
+    "name": "Strawberry Panic",
+    "sourceUrl": "https://strawberrypanic10000.bandcamp.com/album/gape-horno",
+    "imageUrl": "https://f4.bcbits.com/img/0044472142_21.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Record label’s artist list and an independent profile identify the act as San Francisco-based.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://strawberrypanic10000.bandcamp.com/album/gape-horno. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://cherubdreamrecords.bandcamp.com/",
+        "https://www.analoguetrash.com/blog/strawberry-panic-ass-victim"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "The initial cited Bandcamp belongs to label Cherub Dream, whose generic logo does not depict Strawberry Panic. Artist link in the cited feature led to strawberrypanic10000.bandcamp.com and the corresponding official social account; selected photo is from that exact artist profile.",
+    "priorSourceUrl": "https://cherubdreamrecords.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0028687338_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://cherubdreamrecords.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.analoguetrash.com/blog/strawberry-panic-ass-victim",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://cherubdream.online/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/strawberrypanic10000/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://strawberrypanic10000.bandcamp.com/album/gape-horno",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://cherubdreamrecords.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0028687338_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/strawberrypanic10000/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-19/778103325_17924298900413161_8597079422931252374_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=109&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=V8QyUiPNe0kQ7kNvwFdlvnJ&_nc_oc=Adq-ZBllRCBErNzKQXfFM7_5TrIxAaYgUEIy_ZPw5k5uxVJiUvmONj0KvRfQVma0m9E&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=pJFzVI0Dy4S7UjEm7PA8zA&_nc_ss=7c60f&oh=00_AQOi_3_17-j1kclbDJ_EciXSywyNoq0Qi8SgJ2pntHL-3w&oe=6AD0BE2D",
+        "origin": "final-followup",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://strawberrypanic10000.bandcamp.com/album/gape-horno",
+        "imageUrl": "https://f4.bcbits.com/img/0044472142_21.jpg",
+        "origin": "artist-profile",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 992591292,
+    "name": "Strange Ones",
+    "sourceUrl": "https://wearethestrangeones.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0038616534_10.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp lists Oakland; Bottom of the Hill says the band is from Oakland.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://wearethestrangeones.bandcamp.com/. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://wearethestrangeones.bandcamp.com/",
+        "https://www.bottomofthehill.com/20260521.html"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://wearethestrangeones.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0038616534_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://www.bottomofthehill.com/20260521.html",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://wearethestrangeones.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://linktr.ee/strangeones",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://wearethestrangeones.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0038616534_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "photo"
+      },
+      {
+        "sourceUrl": "https://linktr.ee/strangeones",
+        "imageUrl": "https://ugc.production.linktr.ee/3e9cc60f-17e8-4838-bd9c-c3f2c857b3da_IMG-4967.jpeg?io=true&size=avatar-v3_0",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1797330895,
+    "name": "Credit Electric",
+    "sourceUrl": "https://creditelectric.bandcamp.com/album/credit-electric-3",
+    "imageUrl": "https://f4.bcbits.com/img/0032614441_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist biography identifies origin or base as Oakland, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://creditelectric.bandcamp.com/album/credit-electric-3"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "Official website, Instagram, and directly linked Spotify artist page expose artwork/logos, not a verified performer photograph.",
+    "priorSourceUrl": "https://creditelectric.bandcamp.com/album/credit-electric-3",
+    "priorImageUrl": "https://f4.bcbits.com/img/0032614441_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://creditelectric.bandcamp.com/album/credit-electric-3",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://creditelectric.org/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/creditelectric/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://open.spotify.com/artist/5POatvLAZTsSIV7QYLMDXU",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://creditelectric.bandcamp.com/album/credit-electric-3",
+        "imageUrl": "https://f4.bcbits.com/img/0032614441_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/creditelectric/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/489591569_636657805898903_4705169846728000450_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=104&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=q7daGb4sIpIQ7kNvwEAq0Vq&_nc_oc=Ado7qjxGLlExI21hBRVNVc-Tt7TLgPDKxA5FBd5nvOia_Cpdmr594xftUEASiWxuf_A&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQNKj3HrIPWUmJN42D54J8HGBqQHIvPgmACMZH_180748A&oe=6AD0B68A",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://open.spotify.com/artist/5POatvLAZTsSIV7QYLMDXU",
+        "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb67daec61bfa5615eb3e7714b",
+        "origin": "final-followup",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 995736401,
+    "name": "Djuna",
+    "sourceUrl": "https://djunaband650.bandcamp.com/album/woodland",
+    "imageUrl": "https://f4.bcbits.com/img/0040584195_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist biography or local reporting identifies origin or home scene as San Mateo, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://djunaband650.bandcamp.com/album/woodland"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://djunaband650.bandcamp.com/album/woodland",
+    "priorImageUrl": "https://f4.bcbits.com/img/0040584195_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://djunaband650.bandcamp.com/album/woodland",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://djunaband650.bandcamp.com/album/woodland",
+        "imageUrl": "https://f4.bcbits.com/img/0040584195_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 183257584,
+    "name": "Midheaven",
+    "sourceUrl": "https://midheavenband.bandcamp.com/album/portals",
+    "imageUrl": "https://f4.bcbits.com/img/0039918210_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band’s official Bandcamp lists San Francisco as its location and says its members met in the city.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://midheavenband.bandcamp.com/album/portals"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://midheavenband.bandcamp.com/album/portals",
+    "priorImageUrl": "https://f4.bcbits.com/img/0039918210_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://midheavenband.bandcamp.com/album/portals",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://midheavenband.bandcamp.com/album/portals",
+        "imageUrl": "https://f4.bcbits.com/img/0039918210_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1375198389,
+    "name": "Super Apes",
+    "sourceUrl": "https://superapes2.bandcamp.com/album/kill-the-humans",
+    "imageUrl": "https://f4.bcbits.com/img/0039095431_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist Bandcamp profile identifies Oakland.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://superapes2.bandcamp.com/album/kill-the-humans"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://superapes2.bandcamp.com/album/kill-the-humans",
+    "priorImageUrl": "https://f4.bcbits.com/img/0039095431_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://superapes2.bandcamp.com/album/kill-the-humans",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://superapes2.bandcamp.com/album/kill-the-humans",
+        "imageUrl": "https://f4.bcbits.com/img/0039095431_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 900824944,
+    "name": "Moondrops",
+    "sourceUrl": "https://themoondrops.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0037817525_10.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "The official Bandcamp says the band is SF-based; Cafe du Nord calls them a local Bay Area band.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://themoondrops.bandcamp.com/. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://themoondrops.bandcamp.com/",
+        "https://cafedunord.com/tm-attraction/the-moondrops/"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Alias verified: The Moondrops Bandcamp describes SF band Hussain Khan, Craig Lager, Alex Bru, Josh May. Its linked @themoondropsofficial account uses the same four-person photo. Catalog Moondrops and artist The Moondrops are the same act.",
+    "priorSourceUrl": "https://themoondrops.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0037817525_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://themoondrops.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://cafedunord.com/tm-attraction/the-moondrops/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/themoondropsofficial/?hl=en",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.facebook.com/themoondropsmusic",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://twitter.com/themoondrops?lang=en",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://themoondrops.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0037817525_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "photo"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/themoondropsofficial/?hl=en",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-19/465755091_1338797754149681_2861728841756870205_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=111&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=VGaw6Fs5IQcQ7kNvwGHHbiS&_nc_oc=AdqBgE_hRC0KAshEY1XiT_c9oKO89vUx3sViK7hJvyjn_D1Ms51n4CmSRxi5UJ_2O0A&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQN0G7xidMG_pbE0yeDtV0KWqEobm0XraCP7XCrXp-x94A&oe=6AD0B31B",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 634684427,
+    "name": "Ex-Juncos",
+    "sourceUrl": "https://www.ex-juncos.com/epk",
+    "imageUrl": "https://static.wixstatic.com/media/5acfea_1989f871df1c4764bd5d6a2390b37ef7~mv2.jpg/v1/fill/w_465,h_330,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/_DSC8715%20ExJbkBest_JPG.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Ex-Juncos' Bandcamp identifies the act as Oakland, California; its official site links the same act and catalog.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://www.ex-juncos.com/epk. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://ex-juncos.bandcamp.com/",
+        "https://www.ex-juncos.com/"
+      ]
+    },
+    "credit": "Myles Boisen (explicit image alt credit in official EPK)",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://ex-juncos.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0041541032_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://ex-juncos.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.ex-juncos.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/exjuncos/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.ex-juncos.com/epk",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://ex-juncos.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0041541032_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/exjuncos/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/462532891_1057949032485790_2795560247511727025_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=102&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=iSbLnn_aNv4Q7kNvwFXer9X&_nc_oc=Adq2rj2qMSvY_SV7908yXjZ0YPKtyqBGLnGMnIp4ZTAg40fkhX4MOaatTlR3M5ApMgM&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQPTe8t1Ocu555Rl_NOqkp0oCh7ocvXwI_KyFecRjirKJQ&oe=6AD0BBEC",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.ex-juncos.com/epk",
+        "imageUrl": "https://static.wixstatic.com/media/5acfea_1989f871df1c4764bd5d6a2390b37ef7~mv2.jpg/v1/fill/w_465,h_330,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/_DSC8715%20ExJbkBest_JPG.jpg",
+        "origin": "official-site-photo",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 981859608,
+    "name": "Skolp",
+    "sourceUrl": "https://skolp.bandcamp.com/album/wading-through-flesh-and-bone",
+    "imageUrl": "https://f4.bcbits.com/img/0044192985_10.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp labels the act San Francisco and says its sound is from San Francisco.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://skolp.bandcamp.com/album/wading-through-flesh-and-bone. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://skolp.bandcamp.com/album/wading-through-flesh-and-bone"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Photographic rehearsal/performance image with a Skolp logo overlay. A cleaner standalone press photograph was not found.",
+    "priorSourceUrl": "https://skolp.bandcamp.com/album/wading-through-flesh-and-bone",
+    "priorImageUrl": "https://f4.bcbits.com/img/0044192985_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://skolp.bandcamp.com/album/wading-through-flesh-and-bone",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://skolp.bandcamp.com/album/wading-through-flesh-and-bone",
+        "imageUrl": "https://f4.bcbits.com/img/0044192985_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 979084069,
+    "name": "X-Tra",
+    "sourceUrl": "https://xtrapunk.bandcamp.com/album/demonstration",
+    "imageUrl": "https://f4.bcbits.com/img/0034222982_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "X-Tra's Bandcamp identifies the act as San Francisco-based.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://xtrapunk.bandcamp.com/album/demonstration"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://xtrapunk.bandcamp.com/album/demonstration",
+    "priorImageUrl": "https://f4.bcbits.com/img/0034222982_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://xtrapunk.bandcamp.com/album/demonstration",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://xtrapunk.bandcamp.com/album/demonstration",
+        "imageUrl": "https://f4.bcbits.com/img/0034222982_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1348864035,
+    "name": "Slinger",
+    "sourceUrl": "https://slingeremo.bandcamp.com/",
+    "imageUrl": null,
+    "kind": "none",
+    "visualReview": "No image candidate rendered/identified in checked sources; HTML/source metadata reviewed.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist Bandcamp lists San Francisco.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://slingeremo.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "no-photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://slingeremo.bandcamp.com/",
+    "priorImageUrl": null,
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://slingeremo.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": []
+  },
+  {
+    "artistId": 1394882259,
+    "name": "Pinoles",
+    "sourceUrl": "https://thepinoles.bandcamp.com/",
+    "imageUrl": null,
+    "kind": "none",
+    "visualReview": "No image candidate rendered/identified in checked sources; HTML/source metadata reviewed.",
+    "identityEvidence": {
+      "catalogEvidence": "The band's official Bandcamp identifies Pinoles as Pinole, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://thepinoles.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "no-photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://thepinoles.bandcamp.com/",
+    "priorImageUrl": null,
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://thepinoles.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": []
+  },
+  {
+    "artistId": 952091815,
+    "name": "Cuva Bimo",
+    "sourceUrl": "https://cuvabimo.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0033758114_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp lists Oakland; interview says the band formed in the Bay Area in 2023.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://cuvabimo.bandcamp.com/",
+        "https://disarray.blog/2026/09/10/band-spotlight-cuva-bimo-brings-post-whatever-rock-from-the-bay-area/"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://cuvabimo.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0033758114_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://disarray.blog/2026/09/10/band-spotlight-cuva-bimo-brings-post-whatever-rock-from-the-bay-area/",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "Response status code does not indicate success: 403 (Forbidden)."
+      },
+      {
+        "sourceUrl": "https://cuvabimo.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/cuvabimoband/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://cuvabimo.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0033758114_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/cuvabimoband/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/386311913_771677011384013_1628817521449402124_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=101&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=fehf_nEJC0QQ7kNvwFtvJiD&_nc_oc=Adqn_S5_RegWIgVYhEsztreovOdKoqFyem6s0nqF4M4zJsw6f8X8TTAV5UxHAaoFQV4&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQPS5_ZRwI2VRZmmAIdjdWyDl4_-SWpwBd3U1NXjwoGZCQ&oe=6AD0C54F",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 916235027,
+    "name": "B.F.H.",
+    "sourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+    "imageUrl": "https://f4.bcbits.com/img/0045829145_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "This punctuation variant refers to the same Bay Area metal band; the artist’s Bandcamp lists Fairfield, California. https://bfhmusic25.bandcamp.com/track/brothers",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://bfhmusic25.bandcamp.com/track/brothers"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+    "priorImageUrl": "https://f4.bcbits.com/img/0045829145_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+        "imageUrl": "https://f4.bcbits.com/img/0045829145_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 925702850,
+    "name": "Panhandlers Union",
+    "sourceUrl": "https://panhandlersunion.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0030923833_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp lists Panhandlers Union in San Jose.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://panhandlersunion.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://panhandlersunion.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0030923833_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://panhandlersunion.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://facebook.com/panhandlersunion1",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://instagram.com/panhandlersunionband?igshid=OGQ5ZDc2ODk2ZA==",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://panhandlersunion.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0030923833_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://instagram.com/panhandlersunionband?igshid=OGQ5ZDc2ODk2ZA==",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-19/453545968_1027340162126465_4313560031467502530_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=105&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=OHbsr8kEbOUQ7kNvwFjCRym&_nc_oc=AdqmmvgFQMBmLvp6mEQOUggXyRqhb2EMb2-neOWSex8l2EF0atKg1i6tETm8MR7jssk&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQMPZ3Q0hM0KqLgTApP_HQ78vhlMkqCB6x-leDSJd1nY7g&oe=6AD0CB74",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 629145353,
+    "name": "Spy",
+    "sourceUrl": "https://www.meanworldrecords.com/blog/conversations/convulserecords",
+    "imageUrl": "https://images.squarespace-cdn.com/content/v1/650e1a18152ced78f19fecd4/6f962dae-54c8-4951-bac1-670dd041ffeb/SPY-1.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Official artist Bandcamp says Bay Area hardcore punk.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://www.meanworldrecords.com/blog/conversations/convulserecords. Browser review confirms a photographic performer image.",
+      "identitySources": ["https://spyhc.bandcamp.com/"]
+    },
+    "credit": "Joe Lacey (explicit caption, Convulse Weekend 2021)",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://spyhc.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0020779713_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://spyhc.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.meanworldrecords.com/blog/conversations/convulserecords",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://spyhc.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0020779713_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.meanworldrecords.com/blog/conversations/convulserecords",
+        "imageUrl": "https://images.squarespace-cdn.com/content/v1/650e1a18152ced78f19fecd4/6f962dae-54c8-4951-bac1-670dd041ffeb/SPY-1.jpg",
+        "origin": "official-site-photo",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 1970016845,
+    "name": "Opposing Force",
+    "sourceUrl": "https://opposingforcehc.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0035139773_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band's official Bandcamp bio identifies Opposing Force as Bay Area, California hardcore.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://opposingforcehc.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://opposingforcehc.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0035139773_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://opposingforcehc.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://opposingforcehc.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0035139773_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 745218816,
+    "name": "Strange Cities",
+    "sourceUrl": "https://strangecities.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0027448874_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp lists San Francisco; SF State also calls the group SF-based.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://strangecities.bandcamp.com/",
+        "https://cinema.sfsu.edu/september-2023-newsletter"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://strangecities.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0027448874_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://strangecities.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://cinema.sfsu.edu/september-2023-newsletter",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://linktr.ee/strangecities",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://strangecities.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0027448874_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://linktr.ee/strangecities",
+        "imageUrl": "https://ugc.production.linktr.ee/1VW3rMNZRvyXSSKQfVLS_LPD81eD69jPRA8yj?io=true&size=avatar-v3_0",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1159440154,
+    "name": "Dead River Rebels",
+    "sourceUrl": "https://deadriverrebelssf.bandcamp.com/album/exeter",
+    "imageUrl": "https://f4.bcbits.com/img/0010254315_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp identifies the San Francisco band.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://deadriverrebelssf.bandcamp.com/album/exeter",
+        "https://www.indieonthemove.com/users/Deadriverrebels"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "Profile image is an album/release graphic with superimposed text, not a standalone band photograph. Linked deadriverrebels.com domain did not resolve.",
+    "priorSourceUrl": "https://deadriverrebelssf.bandcamp.com/album/exeter",
+    "priorImageUrl": "https://f4.bcbits.com/img/0010254315_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://www.indieonthemove.com/users/Deadriverrebels",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "Response status code does not indicate success: 403 (Forbidden)."
+      },
+      {
+        "sourceUrl": "https://deadriverrebelssf.bandcamp.com/album/exeter",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.deadriverrebels.com/",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "No such host is known. (www.deadriverrebels.com:80)"
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://deadriverrebelssf.bandcamp.com/album/exeter",
+        "imageUrl": "https://f4.bcbits.com/img/0010254315_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1902356500,
+    "name": "Altar De Fey",
+    "sourceUrl": "https://altar-de-fey.bandcamp.com/album/echoes-in-the-corridor",
+    "imageUrl": "https://f4.bcbits.com/img/0001687225_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Band biography explicitly states originated in San Francisco.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://altar-de-fey.bandcamp.com/album/echoes-in-the-corridor"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://altar-de-fey.bandcamp.com/album/echoes-in-the-corridor",
+    "priorImageUrl": "https://f4.bcbits.com/img/0001687225_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://altar-de-fey.bandcamp.com/album/echoes-in-the-corridor",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.facebook.com/AltarDeFey",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://altar-de-fey.bandcamp.com/album/echoes-in-the-corridor",
+        "imageUrl": "https://f4.bcbits.com/img/0001687225_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 629150642,
+    "name": "Yam",
+    "sourceUrl": "https://yamitup.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0043371433_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "YaM's Bandcamp profile lists San Francisco, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://yamitup.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://yamitup.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0043371433_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://yamitup.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/yam.duo/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://yamitup.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0043371433_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/yam.duo/",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.82787-19/629842712_17848464942674431_6351518299776142797_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=110&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=h_Q1Rgj3FAUQ7kNvwFa4oWR&_nc_oc=Adr0WRXPXlI1swwBWvEI-cY8kOzRcy_LJ6ibPF1QzzaNgC1ex8wSer1dw-HaVMRCyVI&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_gid=vbQF0i-Kac8iy5n8kkYKOw&_nc_ss=7c60f&oh=00_AQO50aXYMkqb7Ah2-lRmVjrDeZiOourIjDXYqfV295NNhg&oe=6AD0C518",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 629136350,
+    "name": "Jel",
+    "sourceUrl": "https://jelsmusic.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0038957901_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Jel’s music career is centered in Oakland; SF Weekly’s Anticon profile places him in the Oakland scene.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://jelsmusic.bandcamp.com/",
+        "https://www.sfweekly.com/music/unsettled-jel-and-the-anticon-label-celebrate-15-years-of-weirdo-hip-hop/"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://jelsmusic.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0038957901_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://jelsmusic.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.sfweekly.com/music/unsettled-jel-and-the-anticon-label-celebrate-15-years-of-weirdo-hip-hop/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/jeffreyjellogan/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://jelsmusic.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0038957901_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/jeffreyjellogan/",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-19/317622834_186776280677352_3639328599792561613_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=110&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy45NjAuQzMifQ%3D%3D&_nc_ohc=LfwudbeYAG0Q7kNvwEhFCT2&_nc_oc=Adqa49xo6F8QLZk7X5bTWQ6Htc_ksmFq_w95xI85KtYEemp4jAaIxtsBaJZBFz23EzM&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQOpiBDr5TykrmTTUjEvL67YCO0F6X6_eOcuEGGQqpIj-w&oe=6AD0DF25",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 113812060,
+    "name": "Dark Satellite",
+    "sourceUrl": "https://www.kqed.org/news/11957521/access%40sfoutsidelands.com",
+    "imageUrl": "https://ww2.kqed.org/app/uploads/sites/10/2023/08/Sunday_Drop_Charlie-Hanlon-Trevor-Gabriel-Travis-Drumm-1020x574.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp and KQED feature identify the trio with Oakland.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://www.kqed.org/news/11957521/access%40sfoutsidelands.com. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://darksatellite.bandcamp.com/album/splitting-image",
+        "https://www.kqed.org/news/11957521/access%40sfoutsidelands.com"
+      ]
+    },
+    "credit": "Christian Crandel (photographs); collage by Lakshmi Sarah of KQED (explicit caption)",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://darksatellite.bandcamp.com/album/splitting-image",
+    "priorImageUrl": "https://f4.bcbits.com/img/0026555113_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://www.kqed.org/news/11957521/access%40sfoutsidelands.com",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://darksatellite.bandcamp.com/album/splitting-image",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://darksatelliteband.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/darksatelliteband/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://darksatellite.bandcamp.com/album/splitting-image",
+        "imageUrl": "https://f4.bcbits.com/img/0026555113_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/darksatelliteband/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/323309306_207606695056637_4294514092076121015_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=109&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy43NTcuQzMifQ%3D%3D&_nc_ohc=RBIWbor6rZAQ7kNvwHK_ug6&_nc_oc=Ado6MQ5EjkEVG3G8nOqGCuZEuykf-LSh5Hl4OLGprLMw6L7H90CpY-GVRxTLMtuoays&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQNNhiykS0DZuU43o62KZRHfLXpr4G7URacdHvqb-JYqxw&oe=6AD0E493",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.kqed.org/news/11957521/access%40sfoutsidelands.com",
+        "imageUrl": "https://ww2.kqed.org/app/uploads/sites/10/2023/08/Sunday_Drop_Charlie-Hanlon-Trevor-Gabriel-Travis-Drumm-1020x574.jpg",
+        "origin": "official-site-photo",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 376956363,
+    "name": "The Ink Bats",
+    "sourceUrl": "https://theinkbats.bandcamp.com/merch",
+    "imageUrl": "https://f4.bcbits.com/img/0003467822_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band's Bandcamp profile identifies The Ink Bats as Oakland, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://theinkbats.bandcamp.com/merch"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://theinkbats.bandcamp.com/merch",
+    "priorImageUrl": "https://f4.bcbits.com/img/0003467822_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://theinkbats.bandcamp.com/merch",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/theinkbats",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.facebook.com/theinkbats",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://theinkbats.bandcamp.com/merch",
+        "imageUrl": "https://f4.bcbits.com/img/0003467822_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/theinkbats",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/12424376_1014530285271830_2109066593_a.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=101&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy40MDAuQzMifQ%3D%3D&_nc_ohc=Q4oah0VANYkQ7kNvwEMfEse&_nc_oc=AdqlNDqCwva39YxTftOI_9QMbmTsIZ_Z_6IJ_hYnEsRaFxFjlOGvzhvUMoYzDRvT2cc&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQMWSo1IwN9LB9cwbZkGuU92pZ1owCKlvKu-6ZVYFifuAA&oe=6AD0CFC7",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 406924329,
+    "name": "Cult Strange",
+    "sourceUrl": "https://cultstrange.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0018567975_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist biography identifies origin or base as Oakland, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://cultstrange.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://cultstrange.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0018567975_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://cultstrange.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://facebook.com/CultStrange/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://cultstrange.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0018567975_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 519950527,
+    "name": "Ssleeping Desiress",
+    "sourceUrl": "https://ssleepingdesiress.bandcamp.com/album/s-t",
+    "imageUrl": "https://f4.bcbits.com/img/0005167095_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The artist's Bandcamp page identifies Ssleeping DesiresS as Oakland, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://ssleepingdesiress.bandcamp.com/album/s-t"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://ssleepingdesiress.bandcamp.com/album/s-t",
+    "priorImageUrl": "https://f4.bcbits.com/img/0005167095_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://ssleepingdesiress.bandcamp.com/album/s-t",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://instagram.com/ssleepingdesiress?utm_medium=copy_link",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://ssleepingdesiress.bandcamp.com/album/s-t",
+        "imageUrl": "https://f4.bcbits.com/img/0005167095_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://instagram.com/ssleepingdesiress?utm_medium=copy_link",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.82787-19/684815230_18588862264020491_6729041107349133779_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=110&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy41MjUuQzMifQ%3D%3D&_nc_ohc=dKKHplsOnkoQ7kNvwGhmozA&_nc_oc=AdoAHPnprN31lw12xRmd1LlE8V9N_hfbE0CynBAmMTBVuZgj1ZSMASQu2mUzHfjr5nI&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_gid=GqLaGNI9YWVyYTHoUf9_FQ&_nc_ss=7c60f&oh=00_AQOdwBxcMAWQUD-DH394-T5dmIcLUM3AZNstp9j1zT137A&oe=6AD0CE6B",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 919178389,
+    "name": "Whateverglades",
+    "sourceUrl": "https://whateverglades.bandcamp.com/album/knock-knock",
+    "imageUrl": "https://f4.bcbits.com/img/0013105502_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Exact catalog act and cited source pages supplied for this fallback pass.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://whateverglades.bandcamp.com/album/knock-knock"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "A footer recommendation to Otoboke Beaver was fetched during link discovery but is unrelated; rejected and excluded from photo selection.",
+    "priorSourceUrl": "https://whateverglades.bandcamp.com/album/knock-knock",
+    "priorImageUrl": "https://f4.bcbits.com/img/0013105502_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://whateverglades.bandcamp.com/album/knock-knock",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://whateverglades.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://music.otobokebeaver.com/album/itekoma-hits?from=footer-cc-a1445342773",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://whateverglades.bandcamp.com/album/knock-knock",
+        "imageUrl": "https://f4.bcbits.com/img/0013105502_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 61992529,
+    "name": "Hypnotic Pattern",
+    "sourceUrl": "https://hypnoticpatternmusic.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0034978699_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band’s Bandcamp profile identifies Hypnotic Pattern as Oakland-based.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://hypnoticpatternmusic.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://hypnoticpatternmusic.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0034978699_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://hypnoticpatternmusic.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://linktr.ee/hypnoticpatternmusic",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://hypnoticpatternmusic.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0034978699_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://linktr.ee/hypnoticpatternmusic",
+        "imageUrl": "https://ugc.production.linktr.ee/f37e309e-a387-433d-8961-55cf774f9c7b_HJ9iJ-OR-8Nf2Mv3VT5cNRl4AW6hb6Rac-jy1ZOMLvLGQAaAOfl0VATYpkzVZAlA0nerme9oJw-s800-c-k-c0x00ffffff-no-r.jpeg?io=true&size=avatar-v3_0",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1868515894,
+    "name": "FLESHIES",
+    "sourceUrl": "https://fleshies.bandcamp.com/music",
+    "imageUrl": "https://f4.bcbits.com/img/0000007981_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist profile identifies Oakland.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://fleshies.bandcamp.com/music"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://fleshies.bandcamp.com/music",
+    "priorImageUrl": "https://f4.bcbits.com/img/0000007981_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://fleshies.bandcamp.com/music",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://facebook.com/fleshies",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://fleshies.bandcamp.com/music",
+        "imageUrl": "https://f4.bcbits.com/img/0000007981_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1656376636,
+    "name": "Heartless Folk",
+    "sourceUrl": "https://heartlessfolk.bandcamp.com/album/tired-anxious-hands",
+    "imageUrl": "https://f4.bcbits.com/img/0001470145_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band’s Bandcamp page identifies Heartless Folk as Berkeley punks.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://heartlessfolk.bandcamp.com/album/tired-anxious-hands"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://heartlessfolk.bandcamp.com/album/tired-anxious-hands",
+    "priorImageUrl": "https://f4.bcbits.com/img/0001470145_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://heartlessfolk.bandcamp.com/album/tired-anxious-hands",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.facebook.com/heartlessfolk",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://heartlessfolk.bandcamp.com/album/tired-anxious-hands",
+        "imageUrl": "https://f4.bcbits.com/img/0001470145_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 981839644,
+    "name": "Sleep",
+    "sourceUrl": "https://www.pitchperfectpr.com/sleep",
+    "imageUrl": "https://images.squarespace-cdn.com/content/v1/679012fda46f71605008f8b0/baba43eb-fe5b-42d1-bb20-b6e1aad22a07/%5BHi-Res+Image%5D+Sleep+by+Travis+Shinn.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Third Man Records identifies the intended metal band as formed in San Jose, California, in 1990. The prior sleepband.bandcamp.com source is an unrelated Melbourne artist and is rejected.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://www.pitchperfectpr.com/sleep. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://thirdmanrecords.com/collections/sleep",
+        "https://www.pitchperfectpr.com/sleep"
+      ]
+    },
+    "credit": "Travis Shinn (press-agency image filename: [Hi-Res Image] Sleep by Travis Shinn.jpg)",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Source correction: sleepband.bandcamp.com now serves Melbourne experimental Sleep, with the 2012 album (untitled); reject that page and its unrelated portrait. The Third Man Records artist page identifies the intended metal band formed in San Jose, CA in 1990. The Pitch Perfect PR page provides the selected Sleep photograph and corresponding 2026 US tour. No catalog/locality ledger was changed.",
+    "priorSourceUrl": "https://sleepband.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0000185678_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://sleepband.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.pitchperfectpr.com/sleep",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://sleepband.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0000185678_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.pitchperfectpr.com/sleep",
+        "imageUrl": "https://images.squarespace-cdn.com/content/v1/679012fda46f71605008f8b0/baba43eb-fe5b-42d1-bb20-b6e1aad22a07/%5BHi-Res+Image%5D+Sleep+by+Travis+Shinn.jpg",
+        "origin": "official-site-photo",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 129727800,
+    "name": "Fast & Vengefully",
+    "sourceUrl": "https://timmygmusic.com/fast-and-vengefully",
+    "imageUrl": "https://lh3.googleusercontent.com/pw/AJFCJaVElRpbyZF67n1E2A9X9k1ze7WYoDmjNeQvpGuN0-pN6EiTUCDOIOmJfhaTQjpWQXRpkHu_wLn54JqR8CvXJbF43WKRJ__xuysqaKOhWPICAXj6CH9Bvu82nUorGxmy4QHsr_kikhm4aTT8G1dah2bU6w=w1382-h778-s-no?authuser=0",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "The official project page identifies Fast & Vengefully as Timmy G's Irish-music project; his official site calls him a San Francisco Bay Area musician, and the project's Bandcamp is based in Oakland.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://timmygmusic.com/fast-and-vengefully. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://timmygmusic.com/fast-and-vengefully",
+        "https://timmygmusic.com/home",
+        "https://timmygmusic.bandcamp.com/album/fast-vengefully-rozzie-me-bow"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://timmygmusic.bandcamp.com/album/fast-vengefully-rozzie-me-bow",
+    "priorImageUrl": "https://f4.bcbits.com/img/0040603379_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://timmygmusic.bandcamp.com/album/fast-vengefully-rozzie-me-bow",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://timmygmusic.com/fast-and-vengefully",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://timmygmusic.com/home",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.facebook.com/timmygmusic",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.timmygmusic.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://timmygmusic.bandcamp.com/album/fast-vengefully-rozzie-me-bow",
+        "imageUrl": "https://f4.bcbits.com/img/0040603379_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://timmygmusic.com/fast-and-vengefully",
+        "imageUrl": "https://lh3.googleusercontent.com/pw/AJFCJaVElRpbyZF67n1E2A9X9k1ze7WYoDmjNeQvpGuN0-pN6EiTUCDOIOmJfhaTQjpWQXRpkHu_wLn54JqR8CvXJbF43WKRJ__xuysqaKOhWPICAXj6CH9Bvu82nUorGxmy4QHsr_kikhm4aTT8G1dah2bU6w=w1382-h778-s-no?authuser=0",
+        "origin": "official-site-photo",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 1493068446,
+    "name": "Secret Chiefs 3",
+    "sourceUrl": "https://www.joelestermusic.com/secret-chiefs-3",
+    "imageUrl": "https://images.squarespace-cdn.com/content/v1/6688cb070646036445a9a979/3ab8fea2-46b3-4c93-a7ad-876179052236/secret-chiefs-3-secret-chiefs-3-b40f7c32-624b-4cb0-b506-5e5b4b565e78_18581_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "The band’s official Bandcamp profile lists its location as San Francisco, California.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://www.joelestermusic.com/secret-chiefs-3. Browser review confirms a photographic performer image.",
+      "identitySources": ["https://secretchiefsthree.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Selected photo on musician Joe Lester's own project page shows the collective from behind in hooded garments. Source explains his membership and the Trey Spruance project; faces are not visible.",
+    "priorSourceUrl": "https://secretchiefsthree.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0012115269_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://secretchiefsthree.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://downloads.webofmimicry.com/?from=btl",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.joelestermusic.com/secret-chiefs-3",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://secretchiefsthree.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0012115269_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.joelestermusic.com/secret-chiefs-3",
+        "imageUrl": "https://images.squarespace-cdn.com/content/v1/6688cb070646036445a9a979/3ab8fea2-46b3-4c93-a7ad-876179052236/secret-chiefs-3-secret-chiefs-3-b40f7c32-624b-4cb0-b506-5e5b4b565e78_18581_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+        "origin": "official-site-photo",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 1539683138,
+    "name": "The Green Door",
+    "sourceUrl": "https://thegreendoor.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0040190082_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band's Bandcamp says The Green Door formed in San Francisco.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://thegreendoor.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://thegreendoor.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0040190082_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://thegreendoor.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://thegreendoorband.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/thegreendoorband/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://facebook.com/thegreendoorband",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://thegreendoor.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0040190082_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/thegreendoorband/",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.75761-19/500642386_18331744555162764_8165566740336180841_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=103&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=IbEkPEGXWDMQ7kNvwFcZE8Q&_nc_oc=Adr043WVaqcG4zSMpAXVnryMrL5uen6ijnUqfzvKJnyGi2w0DRJyMe_U8dNfYkJbZao&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_gid=IpaqiOWUXIN5A1eNSQZcSA&_nc_ss=7c60f&oh=00_AQNaCZn1hL4yDWdEYn4cO0UygrGSknOYChIY82j8c45dGw&oe=6AD0C79F",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 564810404,
+    "name": "Artificial Muscle",
+    "sourceUrl": "https://artificialmuscle.bandcamp.com/album/artificial-muscle-ii",
+    "imageUrl": "https://f4.bcbits.com/img/0045881993_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The artist’s Bandcamp lists San Francisco. https://artificialmuscle.bandcamp.com/album/artificial-muscle-ii",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://artificialmuscle.bandcamp.com/album/artificial-muscle-ii"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://artificialmuscle.bandcamp.com/album/artificial-muscle-ii",
+    "priorImageUrl": "https://f4.bcbits.com/img/0045881993_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://artificialmuscle.bandcamp.com/album/artificial-muscle-ii",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://artificialmuscle.bandcamp.com/album/artificial-muscle-ii",
+        "imageUrl": "https://f4.bcbits.com/img/0045881993_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 999387295,
+    "name": "B.F.H",
+    "sourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+    "imageUrl": "https://f4.bcbits.com/img/0045829145_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The artist’s Bandcamp describes B.F.H as a Bay Area metal band and lists Fairfield, California. https://bfhmusic25.bandcamp.com/track/brothers",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://bfhmusic25.bandcamp.com/track/brothers"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+    "priorImageUrl": "https://f4.bcbits.com/img/0045829145_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://bfhmusic25.bandcamp.com/track/brothers",
+        "imageUrl": "https://f4.bcbits.com/img/0045829145_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 276364424,
+    "name": "Parliament Of Trees",
+    "sourceUrl": "https://parliamentoftrees1.bandcamp.com/track/taxi-to-the-front-2",
+    "imageUrl": "https://f4.bcbits.com/img/0019683696_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp lists Parliament Of Trees in Castro Valley.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://parliamentoftrees1.bandcamp.com/track/taxi-to-the-front-2"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://parliamentoftrees1.bandcamp.com/track/taxi-to-the-front-2",
+    "priorImageUrl": "https://f4.bcbits.com/img/0019683696_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://parliamentoftrees1.bandcamp.com/track/taxi-to-the-front-2",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://parliamentoftrees1.bandcamp.com/track/taxi-to-the-front-2",
+        "imageUrl": "https://f4.bcbits.com/img/0019683696_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1370194942,
+    "name": "Indianna Hale And The Dust Collector",
+    "sourceUrl": "https://indiannahale.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0028605678_10.jpg",
+    "kind": "bandleader-portrait",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "The act’s Bandcamp identifies Indianna Hale as an SF-based singer-songwriter. https://indiannahale.bandcamp.com/",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://indiannahale.bandcamp.com/. Browser review confirms a photographic performer image.",
+      "identitySources": ["https://indiannahale.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Selected image is Indianna Hale performing alone, not the full Dust Collector ensemble. The source identifies Indianna Hale as an SF singer/songwriter; caption as leader portrait.",
+    "priorSourceUrl": "https://indiannahale.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0028605678_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://indiannahale.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://indiannahale.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0028605678_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 236813179,
+    "name": "Bad Angle",
+    "sourceUrl": "https://badangle.bandcamp.com/album/self-titled",
+    "imageUrl": null,
+    "kind": "none",
+    "visualReview": "No image candidate rendered/identified in checked sources; HTML/source metadata reviewed.",
+    "identityEvidence": {
+      "catalogEvidence": "The artist’s Bandcamp says Bad Angle formed in Oakland. https://badangle.bandcamp.com/album/self-titled",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://badangle.bandcamp.com/album/self-titled"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "no-photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://badangle.bandcamp.com/album/self-titled",
+    "priorImageUrl": null,
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://badangle.bandcamp.com/album/self-titled",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.facebook.com/BadAngleBand",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": []
+  },
+  {
+    "artistId": 569518867,
+    "name": "Loquat",
+    "sourceUrl": "https://loquatmusic.bandcamp.com/community",
+    "imageUrl": null,
+    "kind": "none",
+    "visualReview": "No image candidate rendered/identified in checked sources; HTML/source metadata reviewed.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist Bandcamp community profile lists San Francisco.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://loquatmusic.bandcamp.com/community"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "no-photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://loquatmusic.bandcamp.com/community",
+    "priorImageUrl": null,
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://loquatmusic.bandcamp.com/community",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.loquatmusic.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.twitter.com/loquatmusic",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "Response status code does not indicate success: 520 (<none>)."
+      },
+      {
+        "sourceUrl": "http://www.facebook.com/loquatband",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": []
+  },
+  {
+    "artistId": 633595575,
+    "name": "Pendletons",
+    "sourceUrl": "https://thependletonssf.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0012818004_10.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp identifies The Pendletons as from San Francisco.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://thependletonssf.bandcamp.com/. Browser review confirms a photographic performer image.",
+      "identitySources": ["https://thependletonssf.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://thependletonssf.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0012818004_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://thependletonssf.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://thependletonssf.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0012818004_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 739164244,
+    "name": "Mourning Mountains",
+    "sourceUrl": "https://mourningmountains.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0015265543_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Bottom of the Hill's band bio identifies Mourning Mountains as an ADD Rock band from the Bay Area; its official Bandcamp identifies the matching band.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://www.bottomofthehill.com/20160610.html",
+        "https://mourningmountains.bandcamp.com/"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "Profile graphic only; linked mourningmountains.com domain did not resolve.",
+    "priorSourceUrl": "https://mourningmountains.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0015265543_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://www.bottomofthehill.com/20160610.html",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://mourningmountains.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.mourningmountains.com/",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "No such host is known. (www.mourningmountains.com:80)"
+      },
+      {
+        "sourceUrl": "http://www.facebook.com/mourningmountains",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://twitter.com/MourningMtns925",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://mourningmountains.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0015265543_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 986975722,
+    "name": "Mywtr",
+    "sourceUrl": "https://www.instagram.com/myyouthworntorust/",
+    "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-19/729674225_17888523981591567_2366281326493410205_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=101&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=_Fslg0D50koQ7kNvwF9iUOV&_nc_oc=Adocwau0KcFnOw880HCODhb10jFw9ZwHSljpSTDcP4WG1i4hjZeEnY8HxytnRcbTXMg&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=stOwr5DQ2TqjIT_Rr4teUw&_nc_ss=7c60f&oh=00_AQOwffRTeWCkBbzAegoaFfElcZ9fZq5VZvArnd4rPMIP1g&oe=6AD0C407",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist Bandcamp identifies Oakland.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://www.instagram.com/myyouthworntorust/. Browser review confirms a photographic performer image.",
+      "identitySources": ["https://mywtr.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Selected avatar shows the band members. Bandcamp links directly to @myyouthworntorust. Only observed 100x100 signed CDN URL was captured; re-resolve before use.",
+    "priorSourceUrl": "https://mywtr.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0041780221_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://mywtr.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/myyouthworntorust/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://mywtr.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0041780221_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/myyouthworntorust/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-19/729674225_17888523981591567_2366281326493410205_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=101&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=_Fslg0D50koQ7kNvwF9iUOV&_nc_oc=Adocwau0KcFnOw880HCODhb10jFw9ZwHSljpSTDcP4WG1i4hjZeEnY8HxytnRcbTXMg&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=stOwr5DQ2TqjIT_Rr4teUw&_nc_ss=7c60f&oh=00_AQOwffRTeWCkBbzAegoaFfElcZ9fZq5VZvArnd4rPMIP1g&oe=6AD0C407",
+        "origin": "linked-profile",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 373047413,
+    "name": "Skitzo",
+    "sourceUrl": "https://skitzo3.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0013812028_10.jpg",
+    "kind": "band-photo",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp says the band started in the Bay Area metal scene in 1981.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://skitzo3.bandcamp.com/. Browser review confirms a photographic performer image.",
+      "identitySources": ["https://skitzo3.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Group photograph presented with band logo/graphic decoration on the artist profile. The linked skitzo.biz site returned 404.",
+    "priorSourceUrl": "https://skitzo3.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0013812028_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://skitzo3.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.skitzo.biz/",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "Response status code does not indicate success: 404 (Not Found)."
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://skitzo3.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0013812028_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 1946825896,
+    "name": "The Pete Escovedo Orchestra",
+    "sourceUrl": "https://peteescovedo.bandcamp.com/album/lifetime-anthology",
+    "imageUrl": "https://f4.bcbits.com/img/0020956737_10.jpg",
+    "kind": "bandleader-portrait",
+    "visualReview": "Visually reviewed in remote-image browser contact sheet; photographic performer subject confirmed within the noted limits.",
+    "identityEvidence": {
+      "catalogEvidence": "The City of Pittsburg says Escovedo hails from Pittsburg and moved with his family to Oakland; his artist bio says he formed a Latin jazz band that performed around the Bay Area.",
+      "sourceAssociation": "Selected image is on the artist-owned/artist-linked page https://peteescovedo.bandcamp.com/album/lifetime-anthology. Browser review confirms a photographic performer image.",
+      "identitySources": [
+        "https://www.pittsburgca.gov/Home/Components/News/News/1808/",
+        "https://peteescovedo.bandcamp.com/album/lifetime-anthology"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "photo-found",
+    "notes": "Selected image is a portrait of bandleader Pete Escovedo, not the full orchestra. Artist biography explicitly describes his orchestra; caption accordingly. peteescovedo.com is currently under construction. Do not transfer the album-cover photographer credit to this profile portrait.",
+    "priorSourceUrl": "https://peteescovedo.bandcamp.com/album/lifetime-anthology",
+    "priorImageUrl": "https://f4.bcbits.com/img/0020956737_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://www.pittsburgca.gov/Home/Components/News/News/1808/",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "Response status code does not indicate success: 403 (Forbidden)."
+      },
+      {
+        "sourceUrl": "https://peteescovedo.bandcamp.com/album/lifetime-anthology",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://peteescovedo.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://eurweb.com/jazz-at-drew-keeping-your-mind-body-soul-in-tune-photos/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://peteescovedo.bandcamp.com/album/lifetime-anthology",
+        "imageUrl": "https://f4.bcbits.com/img/0020956737_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "photo"
+      }
+    ]
+  },
+  {
+    "artistId": 587440292,
+    "name": "Band Of Orcs",
+    "sourceUrl": "https://abandoforcs.bandcamp.com/music",
+    "imageUrl": "https://f4.bcbits.com/img/0038573793_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The artist-owned Bandcamp lists Santa Cruz, included under the Greater Bay/Monterey Bay convention for this review. https://abandoforcs.bandcamp.com/music",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://abandoforcs.bandcamp.com/music"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "Artist website exposed placeholder images and the linked social avatar repeated the band logo. No actual performer photo verified.",
+    "priorSourceUrl": "https://abandoforcs.bandcamp.com/music",
+    "priorImageUrl": "https://f4.bcbits.com/img/0038573793_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://abandoforcs.bandcamp.com/music",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://abandoforcs.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "http://www.facebook.com/abandoforcs",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/abandoforcs",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://abandoforcs.bandcamp.com/music",
+        "imageUrl": "https://f4.bcbits.com/img/0038573793_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/abandoforcs",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-19/38072711_254415091843020_8889501822092312576_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=103&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=klEkJaZBbZQQ7kNvwESIBy2&_nc_oc=Ado8EoNP1a70Z3l02C2abDdmWhUd-VE4LIURmBJcHZXed2IE0XoFOYg2qA8P01arXPA&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQMoBKBiNniHXd99I3kenOQfQHRPm73oyCid6TPr7NNQ7A&oe=6AD0B12E",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1792148595,
+    "name": "Personal Space Man",
+    "sourceUrl": "https://personalspaceman.bandcamp.com/album/live-at-rickshaw-stop",
+    "imageUrl": "https://f4.bcbits.com/img/0032350625_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The artist's Bandcamp locates Personal Space Man in San Francisco; Bottom of the Hill describes the band as from San Francisco.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://personalspaceman.bandcamp.com/album/live-at-rickshaw-stop",
+        "https://bottomofthehill.com/20260417.html"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "Bandcamp credits Roan Gibson as live engineer and Drea Bennet as album artist. Their linked portraits were visually reviewed and rejected as performer images. The band page itself exposes a logo, not a performer photograph.",
+    "priorSourceUrl": "https://personalspaceman.bandcamp.com/album/live-at-rickshaw-stop",
+    "priorImageUrl": "https://f4.bcbits.com/img/0032350625_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://bottomofthehill.com/20260417.html",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://personalspaceman.bandcamp.com/album/live-at-rickshaw-stop",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/roan_music/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/dr_dreeaaa/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://personalspaceman.bandcamp.com/album/live-at-rickshaw-stop",
+        "imageUrl": "https://f4.bcbits.com/img/0032350625_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/roan_music/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/382548375_225026127225207_7324783240593324075_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=104&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=uorGG-wc6CAQ7kNvwE9htz3&_nc_oc=Adro0O2DIkVUP-0Mdheu6vTAQyAZhEpByDKRqV_27TBjbIftZ3waxNT_ZvYi8SJeexg&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQMV5OjFgQm0QVX0YrtJFk2oKsmxs7BjCxM-SHInu_H9pw&oe=6AD0DD0D",
+        "origin": "linked-profile",
+        "outcome": "wrong-subject"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/dr_dreeaaa/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-19/778767602_18608820286004437_1294790167618857406_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=104&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=RhLpFgiDgRcQ7kNvwHnmNOi&_nc_oc=Adq3t4QNNbLn4mic0zg3HFf74sU3JBFAFoKp2ghrL8zo2e9o7tpuvO63X-N6WhD_y-c&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=-Ps5Fc0vCtKk4zxYstQkLA&_nc_ss=7c60f&oh=00_AQM5vL93RSaU2hk1Q_EA8K87VJVJk52DfYXRIqa7f9r9Gg&oe=6AD0E17D",
+        "origin": "linked-profile",
+        "outcome": "wrong-subject"
+      }
+    ]
+  },
+  {
+    "artistId": 121913892,
+    "name": "Sweet Plot",
+    "sourceUrl": "https://sweetplotmusic.bandcamp.com/album/interstate-plot",
+    "imageUrl": "https://f4.bcbits.com/img/0004760455_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp identifies Sweet Plot as from San Francisco, California.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://sweetplotmusic.bandcamp.com/album/interstate-plot"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://sweetplotmusic.bandcamp.com/album/interstate-plot",
+    "priorImageUrl": "https://f4.bcbits.com/img/0004760455_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://sweetplotmusic.bandcamp.com/album/interstate-plot",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://sweetplotmusic.bandcamp.com/album/interstate-plot",
+        "imageUrl": "https://f4.bcbits.com/img/0004760455_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1193134411,
+    "name": "Low Plateau",
+    "sourceUrl": "https://lowplateau.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0025866283_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist Bandcamp says the act is from Oakland.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://lowplateau.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://lowplateau.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0025866283_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://lowplateau.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://lowplateau.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0025866283_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 2028346343,
+    "name": "Can Of Bliss",
+    "sourceUrl": "https://canofblissmusic.bandcamp.com/",
+    "imageUrl": "https://f4.bcbits.com/img/0039184553_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Official Bandcamp profile lists San Francisco.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://canofblissmusic.bandcamp.com/"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://canofblissmusic.bandcamp.com/",
+    "priorImageUrl": "https://f4.bcbits.com/img/0039184553_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://canofblissmusic.bandcamp.com/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/canofblissmusic/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://twitter.com/canofblissmusic",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://canofblissmusic.bandcamp.com/",
+        "imageUrl": "https://f4.bcbits.com/img/0039184553_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/canofblissmusic/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-19/528430484_18093453496642903_4814293714912632418_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=101&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy45MzEuQzMifQ%3D%3D&_nc_ohc=Qc4Ikyk3rrUQ7kNvwHPSfEI&_nc_oc=AdoJaPLn9pxMlf90DX9eepRvsEu-s7257JqQag98HQNQNcxIw7sAkXEE-CFTUK8bITk&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=-ukf9kLyVachM5vtTN64uw&_nc_ss=7c60f&oh=00_AQNNTH8IyPNub21mfTRCnIaCs20RbSlahgFtTs6i6g5b-w&oe=6AD0B460",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 1109826802,
+    "name": "Ethnocide",
+    "sourceUrl": "https://ethnocideofficial.bandcamp.com/music",
+    "imageUrl": "https://f4.bcbits.com/img/0017047251_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The band's official Bandcamp bio identifies Ethnocide as San Jose death-thrash.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://ethnocideofficial.bandcamp.com/music"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://ethnocideofficial.bandcamp.com/music",
+    "priorImageUrl": "https://f4.bcbits.com/img/0017047251_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://ethnocideofficial.bandcamp.com/music",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.facebook.com/Ethnocideofficial/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/ethnocide.official/?hl=en",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://ethnocideofficial.bandcamp.com/music",
+        "imageUrl": "https://f4.bcbits.com/img/0017047251_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/ethnocide.official/?hl=en",
+        "imageUrl": "https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-19/36136340_199050780799756_6460919101509337088_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=105&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy43NTAuQzMifQ%3D%3D&_nc_ohc=6uLBMPHCvtMQ7kNvwEq09B0&_nc_oc=Adrap8PZcVIh1s2XvedmUZckniuiD_VibpmGUfdRdxr2YRBFnT7EYQ5yTihhG8LtLiE&_nc_zt=24&_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQOxgldOQz6eBXScOR5UzJiSHUsGenlMPQbPxT5aejC3DA&oe=6AD0DE7E",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 369507482,
+    "name": "Sodomy",
+    "sourceUrl": "https://instagram.com/sodomyband?igshid=1bk9em326sr4c",
+    "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/75280945_2389890631339411_2907489449740861440_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=100&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=QSIZYBmFT3oQ7kNvwELf7Ju&_nc_oc=AdpMS6il15HgkpJ-siP7VTjiqDADbP00kaLiL6iA45NrEbcWnZx5j5Q-0wRXXkyUaBc&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQNdXWrXGD2DMjSglAf5ovcsYsg3X8p-tqkQ_f_goAjFfA&oe=6AD0B09F",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "The death-metal band’s official Bandcamp says it is from San Jose, California; Metal Archives confirms San Jose.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": [
+        "https://sodomy408.bandcamp.com/community",
+        "https://www.metal-archives.com/bands/Sodomy/3540461740"
+      ]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://sodomy408.bandcamp.com/community",
+    "priorImageUrl": null,
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://www.metal-archives.com/bands/Sodomy/3540461740",
+        "outcome": "unavailable",
+        "httpStatus": null,
+        "error": "Response status code does not indicate success: 403 (Forbidden)."
+      },
+      {
+        "sourceUrl": "https://sodomy408.bandcamp.com/community",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://instagram.com/sodomyband?igshid=1bk9em326sr4c",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.facebook.com/SJdeathmetal/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://instagram.com/sodomyband?igshid=1bk9em326sr4c",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/75280945_2389890631339411_2907489449740861440_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=100&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=QSIZYBmFT3oQ7kNvwELf7Ju&_nc_oc=AdpMS6il15HgkpJ-siP7VTjiqDADbP00kaLiL6iA45NrEbcWnZx5j5Q-0wRXXkyUaBc&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQNdXWrXGD2DMjSglAf5ovcsYsg3X8p-tqkQ_f_goAjFfA&oe=6AD0B09F",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  },
+  {
+    "artistId": 657271801,
+    "name": "Squeakie",
+    "sourceUrl": "https://squeakie.bandcamp.com/music",
+    "imageUrl": "https://f4.bcbits.com/img/0026645020_10.jpg",
+    "kind": "logo-artwork",
+    "visualReview": "Existing profile and available linked image candidates visually reviewed; only logos/artwork or rejected subjects were verified.",
+    "identityEvidence": {
+      "catalogEvidence": "Artist Bandcamp says Oakland and that the band formed in the East Bay.",
+      "sourceAssociation": "All supplied sources and available artist links were attempted; no additional verified performer photograph selected.",
+      "identitySources": ["https://squeakie.bandcamp.com/music"]
+    },
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "status": "logo-artwork-only",
+    "notes": "No alternative performer photograph verified in the checked artist-linked pages; this is not an exhaustive global absence claim.",
+    "priorSourceUrl": "https://squeakie.bandcamp.com/music",
+    "priorImageUrl": "https://f4.bcbits.com/img/0026645020_10.jpg",
+    "sourceAttempts": [
+      {
+        "sourceUrl": "https://squeakie.bandcamp.com/music",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/squeakiemakesamusic/",
+        "outcome": "loaded",
+        "httpStatus": 200,
+        "error": null
+      }
+    ],
+    "reviewedCandidates": [
+      {
+        "sourceUrl": "https://squeakie.bandcamp.com/music",
+        "imageUrl": "https://f4.bcbits.com/img/0026645020_10.jpg",
+        "origin": "existing-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      },
+      {
+        "sourceUrl": "https://www.instagram.com/squeakiemakesamusic/",
+        "imageUrl": "https://scontent-sjc6-1.cdninstagram.com/v/t51.2885-19/457403204_1589194575143836_758720073181471804_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=108&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy45NTcuQzMifQ%3D%3D&_nc_ohc=NscOTZQscIcQ7kNvwFIlq6B&_nc_oc=AdoSBfjmFLjWvtDPtt09adHb1-Ma9dp370f7P2u9NvGfAPxh_dFb17h85PLnVxyfEmM&_nc_zt=24&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ss=7c60f&oh=00_AQPlWNKtx9YlcSZ1UAc0Oll0uc1Oo4EQ4mhhT5GThJI6SQ&oe=6AD0CBDA",
+        "origin": "linked-profile",
+        "outcome": "logo-artwork-or-rejected-candidate"
+      }
+    ]
+  }
+]
