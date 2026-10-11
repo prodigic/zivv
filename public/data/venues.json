@@ -5506,37 +5506,8 @@
     "slug": "the-caravan-lounge",
     "sourceLineNumber": 83,
     "totalEventCount": 30,
-    "upcomingEventCount": 4,
+    "upcomingEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 472721086,
-        "slug": "2026-10-10-stray-dog-choir-caravan-lounge",
-        "dateEpochMs": 1791633600000,
-        "startTimeEpochMs": 1791694800000,
-        "headlinerName": "Stray Dog Choir",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:73be67a05c4ff130",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1229703691,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 255754037,
         "slug": "2026-10-16-holy-death-temple-caravan-lounge",
@@ -22856,38 +22827,8 @@
     "slug": "midway",
     "sourceLineNumber": 3919,
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 843084206,
-        "slug": "2026-10-10-tinlicker-the-midway",
-        "dateEpochMs": 1791633600000,
-        "startTimeEpochMs": 1791694800000,
-        "headlinerName": "Tinlicker",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c8da47111cf2a72f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 343961277,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790992500236,
     "website": "https://themidwaysf.com/"
   },

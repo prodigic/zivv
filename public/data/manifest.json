@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "schemaVersion": "2.0.0",
-  "datasetVersion": "2026-10-11T04:51:14.648Z",
-  "lastUpdated": 1791694274648,
-  "processedAt": 1791694274648,
+  "datasetVersion": "2026-10-11T06:49:54.603Z",
+  "lastUpdated": 1791701394603,
+  "processedAt": 1791701394603,
   "latestIngestionDate": "2026-10-09",
   "totalEvents": 4641,
   "totalArtists": 8678,
@@ -217,25 +217,25 @@
     ],
     "artists": {
       "filename": "artists.json",
-      "size": 6252637,
-      "checksum": "sha256-b1c260866c2c88b74c2651236273a962c13f208c042a60d81e9e337081dbf026",
+      "size": 6247839,
+      "checksum": "sha256-e926ea85d054c62be9b74e8b99fb92fa842662ee4793dee0213ecd1f02670f1a",
       "recordCount": 8678
     },
     "venues": {
       "filename": "venues.json",
-      "size": 1964676,
-      "checksum": "sha256-6dc3510adca019e344d078c7b15668a0e60284b39f483bf185843f48a1a5ae29",
+      "size": 1962458,
+      "checksum": "sha256-c9a29cb73384be3a769b38c3bcc251ca8dac45c3b58a654aa9bf68d8d27c44c6",
       "recordCount": 656
     },
     "indexes": {
       "filename": "indexes.json",
       "size": 1022666,
-      "checksum": "sha256-53af15d09362fb3729eb859a4cece294836492f05b96a147b11cce8582315b11"
+      "checksum": "sha256-7735730ba9634f2fb5681186626592b50a7f498d619e2e1755d8e6677afa059c"
     },
     "recentAdditions": {
       "filename": "recent-additions.json",
       "size": 1140017,
-      "checksum": "sha256-46ab5ea6d0e5466d7e9c8bd3e31b73321aa27cdd8811bf21a110c1219667dd42"
+      "checksum": "sha256-4bf3c460f30e2599bdae2780540393bdb80c3d330f4b2973215ac096d88080a9"
     }
   },
   "sourceFiles": {
@@ -269,10 +269,10 @@
     },
     "artistReviews": {
       "filename": "artist-reviews.json",
-      "size": 217073,
-      "checksum": "sha256-017b0db8b7a3c17833925cab0daadbe26a00e6147ca53dc47f563d939ae866b4",
+      "size": 217232,
+      "checksum": "sha256-68c92f5a0e85854918a75c509d49163f9ddcdbe3d020826403e0cf0697527797",
       "lineCount": 4233,
-      "lastModified": 1791692214561.4104
+      "lastModified": 1791701377313.0708
     },
     "eventPosters": {
       "filename": "event-posters.json",
