@@ -202,7 +202,7 @@ const venues = researched.map((row) => {
     queryAddress,
     location: result.location,
     notes: result.notes,
-    checkedOn: "2026-10-02",
+    checkedOn: result.checkedOn ?? "2026-10-02",
   };
 });
 const registry = decodeVenueMaps({ schemaVersion: 1, venues });

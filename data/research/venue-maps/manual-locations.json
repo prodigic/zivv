@@ -874,5 +874,57 @@
     },
     "notes": "Official Carnaval festival page identifies 17th/Harrison stage vicinity. Primary OSM vector extract gives this shared named-street intersection node. Festival extends over multiple Harrison blocks; marker is access/stage vicinity area, not exact platform.",
     "checkedOn": "2026-10-02"
+  },
+  {
+    "venueId": 386406925,
+    "venueName": "Mothbelly Gallery",
+    "location": {
+      "latitude": 37.786350641413,
+      "longitude": -122.41806351712,
+      "precision": "address",
+      "sourceUrl": "https://geocoding.geo.census.gov/geocoder/locations/address?street=912+Larkin+St&city=San+Francisco&state=CA&benchmark=Public_AR_Current&format=json",
+      "matchedAddress": "912 LARKIN ST, SAN FRANCISCO, CA, 94109"
+    },
+    "notes": "Census Exact address match; interpolated street-address point, not a verified venue entrance.",
+    "checkedOn": "2026-10-12"
+  },
+  {
+    "venueId": 555262706,
+    "venueName": "Goorin Headquarters",
+    "location": {
+      "latitude": 37.759134414163,
+      "longitude": -122.415734788561,
+      "precision": "address",
+      "sourceUrl": "https://geocoding.geo.census.gov/geocoder/locations/address?street=583+Shotwell+St&city=San+Francisco&state=CA&benchmark=Public_AR_Current&format=json",
+      "matchedAddress": "583 SHOTWELL ST, SAN FRANCISCO, CA, 94110"
+    },
+    "notes": "Census Exact address match of the company-listed HQ; interpolated street-address point, not a verified show-room entrance.",
+    "checkedOn": "2026-10-12"
+  },
+  {
+    "venueId": 366161466,
+    "venueName": "Shed A",
+    "location": {
+      "latitude": 37.7757239,
+      "longitude": -122.386138,
+      "precision": "area",
+      "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/1151042598/full.json",
+      "matchedAddress": "Pier 48, Mission Rock, San Francisco"
+    },
+    "notes": "Operator texts identify Shed A at Pier 48 across from Oracle Park; opened OSM way 1151042598 (man_made=pier, name Pier 48) supplies the shore polygon. Bounding-box center; pier area estimate, not an entrance or shed-room selection.",
+    "checkedOn": "2026-10-12"
+  },
+  {
+    "venueId": 1455411068,
+    "venueName": "Wardlaw Skatepark",
+    "location": {
+      "latitude": 38.115971952343,
+      "longitude": -122.202009179353,
+      "precision": "address",
+      "sourceUrl": "https://geocoding.geo.census.gov/geocoder/locations/address?street=1805+Ascot+Parkway&city=Vallejo&state=CA&benchmark=Public_AR_Current&format=json",
+      "matchedAddress": "1805 ASCOT PKWY, VALLEJO, CA, 94591"
+    },
+    "notes": "Census Exact address match; interpolated street-address point, not a verified skatepark entrance.",
+    "checkedOn": "2026-10-12"
   }
 ]

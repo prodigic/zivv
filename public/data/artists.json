@@ -2067,71 +2067,8 @@
     "normalizedName": "hellbillys",
     "slug": "hellbillys",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1764137205,
-        "slug": "2026-10-11-jack-killed-jill-gilman-brewing-co",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791745200000,
-        "headlinerName": "Jack Killed Jill",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e7d6f582e2176884",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0e96816bbde52503",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:1ac6b78e59666cd9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1788566700000,
-            "lastSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970203
   },
   {
@@ -9301,43 +9238,8 @@
     "normalizedName": "no ambition",
     "slug": "no-ambition",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 462728582,
-        "slug": "2026-10-11-swanblood-fml-studios",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Swanblood",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:718858e457cfe156",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1616660773,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1616660773,
-        "venueName": "FML Studios",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969808
   },
   {
@@ -11707,42 +11609,8 @@
     "normalizedName": "big tractor",
     "slug": "big-tractor",
     "totalEventCount": 9,
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "upcomingEvents": [
-      {
-        "id": 1100099901,
-        "slug": "2026-10-11-big-tractor-thrillhouse-records",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Big Tractor",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:81ee2cba830d940a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 735357859,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 735357859,
-        "venueName": "Thrillhouse Records",
-        "venueCity": "San Francisco"
-      },
       {
         "id": 938526236,
         "slug": "2026-10-21-half-calf-stay-gold-deli",
@@ -14344,42 +14212,8 @@
     "normalizedName": "parabellum",
     "slug": "parabellum",
     "totalEventCount": 4,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1132734069,
-        "slug": "2026-10-11-exhorder-the-hub",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791765000000,
-        "headlinerName": "Exhorder",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 35,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:82f485a8eae23cc5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1804000273,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1804000273,
-        "venueName": "the Hub",
-        "venueCity": "Redwood City"
-      },
       {
         "id": 1798523680,
         "slug": "2026-10-16-blind-illusion-record-release-neck-of-the-woods",
@@ -15976,43 +15810,8 @@
     "normalizedName": "seagulls",
     "slug": "the-seagulls",
     "totalEventCount": 5,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2021200718,
-        "slug": "2026-10-11-the-seagulls-the-make-out-room",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791770400000,
-        "headlinerName": "The Seagulls",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:fd100ced63800b50",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 398859205,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 398859205,
-        "venueName": "Make Out Room",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970183,
     "vibe": {
       "summary": "At San Francisco’s Make Out Room, The Seagulls played fast, driving punk with a fun, energetic attitude. Jeremy Roschelle’s brief eyewitness account enjoyed the retro sound and Geri Vahey’s band, relating it to music from his younger years.",
@@ -18880,43 +18679,8 @@
     "normalizedName": "gill brothers",
     "slug": "gill-brothers-band",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 935907200,
-        "slug": "2026-10-11-christian-francisco-the-planetarium",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791770400000,
-        "headlinerName": "Christian Francisco",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:202bf011fedfeb96",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1392713409,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1392713409,
-        "venueName": "the Planetarium",
-        "venueCity": "Richmond"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969688
   },
   {
@@ -23826,75 +23590,8 @@
     "normalizedName": "project mayhem",
     "slug": "project-mayhem",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 926470308,
-        "slug": "2026-10-11-tehmodhjin-kilowatt",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791748800000,
-        "headlinerName": "Project Mayhem",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1786104000000,
-        "poster": {
-          "imageUrl": "https://dice-media.imgix.net/attachments/2026-07-20/83fd1653-c36f-4d9d-845c-c1ce4bcaa338.jpg",
-          "eventUrl": "https://link.dice.fm/K27c39683771",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:5e82993e01ffce44",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b1be594351653ae1",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:81cd2a82f93d7259",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1433810567,
-        "venueName": "Kilowatt",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204
   },
   {
@@ -24756,138 +24453,8 @@
     "normalizedName": "sick behavior",
     "slug": "sick-behavior",
     "totalEventCount": 9,
-    "upcomingEventCount": 6,
+    "upcomingEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 1764137205,
-        "slug": "2026-10-11-jack-killed-jill-gilman-brewing-co",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791745200000,
-        "headlinerName": "Jack Killed Jill",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e7d6f582e2176884",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0e96816bbde52503",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:1ac6b78e59666cd9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1788566700000,
-            "lastSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 1704506099,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c2d873a24cdbea89",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1789777368000,
-            "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 47470064,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street-and-gilman-brewery",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03f5a8478e8428bf",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1852858383,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1852858383,
-        "venueName": "924 Gilman Street and Gilman Brewery",
-        "venueCity": "Berkeley"
-      },
       {
         "id": 2052174827,
         "slug": "2026-10-17-hell-bound-pound-mabuhay-gardens",
@@ -29387,43 +28954,8 @@
     "normalizedName": "nostalgia",
     "slug": "nostalgia",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 462728582,
-        "slug": "2026-10-11-swanblood-fml-studios",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Swanblood",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:718858e457cfe156",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1616660773,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1616660773,
-        "venueName": "FML Studios",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969715
   },
   {
@@ -35051,104 +34583,8 @@
     "normalizedName": "hellflowers",
     "slug": "the-hellflowers",
     "totalEventCount": 6,
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1764137205,
-        "slug": "2026-10-11-jack-killed-jill-gilman-brewing-co",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791745200000,
-        "headlinerName": "Jack Killed Jill",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e7d6f582e2176884",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0e96816bbde52503",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:1ac6b78e59666cd9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1788566700000,
-            "lastSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 1704506099,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c2d873a24cdbea89",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1789777368000,
-            "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      },
       {
         "id": 2128022671,
         "slug": "2026-11-06-knights-of-molino-on-broadway",
@@ -37288,74 +36724,8 @@
     "normalizedName": "tehmodhjin",
     "slug": "tehmodhjin",
     "totalEventCount": 5,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 926470308,
-        "slug": "2026-10-11-tehmodhjin-kilowatt",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791748800000,
-        "headlinerName": "Project Mayhem",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1786104000000,
-        "poster": {
-          "imageUrl": "https://dice-media.imgix.net/attachments/2026-07-20/83fd1653-c36f-4d9d-845c-c1ce4bcaa338.jpg",
-          "eventUrl": "https://link.dice.fm/K27c39683771",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:5e82993e01ffce44",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b1be594351653ae1",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:81cd2a82f93d7259",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1433810567,
-        "venueName": "Kilowatt",
-        "venueCity": "San Francisco"
-      },
       {
         "id": 960624723,
         "slug": "2026-12-12-bfh-the-hub",
@@ -41425,43 +40795,8 @@
     "normalizedName": "this train don't stop",
     "slug": "this-train-dont-stop",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2021200718,
-        "slug": "2026-10-11-the-seagulls-the-make-out-room",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791770400000,
-        "headlinerName": "The Seagulls",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:fd100ced63800b50",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 398859205,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 398859205,
-        "venueName": "Make Out Room",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969824
   },
   {
@@ -42974,138 +42309,8 @@
     "normalizedName": "hemmed up",
     "slug": "hemmed-up",
     "totalEventCount": 11,
-    "upcomingEventCount": 6,
+    "upcomingEventCount": 3,
     "upcomingEvents": [
-      {
-        "id": 1764137205,
-        "slug": "2026-10-11-jack-killed-jill-gilman-brewing-co",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791745200000,
-        "headlinerName": "Jack Killed Jill",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e7d6f582e2176884",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0e96816bbde52503",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:1ac6b78e59666cd9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1788566700000,
-            "lastSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 1704506099,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c2d873a24cdbea89",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1789777368000,
-            "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 47470064,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street-and-gilman-brewery",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03f5a8478e8428bf",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1852858383,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1852858383,
-        "venueName": "924 Gilman Street and Gilman Brewery",
-        "venueCity": "Berkeley"
-      },
       {
         "id": 1930421837,
         "slug": "2026-10-16-too-bad-eugene-the-jury-room",
@@ -48287,43 +47492,8 @@
     "normalizedName": "thee marloes",
     "slug": "thee-marloes",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 810426816,
-        "slug": "2026-10-11-derya-yildirim-grup-simsek-the-chapel",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Derya Yildirim & Grup Simsek",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 27,
-        "priceMax": 30,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b2f8578bd1ff0fad",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 680116887,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 680116887,
-        "venueName": "Chapel",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969780
   },
   {
@@ -56381,139 +55551,8 @@
     "normalizedName": "nixed",
     "slug": "nixed",
     "totalEventCount": 5,
-    "upcomingEventCount": 3,
-    "upcomingEvents": [
-      {
-        "id": 1764137205,
-        "slug": "2026-10-11-jack-killed-jill-gilman-brewing-co",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791745200000,
-        "headlinerName": "Jack Killed Jill",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e7d6f582e2176884",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0e96816bbde52503",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:1ac6b78e59666cd9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1788566700000,
-            "lastSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 1704506099,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c2d873a24cdbea89",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1789777368000,
-            "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 47470064,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street-and-gilman-brewery",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03f5a8478e8428bf",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1852858383,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1852858383,
-        "venueName": "924 Gilman Street and Gilman Brewery",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970203,
     "links": [
       {
@@ -57477,49 +56516,8 @@
     "normalizedName": "let's go bowling",
     "slug": "lets-go-bowling",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2136268934,
-        "slug": "2026-10-11-lets-go-bowling-the-bottom-of-the-hill",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Let's Go Bowling",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 25,
-        "priceMax": 30,
-        "createdAtEpochMs": 1786708800000,
-        "poster": {
-          "imageUrl": "https://www.bottomofthehill.com/f/20261011f.jpg",
-          "eventUrl": "https://www.bottomofthehill.com/20261011.html",
-          "kind": "poster",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03bcf84d3351a9e9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1016385760,
-        "venueName": "Bottom of the Hill",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204
   },
   {
@@ -64041,139 +63039,8 @@
     "normalizedName": "bad ass",
     "slug": "bad-ass",
     "totalEventCount": 4,
-    "upcomingEventCount": 3,
-    "upcomingEvents": [
-      {
-        "id": 1764137205,
-        "slug": "2026-10-11-jack-killed-jill-gilman-brewing-co",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791745200000,
-        "headlinerName": "Jack Killed Jill",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e7d6f582e2176884",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0e96816bbde52503",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:1ac6b78e59666cd9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1788566700000,
-            "lastSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 1704506099,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c2d873a24cdbea89",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1789777368000,
-            "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 47470064,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street-and-gilman-brewery",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03f5a8478e8428bf",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1852858383,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1852858383,
-        "venueName": "924 Gilman Street and Gilman Brewery",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970203
   },
   {
@@ -74807,42 +73674,8 @@
     "normalizedName": "swanblood",
     "slug": "swanblood",
     "totalEventCount": 3,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 462728582,
-        "slug": "2026-10-11-swanblood-fml-studios",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Swanblood",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:718858e457cfe156",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1616660773,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1616660773,
-        "venueName": "FML Studios",
-        "venueCity": "Oakland"
-      },
       {
         "id": 2082002351,
         "slug": "2026-10-17-the-american-dream-goorin-headquarters",
@@ -75400,41 +74233,8 @@
     "normalizedName": "wise company",
     "slug": "wise-company",
     "totalEventCount": 4,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1182524779,
-        "slug": "2026-10-11-wolfs-law-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791752400000,
-        "headlinerName": "Wolf's Law",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b2820f0a99d87e1e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970101
   },
   {
@@ -78271,43 +77071,8 @@
     "normalizedName": "christian francisco",
     "slug": "christian-francisco",
     "totalEventCount": 5,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 935907200,
-        "slug": "2026-10-11-christian-francisco-the-planetarium",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791770400000,
-        "headlinerName": "Christian Francisco",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:202bf011fedfeb96",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1392713409,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1392713409,
-        "venueName": "the Planetarium",
-        "venueCity": "Richmond"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970163,
     "vibe": {
       "summary": "Christian Francisco’s November 2022 Brick and Mortar opening set centered on singing and acoustic guitar. The eyewitness reviewer found the short solo performance emotionally powerful, emphasizing the maturity of the songs and the exposed, personal delivery rather than a full-band sound.",
@@ -95742,55 +94507,8 @@
     "normalizedName": "jon chi & the pacific syndicate",
     "slug": "jon-chi-the-pacific-syndicate",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 983440295,
-        "slug": "2026-10-11-jackie-greene-hopmonk-tavern",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Jackie Greene",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:ebaaeda4739363d9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:9323268fb01924bd",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1811398338,
-        "venueName": "Hopmonk Tavern (Novato)",
-        "venueCity": "Novato"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970115
   },
   {
@@ -106716,61 +105434,8 @@
     "normalizedName": "my morning jacket",
     "slug": "my-morning-jacket",
     "totalEventCount": 9,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 537463467,
-        "slug": "2026-10-11-my-morning-jacket-the-fillmore",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "My Morning Jacket",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://s1.ticketm.net/dam/a/ae1/0df66a15-a001-44bb-870a-8e3baa6bfae1_TABLET_LANDSCAPE_LARGE_16_9.jpg",
-          "eventUrl": "https://www.ticketmaster.com/my-morning-jacket-san-francisco-california-10-11-2026/event/1C0064761A558053",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:aa51a22fdac27aec",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1136597428,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:3a71688c0731afef",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1136597428,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1136597428,
-        "venueName": "Fillmore",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204
   },
   {
@@ -108719,41 +107384,8 @@
     "normalizedName": "air supply",
     "slug": "air-supply",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 961903877,
-        "slug": "2026-10-11-air-supply-the-mountain-winery",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791772200000,
-        "headlinerName": "Air Supply",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:17db0364f6a10fba",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2021730900,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2021730900,
-        "venueName": "Mountain Winery",
-        "venueCity": "Saratoga"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204
   },
   {
@@ -109231,54 +107863,8 @@
     "normalizedName": "jackie greene",
     "slug": "jackie-greene",
     "totalEventCount": 3,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 983440295,
-        "slug": "2026-10-11-jackie-greene-hopmonk-tavern",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Jackie Greene",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:ebaaeda4739363d9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:9323268fb01924bd",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1811398338,
-        "venueName": "Hopmonk Tavern (Novato)",
-        "venueCity": "Novato"
-      },
       {
         "id": 1867550785,
         "slug": "2026-11-27-jackie-greene-the-catalyst",
@@ -109360,40 +107946,8 @@
     "normalizedName": "bruno mars",
     "slug": "bruno-mars",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1770220871,
-        "slug": "2026-10-10-bruno-mars-the-49er-stadium",
-        "dateEpochMs": 1791633600000,
-        "headlinerName": "Bruno Mars",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:f2badd9452be8633",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1188914662,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1188914662,
-        "venueName": "49ers Stadium",
-        "venueCity": "Santa Clara"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970201
   },
   {
@@ -109440,77 +107994,8 @@
     "normalizedName": "menstrual tramps",
     "slug": "menstrual-tramps",
     "totalEventCount": 4,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1704506099,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c2d873a24cdbea89",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1789777368000,
-            "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 47470064,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street-and-gilman-brewery",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03f5a8478e8428bf",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1852858383,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1852858383,
-        "venueName": "924 Gilman Street and Gilman Brewery",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970201
   },
   {
@@ -109629,49 +108114,8 @@
     "normalizedName": "santiago cruz",
     "slug": "santiago-cruz",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1391348599,
-        "slug": "2026-10-11-santiago-cruz-the-independent",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Santiago Cruz",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 52.55,
-        "priceMax": 52.55,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/13/48/87/13_Edp.jpg?v=12",
-          "eventUrl": "https://www.theindependentsf.com/tm-event/santiago-cruz/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:4c1c343d8bce6d7f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 515101024,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 515101024,
-        "venueName": "Independent",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970203
   },
   {
@@ -109682,139 +108126,8 @@
     "normalizedName": "jack killed jill",
     "slug": "jack-killed-jill",
     "totalEventCount": 3,
-    "upcomingEventCount": 3,
-    "upcomingEvents": [
-      {
-        "id": 1764137205,
-        "slug": "2026-10-11-jack-killed-jill-gilman-brewing-co",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791745200000,
-        "headlinerName": "Jack Killed Jill",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e7d6f582e2176884",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0e96816bbde52503",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:1ac6b78e59666cd9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1788566700000,
-            "lastSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 1704506099,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c2d873a24cdbea89",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1789777368000,
-            "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 47470064,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street-and-gilman-brewery",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03f5a8478e8428bf",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1852858383,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1852858383,
-        "venueName": "924 Gilman Street and Gilman Brewery",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970203,
     "links": [
       {
@@ -109831,43 +108144,8 @@
     "normalizedName": "gabriel fluffy iglesias (comedian)",
     "slug": "gabriel-fluffy-iglesias-comedian",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 475217268,
-        "slug": "2026-10-11-gabriel-fluffy-iglesias-comedian-the-arena",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Gabriel Fluffy Iglesias (comedian)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39,
-        "priceMax": 39,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:853ccff6c2b2cbe6",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1887679738,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1887679738,
-        "venueName": "Arena",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970203
   },
   {
@@ -109878,43 +108156,8 @@
     "normalizedName": "chayanne",
     "slug": "chayanne",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1509749910,
-        "slug": "2026-10-11-chayanne-the-warriors-stadiom",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791770400000,
-        "headlinerName": "Chayanne",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 72,
-        "priceMax": 72,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:aecebd99f87c57d4",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 793025194,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 793025194,
-        "venueName": "Warriors Stadium",
-        "venueCity": "S.f"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204
   },
   {
@@ -109925,43 +108168,8 @@
     "normalizedName": "edgar alejandro",
     "slug": "edgar-alejandro",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1190241124,
-        "slug": "2026-10-11-edgar-alejandro-the-rickshaw-stop",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Edgar Alejandro",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 45,
-        "priceMax": 50,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:f39b96744915b597",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 31041890,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 31041890,
-        "venueName": "Rickshaw Stop",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204
   },
   {
@@ -109972,43 +108180,8 @@
     "normalizedName": "killer queen",
     "slug": "killer-queen",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1420838068,
-        "slug": "2026-10-11-killer-queen-the-uptown-theater",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Killer Queen",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 43.25,
-        "priceMax": 43.25,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:d4dabbd111413458",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1711400117,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1711400117,
-        "venueName": "Uptown Theater",
-        "venueCity": "Napa"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204
   },
   {
@@ -110019,75 +108192,8 @@
     "normalizedName": "b.f.h",
     "slug": "bfh",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 926470308,
-        "slug": "2026-10-11-tehmodhjin-kilowatt",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791748800000,
-        "headlinerName": "Project Mayhem",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1786104000000,
-        "poster": {
-          "imageUrl": "https://dice-media.imgix.net/attachments/2026-07-20/83fd1653-c36f-4d9d-845c-c1ce4bcaa338.jpg",
-          "eventUrl": "https://link.dice.fm/K27c39683771",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:5e82993e01ffce44",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b1be594351653ae1",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:81cd2a82f93d7259",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1433810567,
-        "venueName": "Kilowatt",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970205,
     "links": [
       {
@@ -110104,49 +108210,8 @@
     "normalizedName": "reducers sf",
     "slug": "reducers-sf",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2136268934,
-        "slug": "2026-10-11-lets-go-bowling-the-bottom-of-the-hill",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Let's Go Bowling",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 25,
-        "priceMax": 30,
-        "createdAtEpochMs": 1786708800000,
-        "poster": {
-          "imageUrl": "https://www.bottomofthehill.com/f/20261011f.jpg",
-          "eventUrl": "https://www.bottomofthehill.com/20261011.html",
-          "kind": "poster",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03bcf84d3351a9e9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1016385760,
-        "venueName": "Bottom of the Hill",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204,
     "vibe": {
       "summary": "Crappy Clubs and Smelly Pubs delivers direct street punk built around firm rhythm playing, ringing guitar leads and forceful, simple chants. The review hears communal singalong choruses and an abrasive attitude that make the record immediately accessible.",
@@ -110179,49 +108244,8 @@
     "normalizedName": "odd numbers",
     "slug": "the-odd-numbers",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2136268934,
-        "slug": "2026-10-11-lets-go-bowling-the-bottom-of-the-hill",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Let's Go Bowling",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 25,
-        "priceMax": 30,
-        "createdAtEpochMs": 1786708800000,
-        "poster": {
-          "imageUrl": "https://www.bottomofthehill.com/f/20261011f.jpg",
-          "eventUrl": "https://www.bottomofthehill.com/20261011.html",
-          "kind": "poster",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03bcf84d3351a9e9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1016385760,
-        "venueName": "Bottom of the Hill",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970204
   },
   {
@@ -110232,49 +108256,8 @@
     "normalizedName": "soulciter",
     "slug": "dj-soulciter",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2136268934,
-        "slug": "2026-10-11-lets-go-bowling-the-bottom-of-the-hill",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Let's Go Bowling",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 25,
-        "priceMax": 30,
-        "createdAtEpochMs": 1786708800000,
-        "poster": {
-          "imageUrl": "https://www.bottomofthehill.com/f/20261011f.jpg",
-          "eventUrl": "https://www.bottomofthehill.com/20261011.html",
-          "kind": "poster",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03bcf84d3351a9e9",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1016385760,
-        "venueName": "Bottom of the Hill",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970205
   },
   {
@@ -149362,43 +147345,8 @@
     "normalizedName": "moose trout",
     "slug": "moose-trout",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1100099901,
-        "slug": "2026-10-11-big-tractor-thrillhouse-records",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Big Tractor",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:81ee2cba830d940a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 735357859,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 735357859,
-        "venueName": "Thrillhouse Records",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789179075025
   },
   {
@@ -151989,40 +149937,8 @@
     "normalizedName": "unwoman",
     "slug": "unwoman",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1313433379,
-        "slug": "2026-10-10-unwoman-bay-area-makers-farm",
-        "dateEpochMs": 1791633600000,
-        "headlinerName": "Unwoman",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:2bcfa7005f979189",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2037432326,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2037432326,
-        "venueName": "Bay Area Makers Farm",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789179075139
   },
   {
@@ -152033,40 +149949,8 @@
     "normalizedName": "hare and arrow",
     "slug": "hare-and-arrow",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1313433379,
-        "slug": "2026-10-10-unwoman-bay-area-makers-farm",
-        "dateEpochMs": 1791633600000,
-        "headlinerName": "Unwoman",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:2bcfa7005f979189",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2037432326,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2037432326,
-        "venueName": "Bay Area Makers Farm",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789179075139
   },
   {
@@ -152077,40 +149961,8 @@
     "normalizedName": "brassica a/a $20 8pm",
     "slug": "brassica-aa-20-8pm",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1313433379,
-        "slug": "2026-10-10-unwoman-bay-area-makers-farm",
-        "dateEpochMs": 1791633600000,
-        "headlinerName": "Unwoman",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:2bcfa7005f979189",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2037432326,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2037432326,
-        "venueName": "Bay Area Makers Farm",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789179075140,
     "links": [
       {
@@ -152275,76 +150127,8 @@
     "normalizedName": "mismiths",
     "slug": "mismiths",
     "totalEventCount": 3,
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1704506099,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c2d873a24cdbea89",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1789777368000,
-            "lastSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      },
-      {
-        "id": 47470064,
-        "slug": "2026-10-11-menstrual-tramps-924-gilman-street-and-gilman-brewery",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791766800000,
-        "headlinerName": "Menstrual Tramps",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:03f5a8478e8428bf",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1852858383,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1852858383,
-        "venueName": "924 Gilman Street and Gilman Brewery",
-        "venueCity": "Berkeley"
-      },
       {
         "id": 1551171062,
         "slug": "2026-10-12-mismiths-the-blue-lagoon",
@@ -152390,43 +150174,8 @@
     "normalizedName": "derya yildirim & grup simsek",
     "slug": "derya-yildirim-grup-simsek",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 810426816,
-        "slug": "2026-10-11-derya-yildirim-grup-simsek-the-chapel",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Derya Yildirim & Grup Simsek",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 27,
-        "priceMax": 30,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b2f8578bd1ff0fad",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 680116887,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 680116887,
-        "venueName": "Chapel",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789179075144
   },
   {
@@ -160507,43 +158256,8 @@
     "normalizedName": "divine offering (tribute)",
     "slug": "divine-offering-tribute",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 790147991,
-        "slug": "2026-10-11-divine-offering-tribute-great-american-music-hall",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Divine Offering (tribute)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39.5,
-        "priceMax": 45,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:625f79f64d6f9cc8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790381132084,
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "originalVenueId": 463728167,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 463728167,
-        "venueName": "Great American Music Hall",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789179076892
   },
   {
@@ -160554,77 +158268,8 @@
     "normalizedName": "sita michelle coltrain",
     "slug": "sita-michelle-coltrain",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 790147991,
-        "slug": "2026-10-11-divine-offering-tribute-great-american-music-hall",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Divine Offering (tribute)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39.5,
-        "priceMax": 45,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:625f79f64d6f9cc8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790381132084,
-            "lastSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "originalVenueId": 463728167,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 463728167,
-        "venueName": "Great American Music Hall",
-        "venueCity": "San Francisco"
-      },
-      {
-        "id": 326858952,
-        "slug": "2026-10-11-sita-michelle-coltrain-great-american-music-hall",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Sita Michelle Coltrain",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39.5,
-        "priceMax": 45,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:2541484f2dc51944",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 463728167,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 463728167,
-        "venueName": "Great American Music Hall",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789179076892
   },
   {
@@ -165479,49 +163124,8 @@
     "normalizedName": "egyptian lover",
     "slug": "egyptian-lover",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1350390379,
-        "slug": "2026-10-11-egyptian-lover-the-dna-lounge",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791779400000,
-        "headlinerName": "Egyptian Lover",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 25,
-        "priceMax": 25,
-        "createdAtEpochMs": 1789777368000,
-        "poster": {
-          "imageUrl": "https://cdn.dnalounge.com/flyers/2026/10/11-1.jpg",
-          "eventUrl": "https://www.dnalounge.com/calendar/2026/10-11.html",
-          "kind": "poster",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:f12c52166795243f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 405307007,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 405307007,
-        "venueName": "DNA Lounge",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789778766697
   },
   {
@@ -165532,49 +163136,8 @@
     "normalizedName": "nogu svelo!",
     "slug": "nogu-svelo",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1604276081,
-        "slug": "2026-10-11-nogu-svelo-kilowatt",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791770400000,
-        "headlinerName": "Nogu Svelo!",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 71.07,
-        "priceMax": 71.07,
-        "createdAtEpochMs": 1789777368000,
-        "poster": {
-          "imageUrl": "https://dice-media.imgix.net/attachments/2026-06-05/39a610b7-5218-4aa1-afbe-e40e03e1f3ac.jpg",
-          "eventUrl": "https://link.dice.fm/Y445881b85b6",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:d63d1b6dbebb7b81",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1433810567,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1433810567,
-        "venueName": "Kilowatt",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789778766697
   },
   {
@@ -175114,40 +172677,8 @@
     "normalizedName": "sweet gloom",
     "slug": "sweet-gloom",
     "totalEventCount": 4,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1465401246,
-        "slug": "2026-10-10-sweet-gloom-the-planetarium",
-        "dateEpochMs": 1791633600000,
-        "headlinerName": "Sweet Gloom",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e4028cd3b5e857db",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1790985835628,
-            "lastSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "originalVenueId": 1392713409,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1392713409,
-        "venueName": "the Planetarium",
-        "venueCity": "Richmond"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790381132176
   },
   {
@@ -175338,43 +172869,8 @@
     "normalizedName": "consolidated electric",
     "slug": "consolidated-electric",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 530381858,
-        "slug": "2026-10-11-consolidated-electric-the-ivy-room",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791765000000,
-        "headlinerName": "Consolidated Electric",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:caed94ac64350be5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790381132180,
     "vibe": {
       "summary": "Ohm mixes psychedelic rock with orchestral flourishes, jazzy guitar and wind instruments. Its bright, energetic arrangements also make room for bluesy vocals and bass, harpsichord, vocal harmonies and distorted guitar, giving the recording a varied, expansive palette.",
@@ -175401,43 +172897,8 @@
     "normalizedName": "silver fuzz",
     "slug": "silver-fuzz",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 530381858,
-        "slug": "2026-10-11-consolidated-electric-the-ivy-room",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791765000000,
-        "headlinerName": "Consolidated Electric",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:caed94ac64350be5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790381132180,
     "links": [
       {
@@ -180173,43 +177634,8 @@
     "normalizedName": "100 demons",
     "slug": "100-demons",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 227358884,
-        "slug": "2026-10-11-100-demons-the-cornerstone",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "100 Demons",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 33.96,
-        "priceMax": 33.96,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:7dd6de3668a369ee",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1393740940,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1393740940,
-        "venueName": "Cornerstone",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835703
   },
   {
@@ -180220,43 +177646,8 @@
     "normalizedName": "death before dishonor",
     "slug": "death-before-dishonor",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 227358884,
-        "slug": "2026-10-11-100-demons-the-cornerstone",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "100 Demons",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 33.96,
-        "priceMax": 33.96,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:7dd6de3668a369ee",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1393740940,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1393740940,
-        "venueName": "Cornerstone",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835703
   },
   {
@@ -180267,43 +177658,8 @@
     "normalizedName": "bloodshed",
     "slug": "bloodshed",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 227358884,
-        "slug": "2026-10-11-100-demons-the-cornerstone",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "100 Demons",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 33.96,
-        "priceMax": 33.96,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:7dd6de3668a369ee",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1393740940,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1393740940,
-        "venueName": "Cornerstone",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835703
   },
   {
@@ -180314,43 +177670,8 @@
     "normalizedName": "zero chill",
     "slug": "zero-chill",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 227358884,
-        "slug": "2026-10-11-100-demons-the-cornerstone",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "100 Demons",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 33.96,
-        "priceMax": 33.96,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:7dd6de3668a369ee",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1393740940,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1393740940,
-        "venueName": "Cornerstone",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835703
   },
   {
@@ -180361,43 +177682,8 @@
     "normalizedName": "exhorder",
     "slug": "exhorder",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1132734069,
-        "slug": "2026-10-11-exhorder-the-hub",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791765000000,
-        "headlinerName": "Exhorder",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 35,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:82f485a8eae23cc5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1804000273,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1804000273,
-        "venueName": "the Hub",
-        "venueCity": "Redwood City"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835705
   },
   {
@@ -180408,43 +177694,8 @@
     "normalizedName": "no/mas",
     "slug": "nomas",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1132734069,
-        "slug": "2026-10-11-exhorder-the-hub",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791765000000,
-        "headlinerName": "Exhorder",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 35,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:82f485a8eae23cc5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1804000273,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1804000273,
-        "venueName": "the Hub",
-        "venueCity": "Redwood City"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835705
   },
   {
@@ -180455,43 +177706,8 @@
     "normalizedName": "phantom",
     "slug": "phantom",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1132734069,
-        "slug": "2026-10-11-exhorder-the-hub",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791765000000,
-        "headlinerName": "Exhorder",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 35,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:82f485a8eae23cc5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1804000273,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1804000273,
-        "venueName": "the Hub",
-        "venueCity": "Redwood City"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835705
   },
   {
@@ -180502,43 +177718,8 @@
     "normalizedName": "intoxicated",
     "slug": "intoxicated",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1132734069,
-        "slug": "2026-10-11-exhorder-the-hub",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791765000000,
-        "headlinerName": "Exhorder",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 30,
-        "priceMax": 35,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:82f485a8eae23cc5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1804000273,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1804000273,
-        "venueName": "the Hub",
-        "venueCity": "Redwood City"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835705
   },
   {
@@ -190998,41 +188179,8 @@
     "normalizedName": "wolf's law",
     "slug": "wolfs-law",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1182524779,
-        "slug": "2026-10-11-wolfs-law-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791752400000,
-        "headlinerName": "Wolf's Law",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b2820f0a99d87e1e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464888
   },
   {
@@ -191043,41 +188191,8 @@
     "normalizedName": "nicolette & katie",
     "slug": "nicolette-katie",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1182524779,
-        "slug": "2026-10-11-wolfs-law-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791752400000,
-        "headlinerName": "Wolf's Law",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b2820f0a99d87e1e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464888
   },
   {
@@ -191088,41 +188203,8 @@
     "normalizedName": "slags",
     "slug": "the-slags",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1182524779,
-        "slug": "2026-10-11-wolfs-law-924-gilman-street",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791752400000,
-        "headlinerName": "Wolf's Law",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b2820f0a99d87e1e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464888
   },
   {
@@ -191133,43 +188215,8 @@
     "normalizedName": "plummeled",
     "slug": "plummeled",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 462728582,
-        "slug": "2026-10-11-swanblood-fml-studios",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Swanblood",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:718858e457cfe156",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1616660773,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1616660773,
-        "venueName": "FML Studios",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464889
   },
   {
@@ -191180,43 +188227,8 @@
     "normalizedName": "graham farrow",
     "slug": "graham-farrow",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 935907200,
-        "slug": "2026-10-11-christian-francisco-the-planetarium",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791770400000,
-        "headlinerName": "Christian Francisco",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:202bf011fedfeb96",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1392713409,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1392713409,
-        "venueName": "the Planetarium",
-        "venueCity": "Richmond"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464889
   },
   {
@@ -191227,43 +188239,8 @@
     "normalizedName": "hommy beg",
     "slug": "hommy-beg",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 935907200,
-        "slug": "2026-10-11-christian-francisco-the-planetarium",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791770400000,
-        "headlinerName": "Christian Francisco",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:202bf011fedfeb96",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1392713409,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1392713409,
-        "venueName": "the Planetarium",
-        "venueCity": "Richmond"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464890
   },
   {
@@ -191274,43 +188251,8 @@
     "normalizedName": "we are leaves",
     "slug": "we-are-leaves",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 530381858,
-        "slug": "2026-10-11-consolidated-electric-the-ivy-room",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791765000000,
-        "headlinerName": "Consolidated Electric",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:caed94ac64350be5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464890
   },
   {
@@ -191321,43 +188263,8 @@
     "normalizedName": "bussdown",
     "slug": "the-bussdown",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1121212371,
-        "slug": "2026-10-11-the-bussdown-thee-stork-club",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791777600000,
-        "headlinerName": "The Bussdown",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:f79113d33283e99f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 873142532,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 873142532,
-        "venueName": "Stork Club",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464891
   },
   {
@@ -191368,43 +188275,8 @@
     "normalizedName": "blind dogs",
     "slug": "blind-dogs",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1100099901,
-        "slug": "2026-10-11-big-tractor-thrillhouse-records",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Big Tractor",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:81ee2cba830d940a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 735357859,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 735357859,
-        "venueName": "Thrillhouse Records",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464891
   },
   {
@@ -191415,43 +188287,8 @@
     "normalizedName": "garrafales",
     "slug": "garrafales",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1100099901,
-        "slug": "2026-10-11-big-tractor-thrillhouse-records",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Big Tractor",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:81ee2cba830d940a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 735357859,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 735357859,
-        "venueName": "Thrillhouse Records",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464891
   },
   {
@@ -191462,43 +188299,8 @@
     "normalizedName": "wet summer",
     "slug": "wet-summer",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1100099901,
-        "slug": "2026-10-11-big-tractor-thrillhouse-records",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791759600000,
-        "headlinerName": "Big Tractor",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:81ee2cba830d940a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 735357859,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 735357859,
-        "venueName": "Thrillhouse Records",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464891
   },
   {
@@ -191509,43 +188311,8 @@
     "normalizedName": "artesano",
     "slug": "artesano",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1190241124,
-        "slug": "2026-10-11-edgar-alejandro-the-rickshaw-stop",
-        "dateEpochMs": 1791720000000,
-        "startTimeEpochMs": 1791774000000,
-        "headlinerName": "Edgar Alejandro",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 45,
-        "priceMax": 50,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:f39b96744915b597",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 31041890,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 31041890,
-        "venueName": "Rickshaw Stop",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1791595464895
   },
   {

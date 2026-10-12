@@ -7441,6 +7441,73 @@
       "sources": ["https://wonderstump.art/contact"],
       "notes": "Opened official venue, city or organizer source. Street/intersection location used for outdoor sites.",
       "checkedOn": "2026-10-02"
+    },
+    {
+      "venueId": 1315145584,
+      "venueName": "Lanesplitter Pizza",
+      "streetAddress": null,
+      "city": null,
+      "website": null,
+      "status": "partial",
+      "sources": [
+        "https://jon.luini.com/thelist/club.html",
+        "https://lanesplitterpizzapub.com/our-story",
+        "https://www.lanesplitterpizzaoakland.com/",
+        "https://www.kqed.org/checkplease/6759/lanesplitter-pizza-and-pub-restaurant-info",
+        "https://localwiki.org/oakland/Lanesplitter_Pizza_%26_Pub"
+      ],
+      "notes": "TheList clubs index lists 'Lanesplitter Pizza, Oakland' without a street, separate from 'Lanesplitters Pizza' at the official Emeryville pub (3645 San Pablo Avenue, already researched under IDs 2087584222, 1567494397 and 1031217323). The operator currently publishes three East Bay locations — lanesplitterpizzaoakland.com lists 4400 Keller Avenue #300 in Oakland, KQED lists 4799 Telegraph Avenue and localwiki lists 536 Lake Park Avenue — on separate branch pages, and neither the feed nor an operator page ties the Oakland-billed Rapture Girls or Spork shows to one branch. Retain the canonical city; no house address or branch-specific website is assigned until source-supported.",
+      "checkedOn": "2026-10-12"
+    },
+    {
+      "venueId": 386406925,
+      "venueName": "Mothbelly Gallery",
+      "streetAddress": "912 Larkin Street",
+      "city": "San Francisco",
+      "website": "https://www.mothbelly.org/",
+      "status": "verified",
+      "sources": ["https://www.mothbelly.org/"],
+      "notes": "Official artist-owned gallery homepage lists 912 Larkin Street, San Francisco, CA 94109 with contact and weekly open hours.",
+      "checkedOn": "2026-10-12"
+    },
+    {
+      "venueId": 555262706,
+      "venueName": "Goorin Headquarters",
+      "streetAddress": "583 Shotwell Street",
+      "city": "San Francisco",
+      "website": "https://goorin.com/",
+      "status": "verified",
+      "sources": [
+        "https://goorin.com/pages/privacy-policy",
+        "http://www.foopee.com/punk/the-list/by-band.0.html"
+      ],
+      "notes": "TheList bands listing bills 'Goorin Headquarters, 583 Shotwell Street, S.F.'; Goorin's own privacy policy names Goorin Bros., 583 Shotwell St., San Francisco, CA 94110 as the company address, corroborating the billed HQ as the show location. goorin.com is the company's official site.",
+      "checkedOn": "2026-10-12"
+    },
+    {
+      "venueId": 366161466,
+      "venueName": "Shed A",
+      "streetAddress": null,
+      "city": null,
+      "website": "https://clubdarc.com/venue-info/",
+      "status": "partial",
+      "sources": [
+        "https://clubdarc.com/venue-info/",
+        "https://giantsenterprises.com/oracle-park-edge/pier-48/"
+      ],
+      "notes": "Operator venue pages identify 'Shed A at Pier 48' in the Mission Rock waterfront across from Oracle Park; Giants Enterprises describes Pier 48 as two historic maritime sheds. No single street number is published for the shed, so no house address is assigned; clubdarc.com is the official Club Darc season site operating Shed A.",
+      "checkedOn": "2026-10-12"
+    },
+    {
+      "venueId": 1455411068,
+      "venueName": "Wardlaw Skatepark",
+      "streetAddress": "1805 Ascot Parkway",
+      "city": "Vallejo",
+      "website": "https://www.gvrd.org/wardlaw-skate-bike-park",
+      "status": "verified",
+      "sources": ["https://www.gvrd.org/wardlaw-skate-bike-park"],
+      "notes": "Greater Vallejo Recreation District official park page lists the Wardlaw skate and bike park at 1805 Ascot Parkway in Vallejo.",
+      "checkedOn": "2026-10-12"
     }
   ]
 }
