@@ -63,3 +63,20 @@ it.each([
   );
   expect(container).toBeEmptyDOMElement();
 });
+
+it("reserves the artwork frame when requested but no poster is available", () => {
+  const { container } = render(
+    <EventPosterLink poster={undefined} showName="Test Band" reserve />
+  );
+  expect(container.querySelector("a")).toBeNull();
+  const frame = container.querySelector("span");
+  expect(frame).toHaveAttribute("aria-hidden", "true");
+  expect(frame).toHaveClass("h-11", "w-9", "rounded");
+});
+
+it("keeps omitting unavailable artwork by default", () => {
+  const { container } = render(
+    <EventPosterLink poster={undefined} showName="Test Band" />
+  );
+  expect(container).toBeEmptyDOMElement();
+});

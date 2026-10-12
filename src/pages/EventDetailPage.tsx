@@ -6,7 +6,9 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
-import EventPosterLink from "@/components/ui/EventPosterLink.js";
+import EventPosterLink, {
+  EventPosterArt,
+} from "@/components/ui/EventPosterLink.js";
 import EventAtlasCard from "@/components/ui/EventAtlasCard.js";
 import VenueNameLink from "@/components/ui/VenueNameLink.js";
 import { useAppStore } from "@/stores/appStore.js";
@@ -347,9 +349,16 @@ const EventDetailPage: React.FC = () => {
             supportingArtists={supportingArtists.map((artist) => artist!)}
           />
 
-          {/* Artist cards — 2-col inside left column */}
+          {/* Artist cards flow down the left column past the tall poster. */}
           {allArtists.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {event.poster && (
+                <EventPosterArt
+                  poster={event.poster}
+                  showName={headliner?.name ?? "Show"}
+                  className="sm:col-start-2 sm:row-end-3 sm:row-start-1 sm:col-end-3"
+                />
+              )}
               {allArtists.map((artist) => (
                 <Link
                   key={artist!.id}
@@ -412,6 +421,12 @@ const EventDetailPage: React.FC = () => {
                 </Link>
               ))}
             </div>
+          )}
+          {allArtists.length === 0 && event.poster && (
+            <EventPosterArt
+              poster={event.poster}
+              showName={headliner?.name ?? "Show"}
+            />
           )}
         </div>
         {/* end col-span-2 */}
@@ -493,6 +508,7 @@ const EventDetailPage: React.FC = () => {
                       <EventPosterLink
                         poster={ev.poster}
                         showName={ev.headlinerName || "Show"}
+                        reserve
                       />
                       <Link
                         key={ev.id}
@@ -503,29 +519,32 @@ const EventDetailPage: React.FC = () => {
                             : "hover:bg-gray-50 dark:hover:bg-gray-700"
                         }`}
                       >
+                        {/* Stacked date and admission recover width for the name. */}
                         <span
-                          className={`text-xs w-14 shrink-0 tabular-nums ${isCurrent ? "text-purple-600 dark:text-purple-400" : "text-gray-400 dark:text-gray-500"}`}
+                          className={`flex w-14 shrink-0 flex-col items-center gap-0.5 ${isCurrent ? "text-purple-600 dark:text-purple-400" : "text-gray-400 dark:text-gray-500"}`}
                         >
-                          {new Date(ev.dateEpochMs).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )}
+                          <span className="text-xs tabular-nums whitespace-nowrap">
+                            {new Date(ev.dateEpochMs).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )}
+                          </span>
+                          <PriceWidget
+                            isFree={ev.isFree}
+                            isSoldOut={ev.isSoldOut}
+                            priceMin={ev.priceMin}
+                            priceMax={ev.priceMax}
+                            className="text-[10px]"
+                          />
                         </span>
                         <span
-                          className={`text-xs truncate flex-1 ${isCurrent ? "text-purple-900 dark:text-purple-100 font-semibold" : "text-gray-700 dark:text-gray-200 font-medium"}`}
+                          className={`text-xs line-clamp-2 flex-1 ${isCurrent ? "text-purple-900 dark:text-purple-100 font-semibold" : "text-gray-700 dark:text-gray-200 font-medium"}`}
                         >
                           {ev.headlinerName || "Show"}
                         </span>
-                        <PriceWidget
-                          isFree={ev.isFree}
-                          isSoldOut={ev.isSoldOut}
-                          priceMin={ev.priceMin}
-                          priceMax={ev.priceMax}
-                          className="text-xs shrink-0"
-                        />
                       </Link>
                     </div>
                   );
