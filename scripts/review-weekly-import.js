@@ -216,8 +216,10 @@ if (command === "review") {
   let lease;
   try {
     lease = journal.acquire("prodigic/zivv/production", 3600000);
-    const result = await loadReviewedSteveImport(root, prepared, receipt, () =>
-      journal.checkOwnership(lease)
+    const result = await journal.guardOperation(lease, () =>
+      loadReviewedSteveImport(root, prepared, receipt, () =>
+        journal.checkOwnership(lease)
+      )
     );
     console.log(
       JSON.stringify({

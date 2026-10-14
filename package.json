@@ -65,6 +65,7 @@
     "import:venue": "npm run build:etl && node scripts/import-events.js venue",
     "weekly:prepare": "npm run build:etl && node scripts/weekly-edition.js prepare",
     "weekly:review-import": "npm run build:etl && node scripts/review-weekly-import.js review",
+    "weekly:run-import": "npm run build:etl && node scripts/run-weekly-import.js",
     "weekly:load-reviewed": "npm run build:etl && node scripts/review-weekly-import.js load",
     "candidate:build": "npm run build:etl && node scripts/build-weekly-candidate.js build",
     "candidate:verify": "npm run build:etl && node scripts/build-weekly-candidate.js verify",

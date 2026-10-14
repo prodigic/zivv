@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
 import { chmodSync, existsSync, lstatSync, realpathSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
@@ -8,6 +8,7 @@ import {
   parseWeeklyRunState,
   transitionWeeklyRun,
   type WeeklyRunState,
+  type WeeklyRunStage,
 } from "./weekly-run-state.js";
 
 export interface WeeklyRunLease {
@@ -22,6 +23,7 @@ export class WeeklyRunJournal {
   readonly path: string;
   private readonly db: DatabaseSync;
   private readonly clock: () => number;
+  private guardedLease: WeeklyRunLease | null = null;
 
   constructor(directory: string, clock: () => number = Date.now) {
     this.clock = clock;
@@ -79,11 +81,25 @@ export class WeeklyRunJournal {
       // Inspect under the writer lock, so simultaneous initializers wait.
       if (
         !(
-          (schema === 1 && application === 1514759762) ||
+          ([1, 2].includes(schema) && application === 1514759762) ||
           (schema === 0 && application === 0 && tables === 0)
         )
       )
         throw new Error("Unsupported or uninitialized journal schema");
+      if (schema > 0) {
+        const names = this.db
+          .prepare(
+            "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+          )
+          .all()
+          .map((row) => String(row.name));
+        const expected =
+          schema === 1
+            ? ["ownership", "run_state"]
+            : ["ownership", "run_state", "stage_artifact"];
+        if (canonicalJson(names) !== canonicalJson(expected))
+          throw new Error("Unsupported journal tables");
+      }
       if (schema === 0) {
         this.db
           .exec(`CREATE TABLE ownership(scope TEXT PRIMARY KEY, owner TEXT NOT NULL, fence INTEGER NOT NULL CHECK(fence BETWEEN 1 AND 9007199254740991), expires_at INTEGER NOT NULL CHECK(expires_at BETWEEN 0 AND 9007199254740991)) STRICT;
@@ -91,6 +107,13 @@ export class WeeklyRunJournal {
           PRAGMA application_id=1514759762;
           PRAGMA user_version=1;`);
       }
+      if (schema < 2) {
+        this.db
+          .exec(`CREATE TABLE stage_artifact(run_id TEXT NOT NULL REFERENCES run_state(id), stage TEXT NOT NULL, attempt INTEGER NOT NULL CHECK(attempt BETWEEN 0 AND 9007199254740991), identity TEXT NOT NULL, bytes BLOB NOT NULL, PRIMARY KEY(run_id,stage,attempt)) STRICT;
+          PRAGMA user_version=2;`);
+      }
+      if (this.db.prepare("PRAGMA foreign_key_check").all().length)
+        throw new Error("Corrupt journal references");
       this.db.exec("COMMIT");
       this.db.exec("PRAGMA journal_mode=WAL;");
     } catch (error) {
@@ -106,7 +129,39 @@ export class WeeklyRunJournal {
 
   /** Verify an owner immediately before a guarded external/catalog operation. */
   checkOwnership(lease: WeeklyRunLease): void {
+    if (
+      this.guardedLease &&
+      this.guardedLease.scope === lease.scope &&
+      this.guardedLease.owner === lease.owner &&
+      this.guardedLease.fence === lease.fence
+    ) {
+      this.assertLease(lease);
+      return;
+    }
     this.transaction(() => this.assertLease(lease));
+  }
+
+  /** Prevent another process taking ownership while a guarded catalog commit finishes. */
+  async guardOperation<T>(
+    lease: WeeklyRunLease,
+    work: () => Promise<T>
+  ): Promise<T> {
+    if (this.guardedLease || this.db.isTransaction)
+      throw new Error("Nested guarded journal operation refused");
+    this.db.exec("BEGIN IMMEDIATE");
+    try {
+      this.assertLease(lease);
+      this.guardedLease = { ...lease };
+      const result = await work();
+      this.assertLease(lease);
+      this.db.exec("COMMIT");
+      return result;
+    } catch (error) {
+      if (this.db.isTransaction) this.db.exec("ROLLBACK");
+      throw error;
+    } finally {
+      this.guardedLease = null;
+    }
   }
 
   private now(): number {
@@ -204,7 +259,7 @@ export class WeeklyRunJournal {
   renew(lease: WeeklyRunLease, ttlMs = 120000): WeeklyRunLease {
     if (!Number.isSafeInteger(ttlMs) || ttlMs < 1000 || ttlMs > 3600000)
       throw new Error("Invalid ownership TTL");
-    return this.transaction(() => {
+    const work = () => {
       this.assertLease(lease);
       const expiresAtEpochMs = this.now() + ttlMs;
       if (!Number.isSafeInteger(expiresAtEpochMs))
@@ -213,7 +268,15 @@ export class WeeklyRunJournal {
         .prepare("UPDATE ownership SET expires_at=? WHERE scope=?")
         .run(expiresAtEpochMs, lease.scope);
       return { ...lease, expiresAtEpochMs };
-    });
+    };
+    if (
+      this.guardedLease &&
+      this.guardedLease.scope === lease.scope &&
+      this.guardedLease.owner === lease.owner &&
+      this.guardedLease.fence === lease.fence
+    )
+      return work();
+    return this.transaction(work);
   }
 
   release(lease: WeeklyRunLease): void {
@@ -236,8 +299,120 @@ export class WeeklyRunJournal {
     return state;
   }
 
-  create(state: WeeklyRunState, lease: WeeklyRunLease): WeeklyRunState {
+  loadOwned(runId: string, lease: WeeklyRunLease): WeeklyRunState {
+    return this.transaction(() => {
+      this.assertLease(lease);
+      const row = this.db
+        .prepare("SELECT scope FROM run_state WHERE id=?")
+        .get(runId);
+      const state = this.load(runId);
+      if (!row || row.scope !== lease.scope || !state)
+        throw new Error("Missing run or wrong destination");
+      return state;
+    });
+  }
+
+  /** Inspect persisted delivery identities before selecting or resuming a run. */
+  findDelivery(
+    scope: string,
+    editionId: string,
+    deliveryId: string
+  ): WeeklyRunState[] {
+    return this.db
+      .prepare("SELECT id FROM run_state WHERE scope=?")
+      .all(scope)
+      .map((row) => this.load(String(row.id))!)
+      .filter(
+        (state) =>
+          state.source.editionId === editionId &&
+          state.source.deliveryId === deliveryId
+      );
+  }
+
+  readArtifact(
+    runId: string,
+    stage: WeeklyRunStage,
+    attempt: number
+  ): Buffer | null {
+    const row = this.db
+      .prepare(
+        "SELECT identity,bytes FROM stage_artifact WHERE run_id=? AND stage=? AND attempt=?"
+      )
+      .get(runId, stage, attempt);
+    if (!row) return null;
+    if (typeof row.identity !== "string" || !(row.bytes instanceof Uint8Array))
+      throw new Error("Corrupt stage artifact");
+    const bytes = Buffer.from(row.bytes);
+    if (createHash("sha256").update(bytes).digest("hex") !== row.identity)
+      throw new Error("Changed stage artifact");
+    return bytes;
+  }
+
+  private insertArtifact(
+    runId: string,
+    stage: WeeklyRunStage,
+    attempt: number,
+    bytes: Buffer
+  ): void {
+    if (bytes.length > 64 * 1024 * 1024)
+      throw new Error("Stage artifact exceeds private evidence limit");
+    const existing = this.readArtifact(runId, stage, attempt);
+    if (existing) {
+      if (!existing.equals(bytes))
+        throw new Error("Stage artifact differs; refusing overwrite");
+      return;
+    }
+    this.db
+      .prepare("INSERT INTO stage_artifact VALUES(?,?,?,?,?)")
+      .run(
+        runId,
+        stage,
+        attempt,
+        createHash("sha256").update(bytes).digest("hex"),
+        bytes
+      );
+  }
+
+  /** Immutable per-attempt evidence; a failed attempt remains available after retry. */
+  writeArtifact(
+    runId: string,
+    stage: WeeklyRunStage,
+    bytes: Buffer,
+    lease: WeeklyRunLease
+  ): void {
+    const captured = Buffer.from(bytes);
+    this.transaction(() => {
+      this.assertLease(lease);
+      const row = this.db
+        .prepare("SELECT scope FROM run_state WHERE id=?")
+        .get(runId);
+      const state = this.load(runId);
+      const item = state?.stages.find((value) => value.stage === stage);
+      if (
+        !row ||
+        row.scope !== lease.scope ||
+        !item ||
+        item.status !== "running"
+      )
+        throw new Error("Artifact requires owned running stage");
+      this.insertArtifact(runId, stage, item.attempt, captured);
+      this.assertLease(lease);
+    });
+  }
+
+  create(
+    state: WeeklyRunState,
+    lease: WeeklyRunLease,
+    rawSource?: Buffer
+  ): WeeklyRunState {
     const validated = parseWeeklyRunState(state);
+    const raw = rawSource ? Buffer.from(rawSource) : undefined;
+    if (
+      raw &&
+      createHash("sha256").update(raw).digest("hex") !==
+        validated.source.rawSha256
+    )
+      throw new Error("Raw source disagrees with run identity");
     if (validated.revision !== 0)
       throw new Error("New run must begin at revision zero");
     return this.transaction(() => {
@@ -248,10 +423,18 @@ export class WeeklyRunJournal {
       if (row && row.scope !== lease.scope)
         throw new Error("Run belongs to another destination");
       const existing = this.load(validated.runId);
-      if (existing) return existing;
+      if (existing) {
+        if (
+          raw &&
+          !this.readArtifact(existing.runId, "acquire", 0)?.equals(raw)
+        )
+          throw new Error("Existing persisted source disagrees");
+        return existing;
+      }
       this.db
         .prepare("INSERT INTO run_state VALUES(?,?,?,?)")
         .run(validated.runId, lease.scope, 0, canonicalJson(validated));
+      if (raw) this.insertArtifact(validated.runId, "acquire", 0, raw);
       return validated;
     });
   }

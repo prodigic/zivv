@@ -5,6 +5,7 @@ export default defineConfig({
   cacheDir: ".cache/vitest-ingestion",
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
+    maxWorkers: 4,
     environment: "node",
     include: [
       "src/test/ingestion/**/*.test.ts",
