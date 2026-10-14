@@ -1,0 +1,34 @@
+[
+  {
+    "artistId": 1307419795,
+    "name": "Shoplifters United (tribute)",
+    "slug": "shoplifters-united-tribute",
+    "status": "photo-found",
+    "imageUrl": "https://www.shopliftersutd.com/wp-content/uploads/2024/08/Band-pic_2024_08_SUSLC-819x1024.jpg",
+    "sourceUrl": "https://www.shopliftersutd.com/",
+    "sourceType": "artist-owned-site",
+    "kind": "performer-photo-with-band-branding",
+    "visualReview": "reviewed-remote-image-in-browser",
+    "identityEvidence": "Official site explicitly says Shoplifters United BAY AREA TRIBUTE TO THE SMITHS. Named band picture shows four contemporary tribute musicians holding guitars; this is the tribute performer group, not an image of The Smiths.",
+    "credit": "unknown",
+    "reuseTerms": "unknown",
+    "attemptedSources": [
+      {
+        "url": "https://www.shopliftersutd.com/",
+        "status": "fetched",
+        "error": null
+      },
+      {
+        "url": "https://www.bandsintown.com/e/108747442-shoplifters-united-at-peri%27s-saloon?came_from=252",
+        "status": "unavailable",
+        "error": "Response status code does not indicate success: 403 (Forbidden)."
+      },
+      {
+        "url": "https://tickets.venuepilot.com/e/shoplifters-united-the-smiths-tribute-debased-a-pixies-tribute-ceremony81-joy-division-tribute-2026-0-334086",
+        "status": "fetched",
+        "error": null
+      }
+    ],
+    "reviewedAt": "2026-10-10"
+  }
+]
