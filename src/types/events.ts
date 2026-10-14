@@ -3,6 +3,8 @@ import type {
   AddedDateProvenance,
   SourceLink,
 } from "./ingestion.js";
+import type { ArtistVibe } from "./artist-reviews.js";
+import type { ArtistLink } from "./artist-links.js";
 
 /** Provenance is optional only for legacy JSON and transient parser results. */
 export interface EventProvenance {
@@ -19,6 +21,14 @@ export interface EventProvenance {
 export type EventId = number & { readonly __brand: "EventId" };
 export type ArtistId = number & { readonly __brand: "ArtistId" };
 export type VenueId = number & { readonly __brand: "VenueId" };
+
+/** Show-specific artwork observed on the venue's official event listing. */
+export interface EventPoster {
+  imageUrl: string;
+  eventUrl: string;
+  kind: "poster" | "event-artwork";
+  checkedOn: string;
+}
 
 // Raw data types (as they appear in source files)
 export interface RawEventData {
@@ -66,6 +76,7 @@ export interface Event extends EventProvenance {
   description?: string;
   notes?: string;
   ticketUrl?: string;
+  poster?: EventPoster;
 
   // Status and metadata
   status: EventStatus;
@@ -92,6 +103,7 @@ export interface ArtistUpcomingEvent extends EventProvenance {
   priceMin?: number;
   priceMax?: number;
   createdAtEpochMs: number;
+  poster?: EventPoster;
 }
 
 export interface Artist {
@@ -100,6 +112,8 @@ export interface Artist {
   slug: string;
   normalizedName: string; // For deduplication
   aliases: string[]; // Alternative names/spellings
+  vibe?: ArtistVibe;
+  links?: ArtistLink[];
   upcomingEventCount: number;
   totalEventCount: number;
 
@@ -122,6 +136,7 @@ export interface VenueUpcomingEvent extends EventProvenance {
   priceMin?: number;
   priceMax?: number;
   createdAtEpochMs: number;
+  poster?: EventPoster;
 }
 
 /** Reviewed coordinates with precision and a public evidence source. */

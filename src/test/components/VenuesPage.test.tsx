@@ -2,7 +2,13 @@
 import "@testing-library/jest-dom/vitest";
 import React from "react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  render,
+  screen,
+  fireEvent,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { useAppStore } from "@/stores/appStore";
 import { useFilterStore } from "@/stores/filterStore";
@@ -70,4 +76,31 @@ it("keeps each city in one section and renders each venue once after selecting o
     screen.getAllByRole("heading", { name: "Hopmonk Tavern", exact: true })
   ).toHaveLength(1);
   expect(container.querySelectorAll(".venue-card")).toHaveLength(3);
+});
+
+it("keeps official poster links separate from internal show navigation", () => {
+  const storeVenues = useAppStore.getState().venues;
+  const first = [...storeVenues.values()][0];
+  first.upcomingEvents[0].poster = {
+    imageUrl: "https://venue.example/flyer.jpg",
+    eventUrl: "https://venue.example/show",
+    kind: "poster",
+    checkedOn: "2026-10-10",
+  };
+  const { container } = render(
+    <MemoryRouter>
+      <VenuesPage />
+    </MemoryRouter>
+  );
+  const poster = screen.getByRole("link", { name: /View Band 1-0 poster/ });
+  expect(poster).toHaveAttribute("href", "https://venue.example/show");
+  expect(container.querySelector("a a")).toBeNull();
+  expect(
+    poster.parentElement?.querySelector('a[href="/events/show-1-0"]')
+  ).toBeTruthy();
+  poster.addEventListener("click", (event) => event.preventDefault());
+  fireEvent.click(poster);
+  expect(
+    screen.getByRole("heading", { name: "Hopmonk Tavern", exact: true })
+  ).toBeVisible();
 });

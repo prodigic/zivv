@@ -189,7 +189,6 @@ private operator storage outside worktrees.
 4. **PUSH TO REMOTE** - This is MANDATORY:
    ```bash
    git pull --rebase
-   bd sync
    git push
    git status  # MUST show "up to date with origin"
    ```
@@ -203,65 +202,47 @@ private operator storage outside worktrees.
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
 
-<!-- bv-agent-instructions-v1 -->
+<!-- github-issues-agent-instructions-v1 -->
 
 ---
 
-## Beads Workflow Integration
+## Issue Tracking: GitHub Issues
 
-This project uses [beads_viewer](https://github.com/Dicklesworthstone/beads_viewer) for issue tracking. Issues are stored in `.beads/` and tracked in git.
+This project tracks issues in GitHub Issues (`prodigic/zivv`) with the `gh` CLI. Beads is retired. Its history remains in `.beads/issues.jsonl` for reference only; do not use it for new work.
 
 ### Essential Commands
 
 ```bash
-# View issues (launches TUI - avoid in automated sessions)
-bv
-
-# CLI commands for agents (use these instead)
-bd ready              # Show issues ready to work (no blockers)
-bd list --status=open # All open issues
-bd show <id>          # Full issue details with dependencies
-bd create --title="..." --type=task --priority=2
-bd update <id> --status=in_progress
-bd close <id> --reason="Completed"
-bd close <id1> <id2>  # Close multiple issues at once
-bd sync               # Commit and push changes
+gh issue list --state open                  # Open issues
+gh issue view <number>                      # Details and comments
+gh issue create --title "..." --body "..." --label needs-triage
+gh issue edit <number> --add-label "..."    # Triage labels
+gh issue edit <number> --add-assignee @me   # Claim work
+gh issue comment <number> --body "..."      # Progress notes
+gh issue close <number> --comment "..."     # Finish work
 ```
 
 ### Workflow Pattern
 
-1. **Start**: Run `bd ready` to find actionable work
-2. **Claim**: Use `bd update <id> --status=in_progress`
-3. **Work**: Implement the task
-4. **Complete**: Use `bd close <id>`
-5. **Sync**: Always run `bd sync` at session end
+1. **Start**: `gh issue list --state open --label ready-for-agent`
+2. **Claim**: `gh issue edit <number> --add-assignee @me`
+3. **Work**: Implement the task with tests
+4. **Complete**: Comment with the commit SHA, then `gh issue close <number>`
 
-### Key Concepts
+### Triage Labels
 
-- **Dependencies**: Issues can block other issues. `bd ready` shows only unblocked work.
-- **Priority**: P0=critical, P1=high, P2=medium, P3=low, P4=backlog (use numbers, not words)
-- **Types**: task, bug, feature, epic, question, docs
-- **Blocking**: `bd dep add <issue> <depends-on>` to add dependencies
+Five roles, using labels with the same names: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`.
 
 ### Session Protocol
 
-**Before ending any session, run this checklist:**
-
 ```bash
-git status              # Check what changed
-git add <files>         # Stage code changes
-bd sync                 # Commit beads changes
-git commit -m "..."     # Commit code
-bd sync                 # Commit any new beads changes
-git push                # Push to remote
+git status
+git add <files>
+git commit -m "..."
+git pull --rebase
+git push
 ```
 
-### Best Practices
+File issues for follow-up work you discover, and link related issues with `#<number>`.
 
-- Check `bd ready` at session start to find available work
-- Update status as you work (in_progress → closed)
-- Create new issues with `bd create` when you discover tasks
-- Use descriptive titles and set appropriate priority/type
-- Always `bd sync` before ending session
-
-<!-- end-bv-agent-instructions -->
+<!-- end-github-issues-agent-instructions -->

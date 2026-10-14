@@ -1,6 +1,6 @@
 # Venue OpenStreetMap tiles
 
-Each of the 651 existing venue identities has a researched map record in
+Each of the 656 existing venue identities has a researched map record in
 `data/venue-maps.json` and a row in the [tile catalog](venue-map-catalog.md).
 The catalog includes coordinates, precision, an OpenStreetMap viewing link,
 the corresponding Slippy tile URL, source evidence and remaining limitations.
@@ -89,9 +89,9 @@ The refreshed encrypted ledger snapshot accompanies the export.
 
 ## Final coverage and verification
 
-All 651 identities have a catalog entry. 594 have a supported tile reference:
-491 approximate address matches, 28 site points and 75 area estimates. The
-remaining 57 have venue-specific OpenStreetMap searches and explicit reasons
+All 656 identities have a catalog entry. 598 have a supported tile reference:
+494 approximate address matches, 28 site points and 76 area estimates. The
+remaining 58 have venue-specific OpenStreetMap searches and explicit reasons
 for leaving coordinates unset. These include conflicting branches, private
 locations, stale address metadata, unidentified performance spaces and
 unresolved geocoder matches. A search link is not a verified map tile.
@@ -114,3 +114,31 @@ marker render, credits remain on the visible tile, and an unresolved venue
 retains usable search navigation. No bulk tile requests or image archives
 were created. The shared ledger and review branch are updated; the live site
 has not been published.
+
+## October 12 expansion
+
+The October 9 catalog added five venue IDs after this audit. Each received
+source-supported research in `data/details` registry `data/venue-details.json`,
+with map observations in `data/research/venue-maps/manual-locations.json`:
+
+- Mothbelly Gallery (386406925): 912 Larkin Street, San Francisco on the
+  [official gallery site](https://www.mothbelly.org/); Census address point.
+- Goorin Headquarters (555262706): 583 Shotwell Street, San Francisco from the
+  [TheList bands listing](http://www.foopee.com/punk/the-list/by-band.0.html),
+  corroborated by [goorin.com](https://goorin.com/pages/privacy-policy); Census
+  address point.
+- Wardlaw Skatepark (1455411068): 1805 Ascot Parkway, Vallejo on the
+  [Greater Vallejo Recreation District page](https://www.gvrd.org/wardlaw-skate-bike-park);
+  Census address point.
+- Shed A at Pier 48 (366161466): operator pages
+  ([Club Darc](https://clubdarc.com/venue-info/) and
+  [Giants Enterprises](https://giantsenterprises.com/oracle-park-edge/pier-48/))
+  publish no single shed street number, so the address stays unset and the map
+  uses the opened OSM `Pier 48` shore polygon (way 1151042598) as an area
+  estimate.
+- Lanesplitter Pizza (1315145584): the feed's distinct Oakland billing carries
+  no street while the operator publishes three Oakland branches, so the row
+  stays partial and unlocated with a documented search fallback.
+
+`build-venue-maps.js` now passes each manual row's own `checkedOn` date through
+to the registry. Both fixed-size verifiers cover all 656 exported venues.

@@ -7,6 +7,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { DirectoryContent } from "@/components/layout/DirectoryContent.tsx";
 import { isEventUpcoming } from "@/lib/discovery.ts";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import EventPosterLink from "@/components/ui/EventPosterLink.js";
 import NewBadge from "@/components/ui/NewBadge.js";
 import {
   VenueCardSkeleton,
@@ -549,37 +550,46 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                         visibleEvents.length > 0 && (
                           <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
                             {visibleEvents.map((event) => (
-                              <Link
+                              <div
                                 key={event.id}
-                                to={`/events/${event.slug}`}
-                                onClick={(e) => e.stopPropagation()}
-                                className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                className="flex items-center gap-1.5"
                               >
-                                <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
-                                  {new Date(
-                                    event.dateEpochMs
-                                  ).toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                  })}
-                                </span>
-                                <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">
-                                  {event.headlinerName || "Show"}
-                                </span>
-                                <PriceWidget
-                                  isFree={event.isFree}
-                                  isSoldOut={event.isSoldOut}
-                                  priceMin={event.priceMin}
-                                  priceMax={event.priceMax}
-                                  className="text-xs shrink-0"
+                                <EventPosterLink
+                                  poster={event.poster}
+                                  showName={event.headlinerName || "Show"}
                                 />
-                                <NewBadge
-                                  createdAtEpochMs={event.createdAtEpochMs}
-                                  addedDateProvenance={
-                                    event.addedDateProvenance
-                                  }
-                                />
-                              </Link>
+                                <Link
+                                  key={event.id}
+                                  to={`/events/${event.slug}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="flex min-w-0 flex-1 items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                >
+                                  <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
+                                    {new Date(
+                                      event.dateEpochMs
+                                    ).toLocaleDateString("en-US", {
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
+                                  </span>
+                                  <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">
+                                    {event.headlinerName || "Show"}
+                                  </span>
+                                  <PriceWidget
+                                    isFree={event.isFree}
+                                    isSoldOut={event.isSoldOut}
+                                    priceMin={event.priceMin}
+                                    priceMax={event.priceMax}
+                                    className="text-xs shrink-0"
+                                  />
+                                  <NewBadge
+                                    createdAtEpochMs={event.createdAtEpochMs}
+                                    addedDateProvenance={
+                                      event.addedDateProvenance
+                                    }
+                                  />
+                                </Link>
+                              </div>
                             ))}
                           </div>
                         )

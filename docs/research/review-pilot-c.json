@@ -1,0 +1,105 @@
+{
+  "startedAt": "2026-10-11T03:30:38Z",
+  "finishedAt": "2026-10-11T03:31:04Z",
+  "searchQueries": 5,
+  "pageOpens": 8,
+  "tokenUsage": null,
+  "records": [
+    {
+      "artistId": 78581369,
+      "artistName": "Modern Monsters",
+      "status": "review-found",
+      "vibe": "Release-only inference: Reviews of Malice suggest forceful alternative hard rock with thick guitar grooves, muscular rhythms and accessible melodic hooks. The recorded sound combines familiar 1990s rock influences with occasional rap and psychedelic touches. This describes the reviewed EP, without predicting current concerts.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://metalheadcommunity.com/modern-monsters-malice-album-review/",
+          "title": "Modern Monsters - Malice - Album Review - 90s Alternative Heavy Rock from San Francisco, California, USA",
+          "publication": "Metalhead Community",
+          "author": "Burak Gundogdu",
+          "publishedOn": "2023-05-09",
+          "kind": "release",
+          "reviewedWork": "Malice EP (2023)",
+          "evidenceSummary": "Original listening-based criticism praises dynamic production and 1990s alternative/heavy rock energy while questioning the distinctiveness of familiar influences."
+        },
+        {
+          "url": "https://metal-temple.com/review/modern-monsters-malice/",
+          "title": "Malice",
+          "publication": "Metal Temple",
+          "author": "\"Metal Mark\" Garcia",
+          "publishedOn": "2023-05-11",
+          "kind": "release",
+          "reviewedWork": "Malice EP (2023)",
+          "evidenceSummary": "Track-specific evaluation identifies alternative metal/rock, melodic accessibility, groove, rap-metal touches and psychedelic elements in White Rabbit."
+        }
+      ],
+      "identityEvidence": "Both reviews identify the Bay Area band and link modernmonstersmusic.com, the supplied canonical site. The opened official homepage names Malice and links its recording: https://modernmonstersmusic.com/.",
+      "searches": ["\"Modern Monsters\" review EP music", "\"Modern Monsters\" \"review\"", "\"Modern Monsters\" \"Malice\" review"],
+      "gaps": ["No live review established; descriptions are restricted to the 2023 release."]
+    },
+    {
+      "artistId": 36869837,
+      "artistName": "Sour Widows",
+      "status": "review-found",
+      "vibe": "Release-only inference: These reviews suggest intimate guitar-driven songs whose intertwined voices and patient arrangements move from fragile calm into heavy emotional surges. Folk-like warmth and spacious passages frame tension, grief and catharsis. The description reflects the reviewed recordings, without predicting the feel of current shows.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://pitchfork.com/reviews/albums/sour-widows-revival-of-a-friend/",
+          "title": "Revival of a Friend",
+          "publication": "Pitchfork",
+          "author": "Marissa Lorusso",
+          "publishedOn": "2024-07-02",
+          "kind": "release",
+          "reviewedWork": "Revival of a Friend (2024)",
+          "evidenceSummary": "Review discusses patient dynamics, the guitar/vocal interplay of Maia Sinaiko and Susanna Thomson, and the album's grief and tenderness."
+        },
+        {
+          "url": "https://post-trash.com/news/2020/5/3/sour-widows-sour-widows-album-review",
+          "title": "Sour Widows - \"Sour Widows\" | Album Review",
+          "publication": "Post-Trash",
+          "author": "Dan Goldin",
+          "publishedOn": "2020-05-04",
+          "kind": "release",
+          "reviewedWork": "Sour Widows self-titled EP (2020)",
+          "evidenceSummary": "Original critical assessment of Oakland quartet's debut EP emphasizes interlocking guitars, harmonies, folk-like gentleness and substantial loud/quiet contrasts."
+        }
+      ],
+      "identityEvidence": "The supplied Bandcamp page identifies Bay Area alternative rock and lists both reviewed releases: https://sourwidows.bandcamp.com/. Reviews independently identify the Bay Area/Oakland band and Sinaiko/Thomson partnership.",
+      "searches": ["\"Sour Widows\" review album"],
+      "gaps": ["No live review established; release dates span 2020 and 2024."]
+    },
+    {
+      "artistId": 708820545,
+      "artistName": "Swingin' Utters",
+      "status": "review-found",
+      "vibe": "Release-only inference: These reviews suggest rough-edged, tuneful street punk with gravelly vocals and choruses built for singing along. Acoustic, Celtic and country instrumentation adds texture, while varied arrangements temper the aggression with reflection and humor. This characterizes older recordings and makes no claim about current performances.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://ink19.com/2000/12/magazine/music-reviews/vhmd55-swingin-utters",
+          "title": "Swingin’ Utters",
+          "publication": "Ink 19",
+          "author": "Sean Carswell",
+          "publishedOn": "2000-12-26",
+          "kind": "release",
+          "reviewedWork": "Swingin' Utters self-titled album (2000)",
+          "evidenceSummary": "Listening-based review describes Johnny Peebuck's rough vocals, catchy guitars, street-punk roots and expanded folk/country instrumentation with more self-reflection."
+        },
+        {
+          "url": "https://www.scenepointblank.com/reviews/swingina-utters/poorly-formed/",
+          "title": "Swingin' Utters – Poorly Formed",
+          "publication": "Scene Point Blank",
+          "author": "Loren",
+          "publishedOn": "2013-04-01",
+          "kind": "release",
+          "reviewedWork": "Poorly Formed (2013)",
+          "evidenceSummary": "Review describes 1977 punk with Celtic/acoustic and occasional bluegrass influences, stronger harmonies, evolving guitar arrangements and singalong streetpunk."
+        }
+      ],
+      "identityEvidence": "Both reviews match the punk act through Fat Wreck Chords, vocalist Johnny Peebuck(s), and established catalog titles. Scene Point Blank's opened page also identifies the act as the San Fran band in its related Here, Under Protest review excerpt.",
+      "searches": ["\"Swingin Utters\" album review"],
+      "gaps": ["Sources concern older albums, not the current lineup or live set.", "Ink 19 displays both December 26, 2000 and January 3, 2023; the former is recorded as the original date, with the later date's role unspecified."]
+    }
+  ]
+}

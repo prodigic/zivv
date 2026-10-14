@@ -1,0 +1,6067 @@
+{
+  "schemaVersion": 1,
+  "checkedOn": "2026-10-10",
+  "sfVenueCount": 223,
+  "activeVenues": 48,
+  "listedShows": 657,
+  "accepted": 421,
+  "matchedVenues": 29,
+  "method": "Official venue/show evidence; unresolved is a bounded research outcome. Inactive SF venues had no listed shows to associate with artwork.",
+  "noListedShows": [
+    {
+      "venueId": 826658255,
+      "name": "Amado's",
+      "website": "https://amadossf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1908553417,
+      "name": "Amnesia",
+      "website": "http://www.amnesiathebar.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 915438229,
+      "name": "Audio SF",
+      "website": "https://www.audiosf.com/contact/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 418122002,
+      "name": "Bender's Bar And Grill",
+      "website": "https://bendersbar.com/contact",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1125299906,
+      "name": "Boom Boom Room",
+      "website": "https://boomboomroom.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1296228040,
+      "name": "Cafe Cocomo",
+      "listedShows": 0
+    },
+    {
+      "venueId": 705503013,
+      "name": "Curio Bar",
+      "website": "https://www.curiobarsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 664752640,
+      "name": "Davies Symphony Hall",
+      "website": "https://sfwarmemorial.org/davies-symphony-hall/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1189056044,
+      "name": "Depot",
+      "website": "https://asi.sfsu.edu/the-depot",
+      "listedShows": 0
+    },
+    {
+      "venueId": 884606152,
+      "name": "Driftwood",
+      "website": "https://www.driftwoodbarsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1220592213,
+      "name": "Edinburgh Castle",
+      "listedShows": 0
+    },
+    {
+      "venueId": 645156289,
+      "name": "El Rincon",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1925979067,
+      "name": "El Rio",
+      "website": "https://www.elriosf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1996487210,
+      "name": "Gray Area Grand Theater",
+      "website": "https://grayarea.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1931690015,
+      "name": "Herbst Theater",
+      "website": "https://sfperformances.org/performances/venues/herbst.html",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1488360326,
+      "name": "Honey Hive",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1935435606,
+      "name": "Jack Adams Hall",
+      "website": "https://asi.sfsu.edu/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 679424983,
+      "name": "Jerry Garcia Amphitheater",
+      "website": "https://www.sfrecpark.org/Facilities/Facility/Details/Jerry-Garcia-Amphitheater-421",
+      "listedShows": 0
+    },
+    {
+      "venueId": 984695167,
+      "name": "Johnny Foley's Irish House",
+      "website": "https://www.johnnyfoleys.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1652761549,
+      "name": "the Lab",
+      "website": "https://www.thelab.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 598804186,
+      "name": "Li-Po Lounge",
+      "listedShows": 0
+    },
+    {
+      "venueId": 698121015,
+      "name": "Lost Church",
+      "website": "https://thelostchurch.org/san-francisco/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1966034770,
+      "name": "Madrone Art Bar",
+      "website": "https://madroneartbar.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 337931090,
+      "name": "Makeout Room",
+      "website": "https://www.makeoutroom.com/contact.html",
+      "listedShows": 0
+    },
+    {
+      "venueId": 954167517,
+      "name": "McEvoy Fondation for the Arts",
+      "listedShows": 0
+    },
+    {
+      "venueId": 798787109,
+      "name": "Mezzanine",
+      "listedShows": 0
+    },
+    {
+      "venueId": 2078810884,
+      "name": "Milk Bar",
+      "listedShows": 0
+    },
+    {
+      "venueId": 826017948,
+      "name": "Miner Auditorium (SF Jazz Center)",
+      "website": "https://www.sfjazz.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1439874346,
+      "name": "Monarch",
+      "website": "https://www.monarchsf.com/contact-us",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1386365370,
+      "name": "Music City",
+      "website": "https://musiccitysf.com/about-us/contact-us/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 513710571,
+      "name": "Noisebridge Hackerspace",
+      "website": "https://www.noisebridge.net/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 117533728,
+      "name": "O'Reilly's Pub",
+      "website": "https://oreillyssf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 485759302,
+      "name": "Parkside",
+      "website": "https://www.theeparkside.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1185666454,
+      "name": "the Peacock Lounge",
+      "website": "https://sfpeacock.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1810219236,
+      "name": "Phoenix Hotel",
+      "website": "https://www.phoenixhotelsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1282095081,
+      "name": "Plough and Stars",
+      "website": "https://theploughandstars.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 755151683,
+      "name": "Public Works",
+      "website": "https://publicsf.com/connect/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1655849135,
+      "name": "Radio Habana Social Club",
+      "listedShows": 0
+    },
+    {
+      "venueId": 427667661,
+      "name": "Red Devil Lounge",
+      "listedShows": 0
+    },
+    {
+      "venueId": 2113527323,
+      "name": "Rite Spot",
+      "website": "https://www.ritespotcafe.net/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 549325977,
+      "name": "Social Hall",
+      "website": "https://www.theregencyballroom.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1276498217,
+      "name": "Stern Grove",
+      "website": "https://www.sterngrove.org/getting-here",
+      "listedShows": 0
+    },
+    {
+      "venueId": 927889318,
+      "name": "the Swedish American Hall",
+      "website": "https://www.swedishamericanhall.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1327234872,
+      "name": "Tupelo",
+      "website": "https://www.tupelosf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 415372741,
+      "name": "Verdi Club",
+      "website": "https://www.verdiclub.net/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 882308789,
+      "name": "Yerba Buena Gardens",
+      "website": "https://ybgfestival.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1183655994,
+      "name": "Zeitgeist",
+      "website": "https://www.zeitgeistsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1740241181,
+      "name": "240 Front Street",
+      "website": "https://www.noisepop.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 2128628460,
+      "name": "Adobe Books",
+      "website": "https://www.adobebooks.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1682611483,
+      "name": "Bar Part Time",
+      "website": "https://barparttime.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1038387369,
+      "name": "Bimb's 365 Club",
+      "website": "https://bimbos365club.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1720239941,
+      "name": "Bric-a-brack",
+      "listedShows": 0
+    },
+    {
+      "venueId": 374946520,
+      "name": "Civic Center Plaza",
+      "website": "https://sfrecpark.org/866/Civic-Center-Plaza-Joseph-Alioto-Piazza",
+      "listedShows": 0
+    },
+    {
+      "venueId": 648572129,
+      "name": "Golden Gate Theater",
+      "website": "https://us.atgtickets.com/venues/golden-gate-theatre/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 778116947,
+      "name": "Hardly Stricty Bluegrass",
+      "website": "https://hardlystrictlybluegrass.com/info-faq-2026/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1868963076,
+      "name": "Hibernia Bank",
+      "website": "https://thehiberniasf.com/contact/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1533734128,
+      "name": "Jack Kerouac Alley",
+      "website": "https://sfbos.org/ftp/uploadedfiles/bdsupvrs/resolutions06/r0445-06.pdf",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1745359648,
+      "name": "Marines Memorial Theater",
+      "website": "https://marinesmemorial.org/theatre/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 2011645013,
+      "name": "Mayes Oyster House",
+      "website": "https://www.mayessf.com/about",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1051500561,
+      "name": "Music City Starfactory",
+      "website": "https://musiccitysf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 209865609,
+      "name": "Tequila Mockingbird",
+      "website": "https://www.tequilamockingbar.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 851634690,
+      "name": "Upper Noe Rec Center",
+      "website": "https://sfrecpark.org/facilities/facility/details/Upper-Noe-Recreation-Center-112",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1243828408,
+      "name": "Balboa Cafe",
+      "website": "https://www.balboacafesf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1614652189,
+      "name": "Brava Theatre",
+      "website": "https://www.brava.org/contact",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1303522840,
+      "name": "Clarion Alley Mission Stage",
+      "website": "https://clarionalleymuralproject.org/events/annual-block-party/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1503344643,
+      "name": "Clarion Alley Valencia Stage",
+      "website": "https://clarionalleymuralproject.org/clarion-alley-block-party/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 2036943294,
+      "name": "Gray Area",
+      "website": "https://grayarea.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1625417326,
+      "name": "Mercury Cafe",
+      "website": "https://www.mercurycafe.net/about",
+      "listedShows": 0
+    },
+    {
+      "venueId": 822625010,
+      "name": "Moscone Center",
+      "website": "https://www.moscone.com/directions-and-parking-moscone-center",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1512685125,
+      "name": "Robin Williams Meadow",
+      "website": "https://sfrecpark.org/879/Golden-Gate-Park---Robin-Williams-Meadow",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1805757855,
+      "name": "the Civic Audtorium",
+      "website": "https://billgrahamcivic.com/venue-info/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 447883166,
+      "name": "the DNA Louge",
+      "website": "https://www.dnalounge.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1292097351,
+      "name": "the Independnet",
+      "website": "https://www.theindependentsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 498805266,
+      "name": "the Indpendent",
+      "website": "https://www.theindependentsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1902290222,
+      "name": "the Orpheum Theater",
+      "website": "https://us.atgtickets.com/venues/orpheum-theatre/venue-info/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1614077014,
+      "name": "the Richshaw Stop",
+      "website": "https://rickshawstop.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1783397328,
+      "name": "the Rickshw Stop",
+      "website": "https://rickshawstop.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 392702093,
+      "name": "4-Star Theater",
+      "website": "https://www.4-star-movies.com/contact",
+      "listedShows": 0
+    },
+    {
+      "venueId": 590909310,
+      "name": "Autust Hall",
+      "website": "https://www.augusthallsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 360529898,
+      "name": "I Hate Records",
+      "website": "https://ihaterecords.com/pages/about-us",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1389315022,
+      "name": "KQED Commons",
+      "website": "https://www.kqed.org/about/visit",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1003407314,
+      "name": "O' Briens",
+      "website": "https://obriensirishpubsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 2084336383,
+      "name": "SF Jazz",
+      "website": "https://www.sfjazz.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1396518846,
+      "name": "SF Jazz Center",
+      "website": "https://www.sfjazz.org/visit/first-timer-guide/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 181566439,
+      "name": "the Botom of the Hill",
+      "website": "https://bottomofthehill.com/calendar.html",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1301386092,
+      "name": "the Knockouut",
+      "website": "https://theknockoutsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1697837308,
+      "name": "the Nikko",
+      "website": "https://www.feinsteinssf.com/about/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 115632481,
+      "name": "Books on the Park",
+      "website": "https://greenapplebooks.com/inner-sunset-location",
+      "listedShows": 0
+    },
+    {
+      "venueId": 222096883,
+      "name": "Questionmark Taern",
+      "website": "https://www.questionmarksf.com/contact",
+      "listedShows": 0
+    },
+    {
+      "venueId": 186436097,
+      "name": "the Black Cat S.F.",
+      "website": "https://blackcatsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1730654249,
+      "name": "the Castro Theataer",
+      "website": "https://thecastro.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 905826547,
+      "name": "the the Castro Theater",
+      "website": "https://thecastro.com/contact-us/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1237996847,
+      "name": "1015 Folsom",
+      "website": "https://1015.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1769347402,
+      "name": "Jax Vineyards",
+      "website": "https://jaxvineyards.com/san-francisco-tasting-room/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1370602424,
+      "name": "KQED Headquarters",
+      "website": "https://www.kqed.org/about/visit",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1710454576,
+      "name": "Mass",
+      "website": "https://www.sfmass.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1344278433,
+      "name": "Outside Lands",
+      "website": "https://sfoutsidelands.com/accessibility/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 968700038,
+      "name": "Pretty Gritty",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1159871074,
+      "name": "Psyched Radio",
+      "website": "https://www.psychedradiosf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 32234871,
+      "name": "Question Mark Bar",
+      "website": "https://questionmarkbarsf.com/contact-2/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1094184065,
+      "name": "Stern Grove Festival",
+      "website": "https://www.sterngrove.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1817412579,
+      "name": "Synygy",
+      "website": "https://syzygysf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 413331686,
+      "name": "West Portal Branch Library",
+      "website": "https://sfpl.org/locations/west-portal",
+      "listedShows": 0
+    },
+    {
+      "venueId": 217949417,
+      "name": "the Giant's Ball Park",
+      "website": "https://www.mlb.com/giants/ballpark/information/guide",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1140492065,
+      "name": "Giants Ballpark",
+      "website": "https://www.mlb.com/giants/ballpark",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1965011223,
+      "name": "the Rickshas Stop",
+      "website": "https://rickshawstop.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 289243276,
+      "name": "518 Valencia Gallery",
+      "website": "https://518valencia.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 242508849,
+      "name": "Dog",
+      "website": "https://thisislandscape.com/music-at-dog-la-digestion/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1291359065,
+      "name": "Embarcadero Plaza",
+      "website": "https://sfrecpark.org/Facilities/Facility/Details/Embarcadero-Plaza-347",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1937523578,
+      "name": "Laundry Gallery",
+      "website": "https://www.thelaundrysf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 157991490,
+      "name": "the Roxie Movie House",
+      "website": "https://roxie.com/plan-your-visit/how-to-get-here/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 697988159,
+      "name": "Golden Gate Valley Library",
+      "website": "https://sfpl.org/locations/golden-gate-valley",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1299863522,
+      "name": "20 Spot",
+      "website": "https://www.20spot.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 445731900,
+      "name": "22nd & Bartlett",
+      "website": "https://www.sfporchfest.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1732604937,
+      "name": "Anthony & Marissa's",
+      "listedShows": 0
+    },
+    {
+      "venueId": 626006669,
+      "name": "Arcana",
+      "website": "https://www.arcanasf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 713594331,
+      "name": "Athen's",
+      "website": "https://www.sfporchfest.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 664660939,
+      "name": "Buddy's",
+      "listedShows": 0
+    },
+    {
+      "venueId": 674532354,
+      "name": "Civic Center and Market Street Parade",
+      "website": "https://sfpride.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1950476525,
+      "name": "Community Music Center",
+      "website": "https://sfcmc.org/about/locations-contact-us/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 756094939,
+      "name": "David's",
+      "listedShows": 0
+    },
+    {
+      "venueId": 2038208300,
+      "name": "Harrison between 16th and 24th",
+      "website": "https://carnavalsanfrancisco.org/festival/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 327602376,
+      "name": "Hila Gelato",
+      "website": "https://www.hilagelato.com/contact",
+      "listedShows": 0
+    },
+    {
+      "venueId": 978018774,
+      "name": "Love & Luxe",
+      "website": "https://loveandluxesf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 988969630,
+      "name": "Michelle's",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1621831563,
+      "name": "Mid Bartlett",
+      "website": "https://www.sfporchfest.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1826340425,
+      "name": "Ricksaw Stop",
+      "website": "https://rickshawstop.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 724689189,
+      "name": "Senor Sisig",
+      "website": "https://www.senorsisig.com/locations/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1055458173,
+      "name": "Shuggies",
+      "website": "https://shuggies.world/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 410740649,
+      "name": "Wildhawk",
+      "website": "https://www.wildhawksf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 181982577,
+      "name": "Willow's",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1211018360,
+      "name": "ht Civic Auditorium",
+      "website": "https://billgrahamcivic.com/venue-info/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 132433457,
+      "name": "1015",
+      "website": "https://1015.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1806612737,
+      "name": "the Saloon",
+      "website": "https://thesaloonsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1094129374,
+      "name": "Mabuhay Gardens and on Broadway",
+      "listedShows": 0
+    },
+    {
+      "venueId": 235316584,
+      "name": "Pier 80",
+      "website": "https://portolamusicfestival.com/plan/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 125036029,
+      "name": "Salesforce Park",
+      "website": "https://www.tjpa.org/salesforce-transit-center/faq",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1113366560,
+      "name": "Gouth Street Stage",
+      "website": "https://unionstreetsf.com/festivals/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1400383054,
+      "name": "Ocean Ale House",
+      "website": "https://oceanalehouse.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 2124529002,
+      "name": "Union Square",
+      "website": "https://sfrecpark.org/DocumentCenter/View/13932/Union-Square-Features-List",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1781054735,
+      "name": "Ellis Street between Powell and Stockton",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1217182281,
+      "name": "the Natural",
+      "website": "https://www.thenaturalsf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1269742592,
+      "name": "Great Star Theater",
+      "website": "https://www.greatstartheater.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1572399683,
+      "name": "Pizza Place",
+      "website": "https://www.pizzaplacesf.com/contact/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 595294036,
+      "name": "the Ferry Buiding",
+      "website": "https://www.ferrybuildingmarketplace.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1206249551,
+      "name": "Broadway Studios",
+      "website": "https://broadwaystudios.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 192152317,
+      "name": "Everyday Skateshop",
+      "website": "https://everydaysfc.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 413979258,
+      "name": "Keys Jazz Bistro",
+      "website": "https://keysjazzbistro.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1270795673,
+      "name": "Museum of Modern Art",
+      "website": "https://www.sfmoma.org/visit/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1791753994,
+      "name": "the Curran Theater",
+      "website": "https://us.atgtickets.com/venues/curran-theater/venue-info/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1774955152,
+      "name": "Haight Ashbury Street Fair",
+      "website": "https://www.haightashburystreetfair.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 723101454,
+      "name": "Larkin Street at Eddy Street",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1871078609,
+      "name": "Rooftop Park",
+      "website": "https://www.tjpa.org/salesforce-transit-center/faq",
+      "listedShows": 0
+    },
+    {
+      "venueId": 318791909,
+      "name": "S.F. Mass",
+      "website": "https://www.sfmass.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 398286726,
+      "name": "Mabuhay Gardens (21+) and On Broadway (a/a)",
+      "website": "https://themab.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1056440065,
+      "name": "the Roxie Theater",
+      "website": "https://roxie.com/plan-your-visit/how-to-get-here/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 653703997,
+      "name": "Book and Job Gallery",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1384743074,
+      "name": "Koret Auditorium",
+      "website": "https://sfpl.org/quickview/118167",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1187845636,
+      "name": "Eye and Hand Society",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1899550573,
+      "name": "Presidio Theater",
+      "website": "https://www.presidiotheatre.org/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 91824912,
+      "name": "Rickhouse",
+      "website": "https://www.rickhousebar.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1340123468,
+      "name": "Hardly Strictly Bluegrass",
+      "website": "https://hardlystrictlybluegrass.com/info-faq-2026/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1164291462,
+      "name": "the Hibernia",
+      "website": "https://thehiberniasf.com/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1611053286,
+      "name": "the Faight",
+      "website": "https://www.thefaight.com/about",
+      "listedShows": 0
+    },
+    {
+      "venueId": 288601293,
+      "name": "Sunset Village Music Hall",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1141595758,
+      "name": "the Fold",
+      "website": "https://luma.com/thefoldopenmic",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1578696718,
+      "name": "Levi's Plaza",
+      "website": "https://www.levisplaza.com/about",
+      "listedShows": 0
+    },
+    {
+      "venueId": 757102003,
+      "name": "Benders",
+      "website": "https://bendersbar.com/contact",
+      "listedShows": 0
+    },
+    {
+      "venueId": 326664506,
+      "name": "USF's McLaren Center",
+      "website": "https://www.usfca.edu/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 368186123,
+      "name": "Folsom Street Fair",
+      "website": "https://www.folsomstreet.org/faq",
+      "listedShows": 0
+    },
+    {
+      "venueId": 467396903,
+      "name": "Castro Street Fair",
+      "website": "https://castrostreetfair.org/fair/faq/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 315738847,
+      "name": "Golden Gate Park Bandshell",
+      "website": "https://sfrecpark.org/870/Golden-Gate-Park---Bandshell",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1362359479,
+      "name": "S.F. Zoo",
+      "website": "https://www.sfzoo.org/zoo-map/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1879705643,
+      "name": "Hardly Strictly Bluegrass at Golden Gate Park",
+      "website": "https://hardlystrictlybluegrass.com/info-faq-2026/",
+      "listedShows": 0
+    },
+    {
+      "venueId": 1699183410,
+      "name": "Irelands 32",
+      "website": "https://linktr.ee/irelands32sf",
+      "listedShows": 0
+    }
+  ],
+  "venues": [
+    {
+      "venueId": 1383208152,
+      "venueName": "Castro",
+      "website": "https://thecastro.com/",
+      "listed": 60,
+      "matched": 38,
+      "events": [
+        {
+          "eventId": 2044331820,
+          "eventSlug": "2026-10-09-emergency-intercom-live-the-castro",
+          "date": "2026-10-09",
+          "headlinerName": "Emergency Intercom Live",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 954673211,
+          "eventSlug": "2026-10-10-jacob-collier-the-castro",
+          "date": "2026-10-10",
+          "headlinerName": "Jacob Collier",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1282829488,
+          "eventSlug": "2026-10-14-finn-wolfhard-the-castro",
+          "date": "2026-10-14",
+          "headlinerName": "Finn Wolfhard",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1822083123,
+          "eventSlug": "2026-10-16-iron-wine-the-castro",
+          "date": "2026-10-16",
+          "headlinerName": "Iron & Wine",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 466091856,
+          "eventSlug": "2026-10-17-blondshell-the-castro",
+          "date": "2026-10-17",
+          "headlinerName": "Blondshell",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1395378895,
+          "eventSlug": "2026-10-18-dinosaur-jr-the-castro",
+          "date": "2026-10-18",
+          "headlinerName": "Dinosaur Jr",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1598245924,
+          "eventSlug": "2026-10-19-almost-monday-the-castro",
+          "date": "2026-10-19",
+          "headlinerName": "Almost Monday",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 224126636,
+          "eventSlug": "2026-10-20-shakey-graves-the-castro",
+          "date": "2026-10-20",
+          "headlinerName": "Shakey Graves",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1786325540,
+          "eventSlug": "2026-10-21-todd-rundgren-the-castro",
+          "date": "2026-10-21",
+          "headlinerName": "Todd Rundgren",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 642018244,
+          "eventSlug": "2026-10-22-george-clanton-the-castro",
+          "date": "2026-10-22",
+          "headlinerName": "George Clanton",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1343543744,
+          "eventSlug": "2026-10-23-julia-jacklin-the-castro",
+          "date": "2026-10-23",
+          "headlinerName": "Julia Jacklin",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 913367265,
+          "eventSlug": "2026-10-24-julia-jacklin-the-castro",
+          "date": "2026-10-24",
+          "headlinerName": "Julia Jacklin",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1104456673,
+          "eventSlug": "2026-10-25-joy-oladokun-the-castro",
+          "date": "2026-10-25",
+          "headlinerName": "Joy Oladokun",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1827152905,
+          "eventSlug": "2026-10-26-fred-armisen-comedy-for-musicans-the-castro",
+          "date": "2026-10-26",
+          "headlinerName": "Fred Armisen (comedy for musicans)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2019117752,
+          "eventSlug": "2026-10-27-fred-armisen-comedy-for-musicans-the-castro",
+          "date": "2026-10-27",
+          "headlinerName": "Fred Armisen (comedy for musicans)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1570421113,
+          "eventSlug": "2026-10-28-fred-armisen-comedy-for-musicans-the-castro",
+          "date": "2026-10-28",
+          "headlinerName": "Fred Armisen (comedy for musicans)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1952391393,
+          "eventSlug": "2026-10-30-montell-fish-the-castro",
+          "date": "2026-10-30",
+          "headlinerName": "Montell Fish",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 853605920,
+          "eventSlug": "2026-10-31-dj-mandy-the-castro",
+          "date": "2026-10-31",
+          "headlinerName": "dj Mandy",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1501711198,
+          "eventSlug": "2026-11-07-pj-morton-the-castro",
+          "date": "2026-11-07",
+          "headlinerName": "PJ Morton",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1636798639,
+          "eventSlug": "2026-11-10-claudio-simonettis-goblin-performs-the-live-score-to-tenebre-the-castro",
+          "date": "2026-11-10",
+          "headlinerName": "Claudio Simonetti’s Goblin (Performs the Live Score to Tenebre)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1315828248,
+          "eventSlug": "2026-11-11-olafur-arnalds-the-castro",
+          "date": "2026-11-11",
+          "headlinerName": "Olafur Arnalds",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 71063767,
+          "eventSlug": "2026-11-12-olafur-arnalds-the-castro",
+          "date": "2026-11-12",
+          "headlinerName": "Olafur Arnalds",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 268448422,
+          "eventSlug": "2026-11-14-paul-cauthen-the-castro",
+          "date": "2026-11-14",
+          "headlinerName": "Paul Cauthen",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 244897538,
+          "eventSlug": "2026-11-16-jorja-smith-the-castro",
+          "date": "2026-11-16",
+          "headlinerName": "Jorja Smith",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 208238779,
+          "eventSlug": "2026-11-18-hamilton-leithauser-the-castro",
+          "date": "2026-11-18",
+          "headlinerName": "Hamilton Leithauser",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1203022705,
+          "eventSlug": "2026-11-19-prateek-kuhad-the-castro",
+          "date": "2026-11-19",
+          "headlinerName": "Prateek Kuhad",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1436484404,
+          "eventSlug": "2026-11-20-danna-the-castro",
+          "date": "2026-11-20",
+          "headlinerName": "Danna",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 107190221,
+          "eventSlug": "2026-11-24-jim-lang-and-the-ps-118-allstars-the-castro",
+          "date": "2026-11-24",
+          "headlinerName": "Jim Lang and The PS 118 AllStars",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2042850508,
+          "eventSlug": "2026-11-25-jim-lang-and-the-ps-118-allstars-the-castro",
+          "date": "2026-11-25",
+          "headlinerName": "Jim Lang and The PS 118 AllStars",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 973484899,
+          "eventSlug": "2026-11-29-dweezil-zappa-the-castro",
+          "date": "2026-11-29",
+          "headlinerName": "Dweezil Zappa",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2062200583,
+          "eventSlug": "2026-11-30-julio-torres-the-castro",
+          "date": "2026-11-30",
+          "headlinerName": "Julio Torres",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 196167253,
+          "eventSlug": "2026-12-03-sandra-bernhard-the-castro",
+          "date": "2026-12-03",
+          "headlinerName": "Sandra Bernhard",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1553888798,
+          "eventSlug": "2026-12-05-marc-maron-live-taping-the-castro",
+          "date": "2026-12-05",
+          "headlinerName": "Marc Maron (live taping)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 638669721,
+          "eventSlug": "2026-12-07-angine-de-poitrine-the-castro",
+          "date": "2026-12-07",
+          "headlinerName": "Angine De Poitrine",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1454741750,
+          "eventSlug": "2026-12-08-frost-children-the-castro",
+          "date": "2026-12-08",
+          "headlinerName": "Frost Children",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 22548784,
+          "eventSlug": "2026-12-11-lucius-the-castro",
+          "date": "2026-12-11",
+          "headlinerName": "Lucius",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2089567281,
+          "eventSlug": "2026-12-12-tiny-habits-the-castro",
+          "date": "2026-12-12",
+          "headlinerName": "Tiny Habits",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2139034017,
+          "eventSlug": "2026-12-13-yaelokre-the-castro",
+          "date": "2026-12-13",
+          "headlinerName": "Yaelokre",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 740882157,
+          "eventSlug": "2026-12-15-syd-the-castro",
+          "date": "2026-12-15",
+          "headlinerName": "Syd",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1909577418,
+          "eventSlug": "2026-12-18-venna-the-castro",
+          "date": "2026-12-18",
+          "headlinerName": "Venna",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1229230354,
+          "eventSlug": "2026-12-19-david-archuleta-the-castro",
+          "date": "2026-12-19",
+          "headlinerName": "David Archuleta",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 679454224,
+          "eventSlug": "2026-12-20-alyssa-edwards-the-castro",
+          "date": "2026-12-20",
+          "headlinerName": "Alyssa Edwards",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 454833262,
+          "eventSlug": "2026-12-24-san-francisco-gay-mens-chorus-3-shows-the-castro",
+          "date": "2026-12-24",
+          "headlinerName": "San Francisco Gay Men's Chorus (3 shows)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 10669019,
+          "eventSlug": "2027-01-15-sts9-the-castro",
+          "date": "2027-01-15",
+          "headlinerName": "STS9",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 282733988,
+          "eventSlug": "2027-01-16-sts9-the-castro",
+          "date": "2027-01-16",
+          "headlinerName": "STS9",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2112522702,
+          "eventSlug": "2027-01-20-dj-meredith-marks-the-castro",
+          "date": "2027-01-20",
+          "headlinerName": "dj Meredith Marks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 876629636,
+          "eventSlug": "2027-01-20-dj-meredith-marka-the-castro",
+          "date": "2027-01-20",
+          "headlinerName": "dj Meredith Marka",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1264157168,
+          "eventSlug": "2027-02-02-la-raux-the-castro",
+          "date": "2027-02-02",
+          "headlinerName": "La Raux",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 287658490,
+          "eventSlug": "2027-02-20-la-roux-the-castro",
+          "date": "2027-02-20",
+          "headlinerName": "La Roux",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1399837780,
+          "eventSlug": "2027-03-02-wasia-project-the-castro",
+          "date": "2027-03-02",
+          "headlinerName": "Wasia Project",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 888371830,
+          "eventSlug": "2027-03-03-blondshell-the-castro",
+          "date": "2027-03-03",
+          "headlinerName": "Blondshell",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 748095682,
+          "eventSlug": "2027-03-09-strongboi-the-castro",
+          "date": "2027-03-09",
+          "headlinerName": "Strongboi",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 965856356,
+          "eventSlug": "2027-03-20-aaron-chen-comedian-the-castro",
+          "date": "2027-03-20",
+          "headlinerName": "Aaron Chen (comedian)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 371047737,
+          "eventSlug": "2027-03-20-aaron-chen-comedian-2-shows-the-castro",
+          "date": "2027-03-20",
+          "headlinerName": "Aaron Chen (comedian - 2 shows)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 497376960,
+          "eventSlug": "2027-03-27-crystal-methyd-the-castro",
+          "date": "2027-03-27",
+          "headlinerName": "Crystal Methyd",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1893793026,
+          "eventSlug": "2027-04-08-chris-fleming-the-castro",
+          "date": "2027-04-08",
+          "headlinerName": "Chris Fleming",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 363117981,
+          "eventSlug": "2027-04-09-chris-fleming-the-castro",
+          "date": "2027-04-09",
+          "headlinerName": "Chris Fleming",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 578960342,
+          "eventSlug": "2027-04-24-mei-semones-the-castro",
+          "date": "2027-04-24",
+          "headlinerName": "Mei Semones",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 148121611,
+          "eventSlug": "2027-05-09-alaska-thunderfuck-the-castro",
+          "date": "2027-05-09",
+          "headlinerName": "Alaska Thunderfuck",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 573826892,
+          "eventSlug": "2027-05-20-agnes-obel-the-castro",
+          "date": "2027-05-20",
+          "headlinerName": "Agnes Obel",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 31041890,
+      "venueName": "Rickshaw Stop",
+      "website": "https://rickshawstop.com/",
+      "listed": 46,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1556451027,
+          "eventSlug": "2026-10-09-tim-atlas-the-rickshaw-stop",
+          "date": "2026-10-09",
+          "headlinerName": "Tim Atlas",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 256145619,
+          "eventSlug": "2026-10-10-kafana-balkan-rickshaw-stop",
+          "date": "2026-10-10",
+          "headlinerName": "Kafana Balkan",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1190241124,
+          "eventSlug": "2026-10-11-edgar-alejandro-the-rickshaw-stop",
+          "date": "2026-10-11",
+          "headlinerName": "Edgar Alejandro",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 893376595,
+          "eventSlug": "2026-10-13-zolita-the-rickshaw-stop",
+          "date": "2026-10-13",
+          "headlinerName": "Zolita",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2050088262,
+          "eventSlug": "2026-10-15-abracadabra-ep-release-the-rickshaw-stop",
+          "date": "2026-10-15",
+          "headlinerName": "Abracadabra (ep release)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 723006652,
+          "eventSlug": "2026-10-16-diles-que-no-maten-the-rickshaw-stop",
+          "date": "2026-10-16",
+          "headlinerName": "Diles Que No Maten",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1659288594,
+          "eventSlug": "2026-10-17-flower-face-the-rickshaw-stop",
+          "date": "2026-10-17",
+          "headlinerName": "Flower Face",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 948504952,
+          "eventSlug": "2026-10-19-bebe-stockwell-rickshaw-stop",
+          "date": "2026-10-19",
+          "headlinerName": "Bebe Stockwell",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1277764599,
+          "eventSlug": "2026-10-20-avery-cochrane-the-rickshaw-stop",
+          "date": "2026-10-20",
+          "headlinerName": "Avery Cochrane",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 182679647,
+          "eventSlug": "2026-10-24-country-risqu-record-release-the-rickshaw-stop",
+          "date": "2026-10-24",
+          "headlinerName": "Country Risqué (record release)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 723066908,
+          "eventSlug": "2026-10-25-kyle-gordon-the-rickshaw-stop",
+          "date": "2026-10-25",
+          "headlinerName": "Kyle Gordon",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 376461827,
+          "eventSlug": "2026-10-26-wine-lips-the-rickshaw-stop",
+          "date": "2026-10-26",
+          "headlinerName": "Wine Lips",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1952399730,
+          "eventSlug": "2026-10-27-otha-rickshaw-stop",
+          "date": "2026-10-27",
+          "headlinerName": "Otha",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1755820745,
+          "eventSlug": "2026-10-27-violet-grohl-rickshaw-stop",
+          "date": "2026-10-27",
+          "headlinerName": "Violet Grohl",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1599384262,
+          "eventSlug": "2026-10-28-we-are-scientists-the-rickshaw-stop",
+          "date": "2026-10-28",
+          "headlinerName": "We Are Scientists",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1972766401,
+          "eventSlug": "2026-10-29-the-tubs-rickshaw-stop",
+          "date": "2026-10-29",
+          "headlinerName": "The Tubs",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1747569032,
+          "eventSlug": "2026-11-04-mary-in-the-junkyard-the-rickshaw-stop",
+          "date": "2026-11-04",
+          "headlinerName": "Mary In The Junkyard",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1542275305,
+          "eventSlug": "2026-11-05-kennedy-ryon-rickshaw-stop",
+          "date": "2026-11-05",
+          "headlinerName": "Kennedy Ryon",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 767129501,
+          "eventSlug": "2026-11-06-genesis-owusu-the-rickshaw-stop",
+          "date": "2026-11-06",
+          "headlinerName": "Genesis Owusu",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 692481339,
+          "eventSlug": "2026-11-07-peach-tree-rascals-the-rickshaw-stop",
+          "date": "2026-11-07",
+          "headlinerName": "Peach Tree Rascals",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 9441571,
+          "eventSlug": "2026-11-08-forrest-nolan-rickshaw-stop",
+          "date": "2026-11-08",
+          "headlinerName": "Forrest Nolan",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2007610384,
+          "eventSlug": "2026-11-11-sparta-the-rickshaw-stop",
+          "date": "2026-11-11",
+          "headlinerName": "Sparta",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1084979261,
+          "eventSlug": "2026-11-12-jake-minch-the-rickshaw-stop",
+          "date": "2026-11-12",
+          "headlinerName": "Jake Minch",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 299831903,
+          "eventSlug": "2026-11-13-hails-the-rickshaw-stop",
+          "date": "2026-11-13",
+          "headlinerName": "Hails",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 726721205,
+          "eventSlug": "2026-11-15-francisca-valenzuela-the-rickshaw-stop",
+          "date": "2026-11-15",
+          "headlinerName": "Francisca Valenzuela",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1287725420,
+          "eventSlug": "2026-11-19-cannelle-rickshaw-stop",
+          "date": "2026-11-19",
+          "headlinerName": "Cannelle",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1429268553,
+          "eventSlug": "2026-11-20-natural-child-the-rickshaw-stop",
+          "date": "2026-11-20",
+          "headlinerName": "Natural Child",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 62549727,
+          "eventSlug": "2026-11-22-qendresa-rickshaw-stop",
+          "date": "2026-11-22",
+          "headlinerName": "Qendresa",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 551542685,
+          "eventSlug": "2026-12-02-lrain-the-rickshaw-stop",
+          "date": "2026-12-02",
+          "headlinerName": "L'Rain",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 958557005,
+          "eventSlug": "2026-12-03-emancipator-rickshaw-stop",
+          "date": "2026-12-03",
+          "headlinerName": "Emancipator",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 629720055,
+          "eventSlug": "2026-12-04-niko-rubio-the-rickshaw-stop",
+          "date": "2026-12-04",
+          "headlinerName": "Niko Rubio",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1572118982,
+          "eventSlug": "2026-12-05-alisons-halo-the-rickshaw-stop",
+          "date": "2026-12-05",
+          "headlinerName": "Alison's Halo",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1671123519,
+          "eventSlug": "2026-12-08-bree-runway-rickshaw-stop",
+          "date": "2026-12-08",
+          "headlinerName": "Bree Runway",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1685494385,
+          "eventSlug": "2026-12-09-jessica-lea-mayfield-the-rickshaw-stop",
+          "date": "2026-12-09",
+          "headlinerName": "Jessica Lea Mayfield",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 97241600,
+          "eventSlug": "2026-12-10-oliver-hazard-the-rickshaw-stop",
+          "date": "2026-12-10",
+          "headlinerName": "Oliver Hazard",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 717921062,
+          "eventSlug": "2026-12-11-graham-hunt-the-rickshaw-stop",
+          "date": "2026-12-11",
+          "headlinerName": "Graham Hunt",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 495321402,
+          "eventSlug": "2026-12-12-tanukichan-rickshaw-stop",
+          "date": "2026-12-12",
+          "headlinerName": "Tanukichan",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1342374031,
+          "eventSlug": "2026-12-15-ruby-haunt-the-rickshaw-stop",
+          "date": "2026-12-15",
+          "headlinerName": "Ruby Haunt",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 859366223,
+          "eventSlug": "2026-12-18-milk-bone-rickshaw-stop",
+          "date": "2026-12-18",
+          "headlinerName": "Milk & Bone",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 719632804,
+          "eventSlug": "2027-01-07-chris-simpson-playing-the-songs-of-mineral-the-rickshaw-stop",
+          "date": "2027-01-07",
+          "headlinerName": "Chris Simpson (playing the songs of Mineral)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2062186925,
+          "eventSlug": "2027-01-15-seb-lowe-rickshaw-stop",
+          "date": "2027-01-15",
+          "headlinerName": "Seb Lowe",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2115612837,
+          "eventSlug": "2027-01-18-tara-clerkin-trio-the-rickshaw-stop",
+          "date": "2027-01-18",
+          "headlinerName": "Tara Clerkin Trio",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 633804749,
+          "eventSlug": "2027-02-19-small-brown-bike-the-rickshaw-stop",
+          "date": "2027-02-19",
+          "headlinerName": "Small Brown Bike",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 297095890,
+          "eventSlug": "2027-02-25-deathby-romy-the-rickshaw-stop",
+          "date": "2027-02-25",
+          "headlinerName": "Deathby Romy",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1471972580,
+          "eventSlug": "2027-04-06-valencia-grace-the-rickshaw-stop",
+          "date": "2027-04-06",
+          "headlinerName": "Valencia Grace",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1912509805,
+          "eventSlug": "2027-04-29-paloma-morphy-the-rickshaw-stop",
+          "date": "2027-04-29",
+          "headlinerName": "Paloma Morphy",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1016385760,
+      "venueName": "Bottom of the Hill",
+      "website": "https://www.bottomofthehill.com/calendar.html",
+      "listed": 44,
+      "matched": 29,
+      "events": [
+        {
+          "eventId": 1928279445,
+          "eventSlug": "2026-10-09-bit-brigade-bottom-of-the-hill",
+          "date": "2026-10-09",
+          "headlinerName": "Bit Brigade",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1715609513,
+          "eventSlug": "2026-10-10-juicebumps-the-bottom-of-the-hill",
+          "date": "2026-10-10",
+          "headlinerName": "Juicebumps",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2136268934,
+          "eventSlug": "2026-10-11-lets-go-bowling-the-bottom-of-the-hill",
+          "date": "2026-10-11",
+          "headlinerName": "Let's Go Bowling",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1519522506,
+          "eventSlug": "2026-10-12-triclops-bottom-of-the-hill",
+          "date": "2026-10-12",
+          "headlinerName": "Triclops",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1192392557,
+          "eventSlug": "2026-10-13-wolves-of-glendale-bottom-of-the-hill",
+          "date": "2026-10-13",
+          "headlinerName": "Wolves Of Glendale",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 897947598,
+          "eventSlug": "2026-10-15-imperial-teen-the-bottom-of-the-hill",
+          "date": "2026-10-15",
+          "headlinerName": "Imperial Teen",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1788885284,
+          "eventSlug": "2026-10-16-the-seshen-bottom-of-the-hill",
+          "date": "2026-10-16",
+          "headlinerName": "The Seshen",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1025723901,
+          "eventSlug": "2026-10-17-heavens-to-betsey-the-bottom-of-the-hill",
+          "date": "2026-10-17",
+          "headlinerName": "Heavens To Betsey",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1636439398,
+          "eventSlug": "2026-10-18-heavens-to-betsey-the-bottom-of-the-hill",
+          "date": "2026-10-18",
+          "headlinerName": "Heavens To Betsey",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 474030739,
+          "eventSlug": "2026-10-21-kepi-ghoulie-electric-the-bottom-of-the-hill",
+          "date": "2026-10-21",
+          "headlinerName": "Kepi Ghoulie Electric",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1142892760,
+          "eventSlug": "2026-10-22-fabio-frizzi-the-bottom-of-the-hill",
+          "date": "2026-10-22",
+          "headlinerName": "Fabio Frizzi",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 455535352,
+          "eventSlug": "2026-10-24-kflay-bottom-of-the-hill",
+          "date": "2026-10-24",
+          "headlinerName": "K.Flay",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1684562286,
+          "eventSlug": "2026-10-25-castle-the-bottom-of-the-hill",
+          "date": "2026-10-25",
+          "headlinerName": "Castle",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 626601314,
+          "eventSlug": "2026-10-27-slothrust-the-bottom-of-the-hill",
+          "date": "2026-10-27",
+          "headlinerName": "Slothrust",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 637917441,
+          "eventSlug": "2026-10-28-slothrust-the-bottom-of-the-hill",
+          "date": "2026-10-28",
+          "headlinerName": "Slothrust",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1412884640,
+          "eventSlug": "2026-10-29-astro-zombies-tribute-the-bottom-of-the-hill",
+          "date": "2026-10-29",
+          "headlinerName": "Astrozombies SF (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 733100237,
+          "eventSlug": "2026-10-30-temptation-tribute-the-bottom-of-the-hill",
+          "date": "2026-10-30",
+          "headlinerName": "Temptation (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 900962568,
+          "eventSlug": "2026-10-31-the-mummies-the-bottom-of-the-hill",
+          "date": "2026-10-31",
+          "headlinerName": "The Mummies",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1778944899,
+          "eventSlug": "2026-11-01-the-mutants-bottom-of-the-hill",
+          "date": "2026-11-01",
+          "headlinerName": "The Mutants",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1681388916,
+          "eventSlug": "2026-11-03-sex-mex-the-bottom-of-the-hill",
+          "date": "2026-11-03",
+          "headlinerName": "Sex Mex",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1032969202,
+          "eventSlug": "2026-11-04-team-dresch-the-bottom-of-the-hill",
+          "date": "2026-11-04",
+          "headlinerName": "Team Dresch",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1251894253,
+          "eventSlug": "2026-11-05-team-dresch-the-bottom-of-the-hill",
+          "date": "2026-11-05",
+          "headlinerName": "Team Dresch",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1539792018,
+          "eventSlug": "2026-11-06-loquat-the-bottom-of-the-hill",
+          "date": "2026-11-06",
+          "headlinerName": "Loquat",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 605582881,
+          "eventSlug": "2026-11-07-southern-culture-on-the-skids-the-bottom-of-the-hill",
+          "date": "2026-11-07",
+          "headlinerName": "Southern Culture On The Skids",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 191078883,
+          "eventSlug": "2026-11-08-armand-hammer-the-bottom-of-the-hill",
+          "date": "2026-11-08",
+          "headlinerName": "Armand Hammer",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 398845964,
+          "eventSlug": "2026-11-10-hit-the-lights-the-bottom-of-the-hill",
+          "date": "2026-11-10",
+          "headlinerName": "Hit The Lights",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 546744614,
+          "eventSlug": "2026-11-11-loercase-the-bottom-of-the-hill",
+          "date": "2026-11-11",
+          "headlinerName": "Loercase",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 550773456,
+          "eventSlug": "2026-11-12-maus-haus-bottom-of-the-hill",
+          "date": "2026-11-12",
+          "headlinerName": "Maus Haus",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1539473248,
+          "eventSlug": "2026-11-13-jon-spencer-the-bottom-of-the-hill",
+          "date": "2026-11-13",
+          "headlinerName": "Jon Spencer",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 605273068,
+          "eventSlug": "2026-11-14-the-avengers-the-bottom-of-the-hill",
+          "date": "2026-11-14",
+          "headlinerName": "The Avengers",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1380989225,
+          "eventSlug": "2026-11-15-finish-ticket-final-show-the-bottom-of-the-hill",
+          "date": "2026-11-15",
+          "headlinerName": "Finish Ticket (final show)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 16583778,
+          "eventSlug": "2026-11-18-mild-universe-the-bottom-of-the-hill",
+          "date": "2026-11-18",
+          "headlinerName": "Mild Universe",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 185402859,
+          "eventSlug": "2026-11-20-earthless-the-bottom-of-the-hill",
+          "date": "2026-11-20",
+          "headlinerName": "Earthless",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1442111631,
+          "eventSlug": "2026-11-21-mdc-the-bottom-of-the-hill",
+          "date": "2026-11-21",
+          "headlinerName": "M.D.C.",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 949183314,
+          "eventSlug": "2026-11-22-verst-the-bottom-of-the-hill",
+          "date": "2026-11-22",
+          "headlinerName": "Verst",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1989645112,
+          "eventSlug": "2026-11-23-pedro-the-lion-the-bottom-of-the-hill",
+          "date": "2026-11-23",
+          "headlinerName": "Pedro The Lion",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1922716992,
+          "eventSlug": "2026-11-27-dr-know-the-bottom-of-the-hill",
+          "date": "2026-11-27",
+          "headlinerName": "Dr. Know",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1440369296,
+          "eventSlug": "2026-11-28-the-inciters-the-bottom-of-the-hill",
+          "date": "2026-11-28",
+          "headlinerName": "The Inciters",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2051019895,
+          "eventSlug": "2026-12-03-hazzards-cure-bottom-of-the-hill",
+          "date": "2026-12-03",
+          "headlinerName": "Hazzard's Cure",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 236581767,
+          "eventSlug": "2026-12-05-sonny-his-rhinestone-sunsets-bottom-of-the-hill",
+          "date": "2026-12-05",
+          "headlinerName": "Sonny & His Rhinestone Sunsets",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1387791865,
+          "eventSlug": "2026-12-08-makeout-reef-bottom-of-the-hill",
+          "date": "2026-12-08",
+          "headlinerName": "Makeout Reef",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1931203705,
+          "eventSlug": "2026-12-11-andre-nickatina-the-bottom-of-the-hill",
+          "date": "2026-12-11",
+          "headlinerName": "Andre Nickatina",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2132064289,
+          "eventSlug": "2026-12-12-hot-lunch-the-bottom-of-the-hill",
+          "date": "2026-12-12",
+          "headlinerName": "Hot Lunch",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1563622473,
+          "eventSlug": "2026-12-23-swingin-utters-bottom-of-the-hill",
+          "date": "2026-12-23",
+          "headlinerName": "Swingin Utters",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 697962111,
+      "venueName": "Bimbo's 365 Club",
+      "website": "https://bimbos365club.com/",
+      "listed": 27,
+      "matched": 17,
+      "events": [
+        {
+          "eventId": 1844294227,
+          "eventSlug": "2026-10-09-domi-jd-beck-bimbos-365-club",
+          "date": "2026-10-09",
+          "headlinerName": "Domi & JD Beck",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 17569174,
+          "eventSlug": "2026-10-10-maro-bimbos-365-club",
+          "date": "2026-10-10",
+          "headlinerName": "Maro",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1787869160,
+          "eventSlug": "2026-10-12-maro-bimbos-365-club",
+          "date": "2026-10-12",
+          "headlinerName": "Maro",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 119865025,
+          "eventSlug": "2026-10-14-fightmaster-bimbos-365-club",
+          "date": "2026-10-14",
+          "headlinerName": "Fightmaster",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 702875143,
+          "eventSlug": "2026-10-15-world-famous-pets-bimbos-365-club",
+          "date": "2026-10-15",
+          "headlinerName": "World Famous Pets",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 903525436,
+          "eventSlug": "2026-10-16-tainted-love-bimbos-365-club",
+          "date": "2026-10-16",
+          "headlinerName": "Tainted Love",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 919835493,
+          "eventSlug": "2026-10-17-lewis-ofman-bimbos-365-club",
+          "date": "2026-10-17",
+          "headlinerName": "Lewis Ofman",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1272912532,
+          "eventSlug": "2026-10-28-aliza-kelly-bimbos-365-club",
+          "date": "2026-10-28",
+          "headlinerName": "Aliza Kelly",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 36894263,
+          "eventSlug": "2026-10-30-stella-lefty-bimbos-365-club",
+          "date": "2026-10-30",
+          "headlinerName": "Stella Lefty",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2135601995,
+          "eventSlug": "2026-11-05-mystery-skulls-bimbos-365-club",
+          "date": "2026-11-05",
+          "headlinerName": "Mystery Skulls",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 444334350,
+          "eventSlug": "2026-11-08-murray-hill-bimbos-365-club",
+          "date": "2026-11-08",
+          "headlinerName": "Murray Hill",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1528881652,
+          "eventSlug": "2026-11-12-ezra-collective-bimbos-365-club",
+          "date": "2026-11-12",
+          "headlinerName": "Ezra Collective",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 898829137,
+          "eventSlug": "2026-11-13-mustache-harbor-bimbos-365-club",
+          "date": "2026-11-13",
+          "headlinerName": "Mustache Harbor",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1610031360,
+          "eventSlug": "2026-11-20-hug-bimbos-365-club",
+          "date": "2026-11-20",
+          "headlinerName": "Hug",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 667738976,
+          "eventSlug": "2026-11-27-wonderbread-5-bimbos-365-club",
+          "date": "2026-11-27",
+          "headlinerName": "Wonderbread 5",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1177980862,
+          "eventSlug": "2026-11-28-fleetwood-macrame-tribute-bimbos-365-club",
+          "date": "2026-11-28",
+          "headlinerName": "Fleetwood Macrame (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1824325317,
+          "eventSlug": "2026-12-02-the-womack-sisters-bimbos-365-club",
+          "date": "2026-12-02",
+          "headlinerName": "The Womack Sisters",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 359351610,
+          "eventSlug": "2026-12-03-the-womack-sisters-bimbos-365-club",
+          "date": "2026-12-03",
+          "headlinerName": "The Womack Sisters",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1784290575,
+          "eventSlug": "2026-12-06-squirrel-nut-zippers-bimbos-365-club",
+          "date": "2026-12-06",
+          "headlinerName": "Squirrel Nut Zippers",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1379519381,
+          "eventSlug": "2026-12-08-sasha-alex-sloan-bimbos-365-club",
+          "date": "2026-12-08",
+          "headlinerName": "Sasha Alex Sloan",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 134214569,
+          "eventSlug": "2026-12-13-jd-mcpherson-bimbos-365-club",
+          "date": "2026-12-13",
+          "headlinerName": "JD McPherson",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 277432769,
+          "eventSlug": "2026-12-14-phoebe-judge-bimbos-365-club",
+          "date": "2026-12-14",
+          "headlinerName": "Phoebe Judge",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1785355123,
+          "eventSlug": "2026-12-16-pokey-lafarge-bimbos-365-club",
+          "date": "2026-12-16",
+          "headlinerName": "Pokey LaFarge",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1516912245,
+          "eventSlug": "2026-12-19-shaun-cassidy-bimbos-365-club",
+          "date": "2026-12-19",
+          "headlinerName": "Shaun Cassidy",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 100032277,
+          "eventSlug": "2027-02-01-vansire-bimbos-365-club",
+          "date": "2027-02-01",
+          "headlinerName": "Vansire",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 127360497,
+          "eventSlug": "2027-03-01-marian-hill-bimbos-365-club",
+          "date": "2027-03-01",
+          "headlinerName": "Marian Hill",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 212140897,
+          "eventSlug": "2027-03-10-christian-kuria-bimbos-365-club",
+          "date": "2027-03-10",
+          "headlinerName": "Christian Kuria",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 793956182,
+      "venueName": "Knockout",
+      "website": "https://theknockoutsf.com/",
+      "listed": 11,
+      "matched": 7,
+      "events": [
+        {
+          "eventId": 1918421092,
+          "eventSlug": "2026-10-10-junkyard-cat-the-knockout",
+          "date": "2026-10-10",
+          "headlinerName": "Junkyard Cat",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1975247869,
+          "eventSlug": "2026-10-14-cowboy-beauty-queen-the-knockout",
+          "date": "2026-10-14",
+          "headlinerName": "Cowboy Beauty Queen",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1922284935,
+          "eventSlug": "2026-10-17-croissant-the-knockout",
+          "date": "2026-10-17",
+          "headlinerName": "Croissant",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1518317669,
+          "eventSlug": "2026-10-18-gasoline-alley-the-knockout",
+          "date": "2026-10-18",
+          "headlinerName": "Gasoline Alley",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1584340776,
+          "eventSlug": "2026-10-19-lesser-care-the-knockout",
+          "date": "2026-10-19",
+          "headlinerName": "Lesser Care",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1550754320,
+          "eventSlug": "2026-10-20-copeathetic-the-knockout",
+          "date": "2026-10-20",
+          "headlinerName": "Copeathetic",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1744657534,
+          "eventSlug": "2026-10-22-malice-cooper-tribute-the-knockout",
+          "date": "2026-10-22",
+          "headlinerName": "Malice Cooper (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1529948764,
+          "eventSlug": "2026-10-24-lightweight-champion-the-knockout",
+          "date": "2026-10-24",
+          "headlinerName": "Lightweight Champion",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1131944053,
+          "eventSlug": "2026-10-24-the-maraschinos-the-knockout",
+          "date": "2026-10-24",
+          "headlinerName": "The Maraschinos",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 167344886,
+          "eventSlug": "2026-10-28-the-dead-cassettes-the-knockout",
+          "date": "2026-10-28",
+          "headlinerName": "The Dead Cassettes",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1941228135,
+          "eventSlug": "2026-10-31-halloween-tribute-night-the-knockout",
+          "date": "2026-10-31",
+          "headlinerName": "Halloween tribute night",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1648637995,
+      "venueName": "Civic Auditorium",
+      "website": "https://billgrahamcivic.com/",
+      "listed": 10,
+      "matched": 8,
+      "events": [
+        {
+          "eventId": 1487854026,
+          "eventSlug": "2026-10-09-holy-priest-civic-auditorium",
+          "date": "2026-10-09",
+          "headlinerName": "Holy Priest",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1845397224,
+          "eventSlug": "2026-10-10-bonnie-raitt-the-civic-auditorium",
+          "date": "2026-10-10",
+          "headlinerName": "Bonnie Raitt",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 212455408,
+          "eventSlug": "2026-10-22-monsta-x-the-civic-auditorium",
+          "date": "2026-10-22",
+          "headlinerName": "Monsta X",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 897029433,
+          "eventSlug": "2026-11-05-moby-the-civic-auditorium",
+          "date": "2026-11-05",
+          "headlinerName": "Moby",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 881120196,
+          "eventSlug": "2026-11-11-brand-new-the-civic-auditorium",
+          "date": "2026-11-11",
+          "headlinerName": "Brand New",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 832732163,
+          "eventSlug": "2026-11-13-tyla-the-civic-auditorium",
+          "date": "2026-11-13",
+          "headlinerName": "Tyla",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 816996686,
+          "eventSlug": "2026-11-14-worship-the-civic-auditorium",
+          "date": "2026-11-14",
+          "headlinerName": "Worship",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1547806490,
+          "eventSlug": "2026-12-05-its-murph-the-civic-auditorium",
+          "date": "2026-12-05",
+          "headlinerName": "It's Murph",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1700507240,
+          "eventSlug": "2027-05-01-lola-young-the-civic-auditorium",
+          "date": "2027-05-01",
+          "headlinerName": "Lola Young",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 279504248,
+          "eventSlug": "2027-05-12-fontaines-dc-the-civic-auditorium",
+          "date": "2027-05-12",
+          "headlinerName": "Fontaines d.c.",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 1510199156,
+      "venueName": "On Broadway",
+      "website": "https://themab.org/",
+      "listed": 6,
+      "matched": 2,
+      "events": [
+        {
+          "eventId": 1403957387,
+          "eventSlug": "2026-10-17-hell-bond-pound-the-on-broadway",
+          "date": "2026-10-17",
+          "headlinerName": "Hell Bond Pound",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 828837404,
+          "eventSlug": "2026-10-24-ghoul-the-on-broadway",
+          "date": "2026-10-24",
+          "headlinerName": "Ghoul",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2128022671,
+          "eventSlug": "2026-11-06-knights-of-molino-on-broadway",
+          "date": "2026-11-06",
+          "headlinerName": "Knights Of Molino",
+          "status": "withheld-venue-conflict"
+        },
+        {
+          "eventId": 170871277,
+          "eventSlug": "2026-11-07-paralysis-expletive-the-on-broadway",
+          "date": "2026-11-07",
+          "headlinerName": "Paralysis Expletive",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 240829710,
+          "eventSlug": "2026-11-22-to-violently-vomit-on-broadway",
+          "date": "2026-11-22",
+          "headlinerName": "To Violently Vomit",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1379755860,
+          "eventSlug": "2026-12-05-exhumed-the-on-broadway",
+          "date": "2026-12-05",
+          "headlinerName": "Exhumed",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 1557090037,
+      "venueName": "Neck of the Woods",
+      "website": "https://www.neckofthewoodssf.com/contact/",
+      "listed": 5,
+      "matched": 2,
+      "events": [
+        {
+          "eventId": 23062947,
+          "eventSlug": "2026-10-09-swapmeet-neck-of-the-woods",
+          "date": "2026-10-09",
+          "headlinerName": "Swapmeet",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1059927272,
+          "eventSlug": "2026-10-10-dri-neck-of-the-woods",
+          "date": "2026-10-10",
+          "headlinerName": "D.R.I.",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1798523680,
+          "eventSlug": "2026-10-16-blind-illusion-record-release-neck-of-the-woods",
+          "date": "2026-10-16",
+          "headlinerName": "Blind Illusion (record release)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 922388099,
+          "eventSlug": "2026-10-21-big-ass-truck-neck-of-the-woods",
+          "date": "2026-10-21",
+          "headlinerName": "Big Ass Truck",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1511143606,
+          "eventSlug": "2027-04-08-gutalax-neck-of-the-woods",
+          "date": "2027-04-08",
+          "headlinerName": "Gutalax",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1550837691,
+      "venueName": "Cafe Du Nord",
+      "website": "https://cafedunord.com/",
+      "listed": 2,
+      "matched": 2,
+      "events": [
+        {
+          "eventId": 1721705824,
+          "eventSlug": "2026-10-13-isabel-larosa-cafe-du-nord",
+          "date": "2026-10-13",
+          "headlinerName": "Isabel Larosa",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 600495149,
+          "eventSlug": "2026-10-30-lime-garden-cafe-du-nord",
+          "date": "2026-10-30",
+          "headlinerName": "Lime Garden",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 735357859,
+      "venueName": "Thrillhouse Records",
+      "website": "https://thrillhouserecords.com/pages/about-us",
+      "listed": 2,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1100099901,
+          "eventSlug": "2026-10-11-big-tractor-thrillhouse-records",
+          "date": "2026-10-11",
+          "headlinerName": "Big Tractor",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 381884337,
+          "eventSlug": "2026-10-24-bitchfit-thrillhouse-records",
+          "date": "2026-10-24",
+          "headlinerName": "Bitchfit",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 343961277,
+      "venueName": "Midway",
+      "website": "https://themidwaysf.com/",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 843084206,
+          "eventSlug": "2026-10-10-tinlicker-the-midway",
+          "date": "2026-10-10",
+          "headlinerName": "Tinlicker",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1009706718,
+      "venueName": "above DNA Lounge",
+      "website": "https://www.dnalounge.com/",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1273968091,
+          "eventSlug": "2026-10-24-warumono-the-above-dna-lounge",
+          "date": "2026-10-24",
+          "headlinerName": "Warumono",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 89847210,
+      "venueName": "Feinstein's at the Nikko",
+      "website": "https://www.feinsteinssf.com/about/",
+      "listed": 1,
+      "matched": 1,
+      "events": [
+        {
+          "eventId": 1622045573,
+          "eventSlug": "2026-10-22-carol-luckenbach-feinsteins",
+          "date": "2026-10-22",
+          "headlinerName": "Carol Luckenbach",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 527022144,
+      "venueName": "Biscuits and Blues",
+      "website": "https://www.biscuitsandblues.com/",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 307288005,
+          "eventSlug": "2026-11-08-westerly-biscuits-and-blues",
+          "date": "2026-11-08",
+          "headlinerName": "Westerly",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1856455989,
+      "venueName": "O'Reilly's",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1862840967,
+          "eventSlug": "2026-10-17-gozzard-oreillys",
+          "date": "2026-10-17",
+          "headlinerName": "Gozzard",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 386406925,
+      "venueName": "Mothbelly Gallery",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1823848356,
+          "eventSlug": "2026-10-10-fun-control-mothbelly-gallery",
+          "date": "2026-10-10",
+          "headlinerName": "Fun Control",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 463728167,
+      "venueName": "Great American Music Hall",
+      "website": "https://gamh.com/",
+      "listed": 59,
+      "matched": 45,
+      "events": [
+        {
+          "eventId": 1566253400,
+          "eventSlug": "2026-10-09-phillip-phillips-great-american-music-hall",
+          "date": "2026-10-09",
+          "headlinerName": "Phillip Phillips",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 790147991,
+          "eventSlug": "2026-10-11-divine-offering-tribute-great-american-music-hall",
+          "date": "2026-10-11",
+          "headlinerName": "Divine Offering (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 326858952,
+          "eventSlug": "2026-10-11-sita-michelle-coltrain-great-american-music-hall",
+          "date": "2026-10-11",
+          "headlinerName": "Sita Michelle Coltrain",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 313803026,
+          "eventSlug": "2026-10-13-provoker-the-great-american-music-hall",
+          "date": "2026-10-13",
+          "headlinerName": "Provoker",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2067800795,
+          "eventSlug": "2026-10-14-mexican-institute-of-sound-the-great-american-music-hall",
+          "date": "2026-10-14",
+          "headlinerName": "Mexican Institute Of Sound",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1923695896,
+          "eventSlug": "2026-10-15-kelsey-lu-the-great-american-music-hall",
+          "date": "2026-10-15",
+          "headlinerName": "Kelsey Lu",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 160505722,
+          "eventSlug": "2026-10-16-the-jungle-giants-great-american-music-hall",
+          "date": "2026-10-16",
+          "headlinerName": "The Jungle Giants",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 728222678,
+          "eventSlug": "2026-10-18-peaches-the-great-american-music-hall",
+          "date": "2026-10-18",
+          "headlinerName": "Peaches",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 849801487,
+          "eventSlug": "2026-10-19-amantes-del-futuro-great-american-music-hall",
+          "date": "2026-10-19",
+          "headlinerName": "Amantes Del Futuro",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 603349223,
+          "eventSlug": "2026-10-20-allah-las-great-american-music-hall",
+          "date": "2026-10-20",
+          "headlinerName": "Allah-Las",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 801787825,
+          "eventSlug": "2026-10-21-diiv-great-american-music-hall",
+          "date": "2026-10-21",
+          "headlinerName": "Diiv",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1611382547,
+          "eventSlug": "2026-10-22-automelodi-great-american-music-hall",
+          "date": "2026-10-22",
+          "headlinerName": "Automelodi",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 410173558,
+          "eventSlug": "2026-10-23-julia-wolf-great-american-music-hall",
+          "date": "2026-10-23",
+          "headlinerName": "Julia Wolf",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 433098467,
+          "eventSlug": "2026-10-23-dj-trst-great-american-music-hall",
+          "date": "2026-10-23",
+          "headlinerName": "dj TR/ST",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 870293476,
+          "eventSlug": "2026-10-24-illuminati-hotties-the-great-american-music-hall",
+          "date": "2026-10-24",
+          "headlinerName": "Illuminati Hotties",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 359822332,
+          "eventSlug": "2026-10-25-ali-amran-the-great-american-music-hall",
+          "date": "2026-10-25",
+          "headlinerName": "Ali Amran",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1926082461,
+          "eventSlug": "2026-10-26-inner-wave-great-american-music-hall",
+          "date": "2026-10-26",
+          "headlinerName": "Inner Wave",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 811639047,
+          "eventSlug": "2026-10-27-wand-great-american-music-hall",
+          "date": "2026-10-27",
+          "headlinerName": "Wand",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2106611260,
+          "eventSlug": "2026-10-28-pixel-grip-the-great-american-music-hall",
+          "date": "2026-10-28",
+          "headlinerName": "Pixel Grip",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2115377985,
+          "eventSlug": "2026-10-29-desire-great-american-music-hall",
+          "date": "2026-10-29",
+          "headlinerName": "Desire",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 538134950,
+          "eventSlug": "2026-10-30-cold-cave-solo-great-american-music-hall",
+          "date": "2026-10-30",
+          "headlinerName": "Cold Cave (solo)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 217961239,
+          "eventSlug": "2026-11-01-frankie-and-the-witch-fingers-the-great-american-music-hall",
+          "date": "2026-11-01",
+          "headlinerName": "Frankie And The Witch Fingers",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1965420200,
+          "eventSlug": "2026-11-03-madre-cumbia-great-american-music-hall",
+          "date": "2026-11-03",
+          "headlinerName": "Madre Cumbia",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1704547361,
+          "eventSlug": "2026-11-04-pain-of-truth-great-american-music-hall",
+          "date": "2026-11-04",
+          "headlinerName": "Pain Of Truth",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1074924174,
+          "eventSlug": "2026-11-05-danny-l-harle-great-american-music-hall",
+          "date": "2026-11-05",
+          "headlinerName": "Danny L Harle",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 671026431,
+          "eventSlug": "2026-11-06-dark-n-stormy-great-american-music-hall",
+          "date": "2026-11-06",
+          "headlinerName": "Dark N Stormy",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 949866796,
+          "eventSlug": "2026-11-08-foy-vance-the-great-american-music-hall",
+          "date": "2026-11-08",
+          "headlinerName": "Foy Vance",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 308175735,
+          "eventSlug": "2026-11-10-rio-amor-the-great-american-music-hall",
+          "date": "2026-11-10",
+          "headlinerName": "Rio Amor",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1560176812,
+          "eventSlug": "2026-11-11-jake-xerxes-fussell-great-american-music-hall",
+          "date": "2026-11-11",
+          "headlinerName": "Jake Xerxes Fussell",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1689145702,
+          "eventSlug": "2026-11-12-russian-circles-great-american-music-hall",
+          "date": "2026-11-12",
+          "headlinerName": "Russian Circles",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 641371844,
+          "eventSlug": "2026-11-13-dj-devendra-banhart-great-american-music-hall",
+          "date": "2026-11-13",
+          "headlinerName": "dj Devendra Banhart",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1996527936,
+          "eventSlug": "2026-11-16-prayers-great-american-music-hall",
+          "date": "2026-11-16",
+          "headlinerName": "Prayers",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1195431348,
+          "eventSlug": "2026-11-17-armored-saint-great-american-music-hall",
+          "date": "2026-11-17",
+          "headlinerName": "Armored Saint",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1048073029,
+          "eventSlug": "2026-11-18-sueco-great-american-music-hall",
+          "date": "2026-11-18",
+          "headlinerName": "Sueco",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 396790986,
+          "eventSlug": "2026-11-20-jayski-and-the-dawn-great-american-music-hall",
+          "date": "2026-11-20",
+          "headlinerName": "Jayski And The Dawn",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1820843414,
+          "eventSlug": "2026-11-21-andrew-mcmahon-the-great-american-music-hall",
+          "date": "2026-11-21",
+          "headlinerName": "Andrew McMahon",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1040501602,
+          "eventSlug": "2026-11-25-andre-nickatina-great-american-music-hall",
+          "date": "2026-11-25",
+          "headlinerName": "Andre Nickatina",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 8732079,
+          "eventSlug": "2026-11-27-emma-ruth-rundle-the-great-american-music-hall",
+          "date": "2026-11-27",
+          "headlinerName": "Emma Ruth Rundle",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 828175309,
+          "eventSlug": "2026-11-28-zepparella-tribute-great-american-music-hall",
+          "date": "2026-11-28",
+          "headlinerName": "Zepparella (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1675729823,
+          "eventSlug": "2026-11-30-a-john-waters-christmas-great-american-music-hall",
+          "date": "2026-11-30",
+          "headlinerName": "A John Waters Christmas",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1581542795,
+          "eventSlug": "2026-12-06-zorn-great-american-music-hall",
+          "date": "2026-12-06",
+          "headlinerName": "Zorn",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1976032617,
+          "eventSlug": "2026-12-09-the-strike-great-american-music-hall",
+          "date": "2026-12-09",
+          "headlinerName": "The Strike",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1054945827,
+          "eventSlug": "2026-12-13-matt-hansen-great-american-music-hall",
+          "date": "2026-12-13",
+          "headlinerName": "Matt Hansen",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1500477811,
+          "eventSlug": "2026-12-17-82major-great-american-music-hall",
+          "date": "2026-12-17",
+          "headlinerName": "82Major",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1848700598,
+          "eventSlug": "2026-12-18-the-mother-hips-great-american-music-hall",
+          "date": "2026-12-18",
+          "headlinerName": "The Mother Hips",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 926017015,
+          "eventSlug": "2026-12-19-the-mother-hips-great-american-music-hall",
+          "date": "2026-12-19",
+          "headlinerName": "The Mother Hips",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2101814669,
+          "eventSlug": "2026-12-20-the-mother-hips-great-american-music-hall",
+          "date": "2026-12-20",
+          "headlinerName": "The Mother Hips",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 714057284,
+          "eventSlug": "2026-12-24-oakland-interfaith-gospel-choir-two-shows-great-american-music-hall",
+          "date": "2026-12-24",
+          "headlinerName": "Oakland Interfaith Gospel Choir (two shows)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2009130640,
+          "eventSlug": "2026-12-26-jerrys-middle-finger-the-great-american-music-hall",
+          "date": "2026-12-26",
+          "headlinerName": "Jerry's Middle Finger",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2001371281,
+          "eventSlug": "2026-12-27-jerrys-middle-finger-the-great-american-music-hall",
+          "date": "2026-12-27",
+          "headlinerName": "Jerry's Middle Finger",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2113417285,
+          "eventSlug": "2027-01-09-anna-von-hausswolff-the-great-american-music-hall",
+          "date": "2027-01-09",
+          "headlinerName": "Anna Von Hausswolff",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 307448836,
+          "eventSlug": "2027-01-14-lsd-and-the-search-for-god-the-great-american-music-hall",
+          "date": "2027-01-14",
+          "headlinerName": "LSD And The Search For God",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1211927921,
+          "eventSlug": "2027-01-15-the-first-church-of-the-sacred-silversexual-great-american-music-hall",
+          "date": "2027-01-15",
+          "headlinerName": "The First Church Of The Sacred Silversexual",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1820004784,
+          "eventSlug": "2027-01-16-the-first-church-of-the-sacred-silversexual-great-american-music-hall",
+          "date": "2027-01-16",
+          "headlinerName": "The First Church Of The Sacred Silversexual",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1140419873,
+          "eventSlug": "2027-01-19-true-widow-the-great-american-music-hall",
+          "date": "2027-01-19",
+          "headlinerName": "True Widow",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1109271821,
+          "eventSlug": "2027-02-04-ajj-great-american-music-hall",
+          "date": "2027-02-04",
+          "headlinerName": "AJJ",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 983828466,
+          "eventSlug": "2027-02-07-wolves-in-the-throne-room-great-american-music-hall",
+          "date": "2027-02-07",
+          "headlinerName": "Wolves In The Throne Room",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1667153419,
+          "eventSlug": "2027-02-18-jess-wiliamson-great-american-music-hall",
+          "date": "2027-02-18",
+          "headlinerName": "Jess Wiliamson",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1749965874,
+          "eventSlug": "2027-03-18-nile-great-american-music-hall",
+          "date": "2027-03-18",
+          "headlinerName": "Nile",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 1136597428,
+      "venueName": "Fillmore",
+      "website": "https://www.thefillmore.com/visit",
+      "listed": 49,
+      "matched": 33,
+      "events": [
+        {
+          "eventId": 2101436706,
+          "eventSlug": "2026-10-09-my-morning-jacket-the-fillmore",
+          "date": "2026-10-09",
+          "headlinerName": "My Morning Jacket",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 792200012,
+          "eventSlug": "2026-10-10-my-morning-jacket-the-fillmore",
+          "date": "2026-10-10",
+          "headlinerName": "My Morning Jacket",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 537463467,
+          "eventSlug": "2026-10-11-my-morning-jacket-the-fillmore",
+          "date": "2026-10-11",
+          "headlinerName": "My Morning Jacket",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 533773086,
+          "eventSlug": "2026-10-16-neurosis-the-fillmore",
+          "date": "2026-10-16",
+          "headlinerName": "NEUROSIS",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 310698785,
+          "eventSlug": "2026-10-17-neurosis-the-fillmore",
+          "date": "2026-10-17",
+          "headlinerName": "NEUROSIS",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 971661964,
+          "eventSlug": "2026-10-18-the-wallflowers-the-fillmore",
+          "date": "2026-10-18",
+          "headlinerName": "The Wallflowers",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2093986986,
+          "eventSlug": "2026-10-23-pouya-the-fillmore",
+          "date": "2026-10-23",
+          "headlinerName": "Pouya",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 189390888,
+          "eventSlug": "2026-10-24-amble-the-fillmore",
+          "date": "2026-10-24",
+          "headlinerName": "Amble",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1002350044,
+          "eventSlug": "2026-10-25-kishi-bashi-the-fillmore",
+          "date": "2026-10-25",
+          "headlinerName": "Kishi Bashi",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1380706620,
+          "eventSlug": "2026-10-27-slow-pulp-the-fillmore",
+          "date": "2026-10-27",
+          "headlinerName": "Slow Pulp",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 971882395,
+          "eventSlug": "2026-10-28-slow-pulp-the-fillmore",
+          "date": "2026-10-28",
+          "headlinerName": "Slow Pulp",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 971880165,
+          "eventSlug": "2026-10-29-dilated-peoples-the-fillmore",
+          "date": "2026-10-29",
+          "headlinerName": "Dilated Peoples",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 827410082,
+          "eventSlug": "2026-10-30-galactic-the-fillmore",
+          "date": "2026-10-30",
+          "headlinerName": "Galactic",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1671881954,
+          "eventSlug": "2026-10-31-galactic-the-fillmore",
+          "date": "2026-10-31",
+          "headlinerName": "Galactic",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 959036946,
+          "eventSlug": "2026-11-01-jose-madero-the-fillmore",
+          "date": "2026-11-01",
+          "headlinerName": "Jose Madero",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1451085668,
+          "eventSlug": "2026-11-06-thee-sinseers-the-fillmore",
+          "date": "2026-11-06",
+          "headlinerName": "Thee Sinseers",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1631597707,
+          "eventSlug": "2026-11-07-big-star-quintet-the-fillmore",
+          "date": "2026-11-07",
+          "headlinerName": "Big Star Quintet",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1150579365,
+          "eventSlug": "2026-11-09-quadeca-the-fillmore",
+          "date": "2026-11-09",
+          "headlinerName": "Quadeca",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1530252285,
+          "eventSlug": "2026-11-11-the-damned-the-fillmore",
+          "date": "2026-11-11",
+          "headlinerName": "The Damned",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1537860646,
+          "eventSlug": "2026-11-12-gene-the-fillmore",
+          "date": "2026-11-12",
+          "headlinerName": "Gene",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 426193766,
+          "eventSlug": "2026-11-13-ceremony-the-fillmore",
+          "date": "2026-11-13",
+          "headlinerName": "Ceremony",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1503712153,
+          "eventSlug": "2026-11-15-the-mountain-goats-the-fillmore",
+          "date": "2026-11-15",
+          "headlinerName": "The Mountain Goats",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 573497190,
+          "eventSlug": "2026-11-16-the-mountain-goats-the-fillmore",
+          "date": "2026-11-16",
+          "headlinerName": "The Mountain Goats",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 432948580,
+          "eventSlug": "2026-11-18-the-mountain-goats-the-fillmore",
+          "date": "2026-11-18",
+          "headlinerName": "The Mountain Goats",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1784809373,
+          "eventSlug": "2026-11-19-the-mountain-goats-the-fillmore",
+          "date": "2026-11-19",
+          "headlinerName": "The Mountain Goats",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 964123213,
+          "eventSlug": "2026-11-20-the-mountain-goats-the-fillmore",
+          "date": "2026-11-20",
+          "headlinerName": "The Mountain Goats",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1253634740,
+          "eventSlug": "2026-11-21-the-mountain-goats-the-fillmore",
+          "date": "2026-11-21",
+          "headlinerName": "The Mountain Goats",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1651652527,
+          "eventSlug": "2026-11-23-cocorosie-the-fillmore",
+          "date": "2026-11-23",
+          "headlinerName": "Cocorosie",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1398031320,
+          "eventSlug": "2026-12-02-eloise-the-fillmore",
+          "date": "2026-12-02",
+          "headlinerName": "Eloise",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1487567,
+          "eventSlug": "2026-12-03-pattie-gonia-the-fillmore",
+          "date": "2026-12-03",
+          "headlinerName": "Pattie Gonia",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1217136514,
+          "eventSlug": "2026-12-09-the-jayhawks-the-fillmore",
+          "date": "2026-12-09",
+          "headlinerName": "The Jayhawks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 665667582,
+          "eventSlug": "2026-12-10-strawberry-guy-the-fillmore",
+          "date": "2026-12-10",
+          "headlinerName": "Strawberry Guy",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 974505995,
+          "eventSlug": "2026-12-16-young-gravy-the-fillmore",
+          "date": "2026-12-16",
+          "headlinerName": "Young Gravy",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 305077359,
+          "eventSlug": "2026-12-18-death-angel-the-fillmore",
+          "date": "2026-12-18",
+          "headlinerName": "Death Angel",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1214794765,
+          "eventSlug": "2026-12-19-allman-betts-family-revival-the-fillmore",
+          "date": "2026-12-19",
+          "headlinerName": "Allman Betts Family Revival",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1518222921,
+          "eventSlug": "2026-12-20-allman-betts-family-revival-the-fillmore",
+          "date": "2026-12-20",
+          "headlinerName": "Allman Betts Family Revival",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1396594516,
+          "eventSlug": "2027-01-24-tesseract-the-fillmore",
+          "date": "2027-01-24",
+          "headlinerName": "Tesseract",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1293864265,
+          "eventSlug": "2027-01-27-ibeyi-the-fillmore",
+          "date": "2027-01-27",
+          "headlinerName": "Ibeyi",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 109083181,
+          "eventSlug": "2027-01-28-the-california-honeydrops-the-fillmore",
+          "date": "2027-01-28",
+          "headlinerName": "The California Honeydrops",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2119187022,
+          "eventSlug": "2027-01-29-the-california-honeydrops-the-fillmore",
+          "date": "2027-01-29",
+          "headlinerName": "The California Honeydrops",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 903168732,
+          "eventSlug": "2027-01-30-the-california-honeydrops-the-fillmore",
+          "date": "2027-01-30",
+          "headlinerName": "The California Honeydrops",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 310620397,
+          "eventSlug": "2027-02-09-rhiannon-giddens-the-fillmore",
+          "date": "2027-02-09",
+          "headlinerName": "Rhiannon Giddens",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1945441745,
+          "eventSlug": "2027-02-12-michael-shannon-jason-narducy-the-fillmore",
+          "date": "2027-02-12",
+          "headlinerName": "Michael Shannon & Jason Narducy",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2069514992,
+          "eventSlug": "2027-02-13-michael-shannon-jason-narducy-the-fillmore",
+          "date": "2027-02-13",
+          "headlinerName": "Michael Shannon & Jason Narducy",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1828128754,
+          "eventSlug": "2027-02-23-jack-white-the-fillmore",
+          "date": "2027-02-23",
+          "headlinerName": "Jack White",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 763943814,
+          "eventSlug": "2027-02-25-spin-doctors-the-fillmore",
+          "date": "2027-02-25",
+          "headlinerName": "Spin Doctors",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 706381703,
+          "eventSlug": "2027-04-02-grateful-shred-the-fillmore",
+          "date": "2027-04-02",
+          "headlinerName": "Grateful Shred",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1370827640,
+          "eventSlug": "2027-04-03-grateful-shred-the-fillmore",
+          "date": "2027-04-03",
+          "headlinerName": "Grateful Shred",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2042063808,
+          "eventSlug": "2027-05-06-french-79-the-fillmore",
+          "date": "2027-05-06",
+          "headlinerName": "French 79",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 2133080253,
+      "venueName": "Regency Ballroom",
+      "website": "https://www.theregencyballroom.com/faq/",
+      "listed": 42,
+      "matched": 33,
+      "events": [
+        {
+          "eventId": 1225987582,
+          "eventSlug": "2026-10-09-the-dk-kennedys-the-regency-ballroom",
+          "date": "2026-10-09",
+          "headlinerName": "The DK Kennedys",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 812572869,
+          "eventSlug": "2026-10-13-mico-the-regency-ballroom",
+          "date": "2026-10-13",
+          "headlinerName": "Mico",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1387481638,
+          "eventSlug": "2026-10-15-the-blasting-company-playing-over-the-garden-wall-the-regency-ballroom",
+          "date": "2026-10-15",
+          "headlinerName": "The Blasting Company (playing Over the Garden Wall)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 790170724,
+          "eventSlug": "2026-10-16-moe-the-regency-ballroom",
+          "date": "2026-10-16",
+          "headlinerName": "Moe.",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 161810431,
+          "eventSlug": "2026-10-17-notd-the-regency-ballroom",
+          "date": "2026-10-17",
+          "headlinerName": "Notd",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1257145749,
+          "eventSlug": "2026-10-18-she-wants-revenge-the-regency-ballroom",
+          "date": "2026-10-18",
+          "headlinerName": "She Wants Revenge",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 154424815,
+          "eventSlug": "2026-10-20-artms-the-regency-ballroom",
+          "date": "2026-10-20",
+          "headlinerName": "Artms",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 470502244,
+          "eventSlug": "2026-10-21-ten-the-regency-ballroom",
+          "date": "2026-10-21",
+          "headlinerName": "Ten",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1531711344,
+          "eventSlug": "2026-10-22-the-aquabats-the-regency-ballroom",
+          "date": "2026-10-22",
+          "headlinerName": "The Aquabats",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1542109644,
+          "eventSlug": "2026-10-24-jai-wolf-regency-ballroom",
+          "date": "2026-10-24",
+          "headlinerName": "Jai Wolf",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1646189847,
+          "eventSlug": "2026-10-28-shyne-the-regency-ballroom",
+          "date": "2026-10-28",
+          "headlinerName": "Shyne",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1573945080,
+          "eventSlug": "2026-10-29-bleood-the-regency-ballroom",
+          "date": "2026-10-29",
+          "headlinerName": "Bleood",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 426026073,
+          "eventSlug": "2026-10-30-cholos-vs-vampiers-the-regency-ballroom",
+          "date": "2026-10-30",
+          "headlinerName": "Cholos vs. Vampiers",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 942426029,
+          "eventSlug": "2026-10-30-cholos-vs-vampires-the-regency-ballroom",
+          "date": "2026-10-30",
+          "headlinerName": "Cholos Vs. Vampires",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 210849637,
+          "eventSlug": "2026-10-31-medium-build-the-regency-ballroom",
+          "date": "2026-10-31",
+          "headlinerName": "Medium Build",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1159262525,
+          "eventSlug": "2026-11-01-the-musical-box-the-regency-ballroom",
+          "date": "2026-11-01",
+          "headlinerName": "The Musical Box",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2127963877,
+          "eventSlug": "2026-11-05-the-black-angels-regency-ballroom",
+          "date": "2026-11-05",
+          "headlinerName": "The Black Angels",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1345334767,
+          "eventSlug": "2026-11-06-lucy-bedroque-the-regency-ballroom",
+          "date": "2026-11-06",
+          "headlinerName": "Lucy Bedroque",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 664769074,
+          "eventSlug": "2026-11-07-lucy-bedroque-the-regency-ballroom",
+          "date": "2026-11-07",
+          "headlinerName": "Lucy Bedroque",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 947199974,
+          "eventSlug": "2026-11-08-nia-archives-the-regency-ballroom",
+          "date": "2026-11-08",
+          "headlinerName": "Nia Archives",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 833445685,
+          "eventSlug": "2026-11-10-yuki-chiba-the-regency-ballroom",
+          "date": "2026-11-10",
+          "headlinerName": "Yuki Chiba",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1472123969,
+          "eventSlug": "2026-11-11-soft-cell-the-regency-ballroom",
+          "date": "2026-11-11",
+          "headlinerName": "Soft Cell",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 986991242,
+          "eventSlug": "2026-11-12-band-of-horses-the-regency-ballroom",
+          "date": "2026-11-12",
+          "headlinerName": "Band Of Horses",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 580436608,
+          "eventSlug": "2026-11-13-l7-the-regency-ballroom",
+          "date": "2026-11-13",
+          "headlinerName": "L7",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 781305587,
+          "eventSlug": "2026-11-14-headache-the-regency-ballroom",
+          "date": "2026-11-14",
+          "headlinerName": "Headache",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 37617756,
+          "eventSlug": "2026-11-16-manic-street-preachers-the-regency-ballroom",
+          "date": "2026-11-16",
+          "headlinerName": "Manic Street Preachers",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1063443285,
+          "eventSlug": "2026-11-17-nina-jirachi-the-regency-ballroom",
+          "date": "2026-11-17",
+          "headlinerName": "Nina Jirachi",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 712643348,
+          "eventSlug": "2026-11-18-nina-jirachi-the-regency-ballroom",
+          "date": "2026-11-18",
+          "headlinerName": "Nina Jirachi",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2004698707,
+          "eventSlug": "2026-11-20-layton-giordani-the-regency-ballroom",
+          "date": "2026-11-20",
+          "headlinerName": "Layton Giordani",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1284159851,
+          "eventSlug": "2026-11-23-gary-numan-the-regency-ballroom",
+          "date": "2026-11-23",
+          "headlinerName": "Gary Numan",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 117691532,
+          "eventSlug": "2026-11-24-the-amity-affliction-the-regency-ballroom",
+          "date": "2026-11-24",
+          "headlinerName": "The Amity Affliction",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 834663115,
+          "eventSlug": "2026-11-25-the-wrecks-the-regency-ballroom",
+          "date": "2026-11-25",
+          "headlinerName": "The Wrecks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 921483970,
+          "eventSlug": "2026-11-27-amtrac-the-regency-ballroom",
+          "date": "2026-11-27",
+          "headlinerName": "Amtrac",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 968852290,
+          "eventSlug": "2026-11-28-devault-the-regency-ballroom",
+          "date": "2026-11-28",
+          "headlinerName": "Devault",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 430289154,
+          "eventSlug": "2026-12-06-ripe-the-regency-ballroom",
+          "date": "2026-12-06",
+          "headlinerName": "Ripe",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2107266225,
+          "eventSlug": "2026-12-19-takuya-nakamura-the-regency-ballroom",
+          "date": "2026-12-19",
+          "headlinerName": "Takuya Nakamura",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 209457424,
+          "eventSlug": "2027-01-15-mph-the-regency-ballroom",
+          "date": "2027-01-15",
+          "headlinerName": "MPH",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 397194489,
+          "eventSlug": "2027-02-05-twinsick-the-regency-ballroom",
+          "date": "2027-02-05",
+          "headlinerName": "Twinsick",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1081281739,
+          "eventSlug": "2027-02-18-blue-october-the-regency-ballroom",
+          "date": "2027-02-18",
+          "headlinerName": "Blue October",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 134644876,
+          "eventSlug": "2027-03-03-eluveitie-the-regency-ballroom",
+          "date": "2027-03-03",
+          "headlinerName": "Eluveitie",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1535516437,
+          "eventSlug": "2027-04-27-mass-of-the-fermenting-dregs-the-regency-ballroom",
+          "date": "2027-04-27",
+          "headlinerName": "Mass Of The Fermenting Dregs",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 544953193,
+          "eventSlug": "2027-04-28-the-interrupters-the-regency-ballroom",
+          "date": "2027-04-28",
+          "headlinerName": "The Interrupters",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 1531618194,
+      "venueName": "Warfield",
+      "website": "https://www.thewarfieldtheatre.com/",
+      "listed": 25,
+      "matched": 15,
+      "events": [
+        {
+          "eventId": 433283501,
+          "eventSlug": "2026-10-10-palace-the-warfield",
+          "date": "2026-10-10",
+          "headlinerName": "Palace",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 378326520,
+          "eventSlug": "2026-10-14-sex-pistols-steve-jones-the-warfield",
+          "date": "2026-10-14",
+          "headlinerName": "Sex Pistols (Steve Jones",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 188772760,
+          "eventSlug": "2026-10-16-jessie-ware-the-warfield",
+          "date": "2026-10-16",
+          "headlinerName": "Jessie Ware",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1849283529,
+          "eventSlug": "2026-10-17-jessie-ware-the-warfield",
+          "date": "2026-10-17",
+          "headlinerName": "Jessie Ware",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 349252366,
+          "eventSlug": "2026-10-18-sunset-rollercoaster-the-warfield",
+          "date": "2026-10-18",
+          "headlinerName": "Sunset Rollercoaster",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1492272987,
+          "eventSlug": "2026-10-21-kylie-cantrall-the-warfield",
+          "date": "2026-10-21",
+          "headlinerName": "Kylie Cantrall",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 100129475,
+          "eventSlug": "2026-10-23-julia-wolf-the-warfield",
+          "date": "2026-10-23",
+          "headlinerName": "Julia Wolf",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 896523095,
+          "eventSlug": "2026-10-24-fakemink-the-warfield",
+          "date": "2026-10-24",
+          "headlinerName": "Fakemink",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1485152095,
+          "eventSlug": "2026-11-06-buena-vista-orchestra-the-warfield",
+          "date": "2026-11-06",
+          "headlinerName": "Buena Vista Orchestra",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2124994044,
+          "eventSlug": "2026-11-08-henry-lau-the-warfield",
+          "date": "2026-11-08",
+          "headlinerName": "Henry Lau",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1642010839,
+          "eventSlug": "2026-11-13-kino-the-warfield",
+          "date": "2026-11-13",
+          "headlinerName": "Kino",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 345198165,
+          "eventSlug": "2026-11-14-rhye-the-warfield",
+          "date": "2026-11-14",
+          "headlinerName": "Rhye",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 524846215,
+          "eventSlug": "2026-11-15-vince-staples-the-warfield",
+          "date": "2026-11-15",
+          "headlinerName": "Vince Staples",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1938073615,
+          "eventSlug": "2026-11-17-boynextdoor-the-warfield",
+          "date": "2026-11-17",
+          "headlinerName": "Boynextdoor",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1029472319,
+          "eventSlug": "2026-11-19-roz-the-warfield",
+          "date": "2026-11-19",
+          "headlinerName": "Roz",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2062863651,
+          "eventSlug": "2026-11-21-brutalismus-3000-the-warfield",
+          "date": "2026-11-21",
+          "headlinerName": "Brutalismus 3000",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 231484990,
+          "eventSlug": "2026-12-03-roa-the-warfield",
+          "date": "2026-12-03",
+          "headlinerName": "Roa",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 504788436,
+          "eventSlug": "2026-12-05-berner-the-warfield",
+          "date": "2026-12-05",
+          "headlinerName": "Berner",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 620104327,
+          "eventSlug": "2026-12-11-trippie-redd-the-warfield",
+          "date": "2026-12-11",
+          "headlinerName": "Trippie Redd",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1237893377,
+          "eventSlug": "2026-12-31-deltron-3030-the-warfield",
+          "date": "2026-12-31",
+          "headlinerName": "Deltron 3030",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 976270494,
+          "eventSlug": "2027-03-13-foil-arms-and-hog-the-warfield",
+          "date": "2027-03-13",
+          "headlinerName": "Foil Arms And Hog",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1632555493,
+          "eventSlug": "2027-03-20-calema-the-warfield",
+          "date": "2027-03-20",
+          "headlinerName": "Calema",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 616679665,
+          "eventSlug": "2027-03-23-vacations-the-warfield",
+          "date": "2027-03-23",
+          "headlinerName": "Vacations",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1372971827,
+          "eventSlug": "2027-04-20-the-warning-the-warfield",
+          "date": "2027-04-20",
+          "headlinerName": "Warning",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1053114888,
+          "eventSlug": "2027-05-16-valery-meladze-the-warfield",
+          "date": "2027-05-16",
+          "headlinerName": "Valery Meladze",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1120524281,
+      "venueName": "Masonic Center",
+      "website": "https://www.livenation.com/venue/KovZpZAJ6nlA/the-masonic-events",
+      "listed": 17,
+      "matched": 10,
+      "events": [
+        {
+          "eventId": 1638239162,
+          "eventSlug": "2026-10-13-loathe-the-masonic",
+          "date": "2026-10-13",
+          "headlinerName": "Loathe",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1753181163,
+          "eventSlug": "2026-10-15-laura-ramoso-comedy-the-masonic",
+          "date": "2026-10-15",
+          "headlinerName": "Laura Ramoso (comedy)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1402381226,
+          "eventSlug": "2026-10-16-laura-ramoso-comedy-the-masonic",
+          "date": "2026-10-16",
+          "headlinerName": "Laura Ramoso (comedy)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1835129024,
+          "eventSlug": "2026-10-17-daniel-sloss-comedy-the-masonic",
+          "date": "2026-10-17",
+          "headlinerName": "Daniel Sloss (comedy)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 744364831,
+          "eventSlug": "2026-10-22-rise-against-the-masonic",
+          "date": "2026-10-22",
+          "headlinerName": "Rise Against",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2134462464,
+          "eventSlug": "2026-10-23-shaboozey-the-masonic",
+          "date": "2026-10-23",
+          "headlinerName": "Shaboozey",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 164914657,
+          "eventSlug": "2026-10-24-jodeci-the-masonic",
+          "date": "2026-10-24",
+          "headlinerName": "Jodeci",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1060844080,
+          "eventSlug": "2026-10-27-glack-the-masonic",
+          "date": "2026-10-27",
+          "headlinerName": "Glack",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 352711413,
+          "eventSlug": "2026-10-29-the-chicks-the-masonic",
+          "date": "2026-10-29",
+          "headlinerName": "The Chicks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2005861407,
+          "eventSlug": "2026-10-30-the-chicks-the-masonic",
+          "date": "2026-10-30",
+          "headlinerName": "The Chicks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 184128016,
+          "eventSlug": "2026-11-01-tom-jones-the-masonic",
+          "date": "2026-11-01",
+          "headlinerName": "Tom Jones",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1123233672,
+          "eventSlug": "2026-11-05-gnarls-barkley-the-masonic",
+          "date": "2026-11-05",
+          "headlinerName": "Gnarls Barkley",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 322026,
+          "eventSlug": "2026-11-07-chelsea-handler-comedy-the-masonic",
+          "date": "2026-11-07",
+          "headlinerName": "Chelsea Handler (comedy)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1118306631,
+          "eventSlug": "2026-11-14-underoath-the-masonic",
+          "date": "2026-11-14",
+          "headlinerName": "Underoath",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 566269486,
+          "eventSlug": "2026-12-03-petty-wap-the-masonic",
+          "date": "2026-12-03",
+          "headlinerName": "Petty Wap",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 562549664,
+          "eventSlug": "2026-12-05-trivium-the-masonic",
+          "date": "2026-12-05",
+          "headlinerName": "Trivium",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1293270479,
+          "eventSlug": "2026-12-11-matteo-lane-comedy-the-masonic",
+          "date": "2026-12-11",
+          "headlinerName": "Matteo Lane (comedy)",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1558756676,
+      "venueName": "Hotel Utah Saloon",
+      "website": "https://hotelutah.com/",
+      "listed": 10,
+      "matched": 7,
+      "events": [
+        {
+          "eventId": 1431851118,
+          "eventSlug": "2026-10-09-dirty-brown-napkins-hotel-utah",
+          "date": "2026-10-09",
+          "headlinerName": "Dirty Brown Napkins",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1340030112,
+          "eventSlug": "2026-10-10-gypsy-hoeny-moon-hotel-utah",
+          "date": "2026-10-10",
+          "headlinerName": "Gypsy Hoeny Moon",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 6317689,
+          "eventSlug": "2026-10-15-filthy-traitors-hotel-utah",
+          "date": "2026-10-15",
+          "headlinerName": "Filthy Traitors",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1569039608,
+          "eventSlug": "2026-10-16-our-graves-hotel-utah",
+          "date": "2026-10-16",
+          "headlinerName": "Our Graves",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 937087410,
+          "eventSlug": "2026-10-17-the-sharps-removed-the-hotel-utah",
+          "date": "2026-10-17",
+          "headlinerName": "The Sharps Removed",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1490986853,
+          "eventSlug": "2026-10-17-harbor-drive-the-hotel-utah",
+          "date": "2026-10-17",
+          "headlinerName": "Harbor Drive",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 229200860,
+          "eventSlug": "2026-10-18-scam-likely-hotel-utah-saloon",
+          "date": "2026-10-18",
+          "headlinerName": "Scam Likely",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1223702351,
+          "eventSlug": "2026-10-25-3-oclock-rock-showcase-hotel-utah",
+          "date": "2026-10-25",
+          "headlinerName": "3 O'Clock Rock Showcase",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 324477086,
+          "eventSlug": "2026-11-03-taylor-bickett-hotel-utah",
+          "date": "2026-11-03",
+          "headlinerName": "Taylor Bickett",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 75090774,
+          "eventSlug": "2026-11-20-the-surf-creeps-hotel-utah",
+          "date": "2026-11-20",
+          "headlinerName": "Surf Creeps",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 89816907,
+      "venueName": "4 Star Theater",
+      "website": "https://www.4-star-movies.com/",
+      "listed": 5,
+      "matched": 4,
+      "events": [
+        {
+          "eventId": 878572110,
+          "eventSlug": "2026-10-25-resavoir-4-star-theater",
+          "date": "2026-10-25",
+          "headlinerName": "Resavoir",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1361030306,
+          "eventSlug": "2026-10-28-the-wildwoods-4-star-theater",
+          "date": "2026-10-28",
+          "headlinerName": "The Wildwoods",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1061834252,
+          "eventSlug": "2026-10-29-dead-beat-at-dawn-film-815pm-4-star-theater",
+          "date": "2026-10-29",
+          "headlinerName": "Dead Beat At Dawn (film 8:15pm)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 558819311,
+          "eventSlug": "2026-11-16-elanor-moss-4-star-theater",
+          "date": "2026-11-16",
+          "headlinerName": "Elanor Moss",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1308946495,
+          "eventSlug": "2026-12-05-dagmar-zuniga-4-star-theater",
+          "date": "2026-12-05",
+          "headlinerName": "Dagmar Zuniga",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 405307007,
+      "venueName": "DNA Lounge",
+      "website": "https://www.dnalounge.com/",
+      "listed": 3,
+      "matched": 3,
+      "events": [
+        {
+          "eventId": 1350390379,
+          "eventSlug": "2026-10-11-egyptian-lover-the-dna-lounge",
+          "date": "2026-10-11",
+          "headlinerName": "Egyptian Lover",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1671620196,
+          "eventSlug": "2026-10-13-echos-the-dna-lounge",
+          "date": "2026-10-13",
+          "headlinerName": "Echos",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 853846258,
+          "eventSlug": "2026-10-20-drift-mothership-the-dna-lounge",
+          "date": "2026-10-20",
+          "headlinerName": "Drift Mothership",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 390079947,
+      "venueName": "Palace of Fine Arts",
+      "website": "https://www.palaceoffinearts.org/contact",
+      "listed": 2,
+      "matched": 1,
+      "events": [
+        {
+          "eventId": 1306495898,
+          "eventSlug": "2026-11-10-the-tallest-man-on-earth-palace-of-fine-arts",
+          "date": "2026-11-10",
+          "headlinerName": "The Tallest Man On Earth",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 205284834,
+          "eventSlug": "2026-11-21-the-residents-playing-eskimo-palace-of-fine-arts",
+          "date": "2026-11-21",
+          "headlinerName": "The Residents (playing Eskimo)",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 321425008,
+      "venueName": "Eagle Tavern",
+      "website": "https://sf-eagle.com/",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1931110066,
+          "eventSlug": "2026-11-12-fast-friends-the-eagle",
+          "date": "2026-11-12",
+          "headlinerName": "Fast Friends",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 564335400,
+      "venueName": "the New Farm",
+      "website": "https://www.thenewfarmsf.org/",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 126222165,
+          "eventSlug": "2026-10-10-voice-of-the-soul-the-new-farm",
+          "date": "2026-10-10",
+          "headlinerName": "Voice Of The Soul",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1471035891,
+      "venueName": "the Bandshell",
+      "website": "https://sfrecpark.org/870/Golden-Gate-Park---Bandshell",
+      "listed": 1,
+      "matched": 1,
+      "events": [
+        {
+          "eventId": 602289354,
+          "eventSlug": "2026-10-24-skip-the-needle-5pm-bandshell",
+          "date": "2026-10-24",
+          "headlinerName": "Skip The Needle (5pm)",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 506133276,
+      "venueName": "the Chapel Outdoor State",
+      "website": "https://thechapelsf.com/contact/",
+      "listed": 1,
+      "matched": 1,
+      "events": [
+        {
+          "eventId": 1077982516,
+          "eventSlug": "2026-10-18-travie-bobbito-the-chapel-outdoor-state",
+          "date": "2026-10-18",
+          "headlinerName": "Travie Bobbito",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 204594355,
+      "venueName": "Undergarden",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 953185690,
+          "eventSlug": "2026-10-23-moosetrout-the-undergarden",
+          "date": "2026-10-23",
+          "headlinerName": "Moosetrout",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1113680004,
+      "venueName": "the Mabuhay Gardens/on Broadway",
+      "website": "https://themab.org/",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1999159148,
+          "eventSlug": "2026-11-06-knights-of-molino-album-release-the-mabuhay-gardenson-broadway",
+          "date": "2026-11-06",
+          "headlinerName": "Knights Of Molino (album release)",
+          "status": "withheld-venue-conflict"
+        }
+      ]
+    },
+    {
+      "venueId": 555262706,
+      "venueName": "Goorin Headquarters",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 2082002351,
+          "eventSlug": "2026-10-17-the-american-dream-goorin-headquarters",
+          "date": "2026-10-17",
+          "headlinerName": "The American Dream",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 515101024,
+      "venueName": "Independent",
+      "website": "https://www.theindependentsf.com/",
+      "listed": 57,
+      "matched": 45,
+      "events": [
+        {
+          "eventId": 1411346094,
+          "eventSlug": "2026-10-10-dublon-the-independent",
+          "date": "2026-10-10",
+          "headlinerName": "Dublon",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1391348599,
+          "eventSlug": "2026-10-11-santiago-cruz-the-independent",
+          "date": "2026-10-11",
+          "headlinerName": "Santiago Cruz",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1126220508,
+          "eventSlug": "2026-10-12-king-mala-the-independent",
+          "date": "2026-10-12",
+          "headlinerName": "King Mala",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1953701846,
+          "eventSlug": "2026-10-13-automatic-the-independent",
+          "date": "2026-10-13",
+          "headlinerName": "Automatic",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 970719063,
+          "eventSlug": "2026-10-14-fire-in-the-desert-the-independent",
+          "date": "2026-10-14",
+          "headlinerName": "Fire In The Desert",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1834612428,
+          "eventSlug": "2026-10-14-juice-the-independent",
+          "date": "2026-10-14",
+          "headlinerName": "Juice",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 920218957,
+          "eventSlug": "2026-10-15-lost-kings-the-independent",
+          "date": "2026-10-15",
+          "headlinerName": "Lost Kings",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1725664333,
+          "eventSlug": "2026-10-17-asha-banks-the-independent",
+          "date": "2026-10-17",
+          "headlinerName": "Asha Banks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1696033041,
+          "eventSlug": "2026-10-19-new-constellations-the-independent",
+          "date": "2026-10-19",
+          "headlinerName": "New Constellations",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 658226767,
+          "eventSlug": "2026-10-21-city-of-the-sun-the-independent",
+          "date": "2026-10-21",
+          "headlinerName": "City Of The Sun",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1966924710,
+          "eventSlug": "2026-10-23-frog-the-independent",
+          "date": "2026-10-23",
+          "headlinerName": "Frog",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1189844922,
+          "eventSlug": "2026-10-24-everclear-the-independent",
+          "date": "2026-10-24",
+          "headlinerName": "Everclear",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1048430670,
+          "eventSlug": "2026-10-27-the-wldlfe-the-independent",
+          "date": "2026-10-27",
+          "headlinerName": "The Wldlfe",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1904814535,
+          "eventSlug": "2026-10-28-freak-slug-the-independent",
+          "date": "2026-10-28",
+          "headlinerName": "Freak Slug",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1450080480,
+          "eventSlug": "2026-10-29-patrick-wolf-independent",
+          "date": "2026-10-29",
+          "headlinerName": "Patrick Wolf",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2034056760,
+          "eventSlug": "2026-10-30-high-step-society-the-independent",
+          "date": "2026-10-30",
+          "headlinerName": "High Step Society",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 32394198,
+          "eventSlug": "2026-11-03-gilla-band-the-independent",
+          "date": "2026-11-03",
+          "headlinerName": "Gilla Band",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1527005071,
+          "eventSlug": "2026-11-04-inoha-the-independent",
+          "date": "2026-11-04",
+          "headlinerName": "Inoha",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1494888818,
+          "eventSlug": "2026-11-05-greg-freeman-the-independent",
+          "date": "2026-11-05",
+          "headlinerName": "Greg Freeman",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1841568250,
+          "eventSlug": "2026-11-06-king-buffalo-the-independent",
+          "date": "2026-11-06",
+          "headlinerName": "King Buffalo",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1504052837,
+          "eventSlug": "2026-11-07-karina-rykman-the-independent",
+          "date": "2026-11-07",
+          "headlinerName": "Karina Rykman",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 457995507,
+          "eventSlug": "2026-11-08-thao-album-release-the-independent",
+          "date": "2026-11-08",
+          "headlinerName": "Thao (album release)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 161633359,
+          "eventSlug": "2026-11-09-weston-estate-the-independent",
+          "date": "2026-11-09",
+          "headlinerName": "Weston Estate",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 157694747,
+          "eventSlug": "2026-11-10-weston-estate-the-independent",
+          "date": "2026-11-10",
+          "headlinerName": "Weston Estate",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 147030596,
+          "eventSlug": "2026-11-11-stop-light-observation-the-independent",
+          "date": "2026-11-11",
+          "headlinerName": "Stop Light Observation",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1449166346,
+          "eventSlug": "2026-11-12-stephen-day-the-independent",
+          "date": "2026-11-12",
+          "headlinerName": "Stephen Day",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2118775484,
+          "eventSlug": "2026-11-13-whitmer-thomas-the-independent",
+          "date": "2026-11-13",
+          "headlinerName": "Whitmer Thomas",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 887795522,
+          "eventSlug": "2026-11-14-sean-hayes-the-independent",
+          "date": "2026-11-14",
+          "headlinerName": "Sean Hayes",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 480582463,
+          "eventSlug": "2026-11-17-silverada-the-independent",
+          "date": "2026-11-17",
+          "headlinerName": "Silverada",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 376439912,
+          "eventSlug": "2026-11-21-q-the-independent",
+          "date": "2026-11-21",
+          "headlinerName": "Q",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 243304290,
+          "eventSlug": "2026-11-25-1-umbella-the-independent",
+          "date": "2026-11-25",
+          "headlinerName": "1 Umbella",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 965430984,
+          "eventSlug": "2026-11-27-oflynn-the-independent",
+          "date": "2026-11-27",
+          "headlinerName": "O'Flynn",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2102147888,
+          "eventSlug": "2026-11-30-unkle-the-independent",
+          "date": "2026-11-30",
+          "headlinerName": "Unkle",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1083200566,
+          "eventSlug": "2026-12-02-the-buttertones-the-independent",
+          "date": "2026-12-02",
+          "headlinerName": "The Buttertones",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1965348492,
+          "eventSlug": "2026-12-03-meek-the-independent",
+          "date": "2026-12-03",
+          "headlinerName": "Meek",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1296199830,
+          "eventSlug": "2026-12-05-dragon-smoke-the-independent",
+          "date": "2026-12-05",
+          "headlinerName": "Dragon Smoke",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 390258250,
+          "eventSlug": "2026-12-06-fireworks-playing-gospel-the-independent",
+          "date": "2026-12-06",
+          "headlinerName": "Fireworks (playing Gospel)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 581266175,
+          "eventSlug": "2026-12-08-wishy-the-independent",
+          "date": "2026-12-08",
+          "headlinerName": "Wishy",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 337458286,
+          "eventSlug": "2026-12-09-feeble-little-horse-the-independent",
+          "date": "2026-12-09",
+          "headlinerName": "Feeble Little Horse",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 458793852,
+          "eventSlug": "2026-12-10-feeble-little-horse-the-independent",
+          "date": "2026-12-10",
+          "headlinerName": "Feeble Little Horse",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1610223820,
+          "eventSlug": "2026-12-11-the-bobby-lees-the-independent",
+          "date": "2026-12-11",
+          "headlinerName": "The Bobby Lees",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1966555374,
+          "eventSlug": "2026-12-15-labiahead-tribute-the-independent",
+          "date": "2026-12-15",
+          "headlinerName": "Labiahead (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 144734995,
+          "eventSlug": "2026-12-16-labiahead-tribute-the-independent",
+          "date": "2026-12-16",
+          "headlinerName": "Labiahead (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 32715347,
+          "eventSlug": "2026-12-17-the-polish-ambassador-the-independent",
+          "date": "2026-12-17",
+          "headlinerName": "The Polish Ambassador",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1370504100,
+          "eventSlug": "2026-12-18-petey-usa-the-independent",
+          "date": "2026-12-18",
+          "headlinerName": "Petey USA",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 939996945,
+          "eventSlug": "2027-01-07-top-chefs-the-independent",
+          "date": "2027-01-07",
+          "headlinerName": "Top Chefs",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 284381709,
+          "eventSlug": "2027-01-08-com-truise-the-independent",
+          "date": "2027-01-08",
+          "headlinerName": "Com Truise",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1676540233,
+          "eventSlug": "2027-01-15-sister-nancy-the-independent",
+          "date": "2027-01-15",
+          "headlinerName": "Sister Nancy",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 618156064,
+          "eventSlug": "2027-01-17-sts9-rave-spell-set-the-independent",
+          "date": "2027-01-17",
+          "headlinerName": "STS9 (rave spell set)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1165208094,
+          "eventSlug": "2027-02-05-odezenne-the-independent",
+          "date": "2027-02-05",
+          "headlinerName": "Odezenne",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1692279657,
+          "eventSlug": "2027-02-06-romare-the-independent",
+          "date": "2027-02-06",
+          "headlinerName": "Romare",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 31564672,
+          "eventSlug": "2027-02-12-ely-oaks-the-independent",
+          "date": "2027-02-12",
+          "headlinerName": "Ely Oaks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1767286095,
+          "eventSlug": "2027-02-19-fink-the-independent",
+          "date": "2027-02-19",
+          "headlinerName": "Fink",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 104159488,
+          "eventSlug": "2027-02-20-kack-kays-and-his-band-the-independent",
+          "date": "2027-02-20",
+          "headlinerName": "Kack Kays And His Band",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 754754136,
+          "eventSlug": "2027-03-01-valley-the-independent",
+          "date": "2027-03-01",
+          "headlinerName": "Valley",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 880542764,
+          "eventSlug": "2027-03-05-valley-the-independent",
+          "date": "2027-03-05",
+          "headlinerName": "Valley",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 792508062,
+          "eventSlug": "2027-05-09-too-many-zooz-the-independent",
+          "date": "2027-05-09",
+          "headlinerName": "Too Many Zooz",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 680116887,
+      "venueName": "Chapel",
+      "website": "https://thechapelsf.com/contact/",
+      "listed": 51,
+      "matched": 42,
+      "events": [
+        {
+          "eventId": 810426816,
+          "eventSlug": "2026-10-11-derya-yildirim-grup-simsek-the-chapel",
+          "date": "2026-10-11",
+          "headlinerName": "Derya Yildirim & Grup Simsek",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 682999298,
+          "eventSlug": "2026-10-13-militarie-gun-the-chapel",
+          "date": "2026-10-13",
+          "headlinerName": "Militarie Gun",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1578732577,
+          "eventSlug": "2026-10-14-dummy-the-chapel",
+          "date": "2026-10-14",
+          "headlinerName": "Dummy",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2102193598,
+          "eventSlug": "2026-10-15-hot-flash-heat-wave-the-chapel",
+          "date": "2026-10-15",
+          "headlinerName": "Hot Flash Heat Wave",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1392411185,
+          "eventSlug": "2026-10-16-amelle-farren-the-chapel",
+          "date": "2026-10-16",
+          "headlinerName": "Amelle Farren",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 139191346,
+          "eventSlug": "2026-10-16-amelie-farren-the-chapel",
+          "date": "2026-10-16",
+          "headlinerName": "Amelie Farren",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1178198847,
+          "eventSlug": "2026-10-18-miko-marks-the-chapel",
+          "date": "2026-10-18",
+          "headlinerName": "Miko Marks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1789115146,
+          "eventSlug": "2026-10-19-hovvdy-the-chapel",
+          "date": "2026-10-19",
+          "headlinerName": "Hovvdy",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1222089261,
+          "eventSlug": "2026-10-20-the-devil-makes-three-the-chapel",
+          "date": "2026-10-20",
+          "headlinerName": "The Devil Makes Three",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1191069454,
+          "eventSlug": "2026-10-21-the-devil-makes-three-the-chapel",
+          "date": "2026-10-21",
+          "headlinerName": "The Devil Makes Three",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 815353941,
+          "eventSlug": "2026-10-22-justin-nozuka-the-chapel",
+          "date": "2026-10-22",
+          "headlinerName": "Justin Nozuka",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 734712249,
+          "eventSlug": "2026-10-23-aroma-the-chapel",
+          "date": "2026-10-23",
+          "headlinerName": "AroMa",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2124201896,
+          "eventSlug": "2026-10-24-weatherday-the-chapel",
+          "date": "2026-10-24",
+          "headlinerName": "Weatherday",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1384279230,
+          "eventSlug": "2026-10-26-the-war-and-treaty-the-chapel",
+          "date": "2026-10-26",
+          "headlinerName": "The War And Treaty",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 337791264,
+          "eventSlug": "2026-10-28-theo-katzman-solo-the-chapel",
+          "date": "2026-10-28",
+          "headlinerName": "Theo Katzman (solo)",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2041564855,
+          "eventSlug": "2026-10-29-katie-pruitt-the-chapel",
+          "date": "2026-10-29",
+          "headlinerName": "Katie Pruitt",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1811731989,
+          "eventSlug": "2026-10-30-lebo-the-chapel",
+          "date": "2026-10-30",
+          "headlinerName": "Lebo",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 692424311,
+          "eventSlug": "2026-10-31-bone-diggers-the-chapel",
+          "date": "2026-10-31",
+          "headlinerName": "Bone Diggers",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1320090586,
+          "eventSlug": "2026-11-05-squirrel-flower-the-chapel",
+          "date": "2026-11-05",
+          "headlinerName": "Squirrel Flower",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 622963804,
+          "eventSlug": "2026-11-06-legend-zdppelin-tribute-the-chapel",
+          "date": "2026-11-06",
+          "headlinerName": "Legend Zdppelin (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 71803349,
+          "eventSlug": "2026-11-07-alex-cameron-the-chapel",
+          "date": "2026-11-07",
+          "headlinerName": "Alex Cameron",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 890196258,
+          "eventSlug": "2026-11-10-buzzcocks-the-chapel",
+          "date": "2026-11-10",
+          "headlinerName": "Buzzcocks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 106876095,
+          "eventSlug": "2026-11-11-buzzcocks-the-chapel",
+          "date": "2026-11-11",
+          "headlinerName": "Buzzcocks",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2062660252,
+          "eventSlug": "2026-11-12-marc-broussard-the-chapel",
+          "date": "2026-11-12",
+          "headlinerName": "Marc Broussard",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 705824300,
+          "eventSlug": "2026-11-13-other-lives-the-chapel",
+          "date": "2026-11-13",
+          "headlinerName": "Other Lives",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1167913959,
+          "eventSlug": "2026-11-14-the-cactus-blossoms-the-chapel",
+          "date": "2026-11-14",
+          "headlinerName": "The Cactus Blossoms",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 984332718,
+          "eventSlug": "2026-11-15-craig-finn-the-chapel",
+          "date": "2026-11-15",
+          "headlinerName": "Craig Finn",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 997611588,
+          "eventSlug": "2026-11-15-craig-finn-the-band-of-forgiveness-the-chapel",
+          "date": "2026-11-15",
+          "headlinerName": "Craig Finn & The Band Of Forgiveness",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 558454223,
+          "eventSlug": "2026-11-16-margaret-glaspy-the-chapel",
+          "date": "2026-11-16",
+          "headlinerName": "Margaret Glaspy",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 963788387,
+          "eventSlug": "2026-11-18-john-carroll-kirby-the-chapel",
+          "date": "2026-11-18",
+          "headlinerName": "John Carroll Kirby",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 63523533,
+          "eventSlug": "2026-11-20-maddie-zahm-the-chapel",
+          "date": "2026-11-20",
+          "headlinerName": "Maddie Zahm",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 119245592,
+          "eventSlug": "2026-11-21-poi-dog-pondering-the-chapel",
+          "date": "2026-11-21",
+          "headlinerName": "Poi Dog Pondering",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1970904507,
+          "eventSlug": "2026-11-27-bar-fight-the-chapel",
+          "date": "2026-11-27",
+          "headlinerName": "Bar Fight",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1253718270,
+          "eventSlug": "2026-11-28-petty-theft-tribute-the-chapel",
+          "date": "2026-11-28",
+          "headlinerName": "Petty Theft (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 747967463,
+          "eventSlug": "2026-12-01-gauri-b-the-chapel",
+          "date": "2026-12-01",
+          "headlinerName": "Gauri B",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1844983612,
+          "eventSlug": "2026-12-07-buck-meek-the-chapel",
+          "date": "2026-12-07",
+          "headlinerName": "Buck Meek",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 427699581,
+          "eventSlug": "2026-12-19-ramones-x-the-chapel",
+          "date": "2026-12-19",
+          "headlinerName": "Ramones X",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 888454867,
+          "eventSlug": "2026-12-20-ramones-x-the-chapel",
+          "date": "2026-12-20",
+          "headlinerName": "Ramones X",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 230481662,
+          "eventSlug": "2026-12-26-chuck-prophet-the-chapel",
+          "date": "2026-12-26",
+          "headlinerName": "Chuck Prophet",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1329779416,
+          "eventSlug": "2027-01-07-the-loved-ones-record-release-the-chapel",
+          "date": "2027-01-07",
+          "headlinerName": "The Loved Ones (record release)",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 56539763,
+          "eventSlug": "2027-01-08-western-standard-time-ska-orchestra-the-chapel",
+          "date": "2027-01-08",
+          "headlinerName": "Western Standard Time Ska Orchestra",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1427096274,
+          "eventSlug": "2027-01-09-swirlies-the-chapel",
+          "date": "2027-01-09",
+          "headlinerName": "Swirlies",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 337643018,
+          "eventSlug": "2027-01-10-nora-brown-the-chapel",
+          "date": "2027-01-10",
+          "headlinerName": "Nora Brown",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1990606045,
+          "eventSlug": "2027-01-15-book-of-love-the-chapel",
+          "date": "2027-01-15",
+          "headlinerName": "Book Of Love",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2093010338,
+          "eventSlug": "2027-01-16-book-of-love-the-chapel",
+          "date": "2027-01-16",
+          "headlinerName": "Book Of Love",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1497834345,
+          "eventSlug": "2027-01-22-fruition-the-chapel",
+          "date": "2027-01-22",
+          "headlinerName": "Fruition",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 501761858,
+          "eventSlug": "2027-01-23-pete-floyd-tribute-the-chapel",
+          "date": "2027-01-23",
+          "headlinerName": "Pete Floyd (tribute)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1882898376,
+          "eventSlug": "2027-02-09-rebirth-brass-band-the-chapel",
+          "date": "2027-02-09",
+          "headlinerName": "Rebirth Brass Band",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 92842150,
+          "eventSlug": "2027-04-22-justb-the-chapel",
+          "date": "2027-04-22",
+          "headlinerName": "Justb",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 397081345,
+          "eventSlug": "2027-05-04-jean-michel-blais-the-chapel",
+          "date": "2027-05-04",
+          "headlinerName": "Jean-Michel Blais",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 489208615,
+          "eventSlug": "2027-05-15-the-liminanas-the-chapel",
+          "date": "2027-05-15",
+          "headlinerName": "The Liminanas",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 811075932,
+      "venueName": "August Hall",
+      "website": "https://www.augusthallsf.com/",
+      "listed": 36,
+      "matched": 26,
+      "events": [
+        {
+          "eventId": 678521249,
+          "eventSlug": "2026-10-12-love-spells-august-hall",
+          "date": "2026-10-12",
+          "headlinerName": "Love Spells",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1628841600,
+          "eventSlug": "2026-10-15-sim-august-hall",
+          "date": "2026-10-15",
+          "headlinerName": "Sim",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 847145487,
+          "eventSlug": "2026-10-16-actress-august-hall",
+          "date": "2026-10-16",
+          "headlinerName": "Actress",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 391150028,
+          "eventSlug": "2026-10-17-akeem-ali-august-hall",
+          "date": "2026-10-17",
+          "headlinerName": "Akeem Ali",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2136310830,
+          "eventSlug": "2026-10-18-nice-as-fuck-august-hall",
+          "date": "2026-10-18",
+          "headlinerName": "Nice As Fuck",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 287040355,
+          "eventSlug": "2026-10-20-hazlett-august-hall",
+          "date": "2026-10-20",
+          "headlinerName": "Hazlett",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1393208652,
+          "eventSlug": "2026-10-22-gnash-august-hall",
+          "date": "2026-10-22",
+          "headlinerName": "Gnash",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 70173636,
+          "eventSlug": "2026-10-23-slift-august-hall",
+          "date": "2026-10-23",
+          "headlinerName": "Slift",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 945448418,
+          "eventSlug": "2026-10-24-protomartyr-august-hall",
+          "date": "2026-10-24",
+          "headlinerName": "Protomartyr",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 79329901,
+          "eventSlug": "2026-10-27-grace-enger-august-hall",
+          "date": "2026-10-27",
+          "headlinerName": "Grace Enger",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 234343661,
+          "eventSlug": "2026-10-28-ax-and-the-hatchetmen-august-hall",
+          "date": "2026-10-28",
+          "headlinerName": "Ax And The Hatchetmen",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 541084008,
+          "eventSlug": "2026-10-29-a-twink-and-a-redhead-august-hall",
+          "date": "2026-10-29",
+          "headlinerName": "A Twink And A Redhead",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 709420922,
+          "eventSlug": "2026-10-30-parra-for-cuva-august-hall",
+          "date": "2026-10-30",
+          "headlinerName": "Parra For Cuva",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1959670085,
+          "eventSlug": "2026-10-31-the-aces-august-hall",
+          "date": "2026-10-31",
+          "headlinerName": "The Aces",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 223808675,
+          "eventSlug": "2026-11-03-olivia-obrien-august-hall",
+          "date": "2026-11-03",
+          "headlinerName": "Olivia O'Brien",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 211648612,
+          "eventSlug": "2026-11-04-josh-garrels-august-hall",
+          "date": "2026-11-04",
+          "headlinerName": "Josh Garrels",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 387833041,
+          "eventSlug": "2026-11-06-bahamas-august-hall",
+          "date": "2026-11-06",
+          "headlinerName": "Bahamas",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1932902458,
+          "eventSlug": "2026-11-08-countess-luann-august-hall",
+          "date": "2026-11-08",
+          "headlinerName": "Countess Luann",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1110874548,
+          "eventSlug": "2026-11-11-pinhead-gunpowedr-august-hall",
+          "date": "2026-11-11",
+          "headlinerName": "Pinhead Gunpowedr",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2124319952,
+          "eventSlug": "2026-11-12-they-are-gutting-a-body-of-water-august-hall",
+          "date": "2026-11-12",
+          "headlinerName": "They Are Gutting A Body Of Water",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1460418466,
+          "eventSlug": "2026-11-13-tank-and-the-bangas-august-hall",
+          "date": "2026-11-13",
+          "headlinerName": "Tank And The Bangas",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1213868777,
+          "eventSlug": "2026-11-14-inna-august-hall",
+          "date": "2026-11-14",
+          "headlinerName": "Inna",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1408845827,
+          "eventSlug": "2026-11-17-son-volt-august-hall",
+          "date": "2026-11-17",
+          "headlinerName": "Son Volt",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1981519579,
+          "eventSlug": "2026-11-18-jamila-woods-august-hall",
+          "date": "2026-11-18",
+          "headlinerName": "Jamila Woods",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1214248361,
+          "eventSlug": "2026-11-20-eivor-august-hall",
+          "date": "2026-11-20",
+          "headlinerName": "Eivor",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 138131796,
+          "eventSlug": "2026-11-21-agriculture-august-hall",
+          "date": "2026-11-21",
+          "headlinerName": "Agriculture",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1664323458,
+          "eventSlug": "2026-11-22-boston-manor-august-hall",
+          "date": "2026-11-22",
+          "headlinerName": "Boston Manor",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 490016457,
+          "eventSlug": "2026-11-25-dj-raphi-august-hall",
+          "date": "2026-11-25",
+          "headlinerName": "dj Raphi",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 234646293,
+          "eventSlug": "2026-12-01-jalen-ngonda-august-hall",
+          "date": "2026-12-01",
+          "headlinerName": "Jalen Ngonda",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1485239828,
+          "eventSlug": "2026-12-09-the-pineapple-thief-august-hall",
+          "date": "2026-12-09",
+          "headlinerName": "The Pineapple Thief",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1536053618,
+          "eventSlug": "2027-01-26-bad-suns-august-hall",
+          "date": "2027-01-26",
+          "headlinerName": "Bad Suns",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1992667217,
+          "eventSlug": "2026-10-02-death-from-above-the-uc-theater",
+          "date": "2027-02-11",
+          "headlinerName": "Death From Above 1979",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 718154469,
+          "eventSlug": "2027-02-28-james-marriott-august-hall",
+          "date": "2027-02-28",
+          "headlinerName": "James Marriott",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 886988399,
+          "eventSlug": "2027-03-07-the-lemonheads-august-hall",
+          "date": "2027-03-07",
+          "headlinerName": "The Lemonheads",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1492261871,
+          "eventSlug": "2027-03-25-kid-francescoll-august-hall",
+          "date": "2027-03-25",
+          "headlinerName": "Kid Francescoll",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 937163212,
+          "eventSlug": "2027-04-01-the-mary-wallopers-august-hall",
+          "date": "2027-04-01",
+          "headlinerName": "The Mary Wallopers",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 1433810567,
+      "venueName": "Kilowatt",
+      "website": "https://kilowattbar.com/",
+      "listed": 33,
+      "matched": 28,
+      "events": [
+        {
+          "eventId": 669020038,
+          "eventSlug": "2026-10-09-lottorpg-the-kilowatt",
+          "date": "2026-10-09",
+          "headlinerName": "LottoRPG",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1189767235,
+          "eventSlug": "2026-10-10-the-contraptions-the-kilowatt",
+          "date": "2026-10-10",
+          "headlinerName": "The Contraptions",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 51525736,
+          "eventSlug": "2026-10-10-gavin-prophet-the-kilowatt",
+          "date": "2026-10-10",
+          "headlinerName": "Gavin Prophet",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 926470308,
+          "eventSlug": "2026-10-11-tehmodhjin-kilowatt",
+          "date": "2026-10-11",
+          "headlinerName": "Project Mayhem",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1604276081,
+          "eventSlug": "2026-10-11-nogu-svelo-kilowatt",
+          "date": "2026-10-11",
+          "headlinerName": "Nogu Svelo!",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 781284775,
+          "eventSlug": "2026-10-14-infinite-bits-kilowatt",
+          "date": "2026-10-14",
+          "headlinerName": "Infinite Bits",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 319670085,
+          "eventSlug": "2026-10-15-house-of-dawn-kilowatt",
+          "date": "2026-10-15",
+          "headlinerName": "House Of Dawn",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1967206046,
+          "eventSlug": "2026-10-16-sweet-plot-kilowatt",
+          "date": "2026-10-16",
+          "headlinerName": "Sweet Plot",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1232090382,
+          "eventSlug": "2026-10-18-imadd-wasif-kilowatt",
+          "date": "2026-10-18",
+          "headlinerName": "Imadd Wasif",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1400581175,
+          "eventSlug": "2026-10-18-jahan-kilowatt",
+          "date": "2026-10-18",
+          "headlinerName": "Jahan",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1083741215,
+          "eventSlug": "2026-10-21-chipped-nail-polish-kilowatt",
+          "date": "2026-10-21",
+          "headlinerName": "Chipped Nail Polish",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 792400861,
+          "eventSlug": "2026-10-22-faux-real-kilowatt",
+          "date": "2026-10-22",
+          "headlinerName": "Faux Real",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 56227335,
+          "eventSlug": "2026-10-23-mala-grena-kilowatt",
+          "date": "2026-10-23",
+          "headlinerName": "Mala Grena",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1244469781,
+          "eventSlug": "2026-10-25-tell-me-tell-me-kilowatt",
+          "date": "2026-10-25",
+          "headlinerName": "Tell Me Tell Me",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 451460529,
+          "eventSlug": "2026-10-29-spencer-noble-kilowatt",
+          "date": "2026-10-29",
+          "headlinerName": "Spencer Noble",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1430201136,
+          "eventSlug": "2026-11-02-lucy-kilowatt",
+          "date": "2026-11-02",
+          "headlinerName": "Lucy",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1867704978,
+          "eventSlug": "2026-11-04-landroid-kilowatt",
+          "date": "2026-11-04",
+          "headlinerName": "Landroid",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2102781740,
+          "eventSlug": "2026-11-05-marci-kilowatt",
+          "date": "2026-11-05",
+          "headlinerName": "Marci",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 72836786,
+          "eventSlug": "2026-11-07-palina-and-the-cave-kilowatt",
+          "date": "2026-11-07",
+          "headlinerName": "Palina And The Cave",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2117390612,
+          "eventSlug": "2026-11-07-shoplifters-united-tribute-kilowatt",
+          "date": "2026-11-07",
+          "headlinerName": "Shoplifters United (tribute)",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 820857844,
+          "eventSlug": "2026-11-08-confort-club-kilowatt",
+          "date": "2026-11-08",
+          "headlinerName": "Confort Club",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 169638921,
+          "eventSlug": "2026-11-11-holy-wave-kilowatt",
+          "date": "2026-11-11",
+          "headlinerName": "Holy Wave",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 409069787,
+          "eventSlug": "2026-11-13-strawberry-fuzz-kilowatt",
+          "date": "2026-11-13",
+          "headlinerName": "Strawberry Fuzz",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1310137317,
+          "eventSlug": "2026-11-14-mugger-kilowatt",
+          "date": "2026-11-14",
+          "headlinerName": "Mugger",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 871316144,
+          "eventSlug": "2026-11-15-waax-kilowatt",
+          "date": "2026-11-15",
+          "headlinerName": "Waax",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 423616750,
+          "eventSlug": "2026-11-20-paul-collins-best-of-the-nerves-and-the-exploding-hearts-the-kilowatt",
+          "date": "2026-11-20",
+          "headlinerName": "Paul Collins (best of The Nerves and The Exploding Hearts)",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 669929837,
+          "eventSlug": "2026-11-21-paul-collins-best-of-the-nerves-and-the-exploding-hearts-the-kilowatt",
+          "date": "2026-11-21",
+          "headlinerName": "Paul Collins (best of The Nerves and The Exploding Hearts)",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 827330828,
+          "eventSlug": "2026-11-27-fraxiom-kilowatt",
+          "date": "2026-11-27",
+          "headlinerName": "Fraxiom",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 340463694,
+          "eventSlug": "2026-12-05-jackson-saints-kilowatt",
+          "date": "2026-12-05",
+          "headlinerName": "Jackson Saints",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 830760560,
+          "eventSlug": "2026-12-11-basic-kilowatt",
+          "date": "2026-12-11",
+          "headlinerName": "Basic",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 824383265,
+          "eventSlug": "2026-12-17-unresolved-band-kilowatt",
+          "date": "2026-12-17",
+          "headlinerName": "Unresolved Band",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1784755669,
+          "eventSlug": "2027-01-31-elephant-stone-kilowatt",
+          "date": "2027-01-31",
+          "headlinerName": "Elephant Stone",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1222341339,
+          "eventSlug": "2027-02-05-alvie-the-breakfast-pigs-kilowatt",
+          "date": "2027-02-05",
+          "headlinerName": "Alvie & The Breakfast Pigs",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 1082531611,
+      "venueName": "the Black Cat",
+      "website": "https://blackcatsf.com/",
+      "listed": 10,
+      "matched": 9,
+      "events": [
+        {
+          "eventId": 1022407896,
+          "eventSlug": "2026-10-09-benito-gonzalez-the-black-cat",
+          "date": "2026-10-09",
+          "headlinerName": "Benito Gonzalez",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1341736002,
+          "eventSlug": "2026-10-10-benito-gonzalez-the-black-cat",
+          "date": "2026-10-10",
+          "headlinerName": "Benito Gonzalez",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1596065876,
+          "eventSlug": "2026-10-14-the-soul-sessions-joe-warner-the-black-cat",
+          "date": "2026-10-14",
+          "headlinerName": "The Soul Sessions (Joe Warner",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 359393466,
+          "eventSlug": "2026-10-15-joe-block-solo-piano-the-black-cat",
+          "date": "2026-10-15",
+          "headlinerName": "Joe Block (solo piano)",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 597630731,
+          "eventSlug": "2026-10-16-joe-block-quintet-album-release-the-black-cat",
+          "date": "2026-10-16",
+          "headlinerName": "Joe Block quintet (album release)",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 952559160,
+          "eventSlug": "2026-10-21-the-soul-sessions-joe-warner-the-black-cat",
+          "date": "2026-10-21",
+          "headlinerName": "The Soul Sessions (Joe Warner",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2004750581,
+          "eventSlug": "2026-10-22-now-beauty-the-black-cat",
+          "date": "2026-10-22",
+          "headlinerName": "No(w) Beauty",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 437606751,
+          "eventSlug": "2026-10-28-joe-warner-the-black-cat",
+          "date": "2026-10-28",
+          "headlinerName": "Joe Warner",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1767289876,
+          "eventSlug": "2026-11-04-the-soul-sessions-joe-warner-the-black-cat",
+          "date": "2026-11-04",
+          "headlinerName": "The Soul Sessions (Joe Warner",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 222835919,
+          "eventSlug": "2026-12-12-dragon-force-the-black-cat",
+          "date": "2026-12-12",
+          "headlinerName": "Dragon Force",
+          "status": "withheld-venue-conflict",
+          "reason": "Official DragonForce December12 2026 listing identifies UC Theatre; catalog Black Cat venue needs canonical reconciliation. No artwork attached."
+        }
+      ]
+    },
+    {
+      "venueId": 1719765223,
+      "venueName": "the Brick and Mortar",
+      "website": "https://www.brickandmortarmusic.com/tm-event/telescreens/",
+      "listed": 10,
+      "matched": 6,
+      "events": [
+        {
+          "eventId": 1976545465,
+          "eventSlug": "2026-10-13-dani-offline-brick-and-mortar",
+          "date": "2026-10-13",
+          "headlinerName": "Dani Offline",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 432011238,
+          "eventSlug": "2026-10-15-edgehill-brick-and-mortar",
+          "date": "2026-10-15",
+          "headlinerName": "Edgehill",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 838222605,
+          "eventSlug": "2026-10-16-olive-klug-brick-and-mortar",
+          "date": "2026-10-16",
+          "headlinerName": "Olive Klug",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 999643151,
+          "eventSlug": "2026-10-17-ella-boh-brick-and-mortar",
+          "date": "2026-10-17",
+          "headlinerName": "Ella Boh",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 2056442554,
+          "eventSlug": "2026-10-23-rezn-brick-and-mortar",
+          "date": "2026-10-23",
+          "headlinerName": "Rezn",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 511167869,
+          "eventSlug": "2026-11-01-cardinal-bloom-brick-and-mortar",
+          "date": "2026-11-01",
+          "headlinerName": "Cardinal Bloom",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 103303104,
+          "eventSlug": "2026-11-03-missio-brick-and-mortar",
+          "date": "2026-11-03",
+          "headlinerName": "Missio",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1560257373,
+          "eventSlug": "2026-11-06-clay-street-unit-brick-and-mortar",
+          "date": "2026-11-06",
+          "headlinerName": "Clay Street Unit",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1575508303,
+          "eventSlug": "2026-11-08-triptides-brick-and-mortar",
+          "date": "2026-11-08",
+          "headlinerName": "Triptides",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 124106337,
+          "eventSlug": "2026-11-20-bayonne-the-brick-and-mortar",
+          "date": "2026-11-20",
+          "headlinerName": "Bayonne",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 881479351,
+      "venueName": "Castro Theater",
+      "website": "https://thecastro.com/",
+      "listed": 7,
+      "matched": 4,
+      "events": [
+        {
+          "eventId": 1505240733,
+          "eventSlug": "2026-10-29-dadi-freyr-the-castro-theater",
+          "date": "2026-10-29",
+          "headlinerName": "Dadi Freyr",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1858524366,
+          "eventSlug": "2026-11-03-rebecca-black-the-castro-theater",
+          "date": "2026-11-03",
+          "headlinerName": "Rebecca Black",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 222395997,
+          "eventSlug": "2026-11-06-syml-solo-the-castro-theater",
+          "date": "2026-11-06",
+          "headlinerName": "Syml (solo)",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 81269123,
+          "eventSlug": "2026-11-09-sienna-spiro-the-castro-theater",
+          "date": "2026-11-09",
+          "headlinerName": "Sienna Spiro",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 1334902263,
+          "eventSlug": "2026-11-15-rodrigo-y-gabriela-the-castro-theater",
+          "date": "2026-11-15",
+          "headlinerName": "Rodrigo y Gabriela",
+          "status": "artwork-found"
+        },
+        {
+          "eventId": 147193888,
+          "eventSlug": "2026-12-06-film-repro-man-the-castro-theater",
+          "date": "2026-12-06",
+          "headlinerName": "Film \"Repro Man\"",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 305818474,
+          "eventSlug": "2027-05-12-palaye-royale-the-castro-theater",
+          "date": "2027-05-12",
+          "headlinerName": "Palaye Royale",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 1419356603,
+      "venueName": "Mabuhay Gardens",
+      "website": "https://themab.org/",
+      "listed": 5,
+      "matched": 1,
+      "events": [
+        {
+          "eventId": 416163775,
+          "eventSlug": "2026-10-14-the-contraptions-mabuhay-gardens",
+          "date": "2026-10-14",
+          "headlinerName": "The Contraptions",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1754317307,
+          "eventSlug": "2026-10-16-tilde-mouw-the-mabuhay-gardens",
+          "date": "2026-10-16",
+          "headlinerName": "Tilde Mouw",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1246921218,
+          "eventSlug": "2026-10-17-irrevria-mabuhay-gardens",
+          "date": "2026-10-17",
+          "headlinerName": "Irrevria",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 2052174827,
+          "eventSlug": "2026-10-17-hell-bound-pound-mabuhay-gardens",
+          "date": "2026-10-17",
+          "headlinerName": "Hell Bound Pound",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 119437742,
+          "eventSlug": "2026-12-19-vio-lence-mabuhay-gardens",
+          "date": "2026-12-19",
+          "headlinerName": "Vio-Lence",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 549865205,
+      "venueName": "Great Northern",
+      "website": "https://www.thegreatnorthernsf.com/",
+      "listed": 2,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 563897405,
+          "eventSlug": "2026-10-09-woo-york-great-northern",
+          "date": "2026-10-09",
+          "headlinerName": "Woo York",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 1436881283,
+          "eventSlug": "2026-11-13-maceo-plex-the-great-northern",
+          "date": "2026-11-13",
+          "headlinerName": "Maceo Plex",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 623175657,
+      "venueName": "the Natural Batting Cage",
+      "website": "https://www.thenaturalsf.com/",
+      "listed": 2,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1570551445,
+          "eventSlug": "2026-10-10-melaina-kol-the-natural-batting-cage",
+          "date": "2026-10-10",
+          "headlinerName": "Melaina Kol",
+          "status": "unresolved"
+        },
+        {
+          "eventId": 594801035,
+          "eventSlug": "2026-10-16-whats-important-the-natural-batting-cage",
+          "date": "2026-10-16",
+          "headlinerName": "Whats Important",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 413292306,
+      "venueName": "Bric-A-Brac",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 94941546,
+          "eventSlug": "2026-10-10-slug-bric-a-brac",
+          "date": "2026-10-10",
+          "headlinerName": "Slug",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 398859205,
+      "venueName": "Make Out Room",
+      "website": "https://www.makeoutroom.com/contact.html",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 2021200718,
+          "eventSlug": "2026-10-11-the-seagulls-the-make-out-room",
+          "date": "2026-10-11",
+          "headlinerName": "The Seagulls",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1306836772,
+      "venueName": "Golden Gate Park",
+      "website": "https://sfrecpark.org/770/Golden-Gate-Park",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1404270879,
+          "eventSlug": "2027-08-15-slipknot-golden-gate-park",
+          "date": "2027-08-15",
+          "headlinerName": "Slipknot",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 1075478617,
+      "venueName": "SF Building Resources",
+      "website": "https://buildingresources.org/",
+      "listed": 1,
+      "matched": 1,
+      "events": [
+        {
+          "eventId": 855619388,
+          "eventSlug": "2026-10-10-bite-sf-building-resources",
+          "date": "2026-10-10",
+          "headlinerName": "Bite",
+          "status": "artwork-found"
+        }
+      ]
+    },
+    {
+      "venueId": 1829915689,
+      "venueName": "Alliance Francaise",
+      "website": "https://www.afsf.com/about-afsf/contact-us/",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 1120011876,
+          "eventSlug": "2026-10-15-isabelle-durin-and-michael-ertzscheid-alliance-francaise",
+          "date": "2026-10-15",
+          "headlinerName": "Isabelle Durin And Michael Ertzscheid",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "venueId": 366161466,
+      "venueName": "Shed A",
+      "listed": 1,
+      "matched": 0,
+      "events": [
+        {
+          "eventId": 423039555,
+          "eventSlug": "2026-10-17-dom-dola-b2b-disclosure-shed-a",
+          "date": "2026-10-17",
+          "headlinerName": "Dom Dola b2b Disclosure",
+          "status": "unresolved"
+        }
+      ]
+    }
+  ]
+}

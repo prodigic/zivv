@@ -8760,6 +8760,70 @@
       },
       "notes": "Census Exact address match; interpolated street-address point, not a verified venue entrance.",
       "checkedOn": "2026-10-02"
+    },
+    {
+      "venueId": 1315145584,
+      "venueName": "Lanesplitter Pizza",
+      "queryAddress": null,
+      "location": null,
+      "notes": "No supported coordinates selected. Address research limitation: TheList clubs index lists 'Lanesplitter Pizza, Oakland' without a street, separate from 'Lanesplitters Pizza' at the official Emeryville pub (3645 San Pablo Avenue, already researched under IDs 2087584222, 1567494397 and 1031217323). The operator currently publishes three East Bay locations — lanesplitterpizzaoakland.com lists 4400 Keller Avenue #300 in Oakland, KQED lists 4799 Telegraph Avenue and localwiki lists 536 Lake Park Avenue — on separate branch pages, and neither the feed nor an operator page ties the Oakland-billed Rapture Girls or Spork shows to one branch. Retain the canonical city; no house address or branch-specific website is assigned until source-supported. Use the venue-specific OpenStreetMap search link.",
+      "checkedOn": "2026-10-02"
+    },
+    {
+      "venueId": 386406925,
+      "venueName": "Mothbelly Gallery",
+      "queryAddress": "912 Larkin Street, San Francisco, CA",
+      "location": {
+        "latitude": 37.786350641413,
+        "longitude": -122.41806351712,
+        "precision": "address",
+        "sourceUrl": "https://geocoding.geo.census.gov/geocoder/locations/address?street=912+Larkin+St&city=San+Francisco&state=CA&benchmark=Public_AR_Current&format=json",
+        "matchedAddress": "912 LARKIN ST, SAN FRANCISCO, CA, 94109"
+      },
+      "notes": "Census Exact address match; interpolated street-address point, not a verified venue entrance.",
+      "checkedOn": "2026-10-12"
+    },
+    {
+      "venueId": 555262706,
+      "venueName": "Goorin Headquarters",
+      "queryAddress": "583 Shotwell Street, San Francisco, CA",
+      "location": {
+        "latitude": 37.759134414163,
+        "longitude": -122.415734788561,
+        "precision": "address",
+        "sourceUrl": "https://geocoding.geo.census.gov/geocoder/locations/address?street=583+Shotwell+St&city=San+Francisco&state=CA&benchmark=Public_AR_Current&format=json",
+        "matchedAddress": "583 SHOTWELL ST, SAN FRANCISCO, CA, 94110"
+      },
+      "notes": "Census Exact address match of the company-listed HQ; interpolated street-address point, not a verified show-room entrance.",
+      "checkedOn": "2026-10-12"
+    },
+    {
+      "venueId": 366161466,
+      "venueName": "Shed A",
+      "queryAddress": null,
+      "location": {
+        "latitude": 37.7757239,
+        "longitude": -122.386138,
+        "precision": "area",
+        "sourceUrl": "https://api.openstreetmap.org/api/0.6/way/1151042598/full.json",
+        "matchedAddress": "Pier 48, Mission Rock, San Francisco"
+      },
+      "notes": "Operator texts identify Shed A at Pier 48 across from Oracle Park; opened OSM way 1151042598 (man_made=pier, name Pier 48) supplies the shore polygon. Bounding-box center; pier area estimate, not an entrance or shed-room selection.",
+      "checkedOn": "2026-10-12"
+    },
+    {
+      "venueId": 1455411068,
+      "venueName": "Wardlaw Skatepark",
+      "queryAddress": "1805 Ascot Parkway, Vallejo, CA",
+      "location": {
+        "latitude": 38.115971952343,
+        "longitude": -122.202009179353,
+        "precision": "address",
+        "sourceUrl": "https://geocoding.geo.census.gov/geocoder/locations/address?street=1805+Ascot+Parkway&city=Vallejo&state=CA&benchmark=Public_AR_Current&format=json",
+        "matchedAddress": "1805 ASCOT PKWY, VALLEJO, CA, 94591"
+      },
+      "notes": "Census Exact address match; interpolated street-address point, not a verified skatepark entrance.",
+      "checkedOn": "2026-10-12"
     }
   ]
 }

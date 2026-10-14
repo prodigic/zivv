@@ -1,0 +1,16 @@
+{
+  "checkedOn": "2026-10-10",
+  "baseline": "origin/main",
+  "baselineCommit": "a0ab2ffe07dfbf73ad45c93f9ec4f8b26b58a6a4",
+  "events": 4641,
+  "artists": 8678,
+  "venues": 656,
+  "posterCount": 421,
+  "publicVibes": 222,
+  "canonicalEventsUnchanged": true,
+  "canonicalArtistAndVenueMetadataUnchanged": true,
+  "allowedEntityDifferences": [
+    "reviewed vibes",
+    "upcoming summaries (time filtering and poster metadata)"
+  ]
+}

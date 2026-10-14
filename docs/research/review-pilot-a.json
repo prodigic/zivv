@@ -1,0 +1,75 @@
+{
+  "startedAt": "2026-10-10T20:29:30-07:00",
+  "finishedAt": "2026-10-10T20:30:35-07:00",
+  "searchQueries": 3,
+  "pageOpens": 4,
+  "tokenUsage": null,
+  "records": [
+    {
+      "artistId": "78581369",
+      "artistName": "Modern Monsters",
+      "status": "review-found",
+      "vibe": "Release-only inference: this self-titled EP suggests a loud, nostalgic heavy-rock set with big guitar hooks and an upbeat charge, drawing on 1990s alternative and metal colors. That description reflects one reviewer’s account of the recording, not a promise about current live shows.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://metalheadcommunity.com/modern-monsters-modern-monsters-album-review/",
+          "title": "Modern Monsters - Modern Monsters - Album Review - Heavy Rock from San Francisco, California, USA",
+          "publication": "Metalhead Community Magazine",
+          "author": "Burak Gundogdu",
+          "publishedOn": "2021-11-24",
+          "kind": "release",
+          "reviewedWork": "Self-titled debut EP",
+          "evidenceSummary": "The page explicitly calls the act a San Francisco Bay Area band, reviews its self-titled EP, and describes nostalgic 1990s heavy-rock/metal influences, dynamic energy, and positive vibes. It links the act’s official website, modernmonstersmusic.com."
+        }
+      ],
+      "identityEvidence": "Review describes Modern Monsters as a Bay Area, San Francisco band and links modernmonstersmusic.com, matching the supplied official domain.",
+      "searches": ["Modern Monsters band review album review San Francisco"],
+      "gaps": []
+    },
+    {
+      "artistId": "36869837",
+      "artistName": "Sour Widows",
+      "status": "review-found",
+      "vibe": "Release-only inference: the review portrays patient, emotionally heavy songs that braid interlocking guitar lines and close vocal harmonies, building from hushed, spacious passages toward forceful release. It describes the album’s sound and themes; it does not predict the band’s current set or live presentation.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://pitchfork.com/reviews/albums/sour-widows-revival-of-a-friend/",
+          "title": "Revival of a Friend",
+          "publication": "Pitchfork",
+          "author": "Marissa Lorusso",
+          "publishedOn": "2024-07-02",
+          "kind": "release",
+          "reviewedWork": "Revival of a Friend",
+          "evidenceSummary": "The review identifies Sour Widows as a Bay Area band and discusses the 2024 debut album’s grief and tenderness, intertwined guitars and harmonies, slowcore-influenced interludes, and dynamic shifts."
+        }
+      ],
+      "identityEvidence": "Pitchfork names Sour Widows, identifies them as a Bay Area band, and names members Maia Sinaiko and Susanna Thomson; the review URL and album page identify Revival of a Friend by Sour Widows, matching the supplied band identity.",
+      "searches": ["Sour Widows review album review"],
+      "gaps": []
+    },
+    {
+      "artistId": "708820545",
+      "artistName": "Swingin Utters",
+      "status": "review-found",
+      "vibe": "Release-only inference: this self-titled record keeps street-punk roots while adding reflective lyrics and folk-colored textures such as organs, accordion, mandolin, and strings. The review suggests melodic, arrangement-rich punk with less reliance on sheer speed; it says nothing about the band’s current shows.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://ink19.com/2000/12/magazine/music-reviews/vhmd55-swingin-utters",
+          "title": "Swingin’ Utters",
+          "publication": "Ink 19",
+          "author": "Sean Carswell",
+          "publishedOn": "2000-12-26",
+          "kind": "release",
+          "reviewedWork": "Swingin’ Utters (self-titled album)",
+          "evidenceSummary": "Ink 19 labels the page a music review, names the album and Fat Wreck Chords, credits Sean Carswell, and discusses its street-punk roots, changed direction, reflective edge, and expanded instrumentation."
+        }
+      ],
+      "identityEvidence": "Ink 19’s review calls the group Swingin’ Utters and tags the article with that name; a separate opened Rebel Noise review of the band’s self-titled release links swinginutters.com as its official website.",
+      "searches": ["Swingin' Utters album review punk review"],
+      "gaps": []
+    }
+  ]
+}

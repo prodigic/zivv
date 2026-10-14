@@ -1,0 +1,122 @@
+{
+  "checkedOn": "2026-10-10",
+  "scope": "Independent final3 recoveries for parent integration; no registry edits",
+  "records": [
+    {
+      "artistId": 792649992,
+      "artistName": "O'Craven",
+      "status": "review-found",
+      "summary": "Resurrection mixes Celtic rock, punk-driven guitar riffs and pirate-themed singalongs, with violin adding atmosphere and melodic detail. The review praises the album’s sequencing and instrumental passages, while finding that some recordings capture less vocal force and audience appeal than the band’s live performances.",
+      "basis": "release",
+      "checkedOn": "2026-10-10",
+      "identityEvidence": "Official https://ocraven.com/press-music-reviews directly links this original; original identifies San Jose OCraven and links https://www.ocraven.com/.",
+      "reviews": [
+        {
+          "url": "https://scoundrelsinn.com/2018/08/27/album-review-resurrection/",
+          "title": "Album Review: Resurrection",
+          "publication": "Scoundrel’s Inn",
+          "author": "jackgonzo",
+          "publishedOn": "2018-08-27",
+          "kind": "release",
+          "reviewedWork": "Resurrection",
+          "evidenceSummary": "Original track-by-track review describes Celtic/pirate rock, fast punk riffs, violin, atmospheric passages and strong sequencing; critic compares several recordings unfavorably with personally witnessed live performances."
+        }
+      ],
+      "searches": [
+        "\"O Craven\" album review band",
+        "Independent audit: bounded locality/release query, official referral and original publication opened"
+      ],
+      "gaps": []
+    },
+    {
+      "artistId": 757443420,
+      "artistName": "Look Away",
+      "status": "review-found",
+      "summary": "Look Away’s demo delivers aggressive, mostly fast hardcore with a strong opening, pronounced bass and snare tones, and slower passages built for movement. The reviewer connects its approach to early Lockin’ Out releases and praises it as a standout within that style.",
+      "basis": "release",
+      "checkedOn": "2026-10-10",
+      "identityEvidence": "Original identifies Oakland Look Away; assigned NoEcho interview independently confirms same Oakland band and demo recorded in San Jose and released November2025.",
+      "reviews": [
+        {
+          "url": "https://diyconspiracy.net/one-paragraph-reviews-vol-1/",
+          "title": "One-Paragraph Hardcore Punk Reviews: A Listening Log Vol. 1",
+          "publication": "DIY Conspiracy",
+          "author": "Mittens XVX",
+          "publishedOn": "2026-01-30",
+          "kind": "release",
+          "reviewedWork": "Demo",
+          "evidenceSummary": "Original Look Away paragraph describes harder youth-crew-influenced fast hardcore, great bass/snare tone, slower crawl/mosh parts, early Lockin Out comparison and enthusiastic recommendation."
+        }
+      ],
+      "searches": [
+        "\"Look Away\" Oakland hardcore review",
+        "Independent audit: bounded locality/release query, official referral and original publication opened"
+      ],
+      "gaps": []
+    },
+    {
+      "artistId": 1656376636,
+      "artistName": "Heartless Folk",
+      "status": "review-found",
+      "summary": "At Oakland’s Night Light in July 2017, Heartless Folk delivered a short, spirited set as a three-piece, playing mostly then-unreleased material. The review describes an enthusiastic finish, with the microphone passed around as the room joined in singing Smash Mouth lyrics.",
+      "basis": "live",
+      "checkedOn": "2026-10-10",
+      "identityEvidence": "Original live review directly links https://heartlessfolk.bandcamp.com/ and names local Heartless Folk; linked original news page identifies same Tired Anxious Hands work as assigned Bandcamp anchor.",
+      "reviews": [
+        {
+          "url": "https://thebadcopy.com/show-reviews/heartless-folk-false-positives-ash-williams-baron-bandini-dearly-divided-in-oakland/",
+          "title": "Heartless Folk, False Positives, Ash Williams, Baron Bandini, & Dearly Divided in Oakland, CA",
+          "publication": "Bad Copy",
+          "author": "Jen Louie",
+          "publishedOn": "2017-07-12",
+          "kind": "live",
+          "reviewedWork": "The Night Light, Oakland, July 8, 2017",
+          "evidenceSummary": "Heartless Folk-specific original paragraphs describe short energetic set, new material, one absent member/three-piece and shared-microphone Smashmouth singalong; no sonic traits transferred from other bands in article."
+        }
+      ],
+      "searches": [
+        "\"Heartless Folk\" review",
+        "Independent audit: bounded locality/release query, official referral and original publication opened"
+      ],
+      "gaps": [
+        "Brief concert assessment; summary limited to performance observations, not an inferred genre or instrumental style."
+      ]
+    },
+    {
+      "artistId": 1907727683,
+      "artistName": "Hollow Minds",
+      "status": "review-found",
+      "summary": "Kiss Me Goodnight pairs raw, intimate alternative rock with fuzz-heavy guitars, reverb and vocals nestled within the mix. The review hears 1990s influences, contrasting chaotic passages and anthemic guitar bursts with the restrained slowcore of “Awake” and the dense closing track.",
+      "basis": "release",
+      "checkedOn": "2026-10-10",
+      "identityEvidence": "Original explicitly identifies San Francisco Hollow Minds and links https://www.instagram.com/hollowminds.band/; assigned Linktree describes the same SF alt-rock band.",
+      "reviews": [
+        {
+          "url": "https://loudwomen.org/2026/05/31/hollow-minds-take-a-promising-first-step-with-kiss-me-goodnight/",
+          "title": "Hollow Minds take a promising first step with ‘Kiss Me Goodnight’",
+          "publication": "LOUD WOMEN",
+          "author": "Ana",
+          "publishedOn": "2026-05-31",
+          "kind": "release",
+          "reviewedWork": "Kiss Me Goodnight",
+          "evidenceSummary": "Original evaluates basement-recorded debut: 90s alternative/college-rock influences, bass/drum foundation, open chords/reverb/distortion, intimate mixed vocals, chaotic Pour, slowcore Awake and fuzz-dense closer."
+        }
+      ],
+      "searches": [
+        "\"Hollow Minds\" review",
+        "Independent audit: bounded locality/release query, official referral and original publication opened"
+      ],
+      "gaps": []
+    }
+  ],
+  "corrections": [
+    {
+      "artistId": 1173085903,
+      "reviewUrl": "https://notransmission.com/single-reviews-3-july-2022-ultraflex-foreign-television-public-circuit-badvril-gemma-rogers/",
+      "field": "author",
+      "oldValue": null,
+      "newValue": "No Transmission",
+      "evidence": "Visible original byline links https://notransmission.com/author/no-transmission/; independent live .cache/sf-poster-audit-live/d595e8ea07c0.html."
+    }
+  ]
+}

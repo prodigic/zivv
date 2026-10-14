@@ -1,0 +1,69 @@
+{
+  "checkedOn": "2026-10-10",
+  "seed": "zivv-reviews-final-2-20261010",
+  "status": "proposed-for-parent-review",
+  "records": [
+    {
+      "artistId": 1950440468,
+      "artistName": "Cardboard People",
+      "status": "review-found",
+      "summary": "Cardboard People’s debut pairs cheerful dance rhythms with wry observations about political and social tensions. The writer describes arrangements spanning funk, soul, R&B, and rock, while “Bondage” adds a menacing synthesizer hook, slow funk pulse, and processed vocals.",
+      "basis": "release",
+      "checkedOn": "2026-10-10",
+      "identityEvidence": "Original East Bay Express feature names Jim Greer and Yunoka Berry and directly cites assigned cardboardpeople.bandcamp.com.",
+      "reviews": [
+        {
+          "url": "https://eastbayexpress.com/cardboard-people/",
+          "title": "Cardboard People",
+          "publication": "East Bay Express",
+          "author": "j. poet",
+          "publishedOn": "2023-03-08",
+          "kind": "release",
+          "reviewedWork": "Cardboard People (self-titled debut); Bondage",
+          "evidenceSummary": "Original writer's album and single criticism within a feature: dance beats/social tensions, genre mix, menacing synth, slow funk and processed vocals."
+        }
+      ],
+      "searches": [
+        "\"Cardboard People\" music review"
+      ],
+      "gaps": [
+        "Source is a feature/interview with substantive original release criticism; live-show claims from musicians were excluded."
+      ]
+    },
+    {
+      "artistId": 2062617520,
+      "artistName": "Roy Rogers & The Delta Rhythm Kings",
+      "status": "review-found",
+      "summary": "At Swan Music Hall in November 2025, Roy Rogers and the Delta Rhythm Kings combined fiery slide guitar with soulful blues. The reviewer praises Rogers’s technical skill across several guitars, with the upbeat closing song “Believe” drawing listeners out to dance.",
+      "basis": "live",
+      "checkedOn": "2026-10-10",
+      "identityEvidence": "Original live review names Roy Rogers and the Delta Rhythm Kings, with Kevin Hayes and Steve Ehrman, identifying the blues slide-guitar act.",
+      "reviews": [
+        {
+          "url": "https://tahoeonstage.com/reviews/concert-reviews/roy-rogers-and-the-delta-rhythm-kings-weave-music-and-magic/",
+          "title": "Roy Rogers and the Delta Rhythm Kings weave music and magic in front of capacity crowd",
+          "publication": "Tahoe Onstage",
+          "author": "Marcia Schultz",
+          "publishedOn": "2025-12-02",
+          "kind": "live",
+          "reviewedWork": "Swan Music Hall, Nashville Social Club, Carson City, November 30, 2025",
+          "evidenceSummary": "Firsthand review describes blazing slide guitar, soulful blues, multiple instruments and dancing during closing Believe."
+        }
+      ],
+      "searches": [
+        "\"Roy Rogers\" \"Delta Rhythm Kings\" review"
+      ],
+      "gaps": []
+    }
+  ],
+  "corrections": [
+    {
+      "artistId": 824976364,
+      "reviewUrl": "https://xpressmag.com.au/review-deafheaven-at-the-rechabite/",
+      "field": "reviews[0].author",
+      "oldValue": null,
+      "newValue": "Brayden Edwards",
+      "evidence": "Article-ending byline at original X-Press source."
+    }
+  ]
+}

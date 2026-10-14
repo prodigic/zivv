@@ -1,0 +1,146 @@
+{
+  "checkedOn": "2026-10-10",
+  "seed": "zivv-reviews-2-first60-20261010",
+  "completed": 60,
+  "summary": {
+    "sampled": 10,
+    "pass": 6,
+    "minor": 4,
+    "fail": 0,
+    "acceptedSummaries": 3,
+    "acceptedSummariesPass": 3
+  },
+  "method": "Original publications independently opened; live bytes saved. Three positive claim checks plus seven negatives/identity/access cases. Negative followups bounded to official identity and focused original-review search. No producer model inspected.",
+  "records": [
+    {
+      "artistId": 853478884,
+      "artistName": "dj Aaron Axelsen",
+      "inputStatus": "not-found",
+      "result": "minor",
+      "reason": "Original live review found: Jessica Lachenal, Spinning Platters, July 8 2014, Rickshaw Stop July 3 2014. Evaluates Aaron and Miles together: skilled mixes, Flight Facilities/Disclosure/Metronomy, dancing audience. Preserve joint-set attribution.",
+      "sourceUrls": [
+        "https://spinningplatters.com/show-review-tove-lo-with-dj-aaron-axelsen-and-miles-the-dj-at-rickshaw-stop-07032014/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/d68bcf1c6dc3.html"
+    },
+    {
+      "artistId": 1699921692,
+      "artistName": "Dalmatia",
+      "inputStatus": "not-found",
+      "result": "pass",
+      "reason": "Official site confirms SF identity; narrow locality query found label promotion, not original criticism. Null summary remains appropriate; bounded search is not proof of absence.",
+      "sourceUrls": [
+        "https://dalmatia.band/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/a3e448f52e99.html"
+    },
+    {
+      "artistId": 916235027,
+      "artistName": "B.F.H.",
+      "inputStatus": "not-found",
+      "result": "pass",
+      "reason": "Opened original Bandcamp through web retrieval: Fairfield bilingual metal, Brothers June 30 2026. Narrow title/name query found no original criticism; retain null.",
+      "sourceUrls": [
+        "https://bfhmusic25.bandcamp.com/track/brothers"
+      ],
+      "evidenceMode": "web-retrieved original",
+      "evidenceFile": null
+    },
+    {
+      "artistId": 762513206,
+      "artistName": "Bonnie Raitt",
+      "inputStatus": "review-found",
+      "result": "pass",
+      "reason": "Original live Holler text/byline/date support every musical claim and release basis; exact Bonnie Raitt/Just Like That identity.",
+      "sourceUrls": [
+        "https://holler.country/reviews/album-review/bonnie-raitt-just-like-that/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/d365f0989abc.html"
+    },
+    {
+      "artistId": 2140507067,
+      "artistName": "BNuzzed Lightbeer",
+      "inputStatus": "not-found",
+      "result": "minor",
+      "reason": "Known malformed alias: assigned official label identifies Buzzed Lightbeer. Original TGEFM June 12 2025 review of June 3 Bottom of the Hill show supports lively garage punk and shared guitar/bass vocals. Parent must arbitrate alias before reuse.",
+      "sourceUrls": [
+        "https://thatsgoodenoughforme.com/live-review-civic-and-guests-at-bottom-of-the-hill-plus-photo-gallery/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/df4210ab7c24.html"
+    },
+    {
+      "artistId": 129727800,
+      "artistName": "Fast & Vengefully",
+      "inputStatus": "not-found",
+      "result": "pass",
+      "reason": "Official Timmy G page confirms exact project and personnel; narrow spelled-out name search found promotion, not criticism. Retain null.",
+      "sourceUrls": [
+        "https://timmygmusic.com/fast-and-vengefully"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/ec963fde8e80.html"
+    },
+    {
+      "artistId": 768613345,
+      "artistName": "Alvie & The Breakfast Pigs",
+      "inputStatus": "blocked",
+      "result": "minor",
+      "reason": "Blocked candidate now opens live. Alt77 original single review, Eduard Banulescu, August 1 2020, Tokyo: dirty hard-rock character compared with Deep Purple Mk II. Brief release criticism supports a short summary; do not turn promotional loud/fast promise into observed live behavior.",
+      "sourceUrls": [
+        "https://alt77.com/alvie-the-breakfast-pigs-tokyo-review/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/8308b30fe727.html"
+    },
+    {
+      "artistId": 587440292,
+      "artistName": "Band Of Orcs",
+      "inputStatus": "identity-uncertain",
+      "result": "minor",
+      "reason": "Identity resolved: assigned Bandcamp says A Band of Orcs, Santa Cruz; Warchiefs album shares I, Gogog, Into the Maelstrom and Celtic Frost cover with original review. Erik T, April 4 2011; tight produced metalcore/thrash/death metal, mixed assessment. Preserve review versus release dates and source title spelling.",
+      "sourceUrls": [
+        "https://www.teethofthedivine.com/reviews/a-band-of-orcs-warchief-of-the-apocalypse-ep/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/f7b76abfd790.html"
+    },
+    {
+      "artistId": 1646320518,
+      "artistName": "Agony Aunts",
+      "inputStatus": "review-found",
+      "result": "pass",
+      "reason": "Original live article confirms exact album, members, Beverly Paterson/August 21 2013, layered harmonies and stated country/soul/psych-pop details; historical release scope retained.",
+      "sourceUrls": [
+        "https://somethingelsereviews.com/2013/08/21/agony-aunts-big-cinnamon-2013/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/7670a3e6b38c.html"
+    },
+    {
+      "artistId": 1205990207,
+      "artistName": "AJ Lee & Blue Summit",
+      "inputStatus": "review-found",
+      "result": "pass",
+      "reason": "Original live article explicitly identifies Bay Area quintet, State Room November 8 2023, John Nelson/November 10, instruments, clear vocals, jazz song and driving Welch cover. Live basis and summary pass.",
+      "sourceUrls": [
+        "https://saltlakemagazine.com/aj-lee-state-room-2/"
+      ],
+      "evidenceMode": "independent live HTTP original",
+      "evidenceFile": ".cache/sf-poster-audit-live/733066ceaa3f.html"
+    }
+  ],
+  "identityEvidence": {
+    "587440292": [
+      "https://abandoforcs.bandcamp.com/music",
+      "https://abandoforcs.bandcamp.com/album/warchiefs-of-the-apocalypse"
+    ],
+    "2140507067": [
+      "https://www.psychedrecords.com/bands/buzzedlightbeer/"
+    ]
+  },
+  "methodCorrection": "Negative coverage remains shallow when limited to a single exact-name query. Follow a credible blocked original with direct HTTP and an assigned identity anchor before finalizing identity-uncertain. Preserve joint performance attribution."
+}

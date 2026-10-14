@@ -246,99 +246,84 @@ calling the release complete, confirm:
 - No console errors in build output
 - Bundle size should remain reasonable (<500KB total)
 
-**Note**: Daemon auto-syncs beads changes. No manual `bd sync` needed.
+**Note**: Issues live in GitHub Issues (`prodigic/zivv`). No tracker sync step is needed; `gh` reads and writes directly.
 
 ### 🎯 Task Planning & Management Protocol 🎯
 
-**CRITICAL**: All significant development tasks MUST use beads for planning and tracking. DO NOT use markdown files for plans.
+**CRITICAL**: All significant development tasks MUST be tracked as GitHub issues for planning and progress. DO NOT use markdown files for plans.
 
-#### When to Create a Beads Epic
+#### When to Create an Issue
 - **Multi-component changes**: Tasks affecting 3+ files or components
 - **New features**: Any functionality addition requiring design decisions
 - **Bug fixes with multiple causes**: Issues requiring investigation and multiple fixes
 - **Architectural changes**: Refactoring, performance improvements, or system changes
 - **User-reported issues**: Any problem that needs structured investigation and resolution
 
-#### Planning Workflow with Beads
+#### Planning Workflow with GitHub Issues
 
-**Phase 1: Epic Creation**
+**Phase 1: Parent issue**
 ```bash
-# Create epic for the main problem/feature
-bd create --title="Fix [Problem Description]" --type=epic --priority=1
-# Example: bd create --title="Fix Filter Display & Positioning Issues" --type=epic --priority=1
+gh issue create --title "Fix [Problem Description]" --body "Priority: P1 ..." --label needs-triage
 ```
 
-**Phase 2: Task Breakdown**
+**Phase 2: Child tasks**
 ```bash
-# Create individual tasks as separate issues
-bd create --title="Fix ToolbarFilterDropdown overflow issues" --type=task --priority=2
-bd create --title="Fix VenueFilter dropdown positioning" --type=bug --priority=2
-bd create --title="Implement proper z-index hierarchy" --type=task --priority=2
+gh issue create --title "Fix VenueFilter dropdown positioning" --body "Part of #<parent>
 
-# Link tasks to epic using dependencies
-bd dep add <task-id> <epic-id>  # Task depends on epic (epic blocks task)
+..." --label ready-for-agent
+```
+Put `Part of #<parent>` on the first line of each child body. Record blockers as `Blocked by: #<n>` in the child body. Use GitHub sub-issues where available.
+
+**Phase 3: Implementation tracking**
+```bash
+# Claim a task
+gh issue edit <task-number> --add-assignee @me
+
+# Record progress, then close with the outcome
+gh issue comment <task-number> --body "Fixed overflow issues in mobile panel (commit <sha>)"
+gh issue close <task-number> --comment "Done: <summary>"
+
+# Close the parent when all linked tasks are closed
+gh issue close <parent-number> --comment "All filter display issues resolved"
 ```
 
-**Phase 3: Implementation Tracking**
-```bash
-# Start work on a task
-bd update <task-id> --status=in_progress
+#### GitHub Issue Standards
 
-# Mark completed tasks
-bd close <task-id> --reason="Fixed overflow issues in mobile panel"
-
-# Close epic when all linked tasks complete
-bd close <epic-id> --reason="All filter display issues resolved"
-```
-
-#### Beads Planning Standards
-
-**Epic Titles**: Clear problem statement
+**Titles**: Clear, specific statements
 - ✅ "Fix Filter Display & Positioning Issues"
-- ✅ "Implement Mobile Filter Responsiveness"
+- ✅ "Fix VenueFilter dropdown cutoff on mobile"
 - ❌ "Update filters" (too vague)
 - ❌ "CSS fixes" (not descriptive)
 
-**Task Titles**: Specific, actionable items
-- ✅ "Fix VenueFilter dropdown cutoff on mobile"
-- ✅ "Update z-index hierarchy for nested dropdowns"
-- ❌ "Fix CSS" (too vague)
-- ❌ "Update component" (not specific)
-
-**Priority Guidelines**:
+**Priority**: GitHub issues have no priority field. Put the priority on the first line of the body as `Priority: P0` through `Priority: P4`:
 - **P0**: Critical bugs breaking core functionality
 - **P1**: Important features/fixes affecting UX
 - **P2**: Standard improvements and enhancements
 - **P3**: Nice-to-have features
 - **P4**: Future considerations/backlog
 
-**Task Dependency Rules**:
-- Tasks depend on epics (epic blocks tasks until planning complete)
-- Implementation tasks can depend on investigation tasks
-- Testing tasks depend on implementation tasks
-- Never create circular dependencies
+**Dependencies**: Child tasks depend on their parent. Never create circular blockers.
 
 #### Integration with Development Workflow
 
 **Before Starting Implementation**:
-1. Check `bd ready` for available work
-2. Review epic and linked tasks with `bd show <epic-id>`
-3. Update task status to in_progress: `bd update <task-id> --status=in_progress`
+1. Find available work: `gh issue list --state open --label ready-for-agent`
+2. Review the parent and linked tasks with `gh issue view <number>`
+3. Claim the task: `gh issue edit <number> --add-assignee @me`
 
 **During Implementation**:
-- Keep beads issues updated with progress and blockers
-- Create new tasks if additional work is discovered
-- Link any new tasks to the parent epic
+- Comment on the issue with progress and blockers
+- Create new issues for additional work you discover, and link them to the parent
 
 **After Completion**:
-- Close completed tasks with descriptive reasons
-- Update epic status and close when all tasks complete
-- Use Session Close Protocol for deployment
+- Close completed tasks with a comment that names the commit
+- Close the parent when all linked tasks are closed
+- Use the Session Close Protocol for deployment
 
 **Never Use Markdown Files for Planning**:
 - ❌ Do not create `.md` files in `.claude/plans/`
 - ❌ Do not write implementation plans in markdown
-- ✅ Use beads epics and issues for all planning
+- ✅ Use GitHub issues for all planning
 - ✅ Use CLAUDE.md only for permanent project documentation
 
 This ensures all work is trackable, persistent across sessions, and integrates with the project's issue management system.
@@ -1081,3 +1066,17 @@ This project has completed Phase 2 (ETL Pipeline), Phase 3 (Core Data Layer), Ph
 - **Production Ready**: Error boundaries, loading states, offline capabilities
 
 The current implementation provides a solid foundation for rapid frontend development with pre-processed, optimized data structures, comprehensive type safety, and a polished user interface that's ready for production deployment.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues (`prodigic/zivv`) via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `GLOSSARY.md` and `docs/adr/` at the repo root (created lazily when terms or decisions are resolved). See `docs/agents/domain.md`.

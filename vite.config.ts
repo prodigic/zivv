@@ -13,6 +13,12 @@ export default defineConfig({
       "@": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src"),
     },
   },
+  optimizeDeps: {
+    // Scan only the SPA entry. The default HTML glob also picks up generated
+    // test-results reports and fixture HTML, which can corrupt or dead-lock the
+    // esbuild dependency scan on Windows.
+    entries: ["index.html"],
+  },
   server: {
     // Dynamic port configuration for dev server management
     port: process.env.DEV_SERVER_PORT

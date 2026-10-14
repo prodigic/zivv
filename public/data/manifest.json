@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "schemaVersion": "2.0.0",
-  "datasetVersion": "2026-10-10T01:49:53.924Z",
-  "lastUpdated": 1791596993924,
-  "processedAt": 1791596993924,
+  "datasetVersion": "2026-10-14T05:37:12.803Z",
+  "lastUpdated": 1791956232803,
+  "processedAt": 1791956232803,
   "latestIngestionDate": "2026-10-09",
   "totalEvents": 4641,
   "totalArtists": 8678,
@@ -96,8 +96,8 @@
       {
         "filename": "events-2026-10.json",
         "chunkId": "2026-10",
-        "size": 1580468,
-        "checksum": "sha256-75ce22c311657d3d4d2515a94d858d38c0393d0f61481da16f64ab563e3bd855",
+        "size": 1636217,
+        "checksum": "sha256-15fd14315ec9dc07e0a79a4fe4c5c6e048c5fc1bf6a65b5d7f421d7b258f6f64",
         "eventCount": 748,
         "dateRange": {
           "startEpochMs": 1790856000000,
@@ -107,8 +107,8 @@
       {
         "filename": "events-2026-11.json",
         "chunkId": "2026-11",
-        "size": 736598,
-        "checksum": "sha256-0356dfbeacf5f91e34d55dbffcfad4a7e1faf351f9cf22dddf4c6549361c4fc5",
+        "size": 783652,
+        "checksum": "sha256-d68372c7f5df7d3b0ccb11bfaed020ccf1b4057c1609b85477f05dc79309b2d3",
         "eventCount": 359,
         "dateRange": {
           "startEpochMs": 1793534400000,
@@ -118,8 +118,8 @@
       {
         "filename": "events-2026-12.json",
         "chunkId": "2026-12",
-        "size": 297975,
-        "checksum": "sha256-d1be3f3ae81c3508254f59f125d6f67a48b193b88c901a4d18974874d78f35fa",
+        "size": 318974,
+        "checksum": "sha256-04625d739311535b358375192997ed420c48671201c920cf7078ae7d1e6d79dd",
         "eventCount": 148,
         "dateRange": {
           "startEpochMs": 1796126400000,
@@ -129,8 +129,8 @@
       {
         "filename": "events-2027-01.json",
         "chunkId": "2027-01",
-        "size": 87888,
-        "checksum": "sha256-6a22ec38483ed3c2a604c754c7e30cdb61ac8f7e29508e66f4994f334b08d64a",
+        "size": 95921,
+        "checksum": "sha256-05a56dc0fa7131fd7118989f910bae0659d71fb84b40b9c735c0b66f5c02d5f0",
         "eventCount": 48,
         "dateRange": {
           "startEpochMs": 1798977600000,
@@ -140,8 +140,8 @@
       {
         "filename": "events-2027-02.json",
         "chunkId": "2027-02",
-        "size": 83413,
-        "checksum": "sha256-1bf09a6540e7e8d9cf0b27529e6f591f21c02b59d0120b7b6b2d6856316b5c55",
+        "size": 87699,
+        "checksum": "sha256-1d1ac629ca7ede9cac16ffc6c422fecf6c9b54ae68755a66b28dbc4a427050e4",
         "eventCount": 45,
         "dateRange": {
           "startEpochMs": 1801483200000,
@@ -151,8 +151,8 @@
       {
         "filename": "events-2027-03.json",
         "chunkId": "2027-03",
-        "size": 49811,
-        "checksum": "sha256-dfebd0943dda9b0058990f3c2725332dcf4df895848c25775ee562edfca377bd",
+        "size": 51959,
+        "checksum": "sha256-e3f9341ffcc93a6c0a5bb6c3a72241f3b267a789c58a1139d50a3f61a8431e78",
         "eventCount": 29,
         "dateRange": {
           "startEpochMs": 1803902400000,
@@ -162,8 +162,8 @@
       {
         "filename": "events-2027-04.json",
         "chunkId": "2027-04",
-        "size": 37796,
-        "checksum": "sha256-6b4fa4900a4b55d5c7123fbcb9c5f3d55c8b99aefb8106cc73bc9aa10edf0bc8",
+        "size": 39012,
+        "checksum": "sha256-63b86fa0f8808a4f183b48800eea1f00b82dbbafbf1112e085fc49782a18cd2b",
         "eventCount": 20,
         "dateRange": {
           "startEpochMs": 1806580800000,
@@ -173,8 +173,8 @@
       {
         "filename": "events-2027-05.json",
         "chunkId": "2027-05",
-        "size": 20020,
-        "checksum": "sha256-b7282575e10722b9a90e6b21f08823c5ee742e0cb95395addf7f14804e0e40a2",
+        "size": 22363,
+        "checksum": "sha256-517a7db2cff8557149076cac5ca35f06bf1fb7854d2c82856fb0e0aed5566ccf",
         "eventCount": 10,
         "dateRange": {
           "startEpochMs": 1809172800000,
@@ -217,25 +217,25 @@
     ],
     "artists": {
       "filename": "artists.json",
-      "size": 5963169,
-      "checksum": "sha256-8c083b4d94b16a1a1b3621dcbe3d3bc629efe0cebb25e81a9a044934d11b0940",
+      "size": 6052488,
+      "checksum": "sha256-ff786226a930fd24af195b3739a7055bc905c61da4471c25a4d4d85ae2ffdd5d",
       "recordCount": 8678
     },
     "venues": {
       "filename": "venues.json",
-      "size": 1908644,
-      "checksum": "sha256-551ef5cf21a4bba40aad0efe2fc72f0bd1a90c3b5a750a67c86470365503f440",
+      "size": 1893270,
+      "checksum": "sha256-5080ea45ca2c083e19e4c6aa70e58934953417910d92053a8acf7afb29b32e5e",
       "recordCount": 656
     },
     "indexes": {
       "filename": "indexes.json",
-      "size": 1022666,
-      "checksum": "sha256-ab4dd55f25c9da295076adbc4f62886f80c36064bccbb2160237f20218821e56"
+      "size": 1022664,
+      "checksum": "sha256-d5b9a4e650e69235abec2b0d2894e916e39ae6e84a00ab49b25c34d16752ce1a"
     },
     "recentAdditions": {
       "filename": "recent-additions.json",
       "size": 1140017,
-      "checksum": "sha256-73639581f2037711ef8db83d45a52ffc3bcefb5df077a7bbb6c3fb53481948b2"
+      "checksum": "sha256-11b7a257a9d3c9a3822ff65b817d3a8821e6d6f04c444db8bd6feef60b7dad5f"
     }
   },
   "sourceFiles": {
@@ -259,6 +259,27 @@
       "checksum": "sha256-b71e1a7e64b25d66812ef5f97557fb2081e4f42d51d28367ddb95a27e24ba631",
       "lineCount": 785,
       "lastModified": 1790988729696.272
+    },
+    "artistLinks": {
+      "filename": "artist-links.json",
+      "size": 347816,
+      "checksum": "sha256-0455eba3ac156a2edad7a786cbd526deea549dce74daaf642678c7eae04f6e70",
+      "lineCount": 6880,
+      "lastModified": 1791701802616.0674
+    },
+    "artistReviews": {
+      "filename": "artist-reviews.json",
+      "size": 217232,
+      "checksum": "sha256-68c92f5a0e85854918a75c509d49163f9ddcdbe3d020826403e0cf0697527797",
+      "lineCount": 4233,
+      "lastModified": 1791701377313.0708
+    },
+    "eventPosters": {
+      "filename": "event-posters.json",
+      "size": 375523,
+      "checksum": "sha256-a4a3012326082b5685b6116ba53f3d0996206b8fc08c05ba1efbdbdde3cc3216",
+      "lineCount": 5900,
+      "lastModified": 1791691512876.7788
     }
   },
   "weeklyEdition": {

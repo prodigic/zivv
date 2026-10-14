@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { DirectoryContent } from "@/components/layout/DirectoryContent.tsx";
 import { isEventUpcoming } from "@/lib/discovery.ts";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import ArtistVibeCard from "@/components/ui/ArtistVibeCard.js";
+import ArtistLinks from "@/components/ui/ArtistLinks.js";
 import NewBadge from "@/components/ui/NewBadge.js";
 import { useAppStore } from "@/stores/appStore.js";
 import { useFilterStore } from "@/stores/filterStore.js";
@@ -255,6 +257,8 @@ const LocalArtistsPage: React.FC<{ embedded?: boolean }> = ({
                   </svg>
                 </Link>
               </div>
+              <ArtistVibeCard vibe={artist.vibe} compact />
+              <ArtistLinks links={artist.links} artistName={artist.name} />
               <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
                 {artist.upcomingEvents.map((event) => (
                   <Link

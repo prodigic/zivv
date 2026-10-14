@@ -1,0 +1,87 @@
+{
+  "startedAt": "2026-10-11T03:30:29Z",
+  "finishedAt": "2026-10-11T03:31:06Z",
+  "searchQueries": 3,
+  "pageOpens": 4,
+  "tokenUsage": null,
+  "records": [
+    {
+      "artistId": 78581369,
+      "artistName": "Modern Monsters",
+      "status": "review-found",
+      "vibe": "Release-only inference: Their debut EP suggests muscular, upbeat heavy rock with a strong 1990s alternative and metal flavor. The review emphasizes a dynamic, polished sound and energetic playing, while noting that the songwriting did not fully connect with its author.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://metalheadcommunity.com/modern-monsters-modern-monsters-album-review/",
+          "title": "Modern Monsters - Modern Monsters - Album Review - Heavy Rock from San Francisco, California, USA",
+          "publication": "Metalhead Community",
+          "author": "Burak Gundogdu",
+          "publishedOn": "2021-11-24",
+          "kind": "release",
+          "reviewedWork": "Modern Monsters (self-titled debut EP)",
+          "evidenceSummary": "Original evaluative review discusses production, 1990s influences and Lament's guitar solo, and expresses personal reservations about the songwriting."
+        }
+      ],
+      "identityEvidence": "Review calls them a Bay Area/San Francisco heavy rock band and links directly to www.modernmonstersmusic.com, matching the supplied canonical site.",
+      "searches": [
+        "\"Modern Monsters\" review album music"
+      ],
+      "gaps": [
+        "Only one review examined; no concert review assessed. Editorial independence is inferred from the external publication and explicit criticism; funding or submission arrangements are not disclosed on the review page."
+      ]
+    },
+    {
+      "artistId": 36869837,
+      "artistName": "Sour Widows",
+      "status": "review-found",
+      "vibe": "Release-only inference: This album suggests intimate alternative rock that takes its time, pairing intertwined guitars and harmonies with emotional weight. Gentle passages gradually give way to heavier catharsis, creating a reflective atmosphere shaped by grief and connection.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://pitchfork.com/reviews/albums/sour-widows-revival-of-a-friend/",
+          "title": "Revival of a Friend",
+          "publication": "Pitchfork",
+          "author": "Marissa Lorusso",
+          "publishedOn": "2024-07-02",
+          "kind": "release",
+          "reviewedWork": "Revival of a Friend",
+          "evidenceSummary": "Reviews patient arrangements, intertwined guitars, harmonies, grief and dynamic shifts."
+        }
+      ],
+      "identityEvidence": "Pitchfork identifies the Bay Area band, Maia Sinaiko and Susanna Thomson. Supplied Bandcamp lists Revival Of A Friend and identifies Sour Widows as Bay Area alternative rock: https://sourwidows.bandcamp.com/.",
+      "searches": [
+        "\"Sour Widows\" review album"
+      ],
+      "gaps": [
+        "No concert review assessed; description derives from the 2024 release."
+      ]
+    },
+    {
+      "artistId": 708820545,
+      "artistName": "Swingin' Utters",
+      "status": "review-found",
+      "vibe": "Release-only inference: Poorly Formed points to rough-edged, melodic street punk built for communal choruses, with folk, Celtic and occasional country touches. The review finds rhythmic drive and playful lyrics alongside more varied guitar interplay and arrangements.",
+      "basis": "release",
+      "reviews": [
+        {
+          "url": "https://www.scenepointblank.com/reviews/swingina-utters/poorly-formed/",
+          "title": "Swingin' Utters – Poorly Formed",
+          "publication": "Scene Point Blank",
+          "author": "Loren",
+          "publishedOn": "2013-04-01",
+          "kind": "release",
+          "reviewedWork": "Poorly Formed",
+          "evidenceSummary": "Original review evaluates streetpunk choruses, folk influences, arrangements and Johnny Peebucks' vocals, including criticism of one song."
+        }
+      ],
+      "identityEvidence": "Review identifies Fat Wreck Chords, Johnny Peebucks and the band's established discography; its related Here, Under Protest review excerpt calls them the San Fran band.",
+      "searches": [
+        "\"Swingin Utters\" album review"
+      ],
+      "gaps": [
+        "No concert review assessed; description derives from the 2013 release."
+      ]
+    }
+  ]
+}

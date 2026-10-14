@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import EventPosterLink from "@/components/ui/EventPosterLink.js";
 import VenueMapPreview from "@/components/ui/VenueMapPreview.js";
 import VenueNameLink from "@/components/ui/VenueNameLink.js";
 import { useAppStore } from "@/stores/appStore.js";
@@ -153,53 +154,61 @@ const VenueDetailPage: React.FC = () => {
               {venue.upcomingEvents.map((event) => {
                 const d = new Date(event.dateEpochMs);
                 return (
-                  <Link
-                    key={event.id}
-                    to={`/events/${event.slug}`}
-                    className="flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <div className="bg-gray-100 dark:bg-gray-700 rounded text-center w-9 shrink-0">
-                      <div className="text-xs font-bold text-gray-400 uppercase pt-0.5">
-                        {d.toLocaleDateString("en-US", { month: "short" })}
-                      </div>
-                      <div className="text-sm font-bold text-gray-900 dark:text-white pb-0.5">
-                        {d.getDate()}
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                        {event.headlinerName || "Show"}
-                      </div>
-                      {event.startTimeEpochMs && (
-                        <div className="text-xs text-gray-400">
-                          {new Date(event.startTimeEpochMs).toLocaleTimeString(
-                            "en-US",
-                            { hour: "numeric", minute: "2-digit" }
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <PriceWidget
-                      isFree={event.isFree}
-                      isSoldOut={event.isSoldOut}
-                      priceMin={event.priceMin}
-                      priceMax={event.priceMax}
-                      className="text-xs shrink-0"
+                  <div key={event.id} className="flex items-center gap-2 px-4">
+                    <EventPosterLink
+                      poster={event.poster}
+                      showName={event.headlinerName || "Show"}
                     />
-                    <svg
-                      className="w-3.5 h-3.5 text-gray-400 shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    <Link
+                      key={event.id}
+                      to={`/events/${event.slug}`}
+                      className="flex min-w-0 flex-1 items-center gap-2 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
+                      <div className="bg-gray-100 dark:bg-gray-700 rounded text-center w-9 shrink-0">
+                        <div className="text-xs font-bold text-gray-400 uppercase pt-0.5">
+                          {d.toLocaleDateString("en-US", { month: "short" })}
+                        </div>
+                        <div className="text-sm font-bold text-gray-900 dark:text-white pb-0.5">
+                          {d.getDate()}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                          {event.headlinerName || "Show"}
+                        </div>
+                        {event.startTimeEpochMs && (
+                          <div className="text-xs text-gray-400">
+                            {new Date(
+                              event.startTimeEpochMs
+                            ).toLocaleTimeString("en-US", {
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })}
+                          </div>
+                        )}
+                      </div>
+                      <PriceWidget
+                        isFree={event.isFree}
+                        isSoldOut={event.isSoldOut}
+                        priceMin={event.priceMin}
+                        priceMax={event.priceMax}
+                        className="text-xs shrink-0"
                       />
-                    </svg>
-                  </Link>
+                      <svg
+                        className="w-3.5 h-3.5 text-gray-400 shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </Link>
+                  </div>
                 );
               })}
             </div>
