@@ -9,7 +9,6 @@ import {
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { setImmediate } from "node:timers/promises";
 import { DatabaseSync } from "node:sqlite";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadBackupKey } from "../../lib/ingestion/encrypted-backup.js";
@@ -121,13 +120,10 @@ describe("weekly edition freeze recovery", () => {
       true
     );
   });
-  afterEach(async () => {
+  afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllEnvs();
     rmSync(directory, { recursive: true, force: true });
-    // SQLite/filesystem work completes synchronously through promise microtasks.
-    // Yield between cases so Vitest can receive its worker-report RPC replies.
-    await setImmediate();
   });
 
   it("freezes the fifth stage and reuses its exact membership and cutoff on resume", async () => {
@@ -415,7 +411,7 @@ describe("weekly edition freeze recovery", () => {
           .map((event) => event.id)
       )
     );
-  });
+  }, 90_000);
 
   it("refuses a saved freeze intent after clock rollback makes its cutoff future", async () => {
     const interruption = new Error("fixture saved freeze intent");

@@ -121,7 +121,9 @@ function validateEvidence(
     evidence,
     stage === "freeze" && Object.hasOwn(evidence, "mode")
       ? [...fields[stage], "mode", "ledgerRevision"]
-      : fields[stage]
+      : stage === "enrich" && Object.hasOwn(evidence, "buildSha256")
+        ? [...fields[stage], "buildSha256"]
+        : fields[stage]
   );
   for (const [key, value] of Object.entries(evidence)) {
     if (key === "cutoffEpochMs" || key === "preCutoffPendingCount") {

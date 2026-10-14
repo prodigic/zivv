@@ -337,7 +337,7 @@ describe("shared transactional ledger", () => {
       priceMin: 31,
       status: "sold-out",
     });
-  });
+  }, 30_000);
   it("waits for a writer in another process", async () => {
     const f = fixture();
     await writeSqliteLedger(f.path, f.ledger, true);

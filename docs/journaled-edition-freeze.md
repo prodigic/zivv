@@ -93,8 +93,10 @@ frozen, acknowledged, published or scheduled.
 
 ## Remaining work
 
-Six later stages remain pending: enrichment, export, validation, deployment, live
-verification and acknowledgement. They must connect to captured reviewed builds,
+At this freeze checkpoint, six later stages remain pending: enrichment, export,
+validation, deployment, live verification and acknowledgement. The subsequent
+[candidate checkpoint](journaled-candidate-stages.md) integrates the first three.
+The remaining delivery must connect to captured reviewed builds,
 exact candidate identity and recovery. Full encrypted recovery must also include
 the private journal and artifacts. Source acquisition, runtime activation,
 independent alerts, failure drills and two observed Fridays remain prerequisites

@@ -5,7 +5,10 @@ export default defineConfig({
   cacheDir: ".cache/vitest-ingestion",
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
+    // Message-channel transport stays responsive during long SQLite/Git suites.
+    pool: "threads",
     maxWorkers: 4,
+    setupFiles: ["./src/test/ingestion/setup.ts"],
     environment: "node",
     include: [
       "src/test/ingestion/**/*.test.ts",

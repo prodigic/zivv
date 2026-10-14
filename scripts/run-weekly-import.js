@@ -21,6 +21,10 @@ for (let index = 0; index < args.length; index += 2) {
       "through",
       "freeze-cutoff",
       "reuse-frozen",
+      "source-commit",
+      "purpose",
+      "base",
+      "npm-cli",
     ].includes(key) ||
     Object.hasOwn(options, key) ||
     !value ||
@@ -54,9 +58,16 @@ if (options["run-id"]) {
 }
 if (
   options.through &&
-  !["acquire", "prepare", "reconcile", "load", "freeze"].includes(
-    options.through
-  )
+  ![
+    "acquire",
+    "prepare",
+    "reconcile",
+    "load",
+    "freeze",
+    "enrich",
+    "export",
+    "validate",
+  ].includes(options.through)
 )
   throw new Error("Unsupported --through stage");
 if (
@@ -66,9 +77,18 @@ if (
   throw new Error("--reuse-frozen must be true or false");
 if (
   (options["freeze-cutoff"] || options["reuse-frozen"]) &&
-  options.through !== "freeze"
+  !["freeze", "enrich", "export", "validate"].includes(options.through)
 )
-  throw new Error("Freeze options require --through freeze");
+  throw new Error(
+    "Freeze options require --through freeze or a later candidate stage"
+  );
+const buildKeys = ["source-commit", "purpose", "base", "npm-cli"];
+if (
+  buildKeys.some((key) => options[key]) &&
+  (!buildKeys.every((key) => options[key]) ||
+    !["enrich", "export", "validate"].includes(options.through))
+)
+  throw new Error("Candidate stages require all four build options together");
 const state = await runWeeklyImport({
   root: resolve(options.root ?? fileURLToPath(new URL("../", import.meta.url))),
   source,
@@ -78,6 +98,14 @@ const state = await runWeeklyImport({
     ? parseImportObservation(options["freeze-cutoff"])
     : undefined,
   reuseFrozen: options["reuse-frozen"] === "true",
+  candidateBuild: options["source-commit"]
+    ? {
+        sourceCommit: options["source-commit"],
+        purpose: options.purpose,
+        basePath: options.base,
+        npmCli: resolve(options["npm-cli"]),
+      }
+    : undefined,
   onProgress: ({ runId, stage, phase }) =>
     process.stderr.write(JSON.stringify({ runId, stage, phase }) + "\n"),
 });
