@@ -1081,3 +1081,17 @@ This project has completed Phase 2 (ETL Pipeline), Phase 3 (Core Data Layer), Ph
 - **Production Ready**: Error boundaries, loading states, offline capabilities
 
 The current implementation provides a solid foundation for rapid frontend development with pre-processed, optimized data structures, comprehensive type safety, and a polished user interface that's ready for production deployment.
+
+## Agent skills
+
+### Issue tracker
+
+Beads: work is tracked in `.beads/issues.jsonl` via the `bd` CLI, committed to git. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `GLOSSARY.md` and `docs/adr/` at the repo root (created lazily when terms or decisions are resolved). See `docs/agents/domain.md`.
