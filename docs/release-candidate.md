@@ -21,21 +21,59 @@ This field establishes an input identity. It does not by itself validate every
 output or authorize deployment. A publisher must bind checked public bytes and
 the snapshot to a sealed candidate and reject changed files before promotion.
 
-## Remaining candidate contracts
+## Captured configuration and sealed bundles
 
-- Capture exact source commit, reviewed configuration bytes and frozen edition
-  alongside the ledger revision. Stage export from those captured inputs so
-  concurrent workspace edits cannot mix configuration versions.
-- Include every effective metadata input: venue sources, location corrections,
-  details, maps, posters, artist reviews/links, slug redirects, local artist
-  verification and weekly edition state. Existing manifest `sourceFiles` hashes
-  cover only a subset; they are not yet a complete configuration identity.
-- Hash all public artifacts, including search and local-artist files omitted from
-  the current `chunks` listing. Keep a strict publication allowlist that excludes
-  sources, reports, databases, keys, operator configuration and recovery state.
-- Keep encrypted recovery material paired privately with the public candidate.
-  Full recovery must also cover journal, receipts, raw/prepared evidence and
-  weekly/configuration state (#36).
+New exports also include `sourceConfigurationSha256`. The complete fixed inventory
+records every effective configuration file as exact bytes or explicit absence.
+ETL applies the captured bytes through the same metadata functions used by release
+validation, and rejects workspace configuration changes before replacing public
+output. Search and city indexes use the export observation time so a later retry
+does not recompute different answers merely because time passed.
+
+`buildCandidateBundle()` copies the supplied ledger, authenticated snapshot,
+configuration and compiled application bytes before yielding. It exports through
+an isolated JSON workspace in private storage outside Git. Each bundle contains:
+
+```text
+candidate-.../
+  workspace/data/              captured ledger and reviewed configuration
+  workspace/public/            checked compiled site and generated dataset
+  recovery/ledger.snapshot.enc matching authenticated snapshot
+  build/vite-manifest.json     complete compiled application inventory
+  candidate.json              identity and exact artifact hashes
+  complete.json               completion marker, written last
+```
+
+`sealReleaseCandidate()` requires ledger/snapshot/configuration/frozen-edition
+agreement. It checks canonical identity/history, reviewed metadata, summaries,
+monthly descriptors and all derived search/index/locality/recent-additions data.
+It hashes every public file, rejects private/unknown/unlisted artifacts, and
+requires the complete Vite inventory, including lazy imports and CSS/assets.
+`ZIVV_CANDIDATE_BUILD=1` enables Vite's private `.vite/manifest.json` output; ordinary
+builds keep their existing output. Move that inventory into the private bundle,
+not the publication directory.
+
+`readVerifiedCandidateBundle(directory, recoveryKey, expectedCandidateId)` requires
+the candidate ID from the trusted run receipt, checks the completion marker,
+authenticates recovery and rechecks captured inputs/public files. It returns the
+verified bytes in memory; publication must upload those buffers, avoiding a later
+unchecked reread. Changed, missing, added, linked or incomplete artifacts fail.
+No recovery key is persisted in the bundle, and private files are outside its
+publication subtree.
+
+These APIs are implemented and tested. The runner must still establish that the
+supplied application build and `sourceCommit` came from the same reviewed code,
+record the candidate ID in its journal, and integrate validation/promotion.
+Supplying a commit string to this library is not proof of build provenance.
+
+## Remaining integrated delivery contracts
+
+- Capture a reviewed source checkout and build provenance, then integrate the
+  bundle APIs with the resumable runner. Copy configuration from that reviewed
+  context and explicitly version generated frozen-edition state.
+- Full recovery must also cover journal, receipts and raw/prepared evidence;
+  a candidate's paired catalog/configuration snapshot is not the complete
+  operator recovery bundle (#36).
 - Required checks bind to candidate identity. Promotion uploads those same bytes;
   live verification precedes edition acknowledgement. Prove public rollback
   without rolling back the private ledger.

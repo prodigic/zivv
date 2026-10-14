@@ -1,7 +1,6 @@
 import {
   existsSync,
   mkdirSync,
-  readFileSync,
   renameSync,
   statSync,
   writeFileSync,
@@ -23,13 +22,16 @@ import type {
 } from "../../types/data.js";
 import { loadLedger } from "../ingestion/ledger.js";
 import { ledgerDigest } from "../ingestion/sqlite-store.js";
-import { buildEventSlugRedirects } from "../ingestion/event-slug-redirects.js";
-import { applyVenueLocationCorrections } from "../ingestion/venue-location-corrections.js";
-import { applyProjectVenueDetails } from "../ingestion/venue-details.js";
-import { applyProjectVenueMaps } from "../ingestion/venue-maps.js";
-import { applyProjectEventPosters } from "../ingestion/event-posters.js";
-import { applyProjectArtistReviews } from "../ingestion/artist-reviews.js";
-import { applyProjectArtistLinks } from "../ingestion/artist-links.js";
+import {
+  captureExportConfiguration,
+  configurationDigest,
+  type CandidateConfiguration,
+} from "../ingestion/export-configuration.js";
+import { buildCapturedEventSlugRedirects } from "../ingestion/event-slug-redirects.js";
+import {
+  capturedExportCatalog,
+  configurationJson,
+} from "../ingestion/export-catalog.js";
 import { namesForVerificationStatus } from "../ingestion/local-artist-verification.js";
 import type { LocalArtistVerificationLedger } from "../ingestion/local-artist-verification.js";
 import { withIngestionLock } from "../ingestion/lock.js";
@@ -50,53 +52,24 @@ export class ETLProcessor {
   private async exportData(): Promise<ProcessingResult> {
     const start = Date.now();
     try {
+      const configuration = captureExportConfiguration(this.projectRoot);
+      const sourceConfigurationSha256 = configurationDigest(configuration);
       const ledger = await loadLedger(
         join(this.projectRoot, "data/ingestion/ledger.json")
       );
-      const events: Event[] = structuredClone(ledger.events);
-      const artists = structuredClone(ledger.artists);
-      const venues = structuredClone(ledger.venues);
-      applyVenueLocationCorrections(this.projectRoot, venues);
-      const registryPath = join(this.projectRoot, "data/venue-sources.json");
-      if (existsSync(registryPath)) {
-        const registry = JSON.parse(readFileSync(registryPath, "utf8"));
-        const pilot = new Set([
-          "fillmore-sf",
-          "rickshaw-stop-sf",
-          "bottom-of-the-hill-sf",
-        ]);
-        for (const source of registry.sources ?? []) {
-          if (!pilot.has(source.sourceId)) continue;
-          const venue = venues.find((v) => v.id === source.venueId);
-          if (
-            !venue ||
-            venue.name !== source.venueName ||
-            new URL(source.website).protocol !== "https:"
-          )
-            throw new Error(
-              `Pilot source identity/website mismatch: ${source.sourceId}`
-            );
-          venue.website = source.website;
-        }
-      }
-      applyProjectVenueDetails(this.projectRoot, venues);
-      applyProjectVenueMaps(this.projectRoot, venues);
-      const posters = applyProjectEventPosters(
-        this.projectRoot,
+      const {
         events,
+        artists,
         venues,
-        artists
-      );
+        posters,
+        staleReviews,
+        staleArtistLinks,
+      } = capturedExportCatalog(ledger, configuration);
       this.validateReferences(events, artists, venues);
-      const staleReviews = applyProjectArtistReviews(this.projectRoot, artists);
-      const staleArtistLinks = applyProjectArtistLinks(
-        this.projectRoot,
-        artists
-      );
-      this.populateSummaries(events, artists, venues, start);
-      const indexes = DataIndexer.buildIndexes(events, artists, venues);
-      indexes.eventSlugRedirects = buildEventSlugRedirects(
-        this.projectRoot,
+      ETLProcessor.populateExportSummaries(events, artists, venues, start);
+      const indexes = DataIndexer.buildIndexes(events, artists, venues, start);
+      indexes.eventSlugRedirects = buildCapturedEventSlugRedirects(
+        configurationJson(configuration, "event-slug-redirects.json") ?? [],
         events
       );
       const { chunks, chunkInfos } = DataChunker.chunkEventsByMonth(events);
@@ -156,6 +129,7 @@ export class ETLProcessor {
         datasetVersion,
         lastUpdated: start,
         sourceLedgerRevision: ledgerDigest(ledger),
+        sourceConfigurationSha256,
         processedAt: start,
         latestIngestionDate:
           localDateKey(
@@ -179,29 +153,40 @@ export class ETLProcessor {
           recentAdditions: additionsFile,
         },
         sourceFiles: {
-          events: this.sourceInfo("events.txt"),
-          venues: this.sourceInfo("venues.txt"),
-          venueSources: this.sourceInfo("venue-sources.json"),
-          ...(existsSync(join(this.projectRoot, "data/artist-links.json"))
-            ? { artistLinks: this.sourceInfo("artist-links.json") }
+          events: this.sourceInfo("events.txt", configuration),
+          venues: this.sourceInfo("venues.txt", configuration),
+          venueSources: this.sourceInfo("venue-sources.json", configuration),
+          ...(configuration["artist-links.json"] !== null
+            ? {
+                artistLinks: this.sourceInfo(
+                  "artist-links.json",
+                  configuration
+                ),
+              }
             : {}),
-          ...(existsSync(join(this.projectRoot, "data/artist-reviews.json"))
-            ? { artistReviews: this.sourceInfo("artist-reviews.json") }
+          ...(configuration["artist-reviews.json"] !== null
+            ? {
+                artistReviews: this.sourceInfo(
+                  "artist-reviews.json",
+                  configuration
+                ),
+              }
             : {}),
-          ...(existsSync(join(this.projectRoot, "data/event-posters.json"))
-            ? { eventPosters: this.sourceInfo("event-posters.json") }
+          ...(configuration["event-posters.json"] !== null
+            ? {
+                eventPosters: this.sourceInfo(
+                  "event-posters.json",
+                  configuration
+                ),
+              }
             : {}),
         },
       };
-      const weeklyPath = join(
-        this.projectRoot,
-        "data/ingestion/weekly-editions.json"
-      );
-      if (existsSync(weeklyPath)) {
+      if (configuration["ingestion/weekly-editions.json"] !== null) {
         const { parseWeeklyEditionLedger } =
           await import("../ingestion/weekly.js");
         const weekly = parseWeeklyEditionLedger(
-          JSON.parse(readFileSync(weeklyPath, "utf8"))
+          configurationJson(configuration, "ingestion/weekly-editions.json")
         );
         const edition = [...weekly.editions].sort(
           (a, b) => b.endEpochMs - a.endEpochMs
@@ -215,15 +200,13 @@ export class ETLProcessor {
             datasetVersion: edition.datasetVersion,
           };
       }
-      const verificationPath = join(
-        this.projectRoot,
-        "data/local-artist-verification.json"
-      );
-      const verification: LocalArtistVerificationLedger = existsSync(
-        verificationPath
-      )
-        ? JSON.parse(readFileSync(verificationPath, "utf8"))
-        : { schemaVersion: 1, entries: [] };
+      const verification: LocalArtistVerificationLedger =
+        configuration["local-artist-verification.json"] !== null
+          ? (configurationJson(
+              configuration,
+              "local-artist-verification.json"
+            ) as LocalArtistVerificationLedger)
+          : { schemaVersion: 1, entries: [] };
       write(
         "local-artists.json",
         namesForVerificationStatus(verification, "local", artists)
@@ -232,6 +215,11 @@ export class ETLProcessor {
         "local-artist-exclude.json",
         namesForVerificationStatus(verification, "non-local", artists)
       );
+      if (
+        configurationDigest(captureExportConfiguration(this.projectRoot)) !==
+        sourceConfigurationSha256
+      )
+        throw new Error("ETL configuration changed during export");
       write("manifest.json", manifest);
       // Paths are fixed children of the resolved project root. Preserve the old
       // directory as rollback; failed replacement restores it immediately.
@@ -307,9 +295,12 @@ export class ETLProcessor {
     return `sha256-${createHash("sha256").update(bytes).digest("hex")}`;
   }
 
-  private sourceInfo(filename: string): SourceFileInfo {
+  private sourceInfo(
+    filename: keyof CandidateConfiguration,
+    configuration: CandidateConfiguration
+  ): SourceFileInfo {
     const file = join(this.projectRoot, "data", filename);
-    const bytes = existsSync(file) ? readFileSync(file) : Buffer.from("");
+    const bytes = configuration[filename] ?? Buffer.from("");
     return {
       filename,
       size: bytes.length,
@@ -340,7 +331,7 @@ export class ETLProcessor {
     }
   }
 
-  private populateSummaries(
+  static populateExportSummaries(
     events: Event[],
     artists: Artist[],
     venues: Venue[],
