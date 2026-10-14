@@ -104,6 +104,11 @@ export class WeeklyRunJournal {
     this.db.close();
   }
 
+  /** Verify an owner immediately before a guarded external/catalog operation. */
+  checkOwnership(lease: WeeklyRunLease): void {
+    this.transaction(() => this.assertLease(lease));
+  }
+
   private now(): number {
     const now = this.clock();
     if (!Number.isSafeInteger(now) || now < 0)
