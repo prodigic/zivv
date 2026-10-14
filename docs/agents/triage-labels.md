@@ -1,6 +1,6 @@
 # Triage Labels
 
-The skills speak in terms of five canonical triage roles. This file maps those roles to the label strings used in this repo's issue tracker (beads).
+The skills speak in terms of five canonical triage roles. This file maps those roles to the label strings used in this repo's issue tracker (GitHub Issues, `prodigic/zivv`).
 
 | Label in mattpocock/skills | Label in our tracker | Meaning                                  |
 | -------------------------- | -------------------- | ---------------------------------------- |
@@ -12,4 +12,4 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
 
-Beads has no separate label-creation step; apply these strings when triaging an issue.
+All five labels exist on GitHub. Apply one with `gh issue edit <number> --add-label <label>`.
