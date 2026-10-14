@@ -1,13 +1,9 @@
-import {
-  existsSync,
-  lstatSync,
-  mkdtempSync,
-  readFileSync,
-  readdirSync,
-  realpathSync,
-} from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { resolvePrivateCandidateDirectory } from "./private-artifacts.js";
+export { resolvePrivateCandidateDirectory } from "./private-artifacts.js";
+import { lstatSync, mkdtempSync, readFileSync, readdirSync } from "node:fs";
+import { dirname, join } from "node:path";
 import type { IngestionLedger } from "../../types/ingestion.js";
+import type { ProcessingResult } from "../../types/data.js";
 import { ETLProcessor } from "../etl/processor.js";
 import { validateLedger } from "./ledger.js";
 import { canonicalJson } from "./sqlite-store.js";
@@ -27,24 +23,6 @@ import {
   type ReleaseCandidate,
 } from "./release-candidate.js";
 
-function privateDirectory(path: string): string {
-  const requested = resolve(path);
-  let ancestor = requested;
-  while (!existsSync(ancestor)) {
-    if (dirname(ancestor) === ancestor)
-      throw new Error("Invalid private directory");
-    ancestor = dirname(ancestor);
-  }
-  const actual = resolve(realpathSync(ancestor), relative(ancestor, requested));
-  if (actual.startsWith("\\\\"))
-    throw new Error("Candidate requires local private storage");
-  for (let parent = actual; ; parent = dirname(parent)) {
-    if (existsSync(join(parent, ".git")))
-      throw new Error("Candidate bundle must be outside Git repositories");
-    if (dirname(parent) === parent) break;
-  }
-  return actual;
-}
 function readRegular(path: string): Buffer {
   for (let parent = dirname(path); ; parent = dirname(parent)) {
     if (lstatSync(parent).isSymbolicLink())
@@ -84,6 +62,9 @@ export interface BuildCandidateBundleInput {
   /** Compiled app files only; the captured ETL generates every data file. */
   applicationFiles: ReadonlyMap<string, Buffer>;
   applicationBuildManifest: Buffer;
+  applicationBuildReceipt?: Buffer;
+  /** Integrated reviewed builds supply their captured compiled ETL. */
+  exportData?: (workspace: string) => Promise<ProcessingResult>;
 }
 
 /** Export from captured private inputs, then persist a checked public/private pair. */
@@ -109,6 +90,9 @@ export async function buildCandidateBundle(
     recoveryKey: Buffer.from(input.recoveryKey),
     configuration,
     applicationBuildManifest: Buffer.from(input.applicationBuildManifest),
+    applicationBuildReceipt: input.applicationBuildReceipt
+      ? Buffer.from(input.applicationBuildReceipt)
+      : undefined,
   };
   const files = new Map(
     [...input.applicationFiles].map(([path, bytes]) => [
@@ -118,7 +102,7 @@ export async function buildCandidateBundle(
   );
   if ([...files.keys()].some((path) => path.startsWith("data/")))
     throw new Error("Application input must exclude stale data files");
-  const parent = privateDirectory(input.privateDirectory);
+  const parent = resolvePrivateCandidateDirectory(input.privateDirectory);
   secureOperatorDirectory(parent);
   const directory = mkdtempSync(join(parent, "candidate-"));
   secureOperatorDirectory(directory);
@@ -131,7 +115,9 @@ export async function buildCandidateBundle(
     const bytes = configuration[path];
     if (bytes !== null) writeDurableFile(join(workspace, "data", path), bytes);
   }
-  const result = await new ETLProcessor(workspace).processData();
+  const result = input.exportData
+    ? await input.exportData(workspace)
+    : await new ETLProcessor(workspace).processData();
   if (!result.success)
     throw new Error(
       "Captured candidate ETL failed: " +
@@ -155,6 +141,11 @@ export async function buildCandidateBundle(
     join(directory, "build/vite-manifest.json"),
     captured.applicationBuildManifest
   );
+  if (captured.applicationBuildReceipt)
+    writeDurableFile(
+      join(directory, "build/application-build.json"),
+      captured.applicationBuildReceipt
+    );
   // This marker is the last write. Interrupted partial bundles are ineligible.
   writeDurableFile(
     join(directory, "complete.json"),
@@ -175,8 +166,9 @@ export async function readVerifiedCandidateBundle(
   candidate: ReleaseCandidate;
   publicFiles: Map<string, Buffer>;
   snapshot: Buffer;
+  applicationBuildReceipt: Buffer | undefined;
 }> {
-  const directory = privateDirectory(path);
+  const directory = resolvePrivateCandidateDirectory(path);
   if (lstatSync(directory).isSymbolicLink())
     throw new Error("Linked candidate directory refused");
   const candidate: ReleaseCandidate = JSON.parse(
@@ -226,11 +218,20 @@ export async function readVerifiedCandidateBundle(
     applicationBuildManifest: readRegular(
       join(directory, "build/vite-manifest.json")
     ),
+    applicationBuildReceipt:
+      candidate.applicationProvenanceSha256 === null
+        ? undefined
+        : readRegular(join(directory, "build/application-build.json")),
     snapshot,
     recoveryKey,
     configuration,
     publicFiles,
   };
   verifySealedCandidate(candidate, inputs);
-  return { candidate, publicFiles, snapshot };
+  return {
+    candidate,
+    publicFiles,
+    snapshot,
+    applicationBuildReceipt: inputs.applicationBuildReceipt,
+  };
 }

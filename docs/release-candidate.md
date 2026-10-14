@@ -40,6 +40,7 @@ candidate-.../
   workspace/public/            checked compiled site and generated dataset
   recovery/ledger.snapshot.enc matching authenticated snapshot
   build/vite-manifest.json     complete compiled application inventory
+  build/application-build.json reviewed source/runtime/application provenance
   candidate.json              identity and exact artifact hashes
   complete.json               completion marker, written last
 ```
@@ -61,16 +62,70 @@ unchecked reread. Changed, missing, added, linked or incomplete artifacts fail.
 No recovery key is persisted in the bundle, and private files are outside its
 publication subtree.
 
-These APIs are implemented and tested. The runner must still establish that the
-supplied application build and `sourceCommit` came from the same reviewed code,
-record the candidate ID in its journal, and integrate validation/promotion.
-Supplying a commit string to this library is not proof of build provenance.
+The isolated bundle primitive accepts legacy builds without provenance, but the
+integrated publication policy rejects them. Supplying a commit string alone is
+not proof of build provenance.
+
+## Reviewed source build recipe
+
+`buildReviewedWeeklyCandidate()` captures a full nominated commit from the
+authoritative `prodigic/zivv` repository into private storage outside Git. Release
+builds require that commit to be an ancestor of the local `origin/main`; the
+runner must refresh and validate that reference before selecting a release.
+Preview builds may use a stacked branch commit. Git replacement objects and
+inherited Git context are disabled. Raw Git blobs are checksum checked and
+written directly, preserving committed bytes rather than applying archive or
+checkout attributes. Linked files, submodules and nonportable collisions fail.
+
+The recipe installs the captured lockfile with `npm ci --ignore-scripts`, then
+compiles the application and ETL from that captured source. It records source
+tree/blob inventory, lockfile, Node/npm versions, compiled ETL inventory, Vite
+inventory, base path and every application artifact hash. It verifies source
+bytes after compilation and the complete compiled ETL inventory before import,
+before export and after export. A changed executable fails before the candidate
+completion marker. Reviewed configuration comes from the captured commit;
+generated frozen-edition state is captured explicitly from operator storage.
+
+`readPublishableCandidate()` requires the trusted candidate ID, expected commit,
+base path and purpose. It authenticates and rechecks the bundle, then returns
+verified public buffers. Preview provenance cannot authorize production release.
+No raw source, private database, build checkout, receipt or key belongs in the
+public publication tree.
+
+Operator commands (explicit paths are placeholders):
+
+```sh
+npm run candidate:build -- --source-commit <full-sha> --purpose preview \
+  --base /zivv-test/ --npm-cli <npm-cli.js> --edition-id <YYYY-MM-DD> \
+  --output-dir <private-operator-directory>
+npm run candidate:verify -- --source-commit <full-sha> --purpose preview \
+  --base /zivv-test/ --directory <candidate-directory> --candidate-id <trusted-id>
+```
+
+Set `ZIVV_LEDGER_HOME` to the existing permanent operator store. These commands
+require the shared SQLite store and existing recovery key. Build briefly captures
+the ledger, matching authenticated encrypted snapshot and existing edition state
+under the store lock; compilation/export happen privately afterward. They do not
+import, acknowledge an edition, deploy or activate a scheduler.
+
+### Read-only rehearsal, 2026-10-14
+
+The reviewed application/ETL commit
+`05e8b11552c0070407419a3dee8c130cffbe2001` built with Node 24.19.0 and npm 11.6.0.
+The frozen 2026-10-09 edition produced 55 verified public files and candidate
+`062ee30d35fd75f96d382c48a8b10112c386823b00af3cdcb2d72ed26633988f`.
+Independent CLI verification passed; requesting release purpose for that preview
+candidate failed. Ledger digest remained
+`5d2360394cf1242b9cc98e2124a850885cf4df0e49e75eb9249783812e38d0c4`,
+with 4,641 events, 8,678 artists and 656 venues. No publication or cutoff changed.
+The controlling recipe was work in progress during this rehearsal; this is build
+and verification evidence, not a completed unattended Friday run.
 
 ## Remaining integrated delivery contracts
 
-- Capture a reviewed source checkout and build provenance, then integrate the
-  bundle APIs with the resumable runner. Copy configuration from that reviewed
-  context and explicitly version generated frozen-edition state.
+- Integrate the reviewed build recipe with the resumable runner and record its
+  candidate ID in the journal. Refresh authoritative release references and
+  select approved code/configuration contexts before side effects.
 - Full recovery must also cover journal, receipts and raw/prepared evidence;
   a candidate's paired catalog/configuration snapshot is not the complete
   operator recovery bundle (#36).

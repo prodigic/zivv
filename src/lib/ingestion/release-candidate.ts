@@ -6,6 +6,7 @@ import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
 import { parseWeeklyEditionLedger } from "./weekly.js";
 import { normalizeSiteBase } from "../../utils/site-base.js";
 import { localDateKey } from "../discovery.js";
+import { verifyApplicationBuildReceipt } from "./source-build.js";
 import { ETLProcessor } from "../etl/processor.js";
 import { DataIndexer, SearchIndexBuilder } from "../etl/indexer.js";
 import { capturedExportCatalog, configurationJson } from "./export-catalog.js";
@@ -43,6 +44,7 @@ export interface ReleaseCandidate {
   datasetVersion: string;
   manifestSha256: string;
   applicationBuildSha256: string;
+  applicationProvenanceSha256: string | null;
   files: CandidateFile[];
 }
 export interface CandidateInputs {
@@ -55,6 +57,8 @@ export interface CandidateInputs {
   editionId: string;
   publicFiles: ReadonlyMap<string, Buffer>;
   applicationBuildManifest: Buffer;
+  /** Required by the reviewed build/publish path; legacy isolated seals may omit it. */
+  applicationBuildReceipt?: Buffer;
 }
 const hash = (bytes: string | Buffer) =>
   createHash("sha256").update(bytes).digest("hex");
@@ -447,6 +451,15 @@ export function sealReleaseCandidate(input: CandidateInputs): ReleaseCandidate {
     if (html.includes("src/main.tsx"))
       throw new Error("Uncompiled application entry");
   }
+  if (input.applicationBuildReceipt)
+    verifyApplicationBuildReceipt(input.applicationBuildReceipt, {
+      sourceCommit: input.sourceCommit,
+      basePath,
+      applicationBuildManifest: input.applicationBuildManifest,
+      applicationFiles: new Map(
+        [...input.publicFiles].filter(([path]) => !path.startsWith("data/"))
+      ),
+    });
   const identity = {
     schemaVersion: 1 as const,
     sourceCommit: input.sourceCommit,
@@ -461,6 +474,9 @@ export function sealReleaseCandidate(input: CandidateInputs): ReleaseCandidate {
     datasetVersion: manifest.datasetVersion,
     manifestSha256: hash(manifestBytes),
     applicationBuildSha256: hash(input.applicationBuildManifest),
+    applicationProvenanceSha256: input.applicationBuildReceipt
+      ? hash(input.applicationBuildReceipt)
+      : null,
     files,
   };
   return { ...identity, candidateId: hash(canonicalJson(identity)) };
