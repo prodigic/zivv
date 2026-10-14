@@ -63,8 +63,12 @@ new ID cannot skip an earlier draft, and publication must happen in draft
 window order. Missed weeks are represented by one later window beginning at
 the last successful cutoff, so additions are not silently skipped.
 
-The CLI reads canonical events and their revision from the validated
-`data/ingestion/ledger.json`:
+The CLI loads canonical events and their revision through `loadLedger` using
+the logical `data/ingestion/ledger.json` path. In configured production checkouts,
+`data/ingestion/store.json` resolves that path to the authoritative shared SQLite
+database outside the worktree. The workspace JSON is not a production fallback;
+it remains supported for isolated fixtures. See [shared recovery](shared-ledger.md)
+and [weekly stage contracts](weekly-stage-contracts.md).
 
 ```text
 node scripts/weekly-edition.js prepare --id 2026-09-11 --cutoff 2026-09-11T19:00:00.000Z [--root <project-root>]

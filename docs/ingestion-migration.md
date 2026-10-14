@@ -20,10 +20,14 @@ new generated dataset.
 
 ## What changed
 
-`data/ingestion/ledger.json` is the canonical build-time store. `public/data`
-is a disposable static export; the browser still reads anonymous static JSON.
-This is a versioned JSON ledger migration, with no hosted database or DuckDB
-dependency. Ordinary parsing, matching, validation, and exports use no AI tokens.
+The original migration used `data/ingestion/ledger.json` as the canonical store.
+Configured production checkouts now resolve that logical path to the permanent
+shared SQLite database via `data/ingestion/store.json`; the old workspace JSON
+is not authoritative or a fallback. `public/data` remains a disposable static
+export and the browser reads anonymous static JSON. There is no hosted database
+or DuckDB dependency. Ordinary parsing, matching, validation and exports use no
+AI tokens. See [weekly stage contracts](weekly-stage-contracts.md) for current
+manual commands and the planned release boundary.
 
 The one-time migration copies the exact previous generated catalog: 3,909
 events, 7,251 artists, and 624 venues. All prior events are explicitly attributed
