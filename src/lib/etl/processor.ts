@@ -22,6 +22,7 @@ import type {
   SourceFileInfo,
 } from "../../types/data.js";
 import { loadLedger } from "../ingestion/ledger.js";
+import { ledgerDigest } from "../ingestion/sqlite-store.js";
 import { buildEventSlugRedirects } from "../ingestion/event-slug-redirects.js";
 import { applyVenueLocationCorrections } from "../ingestion/venue-location-corrections.js";
 import { applyProjectVenueDetails } from "../ingestion/venue-details.js";
@@ -154,6 +155,7 @@ export class ETLProcessor {
         schemaVersion: "2.0.0",
         datasetVersion,
         lastUpdated: start,
+        sourceLedgerRevision: ledgerDigest(ledger),
         processedAt: start,
         latestIngestionDate:
           localDateKey(
