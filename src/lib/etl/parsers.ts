@@ -377,7 +377,8 @@ export class EventParser {
     return { events, errors, warnings };
   }
 
-  private static parseArtistNames(artistLine: string): string[] {
+  /** Shared artist-token parsing for normalization and audited preflight. */
+  static parseArtistNames(artistLine: string): string[] {
     // Split by commas, handling some edge cases
     const artists = artistLine
       .split(",")

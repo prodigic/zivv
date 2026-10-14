@@ -61,6 +61,7 @@
     "ledger:export-key": "npm run build:etl && node scripts/ledger-store.js export-key",
     "ledger:import-key": "npm run build:etl && node scripts/ledger-store.js import-key",
     "import:steveslist": "npm run build:etl && node scripts/import-events.js steveslist",
+    "preflight:steveslist": "npm run build:etl && node scripts/preflight-steveslist.js",
     "import:venue": "npm run build:etl && node scripts/import-events.js venue",
     "weekly:prepare": "npm run build:etl && node scripts/weekly-edition.js prepare",
     "test:ingestion": "vitest run --config vitest.ingestion.config.ts --configLoader runner",
