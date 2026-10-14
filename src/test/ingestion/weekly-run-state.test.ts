@@ -97,6 +97,50 @@ function before(stage: WeeklyRunStage) {
 }
 
 describe("weekly run-state foundation", () => {
+  it("binds export to the freeze catalog revision while preserving legacy evidence", () => {
+    let state = complete(before("freeze"), "freeze", {
+      ...evidence.freeze,
+      mode: "initial",
+      ledgerRevision: b,
+    });
+    state = complete(state, "enrich");
+    expect(() => complete(state, "export")).toThrow();
+    state = complete(state, "export", {
+      ...evidence.export,
+      ledgerRevision: b,
+      snapshotRevision: b,
+    });
+    expect(parseWeeklyRunState(state)).toEqual(state);
+    expect(() => complete(before("export"), "export")).not.toThrow();
+  });
+
+  it("allows corrections after cutoff without relaxing edition or pending-batch guards", () => {
+    const correction = {
+      ...evidence.freeze,
+      cutoffEpochMs: 3000,
+      mode: "correction",
+      ledgerRevision: b,
+    };
+    expect(() =>
+      complete(before("freeze"), "freeze", correction)
+    ).not.toThrow();
+    expect(() =>
+      complete(before("freeze"), "freeze", {
+        ...correction,
+        editionId: "other",
+      })
+    ).toThrow();
+    expect(() =>
+      complete(before("freeze"), "freeze", {
+        ...correction,
+        preCutoffPendingCount: 1,
+      })
+    ).toThrow();
+    expect(() =>
+      complete(before("freeze"), "freeze", { ...correction, mode: "initial" })
+    ).toThrow();
+  });
+
   it("round-trips all stages and binds publication to the exact verified candidate/window", () => {
     let state = createWeeklyRunState(source);
     for (const stage of WEEKLY_RUN_STAGES) state = complete(state, stage);
@@ -208,7 +252,7 @@ describe("weekly run-state foundation", () => {
     ["acknowledge", { ...evidence.acknowledge, cutoffEpochMs: 5001 }],
   ] satisfies [WeeklyRunStage, StageEvidence][])(
     "rejects mismatched %s receipts",
-    (stage, output) => {
+    (stage: WeeklyRunStage, output: StageEvidence) => {
       expect(() => complete(before(stage), stage, output)).toThrow();
     }
   );

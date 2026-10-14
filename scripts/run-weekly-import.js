@@ -19,6 +19,8 @@ for (let index = 0; index < args.length; index += 2) {
       "observed-at",
       "run-id",
       "through",
+      "freeze-cutoff",
+      "reuse-frozen",
     ].includes(key) ||
     Object.hasOwn(options, key) ||
     !value ||
@@ -35,9 +37,7 @@ if (options["run-id"]) {
       (key) => options[key]
     )
   )
-    throw new Error(
-      "Resume requires only --run-id, --root and optional --through"
-    );
+    throw new Error("Resume requires --run-id without source arguments");
 } else {
   for (const key of ["file", "edition-id", "delivery-id", "observed-at"])
     if (!options[key]) throw new Error("Missing --" + key);
@@ -54,14 +54,30 @@ if (options["run-id"]) {
 }
 if (
   options.through &&
-  !["acquire", "prepare", "reconcile", "load"].includes(options.through)
+  !["acquire", "prepare", "reconcile", "load", "freeze"].includes(
+    options.through
+  )
 )
   throw new Error("Unsupported --through stage");
+if (
+  options["reuse-frozen"] &&
+  !["true", "false"].includes(options["reuse-frozen"])
+)
+  throw new Error("--reuse-frozen must be true or false");
+if (
+  (options["freeze-cutoff"] || options["reuse-frozen"]) &&
+  options.through !== "freeze"
+)
+  throw new Error("Freeze options require --through freeze");
 const state = await runWeeklyImport({
   root: resolve(options.root ?? fileURLToPath(new URL("../", import.meta.url))),
   source,
   runId: options["run-id"],
   stopAfter: options.through ?? "load",
+  freezeCutoffEpochMs: options["freeze-cutoff"]
+    ? parseImportObservation(options["freeze-cutoff"])
+    : undefined,
+  reuseFrozen: options["reuse-frozen"] === "true",
   onProgress: ({ runId, stage, phase }) =>
     process.stderr.write(JSON.stringify({ runId, stage, phase }) + "\n"),
 });

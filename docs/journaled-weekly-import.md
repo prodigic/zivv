@@ -25,15 +25,16 @@ npm run weekly:run-import -- --file <private-source> --edition-id <YYYY-MM-DD> \
 npm run weekly:run-import -- --run-id <persisted-run-id> --through load
 ```
 
-`--through` supports `acquire`, `prepare`, `reconcile` and `load`; default `load`
+`--through` supports `acquire`, `prepare`, `reconcile`, `load` and the subsequent
+[freeze checkpoint](journaled-edition-freeze.md); default `load`
 commits a clean guarded import. Stopping after reconciliation leaves the catalog
 unchanged. Resume needs the run ID; the source file can be removed because raw
 bytes were retained atomically with run creation. Output shows stage/phase, IDs,
 hashes and status, without raw source or private report contents.
 
-These commands intentionally finish the four import stages and leave the seven
+With the default, these commands finish the four import stages and leave the seven
 delivery stages pending. The existing manual weekly preparation, ETL and
-publication commands remain usable. This command does not freeze an edition,
+publication commands remain usable. The default does not freeze an edition,
 advance the published cutoff or activate a schedule.
 
 ## Durable evidence and interruption handling

@@ -329,6 +329,13 @@ export class WeeklyRunJournal {
       );
   }
 
+  listRuns(scope: string): WeeklyRunState[] {
+    return this.db
+      .prepare("SELECT id FROM run_state WHERE scope=? ORDER BY id")
+      .all(scope)
+      .map((row) => this.load(String(row.id))!);
+  }
+
   readArtifact(
     runId: string,
     stage: WeeklyRunStage,
