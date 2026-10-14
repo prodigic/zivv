@@ -166,6 +166,7 @@ export async function readVerifiedCandidateBundle(
   candidate: ReleaseCandidate;
   publicFiles: Map<string, Buffer>;
   snapshot: Buffer;
+  applicationBuildManifest: Buffer;
   applicationBuildReceipt: Buffer | undefined;
 }> {
   const directory = resolvePrivateCandidateDirectory(path);
@@ -232,6 +233,7 @@ export async function readVerifiedCandidateBundle(
     candidate,
     publicFiles,
     snapshot,
+    applicationBuildManifest: inputs.applicationBuildManifest,
     applicationBuildReceipt: inputs.applicationBuildReceipt,
   };
 }

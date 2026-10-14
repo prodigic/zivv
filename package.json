@@ -69,6 +69,8 @@
     "weekly:load-reviewed": "npm run build:etl && node scripts/review-weekly-import.js load",
     "candidate:build": "npm run build:etl && node scripts/build-weekly-candidate.js build",
     "candidate:verify": "npm run build:etl && node scripts/build-weekly-candidate.js verify",
+    "publication:prepare": "npm run build:etl && node scripts/prepare-publication-payload.js prepare",
+    "publication:verify": "npm run build:etl && node scripts/prepare-publication-payload.js verify",
     "test:ingestion": "vitest run --config vitest.ingestion.config.ts --configLoader runner",
     "venue:pilot": "npm run build:etl && node scripts/venue-pilot.js",
     "storybook": "storybook dev -p 6006",

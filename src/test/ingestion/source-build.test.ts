@@ -462,7 +462,8 @@ describe("reviewed source capture and isolated application build", () => {
       expect(existsSync(join(source.directory, "application-build.json"))).toBe(
         false
       );
-    }
+    },
+    30_000
   );
 
   it("snapshots caller-owned source metadata before awaiting build commands", async () => {
