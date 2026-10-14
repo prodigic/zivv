@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "schemaVersion": "2.0.0",
-  "datasetVersion": "2026-10-12T07:29:39.848Z",
-  "lastUpdated": 1791790179848,
-  "processedAt": 1791790179848,
+  "datasetVersion": "2026-10-14T05:37:12.803Z",
+  "lastUpdated": 1791956232803,
+  "processedAt": 1791956232803,
   "latestIngestionDate": "2026-10-09",
   "totalEvents": 4641,
   "totalArtists": 8678,
@@ -217,25 +217,25 @@
     ],
     "artists": {
       "filename": "artists.json",
-      "size": 6128320,
-      "checksum": "sha256-cb61103205cac6275c2b5778b72f62eca6aa1a757930a2fafaf4bbd026417668",
+      "size": 6052488,
+      "checksum": "sha256-ff786226a930fd24af195b3739a7055bc905c61da4471c25a4d4d85ae2ffdd5d",
       "recordCount": 8678
     },
     "venues": {
       "filename": "venues.json",
-      "size": 1924941,
-      "checksum": "sha256-e0d43fb90073eb23fd092e07140cd8c6d7c0b18a4bd71a51c7b4e846a2eb72da",
+      "size": 1893270,
+      "checksum": "sha256-5080ea45ca2c083e19e4c6aa70e58934953417910d92053a8acf7afb29b32e5e",
       "recordCount": 656
     },
     "indexes": {
       "filename": "indexes.json",
       "size": 1022664,
-      "checksum": "sha256-e01ec81d3d48aa133a9e433157f6565b0ed2d790fbc7f794c74f557a0fefa85c"
+      "checksum": "sha256-d5b9a4e650e69235abec2b0d2894e916e39ae6e84a00ab49b25c34d16752ce1a"
     },
     "recentAdditions": {
       "filename": "recent-additions.json",
       "size": 1140017,
-      "checksum": "sha256-f0578666782849f0fe3108b2bfd66f86075ab90066569c59836f5a644ce9619d"
+      "checksum": "sha256-11b7a257a9d3c9a3822ff65b817d3a8821e6d6f04c444db8bd6feef60b7dad5f"
     }
   },
   "sourceFiles": {

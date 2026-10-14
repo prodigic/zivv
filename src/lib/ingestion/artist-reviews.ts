@@ -18,7 +18,8 @@ const text = (value: unknown): value is string =>
 const date = (value: unknown): value is string =>
   text(value) &&
   /^\d{4}-\d{2}-\d{2}$/.test(value) &&
-  !Number.isNaN(Date.parse(value));
+  !Number.isNaN(Date.parse(value)) &&
+  new Date(value).toISOString().slice(0, 10) === value;
 
 /** Validate the whole registry before applying any reviewed description. */
 export function decodeArtistReviews(value: unknown): ArtistReviewRegistry {

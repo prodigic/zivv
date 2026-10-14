@@ -53,6 +53,8 @@ it.each([
   { ...row, basis: "live" },
   { ...row, reviews: [] },
   { ...row, reviews: [{ ...row.reviews[0], publishedOn: "2026-11-01" }] },
+  { ...row, checkedOn: "2026-02-30" },
+  { ...row, reviews: [{ ...row.reviews[0], publishedOn: "2024-02-30" }] },
   { ...row, reviews: [{ ...row.reviews[0], url: "javascript:alert(1)" }] },
   {
     ...row,

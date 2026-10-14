@@ -566,45 +566,8 @@
     "slug": "august-hall",
     "sourceLineNumber": 7,
     "totalEventCount": 85,
-    "upcomingEventCount": 36,
+    "upcomingEventCount": 35,
     "upcomingEvents": [
-      {
-        "id": 678521249,
-        "slug": "2026-10-12-love-spells-august-hall",
-        "dateEpochMs": 1791806400000,
-        "startTimeEpochMs": 1791860400000,
-        "headlinerName": "Love Spells",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 31.6,
-        "priceMax": 31.6,
-        "createdAtEpochMs": 1783080000000,
-        "poster": {
-          "imageUrl": "https://s1.ticketm.net/dam/a/45e/1a3f8672-3265-44b4-ad7a-e8a81b35445e_TABLET_LANDSCAPE_LARGE_16_9.jpg",
-          "eventUrl": "https://www.augusthallsf.com/tm-event/love-spells/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:31def259d284161c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 811075932,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 1628841600,
         "slug": "2026-10-15-sim-august-hall",
@@ -1957,45 +1920,8 @@
     "slug": "bimbos-365-club",
     "sourceLineNumber": 265,
     "totalEventCount": 49,
-    "upcomingEventCount": 25,
+    "upcomingEventCount": 24,
     "upcomingEvents": [
-      {
-        "id": 1787869160,
-        "slug": "2026-10-12-maro-bimbos-365-club",
-        "dateEpochMs": 1791806400000,
-        "startTimeEpochMs": 1791860400000,
-        "headlinerName": "Maro",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 41.25,
-        "priceMax": 41.25,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/12/87/37/64_Original.jpg?v=7",
-          "eventUrl": "https://bimbos365club.com/tm-event/maro-moved-from-the-castro/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e39a1ca4eb4ce178",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 697962111,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 119865025,
         "slug": "2026-10-14-fightmaster-bimbos-365-club",
@@ -3210,39 +3136,8 @@
     "slug": "the-blue-lagoon",
     "sourceLineNumber": 4,
     "totalEventCount": 27,
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "upcomingEvents": [
-      {
-        "id": 1551171062,
-        "slug": "2026-10-12-mismiths-the-blue-lagoon",
-        "dateEpochMs": 1791806400000,
-        "startTimeEpochMs": 1791862200000,
-        "headlinerName": "Mismiths",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:41a9105e790ef88c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1372815670,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 1497547955,
         "slug": "2026-10-15-dead-engine-the-blue-lagoon",
@@ -3372,90 +3267,8 @@
     "slug": "bottom-of-the-hill",
     "sourceLineNumber": 23,
     "totalEventCount": 192,
-    "upcomingEventCount": 41,
+    "upcomingEventCount": 39,
     "upcomingEvents": [
-      {
-        "id": 1519522506,
-        "slug": "2026-10-12-triclops-bottom-of-the-hill",
-        "dateEpochMs": 1791806400000,
-        "startTimeEpochMs": 1791856800000,
-        "headlinerName": "Triclops",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 19.81,
-        "priceMax": 19.81,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:cc1a8ee55e99ffb0",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
-      {
-        "id": 1192392557,
-        "slug": "2026-10-13-wolves-of-glendale-bottom-of-the-hill",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Wolves Of Glendale",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 25,
-        "priceMax": 30,
-        "createdAtEpochMs": 1788566700000,
-        "poster": {
-          "imageUrl": "https://www.bottomofthehill.com/f/20261013f.jpg",
-          "eventUrl": "https://www.bottomofthehill.com/20261013.html",
-          "kind": "poster",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:a68cbf7f967bc859",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:8869bdd04742222a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 897947598,
         "slug": "2026-10-15-imperial-teen-the-bottom-of-the-hill",
@@ -4936,45 +4749,8 @@
     "slug": "the-brick-and-mortar",
     "sourceLineNumber": 27,
     "totalEventCount": 70,
-    "upcomingEventCount": 10,
+    "upcomingEventCount": 9,
     "upcomingEvents": [
-      {
-        "id": 1976545465,
-        "slug": "2026-10-13-dani-offline-brick-and-mortar",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Dani Offline",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 25,
-        "priceMax": 25,
-        "createdAtEpochMs": 1789172046956,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/13/01/13/24_Edp.jpg?v=6",
-          "eventUrl": "https://www.brickandmortarmusic.com/tm-event/dani-offline-lovers-discourse-live/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:87e905adb2de96ff",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1719765223,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 432011238,
         "slug": "2026-10-15-edgehill-brick-and-mortar",
@@ -5372,45 +5148,8 @@
     "slug": "cafe-du-nord",
     "sourceLineNumber": 62,
     "totalEventCount": 40,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1721705824,
-        "slug": "2026-10-13-isabel-larosa-cafe-du-nord",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Isabel Larosa",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 39.12,
-        "priceMax": 39.12,
-        "createdAtEpochMs": 1791595464839,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/13/60/77/23_Original.jpg?v=19",
-          "eventUrl": "https://cafedunord.com/tm-event/isabel-larosa-dollparts-tour/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:522bbe71dad410e6",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1550837691,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 600495149,
         "slug": "2026-10-30-lime-garden-cafe-du-nord",
@@ -5603,45 +5342,8 @@
     "slug": "chapel",
     "sourceLineNumber": 2,
     "totalEventCount": 148,
-    "upcomingEventCount": 50,
+    "upcomingEventCount": 49,
     "upcomingEvents": [
-      {
-        "id": 682999298,
-        "slug": "2026-10-13-militarie-gun-the-chapel",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791943200000,
-        "headlinerName": "Militarie Gun",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 27.22,
-        "priceMax": 27.22,
-        "createdAtEpochMs": 1781265600000,
-        "poster": {
-          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMDc0MzUxYzYtOTlmMy00MTk3LWIyYjQtM2JjYmMxZjFmODIwIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MDB9LCJqcGVnIjp7InF1YWxpdHkiOjYwfSwicG5nIjp7ImNvbXByZXNzaW9uTGV2ZWwiOjksInF1YWxpdHkiOjYwfSwid2VicCI6eyJxdWFsaXR5Ijo2MH19fQ==",
-          "eventUrl": "https://wl.seetickets.us/event/militarie-gun/693468?afflky=TheChapel",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:3fae0f6ac1946034",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 680116887,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 1578732577,
         "slug": "2026-10-14-dummy-the-chapel",
@@ -8074,37 +7776,8 @@
     "slug": "cornerstone",
     "sourceLineNumber": 12,
     "totalEventCount": 100,
-    "upcomingEventCount": 44,
+    "upcomingEventCount": 43,
     "upcomingEvents": [
-      {
-        "id": 2080732989,
-        "slug": "2026-10-13-bumpin-uglies-the-cornerstone",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Bumpin Uglies",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c46fcc7c1b2e1142",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1393740940,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 942886759,
         "slug": "2026-10-16-petty-theft-the-cornerstone",
@@ -9672,45 +9345,8 @@
     "slug": "dna-lounge",
     "sourceLineNumber": 61,
     "totalEventCount": 32,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1671620196,
-        "slug": "2026-10-13-echos-the-dna-lounge",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791943200000,
-        "headlinerName": "Echos",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789777368000,
-        "poster": {
-          "imageUrl": "https://cdn.dnalounge.com/flyers/2026/10/13d-1.jpg",
-          "eventUrl": "https://www.dnalounge.com/calendar/2026/10-13d.html",
-          "kind": "poster",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c4a2eb3f0a9b859a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789777368000,
-            "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 405307007,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 853846258,
         "slug": "2026-10-20-drift-mothership-the-dna-lounge",
@@ -11999,37 +11635,8 @@
     "slug": "fox-theater",
     "sourceLineNumber": 50,
     "totalEventCount": 82,
-    "upcomingEventCount": 38,
+    "upcomingEventCount": 37,
     "upcomingEvents": [
-      {
-        "id": 2055192409,
-        "slug": "2026-10-13-audrey-hobert-the-fox-theater",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Audrey Hobert",
-        "isFree": false,
-        "isSoldOut": true,
-        "createdAtEpochMs": 1785499200000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e8ddb91fd0e94f93",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 631118593,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 1677124055,
         "slug": "2026-10-14-brit-floyd-the-fox-theater",
@@ -13481,45 +13088,8 @@
     "slug": "great-american-music-hall",
     "sourceLineNumber": 103,
     "totalEventCount": 131,
-    "upcomingEventCount": 56,
+    "upcomingEventCount": 55,
     "upcomingEvents": [
-      {
-        "id": 313803026,
-        "slug": "2026-10-13-provoker-the-great-american-music-hall",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791943200000,
-        "headlinerName": "Provoker",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 27.5,
-        "priceMax": 30,
-        "createdAtEpochMs": 1788566700000,
-        "poster": {
-          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMWYxNGIwNjAtZWNmNi00MzQxLWE0NWMtMDEzZGM0ZTdjYTgxIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MDB9LCJqcGVnIjp7InF1YWxpdHkiOjYwfSwicG5nIjp7ImNvbXByZXNzaW9uTGV2ZWwiOjksInF1YWxpdHkiOjYwfSwid2VicCI6eyJxdWFsaXR5Ijo2MH19fQ==",
-          "eventUrl": "https://wl.seetickets.us/event/provoker/703886?afflky=GreatAmericanMusicHall",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:8f483cf9df0b2f13",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 463728167,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 2067800795,
         "slug": "2026-10-14-mexican-institute-of-sound-the-great-american-music-hall",
@@ -16312,82 +15882,8 @@
     "slug": "independent",
     "sourceLineNumber": 22,
     "totalEventCount": 140,
-    "upcomingEventCount": 55,
+    "upcomingEventCount": 53,
     "upcomingEvents": [
-      {
-        "id": 1126220508,
-        "slug": "2026-10-12-king-mala-the-independent",
-        "dateEpochMs": 1791806400000,
-        "startTimeEpochMs": 1791860400000,
-        "headlinerName": "King Mala",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 31.55,
-        "priceMax": 31.55,
-        "createdAtEpochMs": 1784289600000,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/12/95/10/44_Edp.jpg?v=9",
-          "eventUrl": "https://www.theindependentsf.com/tm-event/king-mala/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:841adb4c8f4d073b",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 515101024,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
-      {
-        "id": 1953701846,
-        "slug": "2026-10-13-automatic-the-independent",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Automatic",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 31.55,
-        "priceMax": 31.55,
-        "createdAtEpochMs": 1783080000000,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/12/92/33/54_Edp.jpg?v=13",
-          "eventUrl": "https://www.theindependentsf.com/tm-event/automatic/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:d5b9c6242a480963",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 515101024,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 970719063,
         "slug": "2026-10-14-fire-in-the-desert-the-independent",
@@ -18312,70 +17808,8 @@
     "slug": "ivy-room",
     "sourceLineNumber": 1,
     "totalEventCount": 164,
-    "upcomingEventCount": 42,
+    "upcomingEventCount": 40,
     "upcomingEvents": [
-      {
-        "id": 797410645,
-        "slug": "2026-10-12-shiner-the-ivy-room",
-        "dateEpochMs": 1791806400000,
-        "startTimeEpochMs": 1791858600000,
-        "headlinerName": "Shiner",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 25,
-        "priceMax": 25,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:ba276b2e4994e8a2",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
-      {
-        "id": 1807649069,
-        "slug": "2026-10-13-the-reverb-experiment-the-ivy-room",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791941400000,
-        "headlinerName": "The Reverb Experiment",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 7,
-        "priceMax": 7,
-        "createdAtEpochMs": 1790381132084,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:839bd01f8014da5b",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 1807271879,
         "slug": "2026-10-14-splice-the-ivy-room",
@@ -21636,43 +21070,8 @@
     "slug": "masonic-center",
     "sourceLineNumber": 171,
     "totalEventCount": 50,
-    "upcomingEventCount": 17,
+    "upcomingEventCount": 16,
     "upcomingEvents": [
-      {
-        "id": 1638239162,
-        "slug": "2026-10-13-loathe-the-masonic",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791945000000,
-        "headlinerName": "Loathe",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://s1.ticketm.net/dam/a/773/d673bb12-d407-452f-90c0-5fd3e629a773_TABLET_LANDSCAPE_LARGE_16_9.jpg",
-          "eventUrl": "https://www.ticketmaster.com/loathe-a-stranger-to-you-san-francisco-california-10-13-2026/event/1C006496D97AB512",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:b29e3f7f463cf115",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1120524281,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 1753181163,
         "slug": "2026-10-15-laura-ramoso-comedy-the-masonic",
@@ -24228,57 +23627,8 @@
     "slug": "regency-ballroom",
     "sourceLineNumber": 28,
     "totalEventCount": 94,
-    "upcomingEventCount": 41,
+    "upcomingEventCount": 40,
     "upcomingEvents": [
-      {
-        "id": 812572869,
-        "slug": "2026-10-13-mico-the-regency-ballroom",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Mico",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1788566700000,
-        "poster": {
-          "imageUrl": "https://images.discovery-prod.axs.com/2026/05/mico-tickets_10-13-26_86_6a0775e1e68a9.jpg",
-          "eventUrl": "https://www.axs.com/events/1451142/mico-tickets",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:1b8d36da87c96ca1",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 2133080253,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e2bdbc200c5ef506",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 2133080253,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 1387481638,
         "slug": "2026-10-15-the-blasting-company-playing-over-the-garden-wall-the-regency-ballroom",
@@ -25710,39 +25060,8 @@
     "slug": "rickshaw-stop",
     "sourceLineNumber": 19,
     "totalEventCount": 139,
-    "upcomingEventCount": 43,
+    "upcomingEventCount": 42,
     "upcomingEvents": [
-      {
-        "id": 893376595,
-        "slug": "2026-10-13-zolita-the-rickshaw-stop",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Zolita",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 37.75,
-        "priceMax": 37.75,
-        "createdAtEpochMs": 1782475200000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:31013b6d78116bf3",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 31041890,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 2050088262,
         "slug": "2026-10-15-abracadabra-ep-release-the-rickshaw-stop",
@@ -27200,39 +26519,8 @@
     "slug": "ritz",
     "sourceLineNumber": 239,
     "totalEventCount": 71,
-    "upcomingEventCount": 16,
+    "upcomingEventCount": 15,
     "upcomingEvents": [
-      {
-        "id": 2128931445,
-        "slug": "2026-10-13-rin-the-ritz",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791943200000,
-        "headlinerName": "Rin",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 23,
-        "priceMax": 25,
-        "createdAtEpochMs": 1783080000000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:bbfec73581a5d27c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1253820046,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 255147581,
         "slug": "2026-10-17-ghoul-the-ritz",
@@ -28204,39 +27492,8 @@
     "slug": "stay-gold-deli",
     "sourceLineNumber": 45,
     "totalEventCount": 63,
-    "upcomingEventCount": 9,
+    "upcomingEventCount": 8,
     "upcomingEvents": [
-      {
-        "id": 1657161179,
-        "slug": "2026-10-13-fiig-stay-gold-deli",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791943200000,
-        "headlinerName": "Fiig",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 10,
-        "priceMax": 10,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:f8befe751c10df5f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1217828948,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 1776061025,
         "slug": "2026-10-15-half-calf-stay-gold-deli",
@@ -48505,40 +47762,8 @@
     "slug": "the-junction",
     "sourceLineNumber": 109,
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1478316886,
-        "slug": "2026-10-13-the-floozies-the-junction",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791939600000,
-        "headlinerName": "The Floozies",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 32,
-        "priceMax": 32,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:7e23714bebd7fa8b",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 321104510,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790992500236,
     "website": "https://www.thejunc.com/"
   },
@@ -49740,53 +48965,8 @@
     "slug": "hopmonk-tavern-novato",
     "sourceLineNumber": 1,
     "totalEventCount": 72,
-    "upcomingEventCount": 22,
+    "upcomingEventCount": 21,
     "upcomingEvents": [
-      {
-        "id": 90079533,
-        "slug": "2026-10-13-kim-richey-hopmonk-tavern",
-        "dateEpochMs": 1791892800000,
-        "startTimeEpochMs": 1791946800000,
-        "headlinerName": "Kim Richey",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 35.75,
-        "priceMax": 35.75,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:7f67b16373d38bc1",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1791595464839,
-            "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:77de5431a203e3d7",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant"
-      },
       {
         "id": 779979586,
         "slug": "2026-10-17-petty-theft-tribute-hopmonk",
