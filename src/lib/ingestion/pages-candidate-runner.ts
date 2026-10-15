@@ -12,6 +12,8 @@ import {
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { writeDurableFile } from "./encrypted-backup.js";
 import {
+  PROMOTION_DESTINATIONS,
+  candidatePublicReleaseId,
   applyPromotionTransition,
   authorizePagesCreation,
   authorizePromotionDeployment,
@@ -27,6 +29,11 @@ import {
   type PromotionControlStore,
   type PromotionControlTransport,
 } from "./promotion-control-git.js";
+import { verifyLiveInventory } from "./release-live-inventory.js";
+import {
+  buildReleaseBrowserPlan,
+  verifyReleaseBrowser,
+} from "./release-browser.js";
 import { readPublicationPayloadGit } from "./publication-git.js";
 import { verifyPublicationPayload } from "./publication-payload.js";
 import {
@@ -617,12 +624,12 @@ export function createPagesCandidateRunner(options: PagesRunnerOptions) {
       inventorySha256: legacy?.inventorySha256 ?? request.publicInventorySha256,
     };
   };
-  const append = (
+  const commitAppend = (
     record: ReturnType<typeof current>,
     event: PromotionEvent
   ) => {
     const next = applyPromotionTransition(record.state, event);
-    if (next.stateId === record.state.stateId) return record;
+    if (next.stateId === record.state.stateId) return record.head;
     const prepared = options.store.prepareAppend({
       expectedHead: record.head,
       bytes: serializePromotionControl(next),
@@ -649,6 +656,13 @@ export function createPagesCandidateRunner(options: PagesRunnerOptions) {
     delete saved.pendingAppend;
     saved.admittedHead = prepared.attemptedHead;
     persist();
+    return prepared.attemptedHead;
+  };
+  const append = (
+    record: ReturnType<typeof current>,
+    event: PromotionEvent
+  ) => {
+    commitAppend(record, event);
     return current();
   };
   const fields = {
@@ -991,6 +1005,213 @@ export function createPagesCandidateRunner(options: PagesRunnerOptions) {
       throw new Error(
         "Bounded Pages status polling exhausted; retain ownership"
       );
+    },
+    async verifyRelease() {
+      const record = current();
+      requireAdmitted(record);
+      if (!saved.receipt || !record.attempt.deployment)
+        throw new Error(
+          "Exact deployed identity is required before live verification"
+        );
+      same(
+        record.attempt.deployment,
+        {
+          admission,
+          artifactId: saved.receipt.artifactId,
+          deploymentId: saved.receipt.deploymentId,
+        },
+        "live verification deployment"
+      );
+      // A previous poll is not a terminal-status authority for this invocation.
+      const status = await getGithubPagesDeployment({
+        ...api,
+        receipt: saved.receipt,
+      });
+      if (status.classification !== "succeeded")
+        throw new Error(
+          "Live verification requires an exact successful terminal deployment"
+        );
+      const files = verifiedPublic(record);
+      const prior = record.operation.priorVerified;
+      const priorCommit =
+        prior.kind === "legacyPublicSnapshot"
+          ? prior.retainedCommit
+          : prior.request.payloadCommit;
+      const priorRef = `refs/heads/zivv-candidate-artifacts/${priorCommit}`;
+      if (options.transport.readHead(priorRef) !== priorCommit)
+        throw new Error(
+          "Previous verified public recovery artifact is missing"
+        );
+      options.transport.fetchCommit(priorCommit);
+      const priorRaw = readPublicationPayloadGit({
+        repositoryRoot: options.repositoryRoot,
+        payloadCommit: priorCommit,
+      }).files;
+      const priorFiles =
+        prior.kind === "legacyPublicSnapshot"
+          ? priorRaw
+          : verifyPublicationPayload(priorRaw, {
+              expectedCandidateId: prior.request.candidateId,
+              expectedSourceCommit: prior.request.sourceCommit,
+              purpose: "release",
+              basePath: "/zivv/",
+            }).publicFiles;
+      const priorInventory = [...priorFiles]
+        .map(([path, bytes]) => ({
+          path,
+          size: bytes.length,
+          sha256: hash(bytes),
+        }))
+        .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
+      same(
+        promotionDigest(priorInventory),
+        prior.kind === "legacyPublicSnapshot"
+          ? prior.inventorySha256
+          : prior.request.publicInventorySha256,
+        "previous good recovery inventory"
+      );
+      let cacheSeedFiles = priorFiles;
+      if (inputs.mode === "rollback") {
+        const failedRequest = record.operation.request;
+        const failedRef = `refs/heads/zivv-candidate-artifacts/${failedRequest.payloadCommit}`;
+        if (
+          options.transport.readHead(failedRef) !== failedRequest.payloadCommit
+        )
+          throw new Error("Failed release cache seed artifact is unavailable");
+        options.transport.fetchCommit(failedRequest.payloadCommit);
+        cacheSeedFiles = verifyPublicationPayload(
+          readPublicationPayloadGit({
+            repositoryRoot: options.repositoryRoot,
+            payloadCommit: failedRequest.payloadCommit,
+          }).files,
+          {
+            expectedCandidateId: failedRequest.candidateId,
+            expectedSourceCommit: failedRequest.sourceCommit,
+            purpose: "release",
+            basePath: "/zivv/",
+          }
+        ).publicFiles;
+        const failedInventory = [...cacheSeedFiles]
+          .map(([path, bytes]) => ({
+            path,
+            size: bytes.length,
+            sha256: hash(bytes),
+          }))
+          .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
+        same(
+          promotionDigest(failedInventory),
+          failedRequest.publicInventorySha256,
+          "failed release cache seed inventory"
+        );
+      }
+      const now = Date.now();
+      try {
+        const inventory = await verifyLiveInventory({
+          destination: "production",
+          files,
+          expectedInventorySha256: record.inventorySha256,
+        });
+        const plan = buildReleaseBrowserPlan(files, now);
+        const browser = await verifyReleaseBrowser({
+          destination: "production",
+          baseUrl: PROMOTION_DESTINATIONS.production.liveUrl,
+          ...plan,
+          prior: { files: cacheSeedFiles },
+        });
+        const expectedManifestSha256 = hash(files.get("data/manifest.json")!);
+        if (
+          !plan.routes.length ||
+          browser.observations.length !== plan.routes.length * 4 ||
+          browser.observations.some(
+            (observation) =>
+              observation.manifestSha256 !== expectedManifestSha256
+          )
+        )
+          throw new Error(
+            "Browser did not observe the exact retained manifest in every client and viewport"
+          );
+        // Browser loading can overlap a change at the CDN. Confirm bytes again.
+        await verifyLiveInventory({
+          destination: "production",
+          files,
+          expectedInventorySha256: record.inventorySha256,
+        });
+        const body = {
+          destination: "production" as const,
+          liveUrl: PROMOTION_DESTINATIONS.production.liveUrl,
+          releaseId:
+            inputs.mode === "rollback"
+              ? prior.releaseId
+              : candidatePublicReleaseId(
+                  "production",
+                  record.operation.request
+                ),
+          inventorySha256: inventory.inventorySha256,
+          deployment: record.attempt.deployment,
+          verifiedAt: new Date().toISOString(),
+          checks: {
+            inventory: true as const,
+            routes: browser.routes,
+            cachedClient: browser.cachedClient,
+            freshClient: browser.freshClient,
+          },
+        };
+        const verification = { ...body, receiptId: promotionDigest(body) };
+        // Re-read after observations: stale jobs cannot verify another owner.
+        const latest = current();
+        same(
+          latest.attempt.deployment,
+          record.attempt.deployment,
+          "unchanged verification owner"
+        );
+        writeDurableFile(
+          `${options.statePath}.verification-${verification.receiptId}.json`,
+          Buffer.from(
+            JSON.stringify({
+              verification,
+              inventory,
+              recoveryInventorySha256: promotionDigest(priorInventory),
+              browser,
+            }) + "\n"
+          )
+        );
+        const accepted = latest.operation.verification ?? verification;
+        if (!latest.operation.verification)
+          commitAppend(latest, {
+            type: "verified",
+            ...fields,
+            verification: accepted,
+            replayProof: null,
+          });
+        return {
+          type: "release-verification-receipt",
+          verification: accepted,
+          manifestSha256: inventory.manifestSha256,
+          recoveryInventorySha256: promotionDigest(priorInventory),
+          browser,
+          cutoffAcknowledged: false,
+        };
+      } catch {
+        const latest = current();
+        // Do not revoke an already verified operation on an unrelated resume failure.
+        if (
+          latest.operation.phase ===
+          (inputs.mode === "rollback" ? "rollback-deployed" : "deployed")
+        )
+          append(latest, {
+            type: "failed",
+            ...fields,
+            failureReceiptId: promotionDigest({
+              type: "live-verification-failed",
+              operationId: inputs.operation_id,
+              attemptId: inputs.attempt_id,
+              deployment: record.attempt.deployment,
+            }),
+          });
+        throw new Error(
+          "Live verification failed; previous public release requires recovery and operator alert"
+        );
+      }
     },
     receipt() {
       const record = current();

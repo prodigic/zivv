@@ -26,10 +26,11 @@ async function main() {
       "request-deployment",
       "status",
       "receipt",
+      "verify-release",
     ].includes(command)
   )
     throw new Error(
-      "Usage: run-pages-candidate.js admit|materialize|request-deployment|status|receipt"
+      "Usage: run-pages-candidate.js admit|materialize|request-deployment|status|receipt|verify-release"
     );
   const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
   const identity = readPagesRunnerIdentity(process.env, root);
@@ -115,6 +116,7 @@ async function main() {
     "request-deployment": () => runner.requestDeployment(),
     status: () => runner.status(),
     receipt: () => runner.receipt(),
+    "verify-release": () => runner.verifyRelease(),
   }[command]();
 }
 try {
