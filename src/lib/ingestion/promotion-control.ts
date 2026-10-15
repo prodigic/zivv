@@ -89,6 +89,16 @@ export interface CandidatePublicRelease {
 export type VerifiedPublicRelease =
   | LegacyPublicSnapshot
   | CandidatePublicRelease;
+export interface PagesCreationIntent {
+  creationId: string;
+  creationNumber: number;
+  nonce: string;
+  artifactId: string;
+  admission: RunAdmission;
+  status: "requested" | "rejected" | "attached";
+  rejectionReceiptId: string | null;
+  rejectionHttpStatus: number | null;
+}
 export interface PromotionAttempt {
   attemptId: string;
   attemptNumber: number;
@@ -99,12 +109,17 @@ export interface PromotionAttempt {
     | "uncertain"
     | "fenced"
     | "admitted"
+    | "creation-requested"
     | "deployed"
     | "failed";
   fenceReceiptId: string | null;
   admission: RunAdmission | null;
   deployment: PromotionDeployment | null;
   failureReceiptId: string | null;
+  /** New dispatches have an independent CAS nonce; retained v1 attempts omit it. */
+  dispatchNonce?: string;
+  /** Absent on retained v1 states; never inject defaults into historical hashes. */
+  pagesCreation?: PagesCreationIntent;
 }
 export type PromotionPhase =
   | "claimed"
@@ -112,6 +127,7 @@ export type PromotionPhase =
   | "dispatch-uncertain"
   | "dispatch-fenced"
   | "admitted"
+  | "deployment-requested"
   | "deployed"
   | "verified"
   | "rollback-required"
@@ -119,6 +135,7 @@ export type PromotionPhase =
   | "rollback-uncertain"
   | "rollback-fenced"
   | "rollback-admitted"
+  | "rollback-deployment-requested"
   | "rollback-deployed";
 export interface PromotionOperation {
   operationId: string;
@@ -176,6 +193,7 @@ export type PromotionEvent =
       attemptNumber: number;
       workflowCommit: string;
       expectedRunAttempt: number;
+      dispatchNonce?: string;
     }
   | {
       type: "dispatch-uncertain";
@@ -198,11 +216,33 @@ export type PromotionEvent =
       admission: RunAdmission;
     }
   | {
+      type: "pages-create-intent";
+      operationId: string;
+      mode: PromotionMode;
+      attemptId: string;
+      creationId: string;
+      creationNumber: number;
+      nonce: string;
+      artifactId: string;
+      admission: RunAdmission;
+    }
+  | {
+      type: "pages-create-rejected";
+      operationId: string;
+      mode: PromotionMode;
+      attemptId: string;
+      creationId: string;
+      rejectionReceiptId: string;
+      httpStatus: number;
+    }
+  | {
       type: "deployed";
       operationId: string;
       mode: PromotionMode;
       attemptId: string;
       deployment: PromotionDeployment;
+      /** Required when an intent exists; absent on retained legacy transitions. */
+      creationId?: string;
     }
   | {
       type: "failed";
@@ -291,6 +331,31 @@ function githubId(value: unknown): asserts value is string {
   if (typeof value !== "string" || !/^[1-9][0-9]{0,19}$/.test(value))
     throw new Error("Invalid GitHub effect identity");
 }
+function pagesDeploymentId(value: unknown): asserts value is string {
+  if (
+    typeof value !== "string" ||
+    !(
+      /^[1-9][0-9]{0,19}$/.test(value) ||
+      /^[a-f0-9]{40}$/.test(value) ||
+      /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(
+        value
+      )
+    )
+  )
+    throw new Error("Invalid Pages deployment identity");
+}
+function definitiveRejectionStatus(value: unknown): asserts value is number {
+  if (
+    typeof value !== "number" ||
+    !Number.isInteger(value) ||
+    value < 400 ||
+    value >= 500 ||
+    value === 408
+  )
+    throw new Error(
+      "Pages creation rejection requires definitive 4xx evidence"
+    );
+}
 function destination(value: unknown): asserts value is PromotionDestination {
   if (value !== "production" && value !== "preview")
     throw new Error("Unsupported promotion destination");
@@ -335,7 +400,7 @@ function parseDeployment(value: unknown): PromotionDeployment {
   const fields = object(value, ["admission", "artifactId", "deploymentId"]);
   parseAdmission(fields.admission);
   githubId(fields.artifactId);
-  githubId(fields.deploymentId);
+  pagesDeploymentId(fields.deploymentId);
   return fields as unknown as PromotionDeployment;
 }
 function parseVerification(value: unknown): PromotionVerification {
@@ -532,11 +597,27 @@ function parseEvent(value: unknown): PromotionEvent {
         "attemptNumber",
         "workflowCommit",
         "expectedRunAttempt",
+        ...(Object.hasOwn(value, "dispatchNonce") ? ["dispatchNonce"] : []),
       ],
       "dispatch-uncertain": [],
       "fence-dispatch": ["fenceReceiptId"],
       "admit-run": ["admission"],
-      deployed: ["deployment"],
+      "pages-create-intent": [
+        "creationId",
+        "creationNumber",
+        "nonce",
+        "artifactId",
+        "admission",
+      ],
+      "pages-create-rejected": [
+        "creationId",
+        "rejectionReceiptId",
+        "httpStatus",
+      ],
+      deployed: [
+        "deployment",
+        ...(Object.hasOwn(value, "creationId") ? ["creationId"] : []),
+      ],
       failed: ["failureReceiptId"],
       verified: ["verification", "replayProof"],
     };
@@ -556,10 +637,26 @@ function parseEvent(value: unknown): PromotionEvent {
       positive(fields.attemptNumber);
       positive(fields.expectedRunAttempt);
       commit(fields.workflowCommit);
+      if (Object.hasOwn(fields, "dispatchNonce")) digest(fields.dispatchNonce);
     }
     if (type === "fence-dispatch") digest(fields.fenceReceiptId);
     if (type === "admit-run") parseAdmission(fields.admission);
-    if (type === "deployed") parseDeployment(fields.deployment);
+    if (type === "pages-create-intent") {
+      digest(fields.creationId);
+      digest(fields.nonce);
+      positive(fields.creationNumber);
+      githubId(fields.artifactId);
+      parseAdmission(fields.admission);
+    }
+    if (type === "pages-create-rejected") {
+      digest(fields.creationId);
+      digest(fields.rejectionReceiptId);
+      definitiveRejectionStatus(fields.httpStatus);
+    }
+    if (type === "deployed") {
+      parseDeployment(fields.deployment);
+      if (Object.hasOwn(fields, "creationId")) digest(fields.creationId);
+    }
     if (type === "failed") digest(fields.failureReceiptId);
     if (type === "verified") {
       parseVerification(fields.verification);
@@ -603,6 +700,15 @@ export function promotionAttemptId(
     workflowCommit,
     expectedRunAttempt,
   });
+}
+/** A fresh nonce and monotonic number fence every create, even if a nonce is reused. */
+export function pagesCreationId(
+  operationId: string,
+  attemptId: string,
+  creationNumber: number,
+  nonce: string
+): string {
+  return promotionDigest({ operationId, attemptId, creationNumber, nonce });
 }
 export const EMPTY_COMPLETION_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 function gitHash(type: "tree" | "blob", bytes: Buffer): string {
@@ -914,6 +1020,14 @@ function parseAttempt(
     same(value, null, "zero attempt counter");
     return null;
   }
+  const hasCreation =
+    typeof value === "object" &&
+    value !== null &&
+    Object.hasOwn(value, "pagesCreation");
+  const hasDispatchNonce =
+    typeof value === "object" &&
+    value !== null &&
+    Object.hasOwn(value, "dispatchNonce");
   const fields = object(value, [
     "attemptId",
     "attemptNumber",
@@ -924,7 +1038,10 @@ function parseAttempt(
     "admission",
     "deployment",
     "failureReceiptId",
+    ...(hasCreation ? ["pagesCreation"] : []),
+    ...(hasDispatchNonce ? ["dispatchNonce"] : []),
   ]);
+  if (hasDispatchNonce) digest(fields.dispatchNonce);
   same(fields.attemptNumber, counter, "current attempt counter");
   positive(fields.expectedRunAttempt);
   commit(fields.workflowCommit);
@@ -945,6 +1062,7 @@ function parseAttempt(
       "uncertain",
       "fenced",
       "admitted",
+      "creation-requested",
       "deployed",
       "failed",
     ].includes(String(fields.status))
@@ -953,6 +1071,8 @@ function parseAttempt(
   if (fields.status === "fenced") digest(fields.fenceReceiptId);
   else same(fields.fenceReceiptId, null, "unfenced attempt receipt");
   if (["planned", "uncertain", "fenced"].includes(String(fields.status))) {
+    if (hasCreation)
+      throw new Error("Unadmitted attempt cannot create Pages deployment");
     same(fields.admission, null, "unadmitted attempt");
     same(fields.deployment, null, "undeployed attempt");
     same(fields.failureReceiptId, null, "unfailed attempt");
@@ -964,13 +1084,74 @@ function parseAttempt(
       const deployed = parseDeployment(fields.deployment);
       same(deployed.admission, admission, "attempt deployment admission");
     }
-    if (fields.status === "admitted")
+    if (fields.status === "admitted" || fields.status === "creation-requested")
       same(fields.deployment, null, "admitted attempt deployment");
     if (fields.status === "deployed" && fields.deployment === null)
       throw new Error("Missing deployed attempt");
     if (fields.status === "failed") digest(fields.failureReceiptId);
     else same(fields.failureReceiptId, null, "unfailed admitted attempt");
   }
+  if (hasCreation) {
+    const creation = object(fields.pagesCreation, [
+      "creationId",
+      "creationNumber",
+      "nonce",
+      "artifactId",
+      "admission",
+      "status",
+      "rejectionReceiptId",
+      "rejectionHttpStatus",
+    ]);
+    positive(creation.creationNumber);
+    digest(creation.nonce);
+    githubId(creation.artifactId);
+    same(
+      creation.creationId,
+      pagesCreationId(
+        operationId,
+        fields.attemptId as string,
+        creation.creationNumber,
+        creation.nonce
+      ),
+      "Pages creation identity"
+    );
+    same(
+      parseAdmission(creation.admission),
+      fields.admission,
+      "Pages creation admitted run"
+    );
+    if (creation.status === "rejected") {
+      digest(creation.rejectionReceiptId);
+      definitiveRejectionStatus(creation.rejectionHttpStatus);
+      if (fields.status !== "admitted" && fields.status !== "failed")
+        throw new Error("Rejected creation attempt status");
+    } else {
+      same(creation.rejectionReceiptId, null, "unrejected Pages receipt");
+      same(creation.rejectionHttpStatus, null, "unrejected Pages HTTP status");
+      if (creation.status === "requested")
+        same(
+          fields.status,
+          "creation-requested",
+          "unresolved Pages creation status"
+        );
+      else if (creation.status === "attached") {
+        if (fields.status !== "deployed" && fields.status !== "failed")
+          throw new Error("Attached creation attempt status");
+        const deployed = parseDeployment(fields.deployment);
+        same(
+          deployed.artifactId,
+          creation.artifactId,
+          "attached Pages artifact"
+        );
+        same(
+          deployed.admission,
+          creation.admission,
+          "attached Pages admission"
+        );
+      } else throw new Error("Invalid Pages creation status");
+    }
+  } else if (fields.status === "creation-requested")
+    throw new Error("Missing Pages creation intent");
   return fields as unknown as PromotionAttempt;
 }
 function parseOperation(
@@ -1039,6 +1220,7 @@ function parseOperation(
     "dispatch-uncertain": "uncertain",
     "dispatch-fenced": "fenced",
     admitted: "admitted",
+    "deployment-requested": "creation-requested",
     deployed: "deployed",
     verified: "deployed",
   };
@@ -1062,6 +1244,7 @@ function parseOperation(
       "rollback-uncertain": "uncertain",
       "rollback-fenced": "fenced",
       "rollback-admitted": "admitted",
+      "rollback-deployment-requested": "creation-requested",
       "rollback-deployed": "deployed",
     };
     if (fields.phase === "rollback-required") {
@@ -1314,6 +1497,17 @@ function reduce(
   if (event.type === "dispatch-intent") {
     if (attempt?.attemptId === event.attemptId) {
       same(
+        Object.hasOwn(event, "dispatchNonce"),
+        Object.hasOwn(attempt, "dispatchNonce"),
+        "dispatch nonce replay presence"
+      );
+      if (event.dispatchNonce !== undefined)
+        same(
+          event.dispatchNonce,
+          attempt.dispatchNonce,
+          "dispatch nonce replay"
+        );
+      same(
         {
           attemptNumber: attempt.attemptNumber,
           workflowCommit: attempt.workflowCommit,
@@ -1359,6 +1553,9 @@ function reduce(
       admission: null,
       deployment: null,
       failureReceiptId: null,
+      ...(event.dispatchNonce === undefined
+        ? {}
+        : { dispatchNonce: event.dispatchNonce }),
     };
     if (rollback) {
       operation.rollbackAttempt = created;
@@ -1372,7 +1569,97 @@ function reduce(
   }
   if (!attempt || attempt.attemptId !== event.attemptId)
     throw new Error("Stale dispatch attempt");
-  if (event.type === "dispatch-uncertain") {
+  if (
+    attempt.status === "creation-requested" &&
+    !["pages-create-intent", "pages-create-rejected", "deployed"].includes(
+      event.type
+    )
+  )
+    throw new Error("Unresolved Pages creation retains its owner");
+  if (event.type === "pages-create-intent") {
+    const prior = attempt.pagesCreation;
+    if (prior?.creationId === event.creationId) {
+      same(
+        {
+          creationNumber: prior.creationNumber,
+          nonce: prior.nonce,
+          artifactId: prior.artifactId,
+          admission: prior.admission,
+        },
+        {
+          creationNumber: event.creationNumber,
+          nonce: event.nonce,
+          artifactId: event.artifactId,
+          admission: event.admission,
+        },
+        "Pages creation intent replay"
+      );
+      return previous;
+    }
+    requirePhase(operation, rollback ? ["rollback-admitted"] : ["admitted"]);
+    if (prior && prior.status !== "rejected")
+      throw new Error("Previous Pages creation is unresolved");
+    same(
+      event.creationNumber,
+      (prior?.creationNumber ?? 0) + 1,
+      "next Pages creation number"
+    );
+    same(
+      event.creationId,
+      pagesCreationId(
+        operation.operationId,
+        attempt.attemptId,
+        event.creationNumber,
+        event.nonce
+      ),
+      "Pages creation identity"
+    );
+    same(event.admission, attempt.admission, "Pages creation admitted run");
+    attempt.pagesCreation = {
+      creationId: event.creationId,
+      creationNumber: event.creationNumber,
+      nonce: event.nonce,
+      artifactId: event.artifactId,
+      admission: event.admission,
+      status: "requested",
+      rejectionReceiptId: null,
+      rejectionHttpStatus: null,
+    };
+    attempt.status = "creation-requested";
+    operation.phase = rollback
+      ? "rollback-deployment-requested"
+      : "deployment-requested";
+  } else if (event.type === "pages-create-rejected") {
+    const creation = attempt.pagesCreation;
+    if (!creation || creation.creationId !== event.creationId)
+      throw new Error("Stale Pages creation rejection");
+    if (creation.status === "rejected") {
+      same(
+        event.rejectionReceiptId,
+        creation.rejectionReceiptId,
+        "Pages rejection replay receipt"
+      );
+      same(
+        event.httpStatus,
+        creation.rejectionHttpStatus,
+        "Pages rejection replay HTTP status"
+      );
+      return previous;
+    }
+    requirePhase(
+      operation,
+      rollback ? ["rollback-deployment-requested"] : ["deployment-requested"]
+    );
+    definitiveRejectionStatus(event.httpStatus);
+    attempt.pagesCreation = {
+      ...creation,
+      status: "rejected",
+      rejectionReceiptId: event.rejectionReceiptId,
+      rejectionHttpStatus: event.httpStatus,
+    };
+    attempt.status = "admitted";
+    operation.phase = rollback ? "rollback-admitted" : "admitted";
+  } else if (event.type === "dispatch-uncertain") {
     if (attempt.status === "uncertain") return previous;
     requirePhase(operation, [prefix + "-planned"]);
     attempt.status = "uncertain";
@@ -1407,17 +1694,48 @@ function reduce(
     attempt.status = "admitted";
     operation.phase = rollback ? "rollback-admitted" : "admitted";
   } else if (event.type === "deployed") {
+    const creation = attempt.pagesCreation;
+    if (creation) {
+      same(
+        event.creationId,
+        creation.creationId,
+        "deployed Pages creation identity"
+      );
+      same(
+        event.deployment.artifactId,
+        creation.artifactId,
+        "deployed Pages artifact"
+      );
+      same(
+        event.deployment.admission,
+        creation.admission,
+        "deployed Pages admitted run"
+      );
+      if (creation.status === "rejected")
+        throw new Error("Rejected Pages creation cannot be attached");
+    } else if (event.creationId !== undefined)
+      throw new Error("Deployment creation ID requires durable intent");
     if (attempt.deployment) {
       same(event.deployment, attempt.deployment, "deployment replay");
       return previous;
     }
-    requirePhase(operation, rollback ? ["rollback-admitted"] : ["admitted"]);
+    requirePhase(
+      operation,
+      creation
+        ? rollback
+          ? ["rollback-deployment-requested"]
+          : ["deployment-requested"]
+        : rollback
+          ? ["rollback-admitted"]
+          : ["admitted"]
+    );
     same(
       event.deployment.admission,
       attempt.admission,
       "deployment admitted run"
     );
     attempt.deployment = event.deployment;
+    if (creation) attempt.pagesCreation = { ...creation, status: "attached" };
     attempt.status = "deployed";
     operation.phase = rollback ? "rollback-deployed" : "deployed";
   } else if (event.type === "failed") {
@@ -1586,6 +1904,17 @@ function validateLastEventProjection(
       event.expectedRunAttempt,
       "intent run attempt projection"
     );
+    same(
+      Object.hasOwn(event, "dispatchNonce"),
+      Object.hasOwn(attempt, "dispatchNonce"),
+      "intent dispatch nonce projection presence"
+    );
+    if (event.dispatchNonce !== undefined)
+      same(
+        attempt.dispatchNonce,
+        event.dispatchNonce,
+        "intent dispatch nonce projection"
+      );
   } else if (event.type === "dispatch-uncertain") {
     requirePhase(operation, [prefix + "-uncertain"]);
   } else if (event.type === "fence-dispatch") {
@@ -1598,9 +1927,58 @@ function validateLastEventProjection(
   } else if (event.type === "admit-run") {
     requirePhase(operation, rollback ? ["rollback-admitted"] : ["admitted"]);
     same(attempt.admission, event.admission, "admission projection");
+  } else if (event.type === "pages-create-intent") {
+    requirePhase(
+      operation,
+      rollback ? ["rollback-deployment-requested"] : ["deployment-requested"]
+    );
+    same(
+      attempt.pagesCreation,
+      {
+        creationId: event.creationId,
+        creationNumber: event.creationNumber,
+        nonce: event.nonce,
+        artifactId: event.artifactId,
+        admission: event.admission,
+        status: "requested",
+        rejectionReceiptId: null,
+        rejectionHttpStatus: null,
+      },
+      "Pages creation intent projection"
+    );
+  } else if (event.type === "pages-create-rejected") {
+    requirePhase(operation, rollback ? ["rollback-admitted"] : ["admitted"]);
+    same(
+      attempt.pagesCreation?.creationId,
+      event.creationId,
+      "Pages rejection creation projection"
+    );
+    same(
+      attempt.pagesCreation?.status,
+      "rejected",
+      "Pages rejection status projection"
+    );
+    same(
+      attempt.pagesCreation?.rejectionReceiptId,
+      event.rejectionReceiptId,
+      "Pages rejection receipt projection"
+    );
+    same(
+      attempt.pagesCreation?.rejectionHttpStatus,
+      event.httpStatus,
+      "Pages rejection HTTP projection"
+    );
   } else if (event.type === "deployed") {
     requirePhase(operation, rollback ? ["rollback-deployed"] : ["deployed"]);
     same(attempt.deployment, event.deployment, "deployment projection");
+    if (attempt.pagesCreation)
+      same(
+        event.creationId,
+        attempt.pagesCreation.creationId,
+        "Pages deployment creation projection"
+      );
+    else if (event.creationId !== undefined)
+      throw new Error("Deployment creation projection requires intent");
   } else if (event.type === "failed") {
     requirePhase(operation, ["rollback-required"]);
     same(
@@ -1806,6 +2184,15 @@ export function authorizePromotionDeployment(
   )
     throw new Error("Stale promotion deployment attempt");
   same(admission, attempt.admission, "authorized admitted run");
+  return deploymentTarget(checked, operation, attempt, admission, rollback);
+}
+function deploymentTarget(
+  checked: PromotionControl,
+  operation: PromotionOperation,
+  attempt: PromotionAttempt,
+  admission: RunAdmission,
+  rollback: boolean
+): AuthorizedPromotionDeployment {
   const prior = operation.priorVerified;
   const request =
     rollback && prior.kind === "candidateRelease"
@@ -1827,5 +2214,76 @@ export function authorizePromotionDeployment(
     releaseId: rollback
       ? prior.releaseId
       : candidatePublicReleaseId(checked.destination, request),
+  };
+}
+export interface PagesCreationAuthorization extends PromotionDeploymentAuthorization {
+  creationId: string;
+}
+export interface AuthorizedPagesCreation extends AuthorizedPromotionDeployment {
+  creationId: string;
+  creationNumber: number;
+  artifactId: string;
+}
+/**
+ * Identity check for the caller that just won the NEW intent CAS. This getter is
+ * not a one-time permit: a restart seeing requested state must recover only,
+ * never derive its nonce from durable state and repeat the Pages POST.
+ */
+export function authorizePagesCreation(
+  state: PromotionControl,
+  supplied: PagesCreationAuthorization
+): AuthorizedPagesCreation {
+  const checked = parsePromotionControl(state);
+  const input = object(supplied, [
+    "operationId",
+    "mode",
+    "attemptId",
+    "admission",
+    "creationId",
+  ]);
+  digest(input.operationId);
+  digest(input.attemptId);
+  digest(input.creationId);
+  mode(input.mode);
+  const admission = parseAdmission(input.admission);
+  const operation = checked.active;
+  if (!operation || operation.operationId !== input.operationId)
+    throw new Error("Stale Pages creation owner");
+  const rollback = input.mode === "rollback";
+  requirePhase(
+    operation,
+    rollback ? ["rollback-deployment-requested"] : ["deployment-requested"]
+  );
+  const attempt = rollback
+    ? operation.rollbackAttempt
+    : operation.promotionAttempt;
+  const creation = attempt?.pagesCreation;
+  if (
+    !attempt ||
+    attempt.attemptId !== input.attemptId ||
+    attempt.status !== "creation-requested" ||
+    !creation ||
+    creation.status !== "requested"
+  )
+    throw new Error("Stale Pages creation attempt");
+  same(
+    input.creationId,
+    creation.creationId,
+    "authorized Pages creation identity"
+  );
+  same(admission, creation.admission, "authorized Pages creation admission");
+  const event = checked.lastTransition.event;
+  if (event.type !== "pages-create-intent")
+    throw new Error("Pages creation requires current intent transition");
+  same(
+    event.creationId,
+    creation.creationId,
+    "current Pages creation transition"
+  );
+  return {
+    ...deploymentTarget(checked, operation, attempt, admission, rollback),
+    creationId: creation.creationId,
+    creationNumber: creation.creationNumber,
+    artifactId: creation.artifactId,
   };
 }

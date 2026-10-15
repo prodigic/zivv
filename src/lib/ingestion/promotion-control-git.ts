@@ -149,10 +149,28 @@ function git(
   root: string,
   args: string[],
   input?: Buffer,
-  protocol: "" | "https" | "file" = ""
+  protocol: "" | "https" | "file" = "",
+  token?: string
 ): Buffer {
   const env = gitEnvironment();
   env.GIT_ALLOW_PROTOCOL = protocol;
+  if (token !== undefined) {
+    // Only the closed HTTPS transport receives this transient credential.
+    // Clear repository headers/helpers; never put the token in argv or config.
+    env.GIT_CONFIG_COUNT = "6";
+    env.GIT_CONFIG_KEY_0 = `http.${authoritativeUrl}.extraheader`;
+    env.GIT_CONFIG_VALUE_0 = "";
+    env.GIT_CONFIG_KEY_1 = `http.${authoritativeUrl}.extraheader`;
+    env.GIT_CONFIG_VALUE_1 = `AUTHORIZATION: basic ${Buffer.from(`x-access-token:${token}`).toString("base64")}`;
+    env.GIT_CONFIG_KEY_2 = "credential.helper";
+    env.GIT_CONFIG_VALUE_2 = "";
+    env.GIT_CONFIG_KEY_3 = `http.${authoritativeUrl}.followRedirects`;
+    env.GIT_CONFIG_VALUE_3 = "false";
+    env.GIT_CONFIG_KEY_4 = `http.${authoritativeUrl}.sslVerify`;
+    env.GIT_CONFIG_VALUE_4 = "true";
+    env.GIT_CONFIG_KEY_5 = `credential.${authoritativeUrl}.helper`;
+    env.GIT_CONFIG_VALUE_5 = "";
+  }
   return execFileSync(
     "git",
     [
@@ -737,7 +755,8 @@ export function createRemotePromotionControlStore(
 function remoteTransport(
   root: string,
   remote: string,
-  protocol: "https" | "file"
+  protocol: "https" | "file",
+  token?: string
 ): PromotionControlTransport {
   // Local credential helpers remain available. Reject URL rewrites so the
   // authoritative HTTPS endpoint cannot be redirected by repository config.
@@ -767,7 +786,7 @@ function remoteTransport(
   const run = (args: string[]): Buffer => {
     checkEndpoint();
     try {
-      return git(root, args, undefined, protocol);
+      return git(root, args, undefined, protocol, token);
     } catch {
       // Do not expose stderr: helper failures and URLs can contain credentials.
       throw new Error(
@@ -846,8 +865,14 @@ function remoteTransport(
  * and inherited Git config is excluded. Construction never contacts GitHub.
  */
 export function createAuthoritativePromotionControlTransport(
-  repositoryRoot: string
+  repositoryRoot: string,
+  credentials?: { token: string }
 ): PromotionControlTransport {
+  if (credentials && !/^[\x21-\x7e]{1,4096}$/.test(credentials.token)) {
+    throw new Error(
+      "Promotion transport requires a nonempty printable credential"
+    );
+  }
   const root = repository(repositoryRoot);
   const origin = git(root, ["remote", "get-url", "origin"]).toString().trim();
   if (!allowedOrigins.has(origin)) {
@@ -855,7 +880,7 @@ export function createAuthoritativePromotionControlTransport(
       "Promotion transport requires the authoritative Zivv origin"
     );
   }
-  return remoteTransport(root, authoritativeUrl, "https");
+  return remoteTransport(root, authoritativeUrl, "https", credentials?.token);
 }
 
 /** Explicit offline fixture adapter: only a real bare repository under OS tmp. */

@@ -1,8 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { isAbsolute, join, relative, resolve } from "node:path";
+import { createLocalPromotionControlStore } from "../../lib/ingestion/promotion-control-git.js";
 import {
   applyPromotionTransition,
   authorizePromotionDeployment,
+  authorizePagesCreation,
   candidatePublicReleaseId,
   claimPromotion,
   createCompletionProof,
@@ -10,6 +16,7 @@ import {
   EMPTY_COMPLETION_TREE,
   parsePromotionControl,
   promotionAttemptId,
+  pagesCreationId,
   promotionDigest,
   serializePromotionControl,
   validatePromotionAppend,
@@ -200,6 +207,65 @@ function rehash(value: PromotionControl) {
   const { stateId: _stateId, ...body } = value;
   return { ...body, stateId: promotionDigest(body) };
 }
+function pagesIntent(
+  state: PromotionControl,
+  mode: PromotionMode = "promote",
+  nonce = "7".repeat(64)
+): Extract<PromotionEvent, { type: "pages-create-intent" }> {
+  const attemptInput = attempt(state, mode);
+  const current = currentAttempt(state, mode);
+  const creationNumber = (current.pagesCreation?.creationNumber ?? 0) + 1;
+  return {
+    type: "pages-create-intent",
+    ...attemptInput,
+    creationNumber,
+    nonce,
+    creationId: pagesCreationId(
+      attemptInput.operationId,
+      attemptInput.attemptId,
+      creationNumber,
+      nonce
+    ),
+    artifactId: mode === "promote" ? "201" : "202",
+    admission: current.admission!,
+  };
+}
+function pagesAuthorization(
+  state: PromotionControl,
+  mode: PromotionMode = "promote"
+) {
+  const current = currentAttempt(state, mode);
+  return {
+    ...attempt(state, mode),
+    admission: current.admission!,
+    creationId: current.pagesCreation!.creationId,
+  };
+}
+function attachPages(
+  state: PromotionControl,
+  mode: PromotionMode = "promote",
+  deploymentId = mode === "promote" ? "301" : "302"
+) {
+  return step(state, {
+    type: "deployed",
+    ...attempt(state, mode),
+    creationId: currentAttempt(state, mode).pagesCreation!.creationId,
+    deployment: { ...deployment(state, mode), deploymentId },
+  });
+}
+function rejectPages(
+  state: PromotionControl,
+  mode: PromotionMode = "promote",
+  httpStatus = 403
+) {
+  return step(state, {
+    type: "pages-create-rejected",
+    ...attempt(state, mode),
+    creationId: currentAttempt(state, mode).pagesCreation!.creationId,
+    httpStatus,
+    rejectionReceiptId: "8".repeat(64),
+  });
+}
 function reseal(value: PromotionVerification) {
   const { receiptId: _receiptId, ...body } = value;
   return { ...body, receiptId: promotionDigest(body) };
@@ -307,6 +373,125 @@ describe("promotion ownership and bootstrap", () => {
 });
 
 describe("durable dispatch fencing and exact effects", () => {
+  it("retains strict optional dispatch nonce through uncertainty and admission while preserving old bytes", () => {
+    const initial = claimed();
+    const old = planned(initial);
+    expect(Object.hasOwn(old.active!.promotionAttempt!, "dispatchNonce")).toBe(
+      false
+    );
+    const oldBytes = serializePromotionControl(old);
+    expect(serializePromotionControl(parsePromotionControl(oldBytes))).toEqual(
+      oldBytes
+    );
+    const event = { ...intent(initial), dispatchNonce: "7".repeat(64) };
+    const state = step(initial, event);
+    expect(state.active!.promotionAttempt!.dispatchNonce).toBe(
+      event.dispatchNonce
+    );
+    expect(step(state, event)).toEqual(state);
+    expect(() =>
+      step(state, { ...event, dispatchNonce: "8".repeat(64) })
+    ).toThrow("dispatch nonce replay");
+    expect(() => step(state, intent(initial))).toThrow(
+      "dispatch nonce replay presence"
+    );
+    const uncertain = step(state, {
+      type: "dispatch-uncertain",
+      ...attempt(state),
+    });
+    expect(uncertain.active!.promotionAttempt!.dispatchNonce).toBe(
+      event.dispatchNonce
+    );
+    expect(() =>
+      step(uncertain, { ...event, dispatchNonce: "8".repeat(64) })
+    ).toThrow("dispatch nonce replay");
+    const active = admitted(uncertain);
+    expect(active.active!.promotionAttempt!.dispatchNonce).toBe(
+      event.dispatchNonce
+    );
+    expect(() => step(initial, { ...event, dispatchNonce: "bad" })).toThrow(
+      "SHA256"
+    );
+  });
+
+  it("makes competing same-time prepared native Git intents distinct and admits only the first CAS", () => {
+    const directory = mkdtempSync(join(tmpdir(), "zivv-dispatch-nonce-cas-"));
+    const offset = relative(resolve(tmpdir()), resolve(directory));
+    if (
+      !offset ||
+      offset === ".." ||
+      offset.startsWith("../") ||
+      offset.startsWith("..\\") ||
+      isAbsolute(offset)
+    )
+      throw new Error("Temporary dispatch fixture escaped its intended root");
+    const gitEnv = { ...process.env };
+    for (const key of Object.keys(gitEnv))
+      if (key.startsWith("GIT_")) delete gitEnv[key];
+    try {
+      execFileSync("git", ["init", "--quiet", "--object-format=sha1"], {
+        cwd: directory,
+        env: gitEnv,
+        stdio: ["pipe", "pipe", "pipe"],
+        windowsHide: true,
+      });
+      const store = createLocalPromotionControlStore({
+        repositoryRoot: directory,
+        destination: "production",
+        validateState: (bytes, destination) => {
+          const state = parsePromotionControl(bytes);
+          expect(state.destination).toBe(destination);
+          return state.completionRoot;
+        },
+        validateTransition: validatePromotionAppend,
+      });
+      const createdAt = "2026-10-14T18:00:00.000Z";
+      const fixture = createPromotionControlFixture();
+      const bootstrap = store.compareAndAppend({
+        expectedHead: null,
+        bytes: serializePromotionControl(fixture.state),
+        createdAt,
+      });
+      expect(bootstrap.status).toBe("appended");
+      const owner = claim(fixture.state, fixture.request);
+      const owned = store.compareAndAppend({
+        expectedHead: bootstrap.attemptedHead,
+        bytes: serializePromotionControl(owner),
+        createdAt,
+      });
+      expect(owned.status).toBe("appended");
+      const first = step(owner, {
+        ...intent(owner),
+        dispatchNonce: "7".repeat(64),
+      });
+      const second = step(owner, {
+        ...intent(owner),
+        dispatchNonce: "8".repeat(64),
+      });
+      const firstPrepared = store.prepareAppend({
+        expectedHead: owned.attemptedHead,
+        bytes: serializePromotionControl(first),
+        createdAt,
+      });
+      const secondPrepared = store.prepareAppend({
+        expectedHead: owned.attemptedHead,
+        bytes: serializePromotionControl(second),
+        createdAt,
+      });
+      expect(firstPrepared.attemptedHead).not.toBe(
+        secondPrepared.attemptedHead
+      );
+      expect(firstPrepared.expectedHead).toBe(secondPrepared.expectedHead);
+      expect(firstPrepared.createdAt).toBe(secondPrepared.createdAt);
+      expect(store.compareAndAppend(firstPrepared).status).toBe("appended");
+      const losing = store.compareAndAppend(secondPrepared);
+      expect(losing.status).toBe("conflict");
+      expect(losing.observedHead).toBe(firstPrepared.attemptedHead);
+      expect(store.read().bytes).toEqual(firstPrepared.bytes);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  }, 30000);
   it("authorizes only the current admitted run and exact public target", () => {
     const state = admitted();
     const input = {
@@ -786,4 +971,303 @@ describe("bounded native Git completion index and strict append validation", () 
     expect(JSON.stringify(state)).not.toContain("history");
     expect(JSON.stringify(state)).not.toContain("promotionAttempts");
   }, 60000);
+});
+
+describe("durable single-shot Pages creation intent", () => {
+  it("preserves exact old v1 shapes, hashes and legacy direct deployment", () => {
+    const state = admitted();
+    const oldBytes = serializePromotionControl(state);
+    expect(
+      Object.hasOwn(state.active!.promotionAttempt!, "pagesCreation")
+    ).toBe(false);
+    expect(serializePromotionControl(parsePromotionControl(oldBytes))).toEqual(
+      oldBytes
+    );
+    const legacy = deployed(state);
+    expect(legacy.schemaVersion).toBe(1);
+    expect(
+      Object.hasOwn(legacy.active!.promotionAttempt!, "pagesCreation")
+    ).toBe(false);
+    expect(Object.hasOwn(legacy.lastTransition.event, "creationId")).toBe(
+      false
+    );
+    expect(acknowledged(verified(legacy)).completedCount).toBe(1);
+  });
+
+  it.each(["promote", "rollback"] as const)(
+    "persists %s creation identity before authorization",
+    (mode) => {
+      const admittedState =
+        mode === "promote"
+          ? admitted()
+          : admitted(planned(failed(), "rollback"), "rollback");
+      const event = pagesIntent(admittedState, mode);
+      const requested = step(admittedState, event);
+      expect(requested.active!.phase).toBe(
+        mode === "promote"
+          ? "deployment-requested"
+          : "rollback-deployment-requested"
+      );
+      expect(currentAttempt(requested, mode).status).toBe("creation-requested");
+      expect(currentAttempt(requested, mode).pagesCreation!.creationId).toBe(
+        event.creationId
+      );
+      expect(requested.lastVerified).toEqual(admittedState.lastVerified);
+      const authorized = authorizePagesCreation(
+        requested,
+        pagesAuthorization(requested, mode)
+      );
+      expect(authorized.creationId).toBe(event.creationId);
+      expect(authorized.artifactId).toBe(event.artifactId);
+      expect(authorized.candidateId).toBe(
+        mode === "promote" ? requested.active!.request.candidateId : null
+      );
+      expect(() =>
+        authorizePromotionDeployment(requested, {
+          ...attempt(requested, mode),
+          admission: currentAttempt(requested, mode).admission!,
+        })
+      ).toThrow("transition");
+      expect(() =>
+        authorizePagesCreation(requested, {
+          ...pagesAuthorization(requested, mode),
+          creationId: digest,
+        })
+      ).toThrow("authorized Pages creation identity");
+      expect(() =>
+        authorizePagesCreation(requested, {
+          ...pagesAuthorization(requested, mode),
+          admission: { workflowCommit, runId: "999", runAttempt: 1 },
+        })
+      ).toThrow("authorized Pages creation admission");
+    }
+  );
+
+  it.each(["promote", "rollback"] as const)(
+    "retains %s owner on lost response and rejects every blind retry or release",
+    (mode) => {
+      const admittedState =
+        mode === "promote"
+          ? admitted()
+          : admitted(planned(failed(), "rollback"), "rollback");
+      const requested = step(admittedState, pagesIntent(admittedState, mode));
+      const restart = parsePromotionControl(
+        serializePromotionControl(requested)
+      );
+      expect(restart).toEqual(requested);
+      expect(() =>
+        step(restart, pagesIntent(restart, mode, "9".repeat(64)))
+      ).toThrow("transition");
+      expect(() => step(restart, admission(restart, mode))).toThrow(
+        "Unresolved Pages creation"
+      );
+      expect(() =>
+        step(restart, {
+          type: "fence-dispatch",
+          ...attempt(restart, mode),
+          fenceReceiptId: digest,
+        })
+      ).toThrow("Unresolved Pages creation");
+      expect(() => failed(restart, mode)).toThrow("Unresolved Pages creation");
+      expect(() =>
+        planned(restart, mode === "promote" ? "rollback" : "promote")
+      ).toThrow("transition");
+      expect(() => claim(restart, request(restart, "competing"))).toThrow(
+        "active owner request"
+      );
+      // Exact intent reconciliation changes no state and therefore cannot win a NEW CAS.
+      expect(step(restart, requested.lastTransition.event)).toEqual(restart);
+      expect(() =>
+        validatePromotionControlTransition(restart, restart)
+      ).toThrow("append predecessor");
+    }
+  );
+
+  it.each([408, 500, 502, 503, 200, 302])(
+    "refuses uncertain HTTP %s as no-create evidence",
+    (status) => {
+      const admittedState = admitted();
+      const requested = step(admittedState, pagesIntent(admittedState));
+      expect(() => rejectPages(requested, "promote", status)).toThrow(
+        "definitive 4xx"
+      );
+      expect(currentAttempt(requested, "promote").pagesCreation!.status).toBe(
+        "requested"
+      );
+    }
+  );
+
+  it.each([400, 401, 403, 404, 422, 429])(
+    "accepts exact definitive POST rejection %s before a fresh intent",
+    (status) => {
+      const admittedState = admitted();
+      const firstEvent = pagesIntent(admittedState);
+      const first = step(admittedState, firstEvent);
+      const rejected = rejectPages(first, "promote", status);
+      expect(rejected.active!.phase).toBe("admitted");
+      expect(
+        rejected.active!.promotionAttempt!.pagesCreation!.rejectionHttpStatus
+      ).toBe(status);
+      expect(() =>
+        authorizePagesCreation(rejected, pagesAuthorization(rejected))
+      ).toThrow("transition");
+      expect(step(rejected, firstEvent)).toEqual(rejected);
+      expect(() => attachPages(rejected)).toThrow("Rejected Pages creation");
+      const secondEvent = pagesIntent(rejected, "promote", "9".repeat(64));
+      const second = step(rejected, secondEvent);
+      expect(secondEvent.creationNumber).toBe(2);
+      expect(secondEvent.creationId).not.toBe(firstEvent.creationId);
+      expect(() =>
+        step(second, {
+          type: "pages-create-rejected",
+          ...attempt(second),
+          creationId: firstEvent.creationId,
+          httpStatus: status,
+          rejectionReceiptId: digest,
+        })
+      ).toThrow("Stale Pages creation rejection");
+      expect(() =>
+        step(second, {
+          type: "deployed",
+          ...attempt(second),
+          creationId: firstEvent.creationId,
+          deployment: deployment(second),
+        })
+      ).toThrow("deployed Pages creation identity");
+    }
+  );
+
+  it("binds creation to owner, current attempt, nonce, monotonic count, artifact and admission", () => {
+    const admittedState = admitted();
+    const event = pagesIntent(admittedState);
+    expect(() => step(admittedState, { ...event, creationId: digest })).toThrow(
+      "Pages creation identity"
+    );
+    expect(() => step(admittedState, { ...event, creationNumber: 2 })).toThrow(
+      "next Pages creation number"
+    );
+    expect(() =>
+      step(admittedState, {
+        ...event,
+        admission: { ...event.admission, runId: "999" },
+      })
+    ).toThrow("Pages creation admitted run");
+    const requested = step(admittedState, event);
+    expect(() =>
+      step(requested, {
+        type: "deployed",
+        ...attempt(requested),
+        deployment: deployment(requested),
+      })
+    ).toThrow();
+    expect(() =>
+      step(requested, {
+        type: "deployed",
+        ...attempt(requested),
+        creationId: event.creationId,
+        deployment: { ...deployment(requested), artifactId: "999" },
+      })
+    ).toThrow("deployed Pages artifact");
+    expect(() => step(requested, { ...event, artifactId: "999" })).toThrow(
+      "Pages creation intent replay"
+    );
+    expect(() =>
+      step(requested, {
+        type: "pages-create-rejected",
+        ...attempt(requested),
+        creationId: event.creationId,
+        httpStatus: 403,
+        rejectionReceiptId: "invalid",
+      })
+    ).toThrow("SHA256");
+    expect(() =>
+      step(requested, {
+        type: "pages-create-rejected",
+        ...attempt(requested),
+        creationId: digest,
+        httpStatus: 403,
+        rejectionReceiptId: digest,
+      })
+    ).toThrow("Stale Pages creation rejection");
+  });
+
+  it.each(["301", "a".repeat(40), "12345678-1234-1234-1234-123456789abc"])(
+    "attaches exact known Pages ID %s without another create",
+    (deploymentId) => {
+      const admittedState = admitted();
+      const requested = step(admittedState, pagesIntent(admittedState));
+      const attached = attachPages(requested, "promote", deploymentId);
+      expect(attached.active!.phase).toBe("deployed");
+      expect(attached.active!.promotionAttempt!.pagesCreation!.status).toBe(
+        "attached"
+      );
+      expect(attached.active!.promotionAttempt!.deployment!.deploymentId).toBe(
+        deploymentId
+      );
+      expect(step(attached, attached.lastTransition.event)).toEqual(attached);
+      expect(() =>
+        authorizePagesCreation(attached, pagesAuthorization(attached))
+      ).toThrow("transition");
+      expect(() =>
+        step(attached, {
+          ...attached.lastTransition.event,
+          creationId: digest,
+        } as PromotionEvent)
+      ).toThrow("deployed Pages creation identity");
+      expect(attached.lastVerified.kind).toBe("legacyPublicSnapshot");
+    }
+  );
+
+  it("finishes normal verification and acknowledgement after attaching the exact ID", () => {
+    const admittedState = admitted();
+    const attached = attachPages(
+      step(admittedState, pagesIntent(admittedState))
+    );
+    const completed = acknowledged(verified(attached));
+    expect(completed.active).toBeNull();
+    expect(completed.lastVerified.kind).toBe("candidateRelease");
+    expect(
+      proof(completed, attached.active!.request.requestId).record!.verification
+        .deployment.deploymentId
+    ).toBe("301");
+  });
+
+  it("keeps counters and only the latest creation across 100 definitive rejection retries", () => {
+    let state = admitted();
+    const initialBytes = serializePromotionControl(state).length;
+    let maximum = 0;
+    for (let counter = 1; counter <= 100; counter++) {
+      const event = pagesIntent(state, "promote", promotionDigest(counter));
+      state = step(state, event);
+      expect(
+        state.active!.promotionAttempt!.pagesCreation!.creationNumber
+      ).toBe(counter);
+      state = rejectPages(state);
+      maximum = Math.max(maximum, serializePromotionControl(state).length);
+    }
+    expect(maximum).toBeLessThan(initialBytes + 1500);
+    expect(JSON.stringify(state)).not.toContain("creations");
+  });
+
+  it("rejects rehashed malformed requested state and forged release of an uncertain effect", () => {
+    const admittedState = admitted();
+    const requested = step(admittedState, pagesIntent(admittedState));
+    const forged = JSON.parse(JSON.stringify(requested)) as PromotionControl;
+    forged.active!.promotionAttempt!.pagesCreation!.nonce = digest;
+    expect(() => parsePromotionControl(rehash(forged))).toThrow(
+      "Pages creation identity"
+    );
+    const cleared = JSON.parse(JSON.stringify(requested)) as PromotionControl;
+    delete cleared.active!.promotionAttempt!.pagesCreation;
+    cleared.active!.promotionAttempt!.status = "admitted";
+    cleared.active!.phase = "admitted";
+    cleared.lastTransition.event = admission(cleared);
+    cleared.lastTransition.previousStateId = requested.stateId;
+    cleared.revision = requested.revision + 1;
+    const rehashed = rehash(cleared);
+    expect(parsePromotionControl(rehashed)).toEqual(rehashed);
+    expect(() =>
+      validatePromotionControlTransition(requested, rehashed)
+    ).toThrow("Unresolved Pages creation");
+  });
 });
