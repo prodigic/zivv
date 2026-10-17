@@ -55,6 +55,9 @@ function fixture() {
   const store: PromotionControlStore = {
     ref: "refs/heads/zivv-promotion-control/production",
     read: () => ({ head, bytes: serializePromotionControl(state) }),
+    readAt: () => {
+      throw new Error("Unused native history fixture");
+    },
     readCompletionObject: () => {
       throw new Error("Unused completion fixture");
     },
