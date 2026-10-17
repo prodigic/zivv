@@ -39,6 +39,8 @@ export interface DataManifest {
   datasetVersion: string; // e.g., "2024-08-15T10:30:00Z"
   /** Logical digest of the captured authoritative ledger; absent in legacy exports. */
   sourceLedgerRevision?: string;
+  /** Exact effective ETL configuration inventory digest; absent in legacy exports. */
+  sourceConfigurationSha256?: string;
   lastUpdated: number; // epoch milliseconds
   latestIngestionDate: string; // ISO date of the most recent event batch (YYYY-MM-DD)
   weeklyEdition?: WeeklyEditionSummary;

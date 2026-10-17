@@ -19,6 +19,7 @@ let resolvedSiteBase = siteBase;
 export default defineConfig({
   cacheDir: ".cache/vite",
   base: siteBase,
+  build: { manifest: process.env.ZIVV_CANDIDATE_BUILD === "1" },
   plugins: [
     react(),
     {

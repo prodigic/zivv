@@ -10,9 +10,18 @@ export function buildEventSlugRedirects(
 ): NonNullable<DataIndexes["eventSlugRedirects"]> {
   const path = join(root, "data/event-slug-redirects.json");
   if (!existsSync(path)) return {};
-  const rows: { slug: string; eventId: number; source: string }[] = JSON.parse(
-    readFileSync(path, "utf8")
+  return buildCapturedEventSlugRedirects(
+    JSON.parse(readFileSync(path, "utf8")),
+    events
   );
+}
+
+/** Resolve a captured redirect registry against the exact export catalog. */
+export function buildCapturedEventSlugRedirects(
+  value: unknown,
+  events: Event[]
+): NonNullable<DataIndexes["eventSlugRedirects"]> {
+  const rows = value as { slug: string; eventId: number; source: string }[];
   if (!Array.isArray(rows)) throw new Error("Invalid event slug redirects");
   const result: NonNullable<DataIndexes["eventSlugRedirects"]> = {};
   for (const row of rows) {

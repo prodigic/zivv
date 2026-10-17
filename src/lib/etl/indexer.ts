@@ -23,7 +23,8 @@ export class DataIndexer {
   static buildIndexes(
     events: Event[],
     artists: Artist[],
-    venues: Venue[]
+    venues: Venue[],
+    now: number = Date.now()
   ): DataIndexes {
     const eventsByDate: Record<string, EventId[]> = {};
     const eventsByVenue: Record<VenueId, EventId[]> = {};
@@ -80,10 +81,10 @@ export class DataIndexer {
     }
 
     // Build aggregated data
-    const cities = this.buildCityInfo(events, venues);
+    const cities = this.buildCityInfo(events, venues, now);
     const ageRestrictions = this.extractAgeRestrictions(events);
     const priceRanges = this.buildPriceRangeInfo(events);
-    const searchIndex = this.buildSearchIndexInfo(events, artists, venues);
+    const searchIndex = this.buildSearchIndexInfo(events, artists, venues, now);
 
     return {
       eventsByDate,
@@ -100,7 +101,11 @@ export class DataIndexer {
     };
   }
 
-  private static buildCityInfo(events: Event[], venues: Venue[]): CityInfo[] {
+  private static buildCityInfo(
+    events: Event[],
+    venues: Venue[],
+    now: number
+  ): CityInfo[] {
     const cityStats: Record<
       string,
       {
@@ -123,7 +128,6 @@ export class DataIndexer {
     }
 
     // Count events per city
-    const now = Date.now();
     for (const event of events) {
       const venue = venues.find((v) => v.id === event.venueId);
       if (!venue) continue;
@@ -198,7 +202,8 @@ export class DataIndexer {
   private static buildSearchIndexInfo(
     events: Event[],
     artists: Artist[],
-    venues: Venue[]
+    venues: Venue[],
+    now: number
   ): SearchIndexInfo {
     const totalDocuments = events.length + artists.length + venues.length;
     const fields = ["name", "description", "city", "tags"];
@@ -207,7 +212,7 @@ export class DataIndexer {
     const estimatedSize = totalDocuments * 200; // bytes per document average
 
     return {
-      indexedAt: Date.now(),
+      indexedAt: now,
       totalDocuments,
       fields,
       size: estimatedSize,

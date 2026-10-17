@@ -20,9 +20,18 @@ export function applyVenueLocationCorrections(
 ): void {
   const path = join(root, "data/venue-location-corrections.json");
   if (!existsSync(path)) return;
-  const corrections: VenueLocationCorrection[] = JSON.parse(
-    readFileSync(path, "utf8")
+  applyVenueLocationCorrectionEntries(
+    venues,
+    JSON.parse(readFileSync(path, "utf8"))
   );
+}
+
+/** Apply a captured registry without rereading mutable workspace files. */
+export function applyVenueLocationCorrectionEntries(
+  venues: Venue[],
+  value: unknown
+): void {
+  const corrections = value as VenueLocationCorrection[];
   if (!Array.isArray(corrections))
     throw new Error("Invalid venue location corrections");
   const ids = new Set<number>();
