@@ -6,6 +6,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -325,7 +326,8 @@ describe("weekly candidate stages with real sealed bundles", () => {
       githubToken = "ghp_isolated_publication_fixture";
     let lostResponse = false,
       provideRun = true,
-      retainWrites = 0;
+      retainWrites = 0,
+      interruptClaim = false;
     const response = (value: unknown) =>
       new Response(JSON.stringify(value), { status: 200 });
     const fetcher: typeof fetch = async (url, options) => {
@@ -404,7 +406,12 @@ describe("weekly candidate stages with real sealed bundles", () => {
           input.bytes.toString("base64")
         );
       }
-      return compare(input);
+      const result = compare(input);
+      if (interruptClaim && control.lastTransition.event.type === "claim") {
+        interruptClaim = false;
+        throw new Error("Crash after accepted native claim");
+      }
+      return result;
     });
     const publication = {
       store,
@@ -505,6 +512,42 @@ describe("weekly candidate stages with real sealed bundles", () => {
       finishNative,
       claimAnother,
       retainedWrites: () => retainWrites,
+      nativeAppends: () => vi.mocked(store.compareAndAppend).mock.calls.length,
+      interruptAfterClaim: () => {
+        interruptClaim = true;
+      },
+      removeArtifactRef: (conflict = false) => {
+        const current = store.read();
+        const payloadCommit = parsePromotionControl(current.bytes!).active!
+          .request.payloadCommit;
+        const ref = `refs/heads/zivv-candidate-artifacts/${payloadCommit}`;
+        let conflictingCommit: string | undefined;
+        if (conflict) {
+          const original = execFileSync(
+            "git",
+            ["cat-file", "commit", payloadCommit],
+            { cwd: bare, windowsHide: true }
+          );
+          conflictingCommit = execFileSync(
+            "git",
+            ["hash-object", "-w", "--stdin", "-t", "commit"],
+            {
+              cwd: bare,
+              windowsHide: true,
+              input: Buffer.concat([original, Buffer.from("\n")]),
+            }
+          )
+            .toString()
+            .trim();
+        }
+        execFileSync(
+          "git",
+          conflict
+            ? ["update-ref", ref, conflictingCommit!]
+            : ["update-ref", "-d", ref],
+          { cwd: bare, windowsHide: true }
+        );
+      },
       loseResponse: () => {
         lostResponse = true;
       },
@@ -1012,6 +1055,191 @@ describe("weekly candidate stages with real sealed bundles", () => {
       db.close();
     }
   }, 90_000);
+
+  it.each([false, true])(
+    "recovers an accepted canonical weekly claim after losing its plan (dispatch file also lost %s) without replacement effects",
+    async (loseDispatch) => {
+      const f = await publicationFixture();
+      await f.run("dispatch");
+      const originalPlan = readFileSync(f.planPath),
+        originalDispatch = JSON.parse(readFileSync(f.dispatchPath, "utf8")),
+        head = f.store.read().head,
+        appends = f.nativeAppends(),
+        requests = f.requests.length,
+        digest = catalogDigest(),
+        weekly = readFileSync(
+          join(root, "data/ingestion/weekly-editions.json")
+        );
+      unlinkSync(f.planPath);
+      if (loseDispatch) unlinkSync(f.dispatchPath);
+      const result = await f.run("dispatch");
+      expect(
+        result.stages.find((item) => item.stage === "deploy")
+      ).toMatchObject({ status: "running", attempt: 1 });
+      expect(readFileSync(f.planPath)).toEqual(originalPlan);
+      expect(JSON.parse(readFileSync(f.dispatchPath, "utf8"))).toEqual(
+        originalDispatch
+      );
+      expect(f.nativeAppends()).toBe(appends);
+      expect(f.retainedWrites()).toBe(1);
+      expect(f.store.read().head).toBe(head);
+      expect(f.requests.slice(requests)).toHaveLength(1);
+      expect(
+        f.requests.slice(requests).every((request) => request.method === "GET")
+      ).toBe(true);
+      expect(
+        f.requests.filter((request) => request.method === "POST")
+      ).toHaveLength(1);
+      expect(catalogDigest()).toBe(digest);
+      expect(
+        readFileSync(join(root, "data/ingestion/weekly-editions.json"))
+      ).toEqual(weekly);
+      expect(doubles.build).toHaveBeenCalledTimes(1);
+    },
+    90_000
+  );
+
+  it("recovers an accepted canonical weekly claim before first dispatch without another claim or retention write", async () => {
+    const f = await publicationFixture();
+    f.interruptAfterClaim();
+    await expect(f.run("dispatch")).rejects.toThrow(
+      "Crash after accepted native claim"
+    );
+    const original = readFileSync(f.planPath),
+      active = parsePromotionControl(f.store.read().bytes!).active!,
+      appends = f.nativeAppends();
+    expect(active.phase).toBe("claimed");
+    expect(f.requests).toHaveLength(0);
+    expect(existsSync(f.dispatchPath)).toBe(false);
+    expect(f.retainedWrites()).toBe(1);
+    unlinkSync(f.planPath);
+    await f.run("dispatch");
+    expect(readFileSync(f.planPath)).toEqual(original);
+    expect(f.nativeAppends()).toBe(appends + 1);
+    expect(
+      parsePromotionControl(
+        vi.mocked(f.store.compareAndAppend).mock.calls.at(-1)![0].bytes
+      ).lastTransition.event.type
+    ).toBe("dispatch-intent");
+    expect(
+      parsePromotionControl(f.store.read().bytes!).active!.operationId
+    ).toBe(active.operationId);
+    expect(f.retainedWrites()).toBe(1);
+    expect(
+      f.requests.filter((request) => request.method === "POST")
+    ).toHaveLength(1);
+  }, 90_000);
+
+  it.each(["missing", "conflicting"])(
+    "refuses canonical weekly claim recovery with a %s immutable payload ref without replacing it",
+    async (problem) => {
+      const f = await publicationFixture();
+      await f.run("dispatch");
+      unlinkSync(f.planPath);
+      f.removeArtifactRef(problem === "conflicting");
+      const head = f.store.read().head,
+        appends = f.nativeAppends(),
+        requests = f.requests.length,
+        weekly = readFileSync(
+          join(root, "data/ingestion/weekly-editions.json")
+        ),
+        digest = catalogDigest();
+      await expect(f.run("dispatch")).rejects.toThrow();
+      expect(existsSync(f.planPath)).toBe(false);
+      expect(f.store.read().head).toBe(head);
+      expect(f.nativeAppends()).toBe(appends);
+      expect(f.retainedWrites()).toBe(1);
+      expect(f.requests).toHaveLength(requests);
+      expect(
+        readFileSync(join(root, "data/ingestion/weekly-editions.json"))
+      ).toEqual(weekly);
+      expect(catalogDigest()).toBe(digest);
+    },
+    90_000
+  );
+
+  it("refuses to recreate a disappeared artifact ref on a later retry of a reconstructed accepted claim plan", async () => {
+    const f = await publicationFixture();
+    await f.run("dispatch");
+    const original = readFileSync(f.planPath);
+    unlinkSync(f.planPath);
+    await expect(
+      f.run("dispatch", (event) => {
+        if (event.stage === "deploy" && event.phase === "artifact-saved")
+          throw new Error("Pause reconstructed claim plan");
+      })
+    ).rejects.toThrow("Pause reconstructed claim plan");
+    expect(readFileSync(f.planPath)).toEqual(original);
+    f.removeArtifactRef();
+    const head = f.store.read().head,
+      appends = f.nativeAppends(),
+      requests = f.requests.length;
+    await expect(f.run("dispatch")).rejects.toThrow(
+      "Accepted publication artifact is missing or changed"
+    );
+    expect(readFileSync(f.planPath)).toEqual(original);
+    expect(f.store.read().head).toBe(head);
+    expect(f.nativeAppends()).toBe(appends);
+    expect(f.retainedWrites()).toBe(1);
+    expect(f.requests).toHaveLength(requests);
+  }, 90_000);
+
+  it("refuses a different workflow pin when recovering an accepted canonical weekly claim", async () => {
+    const f = await publicationFixture();
+    await f.run("dispatch");
+    unlinkSync(f.planPath);
+    const head = f.store.read().head,
+      appends = f.nativeAppends(),
+      requests = f.requests.length;
+    f.publication.workflowCommit = "d".repeat(40);
+    await expect(f.run("dispatch")).rejects.toThrow();
+    expect(existsSync(f.planPath)).toBe(false);
+    expect(f.store.read().head).toBe(head);
+    expect(f.nativeAppends()).toBe(appends);
+    expect(f.retainedWrites()).toBe(1);
+    expect(f.requests).toHaveLength(requests);
+  }, 90_000);
+
+  it.each(["incomplete", "ambiguous"])(
+    "refuses %s canonical weekly claim history before restoring metadata or effects",
+    async (problem) => {
+      const f = await publicationFixture();
+      await f.run("dispatch");
+      unlinkSync(f.planPath);
+      const read = f.store.readCanonicalHistory!;
+      f.store.readCanonicalHistory = (options) => {
+        const history = read(options);
+        if (problem === "incomplete") history.complete = false;
+        else {
+          const claim = history.commits.find(
+            (entry) =>
+              parsePromotionControl(entry.bytes).lastTransition.event.type ===
+              "claim"
+          );
+          if (!claim) throw new Error("Missing canonical fixture claim");
+          history.commits.push({
+            ...claim,
+            bytes: Buffer.from(claim.bytes),
+            parentBytes:
+              claim.parentBytes === null
+                ? null
+                : Buffer.from(claim.parentBytes),
+          });
+        }
+        return history;
+      };
+      const head = f.store.read().head,
+        appends = f.nativeAppends(),
+        requests = f.requests.length;
+      await expect(f.run("dispatch")).rejects.toThrow();
+      expect(existsSync(f.planPath)).toBe(false);
+      expect(f.store.read().head).toBe(head);
+      expect(f.nativeAppends()).toBe(appends);
+      expect(f.retainedWrites()).toBe(1);
+      expect(f.requests).toHaveLength(requests);
+    },
+    90_000
+  );
 
   it("keeps uncertain weekly dispatch pending and never repeats POST when recovery cannot find a run", async () => {
     const f = await publicationFixture();
