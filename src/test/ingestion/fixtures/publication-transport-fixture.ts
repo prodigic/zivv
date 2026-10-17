@@ -9,8 +9,7 @@ import {
 const hash = (bytes: Buffer | string) =>
   createHash("sha256").update(bytes).digest("hex");
 /** Synthetic, keyless transport fixture; authenticated private preparation is tested separately. */
-export function publicationTransportFixture() {
-  const sourceCommit = "a".repeat(40);
+export function publicationTransportFixture(sourceCommit = "a".repeat(40)) {
   const basePath = "/zivv/";
   const publicFiles = new Map([
     [

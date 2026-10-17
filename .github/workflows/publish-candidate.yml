@@ -1,0 +1,198 @@
+name: Publish retained candidate to GitHub Pages
+run-name: zivv-pages/${{ inputs.operation_id }}/${{ inputs.mode }}/${{ inputs.attempt_id }}
+
+# Optional until the existing manual publisher joins durable promotion control.
+# Dispatch this reviewed code at refs/tags/zivv-workflows/<workflow commit SHA>.
+on:
+  workflow_dispatch:
+    inputs:
+      request_id:
+        description: Persisted promotion request ID
+        required: true
+        type: string
+      operation_id:
+        description: Persisted destination operation ID
+        required: true
+        type: string
+      attempt_id:
+        description: Planned workflow attempt ID
+        required: true
+        type: string
+      control_head:
+        description: Exact expected promotion-control commit SHA
+        required: true
+        type: string
+      payload_commit:
+        description: Exact retained publication payload commit SHA
+        required: true
+        type: string
+      candidate_id:
+        description: Independently trusted candidate ID
+        required: true
+        type: string
+      source_commit:
+        description: Reviewed source commit SHA bound to the candidate
+        required: true
+        type: string
+      mode:
+        description: Planned promotion or public rollback
+        required: true
+        type: choice
+        options: [promote, rollback]
+      destination:
+        description: Closed destination policy; routing preview remains separate
+        required: true
+        type: choice
+        options: [production]
+
+permissions:
+  contents: read
+
+# Match the maintained publisher; durable control, rather than queue order,
+# authorizes each effect. Activation also requires that publisher to join control.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  activation:
+    runs-on: ubuntu-latest
+    env:
+      ZIVV_CONTROLLED_PUBLISHING: ${{ vars.ZIVV_CONTROLLED_PUBLISHING }}
+      ZIVV_MANUAL_PUBLISHER_JOINED: ${{ vars.ZIVV_MANUAL_PUBLISHER_JOINED }}
+    steps:
+      - name: Require verified activation prerequisites
+        run: |
+          node --input-type=module <<'NODE'
+          if (process.env.ZIVV_CONTROLLED_PUBLISHING !== 'enabled' ||
+              process.env.ZIVV_MANUAL_PUBLISHER_JOINED !== 'true') {
+            console.error('Controlled publication is disabled until the manual publisher joins durable promotion control.');
+            process.exit(1);
+          }
+          NODE
+
+  publish:
+    needs: activation
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    env:
+      ZIVV_CONTROLLED_PUBLISHING: ${{ vars.ZIVV_CONTROLLED_PUBLISHING }}
+      ZIVV_MANUAL_PUBLISHER_JOINED: ${{ vars.ZIVV_MANUAL_PUBLISHER_JOINED }}
+      ZIVV_REQUEST_ID: ${{ inputs.request_id }}
+      ZIVV_OPERATION_ID: ${{ inputs.operation_id }}
+      ZIVV_ATTEMPT_ID: ${{ inputs.attempt_id }}
+      ZIVV_CONTROL_HEAD: ${{ inputs.control_head }}
+      ZIVV_PAYLOAD_COMMIT: ${{ inputs.payload_commit }}
+      ZIVV_CANDIDATE_ID: ${{ inputs.candidate_id }}
+      ZIVV_SOURCE_COMMIT: ${{ inputs.source_commit }}
+      ZIVV_MODE: ${{ inputs.mode }}
+      ZIVV_DESTINATION: ${{ inputs.destination }}
+      ZIVV_PAGES_STATE_PATH: ${{ runner.temp }}/zivv-pages-operation.json
+      ZIVV_SITE_DIRECTORY: ${{ runner.temp }}/zivv-pages-site
+    steps:
+      - name: Check out the executing reviewed workflow commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Require immutable reviewed code before installing tooling
+        env:
+          ZIVV_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { execFileSync } from 'node:child_process';
+          const sha = process.env.GITHUB_SHA;
+          const ref = process.env.GITHUB_REF;
+          if (!/^[a-f0-9]{40}$/.test(sha ?? '') ||
+              ref !== 'refs/tags/zivv-workflows/' + sha ||
+              process.env.GITHUB_EVENT_NAME !== 'workflow_dispatch' ||
+              process.env.GITHUB_REPOSITORY !== 'prodigic/zivv' ||
+              process.env.ZIVV_DEFAULT_BRANCH !== 'main') {
+            throw new Error('Publication tooling must execute from the immutable reviewed workflow tag in prodigic/zivv.');
+          }
+          const tagged = execFileSync('git', ['--no-replace-objects', 'rev-parse', '--verify', ref + '^{commit}'], { encoding: 'utf8' }).trim();
+          if (tagged !== sha) throw new Error('Reviewed workflow tag no longer matches the executing commit.');
+          execFileSync('git', ['--no-replace-objects', 'merge-base', '--is-ancestor', sha, 'refs/remotes/origin/main']);
+          NODE
+
+      - name: Set up the ingestion runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24.19.0"
+
+      - name: Install reviewed dependencies without lifecycle scripts
+        env:
+          GITHUB_TOKEN: ""
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
+          ACTIONS_RUNTIME_TOKEN: ""
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ""
+          ACTIONS_ID_TOKEN_REQUEST_URL: ""
+        run: npm ci --ignore-scripts
+
+      - name: Compile ingestion controller only
+        env:
+          GITHUB_TOKEN: ""
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
+          ACTIONS_RUNTIME_TOKEN: ""
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ""
+          ACTIONS_ID_TOKEN_REQUEST_URL: ""
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const root = process.env.GITHUB_WORKSPACE;
+          writeFileSync(join(process.env.RUNNER_TEMP, 'tsconfig.pages.json'), JSON.stringify({
+            extends: join(root, 'tsconfig.build.json'),
+            compilerOptions: { rootDir: join(root, 'src'), outDir: join(root, 'dist') },
+            include: [join(root, 'src/lib/ingestion/**/*.ts')],
+            exclude: [join(root, 'src/**/*.test.ts'), join(root, 'src/**/*.test.tsx')]
+          }));
+          NODE
+          ./node_modules/.bin/tsc --project "$RUNNER_TEMP/tsconfig.pages.json"
+
+      - name: Admit this exact planned workflow run
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/run-pages-candidate.js admit
+
+      - name: Materialize only verified retained public bytes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/run-pages-candidate.js materialize
+
+      - name: Upload the verified public Pages archive
+        id: upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Request deployment and durably record its identity
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ZIVV_ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+        run: node scripts/run-pages-candidate.js request-deployment
+
+      - name: Reconcile the recorded deployment to a terminal status
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/run-pages-candidate.js status
+
+      - name: Emit the exact deployment receipt
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/run-pages-candidate.js receipt
+
+# A failed or interrupted run retains its in-flight owner. No automatic retry,
+# rollback, live-verification acknowledgement or weekly cutoff change occurs here.

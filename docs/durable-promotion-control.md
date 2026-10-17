@@ -114,8 +114,10 @@ controller and enforce append-only operation. Local control writes reject
 symbolic control references and a checkout whose HEAD resolves to that control
 branch.
 
-Actual workflow admission, deployment status reconciliation, live inventory
-and browser checks, rollback restoration, acknowledgement, private recovery,
+The next [reviewed Pages publication checkpoint](reviewed-pages-publication.md)
+connects workflow admission and exact deployment status reconciliation behind
+disabled activation gates. Live inventory and browser checks, rollback
+orchestration, acknowledgement, private recovery,
 metadata queue, source acquisition, runtime/alerts and two observed Fridays
 remain on the approved plan. The manual publication path must join the same
 remote controller before automation becomes active. A successful retained
