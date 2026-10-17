@@ -1,3 +1,4 @@
+import { setImmediate } from "node:timers/promises";
 import { beforeEach, describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -944,11 +945,13 @@ describe("bounded native Git completion index and strict append validation", () 
       "append predecessor"
     );
   });
-  it("retains 1,000 weekly completions with bounded control bytes and exact ancient replay", () => {
+  it("retains 1,000 weekly completions with bounded control bytes and exact ancient replay", async () => {
     let state = createPromotionControl(legacy());
     let oldest: PromotionRequest | null = null;
     let largest = 0;
     for (let index = 0; index < 1000; index++) {
+      // Let test-progress RPCs run during this CPU-heavy retention stress case.
+      if (index % 25 === 0) await setImmediate();
       const input = {
         ...request(state, "weekly-" + index),
         candidateId: promotionDigest(index),
@@ -970,7 +973,9 @@ describe("bounded native Git completion index and strict append validation", () 
     expect(generated.size).toBeGreaterThan(1000);
     expect(JSON.stringify(state)).not.toContain("history");
     expect(JSON.stringify(state)).not.toContain("promotionAttempts");
-  }, 60000);
+    // Shared CI runners also execute encryption/build suites; this is a storage
+    // bound and replay regression, not a production throughput deadline.
+  }, 120000);
 });
 
 describe("durable single-shot Pages creation intent", () => {
