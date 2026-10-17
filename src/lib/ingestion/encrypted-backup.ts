@@ -7,6 +7,7 @@ import {
 import { gzipSync, gunzipSync } from "node:zlib";
 import {
   closeSync,
+  chmodSync,
   existsSync,
   fsyncSync,
   linkSync,
@@ -225,7 +226,10 @@ function installKeyOnce(path: string, bytes: Buffer): void {
 /** Restrict the permanent operator directory before putting private artifacts in it. */
 export function secureOperatorDirectory(directory: string): void {
   mkdirSync(directory, { recursive: true, mode: 0o700 });
-  if (process.platform !== "win32") return;
+  if (process.platform !== "win32") {
+    chmodSync(directory, 0o700);
+    return;
+  }
   const script =
     "$ErrorActionPreference='Stop'; $path=$env:ZIVV_SECURE_DIRECTORY; $acl=New-Object System.Security.AccessControl.DirectorySecurity; $acl.SetAccessRuleProtection($true,$false); $identity=[System.Security.Principal.WindowsIdentity]::GetCurrent().User; $rule=New-Object System.Security.AccessControl.FileSystemAccessRule($identity,'FullControl','ContainerInherit,ObjectInherit','None','Allow'); $acl.AddAccessRule($rule); [IO.Directory]::SetAccessControl($path,$acl)";
   const result = spawnSync(
