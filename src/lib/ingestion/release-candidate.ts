@@ -16,6 +16,7 @@ import {
   type LocalArtistVerificationLedger,
 } from "./local-artist-verification.js";
 import {
+  CANDIDATE_CONFIG_FILES,
   configurationDigest,
   configurationInventory,
   type CandidateConfiguration,
@@ -488,4 +489,120 @@ export function verifySealedCandidate(
   input: CandidateInputs
 ): void {
   same(sealReleaseCandidate(input), candidate, "sealed candidate identity");
+}
+
+/** Parse public identity without private inputs; callers must supply a trusted ID separately. */
+export function parseReleaseCandidate(bytes: Buffer): ReleaseCandidate {
+  const value = parse(bytes);
+  const keys = [
+    "schemaVersion",
+    "candidateId",
+    "sourceCommit",
+    "basePath",
+    "ledgerRevision",
+    "snapshotSha256",
+    "configSha256",
+    "configuration",
+    "editionId",
+    "cutoffEpochMs",
+    "membershipSha256",
+    "datasetVersion",
+    "manifestSha256",
+    "applicationBuildSha256",
+    "applicationProvenanceSha256",
+    "files",
+  ];
+  same(Object.keys(value).sort(), keys.sort(), "public identity fields");
+  if (
+    value.schemaVersion !== 1 ||
+    typeof value.sourceCommit !== "string" ||
+    !/^[a-f0-9]{40}$/.test(value.sourceCommit) ||
+    typeof value.basePath !== "string" ||
+    normalizeSiteBase(value.basePath) !== value.basePath
+  )
+    throw new Error("Invalid candidate schema/source/base");
+  for (const name of [
+    "candidateId",
+    "ledgerRevision",
+    "snapshotSha256",
+    "configSha256",
+    "membershipSha256",
+    "manifestSha256",
+    "applicationBuildSha256",
+  ])
+    if (
+      typeof value[name] !== "string" ||
+      !/^[a-f0-9]{64}$/.test(value[name] as string)
+    )
+      throw new Error("Invalid candidate digest");
+  if (
+    value.applicationProvenanceSha256 !== null &&
+    (typeof value.applicationProvenanceSha256 !== "string" ||
+      !/^[a-f0-9]{64}$/.test(value.applicationProvenanceSha256))
+  )
+    throw new Error("Invalid candidate provenance digest");
+  for (const name of ["editionId", "datasetVersion"])
+    if (
+      typeof value[name] !== "string" ||
+      !(value[name] as string).trim() ||
+      [...(value[name] as string)].some(
+        (character) => character.charCodeAt(0) < 32
+      )
+    )
+      throw new Error("Invalid candidate edition/version");
+  if (
+    !Number.isSafeInteger(value.cutoffEpochMs) ||
+    (value.cutoffEpochMs as number) < 0
+  )
+    throw new Error("Invalid candidate cutoff");
+  if (
+    !Array.isArray(value.configuration) ||
+    value.configuration.length !== CANDIDATE_CONFIG_FILES.length
+  )
+    throw new Error("Invalid candidate configuration inventory");
+  value.configuration.forEach((item, index) => {
+    const record = object(item);
+    same(
+      Object.keys(record).sort(),
+      ["path", "sha256"],
+      "configuration fields"
+    );
+    if (
+      record.path !== CANDIDATE_CONFIG_FILES[index] ||
+      (record.sha256 !== null &&
+        (typeof record.sha256 !== "string" ||
+          !/^[a-f0-9]{64}$/.test(record.sha256)))
+    )
+      throw new Error("Invalid candidate configuration entry");
+  });
+  same(
+    hash(canonicalJson(value.configuration)),
+    value.configSha256,
+    "configuration digest"
+  );
+  if (!Array.isArray(value.files) || value.files.length === 0)
+    throw new Error("Invalid candidate public inventory");
+  let previous = "";
+  for (const item of value.files) {
+    const file = object(item);
+    same(
+      Object.keys(file).sort(),
+      ["path", "sha256", "size"],
+      "public file fields"
+    );
+    if (
+      typeof file.path !== "string" ||
+      !allowed(file.path) ||
+      file.path <= previous ||
+      !Number.isSafeInteger(file.size) ||
+      (file.size as number) < 0 ||
+      typeof file.sha256 !== "string" ||
+      !/^[a-f0-9]{64}$/.test(file.sha256)
+    )
+      throw new Error("Invalid candidate public file");
+    previous = file.path;
+  }
+  const { candidateId, ...identity } = value;
+  same(hash(canonicalJson(identity)), candidateId, "public candidate identity");
+  return value as unknown as ReleaseCandidate;
 }
