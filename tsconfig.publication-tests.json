@@ -13,6 +13,8 @@
     "src/test/ingestion/weekly-candidate-runner.test.ts",
     "src/test/ingestion/weekly-delivery-cli.test.ts",
     "src/test/ingestion/weekly-publication-time.test.ts",
+    "src/test/ingestion/weekly-run-journal.test.ts",
+    "src/test/ingestion/steve-email-intake.test.ts",
     "src/test/ingestion/promotion-control*.test.ts",
     "src/test/ingestion/promotion-git-credentials.test.ts",
     "src/test/ingestion/publication-git.test.ts",

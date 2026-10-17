@@ -1,5 +1,6 @@
 import { existsSync, lstatSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { assertNoPendingSteveEmail } from "./steve-email-intake.js";
 import { loadLedger, validateLedger } from "./ledger.js";
 import { withIngestionLock } from "./lock.js";
 import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
@@ -84,8 +85,14 @@ export async function freezeWeeklyImport(input: {
       input.lease
     );
   };
-  const pending = (cutoff: number) =>
-    input.journal
+  const pending = (cutoff: number) => {
+    assertNoPendingSteveEmail(
+      dirname(input.journal.path),
+      input.journal,
+      input.lease.scope,
+      cutoff
+    );
+    return input.journal
       .listRuns(input.lease.scope)
       .filter(
         (run) =>
@@ -93,6 +100,7 @@ export async function freezeWeeklyImport(input: {
           run.stages.find((stage) => stage.stage === "load")?.status !==
             "succeeded"
       );
+  };
   const item = state.stages.find((stage) => stage.stage === "freeze")!;
   if (!["running", "succeeded"].includes(item.status))
     transition({ status: "running" });
@@ -181,6 +189,7 @@ export async function freezeWeeklyImport(input: {
       transition({
         status: [
           "PENDING_PRE_CUTOFF_IMPORTS",
+          "PENDING_STEVE_EMAIL_INTAKE",
           "FROZEN_REUSE_REQUIRED",
         ].includes(code)
           ? "blocked"
@@ -333,7 +342,12 @@ export async function freezeWeeklyImport(input: {
           ? error.code
           : "FREEZE_EFFECT_FAILED";
       transition({
-        status: code === "PENDING_PRE_CUTOFF_IMPORTS" ? "blocked" : "failed",
+        status: [
+          "PENDING_PRE_CUTOFF_IMPORTS",
+          "PENDING_STEVE_EMAIL_INTAKE",
+        ].includes(code)
+          ? "blocked"
+          : "failed",
         errorCode: code,
       });
     }

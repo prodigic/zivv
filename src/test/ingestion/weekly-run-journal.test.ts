@@ -12,6 +12,7 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { spawn } from "node:child_process";
 import { pathToFileURL } from "node:url";
+import { createHash } from "node:crypto";
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
 import {
   createWeeklyRunState,
@@ -35,6 +36,56 @@ function fixture(clock: () => number) {
   opened.push(journal);
   return { root, directory, journal };
 }
+
+function legacyFixture(version: 1 | 2) {
+  const root = mkdtempSync(join(tmpdir(), "zivv-journal-test-"));
+  roots.push(root);
+  const directory = join(root, "operator");
+  mkdirSync(directory);
+  const path = join(directory, "weekly-runs.sqlite");
+  const state = createWeeklyRunState(source);
+  const bytes = Buffer.from("legacy stage evidence");
+  const lease = {
+    scope: "production",
+    owner: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    fence: 7,
+    expiresAtEpochMs: 10000,
+  };
+  const db = new DatabaseSync(path);
+  try {
+    db.exec(`CREATE TABLE ownership(scope TEXT PRIMARY KEY, owner TEXT NOT NULL, fence INTEGER NOT NULL CHECK(fence BETWEEN 1 AND 9007199254740991), expires_at INTEGER NOT NULL CHECK(expires_at BETWEEN 0 AND 9007199254740991)) STRICT;
+      CREATE TABLE run_state(id TEXT PRIMARY KEY, scope TEXT NOT NULL REFERENCES ownership(scope), revision INTEGER NOT NULL, payload TEXT NOT NULL) STRICT;
+      PRAGMA application_id=1514759762;
+      PRAGMA user_version=${version};`);
+    db.prepare("INSERT INTO ownership VALUES(?,?,?,?)").run(
+      lease.scope,
+      lease.owner,
+      lease.fence,
+      lease.expiresAtEpochMs
+    );
+    db.prepare("INSERT INTO run_state VALUES(?,?,?,?)").run(
+      state.runId,
+      lease.scope,
+      state.revision,
+      JSON.stringify(state)
+    );
+    if (version === 2) {
+      db.exec(
+        "CREATE TABLE stage_artifact(run_id TEXT NOT NULL REFERENCES run_state(id), stage TEXT NOT NULL, attempt INTEGER NOT NULL CHECK(attempt BETWEEN 0 AND 9007199254740991), identity TEXT NOT NULL, bytes BLOB NOT NULL, PRIMARY KEY(run_id,stage,attempt)) STRICT;"
+      );
+      db.prepare("INSERT INTO stage_artifact VALUES(?,?,?,?,?)").run(
+        state.runId,
+        "acquire",
+        0,
+        createHash("sha256").update(bytes).digest("hex"),
+        bytes
+      );
+    }
+  } finally {
+    db.close();
+  }
+  return { directory, path, state, bytes, lease };
+}
 afterEach(() => {
   for (const journal of opened.splice(0)) journal.close();
   for (const root of roots.splice(0)) {
@@ -45,6 +96,245 @@ afterEach(() => {
 });
 
 describe("private weekly journal", () => {
+  it("persists immutable source and correction intake evidence independently of worker stages", () => {
+    const { directory, journal } = fixture(() => 2000);
+    const lease = journal.acquire("production");
+    const id = "a".repeat(64);
+    const sourceBytes = Buffer.from('{"firstObservedAtEpochMs":1000}\n');
+    const correctionBytes = Buffer.from('{"correctionOf":"fixture"}\n');
+    expect(journal.readIntakeEvidence("production", "source", id)).toBeNull();
+    expect(
+      journal.saveIntakeEvidence("source", id, sourceBytes, lease)
+    ).toEqual(sourceBytes);
+    expect(
+      journal.saveIntakeEvidence("correction", id, correctionBytes, lease)
+    ).toEqual(correctionBytes);
+    expect(
+      journal.saveIntakeEvidence("source", id, sourceBytes, lease)
+    ).toEqual(sourceBytes);
+    expect(() =>
+      journal.saveIntakeEvidence("source", id, Buffer.from("changed"), lease)
+    ).toThrow("overwrite");
+    expect(journal.listIntakeEvidence("production", "source")).toEqual([
+      { id, bytes: sourceBytes },
+    ]);
+    expect(journal.readIntakeEvidence("preview", "source", id)).toBeNull();
+    const reopened = new WeeklyRunJournal(directory, () => 2000);
+    opened.push(reopened);
+    expect(reopened.readIntakeEvidence("production", "source", id)).toEqual(
+      sourceBytes
+    );
+    expect(reopened.readIntakeEvidence("production", "correction", id)).toEqual(
+      correctionBytes
+    );
+  });
+
+  it.each([1, 2] as const)(
+    "migrates schema %s without changing legacy ownership, state or stage bytes",
+    (version) => {
+      const legacy = legacyFixture(version);
+      const journal = new WeeklyRunJournal(legacy.directory, () => 2000);
+      opened.push(journal);
+      expect(journal.load(legacy.state.runId)).toEqual(legacy.state);
+      expect(() => journal.acquire("production")).toThrow("active owner");
+      expect(journal.readArtifact(legacy.state.runId, "acquire", 0)).toEqual(
+        version === 2 ? legacy.bytes : null
+      );
+      const sourceBytes = Buffer.from("new intake evidence");
+      journal.saveIntakeEvidence(
+        "source",
+        "a".repeat(64),
+        sourceBytes,
+        legacy.lease
+      );
+      expect(
+        journal.readIntakeEvidence("production", "source", "a".repeat(64))
+      ).toEqual(sourceBytes);
+      const native = new DatabaseSync(legacy.path, { readOnly: true });
+      try {
+        expect(native.prepare("PRAGMA user_version").get()?.user_version).toBe(
+          3
+        );
+        expect(
+          native
+            .prepare(
+              "SELECT owner,fence,expires_at FROM ownership WHERE scope='production'"
+            )
+            .get()
+        ).toMatchObject({
+          owner: legacy.lease.owner,
+          fence: 7,
+          expires_at: 10000,
+        });
+        expect(
+          native
+            .prepare("SELECT payload FROM run_state WHERE id=?")
+            .get(legacy.state.runId)?.payload
+        ).toBe(JSON.stringify(legacy.state));
+        expect(
+          native.prepare("PRAGMA table_list('intake_evidence')").get()?.strict
+        ).toBe(1);
+      } finally {
+        native.close();
+      }
+    }
+  );
+
+  it("isolates intake evidence by destination and returns detached byte copies", () => {
+    const { journal } = fixture(() => 2000);
+    const production = journal.acquire("production"),
+      preview = journal.acquire("preview");
+    const bytes = Buffer.from("original"),
+      id = "b".repeat(64);
+    const saved = journal.saveIntakeEvidence("source", id, bytes, production);
+    bytes.fill(0);
+    saved.fill(1);
+    journal.saveIntakeEvidence("source", id, Buffer.from("preview"), preview);
+    const listed = journal.listIntakeEvidence("production", "source");
+    expect(listed).toEqual([{ id, bytes: Buffer.from("original") }]);
+    listed[0].bytes.fill(2);
+    expect(journal.readIntakeEvidence("production", "source", id)).toEqual(
+      Buffer.from("original")
+    );
+    expect(journal.readIntakeEvidence("preview", "source", id)).toEqual(
+      Buffer.from("preview")
+    );
+  });
+
+  it("fences intake writes, including exact replay, after ownership expires", () => {
+    let now = 2000;
+    const { directory, journal } = fixture(() => now);
+    const original = journal.acquire("production", 1000);
+    const id = "c".repeat(64),
+      bytes = Buffer.from("first observation");
+    journal.saveIntakeEvidence("source", id, bytes, original);
+    now = 3000;
+    expect(() =>
+      journal.saveIntakeEvidence("source", id, bytes, original)
+    ).toThrow("fenced");
+    const successor = new WeeklyRunJournal(directory, () => now);
+    opened.push(successor);
+    const lease = successor.acquire("production", 1000);
+    expect(() =>
+      journal.saveIntakeEvidence("correction", id, bytes, original)
+    ).toThrow("fenced");
+    expect(successor.saveIntakeEvidence("source", id, bytes, lease)).toEqual(
+      bytes
+    );
+    expect(
+      successor.readIntakeEvidence("production", "correction", id)
+    ).toBeNull();
+  });
+
+  it("allows guarded evidence reads but refuses nested writes without disturbing the guard", async () => {
+    const { journal } = fixture(() => 2000);
+    const lease = journal.acquire("production");
+    const id = "d".repeat(64),
+      bytes = Buffer.from("durable before files");
+    journal.saveIntakeEvidence("source", id, bytes, lease);
+    await journal.guardOperation(lease, async () => {
+      expect(journal.readIntakeEvidence("production", "source", id)).toEqual(
+        bytes
+      );
+      expect(journal.listIntakeEvidence("production", "source")).toEqual([
+        { id, bytes },
+      ]);
+      expect(() =>
+        journal.saveIntakeEvidence("correction", id, bytes, lease)
+      ).toThrow("Nested");
+      journal.checkOwnership(lease);
+    });
+    expect(journal.saveIntakeEvidence("correction", id, bytes, lease)).toEqual(
+      bytes
+    );
+  });
+
+  it("rejects changed evidence bytes on reads, enumeration and replay", () => {
+    const { journal } = fixture(() => 2000);
+    const lease = journal.acquire("production");
+    const id = "e".repeat(64),
+      bytes = Buffer.from("immutable acquisition intent");
+    journal.saveIntakeEvidence("source", id, bytes, lease);
+    const corrupt = new DatabaseSync(journal.path);
+    try {
+      corrupt
+        .prepare(
+          "UPDATE intake_evidence SET bytes=? WHERE scope=? AND kind=? AND id=?"
+        )
+        .run(Buffer.from("changed"), "production", "source", id);
+    } finally {
+      corrupt.close();
+    }
+    expect(() =>
+      journal.readIntakeEvidence("production", "source", id)
+    ).toThrow("Changed intake evidence");
+    expect(() => journal.listIntakeEvidence("production", "source")).toThrow(
+      "Changed intake evidence"
+    );
+    expect(() =>
+      journal.saveIntakeEvidence("source", id, bytes, lease)
+    ).toThrow("Changed intake evidence");
+  });
+
+  it("enforces the private evidence limit and rejects malformed input without recording it", () => {
+    const { journal } = fixture(() => 2000);
+    const lease = journal.acquire("production"),
+      id = "f".repeat(64);
+    expect(() =>
+      journal.saveIntakeEvidence(
+        "source",
+        id,
+        Buffer.alloc(8 * 1024 * 1024 + 1),
+        lease
+      )
+    ).toThrow("limit");
+    for (const badId of ["", "a".repeat(63), "A".repeat(64), "../outside"]) {
+      expect(() =>
+        journal.saveIntakeEvidence(
+          "source",
+          badId,
+          Buffer.from("invalid"),
+          lease
+        )
+      ).toThrow("key");
+      expect(() =>
+        journal.readIntakeEvidence("production", "source", badId)
+      ).toThrow("key");
+    }
+    expect(() =>
+      // @ts-expect-error Runtime callers can bypass the closed evidence-kind type.
+      journal.saveIntakeEvidence("other", id, Buffer.from("invalid"), lease)
+    ).toThrow("key");
+    expect(() => journal.listIntakeEvidence("", "source")).toThrow("key");
+    expect(journal.listIntakeEvidence("production", "source")).toEqual([]);
+    const maximum = Buffer.alloc(8 * 1024 * 1024, 0x5a);
+    expect(
+      journal.saveIntakeEvidence("source", id, maximum, lease).equals(maximum)
+    ).toBe(true);
+  });
+
+  it.each(["future-version", "unexpected-table", "malformed-intake-table"])(
+    "refuses an unsupported journal %s without accepting its evidence",
+    (problem) => {
+      const { directory, journal } = fixture(() => 2000);
+      const corrupt = new DatabaseSync(journal.path);
+      try {
+        if (problem === "future-version") corrupt.exec("PRAGMA user_version=4");
+        if (problem === "unexpected-table")
+          corrupt.exec("CREATE TABLE unknown(value TEXT) STRICT");
+        if (problem === "malformed-intake-table")
+          corrupt.exec(
+            "DROP TABLE intake_evidence; CREATE TABLE intake_evidence(scope TEXT,kind TEXT,id TEXT,identity TEXT,bytes TEXT)"
+          );
+      } finally {
+        corrupt.close();
+      }
+      expect(() => new WeeklyRunJournal(directory, () => 2000)).toThrow(
+        "Unsupported"
+      );
+    }
+  );
+
   it("serializes concurrent process initialization and recovers an empty pre-schema file", async () => {
     const root = mkdtempSync(join(tmpdir(), "zivv-journal-test-"));
     roots.push(root);
