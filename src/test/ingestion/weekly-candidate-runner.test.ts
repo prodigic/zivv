@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import {
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -7,7 +9,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { setTimeout } from "node:timers/promises";
 import { DatabaseSync } from "node:sqlite";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -30,6 +32,24 @@ import {
 } from "../../lib/ingestion/candidate-bundle.js";
 import { captureExportConfiguration } from "../../lib/ingestion/export-configuration.js";
 import type { ApplicationBuildReceipt } from "../../lib/ingestion/source-build.js";
+import type { ReleaseCandidate } from "../../lib/ingestion/release-candidate.js";
+import { createLocalPromotionControlStore } from "../../lib/ingestion/promotion-control-git.js";
+import {
+  applyPromotionTransition,
+  candidatePublicReleaseId,
+  claimPromotion,
+  createPromotionControl,
+  parsePromotionControl,
+  promotionAttemptId,
+  promotionDigest,
+  serializePromotionControl,
+  validatePromotionAppend,
+  type PromotionEvent,
+} from "../../lib/ingestion/promotion-control.js";
+import {
+  PROMOTION_FIXTURE_CHECKS,
+  syntheticLegacyPublicSnapshot,
+} from "./fixtures/promotion-control-fixture.js";
 
 type Capture =
   typeof import("../../lib/ingestion/source-build.js").captureReviewedSource;
@@ -118,6 +138,139 @@ describe("weekly candidate stages with real sealed bundles", () => {
     } finally {
       db.close();
     }
+  }
+  function initializeControl() {
+    const env = { ...process.env };
+    for (const key of Object.keys(env))
+      if (key.startsWith("GIT_")) delete env[key];
+    execFileSync("git", ["init", "--quiet", "--object-format=sha1"], {
+      cwd: root,
+      env,
+      windowsHide: true,
+    });
+    return createLocalPromotionControlStore({
+      repositoryRoot: root,
+      destination: "production",
+      validateState(bytes, destination) {
+        const control = parsePromotionControl(bytes);
+        if (control.destination !== destination)
+          throw new Error("Wrong fixture control destination");
+        return control.completionRoot;
+      },
+      validateTransition: validatePromotionAppend,
+    });
+  }
+  function seedVerifiedControl(
+    candidate: ReleaseCandidate,
+    wrongCandidate = false
+  ) {
+    const store = initializeControl();
+    const createdAt = "2026-10-14T18:00:00.000Z";
+    let control = createPromotionControl(syntheticLegacyPublicSnapshot());
+    let head: string | null = null;
+    const save = () => {
+      const result = store.compareAndAppend({
+        expectedHead: head,
+        bytes: serializePromotionControl(control),
+        createdAt,
+      });
+      expect(result.status).toBe("appended");
+      head = result.attemptedHead;
+    };
+    const step = (event: PromotionEvent) => {
+      control = applyPromotionTransition(control, event);
+      save();
+    };
+    save();
+    control = claimPromotion(control, {
+      requestId: "sealed-weekly-fixture",
+      payloadCommit: "e".repeat(40),
+      candidateId: wrongCandidate ? "f".repeat(64) : candidate.candidateId,
+      sourceCommit: candidate.sourceCommit,
+      basePath: "/zivv/",
+      purpose: "release",
+      publicInventorySha256: promotionDigest(candidate.files),
+      expectedVerifiedReleaseId: control.lastVerified.releaseId,
+    });
+    save();
+    const workflowCommit = "b".repeat(40),
+      operationId = control.active!.operationId;
+    const owner = {
+      operationId,
+      mode: "promote" as const,
+      attemptId: promotionAttemptId(
+        operationId,
+        "promote",
+        1,
+        workflowCommit,
+        1
+      ),
+    };
+    step({
+      type: "dispatch-intent",
+      ...owner,
+      attemptNumber: 1,
+      workflowCommit,
+      expectedRunAttempt: 1,
+    });
+    const admission = { workflowCommit, runId: "101", runAttempt: 1 };
+    step({ type: "admit-run", ...owner, admission });
+    const deployment = { admission, artifactId: "201", deploymentId: "301" };
+    step({ type: "deployed", ...owner, deployment });
+    const deployed = control,
+      deployedHead = head!;
+    const body = {
+      destination: "production" as const,
+      liveUrl: "https://www.prodigic.com/zivv/",
+      releaseId: candidatePublicReleaseId(
+        "production",
+        control.active!.request
+      ),
+      inventorySha256: control.active!.request.publicInventorySha256,
+      deployment,
+      verifiedAt: createdAt,
+      checks: PROMOTION_FIXTURE_CHECKS,
+    };
+    step({
+      type: "verified",
+      ...owner,
+      verification: { ...body, receiptId: promotionDigest(body) },
+      replayProof: null,
+    });
+    return { store, control, deployed, deployedHead, createdAt, owner };
+  }
+  async function deliveryFixture(
+    wrongCandidate = false,
+    purpose: "release" | "preview" = "release"
+  ) {
+    const validated = await runWeeklyImport({
+      root,
+      source,
+      stopAfter: "validate",
+      freezeCutoffEpochMs: cutoff,
+      candidateBuild: { ...build, purpose },
+    });
+    const bundle = await readVerifiedCandidateBundle(
+      bundles[0].directory,
+      loadBackupKey(home),
+      String(stage(validated, "export").evidence!.candidateId)
+    );
+    const native = seedVerifiedControl(bundle.candidate, wrongCandidate);
+    const candidate = Buffer.from(canonicalJson(bundle.candidate) + "\n");
+    const run = (
+      through: "verify" | "acknowledge",
+      onProgress?: Parameters<typeof runWeeklyImport>[0]["onProgress"]
+    ) =>
+      runWeeklyImport({
+        root,
+        runId: validated.runId,
+        stopAfter: through,
+        verifiedDelivery: { store: native.store, candidate },
+        controlledPublishing: "enabled",
+        manualPublisherJoined: "true",
+        onProgress,
+      });
+    return { ...native, validated, candidate, run };
   }
   const frozenRun = () =>
     runWeeklyImport({
@@ -282,6 +435,14 @@ describe("weekly candidate stages with real sealed bundles", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllEnvs();
+    if (
+      !resolve(directory).startsWith(
+        resolve(tmpdir(), "zivv-candidate-runner-")
+      )
+    )
+      throw new Error(
+        "Candidate fixture cleanup escaped its allocated directory"
+      );
     rmSync(directory, { recursive: true, force: true });
   });
 
@@ -526,6 +687,214 @@ describe("weekly candidate stages with real sealed bundles", () => {
     ).rejects.toThrow("Build purpose does not authorize this publication");
     expect(stage(journalState(), "export").status).toBe("failed");
     expect(catalogDigest()).toBe(before);
+  });
+
+  it("adopts native sealed delivery through verification and acknowledgement without rebuilding or reimporting", async () => {
+    const f = await deliveryFixture(),
+      before = catalogDigest();
+    const nativeHead = f.store.read().head;
+    const verified = await f.run("verify");
+    expect(
+      verified.stages.slice(0, 10).every((item) => item.status === "succeeded")
+    ).toBe(true);
+    expect(verified.stages.at(-1)!.status).toBe("pending");
+    const weeklyPath = join(root, "data/ingestion/weekly-editions.json");
+    expect(
+      JSON.parse(readFileSync(weeklyPath, "utf8")).publishedCutoffEpochMs
+    ).toBeNull();
+    expect(f.store.read().head).toBe(nativeHead);
+    const completed = await f.run("acknowledge");
+    expect(completed.stages.every((item) => item.status === "succeeded")).toBe(
+      true
+    );
+    expect(
+      JSON.parse(readFileSync(weeklyPath, "utf8")).publishedCutoffEpochMs
+    ).toBe(cutoff);
+    expect(parsePromotionControl(f.store.read().bytes!).active).toBeNull();
+    const finalHead = f.store.read().head,
+      weekly = readFileSync(weeklyPath);
+    expect(await f.run("acknowledge")).toEqual(completed);
+    expect(f.store.read().head).toBe(finalHead);
+    expect(readFileSync(weeklyPath)).toEqual(weekly);
+    expect(catalogDigest()).toBe(before);
+    expect(readSqliteLedger(sqlitePath).runs).toHaveLength(1);
+    expect(doubles.build).toHaveBeenCalledTimes(1);
+  }, 120_000);
+
+  it.each(["deploy", "verify"] as const)(
+    "resumes interrupted %s authority artifact without another attempt or native effect",
+    async (interruptedStage) => {
+      const f = await deliveryFixture(),
+        head = f.store.read().head,
+        before = catalogDigest();
+      const interruption = new Error("Synthetic delivery interruption");
+      await expect(
+        f.run("verify", (event) => {
+          if (
+            event.stage === interruptedStage &&
+            event.phase === "artifact-saved"
+          )
+            throw interruption;
+        })
+      ).rejects.toBe(interruption);
+      const interrupted = journalState();
+      expect(
+        interrupted.stages.find((item) => item.stage === interruptedStage)
+      ).toMatchObject({ status: "running", attempt: 1 });
+      const result = await f.run("verify");
+      for (const name of ["deploy", "verify"])
+        expect(result.stages.find((item) => item.stage === name)).toMatchObject(
+          { status: "succeeded", attempt: 1 }
+        );
+      expect(result.revision).toBe(f.validated.revision + 4);
+      expect(f.store.read().head).toBe(head);
+      expect(catalogDigest()).toBe(before);
+      expect(doubles.build).toHaveBeenCalledTimes(1);
+    },
+    90_000
+  );
+
+  it.each(["noncanonical", "unpublished-fork"] as const)(
+    "rejects a rehashed %s delivery anchor without adopting verification",
+    async (variant) => {
+      const f = await deliveryFixture(),
+        head = f.store.read().head,
+        before = catalogDigest();
+      await expect(
+        f.run("verify", (event) => {
+          if (event.stage === "deploy" && event.phase === "artifact-saved")
+            throw new Error("Pause delivery artifact");
+        })
+      ).rejects.toThrow("Pause delivery artifact");
+      const db = new DatabaseSync(join(home, "weekly-runs.sqlite"));
+      try {
+        const row = db
+          .prepare("SELECT bytes FROM stage_artifact WHERE stage='deploy'")
+          .get()!;
+        const anchor = JSON.parse(
+          Buffer.from(row.bytes as Uint8Array).toString()
+        ) as { controlHead: string; controlSha256: string };
+        if (variant === "unpublished-fork") {
+          const { receiptId: _receiptId, ...body } =
+            f.control.active!.verification!;
+          body.verifiedAt = "2026-10-14T18:00:01.000Z";
+          const fork = applyPromotionTransition(f.deployed, {
+            type: "verified",
+            ...f.owner,
+            verification: { ...body, receiptId: promotionDigest(body) },
+            replayProof: null,
+          });
+          const prepared = f.store.prepareAppend({
+            expectedHead: f.deployedHead,
+            bytes: serializePromotionControl(fork),
+            createdAt: f.createdAt,
+          });
+          anchor.controlHead = prepared.attemptedHead;
+          anchor.controlSha256 = hash(prepared.bytes);
+        }
+        const bytes = Buffer.from(
+          variant === "noncanonical"
+            ? JSON.stringify(anchor, null, 2) + "\n"
+            : canonicalJson(anchor) + "\n"
+        );
+        db.prepare(
+          "UPDATE stage_artifact SET bytes=?,identity=? WHERE stage='deploy'"
+        ).run(bytes, hash(bytes));
+      } finally {
+        db.close();
+      }
+      await expect(f.run("verify")).rejects.toThrow(
+        variant === "noncanonical"
+          ? "Noncanonical delivery anchor"
+          : "canonical ancestor"
+      );
+      expect(
+        journalState().stages.find((item) => item.stage === "verify")!.status
+      ).toBe("pending");
+      expect(f.store.read().head).toBe(head);
+      expect(catalogDigest()).toBe(before);
+      expect(
+        JSON.parse(
+          readFileSync(
+            join(root, "data/ingestion/weekly-editions.json"),
+            "utf8"
+          )
+        ).publishedCutoffEpochMs
+      ).toBeNull();
+    },
+    90_000
+  );
+
+  it("rejects canonical native verification naming a different sealed candidate", async () => {
+    const f = await deliveryFixture(true),
+      head = f.store.read().head,
+      before = catalogDigest();
+    await expect(f.run("verify")).rejects.toThrow("Native candidate mismatch");
+    expect(
+      journalState().stages.find((item) => item.stage === "verify")!.status
+    ).toBe("pending");
+    expect(f.store.read().head).toBe(head);
+    expect(catalogDigest()).toBe(before);
+    expect(doubles.build).toHaveBeenCalledTimes(1);
+  }, 60_000);
+
+  it("rejects a preview-purpose sealed candidate before reading native delivery authority", async () => {
+    const f = await deliveryFixture(false, "preview"),
+      before = catalogDigest();
+    const head = f.store.read().head;
+    const weeklyPath = join(root, "data/ingestion/weekly-editions.json");
+    const weekly = readFileSync(weeklyPath);
+    const read = vi.spyOn(f.store, "read"),
+      readAt = vi.spyOn(f.store, "readAt");
+    await expect(f.run("verify")).rejects.toThrow(
+      "CANDIDATE_BUILD_PURPOSE_MISMATCH"
+    );
+    expect(read).not.toHaveBeenCalled();
+    expect(readAt).not.toHaveBeenCalled();
+    expect(journalState()).toEqual(f.validated);
+    expect(readFileSync(weeklyPath)).toEqual(weekly);
+    expect(catalogDigest()).toBe(before);
+    read.mockRestore();
+    readAt.mockRestore();
+    expect(f.store.read().head).toBe(head);
+  }, 60_000);
+
+  it("fails closed on delivery activation flags before import, journal, candidate or native effects", async () => {
+    const store = initializeControl(),
+      before = catalogDigest();
+    for (const flags of [
+      {},
+      { controlledPublishing: "enabled" },
+      { controlledPublishing: "true", manualPublisherJoined: "true" },
+      { controlledPublishing: "enabled", manualPublisherJoined: "false" },
+    ])
+      await expect(
+        runWeeklyImport({
+          root,
+          runId: "a".repeat(64),
+          stopAfter: "acknowledge",
+          verifiedDelivery: { store, candidate: Buffer.from("must not parse") },
+          ...flags,
+        })
+      ).rejects.toThrow("VERIFIED_DELIVERY_NOT_ENABLED");
+    await expect(
+      runWeeklyImport({
+        root,
+        source,
+        stopAfter: "verify",
+        verifiedDelivery: { store, candidate: Buffer.from("must not parse") },
+        controlledPublishing: "enabled",
+        manualPublisherJoined: "true",
+      })
+    ).rejects.toThrow("VERIFIED_DELIVERY_NOT_ENABLED");
+    expect(existsSync(join(home, "weekly-runs.sqlite"))).toBe(false);
+    expect(existsSync(join(root, "data/ingestion/weekly-editions.json"))).toBe(
+      false
+    );
+    expect(store.read()).toEqual({ head: null, bytes: null });
+    expect(catalogDigest()).toBe(before);
+    expect(readSqliteLedger(sqlitePath).runs).toHaveLength(0);
+    expect(doubles.build).not.toHaveBeenCalled();
   });
 
   it("renews the real destination lease while an asynchronous build exceeds its original TTL", async () => {

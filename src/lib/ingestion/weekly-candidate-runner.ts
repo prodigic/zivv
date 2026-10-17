@@ -104,6 +104,7 @@ export async function runWeeklyCandidateStages(input: {
   lease: WeeklyRunLease;
   stopAfter: Stage;
   candidateBuild?: WeeklyCandidateBuildOptions;
+  requiredPurpose?: "release";
   verifyContext: () => void;
   heartbeatMs: number;
   onProgress: (stage: Stage, phase: Phase) => Promise<void>;
@@ -192,6 +193,8 @@ export async function runWeeklyCandidateStages(input: {
     ]);
     if (value.schemaVersion !== 1) fail("INVALID_CANDIDATE_STAGE_ARTIFACT");
     const build = options(value.build);
+    if (input.requiredPurpose && build.purpose !== input.requiredPurpose)
+      fail("CANDIDATE_BUILD_PURPOSE_MISMATCH");
     const buildSha256 = sha256(canonicalJson(build));
     if (
       item("enrich").status === "succeeded" &&
@@ -298,6 +301,11 @@ export async function runWeeklyCandidateStages(input: {
           ) {
             if (!input.candidateBuild) fail("CANDIDATE_BUILD_OPTIONS_REQUIRED");
             const build = options(input.candidateBuild);
+            if (
+              input.requiredPurpose &&
+              build.purpose !== input.requiredPurpose
+            )
+              fail("CANDIDATE_BUILD_PURPOSE_MISMATCH");
             const source = captureReviewedSource({
               repositoryRoot: input.root,
               privateDirectory: newDirectory(),

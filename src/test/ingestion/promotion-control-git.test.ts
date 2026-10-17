@@ -201,6 +201,10 @@ describe("durable promotion Git compare-and-append", () => {
       createdAt,
     });
     expect(appended.status).toBe("appended");
+    expect(store.readAt(appended.attemptedHead!)).toEqual({
+      head: appended.attemptedHead,
+      bytes: state(0),
+    });
     expect(readFileSync(join(root, ".git", "index"))).toEqual(beforeIndex);
     expect(git(["rev-parse", "HEAD"])).toEqual(beforeHead);
     expect(git(["status", "--porcelain=v1", "-z"])).toEqual(beforeStatus);
@@ -211,6 +215,99 @@ describe("durable promotion Git compare-and-append", () => {
     expect(git(["show-ref"], bare).toString().trim()).toBe(
       `${appended.attemptedHead} ${ref}`
     );
+  }, 30_000);
+
+  it("reads only canonical current and historical native heads without changing refs or HEAD", () => {
+    const store = createLocalPromotionControlStore(options());
+    const first = store.compareAndAppend({
+      expectedHead: null,
+      bytes: state(0),
+      createdAt,
+    }).attemptedHead!;
+    const second = store.compareAndAppend({
+      expectedHead: first,
+      bytes: state(1),
+      createdAt,
+    }).attemptedHead!;
+    const refs = git(["show-ref"]),
+      ordinaryHead = git(["symbolic-ref", "HEAD"]);
+    expect(store.readAt(second)).toEqual({ head: second, bytes: state(1) });
+    expect(store.readAt(first)).toEqual({ head: first, bytes: state(0) });
+    const child = store.prepareAppend({
+      expectedHead: second,
+      bytes: state(2),
+      createdAt,
+    });
+    const fork = store.prepareAppend({
+      expectedHead: first,
+      bytes: state(1, "unpublished-fork"),
+      createdAt,
+    });
+    const orphan = store.prepareAppend({
+      expectedHead: null,
+      bytes: state(0, "unpublished-root"),
+      createdAt,
+    });
+    for (const unpublished of [child, fork, orphan])
+      expect(() => store.readAt(unpublished.attemptedHead)).toThrow(
+        "canonical ancestor"
+      );
+    expect(git(["show-ref"])).toEqual(refs);
+    expect(git(["symbolic-ref", "HEAD"])).toEqual(ordinaryHead);
+    expect(store.read()).toEqual({ head: second, bytes: state(1) });
+  }, 30_000);
+
+  it("rejects malformed, missing and absent-canonical historical reads", () => {
+    const store = createLocalPromotionControlStore(options());
+    expect(() => store.readAt("a".repeat(40))).toThrow("Missing canonical");
+    const first = store.compareAndAppend({
+      expectedHead: null,
+      bytes: state(0),
+      createdAt,
+    }).attemptedHead!;
+    const refs = git(["show-ref"]);
+    for (const invalid of [
+      "HEAD",
+      "--all",
+      first.toUpperCase(),
+      "0".repeat(40),
+      "a".repeat(39),
+    ])
+      expect(() => store.readAt(invalid)).toThrow(
+        "full lowercase commit SHA-1"
+      );
+    expect(() => store.readAt("9".repeat(40))).toThrow("canonical ancestor");
+    expect(git(["show-ref"])).toEqual(refs);
+  }, 30_000);
+
+  it("fetches validated canonical remote history for an exact prior-head read", () => {
+    const writer = remote();
+    const first = writer.compareAndAppend({
+      expectedHead: null,
+      bytes: state(0),
+      createdAt,
+    }).attemptedHead!;
+    const second = writer.compareAndAppend({
+      expectedHead: first,
+      bytes: state(1),
+      createdAt,
+    }).attemptedHead!;
+    const readerRoot = initialize("history-reader");
+    const reader = remote(undefined, readerRoot);
+    const ordinaryHead = git(["symbolic-ref", "HEAD"], readerRoot);
+    expect(reader.readAt(first)).toEqual({ head: first, bytes: state(0) });
+    expect(reader.readAt(second)).toEqual({ head: second, bytes: state(1) });
+    const unpublished = reader.prepareAppend({
+      expectedHead: second,
+      bytes: state(2),
+      createdAt,
+    });
+    expect(() => reader.readAt(unpublished.attemptedHead)).toThrow(
+      "canonical ancestor"
+    );
+    expect(git(["symbolic-ref", "HEAD"], readerRoot)).toEqual(ordinaryHead);
+    expect(git(["for-each-ref"], readerRoot)).toEqual(Buffer.alloc(0));
+    expect(git(["show-ref"], bare).toString().trim()).toBe(`${second} ${ref}`);
   }, 30_000);
 
   it("rejects stale local owners and validator failures before creating new objects", () => {
@@ -690,6 +787,8 @@ describe("durable promotion Git compare-and-append", () => {
     const strict = createLocalPromotionControlStore(options());
     const before = git(["count-objects", "-v"]);
     expect(() => strict.read()).toThrow("Illegal revision");
+    // A legal nominated ancestor cannot bypass an invalid canonical tip.
+    expect(() => strict.readAt(bootstrap)).toThrow("Illegal revision");
     expect(git(["count-objects", "-v"])).toEqual(before);
     // Even a latest valid one-step projection cannot hide an invalid bootstrap.
     const other = initialize("forged-bootstrap");

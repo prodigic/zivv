@@ -43,6 +43,8 @@ export interface PromotionControlTransport {
 export interface PromotionControlStore {
   readonly ref: string;
   read(): PromotionControlRead;
+  /** Read an exact ancestor of the validated current canonical control head. */
+  readAt(head: string): PromotionControlRead;
   /** Persist local objects only; checkpoint this identity before remote writes. */
   prepareAppend(input: PromotionControlAppend): PreparedPromotionControlAppend;
   /** The completion proof helper verifies the root-to-key chain of these bytes. */
@@ -663,6 +665,20 @@ function createStore(
   return {
     ref,
     read,
+    readAt(controlHead) {
+      validateSha(controlHead);
+      const current = read();
+      if (current.head === null)
+        throw new Error("Missing canonical promotion control history");
+      try {
+        git(root, ["merge-base", "--is-ancestor", controlHead, current.head]);
+      } catch {
+        throw new Error(
+          "Promotion control history requires a canonical ancestor"
+        );
+      }
+      return { head: controlHead, bytes: load(controlHead).bytes };
+    },
     readback,
     readCompletionObject(controlHead, objectId, type) {
       validateSha(controlHead);

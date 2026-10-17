@@ -27,7 +27,9 @@ npm run weekly:run-import -- --run-id <persisted-run-id> --through load
 
 `--through` supports `acquire`, `prepare`, `reconcile`, `load` and the subsequent
 [freeze checkpoint](journaled-edition-freeze.md), followed by `enrich`, `export`
-and `validate` in the [candidate checkpoint](journaled-candidate-stages.md);
+and `validate` in the [candidate checkpoint](journaled-candidate-stages.md).
+Explicit `verify` and `acknowledge` resumes are available through the gated
+[delivery journal adapter](weekly-delivery-journal.md);
 default `load`
 commits a clean guarded import. Stopping after reconciliation leaves the catalog
 unchanged. Resume needs the run ID; the source file can be removed because raw

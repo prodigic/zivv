@@ -19,6 +19,9 @@ import { projectLedgerLocation } from "./store-location.js";
 import { WeeklyRunJournal } from "./weekly-run-journal.js";
 import { parseWeeklyEditionLedger } from "./weekly.js";
 import { freezeWeeklyImport } from "./weekly-edition-freeze.js";
+import { journalVerifiedWeeklyDelivery } from "./weekly-delivery.js";
+import { acknowledgeVerifiedWeeklyRelease } from "./weekly-acknowledgement.js";
+import type { PromotionControlStore } from "./promotion-control-git.js";
 import {
   runWeeklyCandidateStages,
   type WeeklyCandidateBuildOptions,
@@ -37,10 +40,17 @@ import type {
 
 const STAGES = ["acquire", "prepare", "reconcile", "load"] as const;
 type ImportStage = (typeof STAGES)[number];
-type WorkerStage = ImportStage | "freeze" | "enrich" | "export" | "validate";
+type WorkerStage =
+  | ImportStage
+  | "freeze"
+  | "enrich"
+  | "export"
+  | "validate"
+  | "verify"
+  | "acknowledge";
 export interface WeeklyImportProgress {
   runId: string;
-  stage: WorkerStage;
+  stage: WorkerStage | "deploy";
   phase: "started" | "artifact-saved" | "effect-committed" | "completed";
 }
 export class WeeklyImportRunnerError extends Error {
@@ -117,10 +127,30 @@ export async function runWeeklyImport(input: {
   freezeCutoffEpochMs?: number;
   reuseFrozen?: boolean;
   candidateBuild?: WeeklyCandidateBuildOptions;
+  verifiedDelivery?: { store: PromotionControlStore; candidate: Buffer };
+  controlledPublishing?: string;
+  manualPublisherJoined?: string;
   onProgress?: (event: WeeklyImportProgress) => void | Promise<void>;
   leaseTtlMs?: number;
 }): Promise<WeeklyRunState> {
   const root = resolve(input.root);
+  const delivering =
+    input.stopAfter === "verify" || input.stopAfter === "acknowledge";
+  const verifiedDelivery = input.verifiedDelivery
+    ? {
+        store: input.verifiedDelivery.store,
+        candidate: Buffer.from(input.verifiedDelivery.candidate),
+      }
+    : undefined;
+  if (
+    delivering &&
+    (!input.runId ||
+      !verifiedDelivery ||
+      input.controlledPublishing !== "enabled" ||
+      input.manualPublisherJoined !== "true")
+  )
+    fail("VERIFIED_DELIVERY_NOT_ENABLED");
+  if (verifiedDelivery && !delivering) fail("INVALID_RUN_INPUT");
   const candidateBuild = input.candidateBuild
     ? { ...input.candidateBuild }
     : undefined;
@@ -130,9 +160,15 @@ export async function runWeeklyImport(input: {
   if (
     !!source === !!input.runId ||
     (input.stopAfter &&
-      ![...STAGES, "freeze", "enrich", "export", "validate"].includes(
-        input.stopAfter
-      )) ||
+      ![
+        ...STAGES,
+        "freeze",
+        "enrich",
+        "export",
+        "validate",
+        "verify",
+        "acknowledge",
+      ].includes(input.stopAfter)) ||
     (input.freezeCutoffEpochMs !== undefined &&
       (!Number.isSafeInteger(input.freezeCutoffEpochMs) ||
         input.freezeCutoffEpochMs < 0 ||
@@ -641,7 +677,14 @@ export async function runWeeklyImport(input: {
     }
     if (
       input.stopAfter &&
-      ["freeze", "enrich", "export", "validate"].includes(input.stopAfter)
+      [
+        "freeze",
+        "enrich",
+        "export",
+        "validate",
+        "verify",
+        "acknowledge",
+      ].includes(input.stopAfter)
     ) {
       state = await freezeWeeklyImport({
         root,
@@ -656,7 +699,9 @@ export async function runWeeklyImport(input: {
     }
     if (
       input.stopAfter &&
-      ["enrich", "export", "validate"].includes(input.stopAfter)
+      ["enrich", "export", "validate", "verify", "acknowledge"].includes(
+        input.stopAfter
+      )
     ) {
       state = await runWeeklyCandidateStages({
         root,
@@ -664,12 +709,43 @@ export async function runWeeklyImport(input: {
         state,
         journal,
         lease: owned,
-        stopAfter: input.stopAfter as "enrich" | "export" | "validate",
+        stopAfter: delivering
+          ? "validate"
+          : (input.stopAfter as "enrich" | "export" | "validate"),
         candidateBuild,
+        requiredPurpose: delivering ? "release" : undefined,
         verifyContext,
         heartbeatMs: Math.max(10, Math.floor(ttl / 3)),
         onProgress: notify,
       });
+    }
+    if (delivering && verifiedDelivery) {
+      state = await journalVerifiedWeeklyDelivery({
+        state,
+        candidate: verifiedDelivery.candidate,
+        store: verifiedDelivery.store,
+        journal,
+        lease: owned,
+        verifyContext,
+        onProgress: notify,
+      });
+      if (input.stopAfter === "acknowledge") {
+        state = await acknowledgeVerifiedWeeklyRelease({
+          root,
+          state,
+          candidate: verifiedDelivery.candidate,
+          store: verifiedDelivery.store,
+          journal,
+          lease: owned,
+          verifyContext,
+          onProgress: (phase) =>
+            notify(
+              "acknowledge",
+              phase === "intent-saved" ? "artifact-saved" : "effect-committed"
+            ),
+        });
+        await notify("acknowledge", "completed");
+      }
     }
     return state;
   } finally {
