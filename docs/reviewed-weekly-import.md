@@ -99,3 +99,20 @@ runtime/credentials, monitoring and two observed Fridays remain activation gates
 
 The maintained manual import, weekly preparation, ETL and publication path remains
 available at this checkpoint.
+
+## Importer-version integration
+
+Friday's whole-show cancellation parser uses `steveslist-v5`. New review
+receipts and candidate run IDs share the current importer constant. The receipt
+parser also retains strict v4 support without changing existing serialized
+identities: the importer name and run-ID prefix must agree.
+
+A historical v4 review can recover only its exact already committed/published
+run, with the same corrected input, aliases, configuration, observation and saved
+report evidence. It cannot authorize a fresh v4 load under v5 parser semantics.
+Missing historical runs require new review rather than silent reimport.
+The manual v5 importer and Friday's cancellation behavior are unchanged.
+
+The ordered-merge ingestion gate exposed the original v5/v4 mismatch. Regression
+coverage includes the current cancellation path, mixed-version rejection, refusal
+of uncommitted legacy receipts and unchanged committed replay history.

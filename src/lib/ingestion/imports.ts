@@ -23,23 +23,34 @@ import {
   importDigest,
   importReportDigest,
   SteveImportReviewError,
+  CURRENT_STEVE_IMPORTER,
+  type SteveImporter,
   type SteveImportReview,
 } from "./steve-import-review.js";
 export type { SteveImportReview } from "./steve-import-review.js";
 import { projectLedgerLocation } from "./store-location.js";
 
-/** Bump the importer version when parsing/normalization semantics change. */
+/** Current parsing semantics define the identity of every new candidate batch. */
 export function steveRunId(
   content: string,
   aliases: Record<string, string>
 ): string {
+  return steveRunIdForImporter(content, aliases, CURRENT_STEVE_IMPORTER);
+}
+
+/** Legacy identities are used only to verify an existing reviewed replay. */
+function steveRunIdForImporter(
+  content: string,
+  aliases: Record<string, string>,
+  importer: SteveImporter
+): string {
   const identity = {
-    importer: "steveslist-v5",
+    importer,
     schema: 1,
     content: normalizeLatestContent(content),
     aliases: Object.entries(aliases).sort(([a], [b]) => a.localeCompare(b)),
   };
-  return `steveslist-v5-${createHash("sha256").update(JSON.stringify(identity)).digest("hex")}`;
+  return `${importer}-${createHash("sha256").update(JSON.stringify(identity)).digest("hex")}`;
 }
 
 /** Pure construction of a weekly candidate batch; shared reconciler owns acceptance. */
@@ -228,7 +239,7 @@ export async function reviewSteveImport(
   });
   const receipt = createSteveImportReview({
     schemaVersion: 1,
-    importer: "steveslist-v4",
+    importer: CURRENT_STEVE_IMPORTER,
     inputSha256: importDigest(content),
     configurationSha256: reviewed.configurationSha256,
     ledgerRevision: reviewed.inputLedgerRevision,
@@ -387,9 +398,14 @@ async function executeSteveImport(
       (text, c) => text.replace(new RegExp(c.pattern, "gim"), c.replacement),
       content
     );
-    const prior = ledger.runs.find(
-      (r) => r.runId === steveRunId(corrected, aliases)
+    const runId = steveRunIdForImporter(
+      corrected,
+      aliases,
+      options.reviewed?.importer ?? CURRENT_STEVE_IMPORTER
     );
+    if (options.reviewed && runId !== options.reviewed.importRunId)
+      throw new SteveImportReviewError("IMPORT_REPORT_CHANGED");
+    const prior = ledger.runs.find((r) => r.runId === runId);
     if (prior) {
       if (options.requireClean && !options.reviewed)
         prepareSteveBatch(
@@ -467,7 +483,12 @@ async function executeSteveImport(
       }
       return finish({ ledger, report: { ...report, replay: true } });
     }
-    if (options.requireReplay)
+    // A legacy receipt may recover its exact durable run, but cannot authorize
+    // parsing an uncommitted review under the current importer's semantics.
+    if (
+      options.requireReplay ||
+      (options.reviewed && options.reviewed.importer !== CURRENT_STEVE_IMPORTER)
+    )
       throw new SteveImportReviewError("NO_COMMITTED_IMPORT");
     if (
       options.reviewed &&
