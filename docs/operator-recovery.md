@@ -98,6 +98,9 @@ sandboxed by this marker. Do not point production tools at staging or remove the
 marker to bypass cutover review.
 
 Absolute paths inside immutable source/build/export artifacts remain unchanged.
+The optional [location inspection command](recovery-location-inspection.md)
+authenticates and verifies their staged inventory without changing receipt bytes
+or granting activation. It reports runtime mismatches and missing tool admission.
 Restoring bytes at a different location does not establish compatible runtime or
 path bindings. A validated relocation resolver and exact-runtime resume rehearsal
 remain required before operational restoration. Do not edit hashed receipts or
