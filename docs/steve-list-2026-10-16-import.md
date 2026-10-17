@@ -76,3 +76,14 @@ Delivery is tracked in [issue #63](https://github.com/prodigic/zivv/issues/63).
 Existing follow-ups cover reusable preparation (#10), performer ambiguities
 (#4), and legacy multi-location venue reconciliation (#5/#12). These are not
 represented as completed by this edition.
+
+## Verified publication
+
+Publication commit:
+[`bd3d0ba`](https://github.com/prodigic/zivv/commit/bd3d0ba02cce6ba187a7a9596f2813ac013cf1e7).
+The [Pages deployment](https://github.com/prodigic/zivv/actions/runs/38989137812)
+succeeded. At 6:05 p.m. Pacific on October 16, all 23 live files matched export
+`2026-10-17T01:00:16.194Z`, including 4,726 events and 85 weekly additions.
+The live newsletter shows the October 16 heading, intact artist names and
+regional city labels. The weekly edition was marked published after those
+checks, retaining the same exact cutoff and public membership.
