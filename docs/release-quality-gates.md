@@ -38,8 +38,17 @@ because it pushes a version before gates and ignores failures.
 Validate Actions contexts with actionlint as well as YAML parsing. Check both
 Linux CI and the local Git Bash fixture path before relying on these gates.
 
-This does not complete #39: full ingestion and semantic workflow validation still
-need required PR checks; legacy Vitest collection/coverage remains #9; ordinary
+The Test Suite now runs the full isolated ingestion command and checksum-pinned
+actionlint 1.7.12 for every PR target, including stacked branches. Both jobs feed
+the fail-closed Test Summary; failure, cancellation or skipping of a required job
+fails that summary. Repository permissions are read-only. The Codecov action is
+updated to a supported runner and input spelling so semantic validation passes.
+Actionlint checks Actions syntax/context/action inputs; external shellcheck and
+pyflakes are explicitly disabled. It is not a runtime workflow rehearsal.
+
+This does not complete #39: repository branch-rule enforcement must be reconciled
+with the maintained direct manual publication path before changing settings;
+legacy Vitest collection/coverage remains #9; ordinary
 Pages and version releases still run independently. Exact candidate promotion,
 manual-publisher controller participation, verified weekly acknowledgement and
 live/recovery rehearsals remain #31/#35/#36/#43. Failed release creation/upload
