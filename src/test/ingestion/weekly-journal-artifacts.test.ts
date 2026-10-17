@@ -68,14 +68,16 @@ describe("durable journal artifacts and guarded operations", () => {
     );
     close(f.journal);
     const db = new DatabaseSync(join(f.directory, "weekly-runs.sqlite"));
-    db.exec("DROP TABLE stage_artifact; PRAGMA user_version=1;");
+    db.exec(
+      "DROP TABLE intake_evidence; DROP TABLE stage_artifact; PRAGMA user_version=1;"
+    );
     db.close();
     const migrated = new WeeklyRunJournal(f.directory, () => 1000);
     opened.add(migrated);
     expect(migrated.loadOwned(state.runId, lease)).toEqual(running);
     migrated.checkOwnership(lease);
     const check = new DatabaseSync(migrated.path, { readOnly: true });
-    expect(check.prepare("PRAGMA user_version").get()?.user_version).toBe(2);
+    expect(check.prepare("PRAGMA user_version").get()?.user_version).toBe(3);
     check.close();
   });
   it("atomically retains raw intent and immutable per-attempt evidence across reopening", () => {
