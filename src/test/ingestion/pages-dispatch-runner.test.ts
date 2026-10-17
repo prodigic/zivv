@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import {
   existsSync,
   mkdtempSync,
@@ -7,6 +7,7 @@ import {
   rmSync,
   mkdirSync,
   writeFileSync,
+  unlinkSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -51,13 +52,41 @@ function fixture() {
   let failAfterCas = false;
   const events: string[] = [];
   const appends = new Map<string, Buffer>();
+  const history: {
+    head: string;
+    parentHead: string | null;
+    bytes: Buffer;
+    parentBytes: Buffer | null;
+    createdAt: string;
+  }[] = [
+    {
+      head,
+      parentHead: null,
+      bytes: serializePromotionControl(state),
+      parentBytes: null,
+      createdAt: "2026-10-16T12:00:00.123Z",
+    },
+  ];
+  let remoteSaved:
+    | {
+        intent: Record<string, unknown>;
+        pendingAppend: Record<string, unknown>;
+      }
+    | undefined;
   const initialHead = head;
   const store: PromotionControlStore = {
     ref: "refs/heads/zivv-promotion-control/production",
     read: () => ({ head, bytes: serializePromotionControl(state) }),
-    readAt: () => {
-      throw new Error("Unused native history fixture");
+    readAt: (selected) => {
+      const record = history.find((item) => item.head === selected);
+      if (!record) throw new Error("Noncanonical history fixture");
+      return { head: selected, bytes: Buffer.from(record.bytes) };
     },
+    readCanonicalHistory: () => ({
+      head,
+      complete: true,
+      commits: [...history].reverse(),
+    }),
     readCompletionObject: () => {
       throw new Error("Unused completion fixture");
     },
@@ -76,6 +105,13 @@ function fixture() {
       if (head !== input.expectedHead)
         return { status: "conflict", attemptedHead, observedHead: head };
       validatePromotionAppend(serializePromotionControl(state), input.bytes);
+      history.push({
+        head: attemptedHead,
+        parentHead: head,
+        bytes: Buffer.from(input.bytes),
+        parentBytes: serializePromotionControl(state),
+        createdAt: input.createdAt,
+      });
       state = parsePromotionControl(input.bytes);
       head = attemptedHead;
       return {
@@ -122,9 +158,11 @@ function fixture() {
       if (loseDispatchResponse) throw new Error(githubToken);
       return response(accepted);
     }
-    const saved = JSON.parse(
-      readFileSync(join(intentDirectory, "pages-dispatch.json"), "utf8")
-    );
+    const saved = existsSync(join(intentDirectory, "pages-dispatch.json"))
+      ? JSON.parse(
+          readFileSync(join(intentDirectory, "pages-dispatch.json"), "utf8")
+        )
+      : remoteSaved;
     const run = {
       id: 101,
       event: "workflow_dispatch",
@@ -172,6 +210,12 @@ function fixture() {
     head: () => head,
     state: () => state,
     initialHead,
+    losePrivateIntent: () => {
+      remoteSaved = JSON.parse(
+        readFileSync(join(intentDirectory, "pages-dispatch.json"), "utf8")
+      );
+      unlinkSync(join(intentDirectory, "pages-dispatch.json"));
+    },
     loseResponse: () => {
       loseDispatchResponse = true;
     },
@@ -185,6 +229,219 @@ function fixture() {
 }
 
 describe("private native controller dispatch checkpoint", () => {
+  it("proves accepted history when fresh-checkout local readback objects are missing", async () => {
+    const f = fixture();
+    await runPagesCandidateDispatch(f.options);
+    f.store.readback = () => {
+      throw new Error("Local object missing");
+    };
+    expect(
+      await runPagesCandidateDispatch({ ...f.options, command: "recover" })
+    ).toMatchObject({ status: "matched" });
+    expect(f.events).toEqual(["GET", "CAS", "POST", "GET"]);
+  });
+  it.each([
+    ["recover", "--operation-id", "a".repeat(64)],
+    ["recover", "--attempt-id", "b".repeat(64)],
+    ["recover", "--operation-id", "bad", "--attempt-id", "b".repeat(64)],
+    [
+      "dispatch",
+      "--operation-id",
+      "a".repeat(64),
+      "--attempt-id",
+      "b".repeat(64),
+    ],
+  ])(
+    "rejects malformed canonical recovery CLI selection %j before credentials or remote access",
+    (...selection) => {
+      const [command, ...flags] = selection;
+      const result = spawnSync(
+        process.execPath,
+        [
+          "scripts/dispatch-pages-candidate.js",
+          command,
+          "--workflow-commit",
+          workflowCommit,
+          "--mode",
+          "promote",
+          "--intent-dir",
+          directory(),
+          ...flags,
+        ],
+        {
+          encoding: "utf8",
+          windowsHide: true,
+          env: { ...process.env, GITHUB_TOKEN: "" },
+        }
+      );
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain("Usage:");
+    }
+  );
+  it("never accepts canonical selection as authorization for a new dispatch", async () => {
+    const f = fixture();
+    await expect(
+      runPagesCandidateDispatch({
+        ...f.options,
+        recovery: { operationId: "a".repeat(64), attemptId: "b".repeat(64) },
+      })
+    ).rejects.toThrow("recovery-only");
+    expect(f.requests).toHaveLength(0);
+    expect(f.head()).toBe(f.initialHead);
+  });
+  it("reconstructs lost private metadata from the exact canonical intent using GET only", async () => {
+    const f = fixture();
+    await runPagesCandidateDispatch(f.options);
+    const original = JSON.parse(
+      readFileSync(
+        join(f.options.intentDirectory, "pages-dispatch.json"),
+        "utf8"
+      )
+    );
+    f.losePrivateIntent();
+    const result = await runPagesCandidateDispatch({
+      ...f.options,
+      command: "recover",
+      recovery: {
+        operationId: original.intent.event.operationId,
+        attemptId: original.intent.event.attemptId,
+      },
+    });
+    expect(result).toMatchObject({
+      status: "matched",
+      receipt: { runId: "101" },
+    });
+    const recovered = JSON.parse(
+      readFileSync(
+        join(f.options.intentDirectory, "pages-dispatch.json"),
+        "utf8"
+      )
+    );
+    expect(recovered.intent).toEqual(original.intent);
+    expect(recovered.pendingAppend).toEqual(original.pendingAppend);
+    expect(f.events).toEqual(["GET", "CAS", "POST", "GET"]);
+  });
+  it("does not POST when remote intent survived but no run can be found", async () => {
+    const f = fixture();
+    f.loseCas();
+    f.noRun();
+    await expect(runPagesCandidateDispatch(f.options)).rejects.toThrow();
+    const original = JSON.parse(
+      readFileSync(
+        join(f.options.intentDirectory, "pages-dispatch.json"),
+        "utf8"
+      )
+    );
+    f.losePrivateIntent();
+    const options = {
+      ...f.options,
+      command: "recover" as const,
+      recovery: {
+        operationId: original.intent.event.operationId,
+        attemptId: original.intent.event.attemptId,
+      },
+    };
+    expect(await runPagesCandidateDispatch(options)).toEqual({
+      status: "uncertain",
+      reason: "no-match",
+    });
+    expect(await runPagesCandidateDispatch(options)).toEqual({
+      status: "uncertain",
+      reason: "no-match",
+    });
+    expect(f.requests.every((request) => request.method === "GET")).toBe(true);
+  });
+  it("uses a historically admitted run ID after local receipt loss", async () => {
+    const f = fixture();
+    await runPagesCandidateDispatch(f.options);
+    const original = JSON.parse(
+      readFileSync(
+        join(f.options.intentDirectory, "pages-dispatch.json"),
+        "utf8"
+      )
+    );
+    const active = f.state().active!,
+      attempt = active.promotionAttempt!;
+    const next = applyPromotionTransition(f.state(), {
+      type: "admit-run",
+      operationId: active.operationId,
+      mode: "promote",
+      attemptId: attempt.attemptId,
+      admission: { workflowCommit, runId: "101", runAttempt: 1 },
+    });
+    f.store.compareAndAppend({
+      expectedHead: f.head(),
+      bytes: serializePromotionControl(next),
+      createdAt: new Date().toISOString(),
+    });
+    f.losePrivateIntent();
+    expect(
+      await runPagesCandidateDispatch({
+        ...f.options,
+        command: "recover",
+        recovery: {
+          operationId: original.intent.event.operationId,
+          attemptId: original.intent.event.attemptId,
+        },
+      })
+    ).toMatchObject({ status: "matched" });
+    expect(f.requests.at(-1)?.url).toContain("/actions/runs/101");
+    expect(
+      f.requests.filter((request) => request.method === "POST")
+    ).toHaveLength(1);
+  });
+  it.each(["incomplete", "missing", "ambiguous", "no-nonce"])(
+    "blocks %s canonical history before recreating private metadata or HTTP",
+    async (problem) => {
+      const f = fixture();
+      await runPagesCandidateDispatch(f.options);
+      const original = JSON.parse(
+        readFileSync(
+          join(f.options.intentDirectory, "pages-dispatch.json"),
+          "utf8"
+        )
+      );
+      f.losePrivateIntent();
+      const count = f.requests.length,
+        read = f.store.readCanonicalHistory!;
+      f.store.readCanonicalHistory = (options) => {
+        const history = structuredClone(read(options));
+        history.commits = history.commits.map((record) => ({
+          ...record,
+          bytes: Buffer.from(record.bytes),
+          parentBytes:
+            record.parentBytes === null
+              ? null
+              : Buffer.from(record.parentBytes),
+        }));
+        if (problem === "incomplete") history.complete = false;
+        if (problem === "missing") history.commits = [];
+        if (problem === "ambiguous")
+          history.commits.unshift(history.commits[0]);
+        if (problem === "no-nonce") {
+          const state = JSON.parse(history.commits[0].bytes.toString("utf8"));
+          delete state.lastTransition.event.dispatchNonce;
+          delete state.active.promotionAttempt.dispatchNonce;
+          history.commits[0].bytes = Buffer.from(JSON.stringify(state));
+        }
+        return history;
+      };
+      await expect(
+        runPagesCandidateDispatch({
+          ...f.options,
+          command: "recover",
+          recovery: {
+            operationId: original.intent.event.operationId,
+            attemptId: original.intent.event.attemptId,
+          },
+        })
+      ).rejects.toThrow();
+      expect(f.requests).toHaveLength(count);
+      expect(
+        existsSync(join(f.options.intentDirectory, "pages-dispatch.json"))
+      ).toBe(false);
+    }
+  );
   it("persists exact prepared append before POST and sends its won control head", async () => {
     const f = fixture();
     const result = await runPagesCandidateDispatch(f.options);

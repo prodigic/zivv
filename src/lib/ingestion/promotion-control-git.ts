@@ -11,6 +11,24 @@ export interface PromotionControlRead {
   bytes: Buffer | null;
 }
 
+export interface PromotionControlHistoryOptions {
+  maxCommits?: number;
+  maxBytes?: number;
+}
+
+export interface PromotionControlHistory {
+  head: string | null;
+  complete: boolean;
+  /** Newest first, including each exact sole-parent transition. */
+  commits: {
+    head: string;
+    parentHead: string | null;
+    bytes: Buffer;
+    parentBytes: Buffer | null;
+    createdAt: string;
+  }[];
+}
+
 export interface PromotionControlAppend {
   expectedHead: string | null;
   bytes: Buffer;
@@ -45,6 +63,15 @@ export interface PromotionControlStore {
   read(): PromotionControlRead;
   /** Read an exact ancestor of the validated current canonical control head. */
   readAt(head: string): PromotionControlRead;
+  /**
+   * Snapshot one canonical head and return detached, validated transitions.
+   * Defaults: 1,000 commits / 16 MiB; maximum: 10,000 commits / 64 MiB.
+   * Byte limits include both buffers in every returned entry. Truncation never
+   * claims completeness. Limits bound the result, not initial chain validation.
+   */
+  readCanonicalHistory?(
+    options?: PromotionControlHistoryOptions
+  ): PromotionControlHistory;
   /** Persist local objects only; checkpoint this identity before remote writes. */
   prepareAppend(input: PromotionControlAppend): PreparedPromotionControlAppend;
   /** The completion proof helper verifies the root-to-key chain of these bytes. */
@@ -302,7 +329,12 @@ function commitBytes(
 function readCommit(
   root: string,
   head: string
-): { bytes: Buffer; parent: string | null; completionTree?: string } {
+): {
+  bytes: Buffer;
+  parent: string | null;
+  createdAt: string;
+  completionTree?: string;
+} {
   const commit = readObject(root, "commit", head);
   const match =
     /^tree ([a-f0-9]{40})\n(?:parent ([a-f0-9]{40})\n)?[\s\S]*\nCreated-at: (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\n$/.exec(
@@ -340,6 +372,7 @@ function readCommit(
   return {
     bytes: readObject(root, "blob", blob),
     parent: parent ?? null,
+    createdAt,
     completionTree,
   };
 }
@@ -665,6 +698,59 @@ function createStore(
   return {
     ref,
     read,
+    readCanonicalHistory(historyOptions = {}) {
+      if (
+        typeof historyOptions !== "object" ||
+        historyOptions === null ||
+        Array.isArray(historyOptions) ||
+        Object.keys(historyOptions).some(
+          (key) => key !== "maxCommits" && key !== "maxBytes"
+        )
+      ) {
+        throw new Error("Invalid promotion control history limits");
+      }
+      const maxCommits =
+        historyOptions.maxCommits === undefined
+          ? 1000
+          : historyOptions.maxCommits;
+      const maxBytes =
+        historyOptions.maxBytes === undefined
+          ? 16 * 1024 * 1024
+          : historyOptions.maxBytes;
+      if (
+        !Number.isSafeInteger(maxCommits) ||
+        maxCommits < 1 ||
+        maxCommits > 10_000 ||
+        !Number.isSafeInteger(maxBytes) ||
+        maxBytes < 1 ||
+        maxBytes > 64 * 1024 * 1024
+      ) {
+        throw new Error("Invalid promotion control history limits");
+      }
+      // Read the authoritative ref once. All subsequent reads follow immutable
+      // parents of that snapshot, never a refreshed or locally prepared head.
+      const current = read();
+      const commits: PromotionControlHistory["commits"] = [];
+      let cursor = current.head;
+      let usedBytes = 0;
+      while (cursor !== null && commits.length < maxCommits) {
+        const record = readCommit(root, cursor);
+        const parent =
+          record.parent === null ? null : readCommit(root, record.parent);
+        const entryBytes = record.bytes.length + (parent?.bytes.length ?? 0);
+        if (entryBytes > maxBytes - usedBytes) break;
+        commits.push({
+          head: cursor,
+          parentHead: record.parent,
+          bytes: Buffer.from(record.bytes),
+          parentBytes: parent === null ? null : Buffer.from(parent.bytes),
+          createdAt: record.createdAt,
+        });
+        usedBytes += entryBytes;
+        cursor = record.parent;
+      }
+      return { head: current.head, complete: cursor === null, commits };
+    },
     readAt(controlHead) {
       validateSha(controlHead);
       const current = read();

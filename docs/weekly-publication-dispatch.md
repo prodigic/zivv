@@ -87,6 +87,12 @@ reserved for the later native verification anchor. The claim plan and dispatch
 files must join the private recovery capsule before activation; the catalog-only
 encrypted backup does not include them.
 
+If private dispatch metadata alone is lost, the
+[canonical dispatch recovery command](canonical-dispatch-recovery.md) can rebuild
+the exact accepted attempt from validated remote history and reconcile its run
+using GET requests only. That does not recover the claim plan, journal, catalog
+or acknowledgement state, and no-match never authorizes another dispatch.
+
 When journal verification has succeeded, resume bypasses publication dispatch.
 The retained delivery anchor and acknowledgement completion proof can therefore
 finish after native acknowledgement cleared the active operation, even after a
