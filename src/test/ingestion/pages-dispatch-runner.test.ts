@@ -229,6 +229,42 @@ function fixture() {
 }
 
 describe("private native controller dispatch checkpoint", () => {
+  it("prefers canonical admission over a stale local run pointer", async () => {
+    const f = fixture();
+    await runPagesCandidateDispatch(f.options);
+    const active = f.state().active!,
+      attempt = active.promotionAttempt!;
+    const next = applyPromotionTransition(f.state(), {
+      type: "admit-run",
+      operationId: active.operationId,
+      mode: "promote",
+      attemptId: attempt.attemptId,
+      admission: { workflowCommit, runId: "101", runAttempt: 1 },
+    });
+    f.store.compareAndAppend({
+      expectedHead: f.head(),
+      bytes: serializePromotionControl(next),
+      createdAt: new Date().toISOString(),
+    });
+    const path = join(f.options.intentDirectory, "pages-dispatch.json"),
+      saved = JSON.parse(readFileSync(path, "utf8"));
+    saved.receipt.runId = "999";
+    writeFileSync(path, JSON.stringify(saved));
+    expect(
+      await runPagesCandidateDispatch({
+        ...f.options,
+        command: "recover",
+        recovery: {
+          operationId: active.operationId,
+          attemptId: attempt.attemptId,
+        },
+      })
+    ).toMatchObject({ status: "matched", receipt: { runId: "101" } });
+    expect(f.requests.at(-1)?.url).toContain("/actions/runs/101");
+    expect(
+      f.requests.filter((request) => request.method === "POST")
+    ).toHaveLength(1);
+  });
   it("proves accepted history when fresh-checkout local readback objects are missing", async () => {
     const f = fixture();
     await runPagesCandidateDispatch(f.options);

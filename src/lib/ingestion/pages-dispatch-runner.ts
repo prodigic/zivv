@@ -417,7 +417,7 @@ export async function runPagesCandidateDispatch(
       ...http,
       intent: saved.intent,
       controlHead: saved.pendingAppend.attemptedHead,
-      runId: saved.receipt?.runId ?? canonical?.runId,
+      runId: canonical?.runId ?? saved.receipt?.runId,
     });
     options.checkContext?.();
     if (result.status === "matched") {
