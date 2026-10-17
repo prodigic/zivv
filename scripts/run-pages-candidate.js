@@ -34,10 +34,14 @@ async function main() {
     );
   const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
   const identity = readPagesRunnerIdentity(process.env, root);
-  const statePath = process.env.ZIVV_PAGES_STATE_PATH ?? "";
-  const siteDirectory = process.env.ZIVV_SITE_DIRECTORY ?? "";
-  const archivePath = join(process.env.RUNNER_TEMP ?? "", "artifact.tar");
-  requirePagesScratchPaths(process.env.RUNNER_TEMP ?? "", root, [
+  const runnerTemp = process.env.RUNNER_TEMP ?? "";
+  const statePath =
+    process.env.ZIVV_PAGES_STATE_PATH ??
+    join(runnerTemp, "zivv-pages-operation.json");
+  const siteDirectory =
+    process.env.ZIVV_SITE_DIRECTORY ?? join(runnerTemp, "zivv-pages-site");
+  const archivePath = join(runnerTemp, "artifact.tar");
+  requirePagesScratchPaths(runnerTemp, root, [
     statePath,
     siteDirectory,
     archivePath,

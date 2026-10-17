@@ -219,12 +219,15 @@ describe("reviewed exact-candidate Pages workflow", () => {
   });
 
   it("admits before uploading site-only bytes and records deployment before status reconciliation", () => {
-    expect(publisher.env!.ZIVV_PAGES_STATE_PATH).toBe(
-      "${{ runner.temp }}/zivv-pages-operation.json"
-    );
-    expect(publisher.env!.ZIVV_SITE_DIRECTORY).toBe(
-      "${{ runner.temp }}/zivv-pages-site"
-    );
+    // Job env is evaluated before a runner exists. Step env/with may use runner,
+    // but the CLI resolves its scratch defaults from runtime RUNNER_TEMP.
+    expect(publisher.env!.ZIVV_PAGES_STATE_PATH).toBeUndefined();
+    expect(publisher.env!.ZIVV_SITE_DIRECTORY).toBeUndefined();
+    expect(
+      Object.values(publisher.env!).some((value) =>
+        /\b(?:runner|steps|env)\./.test(value)
+      )
+    ).toBe(false);
     const controllerCommands = commands.filter((step) =>
       step.run!.startsWith("node scripts/run-pages-candidate.js ")
     );

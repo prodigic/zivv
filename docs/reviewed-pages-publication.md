@@ -139,3 +139,15 @@ the new workflow has executed on GitHub or that Friday activation is complete.
 
 See [the primary-source API findings](research/pages-deployment-recovery.md)
 and [durable promotion control](durable-promotion-control.md).
+
+## Workflow context validation
+
+Job-level environment expressions are evaluated before a runner is available.
+The publisher CLI derives its checkpoint and site-directory defaults from the
+runtime `RUNNER_TEMP`; existing path containment/link guards still apply.
+Step-level archive upload expressions may use `runner.temp`.
+
+GitHub rejected the original job-level `runner.temp` expressions during the
+ordered merge checkpoint. `actionlint` 1.7.12 reproduces that exact context error
+and accepts the repaired workflow. YAML parsing alone cannot validate Actions
+expression availability; include semantic workflow validation in the #39 gate work.

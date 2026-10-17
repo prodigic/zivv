@@ -93,8 +93,6 @@ jobs:
       ZIVV_SOURCE_COMMIT: ${{ inputs.source_commit }}
       ZIVV_MODE: ${{ inputs.mode }}
       ZIVV_DESTINATION: ${{ inputs.destination }}
-      ZIVV_PAGES_STATE_PATH: ${{ runner.temp }}/zivv-pages-operation.json
-      ZIVV_SITE_DIRECTORY: ${{ runner.temp }}/zivv-pages-site
     steps:
       - name: Check out the executing reviewed workflow commit
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
