@@ -38,7 +38,7 @@ export interface RecoveryLocationReport {
     executableMatches: boolean;
     workerMatches: boolean;
     lockfileMatches: boolean;
-    npmIdentity: "not-retained";
+    npmIdentity: "not-retained" | "retained-build-identities";
   };
   requiredBeforeActivation: readonly string[];
 }
@@ -497,7 +497,18 @@ export function inspectOperatorRecoveryLocations(input: {
       lockfileMatches:
         sha256(regular(join(runtimeRoot, "package-lock.json"))) ===
         checkpoint.runtime.lockfileSha256,
-      npmIdentity: "not-retained",
+      npmIdentity: checkpoint.files.some(
+        (file) =>
+          file.area === "operator" &&
+          file.bytes !== null &&
+          /^weekly-candidates\/.+\/(?:source-build-[^/]+|candidate-[^/]+\/build)\/application-build\.json$/.test(
+            file.path
+          ) &&
+          JSON.parse(Buffer.from(file.bytes, "base64").toString("utf8"))
+            .schemaVersion === 2
+      )
+        ? "retained-build-identities"
+        : "not-retained",
     },
     requiredBeforeActivation,
   };

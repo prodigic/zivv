@@ -6,7 +6,10 @@ import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
 import { parseWeeklyEditionLedger } from "./weekly.js";
 import { normalizeSiteBase } from "../../utils/site-base.js";
 import { localDateKey } from "../discovery.js";
-import { verifyApplicationBuildReceipt } from "./source-build.js";
+import {
+  verifyApplicationBuildReceipt,
+  verifyBuildExecutionToolIdentity,
+} from "./source-build.js";
 import { ETLProcessor } from "../etl/processor.js";
 import { DataIndexer, SearchIndexBuilder } from "../etl/indexer.js";
 import { capturedExportCatalog, configurationJson } from "./export-catalog.js";
@@ -60,6 +63,7 @@ export interface CandidateInputs {
   applicationBuildManifest: Buffer;
   /** Required by the reviewed build/publish path; legacy isolated seals may omit it. */
   applicationBuildReceipt?: Buffer;
+  executionToolIdentity?: Buffer;
 }
 const hash = (bytes: string | Buffer) =>
   createHash("sha256").update(bytes).digest("hex");
@@ -131,6 +135,8 @@ function verifyRecords(actual: unknown[], expected: readonly unknown[]): void {
 
 /** Validate exact supplied bytes against authenticated recovery and captured edition/config. */
 export function sealReleaseCandidate(input: CandidateInputs): ReleaseCandidate {
+  if (input.executionToolIdentity && !input.applicationBuildReceipt)
+    throw new Error("Execution tool identity lacks build provenance");
   if (!/^[a-f0-9]{40}$/.test(input.sourceCommit))
     throw new Error("Invalid source commit");
   const basePath = normalizeSiteBase(input.basePath);
@@ -452,8 +458,8 @@ export function sealReleaseCandidate(input: CandidateInputs): ReleaseCandidate {
     if (html.includes("src/main.tsx"))
       throw new Error("Uncompiled application entry");
   }
-  if (input.applicationBuildReceipt)
-    verifyApplicationBuildReceipt(input.applicationBuildReceipt, {
+  if (input.applicationBuildReceipt) {
+    const build = verifyApplicationBuildReceipt(input.applicationBuildReceipt, {
       sourceCommit: input.sourceCommit,
       basePath,
       applicationBuildManifest: input.applicationBuildManifest,
@@ -461,6 +467,8 @@ export function sealReleaseCandidate(input: CandidateInputs): ReleaseCandidate {
         [...input.publicFiles].filter(([path]) => !path.startsWith("data/"))
       ),
     });
+    verifyBuildExecutionToolIdentity(build, input.executionToolIdentity);
+  }
   const identity = {
     schemaVersion: 1 as const,
     sourceCommit: input.sourceCommit,
