@@ -195,6 +195,7 @@ export function validateNpmExecutionToolIdentity(
   let previous = "",
     total = 0;
   const aliases = new Set<string>();
+  const prefixes = new Map<string, { path: string; directory: boolean }>();
   const files: { path: string; size: number; sha256: string }[] = [];
   for (const item of value.files) {
     const file = record(item);
@@ -214,6 +215,19 @@ export function validateNpmExecutionToolIdentity(
       fail();
     previous = file.path;
     aliases.add(file.path.toLowerCase());
+    const parts = file.path.split("/");
+    for (let index = 0; index < parts.length; index++) {
+      const path = parts.slice(0, index + 1).join("/"),
+        directory = index < parts.length - 1,
+        key = path.toLowerCase(),
+        existing = prefixes.get(key);
+      if (
+        existing &&
+        (existing.path !== path || existing.directory !== directory)
+      )
+        fail();
+      prefixes.set(key, { path, directory });
+    }
     files.push(
       Object.freeze({ path: file.path, size: file.size, sha256: file.sha256 })
     );

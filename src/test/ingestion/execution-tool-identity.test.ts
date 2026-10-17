@@ -250,4 +250,19 @@ describe("complete npm execution package identity", () => {
       ).toThrow();
     }
   });
+
+  it.each(["LIB/extra.js", "lib"])(
+    "rejects rehashed directory-prefix conflicts at %s without filesystem access",
+    (path) => {
+      const identity = captureNpmExecutionTool(cli),
+        files = [...identity.files, { ...identity.files[0], path }].sort(
+          (a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0)
+        ),
+        conflicting = rehash({ ...identity, files });
+      rmSync(root, { recursive: true });
+      expect(() => validateNpmExecutionToolIdentity(conflicting)).toThrow(
+        "INVALID_NPM_EXECUTION_TOOL"
+      );
+    }
+  );
 });
