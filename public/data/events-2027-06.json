@@ -24,7 +24,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-06-04-a-perfect-circle-the-cow-palace",
-      "sourceLineNumber": 1162,
+      "sourceLineNumber": 1072,
       "sources": [
         {
           "canonicalUrl": null,
@@ -34,8 +34,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1791595464839,
-          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "lastSeenAtEpochMs": 1792198061662,
+          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "originalVenueId": 850321337,
           "session": null,
           "sourceId": "steveslist"
@@ -48,6 +48,50 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790985835628,
       "venueId": 850321337,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        204256217
+      ],
+      "createdAtEpochMs": 1792198061662,
+      "date": "2027-06-11",
+      "dateEpochMs": 1812715200000,
+      "firstImportRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1792198061662,
+      "headlinerArtistId": 204256217,
+      "id": 1612319378,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-06-11-she-past-away-the-regency-ballroom",
+      "sourceLineNumber": 1073,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:64152d7e33f40f9e",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1792198061662,
+          "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1792198061662,
+          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "originalVenueId": 2133080253,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1812769200000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1792198061662,
+      "venueId": 2133080253,
       "venueType": "major"
     },
     {
@@ -68,7 +112,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-06-18-the-airborne-toxic-event-the-guild-theater",
-      "sourceLineNumber": 1163,
+      "sourceLineNumber": 1074,
       "sources": [
         {
           "canonicalUrl": null,
@@ -78,8 +122,8 @@
           "firstSeenAtEpochMs": 1789172046956,
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1791595464839,
-          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "lastSeenAtEpochMs": 1792198061662,
+          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "originalVenueId": 112130441,
           "session": null,
           "sourceId": "steveslist"
@@ -131,7 +175,7 @@
         }
       ],
       "slug": "2027-06-19-the-airborne-toxic-event-the-guild-theater",
-      "sourceLineNumber": 1164,
+      "sourceLineNumber": 1075,
       "sources": [
         {
           "canonicalUrl": null,
@@ -141,8 +185,8 @@
           "firstSeenAtEpochMs": 1789172046956,
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1791595464839,
-          "lastSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
+          "lastSeenAtEpochMs": 1792198061662,
+          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "originalVenueId": 112130441,
           "session": null,
           "sourceId": "steveslist"
