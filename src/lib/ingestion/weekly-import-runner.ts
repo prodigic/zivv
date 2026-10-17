@@ -16,6 +16,7 @@ import {
   recoverReviewedSteveImport,
 } from "./imports.js";
 import { projectLedgerLocation } from "./store-location.js";
+import { assertOperatorNotQuarantined } from "./private-artifacts.js";
 import { WeeklyRunJournal } from "./weekly-run-journal.js";
 import { parseWeeklyEditionLedger } from "./weekly.js";
 import { freezeWeeklyImport } from "./weekly-edition-freeze.js";
@@ -196,6 +197,7 @@ export async function runWeeklyImport(input: {
   const location = projectLedgerLocation(root);
   if (location.backend !== "sqlite" || !existsSync(location.path))
     fail("SHARED_SQLITE_REQUIRED");
+  assertOperatorNotQuarantined(location.directory);
   const storePath = realpathSync(location.path);
   const runtimeRoot = resolve(
     dirname(fileURLToPath(import.meta.url)),

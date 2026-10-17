@@ -8,7 +8,10 @@ import {
   secureOperatorDirectory,
   writeDurableFile,
 } from "./encrypted-backup.js";
-import { resolvePrivateCandidateDirectory } from "./private-artifacts.js";
+import {
+  assertOperatorNotQuarantined,
+  resolvePrivateCandidateDirectory,
+} from "./private-artifacts.js";
 import { WeeklyRunJournal, type WeeklyRunLease } from "./weekly-run-journal.js";
 
 const scope = "prodigic/zivv/production";
@@ -506,6 +509,7 @@ export async function captureSteveEmail(input: {
     rawSha256 = sha256(raw),
     receiptId = sha256(canonicalJson([accountSha256, editionId, sourceSha256]));
   const directory = resolvePrivateCandidateDirectory(input.operatorDirectory);
+  assertOperatorNotQuarantined(directory);
   secureOperatorDirectory(directory);
   const journal = new WeeklyRunJournal(directory);
   let lease: WeeklyRunLease | undefined;
