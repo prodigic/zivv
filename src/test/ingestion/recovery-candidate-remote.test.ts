@@ -18,6 +18,7 @@ import {
   candidatePublicReleaseId,
   promotionDigest,
   parsePromotionControl,
+  PROMOTION_DESTINATIONS,
 } from "../../lib/ingestion/promotion-control.js";
 import {
   PROMOTION_FIXTURE_CHECKS,
@@ -137,7 +138,7 @@ describe("canonical authority for a retained validated candidate", () => {
     fixture.step({ type: "deployed", ...owner, deployment });
     const body = {
       destination: "production" as const,
-      liveUrl: "https://prodigic.github.io/zivv/",
+      liveUrl: PROMOTION_DESTINATIONS.production.liveUrl,
       releaseId: candidatePublicReleaseId("production", fixture.claimRequest),
       inventorySha256: fixture.claimRequest.publicInventorySha256,
       deployment,
@@ -279,10 +280,10 @@ describe("canonical authority for a retained validated candidate", () => {
     });
     expect(() => open(missing)).toThrow();
     const pending = rewrite((journal) => {
-      const run = JSON.parse(journal.runState[0].payload);
-      run.stages[7].status = "running";
-      run.stages[7].evidence = null;
-      journal.runState[0].payload = canonicalJson(run);
+      journal.runState[0].payload = canonicalJson(
+        fixture.validationPendingState
+      );
+      journal.runState[0].revision = fixture.validationPendingState.revision;
     });
     expect(() => open(pending)).toThrow("VALIDATED_RUN_REQUIRED");
     const invalidValidation = rewrite((journal) => {

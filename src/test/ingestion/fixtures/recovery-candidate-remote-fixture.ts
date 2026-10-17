@@ -46,6 +46,7 @@ import {
   transitionWeeklyRun,
   type StageEvidence,
   type WeeklyRunStage,
+  type WeeklyRunState,
 } from "../../../lib/ingestion/weekly-run-state.js";
 import { captureOperatorRecoveryCheckpoint } from "../../../lib/ingestion/operator-recovery.js";
 import {
@@ -275,6 +276,7 @@ export async function createRecoveryCandidateRemoteFixture(directory: string) {
     rulesSha256,
     importObservedAtEpochMs: observed,
   });
+  let validationPendingState: WeeklyRunState | undefined;
   try {
     state = journal.create(state, lease, raw);
     const complete = (
@@ -293,6 +295,7 @@ export async function createRecoveryCandidateRemoteFixture(directory: string) {
         state.revision,
         lease
       );
+      if (stage === "validate") validationPendingState = structuredClone(state);
       journal.writeArtifact(state.runId, stage, bytes, lease);
       state = journal.save(
         transitionWeeklyRun(
@@ -466,6 +469,7 @@ export async function createRecoveryCandidateRemoteFixture(directory: string) {
     key,
     checkpoint,
     state,
+    validationPendingState: validationPendingState!,
     candidate: bundle.candidate,
     candidateBytes: Buffer.from(canonicalJson(bundle.candidate) + "\n"),
     workflowCommit,
