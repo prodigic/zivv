@@ -200,6 +200,168 @@ export async function acknowledgeVerifiedWeeklyRelease(input: {
     "acknowledge",
     item.attempt
   );
+  if (!bytes && item.status !== "succeeded") {
+    const current = readControl(),
+      active = current.control.active;
+    const needsRecovery =
+      !active ||
+      active.phase !== "verified" ||
+      active.request.candidateId !== candidate.candidateId ||
+      active.request.sourceCommit !== candidate.sourceCommit ||
+      active.verification?.deployment.deploymentId !== verified.deploymentId ||
+      !!active.acknowledgementIntent;
+    if (needsRecovery) {
+      if (!input.store.readCanonicalHistory)
+        throw new Error(
+          "Missing private acknowledgement intent; canonical history is required"
+        );
+      const history = input.store.readCanonicalHistory({
+        maxCommits: 1000,
+        maxBytes: 16 * 1024 * 1024,
+      });
+      if (!history.complete)
+        throw new Error("Acknowledgement recovery history is incomplete");
+      const matches = history.commits.filter((record) => {
+        const control = parsePromotionControl(record.bytes),
+          event = control.lastTransition.event;
+        if (event.type !== "acknowledgement-intent") return false;
+        const operation = control.active;
+        return (
+          operation?.operationId === event.operationId &&
+          operation.request.candidateId === candidate.candidateId &&
+          operation.request.sourceCommit === candidate.sourceCommit &&
+          operation.verification?.deployment.deploymentId ===
+            verified.deploymentId
+        );
+      });
+      if (
+        matches.length === 0 &&
+        current.control.active &&
+        current.control.active.phase !== "verified"
+      )
+        throw new Error("Current verified release owner required");
+      if (matches.length !== 1)
+        throw new Error(
+          "Canonical acknowledgement intent is missing or ambiguous"
+        );
+      const record = matches[0],
+        bound = parsePromotionControl(record.bytes),
+        event = bound.lastTransition.event;
+      if (
+        event.type !== "acknowledgement-intent" ||
+        !record.parentHead ||
+        !record.parentBytes
+      )
+        throw new Error("Canonical acknowledgement lacks its parent");
+      const parent = parsePromotionControl(record.parentBytes),
+        operation = requireVerified(parent);
+      same(
+        operation.operationId,
+        event.operationId,
+        "Recovered acknowledgement owner changed"
+      );
+      same(
+        operation.verification!.receiptId,
+        event.verificationReceiptId,
+        "Recovered acknowledgement verification changed"
+      );
+      const enriched = state.stages.find((stage) => stage.stage === "enrich")!;
+      const retained = input.journal.readArtifact(
+        state.runId,
+        "enrich",
+        enriched.attempt
+      );
+      if (!retained)
+        throw new Error(
+          "Missing sealed weekly preimage for acknowledgement recovery"
+        );
+      const configuration = JSON.parse(retained.toString("utf8")) as {
+        configuration?: Record<string, unknown>;
+      };
+      const encoded =
+        configuration.configuration?.["ingestion/weekly-editions.json"];
+      if (typeof encoded !== "string")
+        throw new Error(
+          "Missing sealed weekly preimage for acknowledgement recovery"
+        );
+      const before = decode(encoded);
+      same(
+        sha256(before),
+        candidate.configuration.find(
+          (file) => file.path === "ingestion/weekly-editions.json"
+        )?.sha256,
+        "Recovered weekly preimage differs from sealed configuration"
+      );
+      const weekly = parseWeeklyEditionLedger(
+        JSON.parse(before.toString("utf8"))
+      );
+      const after = Buffer.from(
+        serializeWeeklyEditionLedger(
+          markWeeklyEditionPublished(weekly, candidate.editionId).ledger
+        )
+      );
+      const intent: Intent = {
+        schemaVersion: 1,
+        runId: state.runId,
+        operationId: operation.operationId,
+        requestId: operation.request.requestId,
+        candidateId: candidate.candidateId,
+        verificationReceiptId: operation.verification!.receiptId,
+        before: before.toString("base64"),
+        after: after.toString("base64"),
+        createdAt: record.createdAt,
+      };
+      same(
+        sha256(canonicalJson(intent)),
+        event.acknowledgementId,
+        "Recovered acknowledgement digest differs from canonical intent"
+      );
+      same(
+        serializePromotionControl(
+          applyPromotionTransition(parent, event)
+        ).toString("base64"),
+        record.bytes.toString("base64"),
+        "Recovered acknowledgement transition changed"
+      );
+      const intentAppend = input.store.prepareAppend({
+        expectedHead: record.parentHead,
+        bytes: record.bytes,
+        createdAt: record.createdAt,
+      });
+      same(
+        intentAppend.attemptedHead,
+        record.head,
+        "Recovered acknowledgement commit changed"
+      );
+      const completed = applyPromotionTransition(bound, {
+        type: "acknowledged",
+        operationId: intent.operationId,
+        verificationReceiptId: intent.verificationReceiptId,
+        acknowledgementId: event.acknowledgementId,
+        replayProof: null,
+      });
+      const completionAppend = input.store.prepareAppend({
+        expectedHead: record.head,
+        bytes: serializePromotionControl(completed),
+        createdAt: record.createdAt,
+      });
+      bytes = Buffer.from(
+        canonicalJson({
+          intent,
+          intentAppend: saveAppend(intentAppend),
+          completionAppend: saveAppend(completionAppend),
+        }) + "\n"
+      );
+      input.verifyContext();
+      input.journal.writeArtifact(
+        state.runId,
+        "acknowledge",
+        bytes,
+        input.lease
+      );
+      await input.onProgress?.("intent-saved");
+    }
+  }
   if (!bytes) {
     if (item.status === "succeeded")
       throw new Error("Missing completed acknowledgement intent");
@@ -454,6 +616,38 @@ export async function acknowledgeVerifiedWeeklyRelease(input: {
     if (!remoteCompleted)
       throw new Error("Missing acknowledgement completion proof");
     await input.onProgress?.("remote-completed");
+  } else {
+    // A newer native completion can survive loss of the private weekly write.
+    // Only the exact original preimage may be repaired; later legitimate weekly
+    // state with an already-published matching target is retained byte-for-byte.
+    await input.journal.guardOperation(input.lease, () =>
+      withIngestionLock(input.root, async () => {
+        input.verifyContext();
+        if (!isCompleted(readControl()))
+          throw new Error("Acknowledgement completion authority changed");
+        const actual = readWeekly(weeklyPath);
+        if (actual.equals(before) && !actual.equals(after))
+          writeDurableFile(weeklyPath, after);
+        else {
+          const current = parseWeeklyEditionLedger(
+              JSON.parse(actual.toString("utf8"))
+            ),
+            expected = parseWeeklyEditionLedger(
+              JSON.parse(after.toString("utf8"))
+            );
+          same(
+            current.editions.find(
+              (edition) => edition.editionId === candidate.editionId
+            ),
+            expected.editions.find(
+              (edition) => edition.editionId === candidate.editionId
+            ),
+            "Completed weekly edition changed"
+          );
+        }
+        input.verifyContext();
+      })
+    );
   }
   const currentWeekly = parseWeeklyEditionLedger(
     JSON.parse(readWeekly(weeklyPath).toString("utf8"))
