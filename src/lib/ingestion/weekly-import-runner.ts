@@ -21,6 +21,10 @@ import { parseWeeklyEditionLedger } from "./weekly.js";
 import { freezeWeeklyImport } from "./weekly-edition-freeze.js";
 import { journalVerifiedWeeklyDelivery } from "./weekly-delivery.js";
 import { acknowledgeVerifiedWeeklyRelease } from "./weekly-acknowledgement.js";
+import {
+  ensureWeeklyPublication,
+  type WeeklyPublicationOptions,
+} from "./weekly-publication.js";
 import type { PromotionControlStore } from "./promotion-control-git.js";
 import {
   runWeeklyCandidateStages,
@@ -46,6 +50,7 @@ type WorkerStage =
   | "enrich"
   | "export"
   | "validate"
+  | "dispatch"
   | "verify"
   | "acknowledge";
 export interface WeeklyImportProgress {
@@ -128,6 +133,7 @@ export async function runWeeklyImport(input: {
   reuseFrozen?: boolean;
   candidateBuild?: WeeklyCandidateBuildOptions;
   verifiedDelivery?: { store: PromotionControlStore; candidate: Buffer };
+  publication?: WeeklyPublicationOptions;
   controlledPublishing?: string;
   manualPublisherJoined?: string;
   onProgress?: (event: WeeklyImportProgress) => void | Promise<void>;
@@ -135,11 +141,21 @@ export async function runWeeklyImport(input: {
 }): Promise<WeeklyRunState> {
   const root = resolve(input.root);
   const delivering =
-    input.stopAfter === "verify" || input.stopAfter === "acknowledge";
-  const verifiedDelivery = input.verifiedDelivery
+    input.stopAfter === "dispatch" ||
+    input.stopAfter === "verify" ||
+    input.stopAfter === "acknowledge";
+  if (input.publication && input.verifiedDelivery) fail("INVALID_RUN_INPUT");
+  const publication = input.publication
     ? {
-        store: input.verifiedDelivery.store,
-        candidate: Buffer.from(input.verifiedDelivery.candidate),
+        ...input.publication,
+        candidate: Buffer.from(input.publication.candidate),
+      }
+    : undefined;
+  const suppliedDelivery = publication ?? input.verifiedDelivery;
+  const verifiedDelivery = suppliedDelivery
+    ? {
+        store: suppliedDelivery.store,
+        candidate: Buffer.from(suppliedDelivery.candidate),
       }
     : undefined;
   if (
@@ -151,6 +167,7 @@ export async function runWeeklyImport(input: {
   )
     fail("VERIFIED_DELIVERY_NOT_ENABLED");
   if (verifiedDelivery && !delivering) fail("INVALID_RUN_INPUT");
+  if (input.stopAfter === "dispatch" && !publication) fail("INVALID_RUN_INPUT");
   const candidateBuild = input.candidateBuild
     ? { ...input.candidateBuild }
     : undefined;
@@ -166,6 +183,7 @@ export async function runWeeklyImport(input: {
         "enrich",
         "export",
         "validate",
+        "dispatch",
         "verify",
         "acknowledge",
       ].includes(input.stopAfter)) ||
@@ -682,6 +700,7 @@ export async function runWeeklyImport(input: {
         "enrich",
         "export",
         "validate",
+        "dispatch",
         "verify",
         "acknowledge",
       ].includes(input.stopAfter)
@@ -699,9 +718,14 @@ export async function runWeeklyImport(input: {
     }
     if (
       input.stopAfter &&
-      ["enrich", "export", "validate", "verify", "acknowledge"].includes(
-        input.stopAfter
-      )
+      [
+        "enrich",
+        "export",
+        "validate",
+        "dispatch",
+        "verify",
+        "acknowledge",
+      ].includes(input.stopAfter)
     ) {
       state = await runWeeklyCandidateStages({
         root,
@@ -720,6 +744,27 @@ export async function runWeeklyImport(input: {
       });
     }
     if (delivering && verifiedDelivery) {
+      if (
+        publication &&
+        state.stages.find((s) => s.stage === "verify")?.status !== "succeeded"
+      ) {
+        const result = await ensureWeeklyPublication({
+          ...publication,
+          root,
+          operatorDirectory: location.directory,
+          state,
+          journal,
+          lease: owned,
+          controlledPublishing: input.controlledPublishing,
+          manualPublisherJoined: input.manualPublisherJoined,
+          verifyContext,
+          heartbeatMs: Math.max(10, Math.floor(ttl / 3)),
+          onProgress: notify,
+        });
+        state = result.state;
+        if (result.status === "pending") return state;
+      }
+      if (input.stopAfter === "dispatch") return state;
       state = await journalVerifiedWeeklyDelivery({
         state,
         candidate: verifiedDelivery.candidate,

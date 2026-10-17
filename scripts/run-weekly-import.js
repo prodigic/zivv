@@ -34,6 +34,7 @@ for (let index = 0; index < args.length; index += 2) {
       "base",
       "npm-cli",
       "candidate",
+      "workflow-commit",
     ].includes(key) ||
     Object.hasOwn(options, key) ||
     !value ||
@@ -76,6 +77,7 @@ if (
     "enrich",
     "export",
     "validate",
+    "dispatch",
     "verify",
     "acknowledge",
   ].includes(options.through)
@@ -88,9 +90,15 @@ if (
   throw new Error("--reuse-frozen must be true or false");
 if (
   (options["freeze-cutoff"] || options["reuse-frozen"]) &&
-  !["freeze", "enrich", "export", "validate", "verify", "acknowledge"].includes(
-    options.through
-  )
+  ![
+    "freeze",
+    "enrich",
+    "export",
+    "validate",
+    "dispatch",
+    "verify",
+    "acknowledge",
+  ].includes(options.through)
 )
   throw new Error(
     "Freeze options require --through freeze or a later candidate stage"
@@ -99,19 +107,38 @@ const buildKeys = ["source-commit", "purpose", "base", "npm-cli"];
 if (
   buildKeys.some((key) => options[key]) &&
   (!buildKeys.every((key) => options[key]) ||
-    !["enrich", "export", "validate", "verify", "acknowledge"].includes(
-      options.through
-    ))
+    ![
+      "enrich",
+      "export",
+      "validate",
+      "dispatch",
+      "verify",
+      "acknowledge",
+    ].includes(options.through))
 )
   throw new Error("Candidate stages require all four build options together");
-const delivering = ["verify", "acknowledge"].includes(options.through);
+const delivering = ["dispatch", "verify", "acknowledge"].includes(
+  options.through
+);
 if (options.candidate && !delivering)
-  throw new Error("--candidate requires --through verify or acknowledge");
+  throw new Error(
+    "--candidate requires --through dispatch, verify or acknowledge"
+  );
+if (
+  options["workflow-commit"] &&
+  (!delivering || !/^[a-f0-9]{40}$/.test(options["workflow-commit"]))
+)
+  throw new Error(
+    "Reviewed workflow commit requires a delivery stage and full SHA"
+  );
+if (options.through === "dispatch" && !options["workflow-commit"])
+  throw new Error("Dispatch requires --workflow-commit");
 async function execute() {
   const root = resolve(
     options.root ?? fileURLToPath(new URL("../", import.meta.url))
   );
   let verifiedDelivery;
+  let publication;
   if (delivering) {
     if (
       !options["run-id"] ||
@@ -140,7 +167,16 @@ async function execute() {
       },
       validateTransition: validatePromotionAppend,
     });
-    verifiedDelivery = { store, candidate: readFileSync(path) };
+    const candidate = readFileSync(path);
+    if (options["workflow-commit"])
+      publication = {
+        store,
+        transport,
+        candidate,
+        workflowCommit: options["workflow-commit"],
+        githubToken: process.env.GITHUB_TOKEN,
+      };
+    else verifiedDelivery = { store, candidate };
   }
   return runWeeklyImport({
     root,
@@ -160,6 +196,7 @@ async function execute() {
         }
       : undefined,
     verifiedDelivery,
+    publication,
     controlledPublishing: process.env.ZIVV_CONTROLLED_PUBLISHING,
     manualPublisherJoined: process.env.ZIVV_MANUAL_PUBLISHER_JOINED,
     onProgress: ({ runId, stage, phase }) =>
@@ -182,6 +219,15 @@ if (state)
       runId: state.runId,
       revision: state.revision,
       source: state.source,
+      deliveryStatus: delivering
+        ? state.stages.find((item) => item.stage === "acknowledge")?.status ===
+          "succeeded"
+          ? "acknowledged"
+          : state.stages.find((item) => item.stage === "verify")?.status ===
+              "succeeded"
+            ? "verified"
+            : "pending"
+        : undefined,
       stages: state.stages.map(({ stage, status, attempt, errorCode }) => ({
         stage,
         status,
