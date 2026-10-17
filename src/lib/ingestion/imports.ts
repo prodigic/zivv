@@ -141,7 +141,12 @@ export function prepareSteveBatch(
     }) ||
       normalizedEvents.events.length !== parsed.rawEvents.length)
   )
-    throw new SteveImportReviewError("CORE_RECONCILIATION_REQUIRED");
+    throw new SteveImportReviewError("CORE_RECONCILIATION_REQUIRED", {
+      kind: "normalization",
+      parsedRows: parsed.rawEvents.length,
+      normalizedRows: normalizedEvents.events.length,
+      warnings: normalizedEvents.warnings,
+    });
   if (normalizedEvents.errors.length)
     throw new Error(
       `Steve's List normalization failed: ${normalizedEvents.errors.map((e) => e.message).join("; ")}`
@@ -254,6 +259,25 @@ export async function loadReviewedSteveImport(
   ).result;
 }
 
+/** Inspect a trusted committed import without ever creating a missing catalog run. */
+export async function recoverReviewedSteveImport(
+  root: string,
+  content: string,
+  receipt: SteveImportReview,
+  assertOwnership: () => void
+): Promise<ReconciliationResult> {
+  const reviewed = parseSteveImportReview(receipt);
+  return (
+    await executeSteveImport(root, content, {
+      observedAtEpochMs: reviewed.observedAtEpochMs,
+      requireClean: true,
+      reviewed,
+      assertOwnership,
+      requireReplay: true,
+    })
+  ).result;
+}
+
 async function executeSteveImport(
   root: string,
   content: string,
@@ -263,6 +287,7 @@ async function executeSteveImport(
     requireClean?: boolean;
     reviewed?: SteveImportReview;
     assertOwnership?: () => void;
+    requireReplay?: boolean;
   }
 ) {
   if (options.requireClean && projectLedgerLocation(root).backend !== "sqlite")
@@ -288,7 +313,12 @@ async function executeSteveImport(
         options.requireClean &&
         (result.report.review.length || result.report.conflicts.length)
       )
-        throw new SteveImportReviewError("CORE_RECONCILIATION_REQUIRED");
+        throw new SteveImportReviewError("CORE_RECONCILIATION_REQUIRED", {
+          kind: "reconciliation",
+          report: result.report,
+          ledgerRevision: inputLedgerRevision,
+          configurationSha256,
+        });
       const reviewed = options.reviewed;
       if (reviewed) {
         if (
@@ -437,6 +467,8 @@ async function executeSteveImport(
       }
       return finish({ ledger, report: { ...report, replay: true } });
     }
+    if (options.requireReplay)
+      throw new SteveImportReviewError("NO_COMMITTED_IMPORT");
     if (
       options.reviewed &&
       inputLedgerRevision !== options.reviewed.ledgerRevision

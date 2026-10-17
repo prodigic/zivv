@@ -17,10 +17,16 @@ export interface SteveImportReview {
 }
 export class SteveImportReviewError extends Error {
   readonly code: string;
-  constructor(code: string) {
+  readonly diagnostic?: Record<string, unknown>;
+  constructor(code: string, diagnostic?: Record<string, unknown>) {
     super(code);
     this.code = code;
     this.name = "SteveImportReviewError";
+    if (diagnostic)
+      Object.defineProperty(this, "diagnostic", {
+        value: structuredClone(diagnostic),
+        enumerable: false,
+      });
   }
 }
 export const importDigest = (value: string | Buffer): string =>

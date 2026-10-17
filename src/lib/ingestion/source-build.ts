@@ -424,8 +424,20 @@ export function verifyCompiledEtl(
   if (compiledEtlDigest(sourceRoot) !== expectedDigest)
     throw new Error("Compiled ETL differs from reviewed build receipt");
 }
-function compiledEtlDigest(sourceRoot: string): string {
-  const files = applicationTree(join(sourceRoot, "dist"), false);
+export function compiledEtlDigest(
+  sourceRoot: string,
+  scope: "all" | "worker" = "all"
+): string {
+  const dist = join(sourceRoot, "dist");
+  let files: Map<string, Buffer>;
+  if (scope === "worker") {
+    files = new Map();
+    for (const directory of ["lib", "types", "utils"])
+      for (const [path, bytes] of applicationTree(join(dist, directory), false))
+        files.set(directory + "/" + path, bytes);
+    if (!files.has("lib/ingestion/weekly-import-runner.js"))
+      throw new Error("Compiled worker is missing");
+  } else files = applicationTree(dist, false);
   return hash(
     canonicalJson(
       [...files]
