@@ -1,4 +1,9 @@
-import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
+import {
+  createCipheriv,
+  createDecipheriv,
+  randomBytes,
+  randomUUID,
+} from "node:crypto";
 import { gzipSync, gunzipSync } from "node:zlib";
 import {
   existsSync,
@@ -7,8 +12,26 @@ import {
   readFileSync,
   readdirSync,
   realpathSync,
+  openSync,
+  closeSync,
+  fsyncSync,
+  writeFileSync,
 } from "node:fs";
-import { dirname, join, posix, win32 } from "node:path";
+import {
+  dirname,
+  join,
+  posix,
+  win32,
+  relative,
+  isAbsolute,
+  resolve,
+} from "node:path";
+import {
+  createOperatorRetirementReceipt,
+  verifyOperatorRetirementReceipt,
+  withOperatorRetirementScope,
+  type OperatorRetirementReceipt,
+} from "./operator-installation.js";
 import { validateLedger } from "./ledger.js";
 import type {
   IngestionLedger,
@@ -20,6 +43,7 @@ import {
   readSqliteLedger,
   withStoreTransaction,
   writeSqliteLedger,
+  assertNoActiveStoreTransaction,
 } from "./sqlite-store.js";
 import {
   CANDIDATE_CONFIG_FILES,
@@ -33,6 +57,7 @@ import {
 import {
   secureOperatorDirectory,
   writeDurableFile,
+  loadBackupKey,
 } from "./encrypted-backup.js";
 import {
   assertOperatorNotQuarantined,
@@ -162,7 +187,7 @@ function allowed(area: string, path: string): boolean {
         (checkoutFiles.includes(path) ||
           checkoutTrees.some((tree) => path.startsWith(tree + "/")));
 }
-function regular(path: string): Buffer {
+function regular(path: string, limit = maxBytes): Buffer {
   for (let parent = dirname(path); ; parent = dirname(parent)) {
     if (lstatSync(parent).isSymbolicLink()) fail();
     if (dirname(parent) === parent) break;
@@ -172,7 +197,7 @@ function regular(path: string): Buffer {
     !stat.isFile() ||
     stat.isSymbolicLink() ||
     stat.nlink !== 1 ||
-    stat.size > maxBytes
+    stat.size > limit
   )
     fail();
   return readFileSync(path);
@@ -668,10 +693,18 @@ function verifyRecoveryCandidates(
 export async function captureOperatorRecoveryCheckpoint(
   root: string
 ): Promise<OperatorRecoveryCheckpoint> {
+  return captureCheckpoint(root);
+}
+
+async function captureCheckpoint(
+  root: string,
+  finalize?: (checkpoint: OperatorRecoveryCheckpoint) => void
+): Promise<OperatorRecoveryCheckpoint> {
   const checkout = realpathSync(root),
     location = projectLedgerLocation(checkout);
   if (location.backend !== "sqlite" || !existsSync(location.path))
     throw new Error("SHARED_SQLITE_REQUIRED");
+  assertNoActiveStoreTransaction(location.path);
   const operator = resolvePrivateCandidateDirectory(location.directory);
   assertOperatorNotQuarantined(operator);
   const journal = new WeeklyRunJournal(operator);
@@ -709,6 +742,7 @@ export async function captureOperatorRecoveryCheckpoint(
         )
           throw new Error("RECOVERY_INPUTS_CHANGED");
         journal.checkOwnership(owned);
+        finalize?.(checkpoint);
         return checkpoint;
       })
     );
@@ -719,6 +753,140 @@ export async function captureOperatorRecoveryCheckpoint(
       journal.close();
     }
   }
+}
+
+/** Authenticate portable final-capture evidence; this grants no installation activation. */
+export function verifyOperatorRetirementEvidence(input: {
+  archive: Buffer;
+  retirementReceipt: Buffer;
+  recoveryKey: Buffer;
+}): {
+  checkpoint: OperatorRecoveryCheckpoint;
+  receipt: OperatorRetirementReceipt;
+} {
+  const receipt = verifyOperatorRetirementReceipt(
+    input.retirementReceipt,
+    input.recoveryKey
+  );
+  const checkpoint = decryptOperatorRecovery(input.archive, input.recoveryKey);
+  if (
+    receipt.archiveSha256 !== sha256(input.archive) ||
+    receipt.checkpointSha256 !== sha256(canonicalJson(checkpoint)) ||
+    receipt.originalOperatorDirectory !==
+      checkpoint.originalOperatorDirectory ||
+    receipt.ledgerRevision !== checkpoint.ledgerRevision
+  )
+    throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
+  return { checkpoint, receipt };
+}
+
+/** Persist a final backup and fence this cooperating installation under both writer locks. */
+export async function retireAndCaptureOperatorRecovery(input: {
+  root: string;
+  out: string;
+}): Promise<{
+  checkpoint: OperatorRecoveryCheckpoint;
+  retirementReceipt: Buffer;
+}> {
+  const checkout = realpathSync(input.root),
+    location = projectLedgerLocation(checkout);
+  if (location.backend !== "sqlite" || !existsSync(location.path))
+    throw new Error("SHARED_SQLITE_REQUIRED");
+  assertNoActiveStoreTransaction(location.path);
+  const operator = resolvePrivateCandidateDirectory(location.directory),
+    out = resolve(input.out),
+    marker = join(operator, "operator-retired.json"),
+    portableReceipt = out + ".retirement.json";
+  if (resolvePrivateCandidateDirectory(dirname(out)) !== dirname(out))
+    throw new Error("UNSAFE_RECOVERY_OUTPUT");
+  const within = relative(operator, out);
+  if (
+    !within ||
+    (!isAbsolute(within) &&
+      within !== ".." &&
+      !within.startsWith(".." + (process.platform === "win32" ? "\\" : "/")))
+  )
+    throw new Error("UNSAFE_RECOVERY_OUTPUT");
+  const key = loadBackupKey(operator);
+  const writeExclusive = (path: string, bytes: Buffer) => {
+    const fd = openSync(path, "wx", 0o600);
+    try {
+      writeFileSync(fd, bytes);
+      fsyncSync(fd);
+    } finally {
+      closeSync(fd);
+    }
+    if (process.platform !== "win32") {
+      const parentFd = openSync(dirname(path), "r");
+      try {
+        fsyncSync(parentFd);
+      } finally {
+        closeSync(parentFd);
+      }
+    }
+  };
+  const persistReceipt = (bytes: Buffer) => {
+    try {
+      writeExclusive(portableReceipt, bytes);
+    } catch (error) {
+      if (
+        !(error instanceof Error && "code" in error && error.code === "EEXIST")
+      )
+        throw error;
+      if (!regular(portableReceipt, 16 * 1024).equals(bytes))
+        throw new Error("RETIREMENT_RECEIPT_CONFLICT");
+    }
+  };
+  // Lost responses repair only the portable receipt; never recapture or unretire.
+  if (existsSync(marker)) {
+    const retirementReceipt = regular(marker, 16 * 1024),
+      archive = regular(out, Math.ceil(maxBytes * 1.4)),
+      { checkpoint, receipt } = verifyOperatorRetirementEvidence({
+        archive,
+        retirementReceipt,
+        recoveryKey: key,
+      });
+    if (
+      receipt.originalOperatorDirectory !== operator ||
+      checkpoint.originalCheckout !== checkout
+    )
+      throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
+    persistReceipt(retirementReceipt);
+    return { checkpoint, retirementReceipt };
+  }
+  if (existsSync(out) || existsSync(portableReceipt))
+    throw new Error("RECOVERY_DESTINATION_EXISTS");
+  return withOperatorRetirementScope(operator, async (permitOwnRetirement) => {
+    let retirementReceipt: Buffer | undefined;
+    const checkpoint = await captureCheckpoint(checkout, (captured) => {
+      if (existsSync(marker) || existsSync(out) || existsSync(portableReceipt))
+        throw new Error("RECOVERY_DESTINATION_EXISTS");
+      const archive = encryptOperatorRecovery(captured, key);
+      decryptOperatorRecovery(archive, key);
+      secureOperatorDirectory(dirname(out));
+      writeExclusive(out, archive);
+      if (!regular(out, Math.ceil(maxBytes * 1.4)).equals(archive))
+        throw new Error("RECOVERY_OUTPUT_CHANGED");
+      retirementReceipt = createOperatorRetirementReceipt(
+        {
+          checkpointSha256: sha256(canonicalJson(captured)),
+          archiveSha256: sha256(archive),
+          ledgerRevision: captured.ledgerRevision,
+          originalOperatorDirectory: operator,
+          installationId: randomUUID(),
+          retiredAtEpochMs: Date.now(),
+        },
+        key
+      );
+      permitOwnRetirement(retirementReceipt);
+      writeDurableFile(marker, retirementReceipt);
+      if (!regular(marker, 16 * 1024).equals(retirementReceipt))
+        throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
+    });
+    if (!retirementReceipt) throw new Error("RETIREMENT_EVIDENCE_MISSING");
+    persistReceipt(retirementReceipt);
+    return { checkpoint, retirementReceipt };
+  });
 }
 
 /** Encrypt the entire private checkpoint; the separate recovery key is never embedded. */

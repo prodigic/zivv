@@ -74,6 +74,11 @@ limits casually.
 
 ## Offline staging and remaining cutover work
 
+For planned source retirement, the optional
+[final-capture and cooperative writer fence](operator-retirement.md) retains a
+separate portable receipt. It does not activate staged recovery or revoke old
+credentials, and is not a substitute for lost-host shutdown/revocation evidence.
+
 Destination must not exist and must be private/local/outside Git. A failed
 restore leaves an `incomplete` marker; inspect/preserve that staging and choose a
 new destination for retry. A successful restore leaves:

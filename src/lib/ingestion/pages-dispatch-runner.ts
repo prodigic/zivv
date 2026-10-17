@@ -1,4 +1,6 @@
 import { execFileSync } from "node:child_process";
+import { projectLedgerLocation } from "./store-location.js";
+import { assertOperatorInstallationWritable } from "./operator-installation.js";
 import { randomBytes } from "node:crypto";
 import {
   closeSync,
@@ -334,6 +336,16 @@ function recoverCanonicalIntent(options: PagesDispatchRunnerOptions): {
 export async function runPagesCandidateDispatch(
   options: PagesDispatchRunnerOptions
 ) {
+  const originalContext = options.checkContext;
+  const operator = projectLedgerLocation(options.repositoryRoot).directory;
+  options = {
+    ...options,
+    checkContext: () => {
+      assertOperatorInstallationWritable(operator);
+      originalContext?.();
+    },
+  };
+  options.checkContext?.();
   if (options.recovery && options.command !== "recover")
     throw new Error("Canonical history selection is recovery-only");
   if (

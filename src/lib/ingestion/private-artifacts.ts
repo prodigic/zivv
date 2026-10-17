@@ -1,8 +1,10 @@
 import { existsSync, realpathSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
+import { assertOperatorInstallationWritable } from "./operator-installation.js";
 
 /** Restored checkpoints remain offline until a separately reviewed installation cutover. */
 export function assertOperatorNotQuarantined(directory: string): void {
+  assertOperatorInstallationWritable(resolve(directory));
   const marker = join(
     dirname(resolvePrivateCandidateDirectory(directory)),
     "recovery-state.json"
