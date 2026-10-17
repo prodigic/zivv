@@ -8,6 +8,11 @@ import {
   writeDurableFile,
 } from "./encrypted-backup.js";
 import { resolvePrivateCandidateDirectory } from "./private-artifacts.js";
+import {
+  assertRecoveredPublicationEffect,
+  recoveredPublicationRepository,
+  resolveRecoveredCandidateWorkDirectory,
+} from "./recovery-import-admission.js";
 import { parseReleaseCandidate } from "./release-candidate.js";
 import { localDateStartEpochMs } from "./weekly.js";
 import { createPublicationPayload } from "./publication-payload.js";
@@ -121,6 +126,7 @@ export async function ensureWeeklyPublication(
     },
   };
   input.verifyContext();
+  const repository = recoveredPublicationRepository(input.root);
   if (
     input.controlledPublishing !== "enabled" ||
     input.manualPublisherJoined !== "true" ||
@@ -193,7 +199,9 @@ export async function ensureWeeklyPublication(
   same(build.sourceCommit, candidate.sourceCommit, "Changed build source");
   same(build.basePath, "/zivv/", "Production base required");
   const workDirectory = resolvePrivateCandidateDirectory(
-    JSON.parse(exportBytes.toString("utf8")).workDirectory
+    resolveRecoveredCandidateWorkDirectory(
+      JSON.parse(exportBytes.toString("utf8")).workDirectory
+    )
   );
   const directories = readdirSync(workDirectory).filter((name) =>
     name.startsWith("candidate-")
@@ -211,7 +219,7 @@ export async function ensureWeeklyPublication(
     recoveryKey: loadBackupKey(input.operatorDirectory),
   });
   if (!input.testTransport)
-    verifyReviewedPagesWorkflowCommit(input.root, input.workflowCommit);
+    verifyReviewedPagesWorkflowCommit(repository.root, input.workflowCommit);
   input.verifyContext();
   const stage = state.stages.find((s) => s.stage === "deploy")!;
   if (stage.status === "succeeded") return { state, status: "verified" };
@@ -245,6 +253,8 @@ export async function ensureWeeklyPublication(
   timer.unref();
   const guard = () => {
     if (heartbeatError) throw heartbeatError;
+    input.verifyContext();
+    assertRecoveredPublicationEffect();
     input.verifyContext();
   };
   try {
@@ -338,7 +348,7 @@ export async function ensureWeeklyPublication(
           input.transport.fetchCommit(request.payloadCommit);
           const retained = verifyPublicationPayload(
             readPublicationPayloadGit({
-              repositoryRoot: input.root,
+              repositoryRoot: repository.root,
               payloadCommit: request.payloadCommit,
             }).files,
             expected
@@ -378,7 +388,7 @@ export async function ensureWeeklyPublication(
             throw new Error("Canonical publication claim is missing");
           const createdAt = new Date().toISOString();
           const stored = writePublicationPayloadGit({
-            repositoryRoot: input.root,
+            repositoryRoot: repository.root,
             files: payload.files,
             createdAt,
           });
@@ -458,7 +468,7 @@ export async function ensureWeeklyPublication(
         "Changed publication payload"
       );
       const actual = writePublicationPayloadGit({
-        repositoryRoot: input.root,
+        repositoryRoot: repository.root,
         files: payload.files,
         createdAt: plan.createdAt,
       });
@@ -524,7 +534,7 @@ export async function ensureWeeklyPublication(
         input.transport.fetchCommit(actual.payloadCommit);
         const retainedPayload = verifyPublicationPayload(
           readPublicationPayloadGit({
-            repositoryRoot: input.root,
+            repositoryRoot: repository.root,
             payloadCommit: actual.payloadCommit,
           }).files,
           expected
@@ -535,21 +545,24 @@ export async function ensureWeeklyPublication(
           "Accepted publication payload changed"
         );
       }
+      guard();
       const retained =
         recoveredClaim || acceptedClaim
           ? { status: "retained" }
           : retainPublicationArtifact({
               ...expected,
-              repositoryRoot: input.root,
+              repositoryRoot: repository.root,
               payloadCommit: actual.payloadCommit,
               transport: input.transport,
+              checkContext: guard,
             });
       if (retained.status !== "retained")
         return { state, status: "pending" as const };
       guard();
       current = input.store.read();
       if (current.head === prepared.expectedHead) {
-        input.store.compareAndAppend(prepared);
+        guard();
+        input.store.compareAndAppend({ ...prepared, checkContext: guard });
         guard();
         current = input.store.read();
       }
@@ -576,7 +589,7 @@ export async function ensureWeeklyPublication(
           : undefined;
       const result = await runPagesCandidateDispatch({
         command: recovery ? "recover" : "dispatch",
-        repositoryRoot: input.root,
+        repositoryRoot: repository.root,
         workflowCommit: input.workflowCommit,
         mode: "promote",
         intentDirectory: join(directory, "dispatch"),

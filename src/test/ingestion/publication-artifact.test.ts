@@ -123,6 +123,36 @@ describe("immutable remote publication artifact retention", () => {
     expect(transport.readHead(ref)).toBeNull();
   }, 30_000);
 
+  it("rechecks caller context after artifact reads before retaining any remote ref", () => {
+    let current = true,
+      appends = 0;
+    const guarded = {
+      ...transport,
+      readHead(target: string) {
+        const result = transport.readHead(target);
+        current = false;
+        return result;
+      },
+      append(...args: Parameters<PublicationArtifactTransport["append"]>) {
+        appends++;
+        transport.append(...args);
+      },
+    };
+    expect(() =>
+      retainPublicationArtifact({
+        ...fixture.expectation,
+        repositoryRoot,
+        payloadCommit,
+        transport: guarded,
+        checkContext: () => {
+          if (!current) throw new Error("context changed during artifact read");
+        },
+      })
+    ).toThrow("context changed during artifact read");
+    expect(appends).toBe(0);
+    expect(transport.readHead(ref)).toBeNull();
+  }, 30_000);
+
   it("retains and replays one exact artifact without writing normal source refs", () => {
     let writes = 0;
     const counted = {
