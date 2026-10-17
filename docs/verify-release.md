@@ -24,7 +24,7 @@ Rollback restores public files only. The newer private SQLite ledger, frozen edi
 
 Both existing activation flags remain required and unset by this change. The maintained manual Friday commands in [the stage contracts](weekly-stage-contracts.md#maintained-manual-commands) and the main deployment workflow are unchanged. Controlled publication must not be enabled until the manual publisher joins destination ownership and the preview/recovery rehearsals pass.
 
-The operator selected: implement and test Verify Release, push a stacked PR, then stop. This does not authorize merging or deploying the combined release PR #61. Automatic acknowledgement, the full Friday orchestrator and observed-Friday acceptance remain later work.
+The original checkpoint ended after implementing, testing and pushing Verify Release. The operator subsequently authorized merging the queued PRs and resumed Friday implementation on October 17. The [acknowledgement checkpoint](verified-weekly-acknowledgement.md) follows this stage; full orchestrator wiring and observed-Friday acceptance remain separate work. Publisher/scheduler activation still requires the agreed prerequisites and rehearsals.
 
 ## Verification
 

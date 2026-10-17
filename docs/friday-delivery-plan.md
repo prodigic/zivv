@@ -105,7 +105,7 @@ Sol high owns architecture, ambiguous identities, transaction/concurrency/cutoff
 
 ## Deferred decisions and activation gates
 
-- Runtime: cloud bot service or local Raspberry Pi. Keep implementation portable; select later as offerings change.
+- Initial runtime (operator decision October 17): this Windows machine, until replacement hardware or a cloud account is selected. Keep implementation portable. Host availability, secure source credentials, scheduling/restart behavior and activation rehearsals still require implementation and verification.
 - Hosting/runtime and AI research budgets; enforce them before unattended research activation.
 - GitHub Pages preview repository is prodigic/zivv-test, public and approved. Verify deployment credentials, branch permissions and /zivv-test/ base path before publishing artifacts; production remains /zivv/.
 - Source-access credentials, exact expected edition identification and credential renewal.
