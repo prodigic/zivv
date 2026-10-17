@@ -33,8 +33,10 @@ rehearsals have passed. They must remain disabled until the maintained manual
 publisher participates in the same native controller and the preview/recovery
 rehearsals are accepted. This change does not enable either flag or scheduling.
 
-This adapter does not dispatch or redeploy the candidate. The publication adapter
-must first complete native verification for that exact candidate. The public
+The adoption-only path does not dispatch or redeploy the candidate. The optional
+[publication dispatch adapter](weekly-publication-dispatch.md) connects native
+retention, claim and dispatch when a reviewed workflow commit is supplied, and
+returns pending until native verification completes. The public
 candidate must have `/zivv/` as its base and non-null reviewed application
 provenance. The worker also revalidates the retained build with release purpose;
 a preview build cannot be adopted for production. Candidate, source commit and full public inventory must match the
@@ -77,8 +79,7 @@ is optional and cannot replace the remaining activation checks.
 ## Remaining acceptance work
 
 Source acquisition through the agent's Gmail connection has been tested, but a
-scheduled acquisition adapter is still needed. Native publication dispatch from
-the worker, manual-publisher participation, repository-state coordination,
+scheduled acquisition adapter is still needed. Manual-publisher participation, repository-state coordination,
 portable private recovery, failure notifications, activation rehearsals and two
 observed Friday runs remain tracked in the [Friday plan](friday-delivery-plan.md).
 No live source, catalog, cutoff, release or native control ref is changed by the

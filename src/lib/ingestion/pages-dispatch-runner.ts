@@ -58,6 +58,8 @@ export interface PagesDispatchRunnerOptions {
   controlledPublishing: string | undefined;
   manualPublisherJoined: string | undefined;
   store: PromotionControlStore;
+  /** Recheck the calling worker's ownership/runtime before effect boundaries. */
+  checkContext?: () => void;
   /** Explicit offline HTTP fixtures only; the CLI exposes no adapter flags. */
   testTransport?: PagesTestTransport;
 }
@@ -248,6 +250,7 @@ export async function runPagesCandidateDispatch(
     );
   if (!options.githubToken || !/^[A-Za-z0-9_-]+$/.test(options.githubToken))
     throw new Error("GITHUB_TOKEN is required for workflow REST calls");
+  options.checkContext?.();
   if (!options.testTransport)
     verifyReviewedPagesWorkflowCommit(
       options.repositoryRoot,
@@ -312,6 +315,7 @@ export async function runPagesCandidateDispatch(
       controlHead: saved.pendingAppend.attemptedHead,
       runId: saved.receipt?.runId,
     });
+    options.checkContext?.();
     if (result.status === "matched") {
       saved.receipt = result.receipt;
       writeDurableFile(path, bytes(saved));
@@ -359,12 +363,14 @@ export async function runPagesCandidateDispatch(
     workflowCommit: options.workflowCommit,
     reviewedMainAncestor: true,
   });
+  options.checkContext?.();
   if (tag.status !== "verified")
     return { status: "uncertain" as const, reason: "workflow-tag", tag };
   return requestGithubPagesWorkflowDispatch({
     ...http,
     intent,
     onIntent: async () => {
+      options.checkContext?.();
       saveOnce(path, saved);
       const result = options.store.compareAndAppend(pending);
       if (
@@ -373,9 +379,11 @@ export async function runPagesCandidateDispatch(
         result.observedHead !== pending.attemptedHead
       )
         throw new Error("Exact prepared controller append did not win");
+      options.checkContext?.();
       return { controlHead: pending.attemptedHead };
     },
     onDispatched: async (receipt) => {
+      options.checkContext?.();
       const existing = readSaved(path);
       if (promotionDigest(existing.intent) !== promotionDigest(intent))
         throw new Error("Private intent ownership changed");

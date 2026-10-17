@@ -33,7 +33,10 @@ import {
 import { captureExportConfiguration } from "../../lib/ingestion/export-configuration.js";
 import type { ApplicationBuildReceipt } from "../../lib/ingestion/source-build.js";
 import type { ReleaseCandidate } from "../../lib/ingestion/release-candidate.js";
-import { createLocalPromotionControlStore } from "../../lib/ingestion/promotion-control-git.js";
+import {
+  createLocalPromotionControlStore,
+  createBareTestPromotionControlTransport,
+} from "../../lib/ingestion/promotion-control-git.js";
 import {
   applyPromotionTransition,
   candidatePublicReleaseId,
@@ -148,6 +151,11 @@ describe("weekly candidate stages with real sealed bundles", () => {
       env,
       windowsHide: true,
     });
+    execFileSync(
+      "git",
+      ["remote", "add", "origin", "https://github.com/prodigic/zivv.git"],
+      { cwd: root, env, windowsHide: true }
+    );
     return createLocalPromotionControlStore({
       repositoryRoot: root,
       destination: "production",
@@ -271,6 +279,239 @@ describe("weekly candidate stages with real sealed bundles", () => {
         onProgress,
       });
     return { ...native, validated, candidate, run };
+  }
+  async function publicationFixture() {
+    const validated = await runWeeklyImport({
+      root,
+      source,
+      stopAfter: "validate",
+      freezeCutoffEpochMs: cutoff,
+      candidateBuild: { ...build, purpose: "release" },
+    });
+    const bundle = await readVerifiedCandidateBundle(
+      bundles[0].directory,
+      loadBackupKey(home),
+      String(stage(validated, "export").evidence!.candidateId)
+    );
+    const store = initializeControl(),
+      createdAt = "2026-10-14T18:00:00.000Z";
+    const bootstrap = store.compareAndAppend({
+      expectedHead: null,
+      bytes: serializePromotionControl(
+        createPromotionControl(syntheticLegacyPublicSnapshot())
+      ),
+      createdAt,
+    });
+    expect(bootstrap.status).toBe("appended");
+    const bare = join(directory, "publication.git");
+    execFileSync(
+      "git",
+      ["init", "--bare", "--quiet", "--object-format=sha1", bare],
+      { cwd: root, windowsHide: true }
+    );
+    const nativeTransport = createBareTestPromotionControlTransport(root, bare);
+    const publicationDirectory = join(
+      home,
+      "weekly-publication",
+      validated.runId
+    );
+    const planPath = join(publicationDirectory, "claim-plan.json");
+    const dispatchPath = join(
+      publicationDirectory,
+      "dispatch/pages-dispatch.json"
+    );
+    const requests: { url: string; method: string }[] = [];
+    const workflowCommit = "b".repeat(40),
+      githubToken = "ghp_isolated_publication_fixture";
+    let lostResponse = false,
+      provideRun = true,
+      retainWrites = 0;
+    const response = (value: unknown) =>
+      new Response(JSON.stringify(value), { status: 200 });
+    const fetcher: typeof fetch = async (url, options) => {
+      const method = options?.method ?? "GET";
+      requests.push({ url: String(url), method });
+      if (String(url).includes("/git/ref/"))
+        return response({
+          ref: `refs/tags/zivv-workflows/${workflowCommit}`,
+          object: { type: "commit", sha: workflowCommit },
+        });
+      if (method === "POST") {
+        expect(existsSync(planPath)).toBe(true);
+        expect(existsSync(dispatchPath)).toBe(true);
+        const control = parsePromotionControl(store.read().bytes!);
+        expect(control.active!.phase).toBe("dispatch-planned");
+        const payloadCommit = control.active!.request.payloadCommit;
+        expect(
+          nativeTransport.readHead(
+            `refs/heads/zivv-candidate-artifacts/${payloadCommit}`
+          )
+        ).toBe(payloadCommit);
+        if (lostResponse) throw new Error("Lost accepted dispatch response");
+        return response({
+          workflow_run_id: 101,
+          run_url:
+            "https://api.github.com/repos/prodigic/zivv/actions/runs/101",
+          html_url: "https://github.com/prodigic/zivv/actions/runs/101",
+        });
+      }
+      const saved = JSON.parse(readFileSync(dispatchPath, "utf8"));
+      const run = {
+        id: 101,
+        event: "workflow_dispatch",
+        head_sha: workflowCommit,
+        head_branch: saved.intent.ref,
+        display_title: saved.intent.runName,
+        path: ".github/workflows/publish-candidate.yml",
+        run_attempt: 1,
+        repository: { full_name: "prodigic/zivv" },
+        url: "https://api.github.com/repos/prodigic/zivv/actions/runs/101",
+        html_url: "https://github.com/prodigic/zivv/actions/runs/101",
+        inputs: {
+          ...saved.intent.inputs,
+          control_head: saved.pendingAppend.attemptedHead,
+        },
+      };
+      return String(url).includes("/actions/runs/101")
+        ? response(run)
+        : response({
+            total_count: provideRun ? 1 : 0,
+            workflow_runs: provideRun ? [run] : [],
+          });
+    };
+    const transport = {
+      ...nativeTransport,
+      append(ref: string, commit: string, expected: string | null) {
+        retainWrites++;
+        expect(existsSync(planPath)).toBe(true);
+        expect(JSON.parse(readFileSync(planPath, "utf8")).payloadCommit).toBe(
+          commit
+        );
+        nativeTransport.append(ref, commit, expected);
+      },
+    };
+    const compare = store.compareAndAppend.bind(store);
+    vi.spyOn(store, "compareAndAppend").mockImplementation((input) => {
+      const control = parsePromotionControl(input.bytes);
+      if (control.lastTransition.event.type === "claim") {
+        const payloadCommit = control.active!.request.payloadCommit;
+        expect(
+          nativeTransport.readHead(
+            `refs/heads/zivv-candidate-artifacts/${payloadCommit}`
+          )
+        ).toBe(payloadCommit);
+        expect(JSON.parse(readFileSync(planPath, "utf8")).claim.bytes).toBe(
+          input.bytes.toString("base64")
+        );
+      }
+      return compare(input);
+    });
+    const publication = {
+      store,
+      transport,
+      candidate: Buffer.from(canonicalJson(bundle.candidate) + "\n"),
+      workflowCommit,
+      githubToken,
+      testTransport: {
+        kind: "local-test" as const,
+        apiBaseUrl: "http://127.0.0.1:4567",
+        fetch: fetcher,
+      },
+    };
+    const run = (
+      through: "dispatch" | "verify" | "acknowledge",
+      onProgress?: Parameters<typeof runWeeklyImport>[0]["onProgress"]
+    ) =>
+      runWeeklyImport({
+        root,
+        runId: validated.runId,
+        stopAfter: through,
+        publication,
+        controlledPublishing: "enabled",
+        manualPublisherJoined: "true",
+        onProgress,
+      });
+    const finishNative = () => {
+      let current = store.read(),
+        control = parsePromotionControl(current.bytes!);
+      const operation = control.active!,
+        attempt = operation.promotionAttempt!;
+      const owner = {
+        operationId: operation.operationId,
+        mode: "promote" as const,
+        attemptId: attempt.attemptId,
+      };
+      const step = (event: PromotionEvent) => {
+        control = applyPromotionTransition(control, event);
+        const result = store.compareAndAppend({
+          expectedHead: current.head,
+          bytes: serializePromotionControl(control),
+          createdAt,
+        });
+        expect(result.status).toBe("appended");
+        current = store.read();
+      };
+      const admission = { workflowCommit, runId: "101", runAttempt: 1 };
+      step({ type: "admit-run", ...owner, admission });
+      const deployment = { admission, artifactId: "201", deploymentId: "301" };
+      step({ type: "deployed", ...owner, deployment });
+      const body = {
+        destination: "production" as const,
+        liveUrl: "https://www.prodigic.com/zivv/",
+        releaseId: candidatePublicReleaseId("production", operation.request),
+        inventorySha256: operation.request.publicInventorySha256,
+        deployment,
+        verifiedAt: createdAt,
+        checks: PROMOTION_FIXTURE_CHECKS,
+      };
+      step({
+        type: "verified",
+        ...owner,
+        verification: { ...body, receiptId: promotionDigest(body) },
+        replayProof: null,
+      });
+    };
+    const claimAnother = () => {
+      const current = store.read(),
+        control = parsePromotionControl(current.bytes!);
+      const planned = JSON.parse(readFileSync(planPath, "utf8"));
+      const claimed = claimPromotion(control, {
+        requestId: "other-publication-owner",
+        payloadCommit: planned.payloadCommit,
+        candidateId: bundle.candidate.candidateId,
+        sourceCommit: bundle.candidate.sourceCommit,
+        basePath: "/zivv/",
+        purpose: "release",
+        publicInventorySha256: promotionDigest(bundle.candidate.files),
+        expectedVerifiedReleaseId: control.lastVerified.releaseId,
+      });
+      expect(
+        compare({
+          expectedHead: current.head,
+          bytes: serializePromotionControl(claimed),
+          createdAt,
+        }).status
+      ).toBe("appended");
+    };
+    return {
+      validated,
+      store,
+      publication,
+      run,
+      planPath,
+      dispatchPath,
+      requests,
+      nativeTransport,
+      finishNative,
+      claimAnother,
+      retainedWrites: () => retainWrites,
+      loseResponse: () => {
+        lostResponse = true;
+      },
+      noRun: () => {
+        provideRun = false;
+      },
+    };
   }
   const frozenRun = () =>
     runWeeklyImport({
@@ -688,6 +929,140 @@ describe("weekly candidate stages with real sealed bundles", () => {
     expect(stage(journalState(), "export").status).toBe("failed");
     expect(catalogDigest()).toBe(before);
   });
+
+  it("retains the sealed weekly payload, claims and dispatches once, then resumes native verification and acknowledgement", async () => {
+    const f = await publicationFixture(),
+      before = catalogDigest();
+    const pending = await f.run("acknowledge");
+    expect(
+      pending.stages.find((item) => item.stage === "deploy")
+    ).toMatchObject({ status: "running", attempt: 1 });
+    expect(pending.stages.find((item) => item.stage === "verify")!.status).toBe(
+      "pending"
+    );
+    const weeklyPath = join(root, "data/ingestion/weekly-editions.json");
+    expect(
+      JSON.parse(readFileSync(weeklyPath, "utf8")).publishedCutoffEpochMs
+    ).toBeNull();
+    const plan = readFileSync(f.planPath),
+      dispatch = readFileSync(f.dispatchPath);
+    expect(
+      (await f.run("verify")).stages.find((item) => item.stage === "verify")!
+        .status
+    ).toBe("pending");
+    expect(readFileSync(f.planPath)).toEqual(plan);
+    expect(readFileSync(f.dispatchPath)).toEqual(dispatch);
+    expect(
+      f.requests.filter((request) => request.method === "POST")
+    ).toHaveLength(1);
+    expect(f.retainedWrites()).toBe(1);
+    f.finishNative();
+    const result = await f.run("acknowledge");
+    expect(result.stages.every((item) => item.status === "succeeded")).toBe(
+      true
+    );
+    expect(
+      JSON.parse(readFileSync(weeklyPath, "utf8")).publishedCutoffEpochMs
+    ).toBe(cutoff);
+    const head = f.store.read().head;
+    expect(await f.run("acknowledge")).toEqual(result);
+    expect(f.store.read().head).toBe(head);
+    expect(
+      f.requests.filter((request) => request.method === "POST")
+    ).toHaveLength(1);
+    expect(f.retainedWrites()).toBe(1);
+    expect(catalogDigest()).toBe(before);
+    expect(readSqliteLedger(sqlitePath).runs).toHaveLength(1);
+    expect(doubles.build).toHaveBeenCalledTimes(1);
+  }, 180_000);
+
+  it("recovers a persisted weekly claim plan before any remote retention or dispatch effect", async () => {
+    const f = await publicationFixture(),
+      head = f.store.read().head;
+    await expect(
+      f.run("dispatch", (event) => {
+        if (event.stage === "deploy" && event.phase === "artifact-saved")
+          throw new Error("Pause durable claim plan");
+      })
+    ).rejects.toThrow("Pause durable claim plan");
+    expect(f.retainedWrites()).toBe(0);
+    expect(f.requests).toHaveLength(0);
+    expect(f.store.read().head).toBe(head);
+    const plan = readFileSync(f.planPath);
+    expect(
+      (await f.run("dispatch")).stages.find((item) => item.stage === "deploy")
+    ).toMatchObject({ status: "running", attempt: 1 });
+    expect(readFileSync(f.planPath)).toEqual(plan);
+    expect(f.retainedWrites()).toBe(1);
+    expect(
+      f.requests.filter((request) => request.method === "POST")
+    ).toHaveLength(1);
+    const db = new DatabaseSync(join(home, "weekly-runs.sqlite"), {
+      readOnly: true,
+    });
+    try {
+      expect(
+        db
+          .prepare(
+            "SELECT count(*) AS total FROM stage_artifact WHERE stage='deploy'"
+          )
+          .get()!.total
+      ).toBe(0);
+    } finally {
+      db.close();
+    }
+  }, 90_000);
+
+  it("keeps uncertain weekly dispatch pending and never repeats POST when recovery cannot find a run", async () => {
+    const f = await publicationFixture();
+    f.loseResponse();
+    f.noRun();
+    const initial = await f.run("dispatch"),
+      head = f.store.read().head;
+    expect(initial.stages.find((item) => item.stage === "deploy")!.status).toBe(
+      "running"
+    );
+    const plan = readFileSync(f.planPath),
+      dispatch = readFileSync(f.dispatchPath);
+    expect(await f.run("dispatch")).toEqual(initial);
+    expect(f.store.read().head).toBe(head);
+    expect(readFileSync(f.planPath)).toEqual(plan);
+    expect(readFileSync(f.dispatchPath)).toEqual(dispatch);
+    expect(
+      f.requests.filter((request) => request.method === "POST")
+    ).toHaveLength(1);
+    expect(f.retainedWrites()).toBe(1);
+  }, 90_000);
+
+  it("rejects a changed weekly publication plan and a competing native owner without sending POST", async () => {
+    const f = await publicationFixture();
+    await expect(
+      f.run("dispatch", (event) => {
+        if (event.stage === "deploy" && event.phase === "artifact-saved")
+          throw new Error("Pause publication");
+      })
+    ).rejects.toThrow("Pause publication");
+    const saved = readFileSync(f.planPath),
+      plan = JSON.parse(saved.toString("utf8"));
+    plan.workflowCommit = "d".repeat(40);
+    writeFileSync(f.planPath, canonicalJson(plan) + "\n");
+    await expect(f.run("dispatch")).rejects.toThrow(
+      "Changed publisher workflow"
+    );
+    expect(f.retainedWrites()).toBe(0);
+    expect(f.requests).toHaveLength(0);
+    writeFileSync(f.planPath, saved);
+    f.claimAnother();
+    const competingHead = f.store.read().head;
+    await expect(f.run("dispatch")).rejects.toThrow("requires reconciliation");
+    expect(f.store.read().head).toBe(competingHead);
+    expect(f.requests).toHaveLength(0);
+    expect(
+      JSON.parse(
+        readFileSync(join(root, "data/ingestion/weekly-editions.json"), "utf8")
+      ).publishedCutoffEpochMs
+    ).toBeNull();
+  }, 90_000);
 
   it("adopts native sealed delivery through verification and acknowledgement without rebuilding or reimporting", async () => {
     const f = await deliveryFixture(),

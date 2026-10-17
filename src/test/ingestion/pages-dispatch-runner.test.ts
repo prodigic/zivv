@@ -224,6 +224,36 @@ describe("private native controller dispatch checkpoint", () => {
     ).toHaveLength(1);
     expect(f.events).toEqual(["GET", "CAS", "POST", "GET"]);
   });
+  it("rejects context loss during workflow-tag lookup before saving an intent, winning CAS or sending POST", async () => {
+    const f = fixture();
+    const fetcher = f.options.testTransport.fetch;
+    let current = true;
+    await expect(
+      runPagesCandidateDispatch({
+        ...f.options,
+        checkContext: () => {
+          if (!current) throw new Error("Expired publication context");
+        },
+        testTransport: {
+          ...f.options.testTransport,
+          fetch: async (url, options) => {
+            const response = await fetcher(url, options);
+            if (String(url).includes("/git/ref/")) current = false;
+            return response;
+          },
+        },
+      })
+    ).rejects.toThrow("Expired publication context");
+    expect(f.events).toEqual(["GET"]);
+    expect(f.head()).toBe(f.initialHead);
+    expect(f.state().active!.phase).toBe("claimed");
+    expect(
+      existsSync(join(f.options.intentDirectory, "pages-dispatch.json"))
+    ).toBe(false);
+    expect(
+      f.requests.filter((request) => request.method === "POST")
+    ).toHaveLength(0);
+  });
   it("recovers accepted dispatch after response loss without another POST", async () => {
     const f = fixture();
     f.loseResponse();
@@ -237,6 +267,29 @@ describe("private native controller dispatch checkpoint", () => {
     expect(
       f.requests.filter((request) => request.method === "POST")
     ).toHaveLength(1);
+  });
+  it("retains planned ownership when context expires after CAS and does not send POST on recovery", async () => {
+    const f = fixture();
+    await expect(
+      runPagesCandidateDispatch({
+        ...f.options,
+        checkContext: () => {
+          if (f.events.includes("CAS"))
+            throw new Error("Expired after native claim");
+        },
+      })
+    ).rejects.toThrow("newly persisted control intent");
+    expect(f.events).toEqual(["GET", "CAS"]);
+    expect(f.state().active!.phase).toBe("dispatch-planned");
+    expect(
+      existsSync(join(f.options.intentDirectory, "pages-dispatch.json"))
+    ).toBe(true);
+    f.noRun();
+    expect(
+      await runPagesCandidateDispatch({ ...f.options, command: "recover" })
+    ).toEqual({ status: "uncertain", reason: "no-match" });
+    expect(f.requests.every((request) => request.method === "GET")).toBe(true);
+    expect(f.state().active!.phase).toBe("dispatch-planned");
   });
   it("recovers a saved exact run after its native admission advances the control head", async () => {
     const f = fixture();
