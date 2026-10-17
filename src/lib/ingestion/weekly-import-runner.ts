@@ -18,6 +18,7 @@ import {
 import { projectLedgerLocation } from "./store-location.js";
 import { WeeklyRunJournal } from "./weekly-run-journal.js";
 import { parseWeeklyEditionLedger } from "./weekly.js";
+import { freezeWeeklyImport } from "./weekly-edition-freeze.js";
 import {
   createWeeklyRunState,
   transitionWeeklyRun,
@@ -34,7 +35,7 @@ const STAGES = ["acquire", "prepare", "reconcile", "load"] as const;
 type ImportStage = (typeof STAGES)[number];
 export interface WeeklyImportProgress {
   runId: string;
-  stage: ImportStage;
+  stage: ImportStage | "freeze";
   phase: "started" | "artifact-saved" | "effect-committed" | "completed";
 }
 export class WeeklyImportRunnerError extends Error {
@@ -97,7 +98,7 @@ function report(value: unknown): ReconciliationReport {
   return raw as unknown as ReconciliationReport;
 }
 
-/** Execute the first four real Friday stages and recover their durable side effects. */
+/** Execute import and optional edition freezing, recovering durable side effects. */
 export async function runWeeklyImport(input: {
   root: string;
   source?: {
@@ -107,7 +108,9 @@ export async function runWeeklyImport(input: {
     importObservedAtEpochMs: number;
   };
   runId?: string;
-  stopAfter?: ImportStage;
+  stopAfter?: ImportStage | "freeze";
+  freezeCutoffEpochMs?: number;
+  reuseFrozen?: boolean;
   onProgress?: (event: WeeklyImportProgress) => void | Promise<void>;
   leaseTtlMs?: number;
 }): Promise<WeeklyRunState> {
@@ -117,7 +120,11 @@ export async function runWeeklyImport(input: {
     : undefined;
   if (
     !!source === !!input.runId ||
-    (input.stopAfter && !STAGES.includes(input.stopAfter))
+    (input.stopAfter && ![...STAGES, "freeze"].includes(input.stopAfter)) ||
+    (input.freezeCutoffEpochMs !== undefined &&
+      (!Number.isSafeInteger(input.freezeCutoffEpochMs) ||
+        input.freezeCutoffEpochMs < 0 ||
+        input.freezeCutoffEpochMs > Date.now()))
   )
     fail("INVALID_RUN_INPUT");
   const location = projectLedgerLocation(root);
@@ -214,7 +221,7 @@ export async function runWeeklyImport(input: {
         fail("RUN_CONTEXT_CHANGED");
     };
     const notify = async (
-      stage: ImportStage,
+      stage: WeeklyImportProgress["stage"],
       phase: WeeklyImportProgress["phase"]
     ) => {
       await input.onProgress?.({ runId: state.runId, stage, phase });
@@ -619,6 +626,18 @@ export async function runWeeklyImport(input: {
         await notify(stage, "completed");
       }
       if (stage === (input.stopAfter ?? "load")) break;
+    }
+    if (input.stopAfter === "freeze") {
+      state = await freezeWeeklyImport({
+        root,
+        state,
+        journal,
+        lease: owned,
+        cutoffEpochMs: input.freezeCutoffEpochMs,
+        reuseFrozen: input.reuseFrozen,
+        verifyContext,
+        onProgress: (phase) => notify("freeze", phase),
+      });
     }
     return state;
   } finally {

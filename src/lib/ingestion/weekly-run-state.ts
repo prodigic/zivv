@@ -117,7 +117,12 @@ function validateEvidence(
   stage: WeeklyRunStage,
   evidence: StageEvidence
 ): void {
-  exactKeys(evidence, fields[stage]);
+  exactKeys(
+    evidence,
+    stage === "freeze" && Object.hasOwn(evidence, "mode")
+      ? [...fields[stage], "mode", "ledgerRevision"]
+      : fields[stage]
+  );
   for (const [key, value] of Object.entries(evidence)) {
     if (key === "cutoffEpochMs" || key === "preCutoffPendingCount") {
       if (!integer(value)) throw new Error(`Invalid ${key}`);
@@ -151,12 +156,19 @@ function validateEvidence(
     throw new Error("Load does not match reviewed revision/report");
   if (
     stage === "freeze" &&
+    evidence.mode !== undefined &&
+    !["initial", "correction"].includes(String(evidence.mode))
+  )
+    throw new Error("Invalid frozen edition mode");
+  if (
+    stage === "freeze" &&
     (evidence.editionId !== state.source.editionId ||
       evidence.preCutoffPendingCount !== 0)
   )
     throw new Error("Edition has unresolved earlier batches or wrong identity");
   if (
     stage === "freeze" &&
+    evidence.mode !== "correction" &&
     typeof evidence.cutoffEpochMs === "number" &&
     evidence.cutoffEpochMs <= state.source.importObservedAtEpochMs
   )
@@ -165,7 +177,9 @@ function validateEvidence(
     );
   if (stage === "export") {
     if (
-      evidence.ledgerRevision !== evidenceFor(state, "load").ledgerRevision ||
+      evidence.ledgerRevision !==
+        (evidenceFor(state, "freeze").ledgerRevision ??
+          evidenceFor(state, "load").ledgerRevision) ||
       evidence.snapshotRevision !== evidence.ledgerRevision
     )
       throw new Error(
