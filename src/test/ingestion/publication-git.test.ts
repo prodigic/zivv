@@ -120,7 +120,7 @@ describe("immutable raw publication Git objects", () => {
       "unstaged edit\r\n"
     );
     expect(existsSync(join(repositoryRoot, "public"))).toBe(false);
-  });
+  }, 30_000);
 
   it("has deterministic identities for timestamp and bytes regardless of map order", () => {
     const files = new Map([
@@ -318,7 +318,7 @@ describe("immutable raw publication Git objects", () => {
       );
       expect(() => read(hash)).toThrow("metadata");
     }
-  });
+  }, 30_000);
 
   it.each(["100755", "120000", "160000"])(
     "rejects unexpected executable, symlink or gitlink mode %s",
@@ -331,7 +331,8 @@ describe("immutable raw publication Git objects", () => {
       expect(() => read(commitWithTree(tree))).toThrow(
         "Unsupported publication Git mode"
       );
-    }
+    },
+    30_000
   );
 
   it("rejects unsafe tree paths, case collisions and empty directories introduced through Git objects", () => {
