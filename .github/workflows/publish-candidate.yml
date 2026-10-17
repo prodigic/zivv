@@ -78,6 +78,7 @@ jobs:
       name: github-pages
     permissions:
       contents: write
+      actions: write
       pages: write
       id-token: write
     env:
@@ -159,6 +160,16 @@ jobs:
           NODE
           ./node_modules/.bin/tsc --project "$RUNNER_TEMP/tsconfig.pages.json"
 
+      - name: Install reviewed browser for release checks
+        env:
+          GITHUB_TOKEN: ""
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
+          ACTIONS_RUNTIME_TOKEN: ""
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ""
+          ACTIONS_ID_TOKEN_REQUEST_URL: ""
+        run: ./node_modules/.bin/playwright install --with-deps chromium
+
       - name: Admit this exact planned workflow run
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -185,14 +196,42 @@ jobs:
         run: node scripts/run-pages-candidate.js request-deployment
 
       - name: Reconcile the recorded deployment to a terminal status
+        id: deployment_status
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/run-pages-candidate.js status
 
       - name: Emit the exact deployment receipt
+        if: steps.deployment_status.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/run-pages-candidate.js receipt
 
-# A failed or interrupted run retains its in-flight owner. No automatic retry,
-# rollback, live-verification acknowledgement or weekly cutoff change occurs here.
+      - name: Verify exact live files and fresh and cached clients
+        id: verify
+        if: steps.deployment_status.outcome == 'success'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/run-pages-candidate.js verify-release
+
+      - name: Queue guarded restoration of the previous verified public release
+        if: always() && (steps.verify.outcome == 'failure' || steps.deployment_status.outcome == 'failure') && inputs.mode == 'promote'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          node scripts/dispatch-pages-candidate.js dispatch
+          --workflow-commit "$GITHUB_SHA" --mode rollback
+          --intent-dir "$RUNNER_TEMP/zivv-public-rollback"
+
+      - name: Alert on failed verification and retain failure status
+        if: always() && (steps.verify.outcome == 'failure' || steps.deployment_status.outcome == 'failure')
+        run: |
+          echo "::error::Live release verification failed. Inspect durable promotion control and the exact recovery run; do not reimport or acknowledge the weekly cutoff."
+          exit 1
+
+# Interrupted/uncertain deployments retain their owner. A terminal deployment
+# whose live checks fail may queue one fenced public rollback. Rollback itself
+# receives the same live checks; a failed rollback cannot recursively redeploy.
+# No weekly acknowledgement or cutoff change occurs here.

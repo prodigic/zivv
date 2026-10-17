@@ -81,8 +81,9 @@ them, make the manual path participate in the same remote ownership controller,
 retain and live-verify rollback bytes, verify runtime permissions, and pass the
 preview, recovery and failure rehearsals.
 
-The next checkpoints complete live inventory/routes/cache checks, public
-rollback orchestration, acknowledgement, portable recovery, optional metadata
+The [Verify Release checkpoint](verify-release.md) adds live inventory, routes,
+cache checks and guarded public rollback. Later checkpoints complete
+acknowledgement, portable recovery, optional metadata
 queue, source acquisition, runtime and alerts. Two observed scheduled Fridays
 remain acceptance requirements.
 
@@ -104,11 +105,12 @@ or planned attempt needs a separate directory and a legal controller transition.
 Rollback uses `--mode rollback` after the controller has authorized it.
 
 The workflow invokes `scripts/run-pages-candidate.js` in order: `admit`,
-`materialize`, `request-deployment`, `status`, `receipt`. These are job commands
+`materialize`, `request-deployment`, `status`, `receipt`, then `verify-release`.
+These are job commands
 bound to the actual GitHub dispatch envelope and admitted run, not local bypasses.
 The final receipt explicitly reports `liveVerified: false` and
-`cutoffAcknowledged: false`; the subsequent verification checkpoint must finish
-those responsibilities.
+`cutoffAcknowledged: false`. The subsequent `verify-release` command produces
+live verification evidence; acknowledgement remains a separate later stage.
 
 ## Verification evidence
 

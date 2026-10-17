@@ -18,6 +18,7 @@ interface WorkflowStep {
   with?: Record<string, string | number | boolean>;
   run?: string;
   if?: string;
+  "continue-on-error"?: boolean;
 }
 interface WorkflowJob {
   needs?: string;
@@ -121,6 +122,7 @@ describe("reviewed exact-candidate Pages workflow", () => {
     });
     expect(publisher.permissions).toEqual({
       contents: "write",
+      actions: "write",
       pages: "write",
       "id-token": "write",
     });
@@ -232,6 +234,7 @@ describe("reviewed exact-candidate Pages workflow", () => {
       "node scripts/run-pages-candidate.js request-deployment",
       "node scripts/run-pages-candidate.js status",
       "node scripts/run-pages-candidate.js receipt",
+      "node scripts/run-pages-candidate.js verify-release",
     ]);
     const upload = steps.find((step) => step.id === "upload")!;
     expect(upload.uses).toMatch(/^actions\/upload-artifact@[a-f0-9]{40}$/);
@@ -251,10 +254,21 @@ describe("reviewed exact-candidate Pages workflow", () => {
       GITHUB_TOKEN: "${{ github.token }}",
       ZIVV_ARTIFACT_ID: "${{ steps.upload.outputs.artifact-id }}",
     });
-    expect(steps.every((step) => step.if === undefined)).toBe(true);
+    const verify = steps.find((step) => step.id === "verify")!;
+    expect(verify["continue-on-error"]).toBe(true);
+    const rollback = steps.find((step) =>
+      step.name.startsWith("Queue guarded")
+    )!;
+    expect(rollback.if).toBe(
+      "always() && (steps.verify.outcome == 'failure' || steps.deployment_status.outcome == 'failure') && inputs.mode == 'promote'"
+    );
+    expect(rollback.run).toContain("--mode rollback");
+    expect(
+      steps.find((step) => step.name.startsWith("Alert on"))!.run
+    ).toContain("exit 1");
     expect(
       commands.some((step) =>
-        /cancel|acknowledge|rollback|fence/.test(step.run!)
+        step.run!.includes("run-pages-candidate.js acknowledge")
       )
     ).toBe(false);
   });

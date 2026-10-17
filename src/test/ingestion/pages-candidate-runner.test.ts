@@ -1,3 +1,5 @@
+import { setImmediate } from "node:timers/promises";
+import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import {
   mkdtempSync,
@@ -8,7 +10,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createPagesCandidateRunner,
   createPagesPublicArchive,
@@ -36,6 +38,31 @@ import { writePublicationPayloadGit } from "../../lib/ingestion/publication-git.
 import { createPromotionControlFixture } from "./fixtures/promotion-control-fixture.js";
 import { publicationTransportFixture } from "./fixtures/publication-transport-fixture.js";
 
+const live = vi.hoisted(() => ({
+  inventory: vi.fn(async () => ({
+    inventorySha256: "",
+    manifestSha256: "f".repeat(64),
+    fileCount: 3,
+  })),
+  browser: vi.fn(async () => ({
+    freshClient: true as const,
+    cachedClient: true as const,
+    routes: true as const,
+    priorDatasetVersion: "old",
+    observations: [] as { manifestSha256: string }[],
+  })),
+}));
+vi.mock("../../lib/ingestion/release-live-inventory.js", () => ({
+  verifyLiveInventory: live.inventory,
+}));
+vi.mock("../../lib/ingestion/release-browser.js", () => ({
+  buildReleaseBrowserPlan: () => ({
+    expectedDatasetVersion: "transport-fixture",
+    routes: [{ path: "shows", expectedText: ["fixture"] }],
+  }),
+  verifyReleaseBrowser: live.browser,
+}));
+
 describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
   let directory: string, root: string, remote: string, scratch: string;
   let options: PagesRunnerOptions;
@@ -52,7 +79,8 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
     }).trim();
   let fixture: ReturnType<typeof publicationTransportFixture>;
   const createdAt = "2026-10-14T23:00:00.000Z";
-  beforeEach(() => {
+  beforeEach(async () => {
+    await setImmediate();
     directory = mkdtempSync(join(tmpdir(), "zivv-pages-runner-"));
     root = join(directory, "source");
     remote = join(directory, "remote.git");
@@ -74,6 +102,7 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
     git(root, ["add", "reviewed.txt"]);
     git(root, ["commit", "--quiet", "-m", "reviewed fixture"]);
     const workflowCommit = git(root, ["rev-parse", "HEAD"]);
+    await setImmediate();
     fixture = publicationTransportFixture(workflowCommit);
     git(root, ["push", "--quiet", remote, `${workflowCommit}:refs/heads/main`]);
     git(root, ["tag", `zivv-workflows/${workflowCommit}`]);
@@ -96,6 +125,7 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
       validateState: (bytes) => parsePromotionControl(bytes).completionRoot,
       validateTransition: validatePromotionAppend,
     });
+    await setImmediate();
     const base = createPromotionControlFixture();
     const legacyCommit = writePublicationPayloadGit({
       repositoryRoot: root,
@@ -136,6 +166,7 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
       bytes: serializePromotionControl(base.state),
       createdAt,
     });
+    await setImmediate();
     const request = {
       ...base.request,
       payloadCommit,
@@ -151,6 +182,7 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
       bytes: serializePromotionControl(state),
       createdAt,
     });
+    await setImmediate();
     const operationId = state.active!.operationId;
     const attemptId = promotionAttemptId(
       operationId,
@@ -173,6 +205,25 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
       bytes: serializePromotionControl(state),
       createdAt,
     });
+    await setImmediate();
+    live.inventory.mockClear();
+    live.browser.mockReset();
+    live.browser.mockResolvedValue({
+      freshClient: true,
+      cachedClient: true,
+      routes: true,
+      priorDatasetVersion: "old",
+      observations: Array.from({ length: 4 }, () => ({
+        manifestSha256: createHash("sha256")
+          .update(fixture.payload.publicFiles.get("data/manifest.json")!)
+          .digest("hex"),
+      })),
+    });
+    live.inventory.mockImplementation(async () => ({
+      inventorySha256: request.publicInventorySha256,
+      manifestSha256: "f".repeat(64),
+      fileCount: 3,
+    }));
     posts = 0;
     gets = [];
     postMode = "success";
@@ -268,6 +319,71 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
   afterEach(() => rmSync(directory, { recursive: true, force: true }));
   const runner = () => createPagesCandidateRunner(options);
 
+  it("Verify Release records real observation evidence and leaves acknowledgement pending on replay", async () => {
+    runner().admit();
+    runner().materialize();
+    await runner().requestDeployment();
+    const result = await runner().verifyRelease();
+    const head = options.store.read().head;
+    expect(result.cutoffAcknowledged).toBe(false);
+    expect(result.verification.checks).toEqual({
+      inventory: true,
+      routes: true,
+      cachedClient: true,
+      freshClient: true,
+    });
+    expect(
+      parsePromotionControl(options.store.read().bytes!).active!.phase
+    ).toBe("verified");
+    expect(live.inventory).toHaveBeenCalledTimes(2);
+    expect(live.browser).toHaveBeenCalledTimes(1);
+    const replay = await runner().verifyRelease();
+    expect(replay.verification).toEqual(result.verification);
+    expect(options.store.read().head).toBe(head);
+    expect(posts).toBe(1);
+  });
+  it("Verify Release holds ownership and requires public rollback when browser evidence fails", async () => {
+    runner().admit();
+    runner().materialize();
+    await runner().requestDeployment();
+    live.browser.mockRejectedValue(new Error("stale cached client"));
+    await expect(runner().verifyRelease()).rejects.toThrow(
+      "Live verification failed"
+    );
+    const state = parsePromotionControl(options.store.read().bytes!);
+    expect(state.active!.phase).toBe("rollback-required");
+    expect(state.lastVerified.releaseId).toBe(
+      state.active!.priorVerified.releaseId
+    );
+    expect(state.active!.verification).toBeNull();
+    expect(posts).toBe(1);
+  });
+  it("Verify Release refuses pending deployment and missing recovery bytes without observations", async () => {
+    runner().admit();
+    runner().materialize();
+    await runner().requestDeployment();
+    statuses = ["building"];
+    await expect(runner().verifyRelease()).rejects.toThrow(
+      "terminal deployment"
+    );
+    expect(live.browser).not.toHaveBeenCalled();
+    const original = options.transport.readHead;
+    const prior = parsePromotionControl(options.store.read().bytes!).active!
+      .priorVerified;
+    const commit =
+      prior.kind === "legacyPublicSnapshot"
+        ? prior.retainedCommit
+        : prior.request.payloadCommit;
+    options.transport.readHead = (ref) =>
+      ref.endsWith(commit) ? null : original(ref);
+    await expect(runner().verifyRelease()).rejects.toThrow(
+      "recovery artifact is missing"
+    );
+    expect(live.inventory).not.toHaveBeenCalled();
+    expect(
+      parsePromotionControl(options.store.read().bytes!).active!.phase
+    ).toBe("deployed");
+  });
   it("runs actual immutable-tag dispatch checks and rejects altered envelope or activation", () => {
     const eventPath = join(scratch, "event.json");
     writeFileSync(
@@ -618,6 +734,7 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
   });
   it("deploys exact retained legacy rollback bytes without inventing candidate or source identity", async () => {
     runner().admit();
+    await setImmediate();
     const { inputs, admission } = options.identity;
     let state = parsePromotionControl(options.store.read().bytes!);
     state = applyPromotionTransition(state, {
@@ -632,6 +749,7 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
       bytes: serializePromotionControl(state),
       createdAt,
     });
+    await setImmediate();
     const rollbackAttempt = promotionAttemptId(
       inputs.operation_id,
       "rollback",
@@ -653,6 +771,7 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
       bytes: serializePromotionControl(state),
       createdAt,
     });
+    await setImmediate();
     const prior = state.active!.priorVerified;
     if (prior.kind !== "legacyPublicSnapshot")
       throw new Error("Expected synthetic legacy fixture");
@@ -681,6 +800,13 @@ describe("actual retained candidate Pages runner", { timeout: 120_000 }, () => {
     expect(
       parsePromotionControl(options.store.read().bytes!).active!.phase
     ).toBe("rollback-deployed");
+    const verification = await runner().verifyRelease();
+    expect(verification.verification.releaseId).toBe(prior.releaseId);
+    expect(verification.cutoffAcknowledged).toBe(false);
+    const completed = parsePromotionControl(options.store.read().bytes!);
+    expect(completed.active).toBeNull();
+    expect(completed.completedCount).toBe(1);
+    expect(completed.lastVerified.releaseId).toBe(prior.releaseId);
   });
 });
 

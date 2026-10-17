@@ -6,6 +6,7 @@
   },
   "include": [
     "src/test/ingestion/pages-*.test.ts",
+    "src/test/ingestion/release-*.test.ts",
     "src/test/ingestion/promotion-control*.test.ts",
     "src/test/ingestion/promotion-git-credentials.test.ts",
     "src/test/ingestion/publication-git.test.ts",
