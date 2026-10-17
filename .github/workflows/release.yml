@@ -4,16 +4,20 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - 'public/data/**'      # ETL data changes shouldn't trigger releases
-      - '.github/workflows/etl.yml'
-      - '.github/workflows/test.yml'
-      - 'README.md'
-      - 'docs/**'
+      - "public/data/**" # ETL data changes shouldn't trigger releases
+      - ".github/workflows/etl.yml"
+      - ".github/workflows/test.yml"
+      - "README.md"
+      - "docs/**"
 
 permissions:
   contents: write
   packages: write
   pull-requests: write
+
+concurrency:
+  group: automated-release-main
+  cancel-in-progress: false
 
 jobs:
   analyze-commits:
@@ -28,13 +32,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for changelog generation
+          ref: ${{ github.sha }}
+          fetch-depth: 0 # Fetch all history for changelog generation
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.19.0'
-          cache: 'npm'
+          node-version: "24.19.0"
+          cache: "npm"
 
       - name: Get last release tag
         id: last-release
@@ -186,6 +191,10 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.analyze-commits.outputs.should-release == 'true'
 
+    env:
+      NEW_VERSION: ${{ needs.analyze-commits.outputs.new-version }}
+      RELEASE_ARCHIVE: zivv-${{ needs.analyze-commits.outputs.new-version }}.tar.gz
+
     outputs:
       release-url: ${{ steps.create-release.outputs.html_url }}
       release-tag: ${{ steps.create-release.outputs.tag_name }}
@@ -195,59 +204,65 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.19.0'
-          cache: 'npm'
+          node-version: "24.19.0"
+          cache: "npm"
 
       - name: Configure git
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Update package.json version
-        run: |
-          NEW_VERSION="${{ needs.analyze-commits.outputs.new-version }}"
-          echo "Updating version to: $NEW_VERSION"
-
-          # Update package.json
-          npm version --no-git-tag-version $NEW_VERSION
-
-          # Commit version update
-          git add package.json package-lock.json
-          git commit -m "chore: bump version to $NEW_VERSION"
-          git push
-
       - name: Install dependencies
         run: npm ci
+
+      - name: Prepare local version for validation
+        run: npm version --no-git-tag-version --ignore-scripts "$NEW_VERSION"
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
       - name: Run linter
         run: npm run lint
-        continue-on-error: true
 
       - name: Check formatting
         run: npm run format:check
-        continue-on-error: true
 
       - name: Run tests
         run: npm run test:run
-        continue-on-error: true
+
+      - name: Run ingestion tests
+        run: npm run test:ingestion
 
       - name: Build application
         run: npm run build:full
 
       - name: Create release archive
         run: |
-          tar -czf zivv-${{ needs.analyze-commits.outputs.new-version }}.tar.gz \
-            dist/ \
-            package.json \
-            README.md \
-            LICENSE 2>/dev/null || true
+          archive_paths=(dist package.json package-lock.json README.md)
+          if [ -f LICENSE ]; then archive_paths+=(LICENSE); fi
+          tar -czf "$RELEASE_ARCHIVE" "${archive_paths[@]}"
+          test -s "$RELEASE_ARCHIVE"
+          tar -tzf "$RELEASE_ARCHIVE" > /dev/null
+
+      - name: Commit validated version
+        id: commit-version
+        run: |
+          git fetch origin main
+          if [ "$(git rev-parse origin/main)" != "$GITHUB_SHA" ]; then
+            echo "Main advanced during validation; refusing a stale release"
+            exit 1
+          fi
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $NEW_VERSION"
+          # A concurrent main write rejects this ordinary fast-forward push.
+          # Never rebase a release onto bytes that were not validated.
+          git push origin HEAD:refs/heads/main
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         id: create-release
@@ -255,6 +270,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          commitish: ${{ steps.commit-version.outputs.commit }}
           tag_name: v${{ needs.analyze-commits.outputs.new-version }}
           release_name: Release v${{ needs.analyze-commits.outputs.new-version }}
           body: ${{ needs.analyze-commits.outputs.changelog }}
