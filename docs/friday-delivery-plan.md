@@ -25,14 +25,14 @@ Acquire and preserve exact private source
   -> Prepare frozen weekly edition; apply reviewed metadata
   -> Export static JSON and matching encrypted recovery snapshot
   -> Validate exact candidate
-  -> Deploy to GitLab Pages
+  -> Deploy to GitHub Pages
   -> Verify live dataset, routes and ordinary cached/fresh clients
   -> Record publication success and advance cutoff
 ```
 
 Each stage has explicit inputs, outputs, receipts, revision identifiers, transitions and retry behavior. A committed import survives a failed publication; retries resume the remaining work without importing twice. Define edition correction semantics, including newly announced shows after membership is frozen, before automating them. No additions may disappear between editions. Keep weekly edition state, metadata/configuration, candidate artifacts and encrypted recovery material traceable alongside the ledger revision.
 
-GitHub remains authoritative for code, issues and reviews. GitLab is a one-way deployment mirror and Pages host. Automation may publish validated data updates; application code changes require review. Keep SQLite authoritative and static JSON as the browser delivery boundary. Review useful parts of the August experiment in #40; a database/framework migration is not required for this plan. #42 records the stage contracts; #43 covers GitLab deployment and cutover.
+GitHub remains authoritative for code, issues and reviews. GitHub Pages hosts the public site. The public prodigic/zivv-test repository is an artifact-only preview destination, approved by the operator on October 14, 2026. Automation may publish validated data updates; application code changes require review. Keep SQLite authoritative and static JSON as the browser delivery boundary. Review useful parts of the August experiment in #40; a database/framework migration is not required for this plan. #42 records the stage contracts; #43 covers GitHub Pages preview and future domain cutover.
 
 ## Every checkpoint preserves Friday importing
 
@@ -47,7 +47,7 @@ For every applicable checkpoint:
 5. Keep operator commands and fallback instructions current. If a script is replaced, retain a compatible entry point until its replacement is verified.
 6. Apply relevant code/data quality checks. Repair existing failures before making new gates mandatory. Implement live verification/recovery support before enforcing gates that depend on it.
 
-Preview work must leave GitHub Pages publication available. Switch the public site only after GitLab checks and a return-to-previous-host drill pass. Keep deployment candidate identity intact across both hosts.
+Preview work must leave GitHub Pages publication available. Promote a candidate only after GitHub preview checks and a return-to-previous-release drill pass. Keep deployment candidate identity intact across both hosts.
 
 ## Implementation order and stop points
 
@@ -56,12 +56,12 @@ Preview work must leave GitHub Pages publication available. Switch the public si
 | 0     | Define contracts (#42); use current commands and retained fixtures as evidence.                                                                                                                            | Existing manual import/export/publication.                                                   |
 | 1     | Deterministic wrapped-email preflight and row accounting (#10).                                                                                                                                            | Existing commands plus independently usable preflight.                                       |
 | 2     | Resumable orchestration (#31), optional durable metadata queue (#32), candidate validation and release-gate support (#39). #31 depends on #10 and #42; development does not depend on scheduler selection. | Manual stage commands and resumable command; new dependent gates stay optional until proven. |
-| 3     | Build a GitLab preview and one-way mirror (#43); implement candidate publication (#35) behind verified contracts.                                                                                          | Current GitHub Pages remains usable; preview is optional.                                    |
+| 3     | Build a GitHub Pages preview in prodigic/zivv-test (#43); implement candidate publication (#35) behind verified contracts.                                                                                 | Current GitHub Pages remains usable; preview is optional.                                    |
 | 4     | Live verification, exact candidate promotion and public rollback (#36); enforce supported fail-closed gates (#39).                                                                                         | Documented manual publication, verification and recovery.                                    |
 | 5     | Automatic acquisition (#30), eventual runtime/scheduler (#29), monitoring/retries/email (#37). Select runtime/budget/credentials before activation.                                                        | Manually supplied source remains supported; scheduler disabled until final rehearsals.       |
 | 6     | End-to-end rehearsal, duplicate/missing-source/interruption/deployment failure drills and fresh-environment recovery (#38). Observe the first two scheduled Friday editions.                               | Verified manual path remains available throughout observation and later operation.           |
 
-GitLab cutover follows successful preview/live/recovery checks. Attach the future custom domain afterward. Optional collectors and bounded AI review (#33–#34) follow explicit runtime/budget decisions. Metadata coverage work can proceed separately without blocking the core delivery path. Newly discovered core-data failures are still publication blockers.
+Production promotion follows successful preview/live/recovery checks. Attach the future custom domain afterward. Optional collectors and bounded AI review (#33–#34) follow explicit runtime/budget decisions. Metadata coverage work can proceed separately without blocking the core delivery path. Newly discovered core-data failures are still publication blockers.
 
 ## Delegation plan
 
@@ -84,7 +84,7 @@ Sol high owns architecture, ambiguous identities, transaction/concurrency/cutoff
 | #38 Acceptance           | Acceptance checklist, rehearsal evidence and prerequisite reports.                                       |
 | #39 Gates                | Tolerated-failure inventory, approved narrow workflow edits, failure/artifact checks.                    |
 | #42 Contracts            | Existing command/input/output inventory, sample receipts and conformance checks.                         |
-| #43 GitLab               | Approved CI configuration, base-path inventory, preview deep-link/asset fixtures.                        |
+| #43 GitHub preview       | Approved CI configuration, base-path inventory, preview deep-link/asset fixtures.                        |
 | #17 Artwork              | Small venue batches of official image candidates with exact artist/date/venue evidence.                  |
 | #18 Links                | Observed destinations from verified official anchors, URL deduplication, ownership gaps.                 |
 | #19 Reviews              | Cited passages, release titles/authors/dates and evidence-constrained summary candidates.                |
@@ -107,7 +107,7 @@ Sol high owns architecture, ambiguous identities, transaction/concurrency/cutoff
 
 - Runtime: cloud bot service or local Raspberry Pi. Keep implementation portable; select later as offerings change.
 - Hosting/runtime and AI research budgets; enforce them before unattended research activation.
-- GitLab project, mirror/deployment credentials, branch permissions and public URL/base path.
+- GitHub Pages preview repository is prodigic/zivv-test, public and approved. Verify deployment credentials, branch permissions and /zivv-test/ base path before publishing artifacts; production remains /zivv/.
 - Source-access credentials, exact expected edition identification and credential renewal.
 - Alert email destination and independent monitoring provider.
 - Fresh-environment restoration of encrypted ledger plus versioned weekly/configuration state, with a separately stored recovery key.

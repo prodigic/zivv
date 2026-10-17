@@ -7,6 +7,7 @@ import { lazy } from "react";
 import { AppShell } from "@/components/layout/AppShell.tsx";
 import { RouterErrorBoundary } from "@/components/error/ErrorBoundary.tsx";
 import { PageWrapper } from "@/components/layout/PageWrapper.tsx";
+import { normalizeSiteBase } from "@/utils/site-base.ts";
 
 // Lazy load page components for code splitting
 const HomePage = lazy(() => import("@/pages/HomePage.tsx"));
@@ -184,7 +185,7 @@ export const router = createBrowserRouter(
     },
   ],
   {
-    basename: import.meta.env.PROD ? "/zivv/" : "/",
+    basename: normalizeSiteBase(import.meta.env.BASE_URL),
   }
 );
 

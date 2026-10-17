@@ -2,7 +2,7 @@
 
 Contract checkpoint for #42, based on main `281504d76e60948b84faea1b389f591c084d9511`, October 14, 2026. See the [approved plan](friday-delivery-plan.md), [glossary](GLOSSARY.md) and [architecture decision](adr/0001-weekly-etl-release-boundary.md).
 
-This defines the required orchestrator behavior. Existing commands below are implemented; the stage journal, automatic acquisition, candidate promotion and GitLab deployment are future work in #30–#39/#43. No scheduler, storage migration or hosting switch is introduced at this checkpoint.
+This defines the required orchestrator behavior. Existing commands below are implemented; the stage journal, automatic acquisition, candidate promotion and GitHub Pages preview deployment are future work in #30–#39/#43. No scheduler, storage migration or hosting switch is introduced at this checkpoint.
 
 ## Stage boundaries
 
@@ -16,7 +16,7 @@ This defines the required orchestrator behavior. Existing commands below are imp
 | Enrich / queue (#32–#34) | Exact identities, reviewed registries, missing/stale metadata                      | Guarded reviewed metadata and persistent research queue; provenance and explicit unresolved outcomes                                   | No collector or AI availability needed for initial release. Do not fabricate facts or mutate canonical identity from unchecked research.                                 |
 | Export (#35)             | One captured ledger revision, frozen edition state, exact reviewed config and code | Complete static JSON/manifest plus matching verified encrypted ledger snapshot; checksums, config/edition identity and source revision | Stage outputs in candidate storage; interrupted export is not deployable. Reject a changed input revision/config and build a new candidate rather than mixing artifacts. |
 | Validate (#39)           | Immutable candidate, expected identities/references, required test policy          | Passed checks bound to exact code/dataset/artifact hashes                                                                              | Failed required checks retain last good public release. Checks changing candidate bytes invalidate earlier success.                                                      |
-| Deploy (#35/#43)         | Exact validated candidate, release authority, destination credentials              | Deployment ID, immutable artifact identity and GitHub/GitLab commit association                                                        | Resume by deployment identity; do not publish a newer unvalidated rebuild. Serialize promotion across runners.                                                           |
+| Deploy (#35/#43)         | Exact validated candidate, release authority, destination credentials              | Deployment ID, immutable artifact identity and GitHub commit association                                                               | Resume by deployment identity; do not publish a newer unvalidated rebuild. Serialize promotion across runners.                                                           |
 | Verify (#36)             | Deployment result, candidate hashes, intended destination                          | Live manifest/file matches; current/future/weekly routes and cached/fresh client checks; previous-good recovery evidence               | Failed checks restore prior verified public artifacts and alert, without restoring an old private ledger.                                                                |
 | Acknowledge (#31/#37)    | Successful live verification receipt for the exact edition/candidate               | Published edition/cutoff, completion receipt and deduplicated success notification                                                     | Idempotent acknowledgement; failure here resumes acknowledgement, not import/deploy. Recheck live identity if the destination changed.                                   |
 
@@ -81,7 +81,7 @@ The current importer reports unresolved reconciliation but can commit accepted s
 
 `npm run validate` is a legacy validator that reads `data/latest.txt`, writes error files and can update aliases; it is not read-only. `npm run merge` combines ledger import with updates to legacy text archives/venue stubs. Do not blindly chain `merge` after the explicit import route; choose and document the intended path. Preserve these commands until verified replacements exist.
 
-Inspect changed files and manifest checksums/references, run applicable tests/build checks, commit only approved public output/configuration/encrypted backup, and publish through the currently maintained GitHub Pages path. GitLab preview/cutover remains #43. Wait for deployment and verify the actual candidate before acknowledging:
+Inspect changed files and manifest checksums/references, run applicable tests/build checks, commit only approved public output/configuration/encrypted backup, and publish through the currently maintained GitHub Pages path. GitHub preview/promotion remains #43. Wait for deployment and verify the actual candidate before acknowledging:
 
 ```text
 node scripts/weekly-edition.js mark-published --id <verified-edition-id>
@@ -99,6 +99,6 @@ October 14 baseline at this checkpoint:
 - Read authoritative operator ledger: 4,641 events, 8,678 artists, 656 venues, six runs and 283 redirects. Logical revision `5d2360394cf1242b9cc98e2124a850885cf4df0e49e75eb9249783812e38d0c4`.
 - `ledger-store.js backup` reported `changed: false`, `verified: true`; `verify` reported the same logical revision, with `restored: false`. The live catalog was not imported, repaired or restored.
 - Existing isolated tests: 71 passing across shared-store (14), weekly (8), ledger (26), Steve input (5), historical replay (4), and migration/export (14). They cover process interruption, simultaneous/stale writers, portable-key recovery, receipt replay, frozen membership and synthetic export.
-- This is component/isolated recovery evidence, not a rehearsal of automatic Friday delivery, email acquisition, GitLab cutover or full private-report recovery. Those remain activation gates.
+- This is component/isolated recovery evidence, not a rehearsal of automatic Friday delivery, email acquisition, GitHub preview promotion or full private-report recovery. Those remain activation gates.
 
-Future implementation must exercise each failure edge in the stage table, including commit-before-report/backup failure, live-success-before-acknowledgement failure, stale promotion owner and correction/new-addition membership. #10 is the next implementation checkpoint; #31 implements this contract. #36 covers full recovery, #39 exact-candidate gates, and #43 GitLab preview. Preserve the manual path throughout.
+Future implementation must exercise each failure edge in the stage table, including commit-before-report/backup failure, live-success-before-acknowledgement failure, stale promotion owner and correction/new-addition membership. #10 is the next implementation checkpoint; #31 implements this contract. #36 covers full recovery, #39 exact-candidate gates, and #43 GitHub Pages preview. Preserve the manual path throughout.

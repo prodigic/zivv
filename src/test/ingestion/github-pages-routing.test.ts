@@ -2,14 +2,17 @@ import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 import { JSDOM } from "jsdom";
 import { describe, expect, it } from "vitest";
+import { renderPagesFallback } from "../../utils/site-base.js";
 
 const index = readFileSync("index.html", "utf8");
 const fallback = readFileSync("public/404.html", "utf8");
 
-function redirectFor(path: string) {
+function redirectFor(path: string, base = "/zivv/") {
   let redirected = "";
   const location = new URL(`https://www.prodigic.com${path}`);
-  const script = fallback.match(/<script[^>]*>([\s\S]*?)<\/script>/)![1];
+  const script = renderPagesFallback(fallback, base).match(
+    /<script[^>]*>([\s\S]*?)<\/script>/
+  )![1];
   runInNewContext(script, {
     window: {
       location: Object.assign(location, {
@@ -23,6 +26,22 @@ function redirectFor(path: string) {
 }
 
 describe("GitHub Pages route recovery", () => {
+  it.each(["/", "/zivv-test/", "/nested/preview/"])(
+    "restores deep links at %s",
+    (base) => {
+      const path = `${base}events/fixture?city=Oakland&query=a%20b#details`;
+      const dom = new JSDOM(index, {
+        url: redirectFor(path, base),
+        runScripts: "dangerously",
+      });
+      expect(
+        dom.window.location.pathname +
+          dom.window.location.search +
+          dom.window.location.hash
+      ).toBe(path);
+      dom.window.close();
+    }
+  );
   it.each([
     "/zivv/newsletter/sfmusic",
     "/zivv/calendar/month?city=Oakland&search=rock%20show#october",
