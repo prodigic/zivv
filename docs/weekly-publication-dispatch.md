@@ -93,6 +93,31 @@ the exact accepted attempt from validated remote history and reconcile its run
 using GET requests only. That does not recover the claim plan, journal, catalog
 or acknowledgement state, and no-match never authorizes another dispatch.
 
+If the claim plan is missing, the worker now searches the complete canonical
+control history (up to 1,000 commits and 16 MiB of returned evidence) for the
+original claim with this private run ID. It requires a unique match, the exact
+candidate/source/public inventory, original parent and commit timestamp, and an
+unchanged remotely retained payload. The payload receipt must match the freshly
+authenticated private candidate, and reproducing the original payload and claim
+must yield their original commit IDs. An accepted dispatch also pins the reviewed
+workflow commit; before the first dispatch the supplied reviewed workflow remains
+the explicit operator choice.
+
+The reconstructed ordinary claim plan is saved before further effects. Recovery
+of an accepted claim fetches and verifies its existing artifact without writing a
+replacement artifact ref or appending another claim. If its dispatch file is also
+missing, the worker uses canonical dispatch recovery for the original operation
+and attempt, with GET requests only. No matching run leaves the attempt pending;
+it never permits a replacement POST. Missing or conflicting artifact refs,
+changed private evidence, ambiguous claims, or truncated history stop recovery.
+If no claim was ever accepted and history is complete, the normal fresh claim
+path remains available.
+
+This requires the earlier private journal, sealed configuration, bundle and key
+to have survived or been restored coherently. It does not recover absent private
+inputs or admit a relocated recovery capsule. A completed historical owner is
+still a separate delivery-adoption recovery boundary when its anchor was lost.
+
 When journal verification has succeeded, resume bypasses publication dispatch.
 The retained delivery anchor and acknowledgement completion proof can therefore
 finish after native acknowledgement cleared the active operation, even after a
@@ -129,3 +154,13 @@ unchanged import identity and catalog, exact retained plans and no repeated buil
 Ten publication-time cases cover Pacific midnight on both sides of daylight saving
 changes, invalid dates and invalid clocks. The maintained importer, CLI and timing
 batch passed 39 cases. CI must independently run the entire exact-head suite.
+
+The canonical-claim recovery slice passed nine additional native Git/SQLite
+cases: losing either/both private plan and dispatch files, interruption immediately
+after claim acceptance, missing/conflicting retained artifact refs, a changed
+workflow pin, incomplete/ambiguous history, and a second retry after reconstructed
+plan retention followed by artifact-ref loss. All four maintained publication
+flows also passed, for 13 targeted cases, alongside the ten Friday timing cases.
+The Sol-high protocol review confirmed the accepted-plan retry and first-dispatch
+boundaries; it does not replace the pending full operational recovery drill.
+The [recovery matrix](publication-recovery-matrix.md) records remaining limits.
