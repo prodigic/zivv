@@ -74,6 +74,12 @@ import {
   WeeklyRunJournal,
   validateWeeklyJournalRecoverySnapshot,
 } from "./weekly-run-journal.js";
+import {
+  captureNpmExecutionTool,
+  validateNpmExecutionToolIdentity,
+  verifyNpmExecutionTool,
+  type NpmExecutionToolIdentity,
+} from "./execution-tool-identity.js";
 
 const scope = "prodigic/zivv/production";
 const format = "zivv-operator-recovery";
@@ -123,7 +129,7 @@ interface RecoveryFile {
 }
 export interface OperatorRecoveryCheckpoint {
   format: typeof format;
-  version: 1;
+  version: 1 | 2;
   createdAtEpochMs: number;
   originalOperatorDirectory: string;
   originalCheckout: string;
@@ -133,6 +139,7 @@ export interface OperatorRecoveryCheckpoint {
     executableSha256: string;
     workerSha256: string;
     lockfileSha256: string;
+    bootstrapNpm?: NpmExecutionToolIdentity;
   };
   ledgerRevision: string;
   ledger: IngestionLedger;
@@ -294,7 +301,7 @@ export function validateOperatorRecoveryCheckpoint(
   ]);
   if (
     raw.format !== format ||
-    raw.version !== 1 ||
+    (raw.version !== 1 && raw.version !== 2) ||
     !Number.isSafeInteger(raw.createdAtEpochMs) ||
     Number(raw.createdAtEpochMs) < 0 ||
     typeof raw.originalOperatorDirectory !== "string" ||
@@ -305,13 +312,15 @@ export function validateOperatorRecoveryCheckpoint(
     raw.files.length > maxFiles
   )
     fail();
-  const runtime = object(raw.runtime, [
+  const runtimeKeys = [
     "node",
     "icu",
     "executableSha256",
     "workerSha256",
     "lockfileSha256",
-  ]);
+  ];
+  if (raw.version === 2) runtimeKeys.push("bootstrapNpm");
+  const runtime = object(raw.runtime, runtimeKeys);
   if (
     typeof runtime.node !== "string" ||
     typeof runtime.icu !== "string" ||
@@ -320,6 +329,7 @@ export function validateOperatorRecoveryCheckpoint(
     !digest(runtime.lockfileSha256)
   )
     fail();
+  if (raw.version === 2) validateNpmExecutionToolIdentity(runtime.bootstrapNpm);
   validateLedger(raw.ledger);
   if (ledgerDigest(raw.ledger) !== raw.ledgerRevision) fail();
   const journal = validateWeeklyJournalRecoverySnapshot(base64(raw.journal));
@@ -691,14 +701,16 @@ function verifyRecoveryCandidates(
 
 /** Capture one journal/catalog/filesystem checkpoint under the established lock order. */
 export async function captureOperatorRecoveryCheckpoint(
-  root: string
+  root: string,
+  options?: { npmCli: string }
 ): Promise<OperatorRecoveryCheckpoint> {
-  return captureCheckpoint(root);
+  return captureCheckpoint(root, undefined, options?.npmCli);
 }
 
 async function captureCheckpoint(
   root: string,
-  finalize?: (checkpoint: OperatorRecoveryCheckpoint) => void
+  finalize?: (checkpoint: OperatorRecoveryCheckpoint) => void,
+  npmCli?: string
 ): Promise<OperatorRecoveryCheckpoint> {
   const checkout = realpathSync(root),
     location = projectLedgerLocation(checkout);
@@ -707,6 +719,8 @@ async function captureCheckpoint(
   assertNoActiveStoreTransaction(location.path);
   const operator = resolvePrivateCandidateDirectory(location.directory);
   assertOperatorNotQuarantined(operator);
+  const bootstrapNpm =
+    npmCli === undefined ? undefined : captureNpmExecutionTool(npmCli);
   const journal = new WeeklyRunJournal(operator);
   let lease: ReturnType<WeeklyRunJournal["acquire"]> | undefined;
   try {
@@ -718,7 +732,7 @@ async function captureCheckpoint(
         const ledger = readSqliteLedger(location.path);
         const checkpoint = validateOperatorRecoveryCheckpoint({
           format,
-          version: 1,
+          version: bootstrapNpm ? 2 : 1,
           createdAtEpochMs: Date.now(),
           originalOperatorDirectory: operator,
           originalCheckout: checkout,
@@ -730,6 +744,7 @@ async function captureCheckpoint(
             lockfileSha256: sha256(
               regular(join(checkout, "package-lock.json"))
             ),
+            ...(bootstrapNpm ? { bootstrapNpm } : {}),
           },
           ledgerRevision: ledgerDigest(ledger),
           ledger,
@@ -742,6 +757,8 @@ async function captureCheckpoint(
         )
           throw new Error("RECOVERY_INPUTS_CHANGED");
         journal.checkOwnership(owned);
+        if (bootstrapNpm && npmCli !== undefined)
+          verifyNpmExecutionTool(bootstrapNpm, npmCli);
         finalize?.(checkpoint);
         return checkpoint;
       })
@@ -784,6 +801,7 @@ export function verifyOperatorRetirementEvidence(input: {
 export async function retireAndCaptureOperatorRecovery(input: {
   root: string;
   out: string;
+  npmCli?: string;
 }): Promise<{
   checkpoint: OperatorRecoveryCheckpoint;
   retirementReceipt: Buffer;
@@ -851,6 +869,11 @@ export async function retireAndCaptureOperatorRecovery(input: {
       checkpoint.originalCheckout !== checkout
     )
       throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
+    if (input.npmCli !== undefined) {
+      if (!checkpoint.runtime.bootstrapNpm)
+        throw new Error("RECOVERY_BOOTSTRAP_NPM_REQUIRED");
+      verifyNpmExecutionTool(checkpoint.runtime.bootstrapNpm, input.npmCli);
+    }
     persistReceipt(retirementReceipt);
     return { checkpoint, retirementReceipt };
   }
@@ -858,31 +881,39 @@ export async function retireAndCaptureOperatorRecovery(input: {
     throw new Error("RECOVERY_DESTINATION_EXISTS");
   return withOperatorRetirementScope(operator, async (permitOwnRetirement) => {
     let retirementReceipt: Buffer | undefined;
-    const checkpoint = await captureCheckpoint(checkout, (captured) => {
-      if (existsSync(marker) || existsSync(out) || existsSync(portableReceipt))
-        throw new Error("RECOVERY_DESTINATION_EXISTS");
-      const archive = encryptOperatorRecovery(captured, key);
-      decryptOperatorRecovery(archive, key);
-      secureOperatorDirectory(dirname(out));
-      writeExclusive(out, archive);
-      if (!regular(out, Math.ceil(maxBytes * 1.4)).equals(archive))
-        throw new Error("RECOVERY_OUTPUT_CHANGED");
-      retirementReceipt = createOperatorRetirementReceipt(
-        {
-          checkpointSha256: sha256(canonicalJson(captured)),
-          archiveSha256: sha256(archive),
-          ledgerRevision: captured.ledgerRevision,
-          originalOperatorDirectory: operator,
-          installationId: randomUUID(),
-          retiredAtEpochMs: Date.now(),
-        },
-        key
-      );
-      permitOwnRetirement(retirementReceipt);
-      writeDurableFile(marker, retirementReceipt);
-      if (!regular(marker, 16 * 1024).equals(retirementReceipt))
-        throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
-    });
+    const checkpoint = await captureCheckpoint(
+      checkout,
+      (captured) => {
+        if (
+          existsSync(marker) ||
+          existsSync(out) ||
+          existsSync(portableReceipt)
+        )
+          throw new Error("RECOVERY_DESTINATION_EXISTS");
+        const archive = encryptOperatorRecovery(captured, key);
+        decryptOperatorRecovery(archive, key);
+        secureOperatorDirectory(dirname(out));
+        writeExclusive(out, archive);
+        if (!regular(out, Math.ceil(maxBytes * 1.4)).equals(archive))
+          throw new Error("RECOVERY_OUTPUT_CHANGED");
+        retirementReceipt = createOperatorRetirementReceipt(
+          {
+            checkpointSha256: sha256(canonicalJson(captured)),
+            archiveSha256: sha256(archive),
+            ledgerRevision: captured.ledgerRevision,
+            originalOperatorDirectory: operator,
+            installationId: randomUUID(),
+            retiredAtEpochMs: Date.now(),
+          },
+          key
+        );
+        permitOwnRetirement(retirementReceipt);
+        writeDurableFile(marker, retirementReceipt);
+        if (!regular(marker, 16 * 1024).equals(retirementReceipt))
+          throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
+      },
+      input.npmCli
+    );
     if (!retirementReceipt) throw new Error("RETIREMENT_EVIDENCE_MISSING");
     persistReceipt(retirementReceipt);
     return { checkpoint, retirementReceipt };

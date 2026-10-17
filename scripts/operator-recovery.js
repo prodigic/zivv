@@ -19,6 +19,10 @@ import {
 } from "../dist/lib/ingestion/operator-recovery.js";
 import { inspectOperatorRecoveryLocations } from "../dist/lib/ingestion/operator-recovery-location.js";
 import {
+  prepareOperatorRecoveryRuntime,
+  verifyPreparedOperatorRuntime,
+} from "../dist/lib/ingestion/recovery-runtime.js";
+import {
   loadBackupKey,
   secureOperatorDirectory,
 } from "../dist/lib/ingestion/encrypted-backup.js";
@@ -47,7 +51,15 @@ try {
       value = args[index + 1];
     if (
       !args[index]?.startsWith("--") ||
-      !["root", "out", "file", "key", "destination", "receipt"].includes(key) ||
+      ![
+        "root",
+        "out",
+        "file",
+        "key",
+        "destination",
+        "receipt",
+        "npm-cli",
+      ].includes(key) ||
       Object.hasOwn(options, key) ||
       !value ||
       value.startsWith("--")
@@ -57,14 +69,17 @@ try {
   }
   const expected =
     command === "capture" || command === "retire"
-      ? ["root", "out"]
+      ? ["root", "out", ...(options["npm-cli"] ? ["npm-cli"] : [])]
       : command === "verify"
         ? ["file", "key"]
         : command === "verify-retirement"
           ? ["file", "key", "receipt"]
-          : command === "stage" || command === "inspect"
-            ? ["file", "key", "destination"]
-            : [];
+          : command === "prepare-runtime" ||
+              command === "verify-prepared-runtime"
+            ? ["file", "key", "receipt", "destination", "npm-cli"]
+            : command === "stage" || command === "inspect"
+              ? ["file", "key", "destination"]
+              : [];
   if (
     !expected.length ||
     JSON.stringify(Object.keys(options).sort()) !==
@@ -76,6 +91,7 @@ try {
     ({ checkpoint } = await retireAndCaptureOperatorRecovery({
       root: resolve(options.root),
       out: resolve(options.out),
+      ...(options["npm-cli"] ? { npmCli: resolve(options["npm-cli"]) } : {}),
     }));
   } else if (command === "capture") {
     const output = resolve(options.out);
@@ -84,7 +100,10 @@ try {
     const location = projectLedgerLocation(resolve(options.root));
     if (location.backend !== "sqlite") throw Error("SHARED_SQLITE_REQUIRED");
     const key = loadBackupKey(location.directory);
-    checkpoint = await captureOperatorRecoveryCheckpoint(resolve(options.root));
+    checkpoint = await captureOperatorRecoveryCheckpoint(
+      resolve(options.root),
+      options["npm-cli"] ? { npmCli: resolve(options["npm-cli"]) } : undefined
+    );
     const bytes = encryptOperatorRecovery(checkpoint, key);
     // Reauthenticate before durable output; never write a cleartext capsule.
     decryptOperatorRecovery(bytes, key);
@@ -103,7 +122,22 @@ try {
     if (key.length !== 32 || key.toString("base64") !== encoded)
       throw Error("INVALID_RECOVERY_KEY");
     const archive = privateInput(options.file, 384 * 1024 * 1024);
-    if (command === "verify-retirement") {
+    if (
+      command === "prepare-runtime" ||
+      command === "verify-prepared-runtime"
+    ) {
+      const input = {
+        archive,
+        recoveryKey: key,
+        retirementReceipt: privateInput(options.receipt, 16 * 1024),
+        destination: resolve(options.destination),
+        npmCli: resolve(options["npm-cli"]),
+      };
+      inspection =
+        command === "prepare-runtime"
+          ? await prepareOperatorRecoveryRuntime(input)
+          : verifyPreparedOperatorRuntime(input);
+    } else if (command === "verify-retirement") {
       ({ checkpoint } = verifyOperatorRetirementEvidence({
         archive,
         recoveryKey: key,

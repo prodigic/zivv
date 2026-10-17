@@ -49,6 +49,10 @@ The capsule retains:
   configuration, package/lockfile and compiled worker lib/types/utils trees.
 - Original checkout/operator paths, Node/ICU versions, executable hash, compiled
   worker inventory digest and lockfile digest.
+- An optional explicit v2 bootstrap npm package identity, captured without tool
+  execution and reverified under writer locks. See
+  [runtime preparation](recovery-runtime-preparation.md) for the `--npm-cli`
+  capture option and exact replacement-tool requirements.
 
 Working keys and `recovery/backup-recovery.key` are never embedded. Dependency
 and npm cache trees are omitted; exact locked dependencies need reinstalling in
@@ -78,6 +82,8 @@ For planned source retirement, the optional
 [final-capture and cooperative writer fence](operator-retirement.md) retains a
 separate portable receipt. It does not activate staged recovery or revoke old
 credentials, and is not a substitute for lost-host shutdown/revocation evidence.
+The optional [runtime preparation](recovery-runtime-preparation.md) installs and
+probes an exact v2 runtime in quarantine after authenticating that receipt.
 
 Destination must not exist and must be private/local/outside Git. A failed
 restore leaves an `incomplete` marker; inspect/preserve that staging and choose a
