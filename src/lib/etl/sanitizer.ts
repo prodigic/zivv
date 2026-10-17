@@ -1,5 +1,5 @@
 const DATE_LINE = /^[a-z]{3}\s+\d{1,2}\s+\w{3}/i;
-const CLUB_INFO_HEADER = /C\s*L\s*U\s*B\s+I\s*N\s*F\s*O/i;
+const CLUB_INFO_HEADER = /^C\s*L\s*U\s*B\s+I\s*N\s*F\s*O\s*$/i;
 
 export class EventSanitizer {
   /**
