@@ -64,6 +64,8 @@
     "preflight:steveslist": "npm run build:etl && node scripts/preflight-steveslist.js",
     "import:venue": "npm run build:etl && node scripts/import-events.js venue",
     "weekly:prepare": "npm run build:etl && node scripts/weekly-edition.js prepare",
+    "candidate:build": "npm run build:etl && node scripts/build-weekly-candidate.js build",
+    "candidate:verify": "npm run build:etl && node scripts/build-weekly-candidate.js verify",
     "test:ingestion": "vitest run --config vitest.ingestion.config.ts --configLoader runner",
     "venue:pilot": "npm run build:etl && node scripts/venue-pilot.js",
     "storybook": "storybook dev -p 6006",
