@@ -19,6 +19,7 @@
     "src/test/ingestion/operator-recovery-candidate.test.ts",
     "src/test/ingestion/steve-email-intake.test.ts",
     "src/test/ingestion/promotion-control*.test.ts",
+    "src/test/ingestion/canonical-dispatch-recovery.test.ts",
     "src/test/ingestion/promotion-git-credentials.test.ts",
     "src/test/ingestion/publication-git.test.ts",
     "src/vite-env.d.ts"
