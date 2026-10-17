@@ -537,14 +537,19 @@ export async function ensureReviewedPagesWorkflowTag(
   input: Transport & {
     workflowCommit: string;
     reviewedMainAncestor: true;
+    checkContext?: () => void;
   }
 ): Promise<{ status: "verified" | "uncertain" | "conflict"; ref: string }> {
-  sha(input.workflowCommit);
+  const checkContext = input.checkContext;
+  const workflowCommit = input.workflowCommit;
+  if (checkContext !== undefined && typeof checkContext !== "function")
+    throw new Error("Workflow tag requires a synchronous context check");
+  sha(workflowCommit);
   if (input.reviewedMainAncestor !== true)
     throw new Error("Independently reviewed main ancestry is required");
-  const ref = `refs/tags/zivv-workflows/${input.workflowCommit}`;
+  const ref = `refs/tags/zivv-workflows/${workflowCommit}`;
   const http = transport(input);
-  const route = `${http.base}${ROOT}/git/ref/tags/zivv-workflows/${input.workflowCommit}`;
+  const route = `${http.base}${ROOT}/git/ref/tags/zivv-workflows/${workflowCommit}`;
   async function read() {
     const response = await http.request(route, {
       headers: http.headers,
@@ -559,7 +564,7 @@ export async function ensureReviewedPagesWorkflowTag(
     const target = object(fields.object);
     return fields.ref === ref &&
       target.type === "commit" &&
-      target.sha === input.workflowCommit
+      target.sha === workflowCommit
       ? "verified"
       : "conflict";
   }
@@ -568,12 +573,13 @@ export async function ensureReviewedPagesWorkflowTag(
     if (existing === "verified" || existing === "conflict")
       return { status: existing, ref };
     if (existing !== 404) return { status: "uncertain", ref };
+    checkContext?.();
     const response = await http.request(`${http.base}${ROOT}/git/refs`, {
       method: "POST",
       headers: http.headers,
       redirect: "error",
       signal: http.signal,
-      body: JSON.stringify({ ref, sha: input.workflowCommit }),
+      body: JSON.stringify({ ref, sha: workflowCommit }),
     });
     await response.body?.cancel();
     // Re-read even after 422: another operator may have created the exact tag.

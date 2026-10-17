@@ -169,6 +169,82 @@ describe("durable promotion Git compare-and-append", () => {
     expect(transport.readHead(ref)).toBeNull();
   }, 30_000);
 
+  it("rechecks caller context after native preparation and keeps callbacks out of prepared evidence", () => {
+    let prepared = false;
+    const normal = options();
+    const store = createLocalPromotionControlStore({
+      ...normal,
+      validateTransition(previous, next) {
+        normal.validateTransition(previous, next);
+        prepared = true;
+      },
+    });
+    const checkContext = vi.fn(() => {
+      if (prepared) throw new Error("context changed after preparation");
+    });
+    const saved = store.prepareAppend({
+      expectedHead: null,
+      bytes: state(0),
+      createdAt,
+      checkContext,
+    });
+    expect(Object.keys(saved).sort()).toEqual([
+      "attemptedHead",
+      "bytes",
+      "createdAt",
+      "expectedHead",
+    ]);
+    expect(checkContext).not.toHaveBeenCalled();
+    prepared = false;
+    expect(() =>
+      store.compareAndAppend({
+        expectedHead: null,
+        bytes: state(0),
+        createdAt,
+        checkContext,
+      })
+    ).toThrow("context changed after preparation");
+    expect(checkContext).toHaveBeenCalledTimes(2);
+    expect(store.read().head).toBeNull();
+  }, 30_000);
+
+  it("runs a captured caller guard after remote reads and again at the native push boundary", () => {
+    const transport = createBareTestPromotionControlTransport(root, bare),
+      append = vi.fn(transport.append);
+    let current = true;
+    const store = remote({
+      ...transport,
+      append,
+      readHead(target) {
+        const result = transport.readHead(target);
+        current = false;
+        return result;
+      },
+    });
+    expect(() =>
+      store.compareAndAppend({
+        expectedHead: null,
+        bytes: state(0),
+        createdAt,
+        checkContext: () => {
+          if (!current) throw new Error("context changed during read");
+        },
+      })
+    ).toThrow("context changed during read");
+    expect(append).not.toHaveBeenCalled();
+    const prepared = createLocalPromotionControlStore(options()).prepareAppend({
+      expectedHead: null,
+      bytes: state(0),
+      createdAt,
+    });
+    expect(() =>
+      transport.append(ref, prepared.attemptedHead, null, () => {
+        throw new Error("context changed before push");
+      })
+    ).toThrow("context changed before push");
+    expect(transport.readHead(ref)).toBeNull();
+  }, 30_000);
+
   it("refuses retirement appearing during local validation before updating its canonical ref", () => {
     const operator = join(root, "data/ingestion");
     mkdirSync(operator, { recursive: true });

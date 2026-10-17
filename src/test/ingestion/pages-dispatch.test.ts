@@ -456,6 +456,30 @@ describe("exact attempt workflow recovery", () => {
 });
 
 describe("create-once reviewed workflow tag", () => {
+  it("rechecks captured context after an awaited missing-tag read before creating a ref", async () => {
+    const f = fixture();
+    let current = true;
+    const original = vi.fn(() => {
+      if (!current) throw new Error("context expired");
+    });
+    const input = {
+      ...f.transport,
+      workflowCommit,
+      reviewedMainAncestor: true as const,
+      checkContext: original,
+    };
+    f.respond(async () => {
+      current = false;
+      input.checkContext = vi.fn();
+      return response({}, 404);
+    });
+    expect(await ensureReviewedPagesWorkflowTag(input)).toMatchObject({
+      status: "uncertain",
+    });
+    expect(f.events).toEqual(["GET"]);
+    expect(original).toHaveBeenCalledOnce();
+    expect(input.checkContext).not.toHaveBeenCalled();
+  });
   it("verifies a raced exact tag after create conflict without moving it", async () => {
     const f = fixture();
     const ref = `refs/tags/${f.intent.ref}`;

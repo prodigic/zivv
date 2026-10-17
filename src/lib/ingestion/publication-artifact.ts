@@ -11,7 +11,12 @@ export interface PublicationArtifactTransport {
   readonly repository: "prodigic/zivv";
   readHead(ref: string): string | null;
   fetchCommit(commit: string): void;
-  append(ref: string, commit: string, expectedHead: string | null): void;
+  append(
+    ref: string,
+    commit: string,
+    expectedHead: string | null,
+    checkContext?: () => void
+  ): void;
 }
 
 export interface RetainedPublicationArtifact {
@@ -32,6 +37,7 @@ export function retainPublicationArtifact(
     repositoryRoot: string;
     payloadCommit: string;
     transport: PublicationArtifactTransport;
+    checkContext?: () => void;
   }
 ): RetainedPublicationArtifact {
   const writable = () =>
@@ -55,6 +61,9 @@ export function retainPublicationArtifact(
   const payloadCommit = input.payloadCommit;
   const repositoryRoot = input.repositoryRoot;
   const transport = input.transport;
+  const checkContext = input.checkContext;
+  if (checkContext !== undefined && typeof checkContext !== "function")
+    throw new Error("Artifact retention requires a synchronous context check");
   const checked = verifyPublicationPayload(
     readPublicationPayloadGit({ repositoryRoot, payloadCommit }).files,
     expected
@@ -85,9 +94,11 @@ export function retainPublicationArtifact(
   }
   const previous = transport.readHead(ref);
   if (previous !== null) return observe();
+  checkContext?.();
   try {
     writable();
-    transport.append(ref, payloadCommit, null);
+    if (checkContext) transport.append(ref, payloadCommit, null, checkContext);
+    else transport.append(ref, payloadCommit, null);
   } catch {
     // A lost response can follow a successful push; observe the same immutable ref.
   }

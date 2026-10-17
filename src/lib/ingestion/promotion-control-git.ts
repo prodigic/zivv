@@ -35,6 +35,8 @@ export interface PromotionControlAppend {
   expectedHead: string | null;
   bytes: Buffer;
   createdAt: string;
+  /** Recheck caller authority after preparation; never serialized into prepared evidence. */
+  checkContext?: () => void;
 }
 
 export interface PromotionControlAppendResult {
@@ -43,7 +45,10 @@ export interface PromotionControlAppendResult {
   observedHead: string | null;
 }
 
-export interface PreparedPromotionControlAppend extends PromotionControlAppend {
+export interface PreparedPromotionControlAppend extends Omit<
+  PromotionControlAppend,
+  "checkContext"
+> {
   attemptedHead: string;
 }
 
@@ -59,7 +64,12 @@ export interface PromotionControlTransport {
   /** Observe the authoritative main ref without granting append access to it. */
   readMainHead?(): string | null;
   fetchCommit(commit: string): void;
-  append(ref: string, commit: string, expectedHead: string | null): void;
+  append(
+    ref: string,
+    commit: string,
+    expectedHead: string | null,
+    checkContext?: () => void
+  ): void;
 }
 
 export interface PromotionControlStore {
@@ -792,7 +802,13 @@ function createStore(
     },
     compareAndAppend(input) {
       assertOperatorInstallationWritable(projectLedgerLocation(root).directory);
+      const checkContext = input.checkContext;
+      if (checkContext !== undefined && typeof checkContext !== "function")
+        throw new Error(
+          "Promotion append requires a synchronous context check"
+        );
       const captured = capture(input);
+      checkContext?.();
       const { bytes, expectedHead } = captured;
       const completionTree = validateState(Buffer.from(bytes), destination);
       const current = read();
@@ -808,10 +824,14 @@ function createStore(
         current.bytes,
         completionTree
       );
+      checkContext?.();
       assertOperatorInstallationWritable(projectLedgerLocation(root).directory);
       try {
-        if (transport) transport.append(ref, attemptedHead, expectedHead);
-        else
+        if (transport) {
+          if (checkContext)
+            transport.append(ref, attemptedHead, expectedHead, checkContext);
+          else transport.append(ref, attemptedHead, expectedHead);
+        } else
           git(root, [
             "update-ref",
             "--no-deref",
@@ -934,7 +954,7 @@ function remoteTransport(
       ]);
       readObject(root, "commit", commit);
     },
-    append(ref, commit, expectedHead) {
+    append(ref, commit, expectedHead, checkContext) {
       assertOperatorInstallationWritable(projectLedgerLocation(root).directory);
       validateRef(ref);
       validateSha(commit);
@@ -959,6 +979,7 @@ function remoteTransport(
       // Restricted append-only controller writers and non-force fast-forward
       // updates make competing sole-parent appends conflict. No ref refresh or
       // reparent occurs here, and no configured push refspec is used.
+      checkContext?.();
       assertOperatorInstallationWritable(projectLedgerLocation(root).directory);
       run([
         "push",

@@ -14,6 +14,7 @@ import {
   secureOperatorDirectory,
 } from "./encrypted-backup.js";
 import { resolvePrivateCandidateDirectory } from "./private-artifacts.js";
+import { resolveRecoveredCandidateWorkDirectory } from "./recovery-import-admission.js";
 import {
   buildReviewedWeeklyCandidate,
   readPublishableCandidate,
@@ -166,6 +167,8 @@ export async function runWeeklyCandidateStages(input: {
     return path;
   };
   const checkedDirectory = (value: unknown) => {
+    if (typeof value !== "string") fail("INVALID_CANDIDATE_STAGE_ARTIFACT");
+    value = resolveRecoveredCandidateWorkDirectory(value);
     if (
       typeof value !== "string" ||
       !/^candidate-work-[A-Za-z0-9_-]+$/.test(relative(parent, value)) ||
@@ -266,6 +269,22 @@ export async function runWeeklyCandidateStages(input: {
     input.verifyContext();
     return candidate;
   }
+  function validationArtifact(
+    evidence: StageEvidence,
+    requireExisting: boolean
+  ) {
+    const expected = { schemaVersion: 1, ...evidence };
+    const bytes = input.journal.readArtifact(
+      state.runId,
+      "validate",
+      item("validate").attempt
+    );
+    if (bytes) {
+      if (!bytes.equals(Buffer.from(canonicalJson(expected) + "\n")))
+        fail("INVALID_CANDIDATE_STAGE_ARTIFACT");
+    } else if (requireExisting) fail("MISSING_STAGE_ARTIFACT");
+    else saveArtifact("validate", expected);
+  }
   for (const stage of ["enrich", "export", "validate"] as const) {
     input.verifyContext();
     const original = item(stage);
@@ -286,6 +305,7 @@ export async function runWeeklyCandidateStages(input: {
               };
         if (canonicalJson(checked) !== canonicalJson(original.evidence))
           fail("INVALID_CANDIDATE_STAGE_ARTIFACT");
+        if (stage === "validate") validationArtifact(checked, true);
       }
     } else {
       if (original.status !== "running")
@@ -389,6 +409,7 @@ export async function runWeeklyCandidateStages(input: {
             candidateId: candidate.candidateId,
             manifestSha256: candidate.manifestSha256,
           };
+          validationArtifact(evidence, false);
         }
       } catch (error) {
         if (observerInterrupted) throw error;
@@ -404,8 +425,7 @@ export async function runWeeklyCandidateStages(input: {
       }
       // Interruption here leaves an unacknowledged build that must not be adopted.
       if (stage === "export") await input.onProgress(stage, "effect-committed");
-      else if (stage === "enrich")
-        await input.onProgress(stage, "artifact-saved");
+      else await input.onProgress(stage, "artifact-saved");
       transition(stage, { status: "succeeded", evidence });
       await input.onProgress(stage, "completed");
     }
