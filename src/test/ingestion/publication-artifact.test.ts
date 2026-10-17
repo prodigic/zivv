@@ -62,6 +62,9 @@ describe("immutable remote publication artifact retention", () => {
     ref = "refs/heads/zivv-candidate-artifacts/" + payloadCommit;
   }, 30_000);
   beforeEach(() => {
+    rmSync(join(repositoryRoot, "data/ingestion/operator-retired.json"), {
+      force: true,
+    });
     git(remote, ["update-ref", "-d", ref]);
   });
   afterAll(() => {
@@ -74,6 +77,51 @@ describe("immutable remote publication artifact retention", () => {
       transport: chosen,
       ...expectation,
     });
+
+  const retire = () => {
+    const operator = join(repositoryRoot, "data/ingestion");
+    mkdirSync(operator, { recursive: true });
+    writeFileSync(join(operator, "operator-retired.json"), "retired");
+  };
+  it("refuses retired installation retention before any remote observation or append", () => {
+    let reads = 0,
+      appends = 0;
+    const counted = {
+      ...transport,
+      readHead: (target: string) => {
+        reads++;
+        return transport.readHead(target);
+      },
+      append: (...args: Parameters<PublicationArtifactTransport["append"]>) => {
+        appends++;
+        transport.append(...args);
+      },
+    };
+    retire();
+    expect(() => retain(counted)).toThrow("OPERATOR_INSTALLATION_RETIRED");
+    expect(reads).toBe(0);
+    expect(appends).toBe(0);
+    expect(transport.readHead(ref)).toBeNull();
+  }, 30_000);
+
+  it("refuses retirement appearing during artifact observation before a retention append", () => {
+    let appends = 0;
+    const racing = {
+      ...transport,
+      readHead: (target: string) => {
+        const result = transport.readHead(target);
+        retire();
+        return result;
+      },
+      append: (...args: Parameters<PublicationArtifactTransport["append"]>) => {
+        appends++;
+        transport.append(...args);
+      },
+    };
+    expect(retain(racing).status).toBe("uncertain");
+    expect(appends).toBe(0);
+    expect(transport.readHead(ref)).toBeNull();
+  }, 30_000);
 
   it("retains and replays one exact artifact without writing normal source refs", () => {
     let writes = 0;

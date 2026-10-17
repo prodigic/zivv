@@ -5,6 +5,8 @@
     "tsBuildInfoFile": "./node_modules/.tmp/publication-tests.tsbuildinfo"
   },
   "include": [
+    "src/test/ingestion/operator-installation.test.ts",
+    "src/test/ingestion/operator-retirement.test.ts",
     "src/test/ingestion/execution-tool-identity.test.ts",
     "src/test/ingestion/source-build.test.ts",
     "src/test/ingestion/pages-*.test.ts",

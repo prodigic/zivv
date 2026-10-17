@@ -13,6 +13,7 @@ import {
   resolvePrivateCandidateDirectory,
 } from "./private-artifacts.js";
 import { WeeklyRunJournal, type WeeklyRunLease } from "./weekly-run-journal.js";
+import { assertOperatorInstallationWritable } from "./operator-installation.js";
 
 const scope = "prodigic/zivv/production";
 const provider = "sp.eocampaign1.com";
@@ -448,6 +449,7 @@ export async function captureSteveEmail(input: {
   source: Buffer;
   disposition: "ready" | "review-required";
 }> {
+  assertOperatorInstallationWritable(resolve(input.operatorDirectory));
   if (
     !input.accountId ||
     input.accountId.length > 256 ||

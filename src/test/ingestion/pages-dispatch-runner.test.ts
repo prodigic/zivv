@@ -229,6 +229,51 @@ function fixture() {
 }
 
 describe("private native controller dispatch checkpoint", () => {
+  it("refuses retired installation dispatch before HTTP, controller CAS or private intent effects", async () => {
+    const f = fixture(),
+      repositoryRoot = directory(),
+      operator = join(repositoryRoot, "data/ingestion");
+    mkdirSync(operator, { recursive: true });
+    writeFileSync(join(operator, "operator-retired.json"), "retired");
+    await expect(
+      runPagesCandidateDispatch({ ...f.options, repositoryRoot })
+    ).rejects.toThrow("OPERATOR_INSTALLATION_RETIRED");
+    expect(f.requests).toEqual([]);
+    expect(f.events).toEqual([]);
+    expect(f.head()).toBe(f.initialHead);
+    expect(
+      existsSync(join(f.options.intentDirectory, "pages-dispatch.json"))
+    ).toBe(false);
+  });
+
+  it("refuses retirement appearing during the workflow-tag read before intent, CAS or POST", async () => {
+    const f = fixture(),
+      repositoryRoot = directory(),
+      operator = join(repositoryRoot, "data/ingestion");
+    mkdirSync(operator, { recursive: true });
+    const fetcher: typeof fetch = async (...args) => {
+      const result = await f.options.testTransport.fetch(...args);
+      writeFileSync(
+        join(operator, "operator-retired.json"),
+        "retired during tag read"
+      );
+      return result;
+    };
+    await expect(
+      runPagesCandidateDispatch({
+        ...f.options,
+        repositoryRoot,
+        testTransport: { ...f.options.testTransport, fetch: fetcher },
+      })
+    ).rejects.toThrow("OPERATOR_INSTALLATION_RETIRED");
+    expect(f.events).toEqual(["GET"]);
+    expect(f.requests.every((request) => request.method === "GET")).toBe(true);
+    expect(f.head()).toBe(f.initialHead);
+    expect(
+      existsSync(join(f.options.intentDirectory, "pages-dispatch.json"))
+    ).toBe(false);
+  });
+
   it("prefers canonical admission over a stale local run pointer", async () => {
     const f = fixture();
     await runPagesCandidateDispatch(f.options);

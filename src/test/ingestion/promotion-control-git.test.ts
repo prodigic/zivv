@@ -138,6 +138,81 @@ describe("durable promotion Git compare-and-append", () => {
     rmSync(directory, { recursive: true, force: true });
   });
 
+  it("refuses retired installation writes through already-constructed native stores and transports", () => {
+    const operator = join(directory, "private-operator");
+    mkdirSync(operator);
+    mkdirSync(join(root, "data/ingestion"), { recursive: true });
+    writeFileSync(
+      join(root, "data/ingestion/store.json"),
+      JSON.stringify({ schemaVersion: 1, backend: "sqlite", namespace: "zivv" })
+    );
+    vi.stubEnv("ZIVV_LEDGER_HOME", operator);
+    const transport = createBareTestPromotionControlTransport(root, bare),
+      local = createLocalPromotionControlStore(options()),
+      remoteStore = remote(transport),
+      prepared = local.prepareAppend({
+        expectedHead: null,
+        bytes: state(0),
+        createdAt,
+      });
+    writeFileSync(join(operator, "operator-retired.json"), "retired");
+    expect(() => local.compareAndAppend(prepared)).toThrow(
+      "OPERATOR_INSTALLATION_RETIRED"
+    );
+    expect(() => remoteStore.compareAndAppend(prepared)).toThrow(
+      "OPERATOR_INSTALLATION_RETIRED"
+    );
+    expect(() => transport.append(ref, prepared.attemptedHead, null)).toThrow(
+      "OPERATOR_INSTALLATION_RETIRED"
+    );
+    expect(local.read().head).toBeNull();
+    expect(transport.readHead(ref)).toBeNull();
+  }, 30_000);
+
+  it("refuses retirement appearing during local validation before updating its canonical ref", () => {
+    const operator = join(root, "data/ingestion");
+    mkdirSync(operator, { recursive: true });
+    const normal = options(),
+      store = createLocalPromotionControlStore({
+        ...normal,
+        validateState(bytes, destination) {
+          normal.validateState(bytes, destination);
+          writeFileSync(
+            join(operator, "operator-retired.json"),
+            "retired during validation"
+          );
+        },
+      });
+    expect(() =>
+      store.compareAndAppend({ expectedHead: null, bytes: state(0), createdAt })
+    ).toThrow("OPERATOR_INSTALLATION_RETIRED");
+    expect(store.read().head).toBeNull();
+  }, 30_000);
+
+  it("refuses retirement appearing during a remote head read before invoking append", () => {
+    const operator = join(root, "data/ingestion");
+    mkdirSync(operator, { recursive: true });
+    const transport = createBareTestPromotionControlTransport(root, bare),
+      append = vi.fn(transport.append),
+      store = remote({
+        ...transport,
+        append,
+        readHead(target) {
+          const result = transport.readHead(target);
+          writeFileSync(
+            join(operator, "operator-retired.json"),
+            "retired during remote read"
+          );
+          return result;
+        },
+      });
+    expect(() =>
+      store.compareAndAppend({ expectedHead: null, bytes: state(0), createdAt })
+    ).toThrow("OPERATOR_INSTALLATION_RETIRED");
+    expect(append).not.toHaveBeenCalled();
+    expect(transport.readHead(ref)).toBeNull();
+  }, 30_000);
+
   it("stores raw bytes with deterministic metadata and only the exact expected parent", () => {
     const store = createLocalPromotionControlStore(options());
     expect(store.read()).toEqual({ head: null, bytes: null });
@@ -656,7 +731,7 @@ describe("durable promotion Git compare-and-append", () => {
           }).attemptedHead!;
       const roots = [initialize("writer-a"), initialize("writer-b")];
       const source = pathToFileURL(
-        resolve("src/lib/ingestion/promotion-control-git.ts")
+        resolve("dist/lib/ingestion/promotion-control-git.js")
       ).href;
       const run = async (repositoryRoot: string, index: number) => {
         const code = `

@@ -14,6 +14,8 @@ import {
   decryptOperatorRecovery,
   encryptOperatorRecovery,
   stageOperatorRecovery,
+  retireAndCaptureOperatorRecovery,
+  verifyOperatorRetirementEvidence,
 } from "../dist/lib/ingestion/operator-recovery.js";
 import { inspectOperatorRecoveryLocations } from "../dist/lib/ingestion/operator-recovery-location.js";
 import {
@@ -45,7 +47,7 @@ try {
       value = args[index + 1];
     if (
       !args[index]?.startsWith("--") ||
-      !["root", "out", "file", "key", "destination"].includes(key) ||
+      !["root", "out", "file", "key", "destination", "receipt"].includes(key) ||
       Object.hasOwn(options, key) ||
       !value ||
       value.startsWith("--")
@@ -54,13 +56,15 @@ try {
     options[key] = value;
   }
   const expected =
-    command === "capture"
+    command === "capture" || command === "retire"
       ? ["root", "out"]
       : command === "verify"
         ? ["file", "key"]
-        : command === "stage" || command === "inspect"
-          ? ["file", "key", "destination"]
-          : [];
+        : command === "verify-retirement"
+          ? ["file", "key", "receipt"]
+          : command === "stage" || command === "inspect"
+            ? ["file", "key", "destination"]
+            : [];
   if (
     !expected.length ||
     JSON.stringify(Object.keys(options).sort()) !==
@@ -68,7 +72,12 @@ try {
   )
     throw Error("INVALID_RECOVERY_ARGUMENTS");
   let checkpoint, inspection;
-  if (command === "capture") {
+  if (command === "retire") {
+    ({ checkpoint } = await retireAndCaptureOperatorRecovery({
+      root: resolve(options.root),
+      out: resolve(options.out),
+    }));
+  } else if (command === "capture") {
     const output = resolve(options.out);
     resolvePrivateCandidateDirectory(dirname(output));
     if (existsSync(output)) throw Error("RECOVERY_DESTINATION_EXISTS");
@@ -94,7 +103,13 @@ try {
     if (key.length !== 32 || key.toString("base64") !== encoded)
       throw Error("INVALID_RECOVERY_KEY");
     const archive = privateInput(options.file, 384 * 1024 * 1024);
-    if (command === "inspect") {
+    if (command === "verify-retirement") {
+      ({ checkpoint } = verifyOperatorRetirementEvidence({
+        archive,
+        recoveryKey: key,
+        retirementReceipt: privateInput(options.receipt, 16 * 1024),
+      }));
+    } else if (command === "inspect") {
       inspection = inspectOperatorRecoveryLocations({
         archive,
         recoveryKey: key,
@@ -115,7 +130,12 @@ try {
     console.log(
       JSON.stringify({
         command,
-        status: command === "stage" ? "staged" : "verified",
+        status:
+          command === "stage"
+            ? "staged"
+            : command === "retire"
+              ? "retired"
+              : "verified",
         activationAllowed: false,
         ledgerRevision: checkpoint.ledgerRevision,
         fileCount: checkpoint.files.length,
