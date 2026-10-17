@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, mkdirSync, lstatSync } from "node:fs";
 import { join } from "node:path";
 import type {
   IngestionBatch,
@@ -15,6 +15,18 @@ import { EventSanitizer } from "../etl/sanitizer.js";
 import { normalizeLatestContent } from "../etl/latest-content.js";
 import { legacyWallClockToInstant } from "../discovery.js";
 import { applyVenueLocationCorrections } from "./venue-location-corrections.js";
+import { ledgerDigest } from "./sqlite-store.js";
+import {
+  createSteveImportReview,
+  parseSteveImportReview,
+  importConfigurationDigest,
+  importDigest,
+  importReportDigest,
+  SteveImportReviewError,
+  type SteveImportReview,
+} from "./steve-import-review.js";
+export type { SteveImportReview } from "./steve-import-review.js";
+import { projectLedgerLocation } from "./store-location.js";
 
 /** Bump the importer version when parsing/normalization semantics change. */
 export function steveRunId(
@@ -35,7 +47,8 @@ export function prepareSteveBatch(
   ledger: IngestionLedger,
   content: string,
   observedAtEpochMs: number,
-  aliases: Record<string, string> = {}
+  aliases: Record<string, string> = {},
+  options: { requireCompleteNormalization?: boolean } = {}
 ): IngestionBatch {
   const normalized = normalizeLatestContent(content);
   const hash = createHash("sha256").update(normalized).digest("hex");
@@ -115,6 +128,20 @@ export function prepareSteveBatch(
     venueMap,
     aliases
   );
+  if (
+    options.requireCompleteNormalization &&
+    (normalizedEvents.warnings.some((warning) => {
+      const name =
+        /^(?:Artist name contains numbers|Unusual capitalization in artist name|Unusually long single-word artist name|Possible concatenated artist name): "([^"]+)"/.exec(
+          warning.message
+        )?.[1];
+      // Existing exact canonical names resolve formatting-only heuristics.
+      // Duplicate bills/performers and count loss always remain blockers.
+      return !name || !ledger.artists.some((artist) => artist.name === name);
+    }) ||
+      normalizedEvents.events.length !== parsed.rawEvents.length)
+  )
+    throw new SteveImportReviewError("CORE_RECONCILIATION_REQUIRED");
   if (normalizedEvents.errors.length)
     throw new Error(
       `Steve's List normalization failed: ${normalizedEvents.errors.map((e) => e.message).join("; ")}`
@@ -178,12 +205,126 @@ export async function importSteveContent(
   content: string,
   options: { observedAtEpochMs?: number; dryRun?: boolean } = {}
 ): Promise<ReconciliationResult> {
+  return (await executeSteveImport(root, content, options)).result;
+}
+
+/** Review all core rows under the same catalog writer lock used by loading. */
+export async function reviewSteveImport(
+  root: string,
+  content: string,
+  observedAtEpochMs: number
+) {
+  if (!Number.isSafeInteger(observedAtEpochMs) || observedAtEpochMs < 0)
+    throw new SteveImportReviewError("INVALID_IMPORT_REVIEW");
+  const reviewed = await executeSteveImport(root, content, {
+    dryRun: true,
+    observedAtEpochMs,
+    requireClean: true,
+  });
+  const receipt = createSteveImportReview({
+    schemaVersion: 1,
+    importer: "steveslist-v4",
+    inputSha256: importDigest(content),
+    configurationSha256: reviewed.configurationSha256,
+    ledgerRevision: reviewed.inputLedgerRevision,
+    reportSha256: importReportDigest(reviewed.result.report),
+    importRunId: reviewed.result.report.runId,
+    observedAtEpochMs,
+  });
+  return { receipt, report: reviewed.result.report };
+}
+
+/** Load exactly the clean reviewed decision, or recover its verified committed replay. */
+export async function loadReviewedSteveImport(
+  root: string,
+  content: string,
+  receipt: SteveImportReview,
+  assertOwnership: () => void
+): Promise<ReconciliationResult> {
+  const reviewed = parseSteveImportReview(receipt);
+  if (typeof assertOwnership !== "function")
+    throw new SteveImportReviewError("INVALID_IMPORT_REVIEW");
+  return (
+    await executeSteveImport(root, content, {
+      observedAtEpochMs: reviewed.observedAtEpochMs,
+      requireClean: true,
+      reviewed,
+      assertOwnership,
+    })
+  ).result;
+}
+
+async function executeSteveImport(
+  root: string,
+  content: string,
+  options: {
+    observedAtEpochMs?: number;
+    dryRun?: boolean;
+    requireClean?: boolean;
+    reviewed?: SteveImportReview;
+    assertOwnership?: () => void;
+  }
+) {
+  if (options.requireClean && projectLedgerLocation(root).backend !== "sqlite")
+    throw new SteveImportReviewError("SHARED_SQLITE_REQUIRED");
   return withIngestionLock(root, async () => {
     const ledger = await loadLedger(join(root, "data/ingestion/ledger.json"));
+    const inputLedgerRevision = ledgerDigest(ledger);
+    const configurationSha256 = options.requireClean
+      ? importConfigurationDigest(root)
+      : "";
+    if (options.reviewed) {
+      options.assertOwnership?.();
+      if (importDigest(content) !== options.reviewed.inputSha256)
+        throw new SteveImportReviewError("IMPORT_INPUT_CHANGED");
+      if (configurationSha256 !== options.reviewed.configurationSha256)
+        throw new SteveImportReviewError("IMPORT_CONFIGURATION_CHANGED");
+    }
+    async function finish(
+      result: ReconciliationResult,
+      batch?: IngestionBatch
+    ) {
+      if (
+        options.requireClean &&
+        (result.report.review.length || result.report.conflicts.length)
+      )
+        throw new SteveImportReviewError("CORE_RECONCILIATION_REQUIRED");
+      const reviewed = options.reviewed;
+      if (reviewed) {
+        if (
+          result.report.runId !== reviewed.importRunId ||
+          importReportDigest(result.report) !== reviewed.reportSha256
+        )
+          throw new SteveImportReviewError("IMPORT_REPORT_CHANGED");
+        if (
+          !result.report.replay &&
+          inputLedgerRevision !== reviewed.ledgerRevision
+        )
+          throw new SteveImportReviewError("IMPORT_LEDGER_CHANGED");
+      }
+      options.assertOwnership?.();
+      if (
+        options.requireClean &&
+        importConfigurationDigest(root) !== configurationSha256
+      )
+        throw new SteveImportReviewError("IMPORT_CONFIGURATION_CHANGED");
+      const committed = batch
+        ? await commitResult(root, result, options.dryRun ?? false, batch)
+        : result;
+      options.assertOwnership?.();
+      if (
+        options.requireClean &&
+        importConfigurationDigest(root) !== configurationSha256
+      )
+        throw new SteveImportReviewError("IMPORT_CONFIGURATION_CHANGED");
+      return { result: committed, inputLedgerRevision, configurationSha256 };
+    }
     applyVenueLocationCorrections(root, ledger.venues);
     const historical = findHistoricalSteveReceipt(root, content, ledger);
-    if (historical)
-      return {
+    if (historical) {
+      if (options.requireClean)
+        throw new SteveImportReviewError("HISTORICAL_IMPORT_NOT_ALLOWED");
+      return finish({
         ledger,
         report: {
           runId: `historical-steveslist-${historical.contentSha256}`,
@@ -200,7 +341,8 @@ export async function importSteveContent(
           review: [],
           conflicts: [],
         },
-      };
+      });
+    }
     const aliasPath = join(root, "data/venue-aliases.json");
     const aliases: Record<string, string> = existsSync(aliasPath)
       ? JSON.parse(readFileSync(aliasPath, "utf8"))
@@ -219,6 +361,24 @@ export async function importSteveContent(
       (r) => r.runId === steveRunId(corrected, aliases)
     );
     if (prior) {
+      if (options.requireClean && !options.reviewed)
+        prepareSteveBatch(
+          ledger,
+          corrected,
+          options.observedAtEpochMs ?? Date.now(),
+          aliases,
+          { requireCompleteNormalization: true }
+        );
+      if (
+        options.requireClean &&
+        prior.observedAtEpochMs !== options.observedAtEpochMs
+      )
+        throw new SteveImportReviewError("IMPORT_OBSERVATION_CHANGED");
+      if (
+        options.requireClean &&
+        !["committed", "published"].includes(prior.status)
+      )
+        throw new SteveImportReviewError("IMPORT_REPORT_CHANGED");
       // Bind replay to the exact source content and importer version, before
       // parsing against a catalog whose entity IDs may since have changed.
       const reportName = createHash("sha256").update(prior.runId).digest("hex");
@@ -227,13 +387,26 @@ export async function importSteveContent(
         "data/ingestion/reports",
         `${reportName}.json`
       );
-      if (!existsSync(reportPath))
+      if (!existsSync(reportPath)) {
+        if (options.requireClean)
+          throw new SteveImportReviewError("IMPORT_REPORT_CHANGED");
         throw new Error(
           `Missing saved report for ${prior.runId}; restore ingestion history`
         );
-      const report: ReconciliationResult["report"] = JSON.parse(
-        readFileSync(reportPath, "utf8")
-      );
+      }
+      let report: ReconciliationResult["report"];
+      try {
+        if (options.requireClean) {
+          const stat = lstatSync(reportPath);
+          if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1)
+            throw new SteveImportReviewError("IMPORT_REPORT_CHANGED");
+        }
+        report = JSON.parse(readFileSync(reportPath, "utf8"));
+      } catch (error) {
+        if (options.requireClean)
+          throw new SteveImportReviewError("IMPORT_REPORT_CHANGED");
+        throw error;
+      }
       if (
         !report ||
         report.runId !== prior.runId ||
@@ -241,35 +414,42 @@ export async function importSteveContent(
         report.review.length !== prior.reviewCount ||
         !Array.isArray(report.conflicts) ||
         report.conflicts.length !== prior.conflictCount
-      )
+      ) {
+        if (options.requireClean)
+          throw new SteveImportReviewError("IMPORT_REPORT_CHANGED");
         throw new Error(
           `Invalid saved report for ${prior.runId}; restore ingestion history`
         );
+      }
       for (const key of [
         "acceptedEventIds",
         "newEventIds",
         "updatedEventIds",
         "linkedEventIds",
       ] as const) {
-        if (JSON.stringify(report[key]) !== JSON.stringify(prior[key]))
+        if (JSON.stringify(report[key]) !== JSON.stringify(prior[key])) {
+          if (options.requireClean)
+            throw new SteveImportReviewError("IMPORT_REPORT_CHANGED");
           throw new Error(
             `Saved report disagrees with durable run ${prior.runId}`
           );
+        }
       }
-      return { ledger, report: { ...report, replay: true } };
+      return finish({ ledger, report: { ...report, replay: true } });
     }
+    if (
+      options.reviewed &&
+      inputLedgerRevision !== options.reviewed.ledgerRevision
+    )
+      throw new SteveImportReviewError("IMPORT_LEDGER_CHANGED");
     const batch = prepareSteveBatch(
       ledger,
       corrected,
       options.observedAtEpochMs ?? Date.now(),
-      aliases
+      aliases,
+      { requireCompleteNormalization: options.requireClean }
     );
-    return commitResult(
-      root,
-      reconcileCandidates(ledger, batch),
-      options.dryRun ?? false,
-      batch
-    );
+    return finish(reconcileCandidates(ledger, batch), batch);
   });
 }
 
