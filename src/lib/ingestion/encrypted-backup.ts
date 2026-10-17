@@ -9,6 +9,8 @@ import {
   closeSync,
   chmodSync,
   existsSync,
+  lstatSync,
+  readdirSync,
   fsyncSync,
   linkSync,
   mkdirSync,
@@ -18,7 +20,7 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import type { IngestionLedger } from "../../types/ingestion.js";
 import { validateLedger } from "./ledger.js";
@@ -198,8 +200,15 @@ function protectForWindows(bytes: Buffer, unprotect = false): Buffer {
 }
 
 /** Install a fully flushed key exactly once, even when two operators initialize together. */
-function installKeyOnce(path: string, bytes: Buffer): void {
-  const temporary = `${path}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`;
+function installKeyOnce(
+  path: string,
+  bytes: Buffer,
+  stagingDirectory = dirname(path)
+): void {
+  const temporary = join(
+    stagingDirectory,
+    `${basename(path)}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`
+  );
   writeDurableFile(temporary, bytes);
   try {
     linkSync(temporary, path);
@@ -221,6 +230,98 @@ function installKeyOnce(path: string, bytes: Buffer): void {
       closeSync(directory);
     }
   }
+}
+
+/** Validate and unlink only this installer's private orphan links after a crash. */
+export function readRecoveryInstalledFile(
+  path: string,
+  stagingDirectory: string,
+  validate: (bytes: Buffer) => void
+): Buffer {
+  const directory = resolve(stagingDirectory),
+    target = resolve(path);
+  for (const parentRoot of [dirname(target), directory]) {
+    for (let parent = parentRoot; ; parent = dirname(parent)) {
+      if (existsSync(parent)) {
+        const stat = lstatSync(parent);
+        if (!stat.isDirectory() || stat.isSymbolicLink())
+          throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+      }
+      if (dirname(parent) === parent) break;
+    }
+  }
+  const before = lstatSync(target);
+  if (
+    !before.isFile() ||
+    before.isSymbolicLink() ||
+    before.size > 16 * 1024 * 1024 ||
+    before.nlink > 64
+  )
+    throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+  const bytes = readFileSync(target);
+  if (bytes.length !== before.size)
+    throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+  validate(bytes);
+  if (before.nlink > 1) {
+    const names = readdirSync(directory);
+    if (names.length > 1000) throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    for (const name of names) {
+      const prefix = basename(target) + ".";
+      if (
+        !name.startsWith(prefix) ||
+        !/^\d+\.[a-f0-9]{16}\.tmp$/.test(name.slice(prefix.length))
+      )
+        continue;
+      const temporary = join(directory, name),
+        stat = lstatSync(temporary);
+      if (stat.isSymbolicLink() || !stat.isFile())
+        throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+      if (stat.ino === before.ino && stat.dev === before.dev) {
+        const current = lstatSync(target);
+        if (current.ino !== before.ino || current.dev !== before.dev)
+          throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+        unlinkSync(temporary);
+      }
+    }
+  }
+  const after = lstatSync(target);
+  if (
+    after.ino !== before.ino ||
+    after.dev !== before.dev ||
+    after.nlink !== 1 ||
+    !readFileSync(target).equals(bytes)
+  )
+    throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+  return bytes;
+}
+
+/** Publish only complete flushed intent bytes, without replacing an existing intent. */
+export function installRecoveryIntent(
+  path: string,
+  bytes: Buffer,
+  stagingDirectory: string
+): Buffer {
+  secureRecoveryStagingDirectory(stagingDirectory);
+  const validate = (current: Buffer) => {
+    if (!current.equals(bytes))
+      throw Error("RECOVERY_INSTALLATION_FILE_CONFLICT");
+  };
+  if (!existsSync(path)) installKeyOnce(path, bytes, stagingDirectory);
+  return readRecoveryInstalledFile(path, stagingDirectory, validate);
+}
+
+function secureRecoveryStagingDirectory(directory: string): void {
+  for (let parent = resolve(directory); ; parent = dirname(parent)) {
+    if (existsSync(join(parent, ".git")))
+      throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    if (existsSync(parent)) {
+      const stat = lstatSync(parent);
+      if (!stat.isDirectory() || stat.isSymbolicLink())
+        throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    }
+    if (dirname(parent) === parent) break;
+  }
+  secureOperatorDirectory(directory);
 }
 
 /** Restrict the permanent operator directory before putting private artifacts in it. */
@@ -323,11 +424,41 @@ export function importRecoveryKey(directory: string, source: string): void {
     throw new Error(
       "A backup key already exists; preserve it before recovering another installation."
     );
-  const key = Buffer.from(readFileSync(source, "utf8").trim(), "base64");
+  installRecoveredBackupKey(
+    directory,
+    Buffer.from(readFileSync(source, "utf8").trim(), "base64")
+  );
+}
+
+/** Install an authenticated recovery key exclusively, including racing installers. */
+export function installRecoveredBackupKey(
+  directory: string,
+  suppliedKey: Buffer,
+  options?: { stagingDirectory: string }
+): void {
+  const key = Buffer.from(suppliedKey);
+  const destination = join(
+    directory,
+    process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
+  );
+  if (existsSync(destination) && !options)
+    throw new Error(
+      "A backup key already exists; preserve it before recovering another installation."
+    );
   if (key.length !== 32) throw new Error("Invalid recovery key file.");
   secureOperatorDirectory(directory);
-  writeDurableFile(
-    destination,
-    process.platform === "win32" ? protectForWindows(key) : key
-  );
+  const stagingDirectory = options?.stagingDirectory ?? directory;
+  secureRecoveryStagingDirectory(stagingDirectory);
+  if (!existsSync(destination))
+    installKeyOnce(
+      destination,
+      process.platform === "win32" ? protectForWindows(key) : key,
+      stagingDirectory
+    );
+  readRecoveryInstalledFile(destination, stagingDirectory, (bytes) => {
+    const installed =
+      process.platform === "win32" ? protectForWindows(bytes, true) : bytes;
+    if (!installed.equals(key))
+      throw Error("RECOVERY_IMPORT_WORKING_KEY_MISMATCH");
+  });
 }

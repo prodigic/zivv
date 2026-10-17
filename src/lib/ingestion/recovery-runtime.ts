@@ -30,7 +30,7 @@ import { sha256 } from "./steve-preflight.js";
 const receiptName = "prepared-runtime.json";
 const kind = "zivv-prepared-recovery-runtime";
 const maxBytes = 512 * 1024 * 1024;
-type Entry =
+export type RecoveryRuntimeEntry =
   | { path: string; kind: "directory" }
   | { path: string; kind: "file"; size: number; sha256: string }
   | { path: string; kind: "symlink"; target: string };
@@ -102,19 +102,23 @@ function inside(root: string, path: string): boolean {
   );
 }
 /** Include dependencies and private bootstrap files; never follow package links. */
-function inventory(root: string): Entry[] {
+function inventory(
+  root: string,
+  omit?: (entry: RecoveryRuntimeEntry) => boolean
+): RecoveryRuntimeEntry[] {
   noLinks(root);
-  const entries: Entry[] = [],
+  const entries: RecoveryRuntimeEntry[] = [],
     aliases = new Set<string>(),
     modules = join(root, "checkout/node_modules");
-  let total = 0;
+  let total = 0,
+    visited = 0;
   function walk(directory: string, prefix: string): void {
     for (const name of readdirSync(directory).sort()) {
       const path = prefix + name,
         physical = join(directory, name);
       if (path === receiptName) continue;
       portable(path);
-      if (entries.length >= 50_000 || aliases.has(path.toLowerCase())) fail();
+      if (++visited > 50_000 || aliases.has(path.toLowerCase())) fail();
       aliases.add(path.toLowerCase());
       const stat = lstatSync(physical);
       if (stat.isSymbolicLink()) {
@@ -127,9 +131,11 @@ function inventory(root: string): Entry[] {
           !inside(modules, realpathSync(physical))
         )
           fail();
-        entries.push({ path, kind: "symlink", target });
+        const entry = { path, kind: "symlink" as const, target };
+        if (!omit?.(entry)) entries.push(entry);
       } else if (stat.isDirectory()) {
-        entries.push({ path, kind: "directory" });
+        const entry = { path, kind: "directory" as const };
+        if (!omit?.(entry)) entries.push(entry);
         walk(physical, path + "/");
       } else {
         if (
@@ -138,6 +144,8 @@ function inventory(root: string): Entry[] {
           (total += stat.size) > maxBytes
         )
           fail();
+        if (omit?.({ path, kind: "file", size: stat.size, sha256: "" }))
+          continue;
         const bytes = readFileSync(physical);
         if (bytes.length !== stat.size) fail();
         entries.push({
@@ -188,7 +196,7 @@ function signature(payload: unknown, key: Buffer): string {
 }
 function report(
   checkpoint: OperatorRecoveryCheckpoint,
-  entries: Entry[]
+  entries: RecoveryRuntimeEntry[]
 ): PreparedRecoveryRuntimeReport {
   return {
     status: "prepared",
@@ -204,7 +212,7 @@ function payload(
   input: RecoveryRuntimeInput,
   checkpoint: OperatorRecoveryCheckpoint,
   root: string,
-  entries: Entry[]
+  entries: RecoveryRuntimeEntry[]
 ) {
   return {
     kind,
@@ -221,6 +229,21 @@ function payload(
 export function verifyPreparedOperatorRuntime(
   input: RecoveryRuntimeInput
 ): PreparedRecoveryRuntimeReport {
+  const opened = openPreparedRuntimeForAdmission(input),
+    entries = opened.inventory();
+  same(sha256(canonicalJson(entries)), opened.report.treeSha256);
+  same(entries.length, opened.report.entryCount);
+  same(entries, opened.inventory());
+  opened.assertRuntime();
+  return opened.report;
+}
+
+/**
+ * Authenticate preparation provenance independently of its now potentially
+ * mutable tree. Only an admission coordinator may decide which changes are legal.
+ * This interface grants no execution or writer authority.
+ */
+export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
   const { checkpoint, root } = authenticate(input);
   const bytes = regular(join(root, receiptName), 16 * 1024),
     value: unknown = JSON.parse(bytes.toString("utf8"));
@@ -242,15 +265,49 @@ export function verifyPreparedOperatorRuntime(
     )
   )
     fail();
-  const entries = inventory(root);
-  same(savedPayload, payload(input, checkpoint, root, entries));
-  // Repeat to catch drift during the scan; a receipt is never an activation token.
-  same(entries, inventory(root));
-  same(
-    bytes.toString("base64"),
-    regular(join(root, receiptName), 16 * 1024).toString("base64")
-  );
-  return report(checkpoint, entries);
+  if (
+    typeof savedPayload.treeSha256 !== "string" ||
+    !/^[a-f0-9]{64}$/.test(savedPayload.treeSha256) ||
+    typeof savedPayload.entryCount !== "number" ||
+    !Number.isSafeInteger(savedPayload.entryCount) ||
+    savedPayload.entryCount < 0 ||
+    savedPayload.entryCount > 50_000
+  )
+    fail();
+  same(savedPayload, {
+    ...payload(input, checkpoint, root, []),
+    treeSha256: savedPayload.treeSha256,
+    entryCount: savedPayload.entryCount,
+  });
+  const preparedReport: PreparedRecoveryRuntimeReport = {
+    ...report(checkpoint, []),
+    treeSha256: savedPayload.treeSha256,
+    entryCount: savedPayload.entryCount,
+  };
+  const assertReceipt = () =>
+    same(
+      bytes.toString("base64"),
+      regular(join(root, receiptName), 16 * 1024).toString("base64")
+    );
+  assertReceipt();
+  return {
+    checkpoint: structuredClone(checkpoint),
+    receiptSha256: sha256(bytes),
+    report: preparedReport,
+    inventory: () => {
+      assertReceipt();
+      return inventory(root);
+    },
+    /** Active SQLite bytes are governed by transactions, never read as flat files. */
+    inventoryImmutable: (omit: (entry: RecoveryRuntimeEntry) => boolean) => {
+      assertReceipt();
+      return inventory(root, omit);
+    },
+    assertRuntime: () => {
+      authenticate(input);
+      assertReceipt();
+    },
+  };
 }
 function environment(root: string): NodeJS.ProcessEnv {
   const bootstrap = join(root, "bootstrap"),

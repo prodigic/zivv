@@ -22,6 +22,7 @@ import {
   prepareOperatorRecoveryRuntime,
   verifyPreparedOperatorRuntime,
 } from "../dist/lib/ingestion/recovery-runtime.js";
+import { resumeOperatorRecoveryImport } from "../dist/lib/ingestion/recovery-import-admission.js";
 import {
   loadBackupKey,
   secureOperatorDirectory,
@@ -59,6 +60,8 @@ try {
         "destination",
         "receipt",
         "npm-cli",
+        "repository",
+        "run-id",
       ].includes(key) ||
       Object.hasOwn(options, key) ||
       !value ||
@@ -74,12 +77,22 @@ try {
         ? ["file", "key"]
         : command === "verify-retirement"
           ? ["file", "key", "receipt"]
-          : command === "prepare-runtime" ||
-              command === "verify-prepared-runtime"
-            ? ["file", "key", "receipt", "destination", "npm-cli"]
-            : command === "stage" || command === "inspect"
-              ? ["file", "key", "destination"]
-              : [];
+          : command === "resume-import"
+            ? [
+                "file",
+                "key",
+                "receipt",
+                "destination",
+                "npm-cli",
+                "repository",
+                "run-id",
+              ]
+            : command === "prepare-runtime" ||
+                command === "verify-prepared-runtime"
+              ? ["file", "key", "receipt", "destination", "npm-cli"]
+              : command === "stage" || command === "inspect"
+                ? ["file", "key", "destination"]
+                : [];
   if (
     !expected.length ||
     JSON.stringify(Object.keys(options).sort()) !==
@@ -123,6 +136,7 @@ try {
       throw Error("INVALID_RECOVERY_KEY");
     const archive = privateInput(options.file, 384 * 1024 * 1024);
     if (
+      command === "resume-import" ||
       command === "prepare-runtime" ||
       command === "verify-prepared-runtime"
     ) {
@@ -134,9 +148,15 @@ try {
         npmCli: resolve(options["npm-cli"]),
       };
       inspection =
-        command === "prepare-runtime"
-          ? await prepareOperatorRecoveryRuntime(input)
-          : verifyPreparedOperatorRuntime(input);
+        command === "resume-import"
+          ? await resumeOperatorRecoveryImport({
+              ...input,
+              repositoryRoot: resolve(options.repository),
+              runId: options["run-id"],
+            })
+          : command === "prepare-runtime"
+            ? await prepareOperatorRecoveryRuntime(input)
+            : verifyPreparedOperatorRuntime(input);
     } else if (command === "verify-retirement") {
       ({ checkpoint } = verifyOperatorRetirementEvidence({
         archive,
