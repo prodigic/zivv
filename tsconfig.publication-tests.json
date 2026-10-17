@@ -16,6 +16,7 @@
     "src/test/ingestion/weekly-run-journal.test.ts",
     "src/test/ingestion/weekly-journal-recovery.test.ts",
     "src/test/ingestion/operator-recovery.test.ts",
+    "src/test/ingestion/operator-recovery-location.test.ts",
     "src/test/ingestion/operator-recovery-candidate.test.ts",
     "src/test/ingestion/steve-email-intake.test.ts",
     "src/test/ingestion/promotion-control*.test.ts",
