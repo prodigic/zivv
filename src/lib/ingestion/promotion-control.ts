@@ -148,6 +148,11 @@ export interface PromotionOperation {
   rollbackAttempt: PromotionAttempt | null;
   completionProof: CompletionProof;
   verification: PromotionVerification | null;
+  /** Absent on retained v1 states; binds a recoverable private acknowledgement. */
+  acknowledgementIntent?: {
+    verificationReceiptId: string;
+    acknowledgementId: string;
+  };
 }
 export interface CompletedPromotion {
   operationId: string;
@@ -258,6 +263,12 @@ export type PromotionEvent =
       attemptId: string;
       verification: PromotionVerification;
       replayProof: CompletionProof | null;
+    }
+  | {
+      type: "acknowledgement-intent";
+      operationId: string;
+      verificationReceiptId: string;
+      acknowledgementId: string;
     }
   | {
       type: "acknowledged";
@@ -579,18 +590,19 @@ function parseEvent(value: unknown): PromotionEvent {
     const fields = object(value, ["type", "request", "proof"]);
     parseRequest(fields.request);
     parseCompletionProof(fields.proof);
-  } else if (type === "acknowledged") {
+  } else if (type === "acknowledged" || type === "acknowledgement-intent") {
     const fields = object(value, [
       "type",
       "operationId",
       "verificationReceiptId",
       "acknowledgementId",
-      "replayProof",
+      ...(type === "acknowledged" ? ["replayProof"] : []),
     ]);
     digest(fields.operationId);
     digest(fields.verificationReceiptId);
     digest(fields.acknowledgementId);
-    if (fields.replayProof !== null) parseCompletionProof(fields.replayProof);
+    if (type === "acknowledged" && fields.replayProof !== null)
+      parseCompletionProof(fields.replayProof);
   } else {
     const extra: Record<string, string[]> = {
       "dispatch-intent": [
@@ -1162,6 +1174,10 @@ function parseOperation(
     completionRoot: string;
   }
 ): PromotionOperation {
+  const hasAcknowledgementIntent =
+    typeof value === "object" &&
+    value !== null &&
+    Object.hasOwn(value, "acknowledgementIntent");
   const fields = object(value, [
     "operationId",
     "request",
@@ -1173,6 +1189,7 @@ function parseOperation(
     "rollbackAttempt",
     "completionProof",
     "verification",
+    ...(hasAcknowledgementIntent ? ["acknowledgementIntent"] : []),
   ]);
   const request = parseRequest(fields.request);
   same(
@@ -1295,6 +1312,21 @@ function parseOperation(
   } else {
     same(fields.verification, null, "premature operation verification");
     same(state.lastVerified, prior, "unverified operation public pointer");
+  }
+  if (hasAcknowledgementIntent) {
+    if (fields.phase !== "verified")
+      throw new Error("Acknowledgement intent requires verified operation");
+    const intent = object(fields.acknowledgementIntent, [
+      "verificationReceiptId",
+      "acknowledgementId",
+    ]);
+    digest(intent.verificationReceiptId);
+    digest(intent.acknowledgementId);
+    same(
+      intent.verificationReceiptId,
+      (fields.verification as PromotionVerification).receiptId,
+      "acknowledgement intent verification"
+    );
   }
   return fields as unknown as PromotionOperation;
 }
@@ -1465,6 +1497,28 @@ function reduce(
       : null,
   };
   next.active = operation;
+  if (event.type === "acknowledgement-intent") {
+    requirePhase(operation, ["verified"]);
+    same(
+      event.verificationReceiptId,
+      operation.verification?.receiptId,
+      "acknowledgement intent verification"
+    );
+    const intent = {
+      verificationReceiptId: event.verificationReceiptId,
+      acknowledgementId: event.acknowledgementId,
+    };
+    if (operation.acknowledgementIntent) {
+      same(
+        operation.acknowledgementIntent,
+        intent,
+        "acknowledgement intent replay"
+      );
+      return previous;
+    }
+    operation.acknowledgementIntent = intent;
+    return seal(next);
+  }
   if (event.type === "acknowledged") {
     same(event.replayProof, null, "active acknowledgement replay proof");
     requirePhase(operation, ["verified"]);
@@ -1473,6 +1527,12 @@ function reduce(
       operation.verification?.receiptId,
       "acknowledgement verification"
     );
+    if (operation.acknowledgementIntent)
+      same(
+        event.acknowledgementId,
+        operation.acknowledgementIntent.acknowledgementId,
+        "acknowledgement intent completion"
+      );
     const record = completedRecord(
       previous,
       operation,
@@ -1880,6 +1940,18 @@ function validateLastEventProjection(
   const operation = state.active;
   if (!operation || operation.operationId !== event.operationId)
     throw new Error("Last event requires current owner projection");
+  if (event.type === "acknowledgement-intent") {
+    requirePhase(operation, ["verified"]);
+    same(
+      operation.acknowledgementIntent,
+      {
+        verificationReceiptId: event.verificationReceiptId,
+        acknowledgementId: event.acknowledgementId,
+      },
+      "acknowledgement intent projection"
+    );
+    return;
+  }
   const rollback = event.mode === "rollback";
   const attempt = rollback
     ? operation.rollbackAttempt

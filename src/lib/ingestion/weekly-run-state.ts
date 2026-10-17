@@ -123,7 +123,16 @@ function validateEvidence(
       ? [...fields[stage], "mode", "ledgerRevision"]
       : stage === "enrich" && Object.hasOwn(evidence, "buildSha256")
         ? [...fields[stage], "buildSha256"]
-        : fields[stage]
+        : stage === "acknowledge" &&
+            Object.hasOwn(evidence, "acknowledgementId")
+          ? [
+              ...fields[stage],
+              "acknowledgementId",
+              "verificationReceiptId",
+              "operationId",
+              "controlHead",
+            ]
+          : fields[stage]
   );
   for (const [key, value] of Object.entries(evidence)) {
     if (key === "cutoffEpochMs" || key === "preCutoffPendingCount") {
@@ -213,6 +222,24 @@ function validateEvidence(
   )
     throw new Error("Verified deployment identity changed");
   if (stage === "acknowledge") {
+    if (Object.hasOwn(evidence, "acknowledgementId")) {
+      for (const key of [
+        "acknowledgementId",
+        "verificationReceiptId",
+        "operationId",
+      ]) {
+        if (
+          typeof evidence[key] !== "string" ||
+          !/^[a-f0-9]{64}$/.test(evidence[key])
+        )
+          throw new Error(`Invalid acknowledgement digest ${key}`);
+      }
+      if (
+        typeof evidence.controlHead !== "string" ||
+        !/^[a-f0-9]{40}$/.test(evidence.controlHead)
+      )
+        throw new Error("Invalid acknowledgement control head");
+    }
     const frozen = evidenceFor(state, "freeze");
     if (
       evidence.editionId !== frozen.editionId ||
