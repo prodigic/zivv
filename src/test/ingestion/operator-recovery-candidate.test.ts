@@ -48,6 +48,8 @@ import {
 import { importReportDigest } from "../../lib/ingestion/steve-import-review.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 import type { ReconciliationReport } from "../../types/ingestion.js";
+import { captureNpmExecutionTool } from "../../lib/ingestion/execution-tool-identity.js";
+import { inspectOperatorRecoveryLocations } from "../../lib/ingestion/operator-recovery-location.js";
 
 const roots: string[] = [];
 const scope = "prodigic/zivv/production";
@@ -304,6 +306,84 @@ afterEach(() => {
 });
 
 describe("sealed candidates in offline operator recovery", () => {
+  it.each(["retained", "missing", "changed"] as const)(
+    "requires exact private npm identity for a new captured build: %s",
+    async (mode) => {
+      const f = await fixture();
+      const npmRoot = join(f.root, "npm-package");
+      const cli = join(npmRoot, "bin/npm-cli.js");
+      write(cli, "// synthetic execution tool\n");
+      write(
+        join(npmRoot, "package.json"),
+        '{"name":"npm","version":"11.6.0"}\n'
+      );
+      const manifest = Buffer.from(
+        canonicalJson(captureNpmExecutionTool(cli)) + "\n"
+      );
+      const capture = join(
+        f.operator,
+        "weekly-candidates/candidate-work-fixture/source-build-retained"
+      );
+      write(join(capture, "execution-tools.json"), manifest);
+      write(
+        join(capture, "application-build.json"),
+        canonicalJson({
+          schemaVersion: 2,
+          npmVersion: "11.6.0",
+          executionToolSha256: sha256(manifest),
+          purpose: "release",
+          sourceRepository: "prodigic/zivv",
+          sourceCommit: "a".repeat(40),
+          sourceTree: "b".repeat(40),
+          sourceInventorySha256: "c".repeat(64),
+          archiveSha256: "d".repeat(64),
+          packageLockSha256: "e".repeat(64),
+          basePath: "/zivv/",
+          nodeVersion: process.version,
+          buildManifestSha256: "f".repeat(64),
+          etlInventorySha256: "1".repeat(64),
+          applicationFiles: [
+            { path: "index.html", size: 1, sha256: "2".repeat(64) },
+          ],
+        }) + "\n"
+      );
+      const within = relative(f.root, npmRoot);
+      if (within !== "npm-package")
+        throw new Error("Unsafe tool fixture cleanup");
+      rmSync(npmRoot, { recursive: true });
+      if (mode === "missing") unlinkSync(join(capture, "execution-tools.json"));
+      if (mode === "changed")
+        write(join(capture, "execution-tools.json"), "{}\n");
+      if (mode !== "retained") {
+        await expect(
+          captureOperatorRecoveryCheckpoint(f.checkout)
+        ).rejects.toThrow();
+        return;
+      }
+      const checkpoint = await captureOperatorRecoveryCheckpoint(f.checkout);
+      const archive = encryptOperatorRecovery(checkpoint, key);
+      const stagingRoot = join(f.root, "retained-tool-staging");
+      await stageOperatorRecovery(
+        decryptOperatorRecovery(archive, key),
+        stagingRoot,
+        key
+      );
+      expect(
+        inspectOperatorRecoveryLocations({
+          archive,
+          recoveryKey: key,
+          stagingRoot,
+        }).report.runtime.npmIdentity
+      ).toBe("retained-build-identities");
+      const broken = structuredClone(checkpoint);
+      broken.files = broken.files.filter(
+        (file) =>
+          !file.path.endsWith("source-build-retained/execution-tools.json")
+      );
+      expect(() => encryptOperatorRecovery(broken, key)).toThrow();
+    }
+  );
+
   it("retains, encrypts and stages a real sealed candidate and exact successful journal history", async () => {
     const f = await fixture();
     expect(f.bundle.candidate.applicationProvenanceSha256).toBeNull();

@@ -39,7 +39,11 @@ import {
   resolvePrivateCandidateDirectory,
 } from "./private-artifacts.js";
 import { projectLedgerLocation } from "./store-location.js";
-import { compiledEtlDigest } from "./source-build.js";
+import {
+  compiledEtlDigest,
+  verifyBuildExecutionToolIdentity,
+  parseApplicationBuildReceipt,
+} from "./source-build.js";
 import { sha256 } from "./steve-preflight.js";
 import {
   WeeklyRunJournal,
@@ -500,6 +504,28 @@ export function validateOperatorRecoveryCheckpoint(
     visit(data);
   }
   const checkpoint = value as OperatorRecoveryCheckpoint;
+  const buildArtifacts = new Map(
+    checkpoint.files
+      .filter((file) => file.bytes !== null)
+      .map((file) => [file.area + "/" + file.path, base64(file.bytes)])
+  );
+  for (const [path, bytes] of buildArtifacts) {
+    if (
+      !path.startsWith("operator/weekly-candidates/") ||
+      !/\/(?:source-build-[^/]+|candidate-[^/]+\/build)\/application-build\.json$/.test(
+        path
+      )
+    )
+      continue;
+    const receipt = parseApplicationBuildReceipt(bytes);
+    if (receipt.schemaVersion === 2)
+      verifyBuildExecutionToolIdentity(
+        receipt,
+        buildArtifacts.get(
+          path.replace(/application-build\.json$/, "execution-tools.json")
+        )
+      );
+  }
   candidateBundles(checkpoint);
   return checkpoint;
 }
@@ -602,6 +628,11 @@ function candidateBundles(checkpoint: OperatorRecoveryCheckpoint) {
       candidate.applicationProvenanceSha256 === null
         ? undefined
         : required(bundle + "build/application-build.json");
+    const executionToolIdentity =
+      applicationBuildReceipt &&
+      JSON.parse(applicationBuildReceipt.toString("utf8")).schemaVersion === 2
+        ? required(bundle + "build/execution-tools.json")
+        : undefined;
     return [
       {
         candidate,
@@ -615,6 +646,7 @@ function candidateBundles(checkpoint: OperatorRecoveryCheckpoint) {
           publicFiles,
           applicationBuildManifest,
           applicationBuildReceipt,
+          executionToolIdentity,
         },
       },
     ];

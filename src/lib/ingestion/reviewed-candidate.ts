@@ -74,6 +74,7 @@ export async function buildReviewedWeeklyCandidate(input: {
     applicationFiles: application.applicationFiles,
     applicationBuildManifest: application.applicationBuildManifest,
     applicationBuildReceipt,
+    executionToolIdentity: application.executionToolIdentity,
     exportData: async (workspace) => {
       verifyCompiledEtl(
         source.sourceRoot,

@@ -24,6 +24,9 @@ not replace private recovery storage.
 The encrypted [operator capsule](operator-recovery.md) restores a coherent
 checkpoint into quarantine. Validated path/runtime admission, old-host fencing
 and operational cutover remain tracked in [#78](https://github.com/prodigic/zivv/issues/78).
+New reviewed builds retain [private npm package identity](build-execution-tool-identity.md)
+bound to schema 2 build receipts. Legacy builds remain explicitly unproven for
+this tool identity; retained metadata alone grants no replacement-host admission.
 Authenticated off-machine durability for private state newer than a retained
 capsule still needs an explicit installation and retention design. No redundant
 remote dispatch-intention store is required where canonical control already
