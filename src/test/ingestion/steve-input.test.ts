@@ -7,6 +7,23 @@ function emptyLedger() {
 }
 
 describe("Steve's List ingestion input", () => {
+  it("honors an explicit whole-show cancellation without cancelling a support-act change", () => {
+    const batch = prepareSteveBatch(
+      emptyLedger(),
+      [
+        "funk-punk-thrash-ska Upcoming shows of Interest October 16, 2026",
+        "nov 3 tue Sex Mex, Sutros, X-Acto at Test Room, S.F. (cancelled)",
+        "nov 4 wed Next Band at Test Room, S.F. a/a 8pm (support cancelled)",
+        "nov 5 thr Sold Band at Test Room, S.F. a/a 8pm (sold out) (cancelled)",
+      ].join("\n"),
+      Date.parse("2026-10-17T00:40:59Z")
+    );
+    expect(
+      batch.events.map(
+        (event) => ("event" in event ? event.event : event).status
+      )
+    ).toEqual(["cancelled", "confirmed", "cancelled"]);
+  });
   it("keeps upcoming dates beyond six months in the year after the issue", () => {
     const batch = prepareSteveBatch(
       emptyLedger(),

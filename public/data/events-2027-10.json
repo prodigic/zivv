@@ -1,0 +1,56 @@
+{
+  "chunkId": "2027-10",
+  "dateRange": {
+    "startEpochMs": 1823169600000,
+    "endEpochMs": 1823169600000
+  },
+  "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        556023205,
+        1971665005,
+        1971865424
+      ],
+      "createdAtEpochMs": 1792198061662,
+      "date": "2027-10-10",
+      "dateEpochMs": 1823169600000,
+      "firstImportRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1792198061662,
+      "headlinerArtistId": 556023205,
+      "id": 1561295713,
+      "isFree": false,
+      "priceMax": 10,
+      "priceMin": 10,
+      "provenanceConflicts": [],
+      "slug": "2027-10-10-cruise-control-the-natural-batting-cage",
+      "sourceLineNumber": 94,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:ded9642a88656b31",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1792198061662,
+          "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1792198061662,
+          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "originalVenueId": 623175657,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1792198061662,
+      "venueId": 623175657,
+      "venueType": "club"
+    }
+  ]
+}

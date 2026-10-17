@@ -1,5 +1,20 @@
 [
   {
+    "note": "October 16 edition adds an almost-final-show annotation to Finish Ticket's existing November 15 bill. Keep its established artist identity and retain the updated annotation in event notes.",
+    "pattern": "^(nov\\s+15\\s+(?:sun|2026)\\s+)Finish Ticket \\(final show almost\\)([^\\n]*)$",
+    "replacement": "$1Finish Ticket (final show)$2 (final show almost)"
+  },
+  {
+    "note": "October 16 edition gives Charm World's set time within the October 17 Lanesplitters bill. Preserve the existing artist identity and retain the set time as an event note.",
+    "pattern": "^(oct\\s+17\\s+(?:sat|2026)\\s+)Charm World \\(10pm\\)([^\\n]*)$",
+    "replacement": "$1Charm World$2 (Charm World set 10pm)"
+  },
+  {
+    "note": "October 16 edition puts CANCELLED before the weekday on the November 3 Sex Mex bill. Restore the date header and retain the explicit cancellation as a status note.",
+    "pattern": "^nov\\s+3\\s+CANCELLED:\\s+tue\\s+Sex Mex, Sutros, X-Acto at the Bottom of the Hill, S\\.F\\.$",
+    "replacement": "nov 3 tue Sex Mex, Sutros, X-Acto at the Bottom of the Hill, S.F. (cancelled)"
+  },
+  {
     "note": "October 9 edition misspells Volunteer Orientation; normalize the programming label for audited non-performer exclusion.",
     "pattern": "\\bVoluneer Orentation\\b",
     "replacement": "Volunteer Orientation"

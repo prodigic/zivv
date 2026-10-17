@@ -22,12 +22,12 @@ export function steveRunId(
   aliases: Record<string, string>
 ): string {
   const identity = {
-    importer: "steveslist-v4",
+    importer: "steveslist-v5",
     schema: 1,
     content: normalizeLatestContent(content),
     aliases: Object.entries(aliases).sort(([a], [b]) => a.localeCompare(b)),
   };
-  return `steveslist-v4-${createHash("sha256").update(JSON.stringify(identity)).digest("hex")}`;
+  return `steveslist-v5-${createHash("sha256").update(JSON.stringify(identity)).digest("hex")}`;
 }
 
 /** Pure construction of a weekly candidate batch; shared reconciler owns acceptance. */
