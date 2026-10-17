@@ -20,6 +20,10 @@ import { WeeklyRunJournal } from "./weekly-run-journal.js";
 import { parseWeeklyEditionLedger } from "./weekly.js";
 import { freezeWeeklyImport } from "./weekly-edition-freeze.js";
 import {
+  runWeeklyCandidateStages,
+  type WeeklyCandidateBuildOptions,
+} from "./weekly-candidate-runner.js";
+import {
   createWeeklyRunState,
   transitionWeeklyRun,
   type WeeklyRunState,
@@ -33,9 +37,10 @@ import type {
 
 const STAGES = ["acquire", "prepare", "reconcile", "load"] as const;
 type ImportStage = (typeof STAGES)[number];
+type WorkerStage = ImportStage | "freeze" | "enrich" | "export" | "validate";
 export interface WeeklyImportProgress {
   runId: string;
-  stage: ImportStage | "freeze";
+  stage: WorkerStage;
   phase: "started" | "artifact-saved" | "effect-committed" | "completed";
 }
 export class WeeklyImportRunnerError extends Error {
@@ -108,19 +113,26 @@ export async function runWeeklyImport(input: {
     importObservedAtEpochMs: number;
   };
   runId?: string;
-  stopAfter?: ImportStage | "freeze";
+  stopAfter?: WorkerStage;
   freezeCutoffEpochMs?: number;
   reuseFrozen?: boolean;
+  candidateBuild?: WeeklyCandidateBuildOptions;
   onProgress?: (event: WeeklyImportProgress) => void | Promise<void>;
   leaseTtlMs?: number;
 }): Promise<WeeklyRunState> {
   const root = resolve(input.root);
+  const candidateBuild = input.candidateBuild
+    ? { ...input.candidateBuild }
+    : undefined;
   const source = input.source
     ? { ...input.source, raw: Buffer.from(input.source.raw) }
     : undefined;
   if (
     !!source === !!input.runId ||
-    (input.stopAfter && ![...STAGES, "freeze"].includes(input.stopAfter)) ||
+    (input.stopAfter &&
+      ![...STAGES, "freeze", "enrich", "export", "validate"].includes(
+        input.stopAfter
+      )) ||
     (input.freezeCutoffEpochMs !== undefined &&
       (!Number.isSafeInteger(input.freezeCutoffEpochMs) ||
         input.freezeCutoffEpochMs < 0 ||
@@ -627,7 +639,10 @@ export async function runWeeklyImport(input: {
       }
       if (stage === (input.stopAfter ?? "load")) break;
     }
-    if (input.stopAfter === "freeze") {
+    if (
+      input.stopAfter &&
+      ["freeze", "enrich", "export", "validate"].includes(input.stopAfter)
+    ) {
       state = await freezeWeeklyImport({
         root,
         state,
@@ -637,6 +652,23 @@ export async function runWeeklyImport(input: {
         reuseFrozen: input.reuseFrozen,
         verifyContext,
         onProgress: (phase) => notify("freeze", phase),
+      });
+    }
+    if (
+      input.stopAfter &&
+      ["enrich", "export", "validate"].includes(input.stopAfter)
+    ) {
+      state = await runWeeklyCandidateStages({
+        root,
+        operatorDirectory: location.directory,
+        state,
+        journal,
+        lease: owned,
+        stopAfter: input.stopAfter as "enrich" | "export" | "validate",
+        candidateBuild,
+        verifyContext,
+        heartbeatMs: Math.max(10, Math.floor(ttl / 3)),
+        onProgress: notify,
       });
     }
     return state;

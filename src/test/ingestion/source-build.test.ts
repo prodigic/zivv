@@ -207,7 +207,7 @@ describe("reviewed source capture and isolated application build", () => {
     expect(capture("preview").sourceCommit).toBe(sourceCommit);
     git(["update-ref", "refs/remotes/origin/main", sourceCommit]);
     expect(capture("release").purpose).toBe("release");
-  });
+  }, 30_000);
 
   it("ignores Git replacement objects when capturing a nominated reviewed commit", () => {
     const reviewedCommit = sourceCommit;

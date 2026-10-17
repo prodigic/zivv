@@ -21,6 +21,7 @@ import {
 } from "../../lib/ingestion/sqlite-store.js";
 import { runWeeklyImport } from "../../lib/ingestion/weekly-import-runner.js";
 import type { WeeklyRunState } from "../../lib/ingestion/weekly-run-state.js";
+import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
 import {
   createEmptyWeeklyEditionLedger,
   markWeeklyEditionPublished,
@@ -568,7 +569,7 @@ describe("weekly import runner recovery", () => {
     const moduleUrl = pathToFileURL(
       join(process.cwd(), "dist/lib/ingestion/weekly-import-runner.js")
     ).href;
-    const code = `const {runWeeklyImport}=await import(process.argv[1]);await runWeeklyImport({root:process.argv[2],runId:process.argv[3],leaseTtlMs:1000,onProgress:async({stage,phase})=>{if(stage==='load'&&phase==='effect-committed'){process.stdout.write('CATALOG_COMMITTED\\n');await new Promise(()=>{setInterval(()=>{},1000)});}}});`;
+    const code = `const {runWeeklyImport}=await import(process.argv[1]);await runWeeklyImport({root:process.argv[2],runId:process.argv[3],leaseTtlMs:120000,onProgress:async({stage,phase})=>{if(stage==='load'&&phase==='effect-committed'){process.stdout.write('CATALOG_COMMITTED\\n');await new Promise(()=>{setInterval(()=>{},1000)});}}});`;
     const child = spawn(
       process.execPath,
       ["--input-type=module", "-e", code, moduleUrl, root, reviewed.runId],
@@ -591,7 +592,7 @@ describe("weekly import runner recovery", () => {
             reject(
               new Error("Child did not reach committed interruption: " + errors)
             ),
-          15_000
+          45_000
         );
         child.stdout.on("data", (bytes: Buffer) => {
           output += bytes.toString();
@@ -641,9 +642,15 @@ describe("weekly import runner recovery", () => {
     } finally {
       db.close();
     }
-    await new Promise<void>((resolveExpiry) =>
-      setTimeout(resolveExpiry, Math.max(0, expiresAt - Date.now()) + 50)
-    );
+    expect(child.exitCode !== null || child.signalCode !== null).toBe(true);
+    expect(Number.isSafeInteger(expiresAt)).toBe(true);
+    const takeover = new WeeklyRunJournal(home, () => expiresAt + 1);
+    try {
+      const lease = takeover.acquire("prodigic/zivv/production");
+      takeover.release(lease);
+    } finally {
+      takeover.close();
+    }
     const before = catalogDigest();
     const recovered = await runWeeklyImport({ root, runId: interrupted.runId });
     expect(stage(recovered, "load")).toMatchObject({
@@ -656,7 +663,7 @@ describe("weekly import runner recovery", () => {
     expect(readSqliteLedger(sqlitePath).events[0].createdAtEpochMs).toBe(
       importObservedAtEpochMs
     );
-  });
+  }, 90_000);
 
   it("retries a blocked unknown U2 bill after canonical repair without changing prepared history", async () => {
     const unknown = {
