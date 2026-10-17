@@ -2,8 +2,8 @@
 
 Implementation checkpoint for [#31](https://github.com/prodigic/zivv/issues/31),
 following [Verify Release](verify-release.md). This adds the acknowledgement
-executor; it does not activate a scheduler, invoke it against the operator's live
-store, or yet connect the complete delivery CLI.
+executor, now integrated with the [weekly publication CLI](weekly-publication-dispatch.md).
+It does not activate a scheduler or invoke it against the operator's live store.
 
 ## Ordering and authority
 

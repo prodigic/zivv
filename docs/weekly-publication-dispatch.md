@@ -99,7 +99,8 @@ The default worker still stops at load. No live source, catalog, cutoff, native
 production ref, flags or schedule is changed by the tests or implementation.
 
 Before enabling controlled publication, make the legacy push publisher participate
-in or defer to the same ownership protocol, retain/live-verify bootstrap and
+in or defer to the same ownership protocol using the
+[mode transition runbook](publisher-mode-transition.md), retain/live-verify bootstrap and
 rollback artifacts, and pass preview, recovery and failure rehearsals. Source
 acquisition, scheduling, actionable notifications, private recovery, repository
 state coordination and two observed Fridays remain open in the

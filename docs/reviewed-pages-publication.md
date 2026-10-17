@@ -76,15 +76,17 @@ output; a checksum alone does not establish that checkpoint metadata is safe.
 The existing manual workflow remains available. Both
 `ZIVV_CONTROLLED_PUBLISHING=enabled` and `ZIVV_MANUAL_PUBLISHER_JOINED=true` must
 be set before this workflow may execute effects. Those flags represent real
-activation prerequisites, not evidence that they have passed. Before setting
-them, make the manual path participate in the same remote ownership controller,
-retain and live-verify rollback bytes, verify runtime permissions, and pass the
+activation prerequisites, not evidence that they have passed. Follow the
+[mode transition runbook](publisher-mode-transition.md) to drain existing runs and
+verify the replacement manual path before setting them. The manual path must
+participate in the same remote ownership controller. Retain and live-verify
+rollback bytes, verify runtime permissions, and pass the
 preview, recovery and failure rehearsals.
 
 The [Verify Release checkpoint](verify-release.md) adds live inventory, routes,
-cache checks and guarded public rollback. Later checkpoints complete
-acknowledgement, portable recovery, optional metadata
-queue, source acquisition, runtime and alerts. Two observed scheduled Fridays
+cache checks and guarded public rollback. The [weekly publication CLI](weekly-publication-dispatch.md)
+now connects dispatch, verification and acknowledgement. Portable recovery,
+optional metadata queue, source acquisition, runtime and alerts remain open. Two observed scheduled Fridays
 remain acceptance requirements.
 
 ## Operator entry points
