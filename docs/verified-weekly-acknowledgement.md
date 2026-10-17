@@ -57,11 +57,45 @@ for new effect callers to bypass intent persistence.
 - A lost terminal response is resolved with the native completion tree proof.
   A later verified release does not erase that historical proof.
 - Unexpected weekly bytes, another owner, wrong candidate/inventory/deployment,
-  missing private intent or conflicting completion fail closed. No import or
+  an unrecoverable private intent or conflicting completion fail closed. No import or
   deployment is retried by this executor.
 - After proven remote completion, journal recovery accepts the same published
-  target edition even if later editions have legitimately been added. It never
-  rewrites the weekly file during that recovery.
+  target edition even if later editions have legitimately been added. Those later
+  bytes remain unchanged. An exact restored preimage can be repaired as below.
+
+### Canonical recovery from an older private checkpoint
+
+When the private journal was restored to before acknowledgement but native
+history retains the accepted acknowledgement intent, the executor can recreate
+the same artifact. It requires one matching canonical transition and complete
+bounded history (1,000 returned commits / 16 MiB), with its exact parent bytes and
+original `Created-at` timestamp. Candidate, source, public inventory, deployment
+and verification authority must match the journaled verified release.
+
+The succeeded enrichment artifact retains the exact base64 weekly configuration.
+Its hash must equal the sealed candidate's configuration hash. Recovery derives
+the after bytes with the existing published-edition transition and recreates the
+original intent using the journal run ID, native operation/request IDs and
+original timestamp. Its digest must equal the canonical acknowledgement ID.
+Both original prepared appends must reproduce the accepted chain before the
+recovered running-stage artifact is saved. No new intent identity is invented.
+
+If the native intent remains bound, recovery resumes the ordinary guarded write
+and the one remaining terminal append. If native completion already exists,
+recovery verifies that completion under the journal guard and ingestion lock. It
+may replace only the exact original weekly-file preimage with the exact after
+bytes, without another remote append. An already-published matching target and
+later legitimate editions are preserved byte-for-byte. Unrelated weekly edits,
+missing/wrong preimages, ambiguous/truncated history or mismatched acknowledgement
+digests stop recovery before a cutoff write or remote append.
+
+A journal already marked acknowledgement-succeeded but missing its completed
+artifact remains a corruption error; this path is for resuming a retained
+pending/running stage from an older checkpoint. It does not silently rewrite
+completed journal history. [Operator staging](operator-recovery.md) still requires
+separate runtime/path admission and old-host fencing; this executor does not
+activate a restored installation or recover absent raw/configuration bytes from
+public hashes.
 
 ## Boundaries and remaining work
 
