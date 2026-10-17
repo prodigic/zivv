@@ -17,9 +17,95 @@ interface Anchor {
   controlHead: string;
   controlSha256: string;
 }
+export interface CanonicalWeeklyVerification {
+  controlHead: string;
+  controlSha256: string;
+}
 const same = (a: unknown, b: unknown, message: string) => {
   if (canonicalJson(a) !== canonicalJson(b)) throw new Error(message);
 };
+
+/** Find this run's exact canonical verification without creating remote effects. */
+export function findCanonicalWeeklyVerification(input: {
+  runId: string;
+  candidate: Buffer;
+  store: PromotionControlStore;
+}): CanonicalWeeklyVerification | null {
+  same(
+    input.store.ref,
+    "refs/heads/zivv-promotion-control/production",
+    "Wrong delivery control ref"
+  );
+  const candidate = parseReleaseCandidate(input.candidate);
+  if (
+    candidate.basePath !== "/zivv/" ||
+    candidate.applicationProvenanceSha256 === null
+  )
+    throw new Error("Delivery requires reviewed production candidate");
+  if (!input.store.readCanonicalHistory)
+    throw new Error("Canonical history is required for delivery recovery");
+  const history = input.store.readCanonicalHistory({
+    maxCommits: 1000,
+    maxBytes: 16 * 1024 * 1024,
+  });
+  if (!history.complete)
+    throw new Error("Delivery recovery history is incomplete");
+  const matches = history.commits.filter((record) => {
+    const control = parsePromotionControl(record.bytes),
+      event = control.lastTransition.event;
+    return (
+      event.type === "verified" &&
+      event.mode === "promote" &&
+      control.active?.request.requestId === input.runId
+    );
+  });
+  if (matches.length > 1)
+    throw new Error("Canonical weekly verification is ambiguous");
+  if (!matches.length) return null;
+  const record = matches[0],
+    control = parsePromotionControl(record.bytes),
+    operation = control.active!;
+  same(
+    control.destination,
+    "production",
+    "Wrong historical delivery destination"
+  );
+  same(
+    operation.phase,
+    "verified",
+    "Native successful verification is required"
+  );
+  same(
+    operation.request.candidateId,
+    candidate.candidateId,
+    "Native historical candidate mismatch"
+  );
+  same(
+    operation.request.sourceCommit,
+    candidate.sourceCommit,
+    "Native historical source mismatch"
+  );
+  same(
+    operation.request.publicInventorySha256,
+    promotionDigest(candidate.files),
+    "Native historical inventory mismatch"
+  );
+  same(
+    operation.request.purpose,
+    "release",
+    "Native historical purpose mismatch"
+  );
+  same(operation.request.basePath, "/zivv/", "Native historical base mismatch");
+  // The selected bytes must still be an ancestor of authoritative control.
+  const proven = input.store.readAt(record.head);
+  same(proven.head, record.head, "Wrong historical delivery head");
+  same(
+    proven.bytes?.toString("base64"),
+    record.bytes.toString("base64"),
+    "Unproven historical delivery bytes"
+  );
+  return { controlHead: record.head, controlSha256: sha256(record.bytes) };
+}
 
 /** Adopt real native verification; never fabricate effects from a supplied receipt. */
 export async function journalVerifiedWeeklyDelivery(input: {
@@ -29,6 +115,8 @@ export async function journalVerifiedWeeklyDelivery(input: {
   journal: WeeklyRunJournal;
   lease: WeeklyRunLease;
   verifyContext: () => void;
+  /** Canonical history probe from the worker; revalidated before persistence. */
+  recoveredAuthority?: CanonicalWeeklyVerification;
   onProgress: (
     stage: "deploy" | "verify",
     phase: "started" | "artifact-saved" | "completed"
@@ -88,12 +176,31 @@ export async function journalVerifiedWeeklyDelivery(input: {
         const current = input.store.read();
         if (!current.head || !current.bytes)
           throw new Error("Missing native delivery control");
+        const active = parsePromotionControl(current.bytes).active;
+        // Prefer this run's history even if a later verified owner happens to
+        // reuse the same candidate. The manual current-owner route is fallback.
+        const authority =
+          input.recoveredAuthority ??
+          (input.store.readCanonicalHistory
+            ? findCanonicalWeeklyVerification({
+                runId: state.runId,
+                candidate: input.candidate,
+                store: input.store,
+              })
+            : null) ??
+          (active?.phase === "verified"
+            ? {
+                controlHead: current.head,
+                controlSha256: sha256(current.bytes),
+              }
+            : null);
+        if (!authority)
+          throw new Error("Native successful verification is required");
         anchor = {
           schemaVersion: 1,
           runId: state.runId,
           candidateId: candidate.candidateId,
-          controlHead: current.head,
-          controlSha256: sha256(current.bytes),
+          ...authority,
         };
       }
       // Validate the authority before retaining an adoptable checkpoint.
@@ -166,6 +273,12 @@ export async function journalVerifiedWeeklyDelivery(input: {
       !op.verification
     )
       throw new Error("Native successful verification is required");
+    if (input.recoveredAuthority)
+      same(
+        op.request.requestId,
+        state.runId,
+        "Native historical request mismatch"
+      );
     same(
       op.request.candidateId,
       candidate.candidateId,
