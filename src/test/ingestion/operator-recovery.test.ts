@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { join, relative, resolve } from "node:path";
 import { randomBytes } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { DatabaseSync } from "node:sqlite";
 import { loadBackupKey } from "../../lib/ingestion/encrypted-backup.js";
 import { runWeeklyImport } from "../../lib/ingestion/weekly-import-runner.js";
 import { assertOperatorNotQuarantined } from "../../lib/ingestion/private-artifacts.js";
@@ -211,6 +212,17 @@ describe("offline operator recovery capsules", () => {
     write(join(operator, "not-classified.json"), "private");
     await expect(captureOperatorRecoveryCheckpoint(root)).rejects.toThrow(
       "UNCLASSIFIED_OPERATOR_ARTIFACT"
+    );
+  });
+  it("refuses a journal run whose retained original source artifact was removed", async () => {
+    const db = new DatabaseSync(join(operator, "weekly-runs.sqlite"));
+    try {
+      db.exec("DELETE FROM stage_artifact WHERE stage='acquire' AND attempt=0");
+    } finally {
+      db.close();
+    }
+    await expect(captureOperatorRecoveryCheckpoint(root)).rejects.toThrow(
+      "INCOMPLETE_OPERATOR_RECOVERY"
     );
   });
   it("records absent configuration and excludes dependency/cache trees", async () => {

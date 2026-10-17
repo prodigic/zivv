@@ -9,6 +9,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
+import { DatabaseSync } from "node:sqlite";
 import { dirname, join, relative, resolve } from "node:path";
 import {
   captureOperatorRecoveryCheckpoint,
@@ -351,6 +352,7 @@ describe("sealed candidates in offline operator recovery", () => {
     "build-manifest",
     "load-report",
     "changed-report-digest",
+    "completed-stage-artifact",
   ] as const)(
     "refuses capture after successful validation loses %s while preserving the valid journal history",
     async (missing) => {
@@ -386,6 +388,16 @@ describe("sealed candidates in offline operator recovery", () => {
       if (missing === "build-manifest")
         unlinkSync(join(f.bundle.directory, "build/vite-manifest.json"));
       if (missing === "load-report") unlinkSync(f.reportPath);
+      if (missing === "completed-stage-artifact") {
+        const db = new DatabaseSync(join(f.operator, "weekly-runs.sqlite"));
+        try {
+          db.prepare(
+            "DELETE FROM stage_artifact WHERE run_id=? AND stage='prepare'"
+          ).run(f.state.runId);
+        } finally {
+          db.close();
+        }
+      }
       if (missing === "changed-report-digest")
         write(
           f.reportPath,

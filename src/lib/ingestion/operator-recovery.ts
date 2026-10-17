@@ -424,12 +424,35 @@ export function validateOperatorRecoveryCheckpoint(
   }
   for (const run of journal.runState) {
     const state = JSON.parse(run.payload) as {
+      source: { rawSha256: string };
       stages: {
         stage: string;
         status: string;
+        attempt: number;
         evidence: Record<string, unknown> | null;
       }[];
     };
+    if (
+      !journal.stageArtifacts.some(
+        (row) =>
+          row.runId === run.id &&
+          row.stage === "acquire" &&
+          row.attempt === 0 &&
+          row.identity === state.source.rawSha256
+      )
+    )
+      throw new Error("INCOMPLETE_OPERATOR_RECOVERY");
+    for (const stage of state.stages)
+      if (
+        stage.status === "succeeded" &&
+        !journal.stageArtifacts.some(
+          (row) =>
+            row.runId === run.id &&
+            row.stage === stage.stage &&
+            row.attempt === stage.attempt
+        )
+      )
+        throw new Error("INCOMPLETE_OPERATOR_RECOVERY");
     const load = state.stages.find((stage) => stage.stage === "load");
     if (load?.status === "succeeded") {
       if (typeof load.evidence?.importRunId !== "string") fail();
