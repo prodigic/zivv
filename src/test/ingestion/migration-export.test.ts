@@ -15,7 +15,12 @@ import {
   importSteveContent,
   importVenueBatch,
 } from "../../lib/ingestion/imports.js";
-import { loadLedger } from "../../lib/ingestion/ledger.js";
+import { loadLedger, saveLedgerAtomic } from "../../lib/ingestion/ledger.js";
+import { ledgerDigest } from "../../lib/ingestion/sqlite-store.js";
+import {
+  decryptLedgerSnapshot,
+  encryptLedgerSnapshot,
+} from "../../lib/ingestion/encrypted-backup.js";
 import type { Artist, Event, Venue } from "../../types/events.js";
 
 const directories: string[] = [];
@@ -109,6 +114,38 @@ afterEach(() => {
 });
 
 describe("migration and ledger export", () => {
+  it("binds exports to the captured ledger and distinguishes a stale recovery snapshot", async () => {
+    const { root } = setup();
+    await migrateExistingCatalog(root);
+    const ledgerPath = join(root, "data/ingestion/ledger.json");
+    const before = await loadLedger(ledgerPath);
+    const recoveryKey = Buffer.alloc(32, 7);
+    const oldSnapshot = encryptLedgerSnapshot(before, recoveryKey);
+    const first = await new ETLProcessor(root).processData();
+    expect(first.success).toBe(true);
+    expect(first.manifest.sourceLedgerRevision).toBe(
+      ledgerDigest(decryptLedgerSnapshot(oldSnapshot, recoveryKey))
+    );
+
+    const changed = structuredClone(before);
+    changed.events[0].priceMin = 25;
+    changed.version = "synthetic-correction";
+    await saveLedgerAtomic(ledgerPath, changed);
+    const next = await new ETLProcessor(root).processData();
+    expect(next.success).toBe(true);
+    expect(next.manifest.sourceLedgerRevision).toBe(ledgerDigest(changed));
+    expect(next.manifest.sourceLedgerRevision).not.toBe(
+      ledgerDigest(decryptLedgerSnapshot(oldSnapshot, recoveryKey))
+    );
+    const written = JSON.parse(
+      readFileSync(join(root, "public/data/manifest.json"), "utf8")
+    );
+    expect(written.sourceLedgerRevision).toBe(
+      next.manifest.sourceLedgerRevision
+    );
+    expect(await loadLedger(ledgerPath)).toEqual(changed);
+  });
+
   it("exports artist links without a review and leaves canonical history untouched", async () => {
     const { root } = setup();
     await migrateExistingCatalog(root);
@@ -152,6 +189,9 @@ describe("migration and ledger export", () => {
     });
     expect(artist.vibe).toBeUndefined();
     expect(result.manifest?.sourceFiles.artistLinks).toBeDefined();
+    expect(result.manifest.sourceLedgerRevision).toBe(
+      ledgerDigest(await loadLedger(ledgerPath))
+    );
     expect(readFileSync(ledgerPath, "utf8")).toBe(before);
   });
 
