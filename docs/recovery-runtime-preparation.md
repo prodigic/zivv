@@ -94,8 +94,9 @@ The recovery marker remains `staged`, `activationAllowed=false`. No working key
 is installed, no Git checkout is created, no source is imported, and no remote
 publication or scheduler is enabled. A preparation receipt is evidence of a
 specific quarantined tree; it is not an active context or an activation token.
-Legitimate future database writes will change that tree and require a separate
-admission/ownership design, rather than weakening this verifier.
+Legitimate future database writes change that tree. The separate
+[same-run import admission](recovery-import-admission.md) authenticates a bounded
+resume through load without weakening this pristine-tree verifier.
 
 Replacement admission still needs physical/logical path consumer integration,
 working-key installation, authoritative Git ancestry, old-host fencing and

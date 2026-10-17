@@ -17,6 +17,11 @@ import {
 } from "./imports.js";
 import { projectLedgerLocation } from "./store-location.js";
 import { assertOperatorNotQuarantined } from "./private-artifacts.js";
+import {
+  assertRecoveredImportInvocation,
+  assertRecoveredImportCurrent,
+  assertRecoveredImportRemote,
+} from "./recovery-import-admission.js";
 import { WeeklyRunJournal } from "./weekly-run-journal.js";
 import { parseWeeklyEditionLedger } from "./weekly.js";
 import { freezeWeeklyImport } from "./weekly-edition-freeze.js";
@@ -145,6 +150,7 @@ export async function runWeeklyImport(input: {
   leaseTtlMs?: number;
 }): Promise<WeeklyRunState> {
   const root = resolve(input.root);
+  assertRecoveredImportInvocation(input);
   const delivering =
     input.stopAfter === "dispatch" ||
     input.stopAfter === "verify" ||
@@ -201,7 +207,7 @@ export async function runWeeklyImport(input: {
   const location = projectLedgerLocation(root);
   if (location.backend !== "sqlite" || !existsSync(location.path))
     fail("SHARED_SQLITE_REQUIRED");
-  assertOperatorNotQuarantined(location.directory);
+  assertOperatorNotQuarantined(location.directory, "weekly-import");
   const storePath = realpathSync(location.path);
   const runtimeRoot = resolve(
     dirname(fileURLToPath(import.meta.url)),
@@ -271,6 +277,7 @@ export async function runWeeklyImport(input: {
     if (!raw || sha256(raw) !== state.source.rawSha256)
       fail("SOURCE_ARTIFACT_CHANGED");
     const verifyContext = () => {
+      assertRecoveredImportCurrent();
       if (Date.now() >= renewalAt) {
         owned = journal.renew(owned, ttl);
         lease = owned;
@@ -428,6 +435,8 @@ export async function runWeeklyImport(input: {
     }
     async function committedImport() {
       const reviewed = await reviewedArtifact();
+      verifyContext();
+      assertRecoveredImportRemote();
       verifyContext();
       return journal.guardOperation(owned, () =>
         recoverReviewedSteveImport(
@@ -591,6 +600,8 @@ export async function runWeeklyImport(input: {
                       [])
                   );
                   const checkNewImport = () => {
+                    verifyContext();
+                    assertRecoveredImportRemote();
                     verifyContext();
                     const currentBytes = existsSync(weeklyPath)
                       ? readFileSync(weeklyPath)
