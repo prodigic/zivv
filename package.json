@@ -67,6 +67,7 @@
     "weekly:review-import": "npm run build:etl && node scripts/review-weekly-import.js review",
     "weekly:run-import": "npm run build:etl && node scripts/run-weekly-import.js",
     "weekly:capture-email": "npm run build:etl && node scripts/capture-steve-email.js",
+    "operator:recovery": "npm run build:etl && node scripts/operator-recovery.js",
     "weekly:load-reviewed": "npm run build:etl && node scripts/review-weekly-import.js load",
     "candidate:build": "npm run build:etl && node scripts/build-weekly-candidate.js build",
     "candidate:verify": "npm run build:etl && node scripts/build-weekly-candidate.js verify",

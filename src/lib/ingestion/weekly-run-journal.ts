@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 import { secureOperatorDirectory } from "./encrypted-backup.js";
 import { canonicalJson } from "./sqlite-store.js";
 import {
+  WEEKLY_RUN_STAGES,
   parseWeeklyRunState,
   transitionWeeklyRun,
   type WeeklyRunState,
@@ -20,6 +21,265 @@ export interface WeeklyRunLease {
 
 export type WeeklyIntakeEvidenceKind = "source" | "correction";
 const maxIntakeEvidenceBytes = 8 * 1024 * 1024;
+const maxRecoveryBytes = 256 * 1024 * 1024;
+const maxRecoveryRows = 100000;
+const productionScope = "prodigic/zivv/production";
+
+/** Logical schema-3 recovery data. Evidence strings encode exact bytes as canonical base64. */
+export interface WeeklyJournalRecoverySnapshot {
+  format: "zivv-weekly-journal-recovery";
+  version: 1;
+  journalSchemaVersion: 3;
+  digest: string;
+  ownership: {
+    scope: string;
+    owner: string;
+    fence: number;
+    expiresAtEpochMs: number;
+  }[];
+  runState: { id: string; scope: string; revision: number; payload: string }[];
+  stageArtifacts: {
+    runId: string;
+    stage: WeeklyRunStage;
+    attempt: number;
+    identity: string;
+    bytes: string;
+  }[];
+  intakeEvidence: {
+    scope: string;
+    kind: WeeklyIntakeEvidenceKind;
+    id: string;
+    identity: string;
+    bytes: string;
+  }[];
+}
+
+function recoveryFailure(): never {
+  throw new Error("Invalid weekly journal recovery snapshot");
+}
+function recoveryObject(
+  value: unknown,
+  keys: string[]
+): Record<string, unknown> {
+  if (
+    !value ||
+    typeof value !== "object" ||
+    Array.isArray(value) ||
+    canonicalJson(Object.keys(value).sort()) !== canonicalJson(keys.sort())
+  )
+    recoveryFailure();
+  return value as Record<string, unknown>;
+}
+function recoveryArray(value: unknown): unknown[] {
+  if (!Array.isArray(value) || value.length > maxRecoveryRows)
+    recoveryFailure();
+  return value;
+}
+function recoveryInteger(value: unknown, minimum = 0): value is number {
+  return (
+    typeof value === "number" && Number.isSafeInteger(value) && value >= minimum
+  );
+}
+function recoveryHash(value: unknown): value is string {
+  return typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
+}
+function recoveryScope(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    /^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,127}$/.test(value)
+  );
+}
+function recoveryOrder(keys: string[]): void {
+  if (keys.some((key, index) => index > 0 && key <= keys[index - 1]))
+    recoveryFailure();
+}
+function recoveryEvidence(
+  value: unknown,
+  identity: unknown,
+  maximum: number
+): Buffer {
+  if (
+    typeof value !== "string" ||
+    !recoveryHash(identity) ||
+    value.length > Math.ceil(maximum / 3) * 4
+  )
+    recoveryFailure();
+  const bytes = Buffer.from(value, "base64");
+  if (
+    bytes.length > maximum ||
+    bytes.toString("base64") !== value ||
+    createHash("sha256").update(bytes).digest("hex") !== identity
+  )
+    recoveryFailure();
+  return bytes;
+}
+function recoveryBytes(input: unknown): Buffer {
+  const body = recoveryObject(input, [
+    "format",
+    "version",
+    "journalSchemaVersion",
+    "ownership",
+    "runState",
+    "stageArtifacts",
+    "intakeEvidence",
+  ]);
+  const bytes = Buffer.from(
+    canonicalJson({
+      ...body,
+      digest: createHash("sha256").update(canonicalJson(body)).digest("hex"),
+    }) + "\n"
+  );
+  if (bytes.length > maxRecoveryBytes) recoveryFailure();
+  return bytes;
+}
+
+/** Validate the entire opaque snapshot before a recovery orchestrator uses its rows. */
+export function validateWeeklyJournalRecoverySnapshot(
+  bytes: Buffer
+): WeeklyJournalRecoverySnapshot {
+  if (
+    !Buffer.isBuffer(bytes) ||
+    !bytes.length ||
+    bytes.length > maxRecoveryBytes
+  )
+    recoveryFailure();
+  const text = new TextDecoder("utf-8", {
+    fatal: true,
+    ignoreBOM: true,
+  }).decode(bytes);
+  const value = recoveryObject(JSON.parse(text) as unknown, [
+    "format",
+    "version",
+    "journalSchemaVersion",
+    "digest",
+    "ownership",
+    "runState",
+    "stageArtifacts",
+    "intakeEvidence",
+  ]);
+  if (
+    value.format !== "zivv-weekly-journal-recovery" ||
+    value.version !== 1 ||
+    value.journalSchemaVersion !== 3 ||
+    !recoveryHash(value.digest) ||
+    canonicalJson(value) + "\n" !== text
+  )
+    recoveryFailure();
+  const { digest, ...body } = value;
+  if (createHash("sha256").update(canonicalJson(body)).digest("hex") !== digest)
+    recoveryFailure();
+  const owners = new Set<string>();
+  const ownership = recoveryArray(value.ownership).map((item) => {
+    const row = recoveryObject(item, [
+      "scope",
+      "owner",
+      "fence",
+      "expiresAtEpochMs",
+    ]);
+    if (
+      !recoveryScope(row.scope) ||
+      typeof row.owner !== "string" ||
+      !/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/.test(row.owner) ||
+      !recoveryInteger(row.fence, 1) ||
+      !recoveryInteger(row.expiresAtEpochMs)
+    )
+      recoveryFailure();
+    owners.add(row.scope);
+    return row as unknown as WeeklyJournalRecoverySnapshot["ownership"][number];
+  });
+  recoveryOrder(ownership.map((row) => row.scope));
+  if (!owners.has(productionScope)) recoveryFailure();
+  const states = new Map<string, WeeklyRunState>();
+  const runState = recoveryArray(value.runState).map((item) => {
+    const row = recoveryObject(item, ["id", "scope", "revision", "payload"]);
+    if (
+      !recoveryHash(row.id) ||
+      !recoveryScope(row.scope) ||
+      !owners.has(row.scope) ||
+      !recoveryInteger(row.revision) ||
+      typeof row.payload !== "string"
+    )
+      recoveryFailure();
+    const state = parseWeeklyRunState(JSON.parse(row.payload) as unknown);
+    if (
+      state.runId !== row.id ||
+      state.revision !== row.revision ||
+      canonicalJson(state) !== row.payload
+    )
+      recoveryFailure();
+    states.set(row.id, state);
+    return row as unknown as WeeklyJournalRecoverySnapshot["runState"][number];
+  });
+  recoveryOrder(runState.map((row) => row.id));
+  const stageArtifacts = recoveryArray(value.stageArtifacts).map((item) => {
+    const row = recoveryObject(item, [
+      "runId",
+      "stage",
+      "attempt",
+      "identity",
+      "bytes",
+    ]);
+    if (
+      !recoveryHash(row.runId) ||
+      typeof row.stage !== "string" ||
+      !WEEKLY_RUN_STAGES.includes(row.stage as WeeklyRunStage) ||
+      !recoveryInteger(row.attempt)
+    )
+      recoveryFailure();
+    const state = states.get(row.runId),
+      stage = state?.stages.find((item) => item.stage === row.stage);
+    if (
+      !state ||
+      !stage ||
+      (row.attempt === 0
+        ? row.stage !== "acquire"
+        : row.attempt > stage.attempt)
+    )
+      recoveryFailure();
+    recoveryEvidence(row.bytes, row.identity, 64 * 1024 * 1024);
+    if (row.attempt === 0 && row.identity !== state.source.rawSha256)
+      recoveryFailure();
+    return row as unknown as WeeklyJournalRecoverySnapshot["stageArtifacts"][number];
+  });
+  recoveryOrder(
+    stageArtifacts.map(
+      (row) =>
+        `${row.runId}\0${row.stage}\0${String(row.attempt).padStart(16, "0")}`
+    )
+  );
+  const intakeEvidence = recoveryArray(value.intakeEvidence).map((item) => {
+    const row = recoveryObject(item, [
+      "scope",
+      "kind",
+      "id",
+      "identity",
+      "bytes",
+    ]);
+    if (
+      !recoveryScope(row.scope) ||
+      !owners.has(row.scope) ||
+      typeof row.kind !== "string" ||
+      !["source", "correction"].includes(row.kind) ||
+      !recoveryHash(row.id)
+    )
+      recoveryFailure();
+    recoveryEvidence(row.bytes, row.identity, maxIntakeEvidenceBytes);
+    return row as unknown as WeeklyJournalRecoverySnapshot["intakeEvidence"][number];
+  });
+  recoveryOrder(
+    intakeEvidence.map((row) => `${row.scope}\0${row.kind}\0${row.id}`)
+  );
+  return {
+    format: "zivv-weekly-journal-recovery",
+    version: 1,
+    journalSchemaVersion: 3,
+    digest,
+    ownership,
+    runState,
+    stageArtifacts,
+    intakeEvidence,
+  };
+}
 
 function validateIntakeKey(
   scope: string,
@@ -171,6 +431,176 @@ export class WeeklyRunJournal {
 
   close(): void {
     this.db.close();
+  }
+
+  private assertRecoveryDatabase(): void {
+    const names = this.db
+      .prepare(
+        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+      )
+      .all()
+      .map((row) => row.name);
+    if (
+      this.db.prepare("PRAGMA user_version").get()?.user_version !== 3 ||
+      this.db.prepare("PRAGMA application_id").get()?.application_id !==
+        1514759762 ||
+      canonicalJson(names) !==
+        canonicalJson([
+          "intake_evidence",
+          "ownership",
+          "run_state",
+          "stage_artifact",
+        ])
+    )
+      throw new Error("Unsupported journal recovery schema");
+    const integrity = this.db.prepare("PRAGMA integrity_check").all();
+    if (
+      integrity.length !== 1 ||
+      integrity[0].integrity_check !== "ok" ||
+      this.db.prepare("PRAGMA foreign_key_check").all().length
+    )
+      throw new Error("Corrupt journal recovery database");
+  }
+
+  private recoverySnapshot(): Buffer {
+    for (const table of [
+      "ownership",
+      "run_state",
+      "stage_artifact",
+      "intake_evidence",
+    ])
+      if (
+        Number(
+          this.db.prepare(`SELECT COUNT(*) AS total FROM ${table}`).get()?.total
+        ) > maxRecoveryRows
+      )
+        recoveryFailure();
+    const size = this.db
+      .prepare(
+        "SELECT (SELECT COALESCE(SUM(length(payload)),0) FROM run_state)+(SELECT COALESCE(SUM(length(bytes)),0) FROM stage_artifact)+(SELECT COALESCE(SUM(length(bytes)),0) FROM intake_evidence) AS total"
+      )
+      .get()?.total;
+    if (!recoveryInteger(size) || size > (maxRecoveryBytes * 3) / 4)
+      recoveryFailure();
+    const encode = (
+      row: Record<string, string | number | bigint | Uint8Array | null>
+    ) => {
+      if (!(row.bytes instanceof Uint8Array)) recoveryFailure();
+      return { ...row, bytes: Buffer.from(row.bytes).toString("base64") };
+    };
+    const bytes = recoveryBytes({
+      format: "zivv-weekly-journal-recovery",
+      version: 1,
+      journalSchemaVersion: 3,
+      ownership: this.db
+        .prepare(
+          "SELECT scope,owner,fence,expires_at AS expiresAtEpochMs FROM ownership ORDER BY scope"
+        )
+        .all(),
+      runState: this.db
+        .prepare("SELECT id,scope,revision,payload FROM run_state ORDER BY id")
+        .all(),
+      stageArtifacts: this.db
+        .prepare(
+          "SELECT run_id AS runId,stage,attempt,identity,bytes FROM stage_artifact ORDER BY run_id,stage,attempt"
+        )
+        .all()
+        .map(encode),
+      intakeEvidence: this.db
+        .prepare(
+          "SELECT scope,kind,id,identity,bytes FROM intake_evidence ORDER BY scope,kind,id"
+        )
+        .all()
+        .map(encode),
+    });
+    validateWeeklyJournalRecoverySnapshot(bytes);
+    return bytes;
+  }
+
+  /** Capture all committed evidence under the valid production owner, borrowing its guard if present. */
+  exportRecoverySnapshot(lease: WeeklyRunLease): Buffer {
+    if (lease.scope !== productionScope)
+      throw new Error("Journal recovery requires production ownership");
+    const work = () => {
+      this.assertLease(lease);
+      this.assertRecoveryDatabase();
+      const bytes = this.recoverySnapshot();
+      this.assertLease(lease);
+      return bytes;
+    };
+    if (this.guardedLease) {
+      if (
+        this.guardedLease.scope !== lease.scope ||
+        this.guardedLease.owner !== lease.owner ||
+        this.guardedLease.fence !== lease.fence
+      )
+        throw new Error("Wrong guarded recovery owner");
+      return work();
+    }
+    if (this.db.isTransaction)
+      throw new Error("Nested journal recovery export refused");
+    return this.transaction(work);
+  }
+
+  /** Restore only into an empty journal. Expiry clearing does not fence another machine. */
+  restoreRecoverySnapshot(bytes: Buffer): void {
+    const snapshot = validateWeeklyJournalRecoverySnapshot(bytes);
+    if (this.guardedLease || this.db.isTransaction)
+      throw new Error("Nested journal recovery restore refused");
+    this.transaction(() => {
+      this.assertRecoveryDatabase();
+      for (const table of [
+        "ownership",
+        "run_state",
+        "stage_artifact",
+        "intake_evidence",
+      ])
+        if (this.db.prepare(`SELECT 1 AS present FROM ${table} LIMIT 1`).get())
+          throw new Error("Journal recovery destination must be empty");
+      const ownership = this.db.prepare(
+        "INSERT INTO ownership(scope,owner,fence,expires_at) VALUES(?,?,?,0)"
+      );
+      for (const row of snapshot.ownership)
+        ownership.run(row.scope, row.owner, row.fence);
+      const state = this.db.prepare(
+        "INSERT INTO run_state(id,scope,revision,payload) VALUES(?,?,?,?)"
+      );
+      for (const row of snapshot.runState)
+        state.run(row.id, row.scope, row.revision, row.payload);
+      const artifact = this.db.prepare(
+        "INSERT INTO stage_artifact(run_id,stage,attempt,identity,bytes) VALUES(?,?,?,?,?)"
+      );
+      for (const row of snapshot.stageArtifacts)
+        artifact.run(
+          row.runId,
+          row.stage,
+          row.attempt,
+          row.identity,
+          Buffer.from(row.bytes, "base64")
+        );
+      const intake = this.db.prepare(
+        "INSERT INTO intake_evidence(scope,kind,id,identity,bytes) VALUES(?,?,?,?,?)"
+      );
+      for (const row of snapshot.intakeEvidence)
+        intake.run(
+          row.scope,
+          row.kind,
+          row.id,
+          row.identity,
+          Buffer.from(row.bytes, "base64")
+        );
+      this.assertRecoveryDatabase();
+      const expected: Record<string, unknown> = {
+        ...snapshot,
+        ownership: snapshot.ownership.map((row) => ({
+          ...row,
+          expiresAtEpochMs: 0,
+        })),
+      };
+      delete expected.digest;
+      if (!this.recoverySnapshot().equals(recoveryBytes(expected)))
+        throw new Error("Journal recovery readback differs");
+    });
   }
 
   /** Verify an owner immediately before a guarded external/catalog operation. */

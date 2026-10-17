@@ -31,6 +31,10 @@ import { freezeWeeklyImport } from "../../lib/ingestion/weekly-edition-freeze.js
 import { bootstrapLedger } from "../../lib/ingestion/ledger.js";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 
+// Each native Windows capture invokes the ACL helper several times; parallel
+// integration suites can legitimately exceed Vitest's default five seconds.
+vi.setConfig({ testTimeout: process.platform === "win32" ? 20000 : 5000 });
+
 const roots: string[] = [];
 const journals: WeeklyRunJournal[] = [];
 const scope = "prodigic/zivv/production";
