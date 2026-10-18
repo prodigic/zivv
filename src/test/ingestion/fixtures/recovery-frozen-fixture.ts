@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
   cpSync,
   existsSync,
@@ -24,6 +25,7 @@ import { runWeeklyImport } from "../../../lib/ingestion/weekly-import-runner.js"
 import { retireAndCaptureOperatorRecovery } from "../../../lib/ingestion/operator-recovery.js";
 import { prepareOperatorRecoveryRuntime } from "../../../lib/ingestion/recovery-runtime.js";
 import { captureExportConfiguration } from "../../../lib/ingestion/export-configuration.js";
+import { captureNpmExecutionTool } from "../../../lib/ingestion/execution-tool-identity.js";
 import { createAcknowledgedRecoveryRemoteFixture } from "./recovery-import-remote-fixture.js";
 import type {
   WeeklyRunStage,
@@ -47,6 +49,35 @@ function git(cwd: string, args: string[]): string {
   })
     .toString()
     .trim();
+}
+
+/** Use the portable registry package, not a runner-global npm with local .npmrc. */
+async function installPinnedRealNpm(directory: string): Promise<void> {
+  const cached = resolve(".cache/npm-runtime-11.6.0/npm.tgz");
+  let bytes: Buffer;
+  if (existsSync(cached)) bytes = readFileSync(cached);
+  else {
+    const response = await fetch(
+      "https://registry.npmjs.org/npm/-/npm-11.6.0.tgz",
+      { signal: AbortSignal.timeout(60_000) }
+    );
+    if (!response.ok)
+      throw new Error("Pinned real npm fixture download failed");
+    bytes = Buffer.from(await response.arrayBuffer());
+  }
+  const expected =
+    "d/P7DbvYgYNde9Ehfeq99+13/E7E82PfZPw8uYZASr9sQ3ZhBBCA9cXSJRA1COfJ6jDLJ0K36UJnXQWhCvLXuQ==";
+  if (createHash("sha512").update(bytes).digest("base64") !== expected)
+    throw new Error("Pinned real npm fixture integrity mismatch");
+  const archive = join(dirname(directory), "npm-distribution.tgz");
+  write(archive, bytes);
+  mkdirSync(directory, { recursive: true });
+  execFileSync(
+    "tar",
+    ["-xzf", archive, "--strip-components=1", "-C", directory],
+    { windowsHide: true, stdio: "pipe", timeout: 30_000 }
+  );
+  captureNpmExecutionTool(join(directory, "bin/npm-cli.js"));
 }
 
 interface LockEntry {
@@ -262,26 +293,7 @@ export async function createRecoveryFrozenFixture() {
       write(join(originalCheckout, path), readFileSync(resolve(path)));
     for (const path of ["dist/lib", "dist/types", "dist/utils"])
       cpSync(resolve(path), join(originalCheckout, path), { recursive: true });
-    const candidates = [
-      process.env.ZIVV_TEST_REAL_NPM_CLI,
-      process.env.npm_execpath,
-      resolve(".cache/npm-runtime-11.6.0/package/bin/npm-cli.js"),
-      join(dirname(process.execPath), "node_modules/npm/bin/npm-cli.js"),
-      resolve(
-        dirname(process.execPath),
-        "../lib/node_modules/npm/bin/npm-cli.js"
-      ),
-    ];
-    const actualCli = candidates.find(
-      (path): path is string =>
-        typeof path === "string" &&
-        path.endsWith("npm-cli.js") &&
-        existsSync(path)
-    );
-    if (!actualCli)
-      throw new Error("Real npm CLI is required for this integration drill");
-    const realNpm = dirname(dirname(actualCli));
-    cpSync(realNpm, originalTool, { recursive: true });
+    await installPinnedRealNpm(originalTool);
     const npmCli = join(originalTool, "bin/npm-cli.js");
     const initial = await runWeeklyImport({
       root: originalCheckout,
