@@ -294,7 +294,10 @@ describe("private native controller dispatch checkpoint", () => {
     const path = join(f.options.intentDirectory, "pages-dispatch.json"),
       saved = JSON.parse(readFileSync(path, "utf8"));
     saved.receipt.runId = "999";
-    writeFileSync(path, JSON.stringify(saved));
+    saved.receipt.runUrl =
+      "https://api.github.com/repos/prodigic/zivv/actions/runs/999";
+    saved.receipt.htmlUrl = "https://github.com/prodigic/zivv/actions/runs/999";
+    writeFileSync(path, JSON.stringify(saved) + "\n");
     expect(
       await runPagesCandidateDispatch({
         ...f.options,
@@ -729,7 +732,7 @@ describe("private native controller dispatch checkpoint", () => {
     const path = join(f.options.intentDirectory, "pages-dispatch.json");
     const saved = JSON.parse(readFileSync(path, "utf8"));
     saved.pendingAppend.expectedHead = "e".repeat(40);
-    writeFileSync(path, JSON.stringify(saved));
+    writeFileSync(path, JSON.stringify(saved) + "\n");
     await expect(runPagesCandidateDispatch(f.options)).rejects.toThrow(
       "append"
     );

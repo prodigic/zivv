@@ -52,9 +52,9 @@ function decoded(value: unknown): Buffer {
 export function proveRecoveryWeeklyLineage(input: {
   checkpoint: OperatorRecoveryCheckpoint;
   runId: string;
-  stage: "frozen" | "validated";
+  stage: "frozen" | "validated" | "pending-dispatch";
 }) {
-  if (input.stage !== "frozen" && input.stage !== "validated")
+  if (!["frozen", "validated", "pending-dispatch"].includes(input.stage))
     fail("INVALID_STAGE");
   const checkpoint = validateOperatorRecoveryCheckpoint(input.checkpoint);
   const journal = validateWeeklyJournalRecoverySnapshot(
@@ -69,13 +69,26 @@ export function proveRecoveryWeeklyLineage(input: {
   const prefix = input.stage === "frozen" ? 5 : 8;
   if (
     run.stages.slice(0, prefix).some((stage) => stage.status !== "succeeded") ||
-    run.stages.slice(prefix).some((stage) => stage.status !== "pending")
+    (input.stage === "pending-dispatch"
+      ? run.stages[8].status !== "running" ||
+        run.stages.slice(9).some((stage) => stage.status !== "pending")
+      : run.stages.slice(prefix).some((stage) => stage.status !== "pending"))
   )
     fail(
       input.stage === "frozen"
         ? "FROZEN_RUN_REQUIRED"
-        : "VALIDATED_RUN_REQUIRED"
+        : input.stage === "pending-dispatch"
+          ? "PENDING_DISPATCH_RUN_REQUIRED"
+          : "VALIDATED_RUN_REQUIRED"
     );
+  if (
+    input.stage === "pending-dispatch" &&
+    journal.stageArtifacts.some(
+      (row) =>
+        row.runId === run.runId && ["verify", "acknowledge"].includes(row.stage)
+    )
+  )
+    fail("UNEXPECTED_LATER_ARTIFACT");
   if (
     input.stage === "frozen" &&
     journal.stageArtifacts.some(
@@ -85,7 +98,7 @@ export function proveRecoveryWeeklyLineage(input: {
     )
   )
     fail("UNEXPECTED_LATER_ARTIFACT");
-  const artifact = (stage: (typeof run.stages)[number]["stage"]) => {
+  const optionalArtifact = (stage: (typeof run.stages)[number]["stage"]) => {
     const item = run.stages.find((item) => item.stage === stage)!;
     const row = journal.stageArtifacts.find(
       (row) =>
@@ -93,8 +106,12 @@ export function proveRecoveryWeeklyLineage(input: {
         row.stage === stage &&
         row.attempt === item.attempt
     );
-    if (!row) fail("MISSING_STAGE_ARTIFACT");
-    return decoded(row.bytes);
+    return row ? decoded(row.bytes) : null;
+  };
+  const artifact = (stage: (typeof run.stages)[number]["stage"]) => {
+    const bytes = optionalArtifact(stage);
+    if (!bytes) fail("MISSING_STAGE_ARTIFACT");
+    return bytes;
   };
   const files = new Map(
     checkpoint.files.map((file) => [
@@ -390,6 +407,7 @@ export function proveRecoveryWeeklyLineage(input: {
     freezeEvidence,
     files,
     artifact,
+    optionalArtifact,
     readRetainedFile: required,
   };
 }

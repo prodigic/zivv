@@ -2,7 +2,10 @@ import { execFileSync } from "node:child_process";
 import { projectLedgerLocation } from "./store-location.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
 import {
+  assertRecoveredFreshDispatchAllowed,
   assertRecoveredPublicationEffect,
+  authorizeRecoveredDispatchReceipt,
+  recoveredDispatchSelection,
   recoveredPublicationRepository,
 } from "./recovery-import-admission.js";
 import { randomBytes } from "node:crypto";
@@ -43,7 +46,7 @@ import {
   type PagesWorkflowDispatchReceipt,
 } from "./pages-dispatch.js";
 
-interface SavedDispatch {
+export interface SavedPagesDispatch {
   schemaVersion: 1;
   intent: PagesWorkflowDispatchIntent;
   pendingAppend: {
@@ -54,6 +57,7 @@ interface SavedDispatch {
   };
   receipt?: PagesWorkflowDispatchReceipt;
 }
+type SavedDispatch = SavedPagesDispatch;
 export interface PagesDispatchRunnerOptions {
   command: "dispatch" | "recover";
   repositoryRoot: string;
@@ -164,6 +168,112 @@ export function verifyReviewedPagesWorkflowCommit(
   }
 }
 
+function record(
+  value: unknown,
+  keys: readonly string[],
+  label: string
+): Record<string, unknown> {
+  if (
+    !value ||
+    typeof value !== "object" ||
+    Array.isArray(value) ||
+    Object.keys(value).sort().join(",") !== [...keys].sort().join(",")
+  )
+    throw new Error(label);
+  return value as Record<string, unknown>;
+}
+
+/** Validate the exact receipt shape emitted by the workflow dispatch transport. */
+export function parseSavedPagesDispatchReceipt(
+  value: unknown,
+  expected: { intent: PagesWorkflowDispatchIntent; controlHead: string }
+): PagesWorkflowDispatchReceipt {
+  const receipt = record(
+    value,
+    ["intent", "controlHead", "runId", "runUrl", "htmlUrl"],
+    "Invalid saved dispatch receipt schema"
+  );
+  const intent = parsePagesWorkflowDispatchIntent(
+    receipt.intent as PagesWorkflowDispatchIntent
+  );
+  if (
+    promotionDigest(intent) !== promotionDigest(receipt.intent) ||
+    promotionDigest(intent) !== promotionDigest(expected.intent) ||
+    typeof receipt.controlHead !== "string" ||
+    !sha(receipt.controlHead) ||
+    receipt.controlHead !== expected.controlHead ||
+    typeof receipt.runId !== "string" ||
+    !/^[1-9][0-9]{0,19}$/.test(receipt.runId) ||
+    receipt.runUrl !==
+      `https://api.github.com/repos/prodigic/zivv/actions/runs/${receipt.runId}` ||
+    receipt.htmlUrl !==
+      `https://github.com/prodigic/zivv/actions/runs/${receipt.runId}`
+  )
+    throw new Error("Saved dispatch receipt changed ownership");
+  return receipt as unknown as PagesWorkflowDispatchReceipt;
+}
+
+/** Parse bounded producer bytes without granting remote dispatch authority. */
+export function parseSavedPagesDispatch(input: Buffer): SavedPagesDispatch {
+  if (!Buffer.isBuffer(input) || input.length === 0 || input.length > 2_000_000)
+    throw new Error("Saved dispatch must contain bounded producer bytes");
+  const value: unknown = JSON.parse(input.toString("utf8"));
+  const hasReceipt =
+    value !== null &&
+    typeof value === "object" &&
+    Object.hasOwn(value, "receipt");
+  const raw = record(
+    value,
+    [
+      "schemaVersion",
+      "intent",
+      "pendingAppend",
+      ...(hasReceipt ? ["receipt"] : []),
+    ],
+    "Invalid saved dispatch schema"
+  );
+  if (raw.schemaVersion !== 1 || !input.equals(bytes(raw)))
+    throw new Error("Noncanonical saved dispatch bytes");
+  const saved = raw as unknown as SavedPagesDispatch;
+  const checked = parsePagesWorkflowDispatchIntent(saved.intent);
+  if (promotionDigest(checked) !== promotionDigest(saved.intent))
+    throw new Error("Saved dispatch intent changed");
+  const pending = record(
+    saved.pendingAppend,
+    ["expectedHead", "attemptedHead", "bytes", "createdAt"],
+    "Invalid saved prepared append"
+  );
+  if (
+    typeof pending.expectedHead !== "string" ||
+    !sha(pending.expectedHead) ||
+    typeof pending.attemptedHead !== "string" ||
+    !sha(pending.attemptedHead) ||
+    pending.attemptedHead === pending.expectedHead ||
+    pending.expectedHead !== checked.expectedControlHead ||
+    typeof pending.bytes !== "string" ||
+    Buffer.from(pending.bytes, "base64").toString("base64") !== pending.bytes ||
+    typeof pending.createdAt !== "string" ||
+    !Number.isFinite(Date.parse(pending.createdAt)) ||
+    new Date(pending.createdAt).toISOString() !== pending.createdAt
+  )
+    throw new Error("Invalid saved prepared append");
+  const state = parsePromotionControl(Buffer.from(pending.bytes, "base64"));
+  if (
+    !serializePromotionControl(state).equals(
+      Buffer.from(pending.bytes, "base64")
+    ) ||
+    promotionDigest(state.lastTransition.event) !==
+      promotionDigest(checked.event) ||
+    state.destination !== "production"
+  )
+    throw new Error("Saved append does not contain the exact dispatch intent");
+  if (hasReceipt)
+    parseSavedPagesDispatchReceipt(saved.receipt, {
+      intent: checked,
+      controlHead: pending.attemptedHead,
+    });
+  return saved;
+}
 function readSaved(path: string): SavedDispatch {
   const stat = lstatSync(path);
   if (
@@ -173,44 +283,7 @@ function readSaved(path: string): SavedDispatch {
     stat.size > 2_000_000
   )
     throw new Error("Saved dispatch must be a bounded unlinked regular file");
-  const saved = JSON.parse(readFileSync(path, "utf8")) as SavedDispatch;
-  if (
-    saved.schemaVersion !== 1 ||
-    Object.keys(saved).some(
-      (key) =>
-        !["schemaVersion", "intent", "pendingAppend", "receipt"].includes(key)
-    )
-  )
-    throw new Error("Invalid saved dispatch schema");
-  const checked = parsePagesWorkflowDispatchIntent(saved.intent);
-  if (promotionDigest(checked) !== promotionDigest(saved.intent))
-    throw new Error("Saved dispatch intent changed");
-  const pending = saved.pendingAppend;
-  if (
-    !pending ||
-    Object.keys(pending).sort().join(",") !==
-      "attemptedHead,bytes,createdAt,expectedHead" ||
-    !sha(pending.attemptedHead) ||
-    pending.expectedHead !== checked.expectedControlHead ||
-    typeof pending.bytes !== "string" ||
-    !/^[A-Za-z0-9+/]+={0,2}$/.test(pending.bytes) ||
-    !Number.isFinite(Date.parse(pending.createdAt))
-  )
-    throw new Error("Invalid saved prepared append");
-  const state = parsePromotionControl(Buffer.from(pending.bytes, "base64"));
-  if (
-    promotionDigest(state.lastTransition.event) !==
-      promotionDigest(checked.event) ||
-    state.destination !== "production"
-  )
-    throw new Error("Saved append does not contain the exact dispatch intent");
-  if (
-    saved.receipt &&
-    (promotionDigest(saved.receipt.intent) !== promotionDigest(checked) ||
-      saved.receipt.controlHead !== pending.attemptedHead)
-  )
-    throw new Error("Saved dispatch receipt changed ownership");
-  return saved;
+  return parseSavedPagesDispatch(readFileSync(path));
 }
 function saveOnce(path: string, saved: SavedDispatch): void {
   const fd = openSync(path, "wx", 0o600);
@@ -341,10 +414,20 @@ function recoverCanonicalIntent(options: PagesDispatchRunnerOptions): {
 export async function runPagesCandidateDispatch(
   options: PagesDispatchRunnerOptions
 ) {
+  const scopedSelection = recoveredDispatchSelection();
   const originalContext = options.checkContext;
   const operator = projectLedgerLocation(options.repositoryRoot).directory;
   options = {
     ...options,
+    ...(scopedSelection
+      ? {
+          command: "recover" as const,
+          recovery: {
+            operationId: scopedSelection.operationId,
+            attemptId: scopedSelection.attemptId,
+          },
+        }
+      : {}),
     checkContext: () => {
       assertOperatorInstallationWritable(operator);
       originalContext?.();
@@ -438,10 +521,14 @@ export async function runPagesCandidateDispatch(
       ...http,
       intent: saved.intent,
       controlHead: saved.pendingAppend.attemptedHead,
-      runId: canonical?.runId ?? saved.receipt?.runId,
+      runId: scopedSelection
+        ? (canonical?.runId ?? scopedSelection.runId)
+        : (canonical?.runId ?? saved.receipt?.runId),
     });
     options.checkContext?.();
     if (result.status === "matched") {
+      authorizeRecoveredDispatchReceipt(result.receipt);
+      options.checkContext?.();
       saved.receipt = result.receipt;
       writeDurableFile(path, bytes(saved));
     }
@@ -451,6 +538,7 @@ export async function runPagesCandidateDispatch(
     throw new Error(
       "No saved dispatch intent exists; recovery cannot create one"
     );
+  assertRecoveredFreshDispatchAllowed();
   const current = options.store.read();
   if (!current.head || !current.bytes)
     throw new Error(

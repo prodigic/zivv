@@ -71,10 +71,18 @@ import {
   type CapturedSource,
 } from "./source-build.js";
 import type { WeeklyCandidateBuildOptions } from "./weekly-candidate-runner.js";
+import { parseSavedPagesDispatch } from "./pages-dispatch-runner.js";
+import type { PagesWorkflowDispatchReceipt } from "./pages-dispatch.js";
 
 const recordName = "recovery-import.json";
 const resultName = "recovery-import-result.json";
-type RecoveryMode = "load" | "dispatch" | "validate";
+type RecoveryMode = "load" | "dispatch" | "validate" | "reconcile";
+function dispatchMode(mode: RecoveryMode): boolean {
+  return mode === "dispatch" || mode === "reconcile";
+}
+function stopStage(mode: RecoveryMode): "load" | "dispatch" | "validate" {
+  return mode === "reconcile" ? "dispatch" : mode;
+}
 const scopes = new AsyncLocalStorage<{
   active: boolean;
   root: string;
@@ -100,6 +108,14 @@ const scopes = new AsyncLocalStorage<{
     mainHead: string;
     workDirectory: string;
     resolveDirectory(original: string): string;
+    dispatchSelection?: {
+      operationId: string;
+      attemptId: string;
+      runId?: string;
+    };
+    receiptSha256?: string;
+    receiptObserved?: boolean;
+    assertReceipt?(receipt: unknown): void;
   };
   assertCurrent(): void;
   assertRemote(): void;
@@ -248,8 +264,18 @@ function mutable(
       return true;
     if (path === parent || path.startsWith(parent + "/")) return true;
   }
-  if (mode === "dispatch") {
+  if (dispatchMode(mode)) {
     const publication = "operator/weekly-publication/" + runId;
+    if (mode === "reconcile" && entry.kind === "file") {
+      const file = publication + "/dispatch/pages-dispatch.json";
+      if (
+        path === file ||
+        (!retained.has(path) &&
+          path.startsWith(file + ".") &&
+          /^[1-9][0-9]*\.[a-f0-9]{16}\.tmp$/.test(path.slice(file.length + 1)))
+      )
+        return true;
+    }
     if (!retained.has(path)) {
       if (
         entry.kind === "directory" &&
@@ -338,16 +364,19 @@ function retainedRun(
   );
   if (!row) fail("RECOVERY_IMPORT_RUN_NOT_RETAINED");
   const run = parseWeeklyRunState(JSON.parse(row.payload));
-  if (mode === "dispatch" || mode === "validate") {
-    const prefix = mode === "dispatch" ? 8 : 5;
+  if (dispatchMode(mode) || mode === "validate") {
+    const prefix = dispatchMode(mode) ? 8 : 5;
     if (
       run.stages
         .slice(0, prefix)
         .some((stage) => stage.status !== "succeeded") ||
-      run.stages.slice(prefix).some((stage) => stage.status !== "pending")
+      (mode === "reconcile"
+        ? run.stages[8].status !== "running" ||
+          run.stages.slice(9).some((stage) => stage.status !== "pending")
+        : run.stages.slice(prefix).some((stage) => stage.status !== "pending"))
     )
       fail(
-        mode === "dispatch"
+        dispatchMode(mode)
           ? "RECOVERY_VALIDATED_CANDIDATE_REQUIRED"
           : "RECOVERY_FROZEN_CHECKPOINT_REQUIRED"
       );
@@ -396,20 +425,18 @@ function currentRun(
     const run = parseWeeklyRunState(JSON.parse(row.payload));
     same(run.source, expected.source);
     same(
-      run.stages.slice(
-        0,
-        mode === "dispatch" ? 8 : mode === "validate" ? 5 : 3
-      ),
+      run.stages.slice(0, dispatchMode(mode) ? 8 : mode === "validate" ? 5 : 3),
       expected.stages.slice(
         0,
-        mode === "dispatch" ? 8 : mode === "validate" ? 5 : 3
+        dispatchMode(mode) ? 8 : mode === "validate" ? 5 : 3
       )
     );
+    if (mode === "reconcile") same(run.stages[8], expected.stages[8]);
     if (
-      (mode === "dispatch" &&
+      (dispatchMode(mode) &&
         !["pending", "running"].includes(run.stages[8].status)) ||
       run.stages
-        .slice(mode === "dispatch" ? 9 : mode === "validate" ? 8 : 4)
+        .slice(dispatchMode(mode) ? 9 : mode === "validate" ? 8 : 4)
         .some((stage) => stage.status !== "pending")
     )
       fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
@@ -419,6 +446,11 @@ function currentRun(
   }
 }
 function admissionNames(mode: RecoveryMode) {
+  if (mode === "reconcile")
+    return {
+      record: "recovery-dispatch.json",
+      result: "recovery-dispatch-result.json",
+    };
   return mode === "load"
     ? { record: recordName, result: resultName }
     : mode === "validate"
@@ -436,7 +468,7 @@ function ensureAdmission(
   test?: TestOptions,
   mode: RecoveryMode = "load"
 ) {
-  if (mode === "dispatch") {
+  if (dispatchMode(mode)) {
     if (
       (!test || test.enforcePublicationFlags) &&
       (process.env.ZIVV_CONTROLLED_PUBLISHING !== "enabled" ||
@@ -484,7 +516,7 @@ function ensureAdmission(
     Buffer.from(opened.checkpoint.journal, "base64")
   );
   let workDirectory: string | undefined;
-  if (mode === "dispatch") {
+  if (dispatchMode(mode)) {
     const exported = journal.stageArtifacts.find(
       (artifact) =>
         artifact.runId === original.runId &&
@@ -530,15 +562,17 @@ function ensureAdmission(
     ".json";
   const digest = (entries: RecoveryRuntimeEntry[]) =>
     immutableDigest(entries, retained, reportPath, mode, input.runId);
-  const remoteInput =
-    mode === "dispatch"
-      ? {
-          ...candidateInput(input),
-          credentials: input.credentials ?? {
-            token: candidateInput(input).githubToken,
-          },
-        }
-      : undefined;
+  const remoteInput = dispatchMode(mode)
+    ? {
+        ...candidateInput(input),
+        ...(mode === "reconcile"
+          ? { profile: "pending-dispatch" as const }
+          : {}),
+        credentials: input.credentials ?? {
+          token: candidateInput(input).githubToken,
+        },
+      }
+    : undefined;
   const remote:
     | RecoveryImportRemote
     | RecoveryCandidateRemote
@@ -554,7 +588,7 @@ function ensureAdmission(
             ...frozenInput(input),
             checkpoint: opened.checkpoint,
           })
-      : mode === "dispatch"
+      : dispatchMode(mode)
         ? test
           ? openRecoveryCandidateRemoteForTest({
               ...remoteInput!,
@@ -592,14 +626,18 @@ function ensureAdmission(
         ? "zivv-recovery-import-admission"
         : mode === "validate"
           ? "zivv-recovery-frozen-admission"
-          : "zivv-recovery-candidate-admission",
+          : mode === "reconcile"
+            ? "zivv-recovery-dispatch-admission"
+            : "zivv-recovery-candidate-admission",
     version: 1,
     scope:
       mode === "load"
         ? "one-retained-run-through-load"
         : mode === "validate"
           ? "one-frozen-run-through-validate"
-          : "one-validated-run-through-dispatch",
+          : mode === "reconcile"
+            ? "one-retained-dispatch-reconciliation"
+            : "one-validated-run-through-dispatch",
     activationAllowed: false,
     root,
     operator,
@@ -612,7 +650,7 @@ function ensureAdmission(
     runId: original.runId,
     source: original.source,
     reportPath,
-    ...(mode === "dispatch"
+    ...(dispatchMode(mode)
       ? { workflowCommit: candidateInput(input).workflowCommit, workDirectory }
       : {}),
     ...(configuration && parent
@@ -665,6 +703,54 @@ function ensureAdmission(
       stagingDirectory: scratch,
     });
   const assertImmutable = () => {
+    if (mode === "reconcile") {
+      if (!("pendingDispatch" in remote) || !remote.pendingDispatch)
+        fail("RECOVERY_ACCEPTED_DISPATCH_REQUIRED");
+      const dispatchPath = join(
+        operator,
+        "weekly-publication",
+        input.runId,
+        "dispatch/pages-dispatch.json"
+      );
+      const originalPath =
+        "weekly-publication/" + input.runId + "/dispatch/pages-dispatch.json";
+      const retainedDispatch = opened.checkpoint.files.find(
+        (file) => file.area === "operator" && file.path === originalPath
+      );
+      if (existsSync(dispatchPath)) {
+        const expected = parseSavedPagesDispatch(
+          remote.pendingDispatch.savedBytes
+        );
+        const currentBytes = regular(dispatchPath, 2_000_000);
+        const current = parseSavedPagesDispatch(currentBytes);
+        same(current.schemaVersion, expected.schemaVersion);
+        same(current.intent, expected.intent);
+        same(current.pendingAppend, expected.pendingAppend);
+        if (expected.receipt) same(current.receipt, expected.receipt);
+        const currentScope = scopes.getStore()?.candidate;
+        if (current.receipt) {
+          remote.pendingDispatch.assertReceipt(current.receipt);
+          const authorized = currentScope?.receiptSha256;
+          if (authorized) {
+            same(sha256(canonicalJson(current.receipt)), authorized);
+            currentScope.receiptObserved = true;
+          }
+        } else if (currentScope?.receiptObserved) {
+          fail("RECOVERY_DISPATCH_RECEIPT_REMOVED");
+        }
+        if (retainedDispatch?.bytes) {
+          const original = parseSavedPagesDispatch(
+            Buffer.from(retainedDispatch.bytes, "base64")
+          );
+          if (original.receipt)
+            same(currentBytes.toString("base64"), retainedDispatch.bytes);
+        }
+      } else if (
+        retainedDispatch?.bytes ||
+        scopes.getStore()?.candidate?.receiptObserved
+      )
+        fail("RECOVERY_RETAINED_DISPATCH_MISSING");
+    }
     const actual = sha256(
       canonicalJson(
         opened.inventoryImmutable(
@@ -737,7 +823,7 @@ function ensureAdmission(
     }
   };
   currentRun(operator, original, mode);
-  if (mode === "dispatch" || mode === "validate")
+  if (dispatchMode(mode) || mode === "validate")
     same(
       ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
       opened.checkpoint.ledgerRevision
@@ -754,7 +840,7 @@ function ensureAdmission(
     assertCurrent,
     assertImmutable,
     candidate:
-      mode === "dispatch" && "candidateBytes" in remote && workDirectory
+      dispatchMode(mode) && "candidateBytes" in remote && workDirectory
         ? {
             remote,
             workDirectory,
@@ -808,12 +894,12 @@ export function assertRecoveredImportInvocation(input: {
   if (
     resolve(input.root) !== scope.root ||
     input.runId !== scope.runId ||
-    input.stopAfter !== scope.mode ||
+    input.stopAfter !== stopStage(scope.mode) ||
     input.source ||
     (scope.mode === "validate"
       ? input.candidateBuild !== scope.build?.options
       : input.candidateBuild !== undefined) ||
-    (scope.mode !== "dispatch"
+    (!dispatchMode(scope.mode)
       ? input.publication !== undefined
       : input.publication !== scope.candidate?.publication ||
         input.controlledPublishing !== "enabled" ||
@@ -839,7 +925,7 @@ export function resolveRecoveredCandidateWorkDirectory(
     return original;
   }
   if (
-    scope.mode !== "dispatch" ||
+    !dispatchMode(scope.mode) ||
     !scope.candidate ||
     original !== scope.candidate.workDirectory
   )
@@ -1068,7 +1154,7 @@ export function recoveredPublicationRepository(defaultRoot: string): {
   if (!scope?.active) return { root: defaultRoot };
   scope.assertCurrent();
   if (
-    scope.mode !== "dispatch" ||
+    !dispatchMode(scope.mode) ||
     !scope.candidate ||
     ![scope.root, scope.candidate.repositoryRoot].includes(resolve(defaultRoot))
   )
@@ -1095,9 +1181,39 @@ export function assertRecoveredImportRemote(): void {
 export function assertRecoveredPublicationEffect(): void {
   const scope = scopes.getStore();
   if (!scope?.active) return;
-  if (scope.mode !== "dispatch") fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+  if (!dispatchMode(scope.mode)) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
   scope.assertCurrent();
   scope.assertRemote();
+}
+/** A captured accepted dispatch is GET-only; it never authorizes a fresh attempt. */
+export function assertRecoveredFreshDispatchAllowed(): void {
+  const scope = scopes.getStore();
+  if (!scope?.active) return;
+  if (scope.mode === "reconcile") fail("RECOVERY_DISPATCH_GET_ONLY");
+  assertRecoveredPublicationEffect();
+}
+/** Select only the authenticated original receipt or canonical attempt, never mutable metadata. */
+export function recoveredDispatchSelection():
+  | { operationId: string; attemptId: string; runId?: string }
+  | undefined {
+  const scope = scopes.getStore();
+  if (!scope?.active || scope.mode !== "reconcile") return undefined;
+  scope.assertCurrent();
+  if (!scope.candidate?.dispatchSelection)
+    fail("RECOVERY_ACCEPTED_DISPATCH_REQUIRED");
+  return { ...scope.candidate.dispatchSelection };
+}
+/** Pin only a receipt just proven by the dispatch transport's matching GET result. */
+export function authorizeRecoveredDispatchReceipt(
+  receipt: PagesWorkflowDispatchReceipt
+): void {
+  const scope = scopes.getStore();
+  if (!scope?.active || scope.mode !== "reconcile") return;
+  scope.assertCurrent();
+  if (!scope.candidate?.assertReceipt)
+    fail("RECOVERY_ACCEPTED_DISPATCH_REQUIRED");
+  scope.candidate.assertReceipt(receipt);
+  scope.candidate.receiptSha256 = sha256(canonicalJson(receipt));
 }
 
 function execute(
@@ -1108,7 +1224,7 @@ function execute(
 function execute(
   input: RecoveryCandidateInput,
   test: TestOptions | undefined,
-  mode: "dispatch"
+  mode: "dispatch" | "reconcile"
 ): Promise<RecoveredCandidateReport>;
 function execute(
   input: RecoveryFrozenInput,
@@ -1137,25 +1253,36 @@ async function execute(
   const admitted = ensureAdmission(input, test, mode);
   const candidate = admitted.candidate;
   const store =
-    candidate && test?.interruptAt === "claim"
+    candidate && mode === "reconcile"
       ? {
           ...candidate.remote.store,
-          compareAndAppend: ((append) => {
-            const result = candidate.remote.store.compareAndAppend(append);
-            if (
-              result.status === "appended" &&
-              parsePromotionControl(append.bytes).lastTransition.event.type ===
-                "claim"
-            )
-              fail("RECOVERY_CANDIDATE_TEST_INTERRUPTION");
-            return result;
-          }) satisfies typeof candidate.remote.store.compareAndAppend,
+          compareAndAppend: () => fail("RECOVERY_DISPATCH_GET_ONLY"),
         }
-      : candidate?.remote.store;
+      : candidate && test?.interruptAt === "claim"
+        ? {
+            ...candidate.remote.store,
+            compareAndAppend: ((append) => {
+              const result = candidate.remote.store.compareAndAppend(append);
+              if (
+                result.status === "appended" &&
+                parsePromotionControl(append.bytes).lastTransition.event
+                  .type === "claim"
+              )
+                fail("RECOVERY_CANDIDATE_TEST_INTERRUPTION");
+              return result;
+            }) satisfies typeof candidate.remote.store.compareAndAppend,
+          }
+        : candidate?.remote.store;
   const publication: WeeklyPublicationOptions | undefined = candidate
     ? Object.freeze({
         store: store!,
-        transport: candidate.remote.transport,
+        transport:
+          mode === "reconcile"
+            ? {
+                ...candidate.remote.transport,
+                append: () => fail("RECOVERY_DISPATCH_GET_ONLY"),
+              }
+            : candidate.remote.transport,
         candidate: Buffer.from(candidate.remote.candidateBytes),
         workflowCommit: candidateInput(input).workflowCommit,
         githubToken: candidateInput(input).githubToken,
@@ -1193,6 +1320,18 @@ async function execute(
             mainHead: candidate.remote.binding.mainHead,
             workDirectory: candidate.workDirectory,
             resolveDirectory: candidate.locations.resolveExportWorkDirectory,
+            ...(mode === "reconcile" && candidate.remote.pendingDispatch
+              ? {
+                  dispatchSelection: {
+                    operationId: candidate.remote.pendingDispatch.operationId,
+                    attemptId: candidate.remote.pendingDispatch.attemptId,
+                    runId: parseSavedPagesDispatch(
+                      candidate.remote.pendingDispatch.savedBytes
+                    ).receipt?.runId,
+                  },
+                  assertReceipt: candidate.remote.pendingDispatch.assertReceipt,
+                }
+              : {}),
           },
         }
       : {}),
@@ -1205,13 +1344,60 @@ async function execute(
   };
   if (scopes.getStore()?.active) fail("NESTED_RECOVERY_IMPORT");
   let dispatchObserved = false;
+  let dispatchProbeCompleted = false;
+  const probeDispatchConsumers = async () => {
+    const { assertOperatorNotQuarantined } =
+      await import("./private-artifacts.js");
+    let denied = false;
+    try {
+      assertOperatorNotQuarantined(admitted.operator);
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        error.message !== "RECOVERY_INSTALLATION_NOT_ACTIVATED"
+      )
+        throw error;
+      denied = true;
+    }
+    if (!denied) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+    for (const change of [
+      { stopAfter: "verify" as const },
+      { stopAfter: "acknowledge" as const },
+      { runId: "another-run" },
+      { publication: { ...publication! } },
+    ]) {
+      denied = false;
+      try {
+        await runWeeklyImport({
+          root: checkout,
+          runId: input.runId,
+          stopAfter: "dispatch",
+          publication,
+          controlledPublishing: "enabled",
+          manualPublisherJoined: "true",
+          ...change,
+        });
+      } catch (error) {
+        if (
+          !(error instanceof Error) ||
+          error.message !== "RECOVERY_IMPORT_SCOPE_EXCEEDED"
+        )
+          throw error;
+        denied = true;
+      }
+      if (!denied) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+    }
+    dispatchProbeCompleted = true;
+  };
   try {
     return await scopes.run(scope, async () => {
       scope.assertCurrent();
+      if (mode === "reconcile" && test?.probeRestrictedConsumers)
+        await probeDispatchConsumers();
       const state = await runWeeklyImport({
         root: checkout,
         runId: input.runId,
-        stopAfter: mode,
+        stopAfter: stopStage(mode),
         ...(admitted.build ? { candidateBuild: admitted.build.options } : {}),
         ...(publication
           ? {
@@ -1271,7 +1457,7 @@ async function execute(
             }
           }
           if (
-            mode === "dispatch" &&
+            dispatchMode(mode) &&
             event.stage === "deploy" &&
             event.phase === "artifact-saved" &&
             test.alterDependencyAfterPlan
@@ -1289,55 +1475,15 @@ async function execute(
             );
           }
           if (
-            mode === "dispatch" &&
+            dispatchMode(mode) &&
             event.stage === "deploy" &&
             event.phase === "started" &&
             test.probeRestrictedConsumers
           ) {
-            const { assertOperatorNotQuarantined } =
-              await import("./private-artifacts.js");
-            let denied = false;
-            try {
-              assertOperatorNotQuarantined(admitted.operator);
-            } catch (error) {
-              if (
-                !(error instanceof Error) ||
-                error.message !== "RECOVERY_INSTALLATION_NOT_ACTIVATED"
-              )
-                throw error;
-              denied = true;
-            }
-            if (!denied) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
-            for (const change of [
-              { stopAfter: "verify" as const },
-              { stopAfter: "acknowledge" as const },
-              { runId: "another-run" },
-              { publication: { ...publication! } },
-            ]) {
-              denied = false;
-              try {
-                await runWeeklyImport({
-                  root: checkout,
-                  runId: input.runId,
-                  stopAfter: "dispatch",
-                  publication,
-                  controlledPublishing: "enabled",
-                  manualPublisherJoined: "true",
-                  ...change,
-                });
-              } catch (error) {
-                if (
-                  !(error instanceof Error) ||
-                  error.message !== "RECOVERY_IMPORT_SCOPE_EXCEEDED"
-                )
-                  throw error;
-                denied = true;
-              }
-              if (!denied) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
-            }
+            await probeDispatchConsumers();
           }
           if (
-            mode === "dispatch" &&
+            dispatchMode(mode) &&
             event.stage === "deploy" &&
             ((test.interruptAt === "plan" &&
               event.phase === "artifact-saved") ||
@@ -1410,6 +1556,12 @@ async function execute(
         },
       });
       scope.assertCurrent();
+      if (
+        mode === "reconcile" &&
+        test?.probeRestrictedConsumers &&
+        !dispatchProbeCompleted
+      )
+        fail("RECOVERY_DISPATCH_PROBE_NOT_EXECUTED");
       same(state.source, admitted.original.source);
       if (
         mode === "load" &&
@@ -1417,7 +1569,7 @@ async function execute(
           state.stages.slice(4).some((stage) => stage.status !== "pending"))
       )
         fail();
-      if (mode === "dispatch" || mode === "validate") {
+      if (dispatchMode(mode) || mode === "validate") {
         currentRun(admitted.operator, admitted.original, mode);
         same(
           ledgerDigest(
@@ -1496,6 +1648,11 @@ export const executeRecoveredCandidate = (input: RecoveryCandidateInput) =>
 export const executeRecoveredCandidateForTest = (
   input: RecoveryCandidateInput & TestOptions
 ) => execute(input, input, "dispatch");
+export const executeRecoveredDispatch = (input: RecoveryCandidateInput) =>
+  execute(input, undefined, "reconcile");
+export const executeRecoveredDispatchForTest = (
+  input: RecoveryCandidateInput & TestOptions
+) => execute(input, input, "reconcile");
 export const executeRecoveredFrozen = (input: RecoveryFrozenInput) =>
   execute(input, undefined, "validate");
 export const executeRecoveredFrozenForTest = (
@@ -1510,7 +1667,7 @@ function launch(
 function launch(
   input: RecoveryCandidateInput,
   test: TestOptions | undefined,
-  mode: "dispatch"
+  mode: "dispatch" | "reconcile"
 ): Promise<RecoveredCandidateReport>;
 function launch(
   input: RecoveryFrozenInput,
@@ -1537,7 +1694,7 @@ async function launch(
       join(root, "checkout/dist/lib/ingestion/recovery-import-admission.js")
     ).href;
   const script = `
-    const {${mode === "load" ? (test ? "executeRecoveredImportForTest" : "executeRecoveredImport") : mode === "validate" ? (test ? "executeRecoveredFrozenForTest" : "executeRecoveredFrozen") : test ? "executeRecoveredCandidateForTest" : "executeRecoveredCandidate"}:execute}=await import(${JSON.stringify(entry)});
+    const {${mode === "load" ? (test ? "executeRecoveredImportForTest" : "executeRecoveredImport") : mode === "validate" ? (test ? "executeRecoveredFrozenForTest" : "executeRecoveredFrozen") : mode === "reconcile" ? (test ? "executeRecoveredDispatchForTest" : "executeRecoveredDispatch") : test ? "executeRecoveredCandidateForTest" : "executeRecoveredCandidate"}:execute}=await import(${JSON.stringify(entry)});
     try {
       let size=0;const chunks=[];for await(const chunk of process.stdin){if((size+=chunk.length)>512*1024*1024)throw Error('RECOVERY_IMPORT_INPUT_TOO_LARGE');chunks.push(chunk);}
       const value=JSON.parse(Buffer.concat(chunks).toString('utf8'));
@@ -1562,7 +1719,7 @@ async function launch(
     if (process.env[name] !== undefined) env[name] = process.env[name];
   env.ZIVV_LEDGER_HOME = join(root, "operator");
   env.ZIVV_RECOVERY_EXECUTOR = "1";
-  if (mode === "dispatch" && (!test || test.enforcePublicationFlags)) {
+  if (dispatchMode(mode) && (!test || test.enforcePublicationFlags)) {
     env.ZIVV_CONTROLLED_PUBLISHING = process.env.ZIVV_CONTROLLED_PUBLISHING;
     env.ZIVV_MANUAL_PUBLISHER_JOINED = process.env.ZIVV_MANUAL_PUBLISHER_JOINED;
   }
@@ -1655,7 +1812,7 @@ async function launch(
             "ledgerRevision",
             "runId",
             "status",
-            ...(mode === "dispatch" ? ["candidateId", "operationId"] : []),
+            ...(dispatchMode(mode) ? ["candidateId", "operationId"] : []),
             ...(mode === "validate" ? ["candidateId"] : []),
           ].sort()
         );
@@ -1674,7 +1831,7 @@ async function launch(
         )
           fail();
         if (
-          (mode === "dispatch" || mode === "validate") &&
+          (dispatchMode(mode) || mode === "validate") &&
           (!("candidateId" in report) ||
             !/^[a-f0-9]{64}$/.test(report.candidateId) ||
             ("operationId" in report &&
@@ -1711,3 +1868,9 @@ export const resumeOperatorRecoveryCandidate = (
 export const resumeOperatorRecoveryCandidateForTest = (
   input: RecoveryCandidateInput & TestOptions
 ) => launch(input, input, "dispatch");
+/** Reconcile only the original captured accepted attempt; never create a new one. */
+export const resumeOperatorRecoveryDispatch = (input: RecoveryCandidateInput) =>
+  launch(input, undefined, "reconcile");
+export const resumeOperatorRecoveryDispatchForTest = (
+  input: RecoveryCandidateInput & TestOptions
+) => launch(input, input, "reconcile");
