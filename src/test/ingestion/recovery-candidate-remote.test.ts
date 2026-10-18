@@ -33,7 +33,7 @@ describe("canonical authority for a retained validated candidate", () => {
     context: RecoveryCandidateRemote,
     verifiedHead: string,
     claimHead: string,
-    dispatchHead: string;
+    deployedHead: string;
   beforeAll(async () => {
     directory = mkdtempSync(join(tmpdir(), "zivv-candidate-remote-"));
     fixture = await createRecoveryCandidateRemoteFixture(directory);
@@ -121,13 +121,13 @@ describe("canonical authority for a retained validated candidate", () => {
         1
       ),
       owner = { operationId, mode: "promote" as const, attemptId };
-    dispatchHead = fixture.step({
+    fixture.step({
       type: "dispatch-intent",
       ...owner,
       attemptNumber: 1,
       workflowCommit: fixture.workflowCommit,
       expectedRunAttempt: 1,
-    }).head;
+    });
     const admission = {
       workflowCommit: fixture.workflowCommit,
       runId: "401",
@@ -135,7 +135,11 @@ describe("canonical authority for a retained validated candidate", () => {
     };
     fixture.step({ type: "admit-run", ...owner, admission });
     const deployment = { admission, artifactId: "501", deploymentId: "601" };
-    fixture.step({ type: "deployed", ...owner, deployment });
+    deployedHead = fixture.step({
+      type: "deployed",
+      ...owner,
+      deployment,
+    }).head;
     const body = {
       destination: "production" as const,
       liveUrl: PROMOTION_DESTINATIONS.production.liveUrl,
@@ -166,7 +170,7 @@ describe("canonical authority for a retained validated candidate", () => {
     );
   }, 150_000);
   it("rejects failure, another owner and a changed workflow instead of rebinding the original authority", () => {
-    fixture.setControl(dispatchHead);
+    fixture.setControl(deployedHead);
     try {
       const current = parsePromotionControl(fixture.store.read().bytes!),
         operation = current.active!;
