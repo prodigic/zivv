@@ -1,6 +1,7 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
+import { setImmediate as yieldToReporter } from "node:timers/promises";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createRecoveryCandidateRemoteFixture } from "./fixtures/recovery-candidate-remote-fixture.js";
 import {
@@ -57,7 +58,8 @@ describe("canonical authority for a retained validated candidate", () => {
       runId: fixture.state.runId,
       workflowCommit,
     });
-  it("proves post-load lineage after old paths disappear and follows only original promote progress through remote verification", () => {
+  it("proves post-load lineage after old paths disappear and follows only original promote progress through remote verification", async () => {
+    await yieldToReporter();
     for (const path of [
       fixture.checkout,
       fixture.operator,
@@ -87,6 +89,7 @@ describe("canonical authority for a retained validated candidate", () => {
     ).toMatchObject({ operationId: null, phase: null });
     expect(fixture.refs()).toBe(originalRefs);
     expect(fixture.git(["symbolic-ref", "HEAD"])).toBe(originalHead);
+    await yieldToReporter();
     const detached = context.candidateBytes;
     detached.fill(0);
     context.candidate.files.length = 0;
@@ -112,6 +115,7 @@ describe("canonical authority for a retained validated candidate", () => {
       proof,
     });
     claimHead = claim.head;
+    await yieldToReporter();
     const operationId = claim.state.active!.operationId,
       attemptId = promotionAttemptId(
         operationId,
@@ -140,6 +144,7 @@ describe("canonical authority for a retained validated candidate", () => {
       ...owner,
       deployment,
     }).head;
+    await yieldToReporter();
     const body = {
       destination: "production" as const,
       liveUrl: PROMOTION_DESTINATIONS.production.liveUrl,
@@ -159,6 +164,7 @@ describe("canonical authority for a retained validated candidate", () => {
     expect(
       context.validateProgress(context.binding.initialControlHead)
     ).toEqual({ head: verifiedHead, operationId, phase: "verified" });
+    await yieldToReporter();
     const reopened = open();
     expect(reopened.binding).toEqual(context.binding);
     expect(
@@ -169,7 +175,8 @@ describe("canonical authority for a retained validated candidate", () => {
       "INITIAL_CONTROL_CHANGED"
     );
   }, 150_000);
-  it("rejects failure, another owner and a changed workflow instead of rebinding the original authority", () => {
+  it("rejects failure, another owner and a changed workflow instead of rebinding the original authority", async () => {
+    await yieldToReporter();
     fixture.setControl(deployedHead);
     try {
       const current = parsePromotionControl(fixture.store.read().bytes!),
@@ -185,6 +192,7 @@ describe("canonical authority for a retained validated candidate", () => {
     } finally {
       fixture.setControl(verifiedHead);
     }
+    await yieldToReporter();
     fixture.setControl(claimHead);
     try {
       const operation = parsePromotionControl(
@@ -210,6 +218,7 @@ describe("canonical authority for a retained validated candidate", () => {
     } finally {
       fixture.setControl(verifiedHead);
     }
+    await yieldToReporter();
     fixture.setControl(context.binding.initialControlHead);
     try {
       const before = fixture.store.read(),
