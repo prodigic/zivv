@@ -1,5 +1,15 @@
 import type { IngestionLedger } from "../../types/ingestion.js";
-import { captureExportConfiguration } from "./export-configuration.js";
+import {
+  CANDIDATE_CONFIG_FILES,
+  captureExportConfiguration,
+  configurationDigest,
+  type CandidateConfiguration,
+} from "./export-configuration.js";
+import {
+  assertRecoveredCandidateBuild,
+  authorizeRecoveredCandidateBuildModules,
+  recoveredCandidateBuildContext,
+} from "./recovery-import-admission.js";
 import {
   buildCandidateBundle,
   readVerifiedCandidateBundle,
@@ -24,6 +34,8 @@ export async function buildReviewedWeeklyCandidate(input: {
   purpose: "preview" | "release";
   basePath: string;
   npmCli: string;
+  expectedMainHead?: string;
+  configuration?: CandidateConfiguration;
   editionId: string;
   weeklyEditionBytes: Buffer;
   ledger: IngestionLedger;
@@ -31,13 +43,39 @@ export async function buildReviewedWeeklyCandidate(input: {
   recoveryKey: Buffer;
   onProgress?: (line: string) => void;
 }) {
+  const context = recoveredCandidateBuildContext(input.repositoryRoot);
+  if (
+    (context.mainHead !== undefined &&
+      input.expectedMainHead !== undefined &&
+      input.expectedMainHead !== context.mainHead) ||
+    (context.configuration !== undefined &&
+      input.configuration !== undefined &&
+      configurationDigest(input.configuration) !==
+        configurationDigest(context.configuration)) ||
+    (context.configuration !== undefined &&
+      !context.configuration["ingestion/weekly-editions.json"]?.equals(
+        input.weeklyEditionBytes
+      ))
+  )
+    throw new Error("Recovered candidate build context changed");
+  const configured = context.configuration ?? input.configuration;
+  if (configured) configurationDigest(configured);
+  const configurationSnapshot = configured
+    ? (Object.fromEntries(
+        CANDIDATE_CONFIG_FILES.map((name) => [
+          name,
+          configured[name] === null ? null : Buffer.from(configured[name]),
+        ])
+      ) as CandidateConfiguration)
+    : undefined;
   const captured = {
-    repositoryRoot: input.repositoryRoot,
+    repositoryRoot: context.repositoryRoot,
     privateDirectory: input.privateDirectory,
     sourceCommit: input.sourceCommit,
     purpose: input.purpose,
     basePath: normalizeSiteBase(input.basePath),
     npmCli: input.npmCli,
+    expectedMainHead: context.mainHead ?? input.expectedMainHead,
     editionId: input.editionId,
     weeklyEditionBytes: Buffer.from(input.weeklyEditionBytes),
     ledger: structuredClone(input.ledger),
@@ -45,9 +83,11 @@ export async function buildReviewedWeeklyCandidate(input: {
     recoveryKey: Buffer.from(input.recoveryKey),
     onProgress: input.onProgress,
   };
+  assertRecoveredCandidateBuild(captured);
   captured.onProgress?.("Capturing reviewed source commit\n");
   const source = captureReviewedSource(captured);
-  const configuration = captureExportConfiguration(source.sourceRoot);
+  const configuration =
+    configurationSnapshot ?? captureExportConfiguration(source.sourceRoot);
   configuration["ingestion/weekly-editions.json"] = captured.weeklyEditionBytes;
   const application = await buildCapturedApplication({
     source,
@@ -64,6 +104,7 @@ export async function buildReviewedWeeklyCandidate(input: {
     ...application,
   });
   verifyCompiledEtl(source.sourceRoot, application.receipt.etlInventorySha256);
+  authorizeRecoveredCandidateBuildModules(source, applicationBuildReceipt);
   const etlModule = (await import(
     pathToFileURL(join(source.sourceRoot, "dist/lib/etl/processor.js")).href
   )) as { ETLProcessor: typeof ETLProcessor };

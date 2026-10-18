@@ -86,8 +86,9 @@ An original succeeded validation stage must carry durable validation evidence.
 Missing historical evidence is refused, not silently fabricated or waived.
 
 This implements the validated-bundle path of
-[#78](https://github.com/prodigic/zivv/issues/78). Frozen checkpoints that still
-need a build, recovery from separately captured pending dispatch or
+[#78](https://github.com/prodigic/zivv/issues/78). Clean frozen checkpoints before
+enrichment use the separate [build admission](recovery-frozen-admission.md).
+Previously started builds, recovery from separately captured pending dispatch or
 verified-before-acknowledgement, off-machine durability, unattended
 credentials/scheduling/notifications and observed Friday runs remain separate
 acceptance work. See [the Friday plan](friday-delivery-plan.md).
