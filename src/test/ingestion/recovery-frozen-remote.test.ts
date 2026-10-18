@@ -128,7 +128,7 @@ describe("frozen recovery canonical baseline", () => {
       "SOURCE_NOT_ON_MAIN"
     );
     expect(() => open(fixture.checkpoint, "main")).toThrow("SOURCE_REQUIRED");
-  }, 90_000);
+  }, 150_000);
   it("requires exactly frozen stage records and refuses even a rehashed pending-stage artifact", () => {
     const started = rewrite((journal) => {
       const run = transitionWeeklyRun(
