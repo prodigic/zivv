@@ -42,6 +42,11 @@ export share the exact staged configuration. The module loader permits the new
 ETL tree only inside the active admission after reviewed source and schema 2
 build evidence have been verified.
 
+The physical run directory uses a compact digest prefix to leave room for nested
+native build executables on Windows. The complete run identity remains signed,
+and an already-existing namespace refuses first admission. Directory names are
+locations, not substitutes for the authenticated run identity.
+
 ## Completion and interrupted attempts
 
 Success writes the signed private `recovery-frozen-result.json` with

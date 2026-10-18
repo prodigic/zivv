@@ -316,9 +316,7 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
       assertReceipt();
       if (
         buildNamespace &&
-        !/^operator\/weekly-candidates\/recovery-[a-f0-9]{64}$/.test(
-          buildNamespace
-        )
+        !/^operator\/weekly-candidates\/r-[a-f0-9]{16}$/.test(buildNamespace)
       )
         fail();
       return inventory(root, omit, buildNamespace);

@@ -56,12 +56,26 @@ interface LockEntry {
   [key: string]: unknown;
 }
 /** Keep the installed, pinned tool versions and their complete dependency closure. */
-function realToolchainManifest() {
+export function realToolchainManifest() {
   const original = JSON.parse(
     readFileSync(resolve("package-lock.json"), "utf8")
   ) as { packages: Record<string, LockEntry> };
   const names = ["postal-mime", "typescript", "vite", "@types/node"];
   const selected = new Map<string, LockEntry>();
+  function dependencyLocation(owner: string, name: string): string {
+    let scope = owner;
+    for (;;) {
+      const nested = `${scope}/node_modules/${name}`;
+      if (original.packages[nested]) return nested;
+      const parent = scope.lastIndexOf("/node_modules/");
+      if (parent < 0) break;
+      scope = scope.slice(0, parent);
+    }
+    const root = `node_modules/${name}`;
+    if (!original.packages[root])
+      throw new Error("Missing pinned fixture dependency");
+    return root;
+  }
   function visit(key: string): void {
     if (selected.has(key)) return;
     const entry = original.packages[key];
@@ -71,8 +85,7 @@ function realToolchainManifest() {
       ...entry.dependencies,
       ...entry.optionalDependencies,
     })) {
-      const nested = `${key}/node_modules/${name}`;
-      visit(original.packages[nested] ? nested : `node_modules/${name}`);
+      visit(dependencyLocation(key, name));
     }
   }
   for (const name of names) visit(`node_modules/${name}`);

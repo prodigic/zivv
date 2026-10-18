@@ -172,8 +172,13 @@ function frozenInput(input: RecoveryImportInput): RecoveryFrozenInput {
     fail("INVALID_RECOVERY_FROZEN_INPUT");
   return input as RecoveryFrozenInput;
 }
+function buildNamespace(runId: string): string {
+  // The full run identity is signed; this collision-refusing location is only
+  // a compact physical role so Windows can spawn nested native build tools.
+  return "operator/weekly-candidates/r-" + sha256(runId).slice(0, 16);
+}
 function buildParent(root: string, runId: string): string {
-  return join(root, "operator/weekly-candidates", "recovery-" + sha256(runId));
+  return join(root, buildNamespace(runId));
 }
 function fail(code = "INVALID_RECOVERY_IMPORT_ADMISSION"): never {
   throw new Error(code);
@@ -238,7 +243,7 @@ function mutable(
   const path = entry.path;
   const names = admissionNames(mode);
   if (mode === "validate" && !retained.has(path)) {
-    const parent = "operator/weekly-candidates/recovery-" + sha256(runId);
+    const parent = buildNamespace(runId);
     if (entry.kind === "directory" && path === "operator/weekly-candidates")
       return true;
     if (path === parent || path.startsWith(parent + "/")) return true;
@@ -664,9 +669,7 @@ function ensureAdmission(
       canonicalJson(
         opened.inventoryImmutable(
           (entry) => mutable(entry, retained, reportPath, mode, input.runId),
-          mode === "validate"
-            ? "operator/weekly-candidates/recovery-" + sha256(input.runId)
-            : undefined
+          mode === "validate" ? buildNamespace(input.runId) : undefined
         )
       )
     );
