@@ -31,7 +31,14 @@ describe("frozen recovery using real npm, TypeScript and Vite", () => {
     expect(fixture.originalPaths.some(existsSync)).toBe(false);
     const refs = f.refs();
     const firstFive = fixture.initial.stages.slice(0, 5);
-    const result = await invoke({ ...f.input, probeRestrictedConsumers: true });
+    const result = await invoke({
+      ...f.input,
+      probeRestrictedConsumers: true,
+    }).catch((error: unknown) => {
+      fixture.preserve();
+      console.error("Preserved failed real-toolchain fixture:", fixture.base);
+      throw error;
+    });
     expect(result).toMatchObject({
       status: "candidate-validated",
       activationAllowed: false,

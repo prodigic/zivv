@@ -125,8 +125,9 @@ export async function createRecoveryFrozenFixture() {
   process.env.ZIVV_LEDGER_HOME = originalOperator;
   let activeCalls = 0,
     cleanupRequested = false;
+  let preserveEvidence = false;
   const cleanup = () => {
-    if (activeCalls) return;
+    if (activeCalls || preserveEvidence) return;
     const suffix = relative(resolve(tmpdir()), resolve(base));
     if (!suffix.startsWith("zivv-frozen-real-") || suffix.startsWith(".."))
       throw new Error("Unsafe fixture cleanup");
@@ -180,6 +181,7 @@ export async function createRecoveryFrozenFixture() {
         moduleResolution: "node",
         outDir: "./dist",
         rootDir: "./src",
+        tsBuildInfoFile: "./.cache/fixture.tsbuildinfo",
         strict: true,
         noImplicitAny: false,
         skipLibCheck: true,
@@ -329,6 +331,9 @@ export async function createRecoveryFrozenFixture() {
       sourceCommit,
       ledgerRevision,
       configuration,
+      preserve() {
+        preserveEvidence = true;
+      },
       async track<T>(operation: () => Promise<T>): Promise<T> {
         activeCalls++;
         try {
