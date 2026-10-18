@@ -1052,7 +1052,8 @@ export function isRecoveredBuildModuleAllowed(path: string): boolean {
     return false;
   const expected = build.files.get(realpathSync(path));
   if (expected === undefined) return false;
-  if (sha256(regular(path, 512 * 1024 * 1024)) !== expected) fail("RECOVERY_BUILD_MODULE_CHANGED");
+  if (sha256(regular(path, 512 * 1024 * 1024)) !== expected)
+    fail("RECOVERY_BUILD_MODULE_CHANGED");
   return true;
 }
 /** Retained files and authoritative Git operations have separately bound roots. */
