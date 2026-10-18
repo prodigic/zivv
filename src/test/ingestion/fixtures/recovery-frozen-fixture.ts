@@ -239,6 +239,12 @@ export async function createRecoveryFrozenFixture() {
       "refs/remotes/origin/main",
       sourceCommit,
     ]);
+    // The retained operator worker belongs to the real repository runtime.
+    // Its dirty working-copy package files must match that runtime exactly.
+    // The explicitly nominated Git commit independently retains the minimal
+    // pinned package files used by the genuine reviewed application build.
+    for (const path of ["package.json", "package-lock.json"])
+      write(join(originalCheckout, path), readFileSync(resolve(path)));
     for (const path of ["dist/lib", "dist/types", "dist/utils"])
       cpSync(resolve(path), join(originalCheckout, path), { recursive: true });
     const candidates = [
