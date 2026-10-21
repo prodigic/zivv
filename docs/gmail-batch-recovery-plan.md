@@ -3,7 +3,11 @@
 Implementation plan. [PR #111](https://github.com/prodigic/zivv/pull/111) delivers
 the detached proof with nine focused tests; [PR #112](https://github.com/prodigic/zivv/pull/112)
 adds authenticated capsule preservation and staging with six dedicated cases and
-the existing operator regressions. Read-only replacement-host inspection follows.
+the existing operator regressions. [PR #114](https://github.com/prodigic/zivv/pull/114)
+adds read-only replacement-host inspection with eleven native prepared-runtime
+and CLI cases. Closed capture (#109) is the next required authority step.
+The [closed capture contract](recovery-gmail-capture-contract.md) records its
+effect-specific journal guards, retained-worker compatibility and required drills.
 These stages replace the baseline's blanket acquisition-tree refusal with exact
 authenticated support; recovery remains incomplete until closed capture,
 selected-receipt loading and composed acceptance below are verified.
