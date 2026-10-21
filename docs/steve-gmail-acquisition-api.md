@@ -55,10 +55,35 @@ The existing local intake uses snake_case for Gmail API projections because its 
 
 `projectSteveGmailSnapshot` in `src/lib/ingestion/steve-gmail-projection.ts` validates and detaches the API responses into the existing snapshot shape. It binds the configured/profile mailbox and listed/RAW/FULL message IDs, requires a digit-string receipt timestamp, bounds MIME nesting and total body/metadata bytes, and refuses incomplete newsletter text. It leaves sender authentication and newsletter admission to the existing intake.
 
-Seventeen fake-response tests, explicit test TypeScript checking, ESLint and formatting passed. Root review corrected timestamp coercion, mailbox control characters, missing empty-text data and aggregate metadata limits; the strict test check also caught fixture typing gaps missed by transpilation. This module performs no network or filesystem operations. The HTTP acquisition adapter, private credential setup, complete intake integration and unattended acceptance remain unfinished.
+Seventeen fake-response tests, explicit test TypeScript checking, ESLint and formatting passed. Root review corrected timestamp coercion, mailbox control characters, missing empty-text data and aggregate metadata limits; the strict test check also caught fixture typing gaps missed by transpilation. This module performs no network or filesystem operations. The HTTP reader and same-host durable handoff are described below; private credential setup and unattended acceptance remain unfinished.
 
 ## Implemented read-only window reader
 
 `readSteveGmailWindow` now performs the bounded HTTP read using one access token supplied by its caller. It binds the profile before listing, searches the fixed sender with conservative epoch-second bounds, consumes complete pagination with cycle/ID limits, fetches both representations, filters the exact millisecond interval, rechecks the account and returns sorted snapshots only after the whole window succeeds. The transport uses a fixed Gmail origin, refuses redirects, limits each streamed JSON response to 24 MiB and total retained snapshots to 32 MiB, and emits only safe error codes.
 
-The combined projection/transport suite passed 34 fake-response tests. Review additionally corrected null list pages being mistaken for empty results and ensured unread early-error bodies are cancelled. No real mailbox was accessed. OAuth refresh credential provisioning, protected snapshot persistence, correction selection, receiver handoff and unattended supervisor integration remain unfinished; returning a snapshot is not an imported or published edition.
+The combined projection/transport suite passed 34 fake-response tests. Review additionally corrected null list pages being mistaken for empty results and ensured unread early-error bodies are cancelled. No real mailbox was accessed. The [durable handoff](steve-gmail-durable-handoff.md) now saves complete windows and supports explicit correction selection, cached replay, local loading and freeze obligations. Private credential provisioning, supervisor integration and batch portability remain unfinished; returning a snapshot is not an imported or published edition.
+
+## OAuth refresh callback
+
+`createGmailAccessTokenProvider` supplies the existing reader's `getAccessToken`
+callback. It accepts private client/refresh credentials and a required durable
+refresh-token persistence callback. It posts to Google's fixed token endpoint,
+shares concurrent refreshes and caches access only until a conservative monotonic
+deadline. Exchanges have a 30-second transport deadline and 64 KiB response cap;
+redirects and malformed tokens refuse. HTTP/transport/storage failures expose
+safe codes without provider bodies or credentials. A supplied scope response must
+include Gmail read-only; mailbox identity is still checked by the reader.
+
+A changed refresh token must be saved before access is returned. If that save
+fails, the provider retains the pending token in memory and retries persistence
+before using its cache or sending another request. It does not implement crash-safe
+credential storage: the installation must provide that callback, OAuth consent,
+scope/account verification and recovery. Nothing reads an agent connector's
+credentials or a repository-local secret file.
+
+The adapter implements the refresh exchange only, following Google's
+[desktop refresh contract](https://developers.google.com/identity/protocols/oauth2/native-app#refresh).
+Initial desktop consent requires the documented PKCE/loopback flow; web clients
+must use their appropriate flow. This adapter does not mint consent, implement
+DPoP proof keys, activate a scheduler or access an actual account. Provisioning
+and credential loss/expiry drills remain required for #30/#29 acceptance.
