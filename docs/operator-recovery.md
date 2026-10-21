@@ -68,10 +68,27 @@ journal and catalog; a registry below its own storage limit can still exceed the
 capsule limit. Capture refuses that overflow before retirement rather than
 discarding messages or increasing the limit.
 
+After completing `prepare-runtime`, inspect retained Gmail obligations with the
+same archive, retirement receipt, recovery key and reviewed replacement npm tool:
+
+```text
+npm run operator:recovery -- inspect-gmail --file PRIVATE_CAPSULE.enc --key PRIVATE_PORTABLE_KEY --receipt PRIVATE_CAPSULE.enc.retirement.json --destination PREPARED_PRIVATE_ROOT --npm-cli REVIEWED_NPM_CLI
+```
+
+Inspection authenticates the archive, retirement and prepared receipt, current
+runtime/tool and complete unchanged prepared tree. It reports hashed message
+identities with `capture-pending`, `review-required`, `load-pending` or `loaded`
+status. A successful load requires an exact canonical production run matching
+the ready receipt's edition, delivery, source hash and original observation.
+The report includes no email address, MIME, source text or original root paths.
+It creates no working key, journal entry or writer permission. Batch registration
+times are reported for later cutoff selection; this command does not approve a
+cutoff or assert that freezing is allowed.
+
 Restoring batch bytes does not grant access to a mailbox or authorize replay from
 the new location. Ordinary batch readers still reject the changed operator root,
-and the staged installation remains quarantined. The closed read/capture/load
-phases and their acceptance requirements remain tracked in
+and the staged installation remains quarantined. Closed capture/load authority
+and their acceptance requirements remain tracked in
 [the batch recovery plan](gmail-batch-recovery-plan.md), [#106](https://github.com/prodigic/zivv/issues/106),
 [#109](https://github.com/prodigic/zivv/issues/109) and [#110](https://github.com/prodigic/zivv/issues/110).
 

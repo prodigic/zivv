@@ -1,11 +1,12 @@
 # Authenticated Gmail batch portability (#106)
 
 Implementation plan. [PR #111](https://github.com/prodigic/zivv/pull/111) delivers
-the detached proof with nine focused tests; capsule preservation and staging are
-the next implementation stage. The baseline capture rejects `email-acquisition`
-before archive/fence creation. Replace that blanket refusal with authenticated
-support; do not call recovery complete until capture, loading and composed
-acceptance below are verified.
+the detached proof with nine focused tests; [PR #112](https://github.com/prodigic/zivv/pull/112)
+adds authenticated capsule preservation and staging with six dedicated cases and
+the existing operator regressions. Read-only replacement-host inspection follows.
+These stages replace the baseline's blanket acquisition-tree refusal with exact
+authenticated support; recovery remains incomplete until closed capture,
+selected-receipt loading and composed acceptance below are verified.
 
 ## Reuse the capsule and preserve signed bytes
 

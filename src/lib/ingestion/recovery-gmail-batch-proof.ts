@@ -33,6 +33,9 @@ export interface RecoveryGmailBatchProof {
           status: "captured";
           receiptId: string;
           disposition: SteveEmailReceipt["disposition"];
+          deliveryId: string;
+          sourceSha256: string;
+          firstObservedAtEpochMs: number;
         }
     >;
   }>;
@@ -408,6 +411,9 @@ function prove(input: Parameters<typeof proveRecoveryGmailBatchInventory>[0]) {
         status: "captured",
         receiptId: receipt.receiptId,
         disposition: receipt.disposition,
+        deliveryId: receipt.deliveryId,
+        sourceSha256: receipt.sourceSha256,
+        firstObservedAtEpochMs: receipt.firstObservedAtEpochMs,
       });
     }
     result.batches.push({ batch, messages });
