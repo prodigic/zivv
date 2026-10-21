@@ -1,6 +1,37 @@
 import { test, expect } from "@playwright/test";
 
+const crossOriginImageSvg =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" viewBox="0 0 1 1"><rect width="1" height="1" fill="#000"/></svg>';
+
 test.describe("Zivv Application Smoke Tests", () => {
+  test.beforeEach(async ({ page, baseURL }) => {
+    if (!baseURL) {
+      throw new Error("Smoke tests require a configured app base URL");
+    }
+    const appOrigin = new URL(baseURL).origin;
+
+    // Core smoke tests exclude third-party host availability; keep app-owned requests real.
+    await page.route("**/*", async (route) => {
+      const request = route.request();
+      const requestUrl = new URL(request.url());
+
+      if (
+        request.resourceType() === "image" &&
+        ["http:", "https:"].includes(requestUrl.protocol) &&
+        requestUrl.origin !== appOrigin
+      ) {
+        await route.fulfill({
+          status: 200,
+          contentType: "image/svg+xml",
+          body: crossOriginImageSvg,
+        });
+        return;
+      }
+
+      await route.continue();
+    });
+  });
+
   test("should load the homepage successfully", async ({ page }) => {
     await page.goto("/");
 
@@ -19,6 +50,14 @@ test.describe("Zivv Application Smoke Tests", () => {
   });
 
   test("should display the app shell correctly", async ({ page }) => {
+    // Check that there are no console errors
+    const errors: string[] = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") {
+        errors.push(msg.text());
+      }
+    });
+
     await page.goto("/");
 
     // Check for header/navigation
@@ -28,14 +67,6 @@ test.describe("Zivv Application Smoke Tests", () => {
     // Check for main content area
     const main = page.locator("main");
     await expect(main).toBeVisible();
-
-    // Check that there are no console errors
-    const errors: string[] = [];
-    page.on("console", (msg) => {
-      if (msg.type() === "error") {
-        errors.push(msg.text());
-      }
-    });
 
     await page.waitForTimeout(2000); // Wait for any async errors
 
@@ -74,7 +105,7 @@ test.describe("Zivv Application Smoke Tests", () => {
       if (route.request().url().includes("/data/")) {
         route.abort();
       } else {
-        route.continue();
+        route.fallback();
       }
     });
 
@@ -106,7 +137,6 @@ test.describe("Zivv Application Smoke Tests", () => {
     await expect(main).toBeVisible();
 
     // Check for skip links or similar accessibility features
-    const skipLink = page.locator('a[href="#main"], .skip-link');
     // This is optional but good practice
 
     // Navigation should be properly marked up - ensure at least one nav is visible
