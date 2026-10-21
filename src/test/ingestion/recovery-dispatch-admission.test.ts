@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { resumeOperatorRecoveryDispatchForTest } from "../../lib/ingestion/recovery-dispatch-admission.js";
@@ -116,8 +116,29 @@ describe("GET-only recovery of an originally accepted lost-response dispatch", (
 
   it("ignores an injected receipt 999 and keeps two genuine matches pending after list discovery", async () => {
     const f = await fixture.prepare("injected-receipt", [101, 102]);
-    f.injectReceipt999();
     const refs = f.refs();
+    const admissionPath = join(f.input.destination, "recovery-dispatch.json");
+    f.injectReceipt999();
+    await expect(invoke(f.input)).rejects.toThrow(
+      "INVALID_PREPARED_RECOVERY_RUNTIME"
+    );
+    expect(f.requests()).toHaveLength(0);
+    expect(f.refs()).toBe(refs);
+    expect(existsSync(admissionPath)).toBe(false);
+
+    f.restoreOriginalProducerDispatchBytes();
+    await expect(
+      invoke({ ...f.input, crashAfterIntent: true })
+    ).rejects.toThrow("RECOVERY_IMPORT_TEST_AFTER_INTENT");
+    expect(existsSync(admissionPath)).toBe(true);
+    expect(JSON.parse(readFileSync(admissionPath, "utf8"))).toMatchObject({
+      payload: { kind: "zivv-recovery-dispatch-admission" },
+      signature: expect.stringMatching(/^[a-f0-9]{64}$/),
+    });
+    expect(f.requests()).toHaveLength(0);
+    expect(f.refs()).toBe(refs);
+
+    f.injectReceipt999();
     const result = await invoke(f.input);
     expect(result).toMatchObject({
       status: "dispatch-pending",

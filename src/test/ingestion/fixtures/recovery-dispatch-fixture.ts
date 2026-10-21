@@ -263,6 +263,7 @@ export async function createRecoveryDispatchFixture() {
           throw new Error(
             "Captured original private dispatch intent is missing"
           );
+        const originalProducerDispatchBytes = readFileSync(path);
         return {
           ...f,
           input,
@@ -284,6 +285,9 @@ export async function createRecoveryDispatchFixture() {
                 },
               }) + "\n"
             );
+          },
+          restoreOriginalProducerDispatchBytes() {
+            writeFileSync(path, originalProducerDispatchBytes);
           },
         };
       },
