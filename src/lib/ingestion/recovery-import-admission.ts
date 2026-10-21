@@ -1396,16 +1396,19 @@ export function recoveredCandidateBuildContext(defaultRoot: string): {
     ) as CandidateConfiguration,
   };
 }
-/** Keep new build outputs in one signed run-specific namespace. */
+/** Use the exact admitted export parent, or the signed new-build namespace. */
 export function recoveredCandidateWorkParent(defaultParent: string): string {
   const scope = scopes.getStore();
   if (!scope?.active) return defaultParent;
   scope.assertCurrent();
   if (resolve(defaultParent) !== join(scope.operator, "weekly-candidates"))
     fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
-  return scope.mode === "validate" && scope.build
-    ? scope.build.parent
-    : defaultParent;
+  if (scope.mode === "validate" && scope.build) return scope.build.parent;
+  if (candidateMode(scope.mode) && scope.candidate)
+    return dirname(
+      scope.candidate.resolveDirectory(scope.candidate.workDirectory)
+    );
+  return defaultParent;
 }
 /** Bind the isolated recipe before it can capture source or execute npm. */
 export function assertRecoveredCandidateBuild(input: {

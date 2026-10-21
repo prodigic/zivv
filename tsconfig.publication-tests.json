@@ -11,6 +11,7 @@
     "src/test/ingestion/recovery-chain-cli.test.ts",
     "src/test/ingestion/recovery-chain-locations.test.ts",
     "src/test/ingestion/recovery-chain-host.test.ts",
+    "src/test/ingestion/recovery-candidate-work-parent.test.ts",
     "src/test/ingestion/recovery-pages-http-fixture.test.ts",
     "src/test/ingestion/operator-installation.test.ts",
     "src/test/ingestion/operator-retirement.test.ts",
