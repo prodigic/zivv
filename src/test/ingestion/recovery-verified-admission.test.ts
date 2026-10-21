@@ -1,5 +1,7 @@
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import {
   afterAll,
   afterEach,
@@ -99,7 +101,10 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
     ).toBe(fixture.ledgerRevision);
     expect(
       captureExportConfiguration(join(f.input.destination, "checkout"))
-    ).toEqual(fixture.configuration);
+    ).toEqual({
+      ...fixture.configuration,
+      "ingestion/weekly-editions.json": expectedWeeklyBytes,
+    });
     const weeklyPath = join(
       f.input.destination,
       "checkout/data/ingestion/weekly-editions.json"
@@ -199,6 +204,110 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
     expect(
       weekly.editions.filter((edition) => edition.editionId === editionId)
     ).toHaveLength(1);
+  });
+
+  it("refuses a changed retained verify artifact after signed admission before effects", async () => {
+    const f = await fixture.prepare("changed-retained-verify-artifact");
+    vi.stubEnv("ZIVV_CONTROLLED_PUBLISHING", "enabled");
+    vi.stubEnv("ZIVV_MANUAL_PUBLISHER_JOINED", "true");
+    const input = { ...f.input, probeRestrictedConsumers: true };
+    const beforeReferences = f.refs();
+    const beforeRequests = f.requests();
+    const weeklyPath = join(
+      f.input.destination,
+      "checkout/data/ingestion/weekly-editions.json"
+    );
+    const weeklyBefore = readFileSync(weeklyPath);
+    const journalPath = join(
+      f.input.destination,
+      "operator/weekly-runs.sqlite"
+    );
+    const verifyStage = fixture.initial.stages.find(
+      (stage) => stage.stage === "verify"
+    );
+    if (!verifyStage) throw new Error("Verified fixture lacks verify stage");
+    if (
+      !fixture.initialArtifactBytes.some(
+        (artifact) => artifact.stage === "verify"
+      )
+    )
+      throw new Error("Verified fixture lacks retained verify artifact");
+
+    await expect(
+      invoke({ ...input, crashAfterIntent: true })
+    ).rejects.toMatchObject({
+      message: "RECOVERY_IMPORT_TEST_AFTER_INTENT",
+    });
+    expect(f.hasCapsule()).toBe(true);
+    assertSignedCapsule(f.capsuleBytes());
+
+    const database = new DatabaseSync(journalPath);
+    let originalBytes: Buffer | undefined;
+    let originalIdentity = "";
+    try {
+      const row = database
+        .prepare(
+          "SELECT identity,bytes FROM stage_artifact WHERE run_id=? AND stage='verify' AND attempt=?"
+        )
+        .get(f.input.runId, verifyStage.attempt) as
+        | { identity: string; bytes: Uint8Array }
+        | undefined;
+      if (!row) throw new Error("Staged verify artifact is missing");
+      originalBytes = Buffer.from(row.bytes);
+      originalIdentity = row.identity;
+      const text = originalBytes.toString("utf8");
+      const digest = /[a-f0-9]{64}/.exec(text);
+      if (!digest) throw new Error("Verify artifact has no digest to alter");
+      const changedBytes = Buffer.from(originalBytes);
+      const changedOffset = digest.index + (digest[0] === "0" ? 1 : 0);
+      changedBytes[changedOffset] =
+        changedBytes[changedOffset] === 0x30 ? 0x31 : 0x30;
+      JSON.parse(changedBytes.toString("utf8"));
+      const changedIdentity = createHash("sha256")
+        .update(changedBytes)
+        .digest("hex");
+      database
+        .prepare(
+          "UPDATE stage_artifact SET identity=?,bytes=? WHERE run_id=? AND stage='verify' AND attempt=?"
+        )
+        .run(changedIdentity, changedBytes, f.input.runId, verifyStage.attempt);
+    } finally {
+      database.close();
+    }
+
+    try {
+      await expect(invoke(input)).rejects.toMatchObject({
+        message: "RECOVERY_IMPORT_EXECUTION_FAILED",
+        cause: { message: "INVALID_RECOVERY_IMPORT_ADMISSION" },
+      });
+      expect(f.refs()).toBe(beforeReferences);
+      expect(f.requests()).toEqual(beforeRequests);
+      expect(readFileSync(weeklyPath)).toEqual(weeklyBefore);
+      expect(
+        ledgerDigest(
+          readSqliteLedger(join(f.input.destination, "operator/ledger.sqlite"))
+        )
+      ).toBe(fixture.ledgerRevision);
+    } finally {
+      if (originalBytes) {
+        const restore = new DatabaseSync(journalPath);
+        try {
+          restore
+            .prepare(
+              "UPDATE stage_artifact SET identity=?,bytes=? WHERE run_id=? AND stage='verify' AND attempt=?"
+            )
+            .run(
+              originalIdentity,
+              originalBytes,
+              f.input.runId,
+              verifyStage.attempt
+            );
+        } finally {
+          restore.close();
+        }
+      }
+    }
+    expect(f.artifactBytes()).toEqual(fixture.initialArtifactBytes);
   });
 
   for (const [interruptAt, transitionsBeforeRecovery, cutoffWritten] of [
