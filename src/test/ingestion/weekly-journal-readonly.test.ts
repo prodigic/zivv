@@ -5,9 +5,9 @@ import {
   linkSync,
   mkdirSync,
   mkdtempSync,
-  rmdirSync,
   rmSync,
   symlinkSync,
+  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
@@ -181,7 +181,7 @@ describe("read-only weekly journal recovery snapshot", () => {
         )
       ).toThrow(`SQLite parent directory must not be linked: ${linkedParent}`);
     } finally {
-      rmdirSync(linkedParent);
+      unlinkSync(linkedParent);
     }
     expect(readWeeklyJournalRecoverySnapshotReadOnly(path)).toBeInstanceOf(
       Buffer
