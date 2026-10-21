@@ -7,6 +7,8 @@
   "include": [
     "src/test/ingestion/steve-gmail-projection.test.ts",
     "src/test/ingestion/steve-gmail-acquisition.test.ts",
+    "src/test/ingestion/recovery-chain-cli.test.ts",
+    "src/test/ingestion/recovery-chain-locations.test.ts",
     "src/test/ingestion/operator-installation.test.ts",
     "src/test/ingestion/operator-retirement.test.ts",
     "src/test/ingestion/execution-tool-identity.test.ts",

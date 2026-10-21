@@ -9,6 +9,7 @@ import {
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { OperatorRecoveryCheckpoint } from "./operator-recovery.js";
 import type { WeeklyJournalRecoverySnapshot } from "./weekly-run-journal.js";
+import { decryptRecoveryResultChain } from "./recovery-result-chain.js";
 
 function fail(): never {
   throw new Error("INVALID_RECOVERY_CANDIDATE_LOCATION");
@@ -55,6 +56,41 @@ export function createRecoveryCandidateLocations(
   checkpoint: OperatorRecoveryCheckpoint,
   preparedRoot: string
 ): { resolveExportWorkDirectory(original: string): string } {
+  return createLocations(checkpoint, preparedRoot);
+}
+
+/** The namespaced role is available only from a fully authenticated chain. */
+export function createRecoveryResultChainCandidateLocations(input: {
+  chain: Buffer;
+  recoveryKey: Buffer;
+  preparedRoot: string;
+}): { resolveExportWorkDirectory(original: string): string } {
+  const proof = decryptRecoveryResultChain(input.chain, input.recoveryKey),
+    role = proof.certificate.exportRole,
+    namespace =
+      "weekly-candidates/r-" +
+      createHash("sha256")
+        .update(proof.certificate.runId)
+        .digest("hex")
+        .slice(0, 16);
+  if (
+    !new RegExp("^" + namespace + "/candidate-work-[A-Za-z0-9_-]+$").test(
+      role.workRelative
+    )
+  )
+    fail();
+  return createLocations(proof.successorCheckpoint, input.preparedRoot, role);
+}
+
+function createLocations(
+  checkpoint: OperatorRecoveryCheckpoint,
+  preparedRoot: string,
+  chainRole?: {
+    workDirectory: string;
+    workRelative: string;
+    bundleRelative: string;
+  }
+): { resolveExportWorkDirectory(original: string): string } {
   const root = absolute(preparedRoot);
   const originalRoots = [
     absolute(checkpoint.originalOperatorDirectory),
@@ -96,6 +132,7 @@ export function createRecoveryCandidateLocations(
   function resolveExportWorkDirectory(original: string): string {
     absolute(original);
     if (!exports.has(original)) fail();
+    if (chainRole && original !== chainRole.workDirectory) fail();
     const matches = originalRoots.flatMap((old, index) => {
       const path = inside(old, original);
       return path === null
@@ -106,7 +143,11 @@ export function createRecoveryCandidateLocations(
     const mapped = matches[0];
     if (
       mapped.area !== "operator" ||
-      !/^weekly-candidates\/candidate-work-[A-Za-z0-9_-]+$/.test(mapped.path) ||
+      (chainRole
+        ? mapped.path !== chainRole.workRelative
+        : !/^weekly-candidates\/candidate-work-[A-Za-z0-9_-]+$/.test(
+            mapped.path
+          )) ||
       directories.filter(
         (entry) => entry.area === mapped.area && entry.path === mapped.path
       ).length !== 1

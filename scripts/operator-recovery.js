@@ -77,8 +77,18 @@ try {
       throw Error("INVALID_RECOVERY_ARGUMENTS");
     options[key] = value;
   }
-  const expected =
-    command === "capture" || command === "retire"
+  const chainCommand = ["prepare-chain", "resume-chain"].includes(command);
+  const expected = chainCommand
+    ? [
+        "file",
+        "key",
+        "destination",
+        "npm-cli",
+        ...(command === "resume-chain"
+          ? ["repository", "workflow-commit"]
+          : []),
+      ]
+    : command === "capture" || command === "retire"
       ? ["root", "out", ...(options["npm-cli"] ? ["npm-cli"] : [])]
       : command === "verify"
         ? ["file", "key"]
@@ -157,8 +167,34 @@ try {
       key = Buffer.from(encoded, "base64");
     if (key.length !== 32 || key.toString("base64") !== encoded)
       throw Error("INVALID_RECOVERY_KEY");
-    const archive = privateInput(options.file, 384 * 1024 * 1024);
-    if (
+    const archive = privateInput(
+      options.file,
+      (chainCommand ? 768 : 384) * 1024 * 1024
+    );
+    if (chainCommand) {
+      const {
+        prepareOperatorRecoveryResultChain,
+        resumeOperatorRecoveryResultChainCandidate,
+      } = await import("../dist/lib/ingestion/recovery-chain-admission.js");
+      const input = {
+        chain: archive,
+        recoveryKey: key,
+        destination: resolve(options.destination),
+        npmCli: resolve(options["npm-cli"]),
+      };
+      inspection =
+        command === "prepare-chain"
+          ? await prepareOperatorRecoveryResultChain(input)
+          : await resumeOperatorRecoveryResultChainCandidate({
+              ...input,
+              repositoryRoot: resolve(options.repository),
+              workflowCommit: options["workflow-commit"],
+              githubToken: process.env.GITHUB_TOKEN,
+              ...(process.env.GITHUB_TOKEN
+                ? { credentials: { token: process.env.GITHUB_TOKEN } }
+                : {}),
+            });
+    } else if (
       command === "resume-import" ||
       command === "resume-candidate" ||
       command === "resume-dispatch" ||
