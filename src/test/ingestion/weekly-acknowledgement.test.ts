@@ -896,9 +896,8 @@ describe("verified weekly acknowledgement with native control and private journa
     const result = await f.run({ store });
     expect(result.stages.at(-1)!.status).toBe("succeeded");
     expect(
-      parseWeeklyEditionLedger(
-        JSON.parse(readFileSync(f.weeklyPath, "utf8"))
-      ).publishedCutoffEpochMs
+      parseWeeklyEditionLedger(JSON.parse(readFileSync(f.weeklyPath, "utf8")))
+        .publishedCutoffEpochMs
     ).toBe(cutoff);
     expect(f.readControl().completedCount).toBe(1);
   }, 90_000);
