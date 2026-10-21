@@ -50,3 +50,9 @@ The local intake documentation says a Node process does not inherit the agent Gm
 7. Write the complete JSON snapshot directly into the protected private operator path and invoke the existing local capture flow. Keep authorization tokens, raw mail, decoded body, and attachment bytes out of stdout/stderr and Git. A successful API read is only acquisition evidence; local intake validation remains the admission boundary.
 
 The existing local intake uses snake_case for Gmail API projections because its snapshot format predates a direct API client. The mapping above is adapter design; it does not change the API's camelCase schema or claim that Gmail API responses by themselves prove sender authenticity.
+
+## Implemented projection boundary
+
+`projectSteveGmailSnapshot` in `src/lib/ingestion/steve-gmail-projection.ts` validates and detaches the API responses into the existing snapshot shape. It binds the configured/profile mailbox and listed/RAW/FULL message IDs, requires a digit-string receipt timestamp, bounds MIME nesting and total body/metadata bytes, and refuses incomplete newsletter text. It leaves sender authentication and newsletter admission to the existing intake.
+
+Seventeen fake-response tests, explicit test TypeScript checking, ESLint and formatting passed. Root review corrected timestamp coercion, mailbox control characters, missing empty-text data and aggregate metadata limits; the strict test check also caught fixture typing gaps missed by transpilation. This module performs no network or filesystem operations. The HTTP acquisition adapter, private credential setup, complete intake integration and unattended acceptance remain unfinished.
