@@ -20,10 +20,24 @@ const maxRegistryBytes = 256 * 1024 * 1024;
 const maxIntakeBytes = 8 * 1024 * 1024;
 const hashPattern = /^[a-f0-9]{64}$/;
 
+export type RecoveryGmailReceiptDescriptor = Pick<
+  SteveEmailReceipt,
+  | "receiptId"
+  | "accountSha256"
+  | "editionId"
+  | "deliveryId"
+  | "sourceSha256"
+  | "firstObservedAtEpochMs"
+  | "disposition"
+  | "correctionOf"
+>;
+
 export interface RecoveryGmailBatchProof {
   activationAllowed: false;
   captureAllowed: false;
   physicalValidationRequired: true;
+  journalDigest: string | null;
+  receipts: RecoveryGmailReceiptDescriptor[];
   batches: Array<{
     batch: SteveGmailHandoffBatch;
     messages: Array<
@@ -120,6 +134,8 @@ function prove(input: Parameters<typeof proveRecoveryGmailBatchInventory>[0]) {
     activationAllowed: false,
     captureAllowed: false,
     physicalValidationRequired: true,
+    journalDigest: null,
+    receipts: [],
     batches: [],
   };
   const files = new Map<string, (typeof checkpoint.files)[number]>();
@@ -213,6 +229,7 @@ function prove(input: Parameters<typeof proveRecoveryGmailBatchInventory>[0]) {
   const journal = validateWeeklyJournalRecoverySnapshot(
     base64(checkpoint.journal, maxRegistryBytes)
   );
+  result.journalDigest = journal.digest;
   const sources = new Map<string, Buffer>();
   const approvals = new Map<string, Buffer>();
   for (const row of journal.intakeEvidence) {
@@ -371,6 +388,18 @@ function prove(input: Parameters<typeof proveRecoveryGmailBatchInventory>[0]) {
     return resolved;
   }
   for (const id of sources.keys()) body(id);
+  result.receipts = [...receipts.values()]
+    .sort((a, b) => a.receiptId.localeCompare(b.receiptId))
+    .map((receipt) => ({
+      receiptId: receipt.receiptId,
+      accountSha256: receipt.accountSha256,
+      editionId: receipt.editionId,
+      deliveryId: receipt.deliveryId,
+      sourceSha256: receipt.sourceSha256,
+      firstObservedAtEpochMs: receipt.firstObservedAtEpochMs,
+      disposition: receipt.disposition,
+      correctionOf: receipt.correctionOf,
+    }));
   for (const batch of batches) {
     const messages: RecoveryGmailBatchProof["batches"][number]["messages"] = [];
     for (const snapshot of batch.snapshots) {

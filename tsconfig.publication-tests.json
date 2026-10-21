@@ -5,6 +5,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/publication-tests.tsbuildinfo"
   },
   "include": [
+    "src/test/ingestion/recovery-gmail-capture-selection.test.ts",
     "src/test/ingestion/recovery-gmail-inspector.test.ts",
     "src/test/ingestion/recovery-gmail-capsule.test.ts",
     "src/test/ingestion/recovery-gmail-batch-proof.test.ts",
