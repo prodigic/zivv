@@ -12,7 +12,12 @@ import {
   assertOperatorNotQuarantined,
   resolvePrivateCandidateDirectory,
 } from "./private-artifacts.js";
-import { WeeklyRunJournal, type WeeklyRunLease } from "./weekly-run-journal.js";
+import {
+  readWeeklyJournalRecoverySnapshotReadOnly,
+  validateWeeklyJournalRecoverySnapshot,
+  WeeklyRunJournal,
+  type WeeklyRunLease,
+} from "./weekly-run-journal.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
 
 const scope = "prodigic/zivv/production";
@@ -322,9 +327,65 @@ function parseReceipt(bytes: Buffer): SteveEmailReceipt {
   );
   return value;
 }
+function parseCaptureManifest(bytes: Buffer): {
+  schemaVersion: 1;
+  messageId: string;
+  accountSha256: string;
+  rawSha256: string;
+  sourceSha256: string;
+  receiptId: string;
+  receivedAtEpochMs: number;
+} {
+  const value = JSON.parse(bytes.toString("utf8")) as Record<string, unknown>;
+  same(
+    bytes.toString("utf8"),
+    canonicalJson(value) + "\n",
+    "CHANGED_INTAKE_CAPTURE"
+  );
+  same(
+    Object.keys(value).sort(),
+    [
+      "schemaVersion",
+      "messageId",
+      "accountSha256",
+      "rawSha256",
+      "sourceSha256",
+      "receiptId",
+      "receivedAtEpochMs",
+    ].sort(),
+    "CHANGED_INTAKE_CAPTURE"
+  );
+  if (
+    value.schemaVersion !== 1 ||
+    typeof value.messageId !== "string" ||
+    !/^[a-f0-9]{1,128}$/.test(value.messageId) ||
+    typeof value.accountSha256 !== "string" ||
+    !/^[a-f0-9]{64}$/.test(value.accountSha256) ||
+    typeof value.rawSha256 !== "string" ||
+    !/^[a-f0-9]{64}$/.test(value.rawSha256) ||
+    typeof value.sourceSha256 !== "string" ||
+    !/^[a-f0-9]{64}$/.test(value.sourceSha256) ||
+    typeof value.receiptId !== "string" ||
+    !/^[a-f0-9]{64}$/.test(value.receiptId) ||
+    typeof value.receivedAtEpochMs !== "number" ||
+    !Number.isSafeInteger(value.receivedAtEpochMs) ||
+    value.receivedAtEpochMs < 0 ||
+    value.receivedAtEpochMs > Date.now()
+  )
+    fail("CHANGED_INTAKE_CAPTURE");
+  return {
+    schemaVersion: 1,
+    messageId: value.messageId,
+    accountSha256: value.accountSha256,
+    rawSha256: value.rawSha256,
+    sourceSha256: value.sourceSha256,
+    receiptId: value.receiptId,
+    receivedAtEpochMs: value.receivedAtEpochMs,
+  };
+}
 function bodyReceipt(
   directory: string,
-  journal: WeeklyRunJournal,
+  journal: Pick<WeeklyRunJournal, "readIntakeEvidence">,
   lineage = new Set<string>()
 ): SteveEmailReceipt {
   const bytes = regular(join(directory, "receipt.json"));
@@ -425,6 +486,204 @@ function bodyReceipt(
     correctionOf: approval.correctionOf,
     disposition: "ready",
   };
+}
+
+/** Read and validate retained Steve email source bodies without opening a journal writer. */
+export function listRetainedSteveEmailSources(input: {
+  operatorDirectory: string;
+  accountId: string;
+  expectedEditionId: string;
+}): Array<{ receipt: SteveEmailReceipt; source: Buffer }> {
+  try {
+    const operatorDirectory = resolve(input.operatorDirectory);
+    if (
+      resolvePrivateCandidateDirectory(operatorDirectory) !== operatorDirectory
+    )
+      fail("UNSAFE_INTAKE_DIRECTORY");
+    if (
+      typeof input.accountId !== "string" ||
+      !input.accountId.length ||
+      input.accountId.length > 320 ||
+      [...input.accountId].some(
+        (character) =>
+          character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127
+      ) ||
+      typeof input.expectedEditionId !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(input.expectedEditionId)
+    )
+      fail("INVALID_INTAKE_QUERY");
+
+    const journalPath = join(operatorDirectory, "weekly-runs.sqlite");
+    const intakeRoot = join(operatorDirectory, "email-intake");
+    if (existsSync(intakeRoot)) {
+      const intakeStat = lstatSync(intakeRoot);
+      if (!intakeStat.isDirectory() || intakeStat.isSymbolicLink())
+        fail("UNSAFE_INTAKE_DIRECTORY");
+    }
+    if (!existsSync(journalPath)) {
+      if (
+        existsSync(journalPath + "-wal") ||
+        existsSync(journalPath + "-shm") ||
+        (existsSync(intakeRoot) && readdirSync(intakeRoot).length > 0)
+      )
+        fail("PENDING_STEVE_EMAIL_INTAKE");
+      return [];
+    }
+    const snapshot = validateWeeklyJournalRecoverySnapshot(
+      readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
+    );
+    const rows = snapshot.intakeEvidence.filter((row) => row.scope === scope);
+    const sources = new Map<string, Buffer>();
+    const approvals = new Map<string, Buffer>();
+    for (const row of rows) {
+      const bytes = Buffer.from(row.bytes, "base64");
+      if (bytes.toString("base64") !== row.bytes)
+        fail("PENDING_STEVE_EMAIL_INTAKE");
+      if (row.kind === "source") sources.set(row.id, bytes);
+      else approvals.set(row.id, bytes);
+    }
+    for (const id of approvals.keys())
+      if (!sources.has(id)) fail("PENDING_STEVE_EMAIL_INTAKE");
+
+    const readEvidence = (
+      evidenceScope: string,
+      kind: "source" | "correction",
+      id: string
+    ) => {
+      if (evidenceScope !== scope) return null;
+      const value = (kind === "source" ? sources : approvals).get(id);
+      return value ? Buffer.from(value) : null;
+    };
+    const snapshotReader = { readIntakeEvidence: readEvidence };
+    const accountSha256 = sha256(input.accountId);
+    const result: Array<{ receipt: SteveEmailReceipt; source: Buffer }> = [];
+    const knownReceiptIds = new Set<string>();
+    const receiptAccounts = new Map<string, string>();
+    const knownMessages = new Map<
+      string,
+      { rawSha256: string; receiptId: string; sourceSha256: string }
+    >();
+    const receiptsById = new Map<string, SteveEmailReceipt>();
+    for (const [id, bytes] of sources) {
+      const receipt = parseReceipt(bytes);
+      if (receipt.receiptId !== id) fail("INTAKE_EVIDENCE_CHANGED");
+      knownReceiptIds.add(id);
+      receiptAccounts.set(id, receipt.accountSha256);
+      receiptsById.set(id, receipt);
+      knownMessages.set(
+        `${receipt.accountSha256}/${sha256(receipt.messageId)}`,
+        {
+          rawSha256: receipt.rawSha256,
+          receiptId: id,
+          sourceSha256: receipt.sourceSha256,
+        }
+      );
+      const directory = join(intakeRoot, receipt.accountSha256, "bodies", id);
+      const validated = bodyReceipt(directory, snapshotReader);
+      if (
+        validated.accountSha256 !== accountSha256 ||
+        validated.editionId !== input.expectedEditionId
+      )
+        continue;
+      result.push({
+        receipt: {
+          ...validated,
+          receiverProfile: {
+            ...validated.receiverProfile,
+            dkimSigningDomains: [
+              ...validated.receiverProfile.dkimSigningDomains,
+            ],
+          },
+          partPath: [...validated.partPath],
+        },
+        source: Buffer.from(regular(join(directory, "source.txt"))),
+      });
+    }
+
+    if (existsSync(intakeRoot)) {
+      const rootStat = lstatSync(intakeRoot);
+      if (!rootStat.isDirectory() || rootStat.isSymbolicLink())
+        fail("UNSAFE_INTAKE_DIRECTORY");
+      for (const accountEntry of readdirSync(intakeRoot, {
+        withFileTypes: true,
+      })) {
+        if (!accountEntry.isDirectory() || accountEntry.isSymbolicLink())
+          fail("PENDING_STEVE_EMAIL_INTAKE");
+        if (!/^[a-f0-9]{64}$/.test(accountEntry.name))
+          fail("PENDING_STEVE_EMAIL_INTAKE");
+        const accountPath = join(intakeRoot, accountEntry.name);
+        const bodyRoot = join(accountPath, "bodies");
+        const messagesRoot = join(accountPath, "messages");
+        if (existsSync(bodyRoot)) {
+          const bodyStat = lstatSync(bodyRoot);
+          if (!bodyStat.isDirectory() || bodyStat.isSymbolicLink())
+            fail("UNSAFE_INTAKE_DIRECTORY");
+          for (const bodyEntry of readdirSync(bodyRoot, {
+            withFileTypes: true,
+          })) {
+            if (
+              !bodyEntry.isDirectory() ||
+              bodyEntry.isSymbolicLink() ||
+              !knownReceiptIds.has(bodyEntry.name) ||
+              receiptAccounts.get(bodyEntry.name) !== accountEntry.name
+            )
+              fail("PENDING_STEVE_EMAIL_INTAKE");
+          }
+        }
+        if (existsSync(messagesRoot)) {
+          const messagesStat = lstatSync(messagesRoot);
+          if (!messagesStat.isDirectory() || messagesStat.isSymbolicLink())
+            fail("UNSAFE_INTAKE_DIRECTORY");
+          for (const messageEntry of readdirSync(messagesRoot, {
+            withFileTypes: true,
+          })) {
+            const expected = knownMessages.get(
+              `${accountEntry.name}/${messageEntry.name}`
+            );
+            if (!messageEntry.isDirectory() || messageEntry.isSymbolicLink())
+              fail("PENDING_STEVE_EMAIL_INTAKE");
+            const messagePath = join(messagesRoot, messageEntry.name);
+            const capture = parseCaptureManifest(
+              regular(join(messagePath, "capture.json"))
+            );
+            const receipt = receiptsById.get(capture.receiptId);
+            if (
+              sha256(capture.messageId) !== messageEntry.name ||
+              capture.accountSha256 !== accountEntry.name ||
+              !receipt ||
+              receipt.accountSha256 !== capture.accountSha256 ||
+              receipt.sourceSha256 !== capture.sourceSha256 ||
+              (expected &&
+                (expected.receiptId !== capture.receiptId ||
+                  expected.rawSha256 !== capture.rawSha256 ||
+                  expected.sourceSha256 !== capture.sourceSha256))
+            )
+              fail("PENDING_STEVE_EMAIL_INTAKE");
+            same(
+              sha256(regular(join(messagePath, "message.eml"))),
+              capture.rawSha256,
+              "CHANGED_INTAKE_MIME"
+            );
+          }
+        }
+        if (
+          readdirSync(accountPath).some(
+            (entry) => entry !== "bodies" && entry !== "messages"
+          )
+        )
+          fail("PENDING_STEVE_EMAIL_INTAKE");
+      }
+    }
+    return result.sort(
+      (left, right) =>
+        left.receipt.firstObservedAtEpochMs -
+          right.receipt.firstObservedAtEpochMs ||
+        left.receipt.receiptId.localeCompare(right.receipt.receiptId)
+    );
+  } catch (error) {
+    if (error instanceof SteveEmailIntakeError) throw error;
+    fail("PENDING_STEVE_EMAIL_INTAKE");
+  }
 }
 
 /**

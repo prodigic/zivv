@@ -112,3 +112,11 @@ local observation time; capture-only produced no worker run. Synthetic tests
 exercise authentication ambiguity, MIME forms, corrections, cutoff boundaries,
 lease contention, schema migration and interrupted evidence writes. This is
 implementation/rehearsal evidence, not activation of a Friday schedule.
+
+## Read retained intake without fetching the mailbox
+
+`listRetainedSteveEmailSources({ operatorDirectory, accountId, expectedEditionId })` returns detached `{ receipt, source }` entries from already admitted private evidence. Supply the same account identity used by capture; this preserves existing receipt hashes. The lookup resolves existing correction approval evidence and validates source, original raw message and duplicate-message manifests against the registered receipt. It does not choose a correction parent, approve a source, load an edition or fetch Gmail.
+
+The implementation uses the existing read-only journal recovery snapshot and existing receipt validators. It creates no journal, acquires no writer lease and performs no migration. A missing pristine store returns an empty list; orphan bodies, partial evidence, linked paths, modified data or SQLite sidecars without their main journal refuse. SQLite itself may create its exact WAL/SHM coordination files during a read; tests preserve the main database bytes/mtime, logical rows and every other intake file rather than hiding this behavior with a priming read.
+
+Seventy-two synthetic tests passed: ten retained-lookup cases and the existing 62 intake regressions. Coverage includes two different Gmail IDs sharing the same immutable source receipt, explicit correction approval, tampering, missing evidence and unchanged first-observed time. This supplies a recovery seam for the future acquisition/supervisor integration; it is not an unattended runner or a completed Friday acceptance rehearsal.
