@@ -261,8 +261,8 @@ describe("canonical remote gate for import-only recovery", () => {
     }
     await yieldToReporter();
   }, 90_000);
-  it("does not trust stale local main ancestry or a malformed canonical control tip", () => {
-    const controlHead = f.store.read().head!;
+  it("does not trust stale local main ancestry", async () => {
+    await yieldToReporter();
     const tree = f.git(["rev-parse", `${f.sourceCommit}^{tree}`]);
     const fork = f.git([
       "-c",
@@ -276,17 +276,25 @@ describe("canonical remote gate for import-only recovery", () => {
     ]);
     f.git(["update-ref", "refs/remotes/origin/main", f.sourceCommit]);
     f.git(["push", "--quiet", "--force", f.bare, `${fork}:refs/heads/main`]);
+    await yieldToReporter();
     try {
       expect(f.open).toThrow("SOURCE_NOT_ON_MAIN");
     } finally {
       f.main(f.sourceCommit);
     }
+    await yieldToReporter();
+  }, 30_000);
+  it("refuses a malformed canonical control tip", async () => {
+    await yieldToReporter();
+    const controlHead = f.store.read().head!;
     f.setControl(f.sourceCommit);
+    await yieldToReporter();
     try {
       expect(f.open).toThrow();
     } finally {
       f.setControl(controlHead);
     }
+    await yieldToReporter();
   }, 30_000);
   it("refuses a retained observation before the acknowledged cutoff even when local weekly state is absent", async () => {
     const journal = new WeeklyRunJournal(f.operator),
