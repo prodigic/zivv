@@ -41,6 +41,12 @@ The capsule retains:
 - Validated catalog content and its revision digest.
 - Journal ownership counters, exact canonical run payloads, every stage/attempt
   artifact and schema-v3 intake/correction evidence, with original hashes.
+- Authenticated canonical `email-acquisition/batches/<batchId>.json` files,
+  including messages not yet captured into intake. Preserve their original
+  signatures, operator identity and observation times. Capture normalizes only
+  unique complete authenticated stages or exact hard-link aliases before taking
+  its writer locks; partial, ambiguous, foreign-link or late stages block capture
+  before an archive or retirement fence is written.
 - `email-intake`, `weekly-candidates`, `weekly-publication` and `rollback` trees,
   including empty attempt directories, source MIME/text, receipts, claim plans,
   dispatch records, candidate snapshots/configuration and public files.
@@ -53,6 +59,21 @@ The capsule retains:
   execution and reverified under writer locks. See
   [runtime preparation](recovery-runtime-preparation.md) for the `--npm-cli`
   capture option and exact replacement-tool requirements.
+
+Batch HMAC, inventory and captured-message evidence are checked during capture,
+encryption, authenticated decryption and staging. Empty acquisition directories
+remain compatible with batch-free checkpoints and do not create a working key.
+The existing 256 MiB clear-JSON capsule limit includes all base64 file contents,
+journal and catalog; a registry below its own storage limit can still exceed the
+capsule limit. Capture refuses that overflow before retirement rather than
+discarding messages or increasing the limit.
+
+Restoring batch bytes does not grant access to a mailbox or authorize replay from
+the new location. Ordinary batch readers still reject the changed operator root,
+and the staged installation remains quarantined. The closed read/capture/load
+phases and their acceptance requirements remain tracked in
+[the batch recovery plan](gmail-batch-recovery-plan.md), [#106](https://github.com/prodigic/zivv/issues/106),
+[#109](https://github.com/prodigic/zivv/issues/109) and [#110](https://github.com/prodigic/zivv/issues/110).
 
 Working keys and `recovery/backup-recovery.key` are never embedded. Dependency
 and npm cache trees are omitted; exact locked dependencies need reinstalling in

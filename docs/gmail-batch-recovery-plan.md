@@ -1,8 +1,11 @@
 # Authenticated Gmail batch portability (#106)
 
-Implementation plan; only the pure proof stage is currently in progress. Existing capture already rejects `email-acquisition` as an
-unclassified operator child before archive/fence creation. Replace that blanket
-refusal with authenticated support; do not call current recovery complete.
+Implementation plan. [PR #111](https://github.com/prodigic/zivv/pull/111) delivers
+the detached proof with nine focused tests; capsule preservation and staging are
+the next implementation stage. The baseline capture rejects `email-acquisition`
+before archive/fence creation. Replace that blanket refusal with authenticated
+support; do not call recovery complete until capture, loading and composed
+acceptance below are verified.
 
 ## Reuse the capsule and preserve signed bytes
 

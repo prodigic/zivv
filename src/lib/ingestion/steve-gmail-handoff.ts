@@ -513,6 +513,15 @@ function registryEntries(
   return names;
 }
 
+/** Normalize only existing authenticated stages before recovery capture takes its locks.
+ * Uses the ordinary writer/quarantine checks and grants no relocated-read authority.
+ */
+export function repairSteveGmailBatchStagingForRecovery(input: {
+  operatorDirectory: string;
+}): Promise<void> {
+  return recoverSteveGmailBatchStaging(operatorPath(input.operatorDirectory));
+}
+
 /** Repair under the same lease as registration; capture never nests that lease. */
 async function recoverSteveGmailBatchStaging(
   operatorDirectory: string
