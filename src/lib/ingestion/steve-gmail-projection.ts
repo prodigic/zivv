@@ -43,6 +43,19 @@ function boundedEmail(value: unknown): string {
   return value;
 }
 
+/** Validate and bind the account identity returned by Gmail getProfile. */
+export function assertSteveGmailAccount(
+  expectedAccountId: string,
+  profileValue: unknown
+): string {
+  const expected = boundedEmail(expectedAccountId);
+  const profile = record(profileValue);
+  const accountId = boundedEmail(profile.emailAddress);
+  if (accountId.toLowerCase() !== expected.toLowerCase())
+    return fail("GMAIL_ACCOUNT_MISMATCH");
+  return accountId;
+}
+
 function messageId(value: unknown): string {
   if (typeof value !== "string" || !/^[a-f0-9]{1,128}$/.test(value))
     return fail("INVALID_GMAIL_MESSAGE_ID");
@@ -155,11 +168,10 @@ export function projectSteveGmailSnapshot(input: {
   fullMessage: unknown;
   observedAtEpochMs: number;
 }): SteveGmailSnapshot {
-  const expected = boundedEmail(input.expectedAccountId);
-  const profile = record(input.profile);
-  const accountId = boundedEmail(profile.emailAddress);
-  if (accountId.toLowerCase() !== expected.toLowerCase())
-    return fail("GMAIL_ACCOUNT_MISMATCH");
+  const accountId = assertSteveGmailAccount(
+    input.expectedAccountId,
+    input.profile
+  );
   const listedId = messageId(input.messageId);
   const raw = record(input.rawMessage);
   const full = record(input.fullMessage);
