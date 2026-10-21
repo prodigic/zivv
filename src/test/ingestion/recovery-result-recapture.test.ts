@@ -28,7 +28,7 @@ import { captureOperatorRecoveryCheckpoint } from "../../lib/ingestion/operator-
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 
-// One genuine build followed by three crash boundaries and exact-byte repairs.
+// One genuine build shared by serial publication and replay/repair cases.
 vi.setConfig({ testTimeout: 1_200_000, hookTimeout: 600_000 });
 
 async function expectInterruption(operation: Promise<unknown>): Promise<void> {
@@ -48,6 +48,7 @@ async function expectInterruption(operation: Promise<unknown>): Promise<void> {
 
 describe("genuine frozen-result recapture and cooperative fencing", () => {
   let fixture: Awaited<ReturnType<typeof createRecoveryFrozenFixture>>;
+  let finishRetainedHandoff: (() => Promise<void>) | undefined;
   beforeAll(async () => {
     fixture = await createRecoveryFrozenFixture();
   });
@@ -60,7 +61,7 @@ describe("genuine frozen-result recapture and cooperative fencing", () => {
   });
   afterAll(() => fixture?.close());
 
-  it("retains one exact plan across source checks, fencing, publication and lost-response repair", async () => {
+  it("retains one exact plan through source checks, fencing and publication", async () => {
     const startedAt = Date.now();
     const progress = (phase: string) => {
       if (process.env.ZIVV_RECOVERY_TEST_PROGRESS === "1")
@@ -235,43 +236,56 @@ describe("genuine frozen-result recapture and cooperative fencing", () => {
       planned.portableReceipt
     );
 
-    const result = await invoke();
-    expect(result).toMatchObject({
-      status: "result-handoff-complete",
-      activationAllowed: false,
-      runId: input.runId,
-      candidateId: validated.candidateId,
-      chainId: proof.chainId,
-      chainSha256: sha256(planned.chain),
-      receiptSha256: sha256(planned.portableReceipt),
-    });
-    unlinkSync(input.out + ".receipt.json");
-    expect(await invoke()).toEqual(result);
-    expect(readFileSync(input.out + ".receipt.json")).toEqual(
-      planned.portableReceipt
-    );
-    try {
-      writeFileSync(input.out, "conflicting output");
-      await expect(invoke()).rejects.toThrow();
-    } finally {
-      writeFileSync(input.out, planned.chain);
-    }
-    expect(await invoke()).toEqual(result);
-    expect(readFileSync(input.out + ".plan")).toEqual(planBytes);
-    expect(readFileSync(marker)).toEqual(
-      proof.members.successorRetirementReceipt
-    );
-    expect(readFileSync(join(root, "recovery-frozen.json"))).toEqual(
-      originalAdmission
-    );
-    expect(readFileSync(join(root, "recovery-frozen-result.json"))).toEqual(
-      originalResult
-    );
-    expect(f.readState()).toEqual(originalRun);
-    expect(f.candidateDirectories()).toEqual(originalDirectories);
-    expect(f.refs()).toBe(originalRefs);
-    expect(fixture.originalPaths.some(existsSync)).toBe(false);
-    expect(proof.activationAllowed).toBe(false);
-    progress("final-repair-and-retention-assertions-complete");
+    // Keep this same actual fixture/plan for the serial replay case. The prior
+    // single case reached publication but exceeded its total 20-minute budget.
+    finishRetainedHandoff = async () => {
+      vi.stubEnv("ZIVV_LEDGER_HOME", join(root, "operator"));
+      const result = await invoke();
+      expect(result).toMatchObject({
+        status: "result-handoff-complete",
+        activationAllowed: false,
+        runId: input.runId,
+        candidateId: validated.candidateId,
+        chainId: proof.chainId,
+        chainSha256: sha256(planned.chain),
+        receiptSha256: sha256(planned.portableReceipt),
+      });
+      unlinkSync(input.out + ".receipt.json");
+      expect(await invoke()).toEqual(result);
+      expect(readFileSync(input.out + ".receipt.json")).toEqual(
+        planned.portableReceipt
+      );
+      try {
+        writeFileSync(input.out, "conflicting output");
+        await expect(invoke()).rejects.toThrow();
+      } finally {
+        writeFileSync(input.out, planned.chain);
+      }
+      expect(await invoke()).toEqual(result);
+      expect(readFileSync(input.out + ".plan")).toEqual(planBytes);
+      expect(readFileSync(marker)).toEqual(
+        proof.members.successorRetirementReceipt
+      );
+      expect(readFileSync(join(root, "recovery-frozen.json"))).toEqual(
+        originalAdmission
+      );
+      expect(readFileSync(join(root, "recovery-frozen-result.json"))).toEqual(
+        originalResult
+      );
+      expect(f.readState()).toEqual(originalRun);
+      expect(f.candidateDirectories()).toEqual(originalDirectories);
+      expect(f.refs()).toBe(originalRefs);
+      expect(fixture.originalPaths.some(existsSync)).toBe(false);
+      expect(proof.activationAllowed).toBe(false);
+      progress("final-repair-and-retention-assertions-complete");
+    };
+  });
+
+  it("repairs lost responses from the same fenced plan without changing retained source", async () => {
+    if (!finishRetainedHandoff)
+      throw new Error(
+        "The real recapture publication prerequisite did not complete"
+      );
+    await finishRetainedHandoff();
   });
 });
