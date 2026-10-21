@@ -120,3 +120,28 @@ implementation/rehearsal evidence, not activation of a Friday schedule.
 The implementation uses the existing read-only journal recovery snapshot and existing receipt validators. It creates no journal, acquires no writer lease and performs no migration. A missing pristine store returns an empty list; orphan bodies, partial evidence, linked paths, modified data or SQLite sidecars without their main journal refuse. SQLite itself may create its exact WAL/SHM coordination files during a read; tests preserve the main database bytes/mtime, logical rows and every other intake file rather than hiding this behavior with a priming read.
 
 Seventy-two synthetic tests passed: ten retained-lookup cases and the existing 62 intake regressions. Coverage includes two different Gmail IDs sharing the same immutable source receipt, explicit correction approval, tampering, missing evidence and unchanged first-observed time. This supplies a recovery seam for the future acquisition/supervisor integration; it is not an unattended runner or a completed Friday acceptance rehearsal.
+
+## Durable acquisition and local loading
+
+The [durable Gmail handoff contract](steve-gmail-durable-handoff.md) connects the
+account-bound API reader to immutable private batches before intake begins.
+`captureSteveGmailWindow` replays capture-incomplete batches before requesting a
+token. `replaySteveGmailBatch` supports offline repair and explicit correction
+selection; `readSteveGmailHandoffStatus` derives capture/load status from retained
+evidence rather than a mutable completion flag. A completed capture does not
+suppress discovery of later mail.
+
+`loadRetainedSteveEmailSources({ root, operatorDirectory, accountId,
+expectedEditionId })` uses the existing worker through `load` for ready receipts,
+preserving their source, delivery identity and first local observation. It
+withholds review-required bodies and stops processing later ready receipts after
+a worker failure. The checkout must select the same physical SQLite operator
+store. Its report contains counts and receipt/run identities, never message
+bodies or account addresses. It does not freeze or publish.
+
+Freeze additionally requires exact successful loads for batches saved before its
+cutoff, including receipts admitted after that cutoff. Batch evidence remains
+private. Portable batch recovery is still unsupported under #106; the existing
+recovery inventory refuses the new acquisition tree before archive output or
+retirement. Credentials, supervisor installation, schedule activation and full
+Friday rehearsals remain separate work.

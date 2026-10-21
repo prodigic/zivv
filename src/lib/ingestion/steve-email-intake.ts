@@ -252,6 +252,27 @@ function plainPart(
     ),
   ];
 }
+/** Select the existing intake plaintext bytes; this alone grants no email authority. */
+export function selectSteveEmailPlaintext(payload: GmailMessagePart): {
+  source: Buffer;
+  partPath: number[];
+} {
+  const parts = plainPart(payload);
+  if (parts.length !== 1 || !parts[0].part.body) fail("AMBIGUOUS_STEVE_TEXT");
+  const body = parts[0].part.body;
+  if (!body.base64_url_content && typeof body.content !== "string")
+    fail("AMBIGUOUS_STEVE_TEXT");
+  const source = body.base64_url_content
+    ? decode(body.base64_url_content)
+    : Buffer.from(body.content!, "utf8");
+  if (
+    typeof body.content === "string" &&
+    !source.equals(Buffer.from(body.content, "utf8"))
+  )
+    fail("GMAIL_MIME_TEXT_MISMATCH");
+  if (source.length !== body.size) fail("TRUNCATED_STEVE_TEXT");
+  return { source, partPath: [...parts[0].path] };
+}
 function edition(text: string): string {
   const matches = [
     ...text.matchAll(
@@ -686,6 +707,86 @@ export function listRetainedSteveEmailSources(input: {
   }
 }
 
+export type SteveEmailMessageResolution =
+  | { messageId: string; status: "missing" }
+  | {
+      messageId: string;
+      status: "captured";
+      receipt: SteveEmailReceipt;
+      source: Buffer;
+      captureReceivedAtEpochMs: number;
+    };
+
+/** Resolve batch message identities only through validated capture manifests and receipts. */
+export function resolveRetainedSteveEmailMessages(input: {
+  operatorDirectory: string;
+  accountId: string;
+  expectedEditionId: string;
+  messages: Array<{ messageId: string; rawSha256: string }>;
+}): SteveEmailMessageResolution[] {
+  if (
+    !Array.isArray(input.messages) ||
+    input.messages.length > 100 ||
+    input.messages.some(
+      (message) =>
+        !/^[a-f0-9]{1,128}$/.test(message.messageId) ||
+        !/^[a-f0-9]{64}$/.test(message.rawSha256)
+    ) ||
+    new Set(input.messages.map((message) => message.messageId)).size !==
+      input.messages.length
+  )
+    fail("INVALID_STEVE_EMAIL_RESOLUTION");
+  const retained = listRetainedSteveEmailSources(input);
+  const receipts = new Map(
+    retained.map(({ receipt, source }) => [
+      receipt.receiptId,
+      { receipt, source },
+    ])
+  );
+  const root = join(
+    resolvePrivateCandidateDirectory(input.operatorDirectory),
+    "email-intake",
+    sha256(input.accountId),
+    "messages"
+  );
+  return input.messages.map((requested) => {
+    const messageDirectory = join(root, sha256(requested.messageId));
+    if (!existsSync(messageDirectory))
+      return { messageId: requested.messageId, status: "missing" };
+    const manifest = parseCaptureManifest(
+      regular(join(messageDirectory, "capture.json"))
+    );
+    const rawSha256 = sha256(regular(join(messageDirectory, "message.eml")));
+    const captured = receipts.get(manifest.receiptId);
+    if (
+      manifest.messageId !== requested.messageId ||
+      manifest.accountSha256 !== sha256(input.accountId) ||
+      manifest.rawSha256 !== rawSha256 ||
+      manifest.rawSha256 !== requested.rawSha256 ||
+      !captured ||
+      captured.receipt.accountSha256 !== manifest.accountSha256 ||
+      captured.receipt.sourceSha256 !== manifest.sourceSha256
+    )
+      return { messageId: requested.messageId, status: "missing" };
+    return {
+      messageId: requested.messageId,
+      status: "captured",
+      receipt: {
+        ...captured.receipt,
+        receiverProfile: {
+          ...captured.receipt.receiverProfile,
+          dkimSigningDomains: [
+            ...captured.receipt.receiverProfile.dkimSigningDomains,
+          ],
+        },
+        partPath: [...captured.receipt.partPath],
+      },
+      source: Buffer.from(captured.source),
+      captureReceivedAtEpochMs: manifest.receivedAtEpochMs,
+    };
+  });
+}
+
 /**
  * Capture snapshots obtained through the configured account-bound Gmail connector.
  * Receiver-profile matching is not a signature on arbitrary uploaded JSON/EML.
@@ -738,20 +839,9 @@ export async function captureSteveEmail(input: {
   const senderDate = header(parsed.headers, "date");
   if (!Number.isFinite(Date.parse(senderDate))) fail("INVALID_SENDER_DATE");
   const auth = receiverProfile(parsed.headers);
-  const parts = plainPart(input.fullMessage.payload);
-  if (parts.length !== 1 || !parts[0].part.body) fail("AMBIGUOUS_STEVE_TEXT");
-  const body = parts[0].part.body;
-  if (!body.base64_url_content && typeof body.content !== "string")
-    fail("AMBIGUOUS_STEVE_TEXT");
-  const source = body.base64_url_content
-    ? decode(body.base64_url_content)
-    : Buffer.from(body.content!, "utf8");
-  if (
-    typeof body.content === "string" &&
-    !source.equals(Buffer.from(body.content, "utf8"))
-  )
-    fail("GMAIL_MIME_TEXT_MISMATCH");
-  if (source.length !== body.size) fail("TRUNCATED_STEVE_TEXT");
+  const { source, partPath } = selectSteveEmailPlaintext(
+    input.fullMessage.payload
+  );
   const text = new TextDecoder("utf-8", {
     fatal: true,
     ignoreBOM: true,
@@ -837,7 +927,7 @@ export async function captureSteveEmail(input: {
         disposition:
           siblings.length && !input.correctionOf ? "review-required" : "ready",
         correctionOf: input.correctionOf ?? null,
-        partPath: parts[0].path,
+        partPath,
         receiverProfile: auth,
       };
       // Commit the first admission before filesystem effects: retries cannot recapture time.

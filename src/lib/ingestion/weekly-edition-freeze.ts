@@ -1,6 +1,7 @@
 import { existsSync, lstatSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { assertNoPendingSteveEmail } from "./steve-email-intake.js";
+import { assertNoPendingSteveGmailBatches } from "./steve-gmail-freeze.js";
 import { loadLedger, validateLedger } from "./ledger.js";
 import { withIngestionLock } from "./lock.js";
 import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
@@ -86,6 +87,12 @@ export async function freezeWeeklyImport(input: {
     );
   };
   const pending = (cutoff: number) => {
+    assertNoPendingSteveGmailBatches({
+      operatorDirectory: dirname(input.journal.path),
+      journal: input.journal,
+      scope: input.lease.scope,
+      cutoffEpochMs: cutoff,
+    });
     assertNoPendingSteveEmail(
       dirname(input.journal.path),
       input.journal,

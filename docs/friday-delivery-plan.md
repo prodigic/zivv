@@ -127,6 +127,7 @@ Until these gates pass, the operator uses the preserved manual path. No schedule
 - [Authenticated frozen-result handoff boundaries](recovery-result-chain.md)
 - [Frozen-result recapture and intermediate fencing](recovery-result-recapture.md)
 - [Weekly editions](weekly-editions.md)
+- [Durable Gmail acquisition handoff contract](steve-gmail-durable-handoff.md)
 - [Architecture experiment review](architecture/2026-08-reorganization-review.md)
 - [Enrichment quality protocol](research/enrichment-quality-protocol.md)
 - [GitHub backlog](https://github.com/prodigic/zivv/issues/38)
