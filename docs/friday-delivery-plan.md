@@ -124,6 +124,7 @@ Until these gates pass, the operator uses the preserved manual path. No schedule
 - [Frozen-run recovery through candidate validation](recovery-frozen-admission.md)
 - [Captured accepted-dispatch reconciliation](recovery-dispatch-admission.md)
 - [Verified release acknowledgement recovery](recovery-verified-admission.md)
+- [Authenticated frozen-result handoff boundaries](recovery-result-chain.md)
 - [Weekly editions](weekly-editions.md)
 - [Architecture experiment review](architecture/2026-08-reorganization-review.md)
 - [Enrichment quality protocol](research/enrichment-quality-protocol.md)
