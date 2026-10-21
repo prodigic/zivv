@@ -243,7 +243,7 @@ export async function createRecoveryFrozenFixture(
         moduleResolution: "node",
         outDir: "./dist",
         rootDir: "./src",
-        tsBuildInfoFile: "./.cache/fixture.tsbuildinfo",
+        tsBuildInfoFile: "./node_modules/.tmp/fixture.tsbuildinfo",
         strict: true,
         noImplicitAny: false,
         skipLibCheck: true,

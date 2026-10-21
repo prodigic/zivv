@@ -344,6 +344,113 @@ describe("captured frozen-result chain content proof", () => {
     expect(() =>
       proveRecoveryResultChain({ members: empty, recoveryKey: key })
     ).toThrow("UNEXPLAINED_BUILD_DIRECTORY");
+    const cache = resealSuccessor((checkpoint) => {
+      const recipe = checkpoint.directories.find((dir) =>
+          dir.path.endsWith("/source-build-retained")
+        )!.path,
+        path = recipe + "/source/.cache/fixture.tsbuildinfo",
+        bytes = Buffer.from('{"root":[],"version":"5.8.3"}');
+      checkpoint.files.push({
+        area: "operator",
+        path,
+        bytes: bytes.toString("base64"),
+        sha256: sha256(bytes),
+      });
+      checkpoint.directories.push({
+        area: "operator",
+        path: recipe + "/source/.cache",
+      });
+      checkpoint.files.sort((a, b) =>
+        a.area + "/" + a.path < b.area + "/" + b.path ? -1 : 1
+      );
+      checkpoint.directories.sort((a, b) =>
+        a.area + "/" + a.path < b.area + "/" + b.path ? -1 : 1
+      );
+    });
+    expect(() =>
+      proveRecoveryResultChain({ members: cache, recoveryKey: key })
+    ).toThrow("UNEXPLAINED_BUILD_FILE");
+  });
+
+  it("authenticates the sole source-only enrich role and refuses altered or extra recipe content", () => {
+    for (const change of [
+      "missing",
+      "capture",
+      "blob",
+      "source",
+      "output",
+      "duplicate",
+    ] as const) {
+      const changed = resealSuccessor((checkpoint) => {
+        const recipe = checkpoint.directories.find((dir) =>
+          dir.path.endsWith("/candidate-work-enrich/source-build-enrich")
+        )!.path;
+        if (change === "missing") {
+          checkpoint.files = checkpoint.files.filter(
+            (file) => !file.path.startsWith(recipe + "/")
+          );
+          checkpoint.directories = checkpoint.directories.filter(
+            (dir) => !dir.path.includes("/candidate-work-enrich")
+          );
+        } else if (change === "duplicate") {
+          checkpoint.directories.push({
+            area: "operator",
+            path:
+              recipe.slice(0, recipe.indexOf("/candidate-work-enrich")) +
+              "/candidate-work-duplicate",
+          });
+        } else if (change === "output") {
+          const bytes = Buffer.from("{}\n");
+          checkpoint.files.push({
+            area: "operator",
+            path: recipe + "/execution-tools.json",
+            bytes: bytes.toString("base64"),
+            sha256: sha256(bytes),
+          });
+        } else {
+          const suffix =
+              change === "capture"
+                ? "source-capture.json"
+                : change === "blob"
+                  ? "source.blobs"
+                  : "source/package-lock.json",
+            row = checkpoint.files.find(
+              (file) => file.path === recipe + "/" + suffix
+            )!;
+          let bytes: Buffer;
+          if (change === "capture") {
+            const capture = JSON.parse(
+              Buffer.from(row.bytes!, "base64").toString()
+            );
+            capture.directory = join(directory, "unbound-source");
+            bytes = Buffer.from(canonicalJson(capture) + "\n");
+          } else
+            bytes = Buffer.concat([
+              Buffer.from(row.bytes!, "base64"),
+              Buffer.from("changed\n"),
+            ]);
+          row.bytes = bytes.toString("base64");
+          row.sha256 = sha256(bytes);
+        }
+        checkpoint.files.sort((a, b) =>
+          a.area + "/" + a.path < b.area + "/" + b.path ? -1 : 1
+        );
+        checkpoint.directories.sort((a, b) =>
+          a.area + "/" + a.path < b.area + "/" + b.path ? -1 : 1
+        );
+      });
+      const code =
+        change === "missing" || change === "duplicate"
+          ? "ENRICH_SOURCE_CAPTURE_REQUIRED"
+          : change === "capture"
+            ? "ENRICH_SOURCE_CAPTURE_CHANGED"
+            : change === "output"
+              ? "UNEXPLAINED_BUILD_FILE"
+              : "ENRICH_SOURCE_CONTENT_CHANGED";
+      expect(() =>
+        proveRecoveryResultChain({ members: changed, recoveryKey: key })
+      ).toThrow(code);
+    }
   });
 
   it("refuses modified source content and later build attempts instead of treating every validated result as supported", () => {

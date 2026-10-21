@@ -326,6 +326,26 @@ export async function createRecoveryResultChainFixture() {
     );
     put(sourceRelative + "/source.blobs", sourceBlobs);
     put(sourceRelative + "/source/package-lock.json", lock);
+    // Enrichment retains one source-only capture; export builds a second recipe.
+    const enrichRelative =
+        namespace + "/candidate-work-enrich/source-build-enrich",
+      enrichDirectory = join(operator, ...enrichRelative.split("/"));
+    put(
+      enrichRelative + "/source-capture.json",
+      Buffer.from(
+        canonicalJson({
+          directory: enrichDirectory,
+          sourceRoot: join(enrichDirectory, "source"),
+          sourceCommit: buildSourceCommit,
+          sourceTree,
+          files: sourceFiles,
+          archiveSha256: sha256(sourceBlobs),
+          purpose: "release",
+        }) + "\n"
+      )
+    );
+    put(enrichRelative + "/source.blobs", sourceBlobs);
+    put(enrichRelative + "/source/package-lock.json", lock);
     put(sourceRelative + "/source/dist/lib/etl/processor.js", compiled);
     put(sourceRelative + "/application-build.json", applicationBytes);
     put(

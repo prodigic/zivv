@@ -32,9 +32,19 @@ requires a resulting first-eight-stage success prefix with deployment,
 verification and acknowledgement pending. Signed but inconsistent members,
 unexplained output, partial builds or mixed identities must be refused.
 The initial format covers a clean first attempt at enrichment, export and
-validation with one retained source-build recipe. A successful result following
+validation with one retained export build recipe and exactly one source-only
+enrichment capture. The enrichment capture must contain the same authenticated
+Git inventory, blob stream and source bytes as the export recipe, with its own
+exact physical capture paths and no build outputs. A successful result following
 failed build attempts requires additional chain support and remains part of the
 interrupted-build work; it is not silently accepted by this first format.
+
+Compiler cache files outside the standard capsule omissions are not supported
+without separate content provenance. In particular, an unreceipted
+`source/.cache/*.tsbuildinfo` is refused. The genuine fixture places TypeScript
+build metadata under `node_modules/.tmp`, matching the current repository's
+compiler configuration and existing dependency omission; this does not add
+general compiler-cache recovery support.
 
 The library exposes `proveRecoveryResultChain`, `encryptRecoveryResultChain` and
 `decryptRecoveryResultChain`. Fixed binary frames carry raw members under

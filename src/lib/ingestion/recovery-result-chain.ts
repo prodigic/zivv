@@ -908,6 +908,62 @@ export function proveRecoveryResultChain(input: RecoveryResultChainInput) {
         fail("COPIED_PUBLIC_METADATA_CHANGED");
       allowedNewFiles.add(path);
     }
+  // A clean enrichment captures reviewed source before export creates its own
+  // build workspace. Admit exactly that source-only sibling, with the same
+  // authenticated input bytes; it cannot contain a second or partial build.
+  const enrichmentWorks = successor.directories.filter(
+    (dir) =>
+      dir.area === "operator" &&
+      dir.path !== workRelative &&
+      dir.path.startsWith(namespace + "/") &&
+      /^candidate-work-[A-Za-z0-9_-]+$/.test(
+        dir.path.slice(namespace.length + 1)
+      )
+  );
+  if (enrichmentWorks.length !== 1) fail("ENRICH_SOURCE_CAPTURE_REQUIRED");
+  const enrichmentWork = enrichmentWorks[0].path,
+    enrichmentSources = successor.directories.filter(
+      (dir) =>
+        dir.area === "operator" &&
+        dir.path.startsWith(enrichmentWork + "/") &&
+        /^source-build-[A-Za-z0-9_-]+$/.test(
+          dir.path.slice(enrichmentWork.length + 1)
+        )
+    );
+  if (enrichmentSources.length !== 1) fail("ENRICH_SOURCE_CAPTURE_REQUIRED");
+  const enrichmentRelative = enrichmentSources[0].path,
+    enrichmentPrefix = "operator/" + enrichmentRelative + "/",
+    enrichmentFile = (path: string) => {
+      const file = successorFiles.get(enrichmentPrefix + path);
+      if (!file || file.bytes === null) fail("ENRICH_SOURCE_CONTENT_CHANGED");
+      allowedNewFiles.add(enrichmentPrefix + path);
+      return Buffer.from(file.bytes, "base64");
+    },
+    enrichmentCaptureBytes = enrichmentFile("source-capture.json"),
+    expectedEnrichmentCapture = {
+      ...capture,
+      directory: pathJoin(operator, ...enrichmentRelative.split("/")),
+      sourceRoot: pathJoin(
+        operator,
+        ...enrichmentRelative.split("/"),
+        "source"
+      ),
+    };
+  if (
+    !enrichmentCaptureBytes.equals(
+      Buffer.from(canonicalJson(expectedEnrichmentCapture) + "\n")
+    )
+  )
+    fail("ENRICH_SOURCE_CAPTURE_CHANGED");
+  if (!enrichmentFile("source.blobs").equals(stream))
+    fail("ENRICH_SOURCE_CONTENT_CHANGED");
+  for (const file of capturedSourceEntries)
+    if (
+      !enrichmentFile("source/" + file.path).equals(
+        sourceFile("source/" + file.path)
+      )
+    )
+      fail("ENRICH_SOURCE_CONTENT_CHANGED");
   for (const [path] of successorFiles)
     if (!originalFiles.has(path) && !allowedNewFiles.has(path))
       fail("UNEXPLAINED_BUILD_FILE");
