@@ -37,7 +37,10 @@ import {
   canonicalJson,
   ledgerDigest,
   readSqliteLedger,
+  readSqliteLedgerReadOnly,
 } from "./sqlite-store.js";
+import type { RecoveryResultPlanContext } from "./recovery-result-plan.js";
+import { assertReadOnlySqliteFiles } from "./readonly-sqlite-files.js";
 import { sha256 } from "./steve-preflight.js";
 import { validateWeeklyJournalRecoverySnapshot } from "./weekly-run-journal.js";
 import {
@@ -158,6 +161,9 @@ export interface RecoveredVerifiedReport {
 }
 export interface RecoveryFrozenInput extends RecoveryImportInput {
   sourceCommit: string;
+}
+export interface RecoveryFrozenResultRecaptureInput extends RecoveryFrozenInput {
+  out: string;
 }
 export interface RecoveredFrozenReport {
   status: "candidate-validated";
@@ -471,6 +477,7 @@ function currentRun(
   database?: DatabaseSync
 ): WeeklyRunState {
   const path = join(operator, "weekly-runs.sqlite");
+  const identity = assertReadOnlySqliteFiles(path);
   regular(path, 512 * 1024 * 1024);
   const db = database ?? new DatabaseSync(path, { readOnly: true });
   try {
@@ -531,7 +538,11 @@ function currentRun(
       fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
     return run;
   } finally {
-    if (!database) db.close();
+    try {
+      assertReadOnlySqliteFiles(path, identity);
+    } finally {
+      if (!database) db.close();
+    }
   }
 }
 function admissionNames(mode: RecoveryMode) {
@@ -557,10 +568,14 @@ function admissionNames(mode: RecoveryMode) {
           result: "recovery-candidate-result.json",
         };
 }
-function ensureAdmission(
+function openAdmission(
   input: RecoveryImportInput,
   test?: TestOptions,
-  mode: RecoveryMode = "load"
+  mode: RecoveryMode = "load",
+  recapture?: {
+    readOnly: boolean;
+    exactFiles: ReadonlyMap<string, Buffer>;
+  }
 ) {
   if (candidateMode(mode)) {
     if (
@@ -707,6 +722,18 @@ function ensureAdmission(
               checkpoint: opened.checkpoint,
             });
   const names = admissionNames(mode);
+  const recaptureMutable = (entry: RecoveryRuntimeEntry) => {
+    const exact = recapture?.exactFiles.get(entry.path);
+    if (exact !== undefined) {
+      if (
+        entry.kind !== "file" ||
+        !regular(join(root, entry.path)).equals(exact)
+      )
+        fail("RECOVERY_RESULT_RECAPTURE_METADATA_CHANGED");
+      return true;
+    }
+    return mutable(entry, retained, reportPath, mode, input.runId);
+  };
   const configuration =
     mode === "validate"
       ? captureExportConfiguration(join(root, "checkout"))
@@ -770,6 +797,7 @@ function ensureAdmission(
       : { kind: "authoritative-https" },
   };
   if (!existsSync(path)) {
+    if (recapture) fail("RECOVERY_RESULT_RECAPTURE_RESULT_REQUIRED");
     verifyPreparedOperatorRuntime(input);
     const initial = opened.inventory();
     remote.assertCurrent();
@@ -779,16 +807,20 @@ function ensureAdmission(
       scratch
     );
   }
-  const bytes = readRecoveryInstalledFile(path, scratch, (current) => {
-      const saved = authenticated(current, input.recoveryKey);
-      if (
-        typeof saved.immutableSha256 !== "string" ||
-        !/^[a-f0-9]{64}$/.test(saved.immutableSha256)
-      )
-        fail();
-      same(saved, { ...fixed, immutableSha256: saved.immutableSha256 });
-    }),
+  const validateRecord = (current: Buffer) => {
+    const saved = authenticated(current, input.recoveryKey);
+    if (
+      typeof saved.immutableSha256 !== "string" ||
+      !/^[a-f0-9]{64}$/.test(saved.immutableSha256)
+    )
+      fail();
+    same(saved, { ...fixed, immutableSha256: saved.immutableSha256 });
+  };
+  const bytes = recapture?.readOnly
+      ? regular(path)
+      : readRecoveryInstalledFile(path, scratch, validateRecord),
     record = authenticated(bytes, input.recoveryKey);
+  validateRecord(bytes);
   if (
     typeof record.immutableSha256 !== "string" ||
     !/^[a-f0-9]{64}$/.test(record.immutableSha256)
@@ -799,7 +831,7 @@ function ensureAdmission(
     operator,
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
   );
-  if (existsSync(keyPath))
+  if (!recapture?.readOnly && existsSync(keyPath))
     installRecoveredBackupKey(operator, input.recoveryKey, {
       stagingDirectory: scratch,
     });
@@ -862,7 +894,7 @@ function ensureAdmission(
     const actual = sha256(
       canonicalJson(
         opened.inventoryImmutable(
-          (entry) => mutable(entry, retained, reportPath, mode, input.runId),
+          recaptureMutable,
           mode === "validate" ? buildNamespace(input.runId) : undefined
         )
       )
@@ -874,6 +906,7 @@ function ensureAdmission(
   if (test?.crashAfterIntent) fail("RECOVERY_IMPORT_TEST_AFTER_INTENT");
   // Key installation follows the durable admission intent, never the reverse.
   if (!existsSync(keyPath)) {
+    if (recapture?.readOnly) fail("RECOVERY_IMPORT_WORKING_KEY_MISMATCH");
     try {
       installRecoveredBackupKey(operator, input.recoveryKey, {
         stagingDirectory: scratch,
@@ -892,7 +925,10 @@ function ensureAdmission(
     journal: lstatSync(join(operator, "weekly-runs.sqlite")),
   };
   const assertCurrent = () => {
-    assertOperatorInstallationWritable(operator);
+    if (!recapture?.readOnly) assertOperatorInstallationWritable(operator);
+    for (const [path, expected] of recapture?.exactFiles ?? [])
+      if (!regular(join(root, path)).equals(expected))
+        fail("RECOVERY_RESULT_RECAPTURE_METADATA_CHANGED");
     if (mode === "acknowledge") {
       same(
         ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
@@ -963,7 +999,11 @@ function ensureAdmission(
   currentRun(operator, original, mode);
   if (candidateMode(mode) || mode === "validate")
     same(
-      ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
+      ledgerDigest(
+        (recapture?.readOnly ? readSqliteLedgerReadOnly : readSqliteLedger)(
+          join(operator, "ledger.sqlite")
+        )
+      ),
       opened.checkpoint.ledgerRevision
     );
   remote.assertCurrent();
@@ -1004,6 +1044,169 @@ function ensureAdmission(
           }
         : undefined,
   };
+}
+
+function ensureAdmission(
+  input: RecoveryImportInput,
+  test?: TestOptions,
+  mode: RecoveryMode = "load",
+  recapture?: { readOnly: false; exactFiles: ReadonlyMap<string, Buffer> }
+) {
+  return openAdmission(input, test, mode, recapture);
+}
+
+const recaptureSelectionName = "recovery-frozen-recapture.json";
+
+/** Authenticate fixed source metadata; this returns evidence, never capture authority. */
+export function inspectRecoveryFrozenResultRecapture(
+  input: RecoveryFrozenResultRecaptureInput
+) {
+  frozenInput(input);
+  const opened = openPreparedRuntimeForAdmission(input),
+    root = resolve(input.destination),
+    admissionReceipt = regular(join(root, "recovery-frozen.json")),
+    resultReceipt = regular(join(root, "recovery-frozen-result.json")),
+    preparedReceipt = regular(join(root, "prepared-runtime.json"), 16 * 1024),
+    original = retainedRun(input, opened.checkpoint, "validate"),
+    result = authenticated(resultReceipt, input.recoveryKey);
+  same(result, {
+    status: "candidate-validated",
+    activationAllowed: false,
+    runId: original.runId,
+    ledgerRevision: opened.checkpoint.ledgerRevision,
+    admissionSha256: sha256(admissionReceipt),
+    candidateId: result.candidateId,
+  });
+  if (
+    typeof result.candidateId !== "string" ||
+    !/^[a-f0-9]{64}$/.test(result.candidateId)
+  )
+    fail("RECOVERY_RESULT_RECAPTURE_RESULT_REQUIRED");
+  const context: RecoveryResultPlanContext = {
+    root,
+    operator: join(root, "operator"),
+    repositoryRoot: realpathSync(input.repositoryRoot),
+    npmCli: resolve(input.npmCli),
+    out: resolve(input.out),
+    runId: original.runId,
+    admissionSha256: sha256(admissionReceipt),
+    resultSha256: sha256(resultReceipt),
+    preparedReceiptSha256: sha256(preparedReceipt),
+  };
+  const payload = {
+    kind: "zivv-recovery-frozen-result-recapture",
+    version: 1,
+    activationAllowed: false,
+    context,
+    archiveSha256: sha256(input.archive),
+    retirementSha256: sha256(input.retirementReceipt),
+    sourceCommit: input.sourceCommit,
+    candidateId: result.candidateId,
+  };
+  const selectionBytes = Buffer.from(
+    canonicalJson({
+      payload,
+      signature: createHmac("sha256", input.recoveryKey)
+        .update("zivv-recovery-frozen-result-recapture/v1\0")
+        .update(canonicalJson(payload))
+        .digest("hex"),
+    }) + "\n"
+  );
+  const selectionPath = join(root, recaptureSelectionName);
+  if (existsSync(selectionPath))
+    readRecoveryInstalledFile(
+      selectionPath,
+      join(dirname(root), ".zivv-recovery-install-" + sha256(root)),
+      (current) => {
+        if (!current.equals(selectionBytes))
+          fail("RECOVERY_RESULT_RECAPTURE_SELECTION_CONFLICT");
+      }
+    );
+  return {
+    context,
+    opened,
+    original,
+    result,
+    admissionReceipt,
+    resultReceipt,
+    preparedReceipt,
+    selectionBytes,
+    selectionPath,
+  };
+}
+
+function openFrozenResultRecapture(
+  input: RecoveryFrozenResultRecaptureInput,
+  readOnly: boolean,
+  test?: { bareDirectory: string }
+) {
+  const selected = inspectRecoveryFrozenResultRecapture(input),
+    exactFiles = new Map<string, Buffer>();
+  if (existsSync(selected.selectionPath))
+    exactFiles.set(recaptureSelectionName, selected.selectionBytes);
+  const marker = join(selected.context.operator, "operator-retired.json");
+  if (readOnly && existsSync(marker))
+    exactFiles.set(
+      "operator/operator-retired.json",
+      regular(marker, 16 * 1024)
+    );
+  const ledgerPath = join(selected.context.operator, "ledger.sqlite"),
+    ledgerFiles = assertReadOnlySqliteFiles(ledgerPath);
+  const admitted = readOnly
+    ? openAdmission(input, test, "validate", { readOnly: true, exactFiles })
+    : ensureAdmission(input, test, "validate", { readOnly: false, exactFiles });
+  const assertCurrent = () => {
+    assertReadOnlySqliteFiles(ledgerPath, readOnly ? ledgerFiles : undefined);
+    admitted.assertCurrent();
+    admitted.opened.assertRuntime();
+    admitted.assertImmutable();
+    admitted.remote.assertCurrent();
+    same(
+      regular(join(admitted.root, "recovery-frozen-result.json")).toString(
+        "base64"
+      ),
+      selected.resultReceipt.toString("base64")
+    );
+    const run = currentRun(admitted.operator, admitted.original, "validate");
+    if (
+      run.stages.slice(0, 8).some((stage) => stage.status !== "succeeded") ||
+      run.stages.slice(8).some((stage) => stage.status !== "pending") ||
+      run.stages[7].evidence?.candidateId !== selected.result.candidateId
+    )
+      fail("RECOVERY_RESULT_RECAPTURE_RESULT_REQUIRED");
+    same(
+      ledgerDigest(
+        (readOnly ? readSqliteLedgerReadOnly : readSqliteLedger)(
+          join(admitted.operator, "ledger.sqlite")
+        )
+      ),
+      admitted.opened.checkpoint.ledgerRevision
+    );
+    assertReadOnlySqliteFiles(ledgerPath, readOnly ? ledgerFiles : undefined);
+    if (
+      existsSync(selected.selectionPath) &&
+      !regular(selected.selectionPath).equals(selected.selectionBytes)
+    )
+      fail("RECOVERY_RESULT_RECAPTURE_SELECTION_CONFLICT");
+  };
+  assertCurrent();
+  return { ...selected, assertCurrent };
+}
+
+/** Writable pre-fence admission, restricted to an already completed frozen result. */
+export function admitRecoveryFrozenResultRecapture(
+  input: RecoveryFrozenResultRecaptureInput,
+  test?: { bareDirectory: string }
+) {
+  return openFrozenResultRecapture(input, false, test);
+}
+
+/** Post-fence verification performs no admission/key installation or writable SQL. */
+export function observeRecoveryFrozenResultRecapture(
+  input: RecoveryFrozenResultRecaptureInput,
+  test?: { bareDirectory: string }
+) {
+  return openFrozenResultRecapture(input, true, test);
 }
 
 /** Only the coordinator below can establish this scope; ordinary staging stays blocked. */

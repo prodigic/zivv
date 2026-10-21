@@ -502,10 +502,26 @@ export function proveRecoveryResultChain(input: RecoveryResultChainInput) {
   const { bootstrapNpm: _oldNpm, ...oldRuntime } = original.runtime,
     { bootstrapNpm: _newNpm, ...newRuntime } = successor.runtime;
   same(newRuntime, oldRuntime, "RUNTIME_CHANGED");
-  const { originalCli: _oldCli, ...oldTool } = original.runtime.bootstrapNpm,
-    { originalCli: _newCli, ...newTool } = successor.runtime.bootstrapNpm;
+  // Each full hash includes originalCli. Validate both hashes, then compare
+  // the complete package content while binding the replacement path separately.
+  const originalTool = validateNpmExecutionToolIdentity(
+      original.runtime.bootstrapNpm
+    ),
+    successorTool = validateNpmExecutionToolIdentity(
+      successor.runtime.bootstrapNpm
+    ),
+    {
+      originalCli: _oldCli,
+      identitySha256: _oldIdentity,
+      ...oldTool
+    } = originalTool,
+    {
+      originalCli: _newCli,
+      identitySha256: _newIdentity,
+      ...newTool
+    } = successorTool;
   same(newTool, oldTool, "BOOTSTRAP_CHANGED");
-  same(successor.runtime.bootstrapNpm.originalCli, npmCli);
+  same(successorTool.originalCli, npmCli);
   const namespace =
       "weekly-candidates/r-" + sha256(admission.runId).slice(0, 16),
     buildParent = pathJoin(operator, ...namespace.split("/"));
@@ -703,7 +719,7 @@ export function proveRecoveryResultChain(input: RecoveryResultChainInput) {
     JSON.parse(toolBytes.toString("utf8"))
   );
   same(tool.originalCli, npmCli);
-  same(tool.identitySha256, prepared.npmIdentitySha256);
+  same(tool, successorTool, "BUILD_TOOL_CHANGED");
   // The mutable namespace is a location, not permission to retain arbitrary
   // siblings. Authenticate the one actual source-build recipe as well as seal.
   const allowedNewFiles = new Set<string>(

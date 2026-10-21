@@ -52,7 +52,7 @@ cannot reconstruct that omitted physical inventory or establish fresh remote
 heads. Its detached proof therefore requires physical and fresh canonical
 validation, and always carries `activationAllowed: false`.
 
-The later recapture coordinator must verify the actual bounded result under the
+The [recapture coordinator](recovery-result-recapture.md) verifies the bounded result under the
 existing journal/catalog locks. Ordinary capture of quarantined state remains
 forbidden. A narrowly minted internal capture capability must grant no weekly
 runner authority. Persist the exact encrypted handoff plan durably before fencing
@@ -86,8 +86,9 @@ verification rather than a guarantee of unchanged filesystem metadata.
 
 The observer does not cover preparation metadata or dependency inventory omitted
 from standard capsules, fresh canonical heads, or a new host. The coordinator must
-verify those separately. These primitives do not provide a recapture CLI, grant
-capture authority in quarantine, or complete the composed recovery rehearsal.
+verify those separately. These storage and observer primitives grant no capture
+authority by themselves; the separate coordinator owns the narrow recapture
+command. Native composed acceptance and new-host admission remain unfinished.
 
 ## Acceptance still required
 

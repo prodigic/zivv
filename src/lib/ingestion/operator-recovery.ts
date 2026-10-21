@@ -82,6 +82,10 @@ import {
   verifyNpmExecutionTool,
   type NpmExecutionToolIdentity,
 } from "./execution-tool-identity.js";
+import {
+  assertRecoveryResultCaptureCurrent,
+  finalizeRecoveryResultCapture,
+} from "./recovery-result-recapture.js";
 
 const scope = "prodigic/zivv/production";
 const format = "zivv-operator-recovery";
@@ -716,7 +720,8 @@ export async function captureOperatorRecoveryCheckpoint(
 async function captureCheckpoint(
   root: string,
   finalize?: (checkpoint: OperatorRecoveryCheckpoint) => void,
-  npmCli?: string
+  npmCli?: string,
+  resultRecapture = false
 ): Promise<OperatorRecoveryCheckpoint> {
   const checkout = realpathSync(root),
     location = projectLedgerLocation(checkout);
@@ -724,7 +729,12 @@ async function captureCheckpoint(
     throw new Error("SHARED_SQLITE_REQUIRED");
   assertNoActiveStoreTransaction(location.path);
   const operator = resolvePrivateCandidateDirectory(location.directory);
-  assertOperatorNotQuarantined(operator);
+  const assertCapture = () => {
+    if (resultRecapture)
+      assertRecoveryResultCaptureCurrent({ checkout, operator, npmCli });
+    else assertOperatorNotQuarantined(operator);
+  };
+  assertCapture();
   const bootstrapNpm =
     npmCli === undefined ? undefined : captureNpmExecutionTool(npmCli);
   const journal = new WeeklyRunJournal(operator);
@@ -734,6 +744,7 @@ async function captureCheckpoint(
     const owned = lease;
     return await journal.guardOperation(owned, () =>
       withStoreTransaction(location.path, async () => {
+        assertCapture();
         const captured = inventory(operator, checkout);
         const ledger = readSqliteLedger(location.path);
         const checkpoint = validateOperatorRecoveryCheckpoint({
@@ -765,6 +776,7 @@ async function captureCheckpoint(
         journal.checkOwnership(owned);
         if (bootstrapNpm && npmCli !== undefined)
           verifyNpmExecutionTool(bootstrapNpm, npmCli);
+        assertCapture();
         finalize?.(checkpoint);
         return checkpoint;
       })
@@ -776,6 +788,21 @@ async function captureCheckpoint(
       journal.close();
     }
   }
+}
+
+/** Private-ALS-gated result capture; it grants no ordinary quarantine exception. */
+export function captureRecoveryResultCheckpoint(input: {
+  checkout: string;
+  operator: string;
+  npmCli: string;
+}): Promise<OperatorRecoveryCheckpoint> {
+  assertRecoveryResultCaptureCurrent(input);
+  return captureCheckpoint(
+    input.checkout,
+    finalizeRecoveryResultCapture,
+    input.npmCli,
+    true
+  );
 }
 
 /** Authenticate portable final-capture evidence; this grants no installation activation. */

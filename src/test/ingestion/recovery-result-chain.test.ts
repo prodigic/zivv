@@ -16,6 +16,7 @@ import {
 } from "../../lib/ingestion/operator-recovery.js";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
+import { captureNpmExecutionTool } from "../../lib/ingestion/execution-tool-identity.js";
 import type { WeeklyJournalRecoverySnapshot } from "../../lib/ingestion/weekly-run-journal.js";
 import {
   proveRecoveryResultChain,
@@ -111,6 +112,14 @@ describe("captured frozen-result chain content proof", () => {
       chainId: proof.chainId,
     });
     expect(restored.candidate.candidateId).toBe(fixture.candidate.candidateId);
+    const historical = restored.originalCheckpoint.runtime.bootstrapNpm!,
+      relocated = restored.successorCheckpoint.runtime.bootstrapNpm!,
+      prepared = JSON.parse(members.preparedReceipt.toString("utf8"));
+    expect(relocated.originalCli).not.toBe(historical.originalCli);
+    expect(relocated.identitySha256).not.toBe(historical.identitySha256);
+    expect(captureNpmExecutionTool(relocated.originalCli)).toEqual(relocated);
+    expect(prepared.npmIdentitySha256).toBe(historical.identitySha256);
+    expect(prepared.physicalNpmCli).toBe(relocated.originalCli);
     for (const name of Object.keys(
       members
     ) as (keyof RecoveryResultChainMembers)[])
@@ -122,6 +131,35 @@ describe("captured frozen-result chain content proof", () => {
     ).toEqual(members.originalArchive);
     expect(fixture.refs()).toBe(refs);
   }, 90_000);
+
+  it("refuses validly reauthenticated package changes and an unadmitted replacement path", () => {
+    for (const alter of ["version", "content", "path"] as const) {
+      const changed = resealSuccessor((checkpoint) => {
+        const { identitySha256: _identity, ...retained } =
+          checkpoint.runtime.bootstrapNpm!;
+        const payload = {
+          ...retained,
+          version: alter === "version" ? "11.6.1" : retained.version,
+          originalCli:
+            alter === "path"
+              ? join(directory, "unadmitted-tool/bin/npm-cli.js")
+              : retained.originalCli,
+          files: retained.files.map((file, index) =>
+            alter === "content" && index === 0
+              ? { ...file, sha256: "0".repeat(64) }
+              : { ...file }
+          ),
+        };
+        checkpoint.runtime.bootstrapNpm = {
+          ...payload,
+          identitySha256: sha256(canonicalJson(payload)),
+        };
+      });
+      expect(() =>
+        proveRecoveryResultChain({ members: changed, recoveryKey: key })
+      ).toThrow(alter === "path" ? "MEMBER_MISMATCH" : "BOOTSTRAP_CHANGED");
+    }
+  });
 
   it("rejects inconsistent results and preparation even when their HMACs are valid", () => {
     const result = JSON.parse(members.resultReceipt.toString("utf8")).payload;

@@ -36,6 +36,8 @@
     "src/test/ingestion/recovery-result-chain.test.ts",
     "src/test/ingestion/recovery-result-chain-framing.test.ts",
     "src/test/ingestion/recovery-result-plan.test.ts",
+    "src/test/ingestion/recovery-result-recapture.test.ts",
+    "src/test/ingestion/recovery-result-capture-authority.test.ts",
     "src/test/ingestion/pages-dispatch-evidence.test.ts",
     "src/test/ingestion/recovery-frozen-remote.test.ts",
     "src/test/ingestion/recovery-frozen-admission.test.ts",

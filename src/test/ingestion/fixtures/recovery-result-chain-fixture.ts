@@ -1,7 +1,8 @@
 import { createHash, createHmac } from "node:crypto";
-import { mkdtempSync, rmSync } from "node:fs";
+import { cpSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, relative } from "node:path";
+import { dirname, join, relative } from "node:path";
+import { captureNpmExecutionTool } from "../../../lib/ingestion/execution-tool-identity.js";
 import { createRecoveryCandidateRemoteFixture } from "./recovery-candidate-remote-fixture.js";
 import { createOperatorRetirementReceipt } from "../../../lib/ingestion/operator-installation.js";
 import {
@@ -116,6 +117,14 @@ export async function createRecoveryResultChainFixture() {
     );
     saveJournal(original, oldJournal);
     const successor = structuredClone(fixture.checkpoint);
+    const replacementToolRoot = join(directory, "replacement-tool");
+    cpSync(dirname(dirname(fixture.npmCli)), replacementToolRoot, {
+      recursive: true,
+    });
+    const replacementNpmCli = join(replacementToolRoot, "bin/npm-cli.js"),
+      replacementTool = captureNpmExecutionTool(replacementNpmCli),
+      replacementToolBytes = Buffer.from(canonicalJson(replacementTool) + "\n");
+    successor.runtime.bootstrapNpm = replacementTool;
     const root = join(directory, "intermediate"),
       operator = join(root, "operator"),
       namespace =
@@ -245,6 +254,7 @@ export async function createRecoveryResultChainFixture() {
     application.sourceInventorySha256 = sha256(canonicalJson(sourceFiles));
     application.archiveSha256 = sha256(sourceBlobs);
     application.packageLockSha256 = sha256(lock);
+    application.executionToolSha256 = sha256(replacementToolBytes);
     application.etlInventorySha256 = sha256(
       canonicalJson([
         {
@@ -283,7 +293,7 @@ export async function createRecoveryResultChainFixture() {
         publicFiles,
         applicationBuildManifest: read("build/vite-manifest.json"),
         applicationBuildReceipt: applicationBytes,
-        executionToolIdentity: read("build/execution-tools.json"),
+        executionToolIdentity: replacementToolBytes,
       });
     put(
       bundleRelative + "/candidate.json",
@@ -299,6 +309,7 @@ export async function createRecoveryResultChainFixture() {
       )
     );
     put(bundleRelative + "/build/application-build.json", applicationBytes);
+    put(bundleRelative + "/build/execution-tools.json", replacementToolBytes);
     put(
       sourceRelative + "/source-capture.json",
       Buffer.from(
@@ -338,6 +349,7 @@ export async function createRecoveryResultChainFixture() {
         Buffer.from(enriched.bytes, "base64").toString("utf8")
       );
     enrichedValue.build.sourceCommit = buildSourceCommit;
+    enrichedValue.build.npmCli = replacementNpmCli;
     const enrichedBytes = Buffer.from(canonicalJson(enrichedValue) + "\n");
     enriched.bytes = enrichedBytes.toString("base64");
     enriched.identity = sha256(enrichedBytes);
@@ -389,7 +401,7 @@ export async function createRecoveryResultChainFixture() {
         archiveSha256: sha256(originalArchive),
         retirementSha256: sha256(originalRetirementReceipt),
         physicalRoot: root,
-        physicalNpmCli: fixture.npmCli,
+        physicalNpmCli: replacementNpmCli,
         npmIdentitySha256: original.runtime.bootstrapNpm!.identitySha256,
         status: "prepared",
         activationAllowed: false,
@@ -432,7 +444,7 @@ export async function createRecoveryResultChainFixture() {
         root,
         operator,
         repositoryRoot: fixture.repositoryRoot,
-        physicalNpmCli: fixture.npmCli,
+        physicalNpmCli: replacementNpmCli,
         checkpointSha256: preparedPayload.checkpointSha256,
         archiveSha256: sha256(originalArchive),
         retirementSha256: sha256(originalRetirementReceipt),
