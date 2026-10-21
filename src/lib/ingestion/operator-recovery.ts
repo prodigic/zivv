@@ -41,6 +41,7 @@ import {
   canonicalJson,
   ledgerDigest,
   readSqliteLedger,
+  readSqliteLedgerReadOnly,
   withStoreTransaction,
   writeSqliteLedger,
   assertNoActiveStoreTransaction,
@@ -73,6 +74,7 @@ import { sha256 } from "./steve-preflight.js";
 import {
   WeeklyRunJournal,
   validateWeeklyJournalRecoverySnapshot,
+  readWeeklyJournalRecoverySnapshotReadOnly,
 } from "./weekly-run-journal.js";
 import {
   captureNpmExecutionTool,
@@ -211,7 +213,8 @@ function regular(path: string, limit = maxBytes): Buffer {
 }
 function inventory(
   operator: string,
-  checkout: string
+  checkout: string,
+  retirementReceipt?: Buffer
 ): Pick<OperatorRecoveryCheckpoint, "files" | "directories"> {
   const files: RecoveryFile[] = [];
   const directories: OperatorRecoveryCheckpoint["directories"] = [];
@@ -258,6 +261,9 @@ function inventory(
         readdirSync(path).some((file) => file !== "backup-recovery.key")
       )
         throw new Error("UNCLASSIFIED_OPERATOR_ARTIFACT");
+    } else if (name === "operator-retired.json" && retirementReceipt) {
+      if (!regular(join(operator, name), 16 * 1024).equals(retirementReceipt))
+        throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
     } else if (
       !operatorInfrastructure.has(name) &&
       !operatorTrees.includes(name)
@@ -795,6 +801,91 @@ export function verifyOperatorRetirementEvidence(input: {
   )
     throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
   return { checkpoint, receipt };
+}
+
+/**
+ * Recheck a fenced installation's physical catalog, journal, files and runtime.
+ * This grants no writer lease, activation or permission to publish a handoff.
+ * Read-only SQLite may create WAL/SHM sidecars; logical content remains unchanged.
+ */
+export function observeRetiredOperatorRecoveryCheckpoint(input: {
+  root: string;
+  archive: Buffer;
+  retirementReceipt: Buffer;
+  recoveryKey: Buffer;
+  npmCli?: string;
+}): OperatorRecoveryCheckpoint {
+  const { checkpoint } = verifyOperatorRetirementEvidence(input);
+  const checkout = realpathSync(input.root);
+  const location = projectLedgerLocation(checkout);
+  const operator = resolvePrivateCandidateDirectory(location.directory);
+  if (
+    location.backend !== "sqlite" ||
+    checkout !== checkpoint.originalCheckout ||
+    operator !== checkpoint.originalOperatorDirectory
+  )
+    throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
+  assertNoActiveStoreTransaction(location.path);
+  const marker = join(operator, "operator-retired.json");
+  const assertMarker = () => {
+    if (!regular(marker, 16 * 1024).equals(input.retirementReceipt))
+      throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
+  };
+  assertMarker();
+  if (!loadBackupKey(operator).equals(input.recoveryKey))
+    throw new Error("RETIREMENT_EVIDENCE_MISMATCH");
+  if (checkpoint.runtime.bootstrapNpm) {
+    if (input.npmCli === undefined)
+      throw new Error("RECOVERY_BOOTSTRAP_NPM_REQUIRED");
+    verifyNpmExecutionTool(checkpoint.runtime.bootstrapNpm, input.npmCli);
+  } else if (input.npmCli !== undefined)
+    throw new Error("RECOVERY_BOOTSTRAP_NPM_REQUIRED");
+  const journalPath = join(operator, "weekly-runs.sqlite");
+  const observe = () => {
+    assertMarker();
+    const ledger = readSqliteLedgerReadOnly(location.path);
+    return validateOperatorRecoveryCheckpoint({
+      ...checkpoint,
+      runtime: {
+        ...checkpoint.runtime,
+        node: process.version,
+        icu: process.versions.icu ?? "",
+        executableSha256: sha256(regular(process.execPath)),
+        workerSha256: compiledEtlDigest(checkout, "worker"),
+        lockfileSha256: sha256(regular(join(checkout, "package-lock.json"))),
+      },
+      ledger,
+      ledgerRevision: ledgerDigest(ledger),
+      journal:
+        readWeeklyJournalRecoverySnapshotReadOnly(journalPath).toString(
+          "base64"
+        ),
+      ...inventory(operator, checkout, input.retirementReceipt),
+    });
+  };
+  const actual = observe();
+  if (canonicalJson(actual) !== canonicalJson(observe()))
+    throw new Error("RECOVERY_INPUTS_CHANGED");
+  const comparable = (value: OperatorRecoveryCheckpoint) => {
+    const journal = validateWeeklyJournalRecoverySnapshot(
+      Buffer.from(value.journal, "base64")
+    );
+    const { digest: _digest, ownership, ...content } = journal;
+    return canonicalJson({
+      ...value,
+      journal: {
+        ...content,
+        // Final capture owns the lease; its permitted cleanup changes only this row.
+        ownership: ownership.filter((row) => row.scope !== scope),
+      },
+    });
+  };
+  if (comparable(actual) !== comparable(checkpoint))
+    throw new Error("RECOVERY_INPUTS_CHANGED");
+  assertMarker();
+  if (checkpoint.runtime.bootstrapNpm && input.npmCli !== undefined)
+    verifyNpmExecutionTool(checkpoint.runtime.bootstrapNpm, input.npmCli);
+  return actual;
 }
 
 /** Persist a final backup and fence this cooperating installation under both writer locks. */

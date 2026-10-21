@@ -28,6 +28,7 @@ import {
   stageOperatorRecovery,
   verifyOperatorRetirementEvidence,
   encryptOperatorRecovery,
+  observeRetiredOperatorRecoveryCheckpoint,
 } from "../../lib/ingestion/operator-recovery.js";
 import { verifyOperatorRetirementReceipt } from "../../lib/ingestion/operator-installation.js";
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
@@ -111,6 +112,73 @@ describe("cooperative operator retirement with a final encrypted checkpoint", ()
       throw new Error("Unsafe fixture cleanup");
     rmSync(base, { recursive: true, force: true });
   });
+
+  it("observes the final physical state after retirement without reopening writer authority", async () => {
+    const result = await retireAndCaptureOperatorRecovery({ root, out });
+    const before = journalRows();
+    const observed = observeRetiredOperatorRecoveryCheckpoint({
+      root,
+      archive: readFileSync(out),
+      retirementReceipt: result.retirementReceipt,
+      recoveryKey: key,
+    });
+    expect(observed.files).toEqual(result.checkpoint.files);
+    expect(observed.ledger).toEqual(result.checkpoint.ledger);
+    expect(journalRows()).toEqual(before);
+    expect(() => new WeeklyRunJournal(operator)).toThrow();
+    await expect(captureOperatorRecoveryCheckpoint(root)).rejects.toThrow();
+  });
+
+  it.each([
+    "file",
+    "extra",
+    "runtime",
+    "marker",
+    "catalog",
+    "journal",
+  ] as const)(
+    "refuses changed %s evidence on a fenced installation",
+    async (kind) => {
+      const result = await retireAndCaptureOperatorRecovery({ root, out });
+      const archive = readFileSync(out);
+      if (kind === "file")
+        write(
+          join(operator, "weekly-publication/fixture/proof.json"),
+          "changed"
+        );
+      if (kind === "extra") write(join(operator, "unexpected.json"), "extra");
+      if (kind === "runtime")
+        write(
+          join(root, "dist/lib/ingestion/weekly-import-runner.js"),
+          "changed"
+        );
+      if (kind === "marker")
+        write(join(operator, "operator-retired.json"), "changed");
+      if (kind === "catalog" || kind === "journal") {
+        const db = new DatabaseSync(
+          join(
+            operator,
+            kind === "catalog" ? "ledger.sqlite" : "weekly-runs.sqlite"
+          )
+        );
+        try {
+          if (kind === "catalog")
+            db.exec("UPDATE metadata SET digest='changed' WHERE id=1");
+          else db.exec("PRAGMA user_version=2");
+        } finally {
+          db.close();
+        }
+      }
+      expect(() =>
+        observeRetiredOperatorRecoveryCheckpoint({
+          root,
+          archive,
+          retirementReceipt: result.retirementReceipt,
+          recoveryKey: key,
+        })
+      ).toThrow();
+    }
+  );
 
   it("retains a bound final capsule, blocks old APIs and leaves restored state quarantined", async () => {
     const oldJournal = new WeeklyRunJournal(operator);

@@ -64,6 +64,31 @@ provision the exact runtime, map only its signed export role and recheck fresh
 canonical authority. They must retain the original request/candidate/attempt
 identity and the existing lost-response reconciliation rules.
 
+## Durable plan and retired-source observation
+
+`recovery-result-plan.ts` stores an authenticated plan containing the exact
+encrypted chain bytes before a future coordinator may retire the intermediate
+installation. The plan binds its physical root, operator, repository, npm CLI,
+output, run and original receipt hashes. Its portable output receipt omits the
+physical output path. Exclusive installation, authenticated orphan-stage recovery
+and byte-identical output repair preserve the same chain on retries. The storage
+primitive requires a caller-supplied fence assertion around output publication;
+it cannot establish that assertion or retire an installation itself.
+
+`observeRetiredOperatorRecoveryCheckpoint` authenticates a standard final archive
+and retirement receipt, checks the exact on-disk fence, and compares actual
+catalog, journal, retained files and runtime with that final checkpoint. It uses
+read-only SQLite connections and never constructs a journal writer or acquires
+a lease. Only the production lease bookkeeping may differ after permitted final
+capture cleanup; other journal content must match. Two observations must agree.
+SQLite may create WAL/SHM sidecars during a read, so this is logical read-only
+verification rather than a guarantee of unchanged filesystem metadata.
+
+The observer does not cover preparation metadata or dependency inventory omitted
+from standard capsules, fresh canonical heads, or a new host. The coordinator must
+verify those separately. These primitives do not provide a recapture CLI, grant
+capture authority in quarantine, or complete the composed recovery rehearsal.
+
 ## Acceptance still required
 
 Format/refusal tests are not a fresh-host rehearsal. Require an actual original
