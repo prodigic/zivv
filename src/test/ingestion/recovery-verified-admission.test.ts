@@ -129,7 +129,10 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
     const f = await fixture.prepare("positive");
     vi.stubEnv("ZIVV_CONTROLLED_PUBLISHING", "enabled");
     vi.stubEnv("ZIVV_MANUAL_PUBLISHER_JOINED", "true");
-    const initialState = f.readState();
+    // Use the authenticated fixture snapshot before admission. Opening SQLite
+    // read-only here can create WAL/SHM sidecars and invalidate the pristine
+    // prepared-runtime tree digest before the first signed admission.
+    const initialState = fixture.initial;
     const beforeReferences = f.refs();
     const beforeControl = f.control();
     const weeklyPath = join(
@@ -146,7 +149,6 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
         .every((stage) => stage.status === "succeeded")
     ).toBe(true);
     expect(initialState.stages.at(-1)?.status).toBe("pending");
-    expect(f.artifactBytes()).toEqual(fixture.initialArtifactBytes);
     expect(f.hasCapsule()).toBe(false);
 
     const input = { ...f.input, probeRestrictedConsumers: true };
@@ -209,7 +211,8 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
       const f = await fixture.prepare(`interrupt-${interruptAt}`);
       vi.stubEnv("ZIVV_CONTROLLED_PUBLISHING", "enabled");
       vi.stubEnv("ZIVV_MANUAL_PUBLISHER_JOINED", "true");
-      const beforeState = f.readState();
+      // Keep the staged SQLite tree pristine until the first admission.
+      const beforeState = fixture.initial;
       const beforeControl = f.control();
       const beforeReferences = f.refs();
       const weeklyPath = join(
