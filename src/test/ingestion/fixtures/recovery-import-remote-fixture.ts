@@ -198,6 +198,11 @@ export async function createAcknowledgedRecoveryRemoteFixture(input: {
     expectedVerifiedReleaseId: control.lastVerified.releaseId,
   };
   const step = (event: PromotionEvent) => {
+    const current = store.read();
+    if (!current.head || !current.bytes)
+      throw new Error("Fixture promotion control disappeared");
+    control = parsePromotionControl(current.bytes);
+    head = current.head;
     control = applyPromotionTransition(control, event);
     persist();
   };

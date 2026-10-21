@@ -29,6 +29,8 @@
     "src/test/ingestion/recovery-candidate-admission.test.ts",
     "src/test/ingestion/recovery-pending-dispatch-remote.test.ts",
     "src/test/ingestion/recovery-dispatch-admission.test.ts",
+    "src/test/ingestion/recovery-verified-remote.test.ts",
+    "src/test/ingestion/recovery-verified-admission.test.ts",
     "src/test/ingestion/pages-dispatch-evidence.test.ts",
     "src/test/ingestion/recovery-frozen-remote.test.ts",
     "src/test/ingestion/recovery-frozen-admission.test.ts",

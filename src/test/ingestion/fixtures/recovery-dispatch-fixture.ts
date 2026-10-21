@@ -13,9 +13,21 @@ import { runWeeklyImport } from "../../../lib/ingestion/weekly-import-runner.js"
 import { readVerifiedCandidateBundle } from "../../../lib/ingestion/candidate-bundle.js";
 import { createRecoveryFrozenFixture } from "./recovery-frozen-fixture.js";
 import type { SavedPagesDispatch } from "../../../lib/ingestion/pages-dispatch-runner.js";
+import type { WeeklyRunState } from "../../../lib/ingestion/weekly-run-state.js";
+import type { FrozenFixtureRetirementContext } from "./recovery-frozen-fixture.js";
+
+export type RecoveryDispatchAfterAccepted = (
+  context: FrozenFixtureRetirementContext,
+  state: WeeklyRunState,
+  candidateBytes: Buffer,
+  workflowCommit: string,
+  saved: SavedPagesDispatch
+) => Promise<WeeklyRunState>;
 
 /** An original worker really POSTs once; only its accepted response is lost. */
-export async function createRecoveryDispatchFixture() {
+export async function createRecoveryDispatchFixture(
+  options: { afterAccepted?: RecoveryDispatchAfterAccepted } = {}
+) {
   let saved: SavedPagesDispatch | undefined;
   let workflowCommit = "";
   let originalPhase = true;
@@ -170,6 +182,9 @@ export async function createRecoveryDispatchFixture() {
           context.recoveryKey,
           candidateId
         );
+        const candidateBytes = Buffer.from(
+          canonicalJson(bundle.candidate) + "\n"
+        );
         const state = await runWeeklyImport({
           root: context.root,
           runId: validated.runId,
@@ -179,7 +194,7 @@ export async function createRecoveryDispatchFixture() {
           publication: {
             store: context.authority.store,
             transport: context.authority.transport,
-            candidate: Buffer.from(canonicalJson(bundle.candidate) + "\n"),
+            candidate: candidateBytes,
             workflowCommit,
             githubToken: "ghp_original_dispatch_fixture",
             testTransport: { kind: "local-test", apiBaseUrl },
@@ -209,7 +224,15 @@ export async function createRecoveryDispatchFixture() {
         ) as SavedPagesDispatch;
         if (saved.receipt)
           throw new Error("Original accepted response was not actually lost");
-        return state;
+        return options.afterAccepted
+          ? options.afterAccepted(
+              context,
+              state,
+              candidateBytes,
+              workflowCommit,
+              saved
+            )
+          : state;
       },
     });
     originalPhase = false;

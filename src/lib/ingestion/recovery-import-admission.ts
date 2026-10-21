@@ -76,11 +76,21 @@ import type { PagesWorkflowDispatchReceipt } from "./pages-dispatch.js";
 
 const recordName = "recovery-import.json";
 const resultName = "recovery-import-result.json";
-type RecoveryMode = "load" | "dispatch" | "validate" | "reconcile";
+type RecoveryMode =
+  | "load"
+  | "dispatch"
+  | "validate"
+  | "reconcile"
+  | "acknowledge";
+function candidateMode(mode: RecoveryMode): boolean {
+  return dispatchMode(mode) || mode === "acknowledge";
+}
 function dispatchMode(mode: RecoveryMode): boolean {
   return mode === "dispatch" || mode === "reconcile";
 }
-function stopStage(mode: RecoveryMode): "load" | "dispatch" | "validate" {
+function stopStage(
+  mode: RecoveryMode
+): "load" | "dispatch" | "validate" | "acknowledge" {
   return mode === "reconcile" ? "dispatch" : mode;
 }
 const scopes = new AsyncLocalStorage<{
@@ -103,7 +113,11 @@ const scopes = new AsyncLocalStorage<{
     };
   };
   candidate?: {
-    publication: WeeklyPublicationOptions;
+    publication?: WeeklyPublicationOptions;
+    verifiedDelivery?: {
+      store: RecoveryCandidateRemote["store"];
+      candidate: Buffer;
+    };
     repositoryRoot: string;
     mainHead: string;
     workDirectory: string;
@@ -128,6 +142,19 @@ export interface RecoveryImportInput extends RecoveryRuntimeInput {
 export interface RecoveryCandidateInput extends RecoveryImportInput {
   workflowCommit: string;
   githubToken: string;
+}
+export interface RecoveryVerifiedInput extends RecoveryImportInput {
+  workflowCommit: string;
+}
+export interface RecoveredVerifiedReport {
+  status: "acknowledgement-complete";
+  activationAllowed: false;
+  runId: string;
+  ledgerRevision: string;
+  admissionSha256: string;
+  candidateId: string;
+  operationId: string;
+  acknowledgementId: string;
 }
 export interface RecoveryFrozenInput extends RecoveryImportInput {
   sourceCommit: string;
@@ -163,7 +190,14 @@ interface TestOptions {
   alterBeforeLoad?: "dependency" | "retained-report";
   probeRestrictedConsumers?: boolean;
   pagesApiBaseUrl?: string;
-  interruptAt?: "plan" | "claim" | "dispatch";
+  interruptAt?:
+    | "plan"
+    | "claim"
+    | "dispatch"
+    | "acknowledge-intent-saved"
+    | "acknowledge-intent-bound"
+    | "acknowledge-cutoff-written"
+    | "acknowledge-remote-completed";
   enforcePublicationFlags?: boolean;
   alterDependencyAfterPlan?: boolean;
   alterBuiltModule?: "module" | "manifest" | "manifest-addition";
@@ -178,6 +212,15 @@ function candidateInput(input: RecoveryImportInput): RecoveryCandidateInput {
   )
     fail("INVALID_RECOVERY_CANDIDATE_INPUT");
   return input as RecoveryCandidateInput;
+}
+function verifiedInput(input: RecoveryImportInput): RecoveryVerifiedInput {
+  const value = input as Partial<RecoveryVerifiedInput>;
+  if (
+    typeof value.workflowCommit !== "string" ||
+    !/^[a-f0-9]{40}$/.test(value.workflowCommit)
+  )
+    fail("INVALID_RECOVERY_VERIFIED_INPUT");
+  return input as RecoveryVerifiedInput;
 }
 function frozenInput(input: RecoveryImportInput): RecoveryFrozenInput {
   const value = input as Partial<RecoveryFrozenInput>;
@@ -263,6 +306,16 @@ function mutable(
     if (entry.kind === "directory" && path === "operator/weekly-candidates")
       return true;
     if (path === parent || path.startsWith(parent + "/")) return true;
+  }
+  if (mode === "acknowledge" && entry.kind === "file") {
+    const weekly = "checkout/data/ingestion/weekly-editions.json";
+    if (
+      path === weekly ||
+      (!retained.has(path) &&
+        path.startsWith(weekly + ".") &&
+        /^[1-9][0-9]*\.[a-f0-9]{16}\.tmp$/.test(path.slice(weekly.length + 1)))
+    )
+      return true;
   }
   if (dispatchMode(mode)) {
     const publication = "operator/weekly-publication/" + runId;
@@ -364,8 +417,15 @@ function retainedRun(
   );
   if (!row) fail("RECOVERY_IMPORT_RUN_NOT_RETAINED");
   const run = parseWeeklyRunState(JSON.parse(row.payload));
-  if (dispatchMode(mode) || mode === "validate") {
-    const prefix = dispatchMode(mode) ? 8 : 5;
+  if (candidateMode(mode) || mode === "validate") {
+    const prefix = mode === "acknowledge" ? 10 : dispatchMode(mode) ? 8 : 5;
+    if (
+      mode === "acknowledge" &&
+      snapshot.stageArtifacts.some(
+        (a) => a.runId === run.runId && a.stage === "acknowledge"
+      )
+    )
+      fail("RECOVERY_VERIFIED_CHECKPOINT_REQUIRED");
     if (
       run.stages
         .slice(0, prefix)
@@ -407,11 +467,12 @@ function retainedRun(
 function currentRun(
   operator: string,
   expected: WeeklyRunState,
-  mode: RecoveryMode
+  mode: RecoveryMode,
+  database?: DatabaseSync
 ): WeeklyRunState {
   const path = join(operator, "weekly-runs.sqlite");
   regular(path, 512 * 1024 * 1024);
-  const db = new DatabaseSync(path, { readOnly: true });
+  const db = database ?? new DatabaseSync(path, { readOnly: true });
   try {
     const row = db
       .prepare("SELECT scope,payload FROM run_state WHERE id=?")
@@ -425,27 +486,60 @@ function currentRun(
     const run = parseWeeklyRunState(JSON.parse(row.payload));
     same(run.source, expected.source);
     same(
-      run.stages.slice(0, dispatchMode(mode) ? 8 : mode === "validate" ? 5 : 3),
+      run.stages.slice(
+        0,
+        mode === "acknowledge"
+          ? 10
+          : dispatchMode(mode)
+            ? 8
+            : mode === "validate"
+              ? 5
+              : 3
+      ),
       expected.stages.slice(
         0,
-        dispatchMode(mode) ? 8 : mode === "validate" ? 5 : 3
+        mode === "acknowledge"
+          ? 10
+          : dispatchMode(mode)
+            ? 8
+            : mode === "validate"
+              ? 5
+              : 3
       )
     );
     if (mode === "reconcile") same(run.stages[8], expected.stages[8]);
     if (
+      mode === "acknowledge" &&
+      !["pending", "running", "succeeded"].includes(run.stages[10].status)
+    )
+      fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+    if (
       (dispatchMode(mode) &&
         !["pending", "running"].includes(run.stages[8].status)) ||
       run.stages
-        .slice(dispatchMode(mode) ? 9 : mode === "validate" ? 8 : 4)
+        .slice(
+          mode === "acknowledge"
+            ? 11
+            : dispatchMode(mode)
+              ? 9
+              : mode === "validate"
+                ? 8
+                : 4
+        )
         .some((stage) => stage.status !== "pending")
     )
       fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
     return run;
   } finally {
-    db.close();
+    if (!database) db.close();
   }
 }
 function admissionNames(mode: RecoveryMode) {
+  if (mode === "acknowledge")
+    return {
+      record: "recovery-verified.json",
+      result: "recovery-verified-result.json",
+    };
   if (mode === "reconcile")
     return {
       record: "recovery-dispatch.json",
@@ -468,14 +562,14 @@ function ensureAdmission(
   test?: TestOptions,
   mode: RecoveryMode = "load"
 ) {
-  if (dispatchMode(mode)) {
+  if (candidateMode(mode)) {
     if (
       (!test || test.enforcePublicationFlags) &&
       (process.env.ZIVV_CONTROLLED_PUBLISHING !== "enabled" ||
         process.env.ZIVV_MANUAL_PUBLISHER_JOINED !== "true")
     )
       fail("RECOVERY_PUBLICATION_NOT_ENABLED");
-    if (test) {
+    if (test && dispatchMode(mode)) {
       const url = new URL(String(test.pagesApiBaseUrl));
       if (
         url.protocol !== "http:" ||
@@ -516,7 +610,7 @@ function ensureAdmission(
     Buffer.from(opened.checkpoint.journal, "base64")
   );
   let workDirectory: string | undefined;
-  if (dispatchMode(mode)) {
+  if (candidateMode(mode)) {
     const exported = journal.stageArtifacts.find(
       (artifact) =>
         artifact.runId === original.runId &&
@@ -562,17 +656,20 @@ function ensureAdmission(
     ".json";
   const digest = (entries: RecoveryRuntimeEntry[]) =>
     immutableDigest(entries, retained, reportPath, mode, input.runId);
-  const remoteInput = dispatchMode(mode)
-    ? {
-        ...candidateInput(input),
-        ...(mode === "reconcile"
-          ? { profile: "pending-dispatch" as const }
-          : {}),
-        credentials: input.credentials ?? {
-          token: candidateInput(input).githubToken,
-        },
-      }
-    : undefined;
+  const remoteInput =
+    mode === "acknowledge"
+      ? { ...verifiedInput(input), profile: "verified" as const }
+      : dispatchMode(mode)
+        ? {
+            ...candidateInput(input),
+            ...(mode === "reconcile"
+              ? { profile: "pending-dispatch" as const }
+              : {}),
+            credentials: input.credentials ?? {
+              token: candidateInput(input).githubToken,
+            },
+          }
+        : undefined;
   const remote:
     | RecoveryImportRemote
     | RecoveryCandidateRemote
@@ -588,7 +685,7 @@ function ensureAdmission(
             ...frozenInput(input),
             checkpoint: opened.checkpoint,
           })
-      : dispatchMode(mode)
+      : candidateMode(mode)
         ? test
           ? openRecoveryCandidateRemoteForTest({
               ...remoteInput!,
@@ -628,7 +725,9 @@ function ensureAdmission(
           ? "zivv-recovery-frozen-admission"
           : mode === "reconcile"
             ? "zivv-recovery-dispatch-admission"
-            : "zivv-recovery-candidate-admission",
+            : mode === "acknowledge"
+              ? "zivv-recovery-verified-admission"
+              : "zivv-recovery-candidate-admission",
     version: 1,
     scope:
       mode === "load"
@@ -637,7 +736,9 @@ function ensureAdmission(
           ? "one-frozen-run-through-validate"
           : mode === "reconcile"
             ? "one-retained-dispatch-reconciliation"
-            : "one-validated-run-through-dispatch",
+            : mode === "acknowledge"
+              ? "one-verified-run-through-acknowledgement"
+              : "one-validated-run-through-dispatch",
     activationAllowed: false,
     root,
     operator,
@@ -650,8 +751,8 @@ function ensureAdmission(
     runId: original.runId,
     source: original.source,
     reportPath,
-    ...(dispatchMode(mode)
-      ? { workflowCommit: candidateInput(input).workflowCommit, workDirectory }
+    ...(candidateMode(mode)
+      ? { workflowCommit: verifiedInput(input).workflowCommit, workDirectory }
       : {}),
     ...(configuration && parent
       ? {
@@ -703,6 +804,13 @@ function ensureAdmission(
       stagingDirectory: scratch,
     });
   const assertImmutable = () => {
+    if (mode === "acknowledge") {
+      if (!("verifiedDelivery" in remote) || !remote.verifiedDelivery)
+        fail("RECOVERY_VERIFIED_CHECKPOINT_REQUIRED");
+      remote.verifiedDelivery.assertWeekly(
+        regular(join(root, "checkout/data/ingestion/weekly-editions.json"))
+      );
+    }
     if (mode === "reconcile") {
       if (!("pendingDispatch" in remote) || !remote.pendingDispatch)
         fail("RECOVERY_ACCEPTED_DISPATCH_REQUIRED");
@@ -785,6 +893,36 @@ function ensureAdmission(
   };
   const assertCurrent = () => {
     assertOperatorInstallationWritable(operator);
+    if (mode === "acknowledge") {
+      same(
+        ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
+        opened.checkpoint.ledgerRevision
+      );
+      const db = new DatabaseSync(join(operator, "weekly-runs.sqlite"), {
+        readOnly: true,
+      });
+      try {
+        db.exec("BEGIN");
+        currentRun(operator, original, mode, db);
+        const rows = db
+          .prepare(
+            "SELECT run_id AS runId,stage,attempt,identity,bytes FROM stage_artifact WHERE run_id=? AND stage!='acknowledge' ORDER BY stage,attempt"
+          )
+          .all(original.runId);
+        same(
+          rows.map((row) => ({
+            ...row,
+            bytes: Buffer.from(row.bytes as Uint8Array).toString("base64"),
+          })),
+          journal.stageArtifacts.filter(
+            (row) => row.runId === original.runId && row.stage !== "acknowledge"
+          )
+        );
+        db.exec("COMMIT");
+      } finally {
+        db.close();
+      }
+    }
     same(regular(path).toString("base64"), bytes.toString("base64"));
     same(
       regular(join(root, "recovery-state.json"), 2 * 1024 * 1024).toString(
@@ -823,7 +961,7 @@ function ensureAdmission(
     }
   };
   currentRun(operator, original, mode);
-  if (dispatchMode(mode) || mode === "validate")
+  if (candidateMode(mode) || mode === "validate")
     same(
       ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
       opened.checkpoint.ledgerRevision
@@ -840,7 +978,7 @@ function ensureAdmission(
     assertCurrent,
     assertImmutable,
     candidate:
-      dispatchMode(mode) && "candidateBytes" in remote && workDirectory
+      candidateMode(mode) && "candidateBytes" in remote && workDirectory
         ? {
             remote,
             workDirectory,
@@ -904,7 +1042,11 @@ export function assertRecoveredImportInvocation(input: {
       : input.publication !== scope.candidate?.publication ||
         input.controlledPublishing !== "enabled" ||
         input.manualPublisherJoined !== "true") ||
-    input.verifiedDelivery ||
+    (scope.mode === "acknowledge"
+      ? input.verifiedDelivery !== scope.candidate?.verifiedDelivery ||
+        input.controlledPublishing !== "enabled" ||
+        input.manualPublisherJoined !== "true"
+      : input.verifiedDelivery !== undefined) ||
     input.freezeCutoffEpochMs !== undefined ||
     input.reuseFrozen !== undefined
   )
@@ -925,7 +1067,7 @@ export function resolveRecoveredCandidateWorkDirectory(
     return original;
   }
   if (
-    !dispatchMode(scope.mode) ||
+    !candidateMode(scope.mode) ||
     !scope.candidate ||
     original !== scope.candidate.workDirectory
   )
@@ -1154,7 +1296,7 @@ export function recoveredPublicationRepository(defaultRoot: string): {
   if (!scope?.active) return { root: defaultRoot };
   scope.assertCurrent();
   if (
-    !dispatchMode(scope.mode) ||
+    !candidateMode(scope.mode) ||
     !scope.candidate ||
     ![scope.root, scope.candidate.repositoryRoot].includes(resolve(defaultRoot))
   )
@@ -1227,6 +1369,11 @@ function execute(
   mode: "dispatch" | "reconcile"
 ): Promise<RecoveredCandidateReport>;
 function execute(
+  input: RecoveryVerifiedInput,
+  test: TestOptions | undefined,
+  mode: "acknowledge"
+): Promise<RecoveredVerifiedReport>;
+function execute(
   input: RecoveryFrozenInput,
   test: TestOptions | undefined,
   mode: "validate"
@@ -1236,7 +1383,10 @@ async function execute(
   test?: TestOptions,
   mode: RecoveryMode = "load"
 ): Promise<
-  RecoveredImportReport | RecoveredCandidateReport | RecoveredFrozenReport
+  | RecoveredImportReport
+  | RecoveredCandidateReport
+  | RecoveredFrozenReport
+  | RecoveredVerifiedReport
 > {
   const root = resolve(input.destination),
     checkout = join(root, "checkout"),
@@ -1253,49 +1403,76 @@ async function execute(
   const admitted = ensureAdmission(input, test, mode);
   const candidate = admitted.candidate;
   const store =
-    candidate && mode === "reconcile"
+    candidate && mode === "acknowledge"
       ? {
           ...candidate.remote.store,
-          compareAndAppend: () => fail("RECOVERY_DISPATCH_GET_ONLY"),
+          compareAndAppend: ((append) => {
+            const verify = () => {
+              admitted.assertCurrent();
+              admitted.opened.assertRuntime();
+              admitted.assertImmutable();
+              candidate.remote.assertCurrent();
+              candidate.remote.verifiedDelivery!.assertAppend(append);
+              append.checkContext?.();
+            };
+            verify();
+            return candidate.remote.store.compareAndAppend({
+              ...append,
+              checkContext: verify,
+            });
+          }) satisfies typeof candidate.remote.store.compareAndAppend,
         }
-      : candidate && test?.interruptAt === "claim"
+      : candidate && mode === "reconcile"
         ? {
             ...candidate.remote.store,
-            compareAndAppend: ((append) => {
-              const result = candidate.remote.store.compareAndAppend(append);
-              if (
-                result.status === "appended" &&
-                parsePromotionControl(append.bytes).lastTransition.event
-                  .type === "claim"
-              )
-                fail("RECOVERY_CANDIDATE_TEST_INTERRUPTION");
-              return result;
-            }) satisfies typeof candidate.remote.store.compareAndAppend,
+            compareAndAppend: () => fail("RECOVERY_DISPATCH_GET_ONLY"),
           }
-        : candidate?.remote.store;
-  const publication: WeeklyPublicationOptions | undefined = candidate
-    ? Object.freeze({
-        store: store!,
-        transport:
-          mode === "reconcile"
-            ? {
-                ...candidate.remote.transport,
-                append: () => fail("RECOVERY_DISPATCH_GET_ONLY"),
-              }
-            : candidate.remote.transport,
-        candidate: Buffer.from(candidate.remote.candidateBytes),
-        workflowCommit: candidateInput(input).workflowCommit,
-        githubToken: candidateInput(input).githubToken,
-        ...(test
+        : candidate && test?.interruptAt === "claim"
           ? {
-              testTransport: {
-                kind: "local-test" as const,
-                apiBaseUrl: String(test.pagesApiBaseUrl),
-              },
+              ...candidate.remote.store,
+              compareAndAppend: ((append) => {
+                const result = candidate.remote.store.compareAndAppend(append);
+                if (
+                  result.status === "appended" &&
+                  parsePromotionControl(append.bytes).lastTransition.event
+                    .type === "claim"
+                )
+                  fail("RECOVERY_CANDIDATE_TEST_INTERRUPTION");
+                return result;
+              }) satisfies typeof candidate.remote.store.compareAndAppend,
             }
-          : {}),
-      })
-    : undefined;
+          : candidate?.remote.store;
+  const verifiedDelivery =
+    candidate && mode === "acknowledge"
+      ? Object.freeze({
+          store: store!,
+          candidate: Buffer.from(candidate.remote.candidateBytes),
+        })
+      : undefined;
+  const publication: WeeklyPublicationOptions | undefined =
+    candidate && dispatchMode(mode)
+      ? Object.freeze({
+          store: store!,
+          transport:
+            mode === "reconcile"
+              ? {
+                  ...candidate.remote.transport,
+                  append: () => fail("RECOVERY_DISPATCH_GET_ONLY"),
+                }
+              : candidate.remote.transport,
+          candidate: Buffer.from(candidate.remote.candidateBytes),
+          workflowCommit: candidateInput(input).workflowCommit,
+          githubToken: candidateInput(input).githubToken,
+          ...(test
+            ? {
+                testTransport: {
+                  kind: "local-test" as const,
+                  apiBaseUrl: String(test.pagesApiBaseUrl),
+                },
+              }
+            : {}),
+        })
+      : undefined;
   const scope = {
     active: true,
     root: checkout,
@@ -1312,10 +1489,11 @@ async function execute(
           },
         }
       : {}),
-    ...(candidate && publication
+    ...(candidate && (publication || verifiedDelivery)
       ? {
           candidate: {
             publication,
+            verifiedDelivery,
             repositoryRoot: realpathSync(input.repositoryRoot),
             mainHead: candidate.remote.binding.mainHead,
             workDirectory: candidate.workDirectory,
@@ -1343,6 +1521,7 @@ async function execute(
     },
   };
   if (scopes.getStore()?.active) fail("NESTED_RECOVERY_IMPORT");
+  let acknowledgementEffects = 0;
   let dispatchObserved = false;
   let dispatchProbeCompleted = false;
   const probeDispatchConsumers = async () => {
@@ -1394,11 +1573,61 @@ async function execute(
       scope.assertCurrent();
       if (mode === "reconcile" && test?.probeRestrictedConsumers)
         await probeDispatchConsumers();
+      if (mode === "acknowledge" && test?.probeRestrictedConsumers) {
+        const { assertOperatorNotQuarantined } =
+          await import("./private-artifacts.js");
+        let quarantined = false;
+        try {
+          assertOperatorNotQuarantined(admitted.operator);
+        } catch (error) {
+          if (
+            !(error instanceof Error) ||
+            error.message !== "RECOVERY_INSTALLATION_NOT_ACTIVATED"
+          )
+            throw error;
+          quarantined = true;
+        }
+        if (!quarantined) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+        for (const change of [
+          { stopAfter: "verify" as const },
+          { stopAfter: "dispatch" as const },
+          { runId: "another-run" },
+          { verifiedDelivery: { ...verifiedDelivery! } },
+        ]) {
+          let denied = false;
+          try {
+            await runWeeklyImport({
+              root: checkout,
+              runId: input.runId,
+              stopAfter: "acknowledge",
+              verifiedDelivery,
+              controlledPublishing: "enabled",
+              manualPublisherJoined: "true",
+              ...change,
+            });
+          } catch (error) {
+            if (
+              !(error instanceof Error) ||
+              error.message !== "RECOVERY_IMPORT_SCOPE_EXCEEDED"
+            )
+              throw error;
+            denied = true;
+          }
+          if (!denied) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+        }
+      }
       const state = await runWeeklyImport({
         root: checkout,
         runId: input.runId,
         stopAfter: stopStage(mode),
         ...(admitted.build ? { candidateBuild: admitted.build.options } : {}),
+        ...(verifiedDelivery
+          ? {
+              verifiedDelivery,
+              controlledPublishing: "enabled",
+              manualPublisherJoined: "true",
+            }
+          : {}),
         ...(publication
           ? {
               publication,
@@ -1410,6 +1639,21 @@ async function execute(
           if (event.stage === "deploy" && event.phase === "effect-committed")
             dispatchObserved = true;
           if (!test) return;
+          if (mode === "acknowledge" && event.stage === "acknowledge") {
+            if (event.phase === "effect-committed") acknowledgementEffects++;
+            const point =
+              event.phase === "artifact-saved"
+                ? "acknowledge-intent-saved"
+                : event.phase === "effect-committed"
+                  ? [
+                      "acknowledge-intent-bound",
+                      "acknowledge-cutoff-written",
+                      "acknowledge-remote-completed",
+                    ][acknowledgementEffects - 1]
+                  : undefined;
+            if (point && test.interruptAt === point)
+              fail("RECOVERY_VERIFIED_TEST_INTERRUPTION");
+          }
           if (
             mode === "validate" &&
             event.stage === "enrich" &&
@@ -1569,7 +1813,7 @@ async function execute(
           state.stages.slice(4).some((stage) => stage.status !== "pending"))
       )
         fail();
-      if (dispatchMode(mode) || mode === "validate") {
+      if (candidateMode(mode) || mode === "validate") {
         currentRun(admitted.operator, admitted.original, mode);
         same(
           ledgerDigest(
@@ -1591,8 +1835,31 @@ async function execute(
       let report:
         | RecoveredImportReport
         | RecoveredCandidateReport
-        | RecoveredFrozenReport;
-      if (mode === "validate") {
+        | RecoveredFrozenReport
+        | RecoveredVerifiedReport;
+      if (mode === "acknowledge" && candidate) {
+        const progress = candidate.remote.validateProgress(
+          candidate.remote.binding.initialControlHead
+        );
+        const acknowledgementId = state.stages[10].evidence?.acknowledgementId;
+        if (
+          state.stages[10].status !== "succeeded" ||
+          progress.acknowledgement !== "completed" ||
+          !progress.operationId ||
+          progress.operationId !==
+            candidate.remote.verifiedDelivery?.operationId ||
+          typeof acknowledgementId !== "string" ||
+          !/^[a-f0-9]{64}$/.test(acknowledgementId)
+        )
+          fail("RECOVERY_ACKNOWLEDGEMENT_NOT_COMPLETED");
+        report = {
+          ...base,
+          status: "acknowledgement-complete",
+          candidateId: candidate.remote.binding.candidateId,
+          operationId: progress.operationId,
+          acknowledgementId,
+        };
+      } else if (mode === "validate") {
         const candidateId = state.stages[7].evidence?.candidateId;
         if (
           state.stages
@@ -1653,6 +1920,11 @@ export const executeRecoveredDispatch = (input: RecoveryCandidateInput) =>
 export const executeRecoveredDispatchForTest = (
   input: RecoveryCandidateInput & TestOptions
 ) => execute(input, input, "reconcile");
+export const executeRecoveredVerified = (input: RecoveryVerifiedInput) =>
+  execute(input, undefined, "acknowledge");
+export const executeRecoveredVerifiedForTest = (
+  input: RecoveryVerifiedInput & TestOptions
+) => execute(input, input, "acknowledge");
 export const executeRecoveredFrozen = (input: RecoveryFrozenInput) =>
   execute(input, undefined, "validate");
 export const executeRecoveredFrozenForTest = (
@@ -1670,6 +1942,11 @@ function launch(
   mode: "dispatch" | "reconcile"
 ): Promise<RecoveredCandidateReport>;
 function launch(
+  input: RecoveryVerifiedInput,
+  test: TestOptions | undefined,
+  mode: "acknowledge"
+): Promise<RecoveredVerifiedReport>;
+function launch(
   input: RecoveryFrozenInput,
   test: TestOptions | undefined,
   mode: "validate"
@@ -1679,7 +1956,10 @@ async function launch(
   test?: TestOptions,
   mode: RecoveryMode = "load"
 ): Promise<
-  RecoveredImportReport | RecoveredCandidateReport | RecoveredFrozenReport
+  | RecoveredImportReport
+  | RecoveredCandidateReport
+  | RecoveredFrozenReport
+  | RecoveredVerifiedReport
 > {
   const input = {
     ...supplied,
@@ -1694,7 +1974,7 @@ async function launch(
       join(root, "checkout/dist/lib/ingestion/recovery-import-admission.js")
     ).href;
   const script = `
-    const {${mode === "load" ? (test ? "executeRecoveredImportForTest" : "executeRecoveredImport") : mode === "validate" ? (test ? "executeRecoveredFrozenForTest" : "executeRecoveredFrozen") : mode === "reconcile" ? (test ? "executeRecoveredDispatchForTest" : "executeRecoveredDispatch") : test ? "executeRecoveredCandidateForTest" : "executeRecoveredCandidate"}:execute}=await import(${JSON.stringify(entry)});
+    const {${mode === "acknowledge" ? (test ? "executeRecoveredVerifiedForTest" : "executeRecoveredVerified") : mode === "load" ? (test ? "executeRecoveredImportForTest" : "executeRecoveredImport") : mode === "validate" ? (test ? "executeRecoveredFrozenForTest" : "executeRecoveredFrozen") : mode === "reconcile" ? (test ? "executeRecoveredDispatchForTest" : "executeRecoveredDispatch") : test ? "executeRecoveredCandidateForTest" : "executeRecoveredCandidate"}:execute}=await import(${JSON.stringify(entry)});
     try {
       let size=0;const chunks=[];for await(const chunk of process.stdin){if((size+=chunk.length)>512*1024*1024)throw Error('RECOVERY_IMPORT_INPUT_TOO_LARGE');chunks.push(chunk);}
       const value=JSON.parse(Buffer.concat(chunks).toString('utf8'));
@@ -1719,7 +1999,7 @@ async function launch(
     if (process.env[name] !== undefined) env[name] = process.env[name];
   env.ZIVV_LEDGER_HOME = join(root, "operator");
   env.ZIVV_RECOVERY_EXECUTOR = "1";
-  if (dispatchMode(mode) && (!test || test.enforcePublicationFlags)) {
+  if (candidateMode(mode) && (!test || test.enforcePublicationFlags)) {
     env.ZIVV_CONTROLLED_PUBLISHING = process.env.ZIVV_CONTROLLED_PUBLISHING;
     env.ZIVV_MANUAL_PUBLISHER_JOINED = process.env.ZIVV_MANUAL_PUBLISHER_JOINED;
   }
@@ -1803,7 +2083,8 @@ async function launch(
         const report = result as
           | RecoveredImportReport
           | RecoveredCandidateReport
-          | RecoveredFrozenReport;
+          | RecoveredFrozenReport
+          | RecoveredVerifiedReport;
         same(
           Object.keys(report).sort(),
           [
@@ -1812,7 +2093,8 @@ async function launch(
             "ledgerRevision",
             "runId",
             "status",
-            ...(dispatchMode(mode) ? ["candidateId", "operationId"] : []),
+            ...(candidateMode(mode) ? ["candidateId", "operationId"] : []),
+            ...(mode === "acknowledge" ? ["acknowledgementId"] : []),
             ...(mode === "validate" ? ["candidateId"] : []),
           ].sort()
         );
@@ -1821,9 +2103,11 @@ async function launch(
             ? report.status !== "load-complete"
             : mode === "validate"
               ? report.status !== "candidate-validated"
-              : !["dispatch-observed", "dispatch-pending"].includes(
-                  report.status
-                )) ||
+              : mode === "acknowledge"
+                ? report.status !== "acknowledgement-complete"
+                : !["dispatch-observed", "dispatch-pending"].includes(
+                    report.status
+                  )) ||
           report.activationAllowed !== false ||
           report.runId !== input.runId ||
           !/^[a-f0-9]{64}$/.test(report.ledgerRevision) ||
@@ -1831,12 +2115,20 @@ async function launch(
         )
           fail();
         if (
-          (dispatchMode(mode) || mode === "validate") &&
+          (candidateMode(mode) || mode === "validate") &&
           (!("candidateId" in report) ||
             !/^[a-f0-9]{64}$/.test(report.candidateId) ||
             ("operationId" in report &&
               report.operationId !== null &&
               !/^[a-f0-9]{64}$/.test(report.operationId)))
+        )
+          fail();
+        if (
+          mode === "acknowledge" &&
+          (!("acknowledgementId" in report) ||
+            !/^[a-f0-9]{64}$/.test(report.acknowledgementId) ||
+            !("operationId" in report) ||
+            report.operationId === null)
         )
           fail();
         resolveChild(report);
@@ -1874,3 +2166,10 @@ export const resumeOperatorRecoveryDispatch = (input: RecoveryCandidateInput) =>
 export const resumeOperatorRecoveryDispatchForTest = (
   input: RecoveryCandidateInput & TestOptions
 ) => launch(input, input, "reconcile");
+
+/** Finish only the original canonically verified release acknowledgement. */
+export const resumeOperatorRecoveryVerified = (input: RecoveryVerifiedInput) =>
+  launch(input, undefined, "acknowledge");
+export const resumeOperatorRecoveryVerifiedForTest = (
+  input: RecoveryVerifiedInput & TestOptions
+) => launch(input, input, "acknowledge");

@@ -566,7 +566,10 @@ export async function acknowledgeVerifiedWeeklyRelease(input: {
     if (current.head === value.attemptedHead) return;
     if (current.head !== value.expectedHead)
       throw new Error("Acknowledgement control changed");
-    const result = input.store.compareAndAppend(value);
+    const result = input.store.compareAndAppend({
+      ...value,
+      checkContext: input.verifyContext,
+    });
     if (result.status !== "appended") {
       const readback = input.store.readback(value);
       if (readback.status !== "appended")
