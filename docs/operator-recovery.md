@@ -84,6 +84,9 @@ separate portable receipt. It does not activate staged recovery or revoke old
 credentials, and is not a substitute for lost-host shutdown/revocation evidence.
 The optional [runtime preparation](recovery-runtime-preparation.md) installs and
 probes an exact v2 runtime in quarantine after authenticating that receipt.
+The optional [same-run import admission](recovery-import-admission.md) can then
+resume one captured before-load run through load while keeping quarantine and
+publication restrictions in place.
 
 Destination must not exist and must be private/local/outside Git. A failed
 restore leaves an `incomplete` marker; inspect/preserve that staging and choose a

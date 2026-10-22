@@ -56,6 +56,8 @@ export interface PromotionCompletionObjects {
 export interface PromotionControlTransport {
   readonly repository: "prodigic/zivv";
   readHead(ref: string): string | null;
+  /** Observe the authoritative main ref without granting append access to it. */
+  readMainHead?(): string | null;
   fetchCommit(commit: string): void;
   append(ref: string, commit: string, expectedHead: string | null): void;
 }
@@ -900,19 +902,23 @@ function remoteTransport(
       );
     }
   };
+  const readRemoteHead = (ref: string): string | null => {
+    const text = run(["ls-remote", "--refs", "--", remote, ref]).toString(
+      "ascii"
+    );
+    if (!text) return null;
+    const match = /^([a-f0-9]{40})\t([^\n\r]+)\n$/.exec(text);
+    if (!match || match[2] !== ref)
+      throw new Error("Unexpected remote promotion control inventory");
+    validateSha(match[1]);
+    return match[1];
+  };
   return {
     repository: "prodigic/zivv",
+    readMainHead: () => readRemoteHead("refs/heads/main"),
     readHead(ref) {
       validateRef(ref);
-      const text = run(["ls-remote", "--refs", "--", remote, ref]).toString(
-        "ascii"
-      );
-      if (!text) return null;
-      const match = /^([a-f0-9]{40})\t([^\n\r]+)\n$/.exec(text);
-      if (!match || match[2] !== ref)
-        throw new Error("Unexpected remote promotion control inventory");
-      validateSha(match[1]);
-      return match[1];
+      return readRemoteHead(ref);
     },
     fetchCommit(commit) {
       validateSha(commit);

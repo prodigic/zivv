@@ -119,6 +119,7 @@ Until these gates pass, the operator uses the preserved manual path. No schedule
 
 - [Shared ledger and encrypted recovery](shared-ledger.md)
 - [Quarantined recovery runtime preparation](recovery-runtime-preparation.md)
+- [Retained same-run import admission](recovery-import-admission.md)
 - [Weekly editions](weekly-editions.md)
 - [Architecture experiment review](architecture/2026-08-reorganization-review.md)
 - [Enrichment quality protocol](research/enrichment-quality-protocol.md)
