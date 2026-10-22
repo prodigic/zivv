@@ -18,6 +18,23 @@ export interface WeeklyRunLease {
   expiresAtEpochMs: number;
 }
 
+export type WeeklyIntakeEvidenceKind = "source" | "correction";
+const maxIntakeEvidenceBytes = 8 * 1024 * 1024;
+
+function validateIntakeKey(
+  scope: string,
+  kind: WeeklyIntakeEvidenceKind,
+  id?: string
+): void {
+  if (
+    typeof scope !== "string" ||
+    !/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,127}$/.test(scope) ||
+    !["source", "correction"].includes(kind) ||
+    (id !== undefined && (typeof id !== "string" || !/^[a-f0-9]{64}$/.test(id)))
+  )
+    throw new Error("Invalid intake evidence key");
+}
+
 /** Independent private coordination database; does not alter the ingestion catalog. */
 export class WeeklyRunJournal {
   readonly path: string;
@@ -81,7 +98,7 @@ export class WeeklyRunJournal {
       // Inspect under the writer lock, so simultaneous initializers wait.
       if (
         !(
-          ([1, 2].includes(schema) && application === 1514759762) ||
+          ([1, 2, 3].includes(schema) && application === 1514759762) ||
           (schema === 0 && application === 0 && tables === 0)
         )
       )
@@ -96,7 +113,9 @@ export class WeeklyRunJournal {
         const expected =
           schema === 1
             ? ["ownership", "run_state"]
-            : ["ownership", "run_state", "stage_artifact"];
+            : schema === 2
+              ? ["ownership", "run_state", "stage_artifact"]
+              : ["intake_evidence", "ownership", "run_state", "stage_artifact"];
         if (canonicalJson(names) !== canonicalJson(expected))
           throw new Error("Unsupported journal tables");
       }
@@ -112,6 +131,33 @@ export class WeeklyRunJournal {
           .exec(`CREATE TABLE stage_artifact(run_id TEXT NOT NULL REFERENCES run_state(id), stage TEXT NOT NULL, attempt INTEGER NOT NULL CHECK(attempt BETWEEN 0 AND 9007199254740991), identity TEXT NOT NULL, bytes BLOB NOT NULL, PRIMARY KEY(run_id,stage,attempt)) STRICT;
           PRAGMA user_version=2;`);
       }
+      if (schema < 3) {
+        this.db
+          .exec(`CREATE TABLE intake_evidence(scope TEXT NOT NULL REFERENCES ownership(scope), kind TEXT NOT NULL CHECK(kind IN ('source','correction')), id TEXT NOT NULL CHECK(length(id)=64 AND id NOT GLOB '*[^0-9a-f]*'), identity TEXT NOT NULL CHECK(length(identity)=64 AND identity NOT GLOB '*[^0-9a-f]*'), bytes BLOB NOT NULL CHECK(length(bytes)<=8388608), PRIMARY KEY(scope,kind,id)) STRICT;
+          PRAGMA user_version=3;`);
+      }
+      const intakeColumns = this.db
+        .prepare("PRAGMA table_info(intake_evidence)")
+        .all()
+        .map((row) => ({
+          name: row.name,
+          type: row.type,
+          notnull: row.notnull,
+          pk: row.pk,
+        }));
+      if (
+        canonicalJson(intakeColumns) !==
+          canonicalJson([
+            { name: "scope", type: "TEXT", notnull: 1, pk: 1 },
+            { name: "kind", type: "TEXT", notnull: 1, pk: 2 },
+            { name: "id", type: "TEXT", notnull: 1, pk: 3 },
+            { name: "identity", type: "TEXT", notnull: 1, pk: 0 },
+            { name: "bytes", type: "BLOB", notnull: 1, pk: 0 },
+          ]) ||
+        this.db.prepare("PRAGMA table_list('intake_evidence')").get()
+          ?.strict !== 1
+      )
+        throw new Error("Unsupported intake evidence schema");
       if (this.db.prepare("PRAGMA foreign_key_check").all().length)
         throw new Error("Corrupt journal references");
       this.db.exec("COMMIT");
@@ -334,6 +380,94 @@ export class WeeklyRunJournal {
       .prepare("SELECT id FROM run_state WHERE scope=? ORDER BY id")
       .all(scope)
       .map((row) => this.load(String(row.id))!);
+  }
+
+  private intakeEvidence(
+    row: Record<string, string | number | bigint | Uint8Array | null>
+  ): { id: string; bytes: Buffer } {
+    if (
+      typeof row.scope !== "string" ||
+      !/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,127}$/.test(row.scope) ||
+      !["source", "correction"].includes(String(row.kind)) ||
+      typeof row.id !== "string" ||
+      !/^[a-f0-9]{64}$/.test(row.id) ||
+      typeof row.identity !== "string" ||
+      !/^[a-f0-9]{64}$/.test(row.identity) ||
+      !(row.bytes instanceof Uint8Array) ||
+      row.bytes.length > maxIntakeEvidenceBytes
+    )
+      throw new Error("Corrupt intake evidence");
+    const bytes = Buffer.from(row.bytes);
+    if (createHash("sha256").update(bytes).digest("hex") !== row.identity)
+      throw new Error("Changed intake evidence");
+    return { id: row.id, bytes };
+  }
+
+  /** Read immutable acquisition evidence; callers may already hold a guarded operation. */
+  readIntakeEvidence(
+    scope: string,
+    kind: WeeklyIntakeEvidenceKind,
+    id: string
+  ): Buffer | null {
+    validateIntakeKey(scope, kind, id);
+    const row = this.db
+      .prepare(
+        "SELECT scope,kind,id,identity,bytes FROM intake_evidence WHERE scope=? AND kind=? AND id=?"
+      )
+      .get(scope, kind, id);
+    return row ? this.intakeEvidence(row).bytes : null;
+  }
+
+  /** Enumerate and verify all retained acquisition evidence for a destination and kind. */
+  listIntakeEvidence(
+    scope: string,
+    kind: WeeklyIntakeEvidenceKind
+  ): { id: string; bytes: Buffer }[] {
+    validateIntakeKey(scope, kind);
+    return this.db
+      .prepare(
+        "SELECT scope,kind,id,identity,bytes FROM intake_evidence WHERE scope=? AND kind=? ORDER BY id"
+      )
+      .all(scope, kind)
+      .map((row) => this.intakeEvidence(row));
+  }
+
+  /** Commit intake intent before external file effects. Exact replay preserves its first bytes. */
+  saveIntakeEvidence(
+    kind: WeeklyIntakeEvidenceKind,
+    id: string,
+    bytes: Buffer,
+    lease: WeeklyRunLease
+  ): Buffer {
+    validateIntakeKey(lease.scope, kind, id);
+    if (!Buffer.isBuffer(bytes) || bytes.length > maxIntakeEvidenceBytes)
+      throw new Error("Intake evidence exceeds private evidence limit");
+    if (this.guardedLease || this.db.isTransaction)
+      throw new Error("Nested intake evidence write refused");
+    const captured = Buffer.from(bytes);
+    return this.transaction(() => {
+      this.assertLease(lease);
+      const existing = this.readIntakeEvidence(lease.scope, kind, id);
+      if (existing) {
+        if (!existing.equals(captured))
+          throw new Error("Intake evidence differs; refusing overwrite");
+        this.assertLease(lease);
+        return existing;
+      }
+      this.db
+        .prepare(
+          "INSERT INTO intake_evidence(scope,kind,id,identity,bytes) VALUES(?,?,?,?,?)"
+        )
+        .run(
+          lease.scope,
+          kind,
+          id,
+          createHash("sha256").update(captured).digest("hex"),
+          captured
+        );
+      this.assertLease(lease);
+      return captured;
+    });
   }
 
   readArtifact(
