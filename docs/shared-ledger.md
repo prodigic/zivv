@@ -1,5 +1,10 @@
 # Shared ledger and encrypted recovery
 
+The catalog snapshot described here does not include the Friday worker journal,
+email evidence or publication intentions. Use the optional
+[operator recovery checkpoint](operator-recovery.md) to capture those together
+and verify an offline staging restore. Staging alone does not authorize cutover.
+
 ## Use the authoritative store
 
 All checkouts with `data/ingestion/store.json` use the same SQLite database on
