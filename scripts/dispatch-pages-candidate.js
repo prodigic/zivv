@@ -13,7 +13,7 @@ import {
 
 const [command, ...args] = process.argv.slice(2);
 const usage =
-  "Usage: dispatch-pages-candidate.js dispatch|recover --workflow-commit SHA --mode promote|rollback --intent-dir PRIVATE_PATH (requires GITHUB_TOKEN and activation flags)";
+  "Usage: dispatch-pages-candidate.js dispatch|recover --workflow-commit SHA --mode promote|rollback --intent-dir PRIVATE_PATH [--operation-id SHA256 --attempt-id SHA256 for canonical GET-only recovery] (requires GITHUB_TOKEN and activation flags)";
 const options = {};
 if (!["dispatch", "recover"].includes(command)) throw new Error(usage);
 for (let index = 0; index < args.length; index += 2) {
@@ -22,7 +22,13 @@ for (let index = 0; index < args.length; index += 2) {
     key = flag?.slice(2);
   if (
     !flag?.startsWith("--") ||
-    !["workflow-commit", "mode", "intent-dir"].includes(key) ||
+    ![
+      "workflow-commit",
+      "mode",
+      "intent-dir",
+      "operation-id",
+      "attempt-id",
+    ].includes(key) ||
     Object.hasOwn(options, key) ||
     !value ||
     value.startsWith("--")
@@ -33,7 +39,12 @@ for (let index = 0; index < args.length; index += 2) {
 if (
   !/^[a-f0-9]{40}$/.test(options["workflow-commit"] ?? "") ||
   !["promote", "rollback"].includes(options.mode) ||
-  !options["intent-dir"]
+  !options["intent-dir"] ||
+  !!options["operation-id"] !== !!options["attempt-id"] ||
+  (options["operation-id"] &&
+    (command !== "recover" ||
+      !/^[a-f0-9]{64}$/.test(options["operation-id"]) ||
+      !/^[a-f0-9]{64}$/.test(options["attempt-id"])))
 )
   throw new Error(usage);
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -60,6 +71,12 @@ try {
     command,
     repositoryRoot,
     store,
+    recovery: options["operation-id"]
+      ? {
+          operationId: options["operation-id"],
+          attemptId: options["attempt-id"],
+        }
+      : undefined,
     githubToken,
     workflowCommit: options["workflow-commit"],
     mode: options.mode,

@@ -58,6 +58,8 @@ export interface PagesDispatchRunnerOptions {
   controlledPublishing: string | undefined;
   manualPublisherJoined: string | undefined;
   store: PromotionControlStore;
+  /** Exact accepted attempt to reconstruct when private dispatch metadata was lost. */
+  recovery?: { operationId: string; attemptId: string };
   /** Recheck the calling worker's ownership/runtime before effect boundaries. */
   checkContext?: () => void;
   /** Explicit offline HTTP fixtures only; the CLI exposes no adapter flags. */
@@ -227,6 +229,103 @@ function prepared(saved: SavedDispatch): PreparedPromotionControlAppend {
   };
 }
 
+function recoverCanonicalIntent(options: PagesDispatchRunnerOptions): {
+  saved: SavedDispatch;
+  runId?: string;
+} {
+  const selector = options.recovery;
+  if (
+    options.command !== "recover" ||
+    !selector ||
+    !/^[a-f0-9]{64}$/.test(selector.operationId) ||
+    !/^[a-f0-9]{64}$/.test(selector.attemptId) ||
+    !options.store.readCanonicalHistory
+  )
+    throw new Error(
+      "Canonical dispatch recovery requires exact operation and attempt identities and a history-capable store"
+    );
+  const history = options.store.readCanonicalHistory({
+    maxCommits: 1000,
+    maxBytes: 16 * 1024 * 1024,
+  });
+  if (!history.complete)
+    throw new Error("Canonical dispatch recovery history is incomplete");
+  const matches = history.commits.filter((record) => {
+    const state = parsePromotionControl(record.bytes),
+      event = state.lastTransition.event;
+    return (
+      event.type === "dispatch-intent" &&
+      event.operationId === selector.operationId &&
+      event.attemptId === selector.attemptId &&
+      event.mode === options.mode &&
+      event.workflowCommit === options.workflowCommit
+    );
+  });
+  if (matches.length !== 1)
+    throw new Error("Canonical dispatch intent is missing or ambiguous");
+  const record = matches[0],
+    state = parsePromotionControl(record.bytes),
+    event = state.lastTransition.event;
+  if (
+    event.type !== "dispatch-intent" ||
+    !event.dispatchNonce ||
+    !record.parentHead ||
+    !record.parentBytes
+  )
+    throw new Error("Canonical dispatch lacks its original nonce or parent");
+  const before = parsePromotionControl(record.parentBytes);
+  const intent = preparePagesWorkflowDispatch({
+    control: before,
+    controlHead: record.parentHead,
+    workflowCommit: options.workflowCommit,
+    reviewedMainAncestor: true,
+    mode: options.mode,
+    dispatchNonce: event.dispatchNonce,
+  });
+  if (
+    promotionDigest(intent.event) !== promotionDigest(event) ||
+    !serializePromotionControl(
+      applyPromotionTransition(before, intent.event)
+    ).equals(record.bytes)
+  )
+    throw new Error(
+      "Canonical dispatch transition does not reproduce its accepted bytes"
+    );
+  const admissions = new Set<string>();
+  for (const item of history.commits) {
+    const active = parsePromotionControl(item.bytes).active;
+    if (active?.operationId !== selector.operationId) continue;
+    const attempt =
+      options.mode === "promote"
+        ? active.promotionAttempt
+        : active.rollbackAttempt;
+    if (attempt?.attemptId === selector.attemptId && attempt.admission) {
+      if (
+        attempt.dispatchNonce !== event.dispatchNonce ||
+        attempt.admission.workflowCommit !== options.workflowCommit ||
+        attempt.admission.runAttempt !== event.expectedRunAttempt
+      )
+        throw new Error("Canonical dispatch admission changed identity");
+      admissions.add(attempt.admission.runId);
+    }
+  }
+  if (admissions.size > 1)
+    throw new Error("Canonical dispatch has conflicting admissions");
+  return {
+    saved: {
+      schemaVersion: 1,
+      intent,
+      pendingAppend: {
+        expectedHead: record.parentHead,
+        attemptedHead: record.head,
+        bytes: record.bytes.toString("base64"),
+        createdAt: record.createdAt,
+      },
+    },
+    runId: [...admissions][0],
+  };
+}
+
 /**
  * This journal checkpoints the native controller CAS, not another authorization
  * state. Every saved file is recovery-only, including a crash before CAS or POST.
@@ -235,6 +334,8 @@ function prepared(saved: SavedDispatch): PreparedPromotionControlAppend {
 export async function runPagesCandidateDispatch(
   options: PagesDispatchRunnerOptions
 ) {
+  if (options.recovery && options.command !== "recover")
+    throw new Error("Canonical history selection is recovery-only");
   if (
     !sha(options.workflowCommit) ||
     !["promote", "rollback"].includes(options.mode) ||
@@ -264,6 +365,13 @@ export async function runPagesCandidateDispatch(
     testTransport: options.testTransport,
   };
 
+  let canonical: ReturnType<typeof recoverCanonicalIntent> | undefined;
+  if (options.recovery) canonical = recoverCanonicalIntent(options);
+  if (!existsSync(path) && canonical) {
+    options.checkContext?.();
+    saveOnce(path, canonical.saved);
+  }
+
   if (existsSync(path)) {
     const saved = readSaved(path);
     if (
@@ -273,39 +381,35 @@ export async function runPagesCandidateDispatch(
       throw new Error(
         "Saved dispatch does not match the selected reviewed workflow/mode"
       );
+    if (
+      canonical &&
+      promotionDigest(saved.intent) !== promotionDigest(canonical.saved.intent)
+    )
+      throw new Error(
+        "Saved dispatch differs from the selected canonical attempt"
+      );
     let readback;
     try {
       readback = options.store.readback(prepared(saved));
     } catch {
-      return { status: "uncertain" as const, reason: "control-readback" };
+      // A fresh checkout may retain the private file but not its Git objects.
+      // Canonical ancestry below can fetch/prove acceptance; a failed local
+      // readback alone must neither authorize effects nor preclude that proof.
     }
-    if (readback.status !== "appended") {
-      // Admission can advance the control ref before the operator saves a run receipt.
-      let current;
+    if (readback?.status !== "appended") {
+      // Accepted history remains GET-only recovery authority after admission,
+      // completion or a later owner; a local prepared child alone is insufficient.
+      let historical;
       try {
-        current = options.store.read();
+        historical = options.store.readAt(saved.pendingAppend.attemptedHead);
       } catch {
         return { status: "uncertain" as const, reason: "control-readback" };
       }
-      if (!current.bytes)
-        return { status: "uncertain" as const, reason: "control-readback" };
-      const active = parsePromotionControl(current.bytes).active;
-      const attempt =
-        options.mode === "promote"
-          ? active?.promotionAttempt
-          : active?.rollbackAttempt;
-      const event = saved.intent.event as typeof saved.intent.event & {
-        dispatchNonce?: string;
-      };
-      const nonce =
-        attempt && "dispatchNonce" in attempt
-          ? attempt.dispatchNonce
-          : undefined;
       if (
-        active?.operationId !== event.operationId ||
-        attempt?.attemptId !== event.attemptId ||
-        !event.dispatchNonce ||
-        nonce !== event.dispatchNonce
+        historical.head !== saved.pendingAppend.attemptedHead ||
+        !historical.bytes?.equals(
+          Buffer.from(saved.pendingAppend.bytes, "base64")
+        )
       )
         return { status: "uncertain" as const, reason: "control-readback" };
     }
@@ -313,7 +417,7 @@ export async function runPagesCandidateDispatch(
       ...http,
       intent: saved.intent,
       controlHead: saved.pendingAppend.attemptedHead,
-      runId: saved.receipt?.runId,
+      runId: canonical?.runId ?? saved.receipt?.runId,
     });
     options.checkContext?.();
     if (result.status === "matched") {
