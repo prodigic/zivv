@@ -197,6 +197,12 @@ function acknowledgementEvent(
 function acknowledged(state = verified()) {
   return step(state, acknowledgementEvent(state));
 }
+function acknowledgementIntentEvent(
+  state: PromotionControl
+): Extract<PromotionEvent, { type: "acknowledgement-intent" }> {
+  const { replayProof: _replayProof, ...event } = acknowledgementEvent(state);
+  return { ...event, type: "acknowledgement-intent" };
+}
 function failed(state = deployed(), mode: PromotionMode = "promote") {
   return step(state, {
     type: "failed",
@@ -638,6 +644,148 @@ describe("durable dispatch fencing and exact effects", () => {
         admission: { workflowCommit, runId: "01", runAttempt: 1 },
       })
     ).toThrow("GitHub effect identity");
+  });
+});
+
+describe("durable acknowledgement intent", () => {
+  it("retains the verified owner and completes only the bound acknowledgement", () => {
+    const success = verified();
+    const event = acknowledgementIntentEvent(success);
+    const bound = step(success, event);
+    expect(bound.revision).toBe(success.revision + 1);
+    expect(bound.active!.phase).toBe("verified");
+    expect(bound.active!.operationId).toBe(success.active!.operationId);
+    expect(bound.active!.acknowledgementIntent).toEqual({
+      verificationReceiptId: event.verificationReceiptId,
+      acknowledgementId: event.acknowledgementId,
+    });
+    expect(bound.lastVerified).toEqual(success.lastVerified);
+    expect(bound.completedCount).toBe(0);
+    expect(step(bound, event)).toEqual(bound);
+    expect(
+      serializePromotionControl(
+        parsePromotionControl(serializePromotionControl(bound))
+      )
+    ).toEqual(serializePromotionControl(bound));
+    expect(() => claim(bound, request(bound, "other"))).toThrow();
+    expect(() => planned(bound, "rollback")).toThrow("transition");
+    expect(() => failed(bound)).toThrow("transition");
+    expect(() =>
+      step(bound, {
+        ...acknowledgementEvent(bound),
+        acknowledgementId: "8".repeat(64),
+      })
+    ).toThrow("acknowledgement intent completion");
+    const completed = acknowledged(bound);
+    expect(completed.active).toBeNull();
+    expect(
+      proof(completed, success.active!.request.requestId).record!
+        .acknowledgementId
+    ).toBe(event.acknowledgementId);
+  });
+
+  it("rejects a wrong phase, owner, verification receipt or conflicting replay", () => {
+    const success = verified();
+    const event = acknowledgementIntentEvent(success);
+    expect(() => step(deployed(), event)).toThrow("transition");
+    expect(() =>
+      step(success, { ...event, operationId: "7".repeat(64) })
+    ).toThrow("Stale promotion owner");
+    expect(() =>
+      step(success, { ...event, verificationReceiptId: "7".repeat(64) })
+    ).toThrow("acknowledgement intent verification");
+    const bound = step(success, event);
+    expect(() =>
+      step(bound, { ...event, acknowledgementId: "7".repeat(64) })
+    ).toThrow("acknowledgement intent replay");
+    expect(() => step(acknowledged(bound), event)).toThrow(
+      "Stale promotion owner"
+    );
+  });
+
+  it("rejects rehashed intent receipt and event projection mismatches", () => {
+    const success = verified();
+    const bound = step(success, acknowledgementIntentEvent(success));
+    for (const field of [
+      "verificationReceiptId",
+      "acknowledgementId",
+    ] as const) {
+      const forged = structuredClone(bound);
+      forged.active!.acknowledgementIntent![field] = "7".repeat(64);
+      expect(() => parsePromotionControl(rehash(forged))).toThrow();
+    }
+    const premature = deployed();
+    premature.active!.acknowledgementIntent =
+      bound.active!.acknowledgementIntent;
+    expect(() => parsePromotionControl(rehash(premature))).toThrow(
+      "Acknowledgement intent requires verified operation"
+    );
+  });
+
+  it("rejects a rehashed native transition that silently changes an existing binding", () => {
+    const success = verified();
+    const bound = step(success, acknowledgementIntentEvent(success));
+    const forged = structuredClone(bound);
+    forged.active!.acknowledgementIntent!.acknowledgementId = "7".repeat(64);
+    const event = forged.lastTransition.event;
+    if (event.type !== "acknowledgement-intent")
+      throw new Error("Wrong fixture event");
+    event.acknowledgementId = "7".repeat(64);
+    forged.revision++;
+    forged.lastTransition.previousStateId = bound.stateId;
+    const rehashed = rehash(forged);
+    expect(parsePromotionControl(rehashed)).toEqual(rehashed);
+    expect(() => validatePromotionControlTransition(bound, rehashed)).toThrow(
+      "acknowledgement intent replay"
+    );
+  });
+
+  it("strictly rejects extra or missing intent metadata", () => {
+    const success = verified();
+    const bound = step(success, acknowledgementIntentEvent(success));
+    for (const change of [
+      { verificationReceiptId: bound.active!.verification!.receiptId },
+      { ...bound.active!.acknowledgementIntent, privatePath: "operator" },
+    ]) {
+      const forged = structuredClone(bound) as unknown as Record<
+        string,
+        unknown
+      >;
+      (forged.active as Record<string, unknown>).acknowledgementIntent = change;
+      expect(() =>
+        parsePromotionControl(rehash(forged as unknown as PromotionControl))
+      ).toThrow("schema fields");
+    }
+    expect(() =>
+      step(bound, {
+        ...acknowledgementIntentEvent(bound),
+        replayProof: null,
+      } as unknown as PromotionEvent)
+    ).toThrow("schema fields");
+  });
+
+  it("preserves legacy verified bytes and direct acknowledgement without adding defaults", () => {
+    const success = verified();
+    const oldBytes = serializePromotionControl(success);
+    // Golden bytes computed from the pre-extension implementation at HEAD.
+    expect(createHash("sha256").update(oldBytes).digest("hex")).toBe(
+      "219f37338a807fe5bd01de4cd9946aa7a9240d498624f2fb5c38aecbaeb9002a"
+    );
+    const parsed = parsePromotionControl(oldBytes);
+    expect(Object.hasOwn(parsed.active!, "acknowledgementIntent")).toBe(false);
+    expect(serializePromotionControl(parsed)).toEqual(oldBytes);
+    expect(parsed.stateId).toBe(success.stateId);
+    const completed = acknowledged(parsed);
+    expect(
+      createHash("sha256")
+        .update(serializePromotionControl(completed))
+        .digest("hex")
+    ).toBe("afe8b05f8671a9aeec5e4d25e9c23f70820ef3a69f8626f59d7da785fca29203");
+    expect(completed.completedCount).toBe(1);
+    expect(completed.lastTransition.event.type).toBe("acknowledged");
+    expect(serializePromotionControl(completed)).not.toContain(
+      "acknowledgementIntent"
+    );
   });
 });
 
