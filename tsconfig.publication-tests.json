@@ -5,6 +5,8 @@
     "tsBuildInfoFile": "./node_modules/.tmp/publication-tests.tsbuildinfo"
   },
   "include": [
+    "src/test/ingestion/recovery-gmail-capture-drift-control.test.ts",
+    "src/test/ingestion/recovery-gmail-capture-data-drift.test.ts",
     "src/test/ingestion/recovery-gmail-capture-escaped-task.test.ts",
     "src/test/ingestion/recovery-gmail-capture-expiry.test.ts",
     "src/test/ingestion/recovery-gmail-capture-authority-negatives.test.ts",

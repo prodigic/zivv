@@ -102,6 +102,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "authority-negatives-before-source",
   "expire-after-admission",
   "authority-escaped-after-admission",
+  "pause-before-key-guard",
 ] as const;
 export type CaptureInterruption =
   (typeof RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS)[number];
@@ -177,6 +178,83 @@ interface EscapedTaskProof {
   outcome: Promise<EscapedTaskOutcome>;
 }
 type CaptureOutcome = RecoveryGmailCaptureReport | EscapedTaskProof;
+
+interface CapturePauseHandshake {
+  waitForGo: Promise<void>;
+  assertCurrent: () => void;
+  close: () => void;
+}
+
+/** The fixed test transport controls timing only. Every resumed effect still
+ * passes the same existing production guards, with the original deadline. */
+function pauseBeforeKeyGuard(deadline: number): CapturePauseHandshake {
+  if (
+    typeof process.send !== "function" ||
+    !process.connected ||
+    !process.channel
+  )
+    fail("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_REQUIRED");
+  const remaining = Math.min(20_000, deadline - Date.now());
+  if (remaining <= 0) fail("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_TIMEOUT");
+  let closed = false,
+    resumed = false,
+    failure: Error | undefined;
+  const gate: { resolve?: () => void; reject?: (error: Error) => void } = {};
+  const waitForGo = new Promise<void>((accept, reject) => {
+    gate.resolve = accept;
+    gate.reject = reject;
+  });
+  const refuse = (code: string) => {
+    failure ??= new Error(code);
+    if (!resumed) gate.reject?.(failure);
+  };
+  const timer = setTimeout(
+    () => refuse("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_TIMEOUT"),
+    remaining
+  );
+  const message = (value: unknown, handle: unknown) => {
+    if (closed || failure) return;
+    if (
+      resumed ||
+      value !== "ZIVV_GMAIL_CAPTURE_GO_V1" ||
+      handle !== undefined
+    ) {
+      refuse("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_INVALID");
+      return;
+    }
+    resumed = true;
+    clearTimeout(timer);
+    gate.resolve?.();
+  };
+  const disconnected = () => {
+    if (!closed) refuse("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_DISCONNECTED");
+  };
+  process.on("message", message);
+  process.on("disconnect", disconnected);
+  process.on("error", disconnected);
+  try {
+    process.send("ZIVV_GMAIL_CAPTURE_READY_V1", (error) => {
+      if (error) disconnected();
+    });
+  } catch {
+    disconnected();
+  }
+  return {
+    waitForGo,
+    assertCurrent: () => {
+      if (failure) throw failure;
+    },
+    close: () => {
+      if (closed) return;
+      closed = true;
+      clearTimeout(timer);
+      process.off("message", message);
+      process.off("disconnect", disconnected);
+      process.off("error", disconnected);
+      if (process.connected) process.disconnect();
+    },
+  };
+}
 
 /** A complete read-only observation, including SQLite/WAL/SHM and the prepared
  * receipt. This is called only after durable admission, outside transactions. */
@@ -1883,6 +1961,13 @@ async function execute(
     )
   )
     fail("RECOVERY_GMAIL_CAPTURE_RETAINED_EXECUTOR_REQUIRED");
+  if (
+    interruption === "pause-before-key-guard" &&
+    (typeof process.send !== "function" ||
+      !process.connected ||
+      !process.channel)
+  )
+    fail("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_REQUIRED");
   const initial = open(input);
   if (initial.selected?.result && !initial.needsRepair) {
     const report = inspectRecoveryGmailCaptureAdmission(input);
@@ -1988,9 +2073,11 @@ async function execute(
     }
   }
   let ownership = scope.ownership;
+  let handshake: CapturePauseHandshake | undefined;
   scope.assertCurrent = (snapshot) => {
     if (!scope.active || Date.now() >= scope.deadline)
       fail("RECOVERY_GMAIL_CAPTURE_EXPIRED");
+    handshake?.assertCurrent();
     const actual = initial.delta(snapshot);
     // The known invocation lease may update only production bookkeeping.
     const observed = validateWeeklyJournalRecoverySnapshot(
@@ -2099,6 +2186,11 @@ async function execute(
         return { kind: "escaped-after-admission", before, outcome };
       }
       scope.phase = "key";
+      if (interruption === "pause-before-key-guard") {
+        scope.assertCurrent();
+        handshake = pauseBeforeKeyGuard(scope.deadline);
+        await handshake.waitForGo;
+      }
       for (const item of initial.all)
         if (item.observations[2]?.candidate)
           installRecoveredBackupKey(initial.operator, input.recoveryKey, {
@@ -2352,6 +2444,7 @@ async function execute(
     scope.active = false;
     scope.key.fill(0);
     escapeGate.release?.();
+    handshake?.close();
   }
   if (executionFailure) {
     closeEscapeObservation();

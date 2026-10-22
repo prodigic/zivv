@@ -15,6 +15,8 @@ import {
 } from "./recovery-gmail-capture-framing.js";
 import { canonicalJson } from "./sqlite-store.js";
 
+export { startRecoveryGmailCaptureDriftProbeForTest } from "./recovery-gmail-capture-drift-probe.js";
+
 type Interruption = CaptureInterruption;
 const errorCode = "RECOVERY_GMAIL_CAPTURE_EXECUTION_FAILED";
 

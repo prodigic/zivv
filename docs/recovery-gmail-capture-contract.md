@@ -6,6 +6,26 @@ credential provisioning is authorized by this packet.
 
 ## Fixed active-capture authority probes
 
+The separate `startRecoveryGmailCaptureDriftProbeForTest` launcher adds a fixed
+IPC pause/resume seam without changing production launch or binary framing.
+It exposes only `paused`, `result`, `resume()` and joined `stop()` controls;
+no callback, process handle, message sender, path or data mutation is accepted.
+The child requires IPC before admission effects. After admission it enters the
+key phase, completes normal outer validation, sends its fixed READY signal and
+awaits one fixed GO signal. The pause is bounded by twenty seconds and the
+existing scope deadline; it never extends authority. The next actual
+`installRecoveredBackupKey` guard must revalidate the changed evidence directly.
+
+The parent test owns a change to an authenticated synthetic batch data file
+after READY. It never patches retained worker code or asks the facade to mutate
+data. A no-drift control must complete through the same pause/resume path; a
+separate tampered-data fixture must refuse before key, intake, result or lease
+effects. Compare the full tree around the intentional data change, preserving
+all other bytes and logical journal state. Do not restore the changed bytes
+before assertions. Stop/timeout/disconnect paths must drain and join the child,
+clear protocol listeners/timers and settle both promises. Selecting the mode
+without IPC refuses before effects; old workers reject the unknown selection.
+
 The fixed `authority-escaped-after-admission` selection creates one real async
 descendant inside the private ALS capture scope after durable admission, before
 key installation or lease acquisition. The descendant waits on a private gate.
