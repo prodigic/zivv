@@ -16,11 +16,26 @@ import {
   buildCapturedApplication,
   captureReviewedSource,
   verifyApplicationBuildReceipt,
+  parseApplicationBuildReceipt,
+  verifyBuildExecutionToolIdentity,
   verifyCompiledEtl,
   type ApplicationBuildReceipt,
   type CapturedSource,
 } from "../../lib/ingestion/source-build.js";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
+import { captureNpmExecutionTool } from "../../lib/ingestion/execution-tool-identity.js";
+import {
+  buildCandidateBundle,
+  readVerifiedCandidateBundle,
+} from "../../lib/ingestion/candidate-bundle.js";
+import { bootstrapLedger } from "../../lib/ingestion/ledger.js";
+import { encryptLedgerSnapshot } from "../../lib/ingestion/encrypted-backup.js";
+import { captureExportConfiguration } from "../../lib/ingestion/export-configuration.js";
+import {
+  createEmptyWeeklyEditionLedger,
+  prepareWeeklyEdition,
+  serializeWeeklyEditionLedger,
+} from "../../lib/ingestion/weekly.js";
 
 interface ToolBehavior {
   version?: string;
@@ -28,6 +43,7 @@ interface ToolBehavior {
   compilerExit?: number;
   viteExit?: number;
   mutate?: "ci" | "compiler" | "vite";
+  mutateTool?: boolean;
 }
 interface ToolLog {
   stage: string;
@@ -44,6 +60,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const behavior = JSON.parse(fs.readFileSync("tool-behavior.json", "utf8"));
 function log(stage, args) {
+  if (!fs.existsSync(path.join(process.cwd(), "..", "execution-tools.json"))) throw new Error("Execution identity must precede every child effect");
   const env = {};
   for (const key of ["npm_config_cache", "npm_config_userconfig", "npm_config_registry", "ZIVV_CANDIDATE_BUILD", "ZIVV_BASE_PATH", "ZIVV_TEST_SECRET", "NODE_OPTIONS", "npm_config_script_shell", "npm_config_ignore_scripts"]) {
     if (process.env[key] !== undefined) env[key] = process.env[key];
@@ -56,6 +73,7 @@ if (args[0] === "--version") {
   process.stdout.write(behavior.version || "11.6.0");
 } else {
   log("ci", args);
+  if (behavior.mutateTool) fs.appendFileSync(__filename, "\n// changed installer bytes\n");
   if (behavior.mutate === "ci") fs.writeFileSync("main.ts", "installer mutation");
   if (behavior.ciExit) process.exit(behavior.ciExit);
   const common = 'const fs = require("node:fs"); const path = require("node:path"); const behavior = JSON.parse(fs.readFileSync("tool-behavior.json", "utf8"));\n' + log.toString() + '\n';
@@ -63,6 +81,7 @@ if (args[0] === "--version") {
   fs.writeFileSync("node_modules/typescript/bin/tsc", common + 'log("compiler", process.argv.slice(2)); if (behavior.mutate === "compiler") fs.writeFileSync("main.ts", "compiler mutation"); if (behavior.compilerExit) process.exit(behavior.compilerExit); if (process.argv.includes("--project")) { fs.mkdirSync("dist/lib/etl", { recursive: true }); fs.writeFileSync("dist/lib/etl/processor.js", "export class ETLProcessor {}\\n"); }');
   fs.mkdirSync("node_modules/vite/bin", { recursive: true });
   fs.writeFileSync("node_modules/vite/bin/vite.js", common + 'log("vite", process.argv.slice(2)); if (behavior.mutate === "vite") fs.writeFileSync("main.ts", "vite mutation"); if (behavior.viteExit) process.exit(behavior.viteExit); const output = process.argv[process.argv.indexOf("--outDir") + 1]; fs.mkdirSync(path.join(output, "assets"), { recursive: true }); fs.mkdirSync(path.join(output, ".vite"), { recursive: true }); fs.mkdirSync(path.join(output, "data"), { recursive: true }); fs.writeFileSync(path.join(output, "index.html"), "<script src=\\"" + process.env.ZIVV_BASE_PATH + "assets/app.js\\"></script>"); fs.writeFileSync(path.join(output, "assets/app.js"), "console.log(1);\\n"); fs.writeFileSync(path.join(output, ".vite/manifest.json"), JSON.stringify({ "main.ts": { file: "assets/app.js", isEntry: true } })); fs.writeFileSync(path.join(output, "data/private.json"), "excluded data"); fs.writeFileSync(path.join(output, "CNAME"), "excluded host");');
+  fs.appendFileSync("node_modules/vite/bin/vite.js", '\nfs.writeFileSync(path.join(output, "404.html"), fs.readFileSync(path.join(output, "index.html"))); fs.writeFileSync(path.join(output, "manifest.json"), JSON.stringify({ scope: process.env.ZIVV_BASE_PATH, start_url: process.env.ZIVV_BASE_PATH })); fs.writeFileSync(path.join(output, ".vite/manifest.json"), JSON.stringify({ "index.html": { file: "assets/app.js", isEntry: true } }));');
   process.stdout.write("installed fixture toolchain\n");
 }
 `;
@@ -72,6 +91,7 @@ describe("reviewed source capture and isolated application build", () => {
   let repositoryRoot: string;
   let privateDirectory: string;
   let sourceCommit: string;
+  let npmCli: string;
   const npmName = "fake npm;cli.cjs";
 
   function git(args: string[], input?: string): string {
@@ -109,7 +129,7 @@ describe("reviewed source capture and isolated application build", () => {
     return buildCapturedApplication({
       source,
       basePath,
-      npmCli: join(source.sourceRoot, npmName),
+      npmCli,
     });
   }
   function logs(source: CapturedSource): ToolLog[] {
@@ -126,6 +146,14 @@ describe("reviewed source capture and isolated application build", () => {
     directory = mkdtempSync(join(tmpdir(), "zivv-source-test-"));
     repositoryRoot = join(directory, "repository");
     privateDirectory = join(directory, "private");
+    const npmRoot = join(directory, "npm tool; literal package");
+    npmCli = join(npmRoot, "bin/npm-cli.js");
+    mkdirSync(dirname(npmCli), { recursive: true });
+    writeFileSync(npmCli, fakeNpm);
+    writeFileSync(
+      join(npmRoot, "package.json"),
+      '{"name":"npm","version":"11.6.0"}\n'
+    );
     mkdirSync(repositoryRoot);
     git(["init", "--quiet"]);
     git(["config", "user.name", "Source fixture"]);
@@ -352,7 +380,7 @@ describe("reviewed source capture and isolated application build", () => {
     const result = await buildCapturedApplication({
       source,
       basePath: "/nested/zivv/",
-      npmCli: join(source.sourceRoot, npmName),
+      npmCli,
       onProgress: (line) => progress.push(line),
     });
     const commands = logs(source);
@@ -393,14 +421,19 @@ describe("reviewed source capture and isolated application build", () => {
     expect(readFileSync(join(source.directory, "empty.npmrc")).length).toBe(0);
     expect(progress.join("")).toContain("installed fixture toolchain");
     expect([...result.applicationFiles.keys()].sort()).toEqual([
+      "404.html",
       "assets/app.js",
       "index.html",
+      "manifest.json",
     ]);
     expect(result.applicationFiles.get("index.html")?.toString()).toContain(
       "/nested/zivv/assets/app.js"
     );
     expect(result.receipt).toEqual({
-      schemaVersion: 1,
+      schemaVersion: 2,
+      executionToolSha256: hash(
+        canonicalJson(captureNpmExecutionTool(npmCli)) + "\n"
+      ),
       purpose: "preview",
       sourceRepository: "prodigic/zivv",
       sourceCommit,
@@ -436,6 +469,15 @@ describe("reviewed source capture and isolated application build", () => {
         readFileSync(join(source.directory, "application-build.json"), "utf8")
       )
     ).toEqual(result.receipt);
+    const retainedTool = readFileSync(
+      join(source.directory, "execution-tools.json")
+    );
+    expect(retainedTool.toString()).toBe(
+      canonicalJson(captureNpmExecutionTool(npmCli)) + "\n"
+    );
+    expect(result.receipt).toMatchObject({
+      executionToolSha256: hash(retainedTool),
+    });
     expect(
       verifyApplicationBuildReceipt(
         readFileSync(join(source.directory, "application-build.json")),
@@ -466,6 +508,65 @@ describe("reviewed source capture and isolated application build", () => {
     30_000
   );
 
+  it("rejects installer package mutation before starting the next build child", async () => {
+    const source = captureBehavior({ mutateTool: true });
+    await expect(build(source)).rejects.toThrow("INVALID_NPM_EXECUTION_TOOL");
+    expect(logs(source).map(({ stage }) => stage)).toEqual(["version", "ci"]);
+    expect(existsSync(join(source.directory, "application-build.json"))).toBe(
+      false
+    );
+  });
+
+  it("rejects private npm package configuration before any child effects", async () => {
+    const source = capture();
+    writeFileSync(
+      join(dirname(dirname(npmCli)), ".npmrc"),
+      "// private configuration\n"
+    );
+    await expect(build(source)).rejects.toThrow("INVALID_NPM_EXECUTION_TOOL");
+    expect(existsSync(join(source.directory, "tool-log.jsonl"))).toBe(false);
+    expect(existsSync(join(source.directory, "execution-tools.json"))).toBe(
+      false
+    );
+  });
+
+  it("binds the private manifest to the v2 receipt hash and npm version without requiring the old tool", async () => {
+    const source = capture(),
+      application = await build(source),
+      retained = readFileSync(join(source.directory, "execution-tools.json"));
+    expect(() =>
+      verifyBuildExecutionToolIdentity(application.receipt, retained)
+    ).not.toThrow();
+    expect(() =>
+      verifyBuildExecutionToolIdentity(application.receipt, undefined)
+    ).toThrow("Missing or changed");
+    expect(() =>
+      verifyBuildExecutionToolIdentity(
+        application.receipt,
+        Buffer.concat([retained, Buffer.from(" ")])
+      )
+    ).toThrow("Missing or changed");
+    expect(() =>
+      verifyBuildExecutionToolIdentity(
+        { ...application.receipt, npmVersion: "11.7.0" },
+        retained
+      )
+    ).toThrow("version mismatch");
+    rmSync(dirname(dirname(npmCli)), { recursive: true });
+    expect(() =>
+      verifyBuildExecutionToolIdentity(application.receipt, retained)
+    ).not.toThrow();
+  });
+
+  it("rejects a runtime npm version that differs from package identity before installing", async () => {
+    const source = captureBehavior({ version: "11.7.0" });
+    await expect(build(source)).rejects.toThrow(/version/i);
+    expect(logs(source).map(({ stage }) => stage)).toEqual(["version"]);
+    expect(existsSync(join(source.directory, "application-build.json"))).toBe(
+      false
+    );
+  });
+
   it("snapshots caller-owned source metadata before awaiting build commands", async () => {
     const source = capture();
     const sourceInventorySha256 = hash(canonicalJson(source.files));
@@ -473,7 +574,7 @@ describe("reviewed source capture and isolated application build", () => {
     const result = await buildCapturedApplication({
       source,
       basePath: "/zivv/",
-      npmCli: join(source.sourceRoot, npmName),
+      npmCli,
       onProgress: () => {
         mutated = true;
         source.sourceCommit = "e".repeat(40);
@@ -520,9 +621,81 @@ describe("reviewed source capture and isolated application build", () => {
         basePath: "/zivv/",
         npmCli: source.sourceRoot,
       })
-    ).rejects.toThrow("unlinked regular file");
+    ).rejects.toThrow("INVALID_NPM_EXECUTION_TOOL");
     expect(existsSync(join(source.directory, "tool-log.jsonl"))).toBe(false);
   });
+
+  it("retains v2 execution identity in a real sealed bundle and refuses missing or changed private metadata", async () => {
+    const source = capture(),
+      application = await build(source),
+      key = Buffer.alloc(32, 14),
+      ledger = bootstrapLedger({ events: [], artists: [], venues: [] }, 1000),
+      weekly = prepareWeeklyEdition(createEmptyWeeklyEditionLedger(), [], {
+        editionId: "2026-10-16",
+        cutoffEpochMs: Date.parse("2026-10-16T19:00:00Z"),
+        datasetVersion: "synthetic-tool-identity",
+      }),
+      configuration = captureExportConfiguration(source.sourceRoot);
+    configuration["ingestion/weekly-editions.json"] = Buffer.from(
+      serializeWeeklyEditionLedger(weekly.ledger)
+    );
+    configuration["venue-sources.json"] = Buffer.from('{"sources":[]}');
+    const bundle = await buildCandidateBundle({
+      privateDirectory,
+      sourceCommit,
+      basePath: "/zivv/",
+      editionId: "2026-10-16",
+      ledger,
+      snapshot: encryptLedgerSnapshot(ledger, key),
+      recoveryKey: key,
+      configuration,
+      applicationFiles: application.applicationFiles,
+      applicationBuildManifest: application.applicationBuildManifest,
+      applicationBuildReceipt: Buffer.from(
+        canonicalJson(application.receipt) + "\n"
+      ),
+      executionToolIdentity: application.executionToolIdentity,
+    });
+    const manifestPath = join(bundle.directory, "build/execution-tools.json"),
+      retained = readFileSync(manifestPath);
+    expect(application.receipt.schemaVersion).toBe(2);
+    expect(
+      (
+        await readVerifiedCandidateBundle(
+          bundle.directory,
+          key,
+          bundle.candidate.candidateId
+        )
+      ).executionToolIdentity
+    ).toEqual(retained);
+    rmSync(manifestPath);
+    await expect(
+      readVerifiedCandidateBundle(
+        bundle.directory,
+        key,
+        bundle.candidate.candidateId
+      )
+    ).rejects.toThrow();
+    writeFileSync(manifestPath, Buffer.concat([retained, Buffer.from(" ")]));
+    await expect(
+      readVerifiedCandidateBundle(
+        bundle.directory,
+        key,
+        bundle.candidate.candidateId
+      )
+    ).rejects.toThrow("Missing or changed build execution tool identity");
+    writeFileSync(manifestPath, retained);
+    rmSync(dirname(dirname(npmCli)), { recursive: true });
+    expect(
+      (
+        await readVerifiedCandidateBundle(
+          bundle.directory,
+          key,
+          bundle.candidate.candidateId
+        )
+      ).executionToolIdentity
+    ).toEqual(retained);
+  }, 30_000);
 
   it.each(["node_modules", ".cache", "dist"])(
     "rejects a linked ignored build directory %s before spawning npm",
@@ -694,6 +867,89 @@ describe("application build receipt verification", () => {
         )
       ).toThrow();
     }
+  });
+
+  it("accepts strict v2 execution-tool digests while preserving legacy v1 bytes", () => {
+    const legacy = receipt();
+    expect(verifyApplicationBuildReceipt(bytes(legacy), input)).toEqual(legacy);
+    const current = {
+      ...legacy,
+      schemaVersion: 2,
+      executionToolSha256: "1".repeat(64),
+    };
+    expect(verifyApplicationBuildReceipt(bytes(current), input)).toEqual(
+      current
+    );
+    for (const executionToolSha256 of [
+      undefined,
+      null,
+      "",
+      "G".repeat(64),
+      ["1".repeat(64)],
+    ]) {
+      expect(() =>
+        verifyApplicationBuildReceipt(
+          bytes({ ...current, executionToolSha256 }),
+          input
+        )
+      ).toThrow();
+    }
+    expect(() =>
+      verifyApplicationBuildReceipt(
+        bytes({ ...legacy, executionToolSha256: current.executionToolSha256 }),
+        input
+      )
+    ).toThrow();
+  });
+
+  it("parses retained metadata without original files and rejects malformed inventory authority", () => {
+    const value = receipt();
+    expect(parseApplicationBuildReceipt(bytes(value))).toEqual(value);
+    for (const change of [
+      { sourceCommit: "A".repeat(40) },
+      { basePath: "/../outside/" },
+      { applicationFiles: [...value.applicationFiles].reverse() },
+      {
+        applicationFiles: [
+          { ...value.applicationFiles[0], path: "../outside.js" },
+        ],
+      },
+      {
+        applicationFiles: [
+          { ...value.applicationFiles[0], path: "assets\\app.js" },
+        ],
+      },
+      { applicationFiles: [{ ...value.applicationFiles[0], size: -1 }] },
+      {
+        applicationFiles: [
+          { ...value.applicationFiles[0], size: 512 * 1024 * 1024 + 1 },
+        ],
+      },
+      {
+        applicationFiles: [{ ...value.applicationFiles[0], sha256: "invalid" }],
+      },
+      {
+        applicationFiles: [{ ...value.applicationFiles[0], unexpected: true }],
+      },
+      {
+        applicationFiles: [
+          { ...value.applicationFiles[0], path: "ASSETS/APP.JS" },
+          ...value.applicationFiles,
+        ],
+      },
+    ])
+      expect(() =>
+        parseApplicationBuildReceipt(bytes({ ...value, ...change }))
+      ).toThrow();
+    expect(() =>
+      parseApplicationBuildReceipt(
+        bytes({
+          schemaVersion: 2,
+          executionToolSha256: "1".repeat(64),
+          npmVersion: "11.6.0",
+        })
+      )
+    ).toThrow();
   });
 
   it("rejects a receipt for a different reviewed commit or deployment base", () => {

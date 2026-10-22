@@ -63,6 +63,7 @@ export interface BuildCandidateBundleInput {
   applicationFiles: ReadonlyMap<string, Buffer>;
   applicationBuildManifest: Buffer;
   applicationBuildReceipt?: Buffer;
+  executionToolIdentity?: Buffer;
   /** Integrated reviewed builds supply their captured compiled ETL. */
   exportData?: (workspace: string) => Promise<ProcessingResult>;
 }
@@ -92,6 +93,9 @@ export async function buildCandidateBundle(
     applicationBuildManifest: Buffer.from(input.applicationBuildManifest),
     applicationBuildReceipt: input.applicationBuildReceipt
       ? Buffer.from(input.applicationBuildReceipt)
+      : undefined,
+    executionToolIdentity: input.executionToolIdentity
+      ? Buffer.from(input.executionToolIdentity)
       : undefined,
   };
   const files = new Map(
@@ -146,6 +150,11 @@ export async function buildCandidateBundle(
       join(directory, "build/application-build.json"),
       captured.applicationBuildReceipt
     );
+  if (captured.executionToolIdentity)
+    writeDurableFile(
+      join(directory, "build/execution-tools.json"),
+      captured.executionToolIdentity
+    );
   // This marker is the last write. Interrupted partial bundles are ineligible.
   writeDurableFile(
     join(directory, "complete.json"),
@@ -168,6 +177,7 @@ export async function readVerifiedCandidateBundle(
   snapshot: Buffer;
   applicationBuildManifest: Buffer;
   applicationBuildReceipt: Buffer | undefined;
+  executionToolIdentity: Buffer | undefined;
 }> {
   const directory = resolvePrivateCandidateDirectory(path);
   if (lstatSync(directory).isSymbolicLink())
@@ -228,6 +238,14 @@ export async function readVerifiedCandidateBundle(
     configuration,
     publicFiles,
   };
+  if (
+    inputs.applicationBuildReceipt &&
+    JSON.parse(inputs.applicationBuildReceipt.toString("utf8"))
+      .schemaVersion === 2
+  )
+    inputs.executionToolIdentity = readRegular(
+      join(directory, "build/execution-tools.json")
+    );
   verifySealedCandidate(candidate, inputs);
   return {
     candidate,
@@ -235,5 +253,6 @@ export async function readVerifiedCandidateBundle(
     snapshot,
     applicationBuildManifest: inputs.applicationBuildManifest,
     applicationBuildReceipt: inputs.applicationBuildReceipt,
+    executionToolIdentity: inputs.executionToolIdentity,
   };
 }

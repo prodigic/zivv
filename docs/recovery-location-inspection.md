@@ -63,8 +63,11 @@ marker at 2 MiB. Retained files are bounded by their authenticated byte counts.
 
 The report compares the inspecting executor's Node version, ICU, Node executable,
 compiled worker and lockfile against the recorded runtime. A mismatch remains
-visible rather than granting compatibility. The v1 capsule does not retain the
-npm executable identity, so `npmIdentity` is always `not-retained`. Successful
+visible rather than granting compatibility. Legacy captured builds do not retain
+the npm package identity, so `npmIdentity` is `not-retained`. New schema 2 builds
+retain [private execution-tool provenance](build-execution-tool-identity.md), and
+inspection reports `retained-build-identities` when this evidence is present.
+This does not verify a replacement installation or imply coverage of every run. Successful
 decryption proves possession of the capsule key, not installation of a working
 operator key or approval of a replacement execution tool.
 

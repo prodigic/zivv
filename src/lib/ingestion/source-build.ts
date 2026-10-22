@@ -16,6 +16,11 @@ import {
   writeDurableFile,
 } from "./encrypted-backup.js";
 import { normalizeSiteBase } from "../../utils/site-base.js";
+import {
+  captureNpmExecutionTool,
+  verifyNpmExecutionTool,
+  validateNpmExecutionToolIdentity,
+} from "./execution-tool-identity.js";
 
 interface SourceFile {
   path: string;
@@ -23,7 +28,8 @@ interface SourceFile {
   mode: "100644" | "100755";
 }
 export interface ApplicationBuildReceipt {
-  schemaVersion: 1;
+  schemaVersion: 1 | 2;
+  executionToolSha256?: string;
   purpose: "preview" | "release";
   sourceRepository: "prodigic/zivv";
   sourceCommit: string;
@@ -38,16 +44,12 @@ export interface ApplicationBuildReceipt {
   etlInventorySha256: string;
   applicationFiles: { path: string; size: number; sha256: string }[];
 }
-/** Check a build receipt against the exact captured application bytes and target. */
-export function verifyApplicationBuildReceipt(
-  bytes: Buffer,
-  input: {
-    sourceCommit: string;
-    basePath: string;
-    applicationBuildManifest: Buffer;
-    applicationFiles: ReadonlyMap<string, Buffer>;
-  }
+/** Parse strict retained build metadata without accessing its original location. */
+export function parseApplicationBuildReceipt(
+  bytes: Buffer
 ): ApplicationBuildReceipt {
+  if (bytes.length > 8 * 1024 * 1024)
+    throw new Error("Invalid application build receipt");
   const parsed: unknown = JSON.parse(bytes.toString("utf8"));
   if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed))
     throw new Error("Invalid application build receipt");
@@ -68,16 +70,25 @@ export function verifyApplicationBuildReceipt(
     "applicationFiles",
     "etlInventorySha256",
   ];
+  if (value.schemaVersion === 2) keys.push("executionToolSha256");
   if (
     canonicalJson(Object.keys(value).sort()) !== canonicalJson(keys.sort()) ||
-    value.schemaVersion !== 1 ||
+    ![1, 2].includes(value.schemaVersion as number) ||
     value.sourceRepository !== "prodigic/zivv" ||
     typeof value.purpose !== "string" ||
     !["preview", "release"].includes(value.purpose) ||
-    value.sourceCommit !== input.sourceCommit ||
-    value.basePath !== normalizeSiteBase(input.basePath)
+    typeof value.sourceCommit !== "string" ||
+    !/^[a-f0-9]{40}$/.test(value.sourceCommit) ||
+    typeof value.basePath !== "string" ||
+    value.basePath !== normalizeSiteBase(value.basePath)
   )
     throw new Error("Application build provenance mismatch");
+  if (
+    value.schemaVersion === 2 &&
+    (typeof value.executionToolSha256 !== "string" ||
+      !/^[a-f0-9]{64}$/.test(value.executionToolSha256))
+  )
+    throw new Error("Invalid build execution tool digest");
   if (
     typeof value.sourceTree !== "string" ||
     !/^[a-f0-9]{40}$/.test(value.sourceTree)
@@ -102,6 +113,56 @@ export function verifyApplicationBuildReceipt(
     !/^\d+\.\d+\.\d+$/.test(value.npmVersion)
   )
     throw new Error("Invalid build runtime receipt");
+  if (
+    !Array.isArray(value.applicationFiles) ||
+    value.applicationFiles.length > 10_000
+  )
+    throw new Error("Invalid application build inventory");
+  let previous = "",
+    total = 0;
+  const aliases = new Set<string>();
+  for (const item of value.applicationFiles) {
+    if (!item || typeof item !== "object" || Array.isArray(item))
+      throw new Error("Invalid application build inventory");
+    const file = item as Record<string, unknown>;
+    if (
+      canonicalJson(Object.keys(file).sort()) !==
+        canonicalJson(["path", "sha256", "size"]) ||
+      typeof file.path !== "string" ||
+      file.path.length > 4096 ||
+      file.path <= previous ||
+      aliases.has(file.path.toLowerCase()) ||
+      typeof file.size !== "number" ||
+      !Number.isSafeInteger(file.size) ||
+      file.size < 0 ||
+      (total += file.size) > 512 * 1024 * 1024 ||
+      typeof file.sha256 !== "string" ||
+      !/^[a-f0-9]{64}$/.test(file.sha256)
+    )
+      throw new Error("Invalid application build inventory");
+    portablePath(file.path);
+    previous = file.path;
+    aliases.add(file.path.toLowerCase());
+  }
+  return value as unknown as ApplicationBuildReceipt;
+}
+
+/** Check a build receipt against the exact captured application bytes and target. */
+export function verifyApplicationBuildReceipt(
+  bytes: Buffer,
+  input: {
+    sourceCommit: string;
+    basePath: string;
+    applicationBuildManifest: Buffer;
+    applicationFiles: ReadonlyMap<string, Buffer>;
+  }
+): ApplicationBuildReceipt {
+  const value = parseApplicationBuildReceipt(bytes);
+  if (
+    value.sourceCommit !== input.sourceCommit ||
+    value.basePath !== normalizeSiteBase(input.basePath)
+  )
+    throw new Error("Application build provenance mismatch");
   const files = [...input.applicationFiles]
     .map(([path, content]) => ({
       path,
@@ -114,7 +175,26 @@ export function verifyApplicationBuildReceipt(
     canonicalJson(value.applicationFiles) !== canonicalJson(files)
   )
     throw new Error("Application bytes differ from captured build receipt");
-  return value as unknown as ApplicationBuildReceipt;
+  return value;
+}
+/** Authenticate retained private tool provenance without requiring the old install. */
+export function verifyBuildExecutionToolIdentity(
+  receipt: ApplicationBuildReceipt,
+  bytes: Buffer | undefined
+): void {
+  receipt = parseApplicationBuildReceipt(Buffer.from(canonicalJson(receipt)));
+  if (receipt.schemaVersion === 1) {
+    if (bytes !== undefined)
+      throw new Error("Unexpected legacy execution tool identity");
+    return;
+  }
+  if (!bytes || hash(bytes) !== receipt.executionToolSha256)
+    throw new Error("Missing or changed build execution tool identity");
+  const identity = validateNpmExecutionToolIdentity(
+    JSON.parse(bytes.toString("utf8"))
+  );
+  if (identity.version !== receipt.npmVersion)
+    throw new Error("Build execution tool version mismatch");
 }
 export interface CapturedSource {
   directory: string;
@@ -460,12 +540,44 @@ export async function buildCapturedApplication(input: {
   receipt: ApplicationBuildReceipt;
   applicationFiles: Map<string, Buffer>;
   applicationBuildManifest: Buffer;
+  executionToolIdentity?: Buffer;
 }> {
   const source = structuredClone(input.source);
   verifyCapturedSource(source);
   const basePath = normalizeSiteBase(input.basePath);
   const npmCli = resolve(input.npmCli);
-  regular(npmCli);
+  const toolIdentity = captureNpmExecutionTool(npmCli);
+  const executionToolIdentity = Buffer.from(canonicalJson(toolIdentity) + "\n");
+  writeDurableFile(
+    join(source.directory, "execution-tools.json"),
+    executionToolIdentity
+  );
+  function verifyTool(): void {
+    verifyNpmExecutionTool(toolIdentity, npmCli);
+    if (
+      !regular(join(source.directory, "execution-tools.json")).equals(
+        executionToolIdentity
+      )
+    )
+      throw new Error("Retained build execution tool identity changed");
+  }
+  async function execute(
+    args: string[],
+    progress?: (line: string) => void
+  ): Promise<string> {
+    verifyTool();
+    try {
+      return await run(
+        process.execPath,
+        args,
+        source.sourceRoot,
+        env,
+        progress
+      );
+    } finally {
+      verifyTool();
+    }
+  }
   const cache = join(dirname(source.directory), "npm-cache");
   secureOperatorDirectory(cache);
   const userconfig = join(source.directory, "empty.npmrc");
@@ -489,16 +601,16 @@ export async function buildCapturedApplication(input: {
   env.npm_config_registry = "https://registry.npmjs.org/";
   env.ZIVV_CANDIDATE_BUILD = "1";
   env.ZIVV_BASE_PATH = basePath;
-  const npmVersion = (
-    await run(process.execPath, [npmCli, "--version"], source.sourceRoot, env)
-  ).trim();
-  if (!/^\d+\.\d+\.\d+$/.test(npmVersion))
+  const npmVersion = (await execute([npmCli, "--version"])).trim();
+  if (
+    !/^\d+\.\d+\.\d+$/.test(npmVersion) ||
+    npmVersion !== toolIdentity.version
+  )
     throw new Error("Invalid npm runtime version");
   const packageLockSha256 = hash(
     regular(join(source.sourceRoot, "package-lock.json"))
   );
-  await run(
-    process.execPath,
+  await execute(
     [
       npmCli,
       "ci",
@@ -508,31 +620,22 @@ export async function buildCapturedApplication(input: {
       "--no-fund",
       "--prefer-offline",
     ],
-    source.sourceRoot,
-    env,
     input.onProgress
   );
-  await run(
-    process.execPath,
+  await execute(
     [join(source.sourceRoot, "node_modules/typescript/bin/tsc"), "-b"],
-    source.sourceRoot,
-    env,
     input.onProgress
   );
-  await run(
-    process.execPath,
+  await execute(
     [
       join(source.sourceRoot, "node_modules/typescript/bin/tsc"),
       "--project",
       "tsconfig.build.json",
     ],
-    source.sourceRoot,
-    env,
     input.onProgress
   );
   const output = join(source.directory, "application");
-  await run(
-    process.execPath,
+  await execute(
     [
       join(source.sourceRoot, "node_modules/vite/bin/vite.js"),
       "build",
@@ -540,8 +643,6 @@ export async function buildCapturedApplication(input: {
       output,
       "--emptyOutDir",
     ],
-    source.sourceRoot,
-    env,
     input.onProgress
   );
   verifyCapturedSource(source);
@@ -549,7 +650,8 @@ export async function buildCapturedApplication(input: {
   const applicationBuildManifest = regular(join(output, ".vite/manifest.json"));
   const etlInventorySha256 = compiledEtlDigest(source.sourceRoot);
   const receipt: ApplicationBuildReceipt = {
-    schemaVersion: 1,
+    schemaVersion: 2,
+    executionToolSha256: hash(executionToolIdentity),
     purpose: source.purpose,
     sourceRepository: "prodigic/zivv",
     sourceCommit: source.sourceCommit,
@@ -574,5 +676,10 @@ export async function buildCapturedApplication(input: {
     join(source.directory, "application-build.json"),
     Buffer.from(canonicalJson(receipt) + "\n")
   );
-  return { receipt, applicationFiles, applicationBuildManifest };
+  return {
+    receipt,
+    applicationFiles,
+    applicationBuildManifest,
+    executionToolIdentity,
+  };
 }
