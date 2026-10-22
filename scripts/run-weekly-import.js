@@ -4,6 +4,14 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runWeeklyImport } from "../dist/lib/ingestion/weekly-import-runner.js";
 import { parseImportObservation } from "../dist/lib/ingestion/steve-import-review.js";
+import {
+  createAuthoritativePromotionControlTransport,
+  createRemotePromotionControlStore,
+} from "../dist/lib/ingestion/promotion-control-git.js";
+import {
+  parsePromotionControl,
+  validatePromotionAppend,
+} from "../dist/lib/ingestion/promotion-control.js";
 const options = {};
 const args = process.argv.slice(2);
 for (let index = 0; index < args.length; index += 2) {
@@ -25,6 +33,7 @@ for (let index = 0; index < args.length; index += 2) {
       "purpose",
       "base",
       "npm-cli",
+      "candidate",
     ].includes(key) ||
     Object.hasOwn(options, key) ||
     !value ||
@@ -67,6 +76,8 @@ if (
     "enrich",
     "export",
     "validate",
+    "verify",
+    "acknowledge",
   ].includes(options.through)
 )
   throw new Error("Unsupported --through stage");
@@ -77,7 +88,9 @@ if (
   throw new Error("--reuse-frozen must be true or false");
 if (
   (options["freeze-cutoff"] || options["reuse-frozen"]) &&
-  !["freeze", "enrich", "export", "validate"].includes(options.through)
+  !["freeze", "enrich", "export", "validate", "verify", "acknowledge"].includes(
+    options.through
+  )
 )
   throw new Error(
     "Freeze options require --through freeze or a later candidate stage"
@@ -86,39 +99,94 @@ const buildKeys = ["source-commit", "purpose", "base", "npm-cli"];
 if (
   buildKeys.some((key) => options[key]) &&
   (!buildKeys.every((key) => options[key]) ||
-    !["enrich", "export", "validate"].includes(options.through))
+    !["enrich", "export", "validate", "verify", "acknowledge"].includes(
+      options.through
+    ))
 )
   throw new Error("Candidate stages require all four build options together");
-const state = await runWeeklyImport({
-  root: resolve(options.root ?? fileURLToPath(new URL("../", import.meta.url))),
-  source,
-  runId: options["run-id"],
-  stopAfter: options.through ?? "load",
-  freezeCutoffEpochMs: options["freeze-cutoff"]
-    ? parseImportObservation(options["freeze-cutoff"])
-    : undefined,
-  reuseFrozen: options["reuse-frozen"] === "true",
-  candidateBuild: options["source-commit"]
-    ? {
-        sourceCommit: options["source-commit"],
-        purpose: options.purpose,
-        basePath: options.base,
-        npmCli: resolve(options["npm-cli"]),
-      }
-    : undefined,
-  onProgress: ({ runId, stage, phase }) =>
-    process.stderr.write(JSON.stringify({ runId, stage, phase }) + "\n"),
-});
-console.log(
-  JSON.stringify({
-    runId: state.runId,
-    revision: state.revision,
-    source: state.source,
-    stages: state.stages.map(({ stage, status, attempt, errorCode }) => ({
-      stage,
-      status,
-      attempt,
-      errorCode,
-    })),
-  })
-);
+const delivering = ["verify", "acknowledge"].includes(options.through);
+if (options.candidate && !delivering)
+  throw new Error("--candidate requires --through verify or acknowledge");
+async function execute() {
+  const root = resolve(
+    options.root ?? fileURLToPath(new URL("../", import.meta.url))
+  );
+  let verifiedDelivery;
+  if (delivering) {
+    if (
+      !options["run-id"] ||
+      !options.candidate ||
+      process.env.ZIVV_CONTROLLED_PUBLISHING !== "enabled" ||
+      process.env.ZIVV_MANUAL_PUBLISHER_JOINED !== "true" ||
+      !process.env.GITHUB_TOKEN
+    )
+      throw new Error("Verified delivery is not enabled");
+    const path = resolve(options.candidate),
+      stat = lstatSync(path);
+    if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1)
+      throw new Error("Unsafe candidate identity file");
+    const transport = createAuthoritativePromotionControlTransport(root, {
+      token: process.env.GITHUB_TOKEN,
+    });
+    const store = createRemotePromotionControlStore({
+      repositoryRoot: root,
+      destination: "production",
+      transport,
+      validateState: (bytes, destination) => {
+        const control = parsePromotionControl(bytes);
+        if (control.destination !== destination)
+          throw new Error("Wrong control destination");
+        return control.completionRoot;
+      },
+      validateTransition: validatePromotionAppend,
+    });
+    verifiedDelivery = { store, candidate: readFileSync(path) };
+  }
+  return runWeeklyImport({
+    root,
+    source,
+    runId: options["run-id"],
+    stopAfter: options.through ?? "load",
+    freezeCutoffEpochMs: options["freeze-cutoff"]
+      ? parseImportObservation(options["freeze-cutoff"])
+      : undefined,
+    reuseFrozen: options["reuse-frozen"] === "true",
+    candidateBuild: options["source-commit"]
+      ? {
+          sourceCommit: options["source-commit"],
+          purpose: options.purpose,
+          basePath: options.base,
+          npmCli: resolve(options["npm-cli"]),
+        }
+      : undefined,
+    verifiedDelivery,
+    controlledPublishing: process.env.ZIVV_CONTROLLED_PUBLISHING,
+    manualPublisherJoined: process.env.ZIVV_MANUAL_PUBLISHER_JOINED,
+    onProgress: ({ runId, stage, phase }) =>
+      process.stderr.write(JSON.stringify({ runId, stage, phase }) + "\n"),
+  });
+}
+let state;
+try {
+  state = await execute();
+} catch (error) {
+  if (!delivering) throw error;
+  console.error(
+    "Verified weekly delivery stopped. Check activation prerequisites, exact candidate/native evidence, private run context and saved intents. Resume the same run; do not reimport or redeploy blindly."
+  );
+  process.exitCode = 1;
+}
+if (state)
+  console.log(
+    JSON.stringify({
+      runId: state.runId,
+      revision: state.revision,
+      source: state.source,
+      stages: state.stages.map(({ stage, status, attempt, errorCode }) => ({
+        stage,
+        status,
+        attempt,
+        errorCode,
+      })),
+    })
+  );

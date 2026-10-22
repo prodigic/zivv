@@ -69,8 +69,9 @@ This library executes real weekly-file and controller effects when deliberately
 called. Tests use disposable stores and synthetic releases. No operator cutoff,
 catalog, keys, publishing flags or production refs are changed during development.
 
-The full weekly delivery adapter still must execute/adopt exact deployment and
-verification evidence, provide context/lease renewal, and call this executor.
+The [weekly delivery journal adapter](weekly-delivery-journal.md) now adopts exact
+native deployment and verification evidence under the worker's context and lease,
+then calls this executor. Dispatching the publication itself remains separate.
 The maintained manual publisher must participate in the same controller before
 controlled publishing activates. Source acquisition, local scheduling, portable
 private recovery, deduplicated notifications, failure rehearsals and two observed
