@@ -6,6 +6,24 @@ credential provisioning is authorized by this packet.
 
 ## Fixed active-capture authority probes
 
+The fixed `authority-escaped-after-admission` selection creates one real async
+descendant inside the private ALS capture scope after durable admission, before
+key installation or lease acquisition. The descendant waits on a private gate.
+Normal finalization first deactivates the scope and wipes its in-memory key, then
+releases that gate. The descendant attempts the exact admission write through
+the real durable writer and must receive `RECOVERY_GMAIL_CAPTURE_EXPIRED` from
+its guard before filesystem effects. The coordinator awaits and bounds that
+outcome outside the revoked ALS context, compares logical and full physical
+state, and returns its safe verified diagnostic only after refusal and unchanged
+state are proved. No task or rejection may remain detached when it returns.
+This is revocation of an actual inherited scope, not a forged or missing scope
+test, and it does not establish active-lease expiry or process-death acceptance.
+The observation holds one fixed read-only journal connection from after
+admission through the final comparison. Standalone SQLite read connections can
+otherwise change SHM timestamps when opening and closing. The observer prevents
+that measurement churn while retaining every file, byte, inode and modification
+field in the comparison; it grants no journal writer and is always closed.
+
 The fixed `expire-after-admission` selection only shortens the private deadline
 after durable admission and before key installation. It then lets the actual
 next key-installation guard reject the expired scope; it does not inject an

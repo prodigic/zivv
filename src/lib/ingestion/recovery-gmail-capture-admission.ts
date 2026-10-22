@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import {
   existsSync,
   lstatSync,
@@ -9,9 +9,11 @@ import {
   closeSync,
   readSync,
   fstatSync,
+  readlinkSync,
 } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { DatabaseSync } from "node:sqlite";
 import {
   openPreparedRuntimeForAdmission,
   type RecoveryRuntimeInput,
@@ -43,6 +45,7 @@ import {
   inspectRecoveryInstalledFile,
   type RecoveryInstallationFile,
   type RecoveryInstallationObservation,
+  writeDurableFile,
 } from "./encrypted-backup.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
@@ -98,6 +101,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "intake-manifest-published",
   "authority-negatives-before-source",
   "expire-after-admission",
+  "authority-escaped-after-admission",
 ] as const;
 export type CaptureInterruption =
   (typeof RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS)[number];
@@ -162,6 +166,139 @@ interface Scope {
   intakeStarted?: boolean;
 }
 const scopes = new AsyncLocalStorage<Scope>();
+type EscapedTaskOutcome =
+  | "refused"
+  | "wrong-refusal"
+  | "allowed"
+  | "invalid-context";
+interface EscapedTaskProof {
+  kind: "escaped-after-admission";
+  before: string;
+  outcome: Promise<EscapedTaskOutcome>;
+}
+type CaptureOutcome = RecoveryGmailCaptureReport | EscapedTaskProof;
+
+/** A complete read-only observation, including SQLite/WAL/SHM and the prepared
+ * receipt. This is called only after durable admission, outside transactions. */
+function escapedTaskSnapshot(root: string, journalPath: string): string {
+  const journal = readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+  validateWeeklyJournalRecoverySnapshot(journal);
+  const entries: unknown[] = [];
+  let count = 0,
+    total = 0;
+  const unstable = () =>
+    fail("RECOVERY_GMAIL_CAPTURE_AUTHORITY_ESCAPE_UNSTABLE");
+  const walk = (directory: string, prefix: string) => {
+    const before = lstatSync(directory);
+    if (!before.isDirectory() || before.isSymbolicLink()) unstable();
+    entries.push({
+      path: prefix,
+      kind: "directory",
+      dev: before.dev,
+      ino: before.ino,
+      nlink: before.nlink,
+      mode: before.mode,
+      mtimeMs: before.mtimeMs,
+      ctimeMs: before.ctimeMs,
+    });
+    for (const name of readdirSync(directory).sort()) {
+      if (++count > 50_000) unstable();
+      const path = join(directory, name),
+        relative = prefix + name,
+        stat = lstatSync(path);
+      const identity = {
+        path: relative,
+        dev: stat.dev,
+        ino: stat.ino,
+        nlink: stat.nlink,
+        mode: stat.mode,
+        mtimeMs: stat.mtimeMs,
+        ctimeMs: stat.ctimeMs,
+      };
+      if (stat.isSymbolicLink()) {
+        entries.push({
+          ...identity,
+          kind: "symlink",
+          target: readlinkSync(path),
+        });
+      } else if (stat.isDirectory()) {
+        walk(path, relative + "/");
+      } else {
+        if (
+          !stat.isFile() ||
+          stat.nlink < 1 ||
+          stat.nlink > 2 ||
+          (total += stat.size) > 512 * 1024 * 1024
+        )
+          unstable();
+        const fd = openSync(path, "r"),
+          digest = createHash("sha256"),
+          buffer = Buffer.alloc(64 * 1024);
+        let size = 0;
+        try {
+          const opened = fstatSync(fd);
+          if (
+            opened.dev !== stat.dev ||
+            opened.ino !== stat.ino ||
+            opened.size !== stat.size ||
+            opened.nlink !== stat.nlink
+          )
+            unstable();
+          for (;;) {
+            const length = readSync(fd, buffer, 0, buffer.length, null);
+            if (!length) break;
+            size += length;
+            if (size > stat.size) unstable();
+            digest.update(buffer.subarray(0, length));
+          }
+          const after = fstatSync(fd);
+          if (
+            after.dev !== stat.dev ||
+            after.ino !== stat.ino ||
+            after.size !== stat.size ||
+            after.nlink !== stat.nlink ||
+            after.mtimeMs !== stat.mtimeMs ||
+            after.ctimeMs !== stat.ctimeMs
+          )
+            unstable();
+        } finally {
+          closeSync(fd);
+        }
+        const after = lstatSync(path);
+        if (
+          size !== stat.size ||
+          after.dev !== stat.dev ||
+          after.ino !== stat.ino ||
+          after.size !== stat.size ||
+          after.nlink !== stat.nlink ||
+          after.isSymbolicLink() ||
+          after.mtimeMs !== stat.mtimeMs ||
+          after.ctimeMs !== stat.ctimeMs
+        )
+          unstable();
+        entries.push({
+          ...identity,
+          kind: "file",
+          size,
+          sha256: digest.digest("hex"),
+        });
+      }
+    }
+    const after = lstatSync(directory);
+    if (
+      after.dev !== before.dev ||
+      after.ino !== before.ino ||
+      after.mtimeMs !== before.mtimeMs ||
+      after.ctimeMs !== before.ctimeMs
+    )
+      unstable();
+  };
+  walk(root, "");
+  return sha256(
+    canonicalJson({ journal: journal.toString("base64"), entries })
+  );
+}
+
 const genuineInterruptions = new WeakMap<Error, Scope>();
 class CaptureTestInterruption extends Error {
   constructor() {
@@ -1885,8 +2022,20 @@ async function execute(
     if (interruption === point)
       fail("RECOVERY_GMAIL_CAPTURE_TEST_INTERRUPTION");
   };
+  const escapeGate: { release?: () => void } = {};
+  // Kept outside Scope and the escaped task. A real readonly connection keeps
+  // shared-memory bookkeeping stable while identical observation reads come
+  // and go; no file or metadata is omitted from the physical comparison.
+  const escapeObservation: { observer?: DatabaseSync } = {};
+  const closeEscapeObservation = () => {
+    const observer = escapeObservation.observer;
+    delete escapeObservation.observer;
+    observer?.close();
+  };
+  let completed: CaptureOutcome | undefined;
+  let executionFailure: { error: unknown } | undefined;
   try {
-    return await scopes.run(scope, async () => {
+    completed = await scopes.run(scope, async (): Promise<CaptureOutcome> => {
       scope.assertCurrent();
       for (const item of initial.all)
         installRecoveryIntent(
@@ -1900,6 +2049,55 @@ async function execute(
         join(directory, "admission-stage")
       );
       stop("admission-saved");
+      if (interruption === "authority-escaped-after-admission") {
+        // Prove that these exact writer arguments are permitted while the real
+        // private scope is active. The later call must differ only by revocation.
+        assertRecoveredGmailCaptureFile(admissionPath, admission);
+        const journalPath = join(initial.operator, "weekly-runs.sqlite");
+        const observer = new DatabaseSync(journalPath, { readOnly: true });
+        escapeObservation.observer = observer;
+        observer.prepare("SELECT count(*) FROM sqlite_schema").get();
+        escapedTaskSnapshot(root, journalPath);
+        const before = escapedTaskSnapshot(root, journalPath);
+        if (escapedTaskSnapshot(root, journalPath) !== before)
+          fail("RECOVERY_GMAIL_CAPTURE_AUTHORITY_ESCAPE_UNSTABLE");
+        if (
+          !scope.active ||
+          Date.now() >= scope.deadline ||
+          scope.phase !== "admission" ||
+          scope.lease
+        )
+          fail("RECOVERY_GMAIL_CAPTURE_AUTHORITY_ESCAPE_CONTEXT");
+        const gate = new Promise<void>((release) => {
+          escapeGate.release = release;
+        });
+        // Created inside scopes.run: the actual descendant retains this same
+        // ALS object. It does no asynchronous work after its private gate opens.
+        const outcome = (async (): Promise<EscapedTaskOutcome> => {
+          await gate;
+          if (
+            scopes.getStore() !== scope ||
+            scope.active ||
+            scope.phase !== "admission" ||
+            scope.lease ||
+            scope.key.some((byte) => byte !== 0)
+          )
+            return "invalid-context";
+          try {
+            writeDurableFile(admissionPath, admission);
+            return "allowed";
+          } catch (error) {
+            return error instanceof Error &&
+              error.message === "RECOVERY_GMAIL_CAPTURE_EXPIRED"
+              ? "refused"
+              : "wrong-refusal";
+          }
+        })().then(
+          (value) => value,
+          (): EscapedTaskOutcome => "wrong-refusal"
+        );
+        return { kind: "escaped-after-admission", before, outcome };
+      }
       scope.phase = "key";
       for (const item of initial.all)
         if (item.observations[2]?.candidate)
@@ -2148,10 +2346,64 @@ async function execute(
         receipts: proof.receipts,
       };
     });
+  } catch (error) {
+    executionFailure = { error };
   } finally {
     scope.active = false;
     scope.key.fill(0);
+    escapeGate.release?.();
   }
+  if (executionFailure) {
+    closeEscapeObservation();
+    throw executionFailure.error;
+  }
+  if (!completed) {
+    closeEscapeObservation();
+    fail("RECOVERY_GMAIL_CAPTURE_AUTHORITY_ESCAPE_OUTCOME");
+  }
+  if ("kind" in completed) {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let outcome: EscapedTaskOutcome;
+    try {
+      try {
+        outcome = await Promise.race([
+          completed.outcome,
+          new Promise<never>((_, reject) => {
+            timer = setTimeout(
+              () =>
+                reject(
+                  new Error("RECOVERY_GMAIL_CAPTURE_AUTHORITY_ESCAPE_TIMEOUT")
+                ),
+              5000
+            );
+          }),
+        ]);
+      } finally {
+        if (timer !== undefined) clearTimeout(timer);
+      }
+      // This continuation is outside the inherited, revoked ALS context. The
+      // descendant's only post-gate work is synchronous and has now settled.
+      if (
+        scopes.getStore() ||
+        scope.active ||
+        scope.key.some((byte) => byte !== 0) ||
+        outcome !== "refused"
+      )
+        fail("RECOVERY_GMAIL_CAPTURE_AUTHORITY_ESCAPE_REFUSAL");
+      if (
+        escapedTaskSnapshot(
+          root,
+          join(initial.operator, "weekly-runs.sqlite")
+        ) !== completed.before
+      )
+        fail("RECOVERY_GMAIL_CAPTURE_AUTHORITY_ESCAPE_CHANGED");
+    } finally {
+      closeEscapeObservation();
+    }
+    fail("RECOVERY_GMAIL_CAPTURE_AUTHORITY_ESCAPE_VERIFIED");
+  }
+  closeEscapeObservation();
+  return completed;
 }
 /** This closed retained entry independently authenticates every input before effects. */
 export const executeRecoveredGmailBatchCapture = (
