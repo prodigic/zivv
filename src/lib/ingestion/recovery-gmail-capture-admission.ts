@@ -97,6 +97,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "intake-manifest-stage-flushed",
   "intake-manifest-published",
   "authority-negatives-before-source",
+  "expire-after-admission",
 ] as const;
 export type CaptureInterruption =
   (typeof RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS)[number];
@@ -1874,6 +1875,13 @@ async function execute(
     );
   };
   const stop = (point: CaptureInterruption) => {
+    if (
+      interruption === "expire-after-admission" &&
+      point === "admission-saved"
+    ) {
+      scope.deadline = Math.min(scope.deadline, Date.now() - 1);
+      return;
+    }
     if (interruption === point)
       fail("RECOVERY_GMAIL_CAPTURE_TEST_INTERRUPTION");
   };
