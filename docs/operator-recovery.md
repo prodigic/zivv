@@ -90,6 +90,9 @@ publication restrictions in place.
 For a run already validated before retirement,
 [candidate admission](recovery-candidate-admission.md) resumes its original sealed
 bundle through dispatch using separately authenticated Git authority.
+For a separately captured running deployment with an accepted native intention,
+[dispatch reconciliation](recovery-dispatch-admission.md) observes only its
+original attempt through GET requests; it never creates a replacement attempt.
 
 Destination must not exist and must be private/local/outside Git. A failed
 restore leaves an `incomplete` marker; inspect/preserve that staging and choose a

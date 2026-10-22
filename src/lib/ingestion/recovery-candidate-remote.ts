@@ -8,6 +8,7 @@ import {
   createRemotePromotionControlStore,
   type PromotionControlStore,
   type PromotionControlTransport,
+  type PromotionControlHistory,
 } from "./promotion-control-git.js";
 import {
   createCompletionProof,
@@ -15,6 +16,8 @@ import {
   promotionDigest,
   validatePromotionAppend,
   verifyCompletionProof,
+  applyPromotionTransition,
+  serializePromotionControl,
   type PromotionPhase,
   type PromotionRequest,
 } from "./promotion-control.js";
@@ -39,6 +42,12 @@ import {
 import { validateNpmExecutionToolIdentity } from "./execution-tool-identity.js";
 import { readPublicationPayloadGit } from "./publication-git.js";
 import { verifyPublicationPayload } from "./publication-payload.js";
+import { preparePagesWorkflowDispatch } from "./pages-dispatch.js";
+import {
+  parseSavedPagesDispatch,
+  parseSavedPagesDispatchReceipt,
+  type SavedPagesDispatch,
+} from "./pages-dispatch-runner.js";
 
 interface RecoveryCandidateRemoteInput {
   repositoryRoot: string;
@@ -46,6 +55,7 @@ interface RecoveryCandidateRemoteInput {
   recoveryKey: Buffer;
   runId: string;
   workflowCommit: string;
+  profile?: "pending-dispatch";
 }
 export interface RecoveryCandidateRemoteBinding {
   mainHead: string;
@@ -59,6 +69,10 @@ export interface RecoveryCandidateRemoteBinding {
   candidateId: string;
   ledgerRevision: string;
   workflowCommit: string;
+  profile?: "pending-dispatch";
+  pendingDispatchSha256?: string;
+  capturedClaimSha256?: string | null;
+  capturedDispatchSha256?: string | null;
 }
 export interface RecoveryCandidateProgress {
   head: string;
@@ -71,6 +85,14 @@ export interface RecoveryCandidateRemote {
   readonly candidateBytes: Buffer;
   readonly store: PromotionControlStore;
   readonly transport: PromotionControlTransport;
+  readonly pendingDispatch?: {
+    readonly operationId: string;
+    readonly attemptId: string;
+    readonly controlHead: string;
+    readonly savedBytes: Buffer;
+    /** Enforce fresh native admission if known; unadmitted additions still require GET proof. */
+    assertReceipt(receipt: unknown): void;
+  };
   validateProgress(initialControlHead: string): RecoveryCandidateProgress;
   assertCurrent(): void;
 }
@@ -101,7 +123,10 @@ function decoded(value: unknown): Buffer {
 function retainedCandidate(input: RecoveryCandidateRemoteInput, key: Buffer) {
   let lineage: ReturnType<typeof proveRecoveryWeeklyLineage>;
   try {
-    lineage = proveRecoveryWeeklyLineage({ ...input, stage: "validated" });
+    lineage = proveRecoveryWeeklyLineage({
+      ...input,
+      stage: input.profile ?? "validated",
+    });
   } catch (error) {
     if (
       error instanceof Error &&
@@ -272,6 +297,170 @@ function retainedCandidate(input: RecoveryCandidateRemoteInput, key: Buffer) {
     baseline,
     candidate,
     candidateBytes: Buffer.from(candidateBytes),
+    files,
+    artifact,
+    deployAnchor: lineage.optionalArtifact("deploy"),
+  };
+}
+
+/** Bind GET-only recovery to the one original accepted intent, never a prepared fork. */
+function provePendingDispatch(
+  input: RecoveryCandidateRemoteInput,
+  retained: ReturnType<typeof retainedCandidate>,
+  history: PromotionControlHistory,
+  claim: PromotionControlHistory["commits"][number],
+  payloadReceiptId: string
+) {
+  if (!claim.parentHead || !claim.parentBytes)
+    fail("PENDING_CLAIM_PARENT_REQUIRED");
+  const operation = parsePromotionControl(claim.bytes).active;
+  if (!operation) fail("PENDING_CLAIM_REQUIRED");
+  const matches = history.commits.filter((record) => {
+    const event = parsePromotionControl(record.bytes).lastTransition.event;
+    return (
+      event.type === "dispatch-intent" &&
+      event.operationId === operation.operationId
+    );
+  });
+  if (matches.length !== 1) fail("PENDING_INTENT_MISSING_OR_AMBIGUOUS");
+  const record = matches[0],
+    event = parsePromotionControl(record.bytes).lastTransition.event;
+  if (
+    event.type !== "dispatch-intent" ||
+    event.mode !== "promote" ||
+    event.workflowCommit !== input.workflowCommit ||
+    !event.dispatchNonce ||
+    !record.parentHead ||
+    !record.parentBytes
+  )
+    fail("PENDING_INTENT_CHANGED");
+  const before = parsePromotionControl(record.parentBytes);
+  const intent = preparePagesWorkflowDispatch({
+    control: before,
+    controlHead: record.parentHead,
+    workflowCommit: input.workflowCommit,
+    mode: "promote",
+    reviewedMainAncestor: true,
+    dispatchNonce: event.dispatchNonce,
+  });
+  same(intent.event, event, "PENDING_INTENT_CHANGED");
+  if (
+    !serializePromotionControl(
+      applyPromotionTransition(before, intent.event)
+    ).equals(record.bytes)
+  )
+    fail("PENDING_INTENT_CHANGED");
+  const prefix = "operator/weekly-publication/" + retained.run.runId + "/";
+  const planBytes = retained.files.get(prefix + "claim-plan.json") ?? null;
+  if (planBytes) {
+    const plan: unknown = JSON.parse(planBytes.toString("utf8"));
+    same(
+      plan,
+      {
+        schemaVersion: 1,
+        runId: retained.run.runId,
+        candidateId: retained.candidate.candidateId,
+        workflowCommit: input.workflowCommit,
+        payloadCommit: operation.request.payloadCommit,
+        payloadReceiptId,
+        createdAt: claim.createdAt,
+        claim: {
+          expectedHead: claim.parentHead,
+          attemptedHead: claim.head,
+          bytes: claim.bytes.toString("base64"),
+          createdAt: claim.createdAt,
+        },
+      },
+      "CAPTURED_CLAIM_CHANGED"
+    );
+    if (!planBytes.equals(Buffer.from(canonicalJson(plan) + "\n")))
+      fail("CAPTURED_CLAIM_CHANGED");
+  }
+  const dispatchBytes =
+    retained.files.get(prefix + "dispatch/pages-dispatch.json") ?? null;
+  const expected: SavedPagesDispatch = {
+    schemaVersion: 1,
+    intent,
+    pendingAppend: {
+      expectedHead: record.parentHead,
+      attemptedHead: record.head,
+      bytes: record.bytes.toString("base64"),
+      createdAt: record.createdAt,
+    },
+  };
+  let saved = expected;
+  if (dispatchBytes) {
+    saved = parseSavedPagesDispatch(dispatchBytes);
+    same(saved.intent, expected.intent, "CAPTURED_DISPATCH_CHANGED");
+    same(
+      saved.pendingAppend,
+      expected.pendingAppend,
+      "CAPTURED_DISPATCH_CHANGED"
+    );
+  }
+  const admissions = new Set<string>();
+  for (const entry of history.commits) {
+    const active = parsePromotionControl(entry.bytes).active;
+    if (active?.operationId !== operation.operationId) continue;
+    const attempt = active.promotionAttempt;
+    if (attempt?.attemptId === event.attemptId && attempt.admission)
+      admissions.add(attempt.admission.runId);
+  }
+  if (
+    admissions.size > 1 ||
+    (saved.receipt &&
+      admissions.size === 1 &&
+      !admissions.has(saved.receipt.runId))
+  )
+    fail("CAPTURED_DISPATCH_ADMISSION_CHANGED");
+  if (retained.deployAnchor) {
+    const anchor: unknown = JSON.parse(retained.deployAnchor.toString("utf8"));
+    const fields = object(anchor, [
+      "schemaVersion",
+      "runId",
+      "candidateId",
+      "controlHead",
+      "controlSha256",
+    ]);
+    const proof = history.commits.find(
+      (entry) => entry.head === fields.controlHead
+    );
+    const active = proof && parsePromotionControl(proof.bytes).active;
+    if (
+      !proof ||
+      active?.operationId !== operation.operationId ||
+      active.phase !== "verified" ||
+      active.promotionAttempt?.attemptId !== event.attemptId
+    )
+      fail("CAPTURED_DELIVERY_ANCHOR_CHANGED");
+    same(
+      fields,
+      {
+        schemaVersion: 1,
+        runId: retained.run.runId,
+        candidateId: retained.candidate.candidateId,
+        controlHead: proof.head,
+        controlSha256: sha256(proof.bytes),
+      },
+      "CAPTURED_DELIVERY_ANCHOR_CHANGED"
+    );
+    if (
+      !retained.deployAnchor.equals(Buffer.from(canonicalJson(fields) + "\n"))
+    )
+      fail("CAPTURED_DELIVERY_ANCHOR_CHANGED");
+  }
+  const savedBytes = dispatchBytes
+    ? Buffer.from(dispatchBytes)
+    : Buffer.from(JSON.stringify(saved) + "\n");
+  parseSavedPagesDispatch(savedBytes);
+  return {
+    operationId: operation.operationId,
+    attemptId: event.attemptId,
+    controlHead: record.head,
+    savedBytes,
+    claimSha256: planBytes ? sha256(planBytes) : null,
+    dispatchSha256: dispatchBytes ? sha256(dispatchBytes) : null,
+    admittedRunId: [...admissions][0] ?? null,
   };
 }
 
@@ -322,6 +511,8 @@ function open(
   input: RecoveryCandidateRemoteInput,
   transport: PromotionControlTransport
 ): RecoveryCandidateRemote {
+  if (input.profile !== undefined && input.profile !== "pending-dispatch")
+    fail("INVALID_PROFILE");
   if (!Buffer.isBuffer(input.recoveryKey) || input.recoveryKey.length !== 32)
     fail("INVALID_KEY");
   if (!/^[a-f0-9]{40}$/.test(input.workflowCommit)) fail("WORKFLOW_REQUIRED");
@@ -405,7 +596,7 @@ function open(
   } catch {
     fail("ACKNOWLEDGED_SOURCE_NOT_ON_MAIN");
   }
-  function payload(request: PromotionRequest) {
+  function payload(request: PromotionRequest, createdAt?: string) {
     if (request.purpose !== "release" || request.basePath !== "/zivv/")
       fail("DESTINATION_MISMATCH");
     const ref = `refs/heads/zivv-candidate-artifacts/${request.payloadCommit}`;
@@ -416,6 +607,7 @@ function open(
       readPublicationPayloadGit({
         repositoryRoot: root,
         payloadCommit: request.payloadCommit,
+        createdAt,
       }).files,
       {
         expectedCandidateId: request.candidateId,
@@ -460,6 +652,21 @@ function open(
     initialBytes = claim ? claim.parentBytes : history.commits[0].bytes;
   if (!initialControlHead || !initialBytes) fail("INITIAL_CONTROL_REQUIRED");
   if (parsePromotionControl(initialBytes).active) fail("ACTIVE_OWNER");
+  let pending: ReturnType<typeof provePendingDispatch> | undefined;
+  if (input.profile === "pending-dispatch") {
+    if (!claim) fail("PENDING_CLAIM_REQUIRED");
+    const owner = parsePromotionControl(claim.bytes).active;
+    if (!owner) fail("PENDING_CLAIM_REQUIRED");
+    const retainedPayload = payload(owner.request, claim.createdAt);
+    same(retainedPayload.receipt.candidate, candidate, "CANDIDATE_CHANGED");
+    pending = provePendingDispatch(
+      input,
+      retained,
+      history,
+      claim,
+      retainedPayload.receipt.receiptId
+    );
+  }
   const binding = Object.freeze({
     mainHead,
     initialControlHead,
@@ -473,8 +680,17 @@ function open(
     candidateId: candidate.candidateId,
     ledgerRevision: candidate.ledgerRevision,
     workflowCommit: input.workflowCommit,
+    ...(pending
+      ? {
+          profile: "pending-dispatch" as const,
+          pendingDispatchSha256: sha256(pending.savedBytes),
+          capturedClaimSha256: pending.claimSha256,
+          capturedDispatchSha256: pending.dispatchSha256,
+        }
+      : {}),
   });
   let cached: RecoveryCandidateProgress | undefined;
+  let admittedRunId = pending?.admittedRunId ?? null;
   let ownPayloadCommit: string | undefined;
   const allowed = new Set([
     "claim",
@@ -563,6 +779,14 @@ function open(
         operation.promotionAttempt.workflowCommit !== binding.workflowCommit
       )
         fail("WORKFLOW_CHANGED");
+      if (
+        pending &&
+        operation.promotionAttempt &&
+        operation.promotionAttempt.attemptId !== pending.attemptId
+      )
+        fail("PENDING_ATTEMPT_CHANGED");
+      if (pending && operation.promotionAttempt?.admission)
+        admittedRunId = operation.promotionAttempt.admission.runId;
       phase = operation.phase;
     }
     const tip = snapshot.commits[0];
@@ -578,10 +802,33 @@ function open(
     return { ...cached };
   }
   validateProgress(binding.initialControlHead);
+  const pendingProof = pending;
   return Object.freeze({
     binding,
     store,
     transport,
+    ...(pendingProof
+      ? {
+          pendingDispatch: Object.freeze({
+            operationId: pendingProof.operationId,
+            attemptId: pendingProof.attemptId,
+            controlHead: pendingProof.controlHead,
+            get savedBytes() {
+              return Buffer.from(pendingProof.savedBytes);
+            },
+            assertReceipt(value: unknown) {
+              const expected = parseSavedPagesDispatch(pendingProof.savedBytes);
+              const receipt = parseSavedPagesDispatchReceipt(value, {
+                intent: expected.intent,
+                controlHead: pendingProof.controlHead,
+              });
+              validateProgress(binding.initialControlHead);
+              if (admittedRunId !== null && receipt.runId !== admittedRunId)
+                fail("CAPTURED_DISPATCH_ADMISSION_CHANGED");
+            },
+          }),
+        }
+      : {}),
     get candidate() {
       return structuredClone(candidate);
     },

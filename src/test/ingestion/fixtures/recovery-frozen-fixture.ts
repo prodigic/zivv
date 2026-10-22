@@ -160,8 +160,26 @@ export default defineConfig({base:process.env.ZIVV_BASE_PATH,build:{manifest:tru
   }
 }]});\n`;
 
+export interface FrozenFixtureRetirementContext {
+  root: string;
+  operatorDirectory: string;
+  npmCli: string;
+  recoveryKey: Buffer;
+  sourceCommit: string;
+  state: WeeklyRunState;
+  authority: Awaited<
+    ReturnType<typeof createAcknowledgedRecoveryRemoteFixture>
+  >;
+}
+
 /** Genuine npm/TypeScript/Vite build of a tiny app and the reviewed ETL sources. */
-export async function createRecoveryFrozenFixture() {
+export async function createRecoveryFrozenFixture(
+  options: {
+    beforeRetirement?: (
+      context: FrozenFixtureRetirementContext
+    ) => Promise<WeeklyRunState>;
+  } = {}
+) {
   const base = mkdtempSync(join(tmpdir(), "zivv-frozen-real-"));
   const originalOperator = join(base, "original-operator"),
     originalTool = join(base, "original-tool");
@@ -295,7 +313,7 @@ export async function createRecoveryFrozenFixture() {
       cpSync(resolve(path), join(originalCheckout, path), { recursive: true });
     await installPinnedRealNpm(originalTool);
     const npmCli = join(originalTool, "bin/npm-cli.js");
-    const initial = await runWeeklyImport({
+    let initial = await runWeeklyImport({
       root: originalCheckout,
       source: {
         editionId: "2026-10-16",
@@ -315,6 +333,16 @@ export async function createRecoveryFrozenFixture() {
       initial.stages.slice(5).some((stage) => stage.status !== "pending")
     )
       throw new Error("Fixture did not stop exactly after freeze");
+    if (options.beforeRetirement)
+      initial = await options.beforeRetirement({
+        root: originalCheckout,
+        operatorDirectory: originalOperator,
+        npmCli,
+        recoveryKey,
+        sourceCommit,
+        state: initial,
+        authority,
+      });
     const ledgerRevision = ledgerDigest(
       readSqliteLedger(join(originalOperator, "ledger.sqlite"))
     );

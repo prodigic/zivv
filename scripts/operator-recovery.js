@@ -25,6 +25,7 @@ import {
 import { resumeOperatorRecoveryImport } from "../dist/lib/ingestion/recovery-import-admission.js";
 import { resumeOperatorRecoveryCandidate } from "../dist/lib/ingestion/recovery-candidate-admission.js";
 import { resumeOperatorRecoveryFrozen } from "../dist/lib/ingestion/recovery-frozen-admission.js";
+import { resumeOperatorRecoveryDispatch } from "../dist/lib/ingestion/recovery-dispatch-admission.js";
 import {
   loadBackupKey,
   secureOperatorDirectory,
@@ -83,6 +84,7 @@ try {
           ? ["file", "key", "receipt"]
           : command === "resume-import" ||
               command === "resume-candidate" ||
+              command === "resume-dispatch" ||
               command === "resume-frozen"
             ? [
                 "file",
@@ -92,7 +94,9 @@ try {
                 "npm-cli",
                 "repository",
                 "run-id",
-                ...(command === "resume-candidate" ? ["workflow-commit"] : []),
+                ...(["resume-candidate", "resume-dispatch"].includes(command)
+                  ? ["workflow-commit"]
+                  : []),
                 ...(command === "resume-frozen" ? ["source-commit"] : []),
               ]
             : command === "prepare-runtime" ||
@@ -146,6 +150,7 @@ try {
     if (
       command === "resume-import" ||
       command === "resume-candidate" ||
+      command === "resume-dispatch" ||
       command === "resume-frozen" ||
       command === "prepare-runtime" ||
       command === "verify-prepared-runtime"
@@ -168,8 +173,12 @@ try {
                 ? { credentials: { token: process.env.GITHUB_TOKEN } }
                 : {}),
             })
-          : command === "resume-candidate"
-            ? await resumeOperatorRecoveryCandidate({
+          : command === "resume-candidate" || command === "resume-dispatch"
+            ? await (
+                command === "resume-dispatch"
+                  ? resumeOperatorRecoveryDispatch
+                  : resumeOperatorRecoveryCandidate
+              )({
                 ...input,
                 repositoryRoot: resolve(options.repository),
                 runId: options["run-id"],
