@@ -6,22 +6,52 @@ on:
   pull_request:
     branches: [main]
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Preserve legacy build ordering without reserving the controlled publisher's queue.
 concurrency:
-  group: "pages"
+  group: legacy-pages-build
   cancel-in-progress: false
 
 jobs:
+  publisher-mode:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      mode: ${{ steps.mode.outputs.mode }}
+    env:
+      ZIVV_CONTROLLED_PUBLISHING: ${{ vars.ZIVV_CONTROLLED_PUBLISHING }}
+      ZIVV_MANUAL_PUBLISHER_JOINED: ${{ vars.ZIVV_MANUAL_PUBLISHER_JOINED }}
+    steps:
+      - name: Select the publication mode
+        id: mode
+        shell: bash
+        run: |
+          case "${ZIVV_CONTROLLED_PUBLISHING:-}:${ZIVV_MANUAL_PUBLISHER_JOINED:-}" in
+            :|:false|disabled:|disabled:false)
+              printf 'mode=legacy\n' >> "$GITHUB_OUTPUT"
+              echo 'Legacy publication is active.'
+              ;;
+            enabled:true)
+              printf 'mode=controlled\n' >> "$GITHUB_OUTPUT"
+              echo 'Controlled publication is active; legacy Pages effects are skipped.'
+              ;;
+            *)
+              echo '::error::Publisher flags are inconsistent; legacy Pages publication is blocked.' >&2
+              exit 1
+              ;;
+          esac
+
   # Build job
   build:
+    needs: publisher-mode
+    if: needs.publisher-mode.result == 'success' && needs.publisher-mode.outputs.mode == 'legacy'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,6 +85,9 @@ jobs:
       - name: Run tests
         run: npm run test:run
 
+      - name: Run ingestion and publication checks
+        run: npm run test:ingestion
+
       - name: Build
         run: |
           echo "Node version: $(node -v)"
@@ -81,9 +114,16 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
-    # Only run on main branch pushes
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    needs: [publisher-mode, build]
+    # Only an explicitly selected legacy main push may enter production concurrency.
+    if: needs.publisher-mode.result == 'success' && needs.publisher-mode.outputs.mode == 'legacy' && needs.build.result == 'success' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
