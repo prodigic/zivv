@@ -3,6 +3,8 @@ import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   inspectRecoveryGmailCaptureAdmission,
+  RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS,
+  type CaptureInterruption,
   type RecoveryGmailCaptureInput,
   type RecoveryGmailCaptureReport,
 } from "./recovery-gmail-capture-admission.js";
@@ -13,19 +15,7 @@ import {
 } from "./recovery-gmail-capture-framing.js";
 import { canonicalJson } from "./sqlite-store.js";
 
-type Interruption =
-  | "admission-saved"
-  | "key-installed"
-  | "source-committed"
-  | "capture-files-written"
-  | "result-saved";
-const interruptions: readonly Interruption[] = [
-  "admission-saved",
-  "key-installed",
-  "source-committed",
-  "capture-files-written",
-  "result-saved",
-];
+type Interruption = CaptureInterruption;
 const errorCode = "RECOVERY_GMAIL_CAPTURE_EXECUTION_FAILED";
 
 function completedReport(
@@ -59,7 +49,7 @@ export function resumeOperatorRecoveryGmailBatchForTest(
   input: RecoveryGmailCaptureInput,
   interruption: Interruption
 ): Promise<RecoveryGmailCaptureReport> {
-  if (!interruptions.includes(interruption))
+  if (!RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS.includes(interruption))
     throw new Error("INVALID_RECOVERY_GMAIL_CAPTURE_INTERRUPTION");
   return launch(input, interruption);
 }
@@ -88,7 +78,7 @@ async function launch(
       const coordinator = await import(${JSON.stringify(entry)});
       const {decodeRecoveryGmailCaptureFrame: decode} = await import(${JSON.stringify(framing)});
       const execute = coordinator.${interruption ? "executeRecoveredGmailBatchCaptureForTest" : "executeRecoveredGmailBatchCapture"};
-      if (coordinator.recoveryGmailCaptureExecutorVersion !== 1 || typeof execute !== 'function' || typeof decode !== 'function') throw Error('RECOVERY_GMAIL_CAPTURE_UNSUPPORTED_RUNTIME');
+      if (coordinator.recoveryGmailCaptureExecutorVersion !== 2 || typeof execute !== 'function' || typeof decode !== 'function') throw Error('RECOVERY_GMAIL_CAPTURE_UNSUPPORTED_RUNTIME');
       let size = 0; const chunks = [];
       for await (const chunk of process.stdin) {
         if ((size += chunk.length) > ${MAX_RECOVERY_GMAIL_CAPTURE_FRAME_BYTES}) throw Error('INVALID_RECOVERY_GMAIL_CAPTURE_FRAME');

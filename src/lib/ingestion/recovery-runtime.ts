@@ -128,16 +128,21 @@ function inventory(
       );
     if (metadata) return path;
     const stage =
-      /^recovery-gmail-capture\/([a-f0-9]{64})\/(admission|result)-stage\/(admission|result)\.json\.\d+\.[a-f0-9]{16}\.tmp$/.exec(
+      /^recovery-gmail-capture\/([a-f0-9]{64})\/(admission|result)-stage\/(admission|result)\.json\.\d+\.[a-f0-9]{16}\.tmp(?:\.\d+\.[a-f0-9]{16}\.tmp)?$/.exec(
         path
       );
     if (stage && stage[2] === stage[3])
       return `recovery-gmail-capture/${stage[1]}/${stage[2]}.json`;
     const keyStage =
-      /^recovery-gmail-capture\/[a-f0-9]{64}\/key-stage\/(backup-key\.(?:dpapi|bin))\.\d+\.[a-f0-9]{16}\.tmp$/.exec(
+      /^recovery-gmail-capture\/[a-f0-9]{64}\/key-stage\/(backup-key\.(?:dpapi|bin))\.\d+\.[a-f0-9]{16}\.tmp(?:\.\d+\.[a-f0-9]{16}\.tmp)?$/.exec(
         path
       );
     if (keyStage?.[1] === workingKey) return "operator/" + workingKey;
+    const intake =
+      /^(operator\/email-intake\/[a-f0-9]{64}\/(?:messages\/[a-f0-9]{64}\/(?:message\.eml|capture\.json)|bodies\/[a-f0-9]{64}\/(?:source\.txt|receipt\.json|correction-approval\.json)))(?:\.\d+\.[a-f0-9]{16}\.tmp)?$/.exec(
+        path
+      );
+    if (intake) return intake[1];
     return undefined;
   }
   function walk(directory: string, prefix: string): void {

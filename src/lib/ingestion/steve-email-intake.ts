@@ -7,6 +7,7 @@ import { localDateStartEpochMs } from "./weekly.js";
 import {
   secureOperatorDirectory,
   writeDurableFile,
+  repairRecoveredGmailCaptureFile,
 } from "./encrypted-backup.js";
 import {
   assertOperatorNotQuarantined,
@@ -118,6 +119,8 @@ function privateDirectory(path: string): void {
 }
 function once(path: string, bytes: Buffer) {
   assertRecoveredGmailCaptureFile(path, bytes);
+  if (recoveredGmailCaptureLeaseOwner())
+    repairRecoveredGmailCaptureFile(path, bytes);
   if (existsSync(path)) {
     if (!regular(path).equals(bytes)) fail("INTAKE_EVIDENCE_CHANGED");
   } else writeDurableFile(path, bytes);

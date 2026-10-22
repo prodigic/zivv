@@ -1,6 +1,15 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { randomUUID } from "node:crypto";
-import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
+import {
+  existsSync,
+  lstatSync,
+  readFileSync,
+  readdirSync,
+  openSync,
+  closeSync,
+  readSync,
+  fstatSync,
+} from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
@@ -29,7 +38,11 @@ import {
 import {
   installRecoveredBackupKey,
   installRecoveryIntent,
+  repairRecoveredGmailCaptureFile,
   validateRecoveredBackupKeyBytes,
+  inspectRecoveryInstalledFile,
+  type RecoveryInstallationFile,
+  type RecoveryInstallationObservation,
 } from "./encrypted-backup.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
@@ -60,14 +73,24 @@ export interface RecoveryGmailCaptureReport {
   resultSha256: string;
   receipts: RecoveryGmailCaptureDeltaProof["receipts"];
 }
+export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
+  "admission-saved",
+  "key-installed",
+  "source-committed",
+  "capture-files-written",
+  "result-saved",
+  "admission-stage-flushed",
+  "admission-linked",
+  "key-stage-flushed",
+  "key-linked",
+  "result-stage-flushed",
+  "result-linked",
+  "intake-stage-flushed",
+] as const;
 export type CaptureInterruption =
-  | "admission-saved"
-  | "key-installed"
-  | "source-committed"
-  | "capture-files-written"
-  | "result-saved";
+  (typeof RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS)[number];
 export type RecoveryGmailCaptureInterruption = CaptureInterruption;
-export const recoveryGmailCaptureExecutorVersion = 1;
+export const recoveryGmailCaptureExecutorVersion = 2;
 const production = "prodigic/zivv/production";
 const hash = /^[a-f0-9]{64}$/;
 const journalPattern = /^operator\/weekly-runs\.sqlite(?:-wal|-shm)?$/;
@@ -84,7 +107,12 @@ type Family = {
   admission: Buffer;
   result?: Buffer;
   record: RecoveryGmailCaptureAdmission;
+  admissionInstalled: boolean;
+  resultCandidate?: Buffer;
+  observations: RecoveryInstallationObservation[];
+  stages: RecoveryInstallationFile[];
 };
+type CaptureStage = RecoveryInstallationFile & { target: string };
 interface Scope {
   active: boolean;
   deadline: number;
@@ -113,6 +141,64 @@ interface Scope {
   intakeStarted?: boolean;
 }
 const scopes = new AsyncLocalStorage<Scope>();
+const genuineInterruptions = new WeakMap<Error, Scope>();
+class CaptureTestInterruption extends Error {
+  constructor() {
+    super("RECOVERY_GMAIL_CAPTURE_TEST_INTERRUPTION");
+  }
+}
+/** Only genuine fixed-point interruptions from this private invocation preserve
+ * flushed stages; arbitrary caller errors cannot acquire this classification. */
+export function isRecoveryGmailCaptureTestInterruption(
+  error: unknown
+): boolean {
+  return (
+    error instanceof CaptureTestInterruption &&
+    genuineInterruptions.get(error) === scopes.getStore()
+  );
+}
+export function observeRecoveredGmailCaptureFileCheckpoint(
+  path: string,
+  point: "flushed" | "linked"
+): void {
+  const scope = current();
+  if (!scope?.interruption) return;
+  const absolute = resolve(path);
+  let selected: CaptureInterruption | undefined;
+  if (
+    absolute === join(scope.operator, keyName) ||
+    absolute.startsWith(join(scope.root, "recovery-gmail-capture") + "/") ||
+    absolute.startsWith(join(scope.root, "recovery-gmail-capture") + "\\")
+  ) {
+    if (
+      absolute.includes("key-stage") ||
+      absolute === join(scope.operator, keyName)
+    )
+      selected = point === "flushed" ? "key-stage-flushed" : "key-linked";
+    else if (
+      absolute.includes("admission-stage") ||
+      basename(absolute) === "admission.json"
+    )
+      selected =
+        point === "flushed" ? "admission-stage-flushed" : "admission-linked";
+    else if (
+      absolute.includes("result-stage") ||
+      basename(absolute) === "result.json"
+    )
+      selected = point === "flushed" ? "result-stage-flushed" : "result-linked";
+  } else if (
+    scope.phase === "capture" &&
+    point === "flushed" &&
+    scope.files.has(absolute)
+  )
+    selected = "intake-stage-flushed";
+  if (selected === scope.interruption) {
+    scope.assertCurrent();
+    const error = new CaptureTestInterruption();
+    genuineInterruptions.set(error, scope);
+    throw error;
+  }
+}
 function fail(code = "RECOVERY_GMAIL_CAPTURE_SCOPE_EXCEEDED"): never {
   throw new Error(code);
 }
@@ -365,13 +451,29 @@ export function assertRecoveredGmailCaptureFile(
     return;
   }
   let canonical = absolute.replace(/(?:\.\d+\.[a-f0-9]{16}\.tmp)+$/, "");
+  const suffix = absolute.slice(canonical.length);
+  const suffixCount = suffix
+    ? suffix.match(/\.\d+\.[a-f0-9]{16}\.tmp/g)!.length
+    : 0;
+  if (
+    suffixCount >
+    (canonical.startsWith(
+      join(scope.operator, "email-intake") +
+        (process.platform === "win32" ? "\\" : "/")
+    )
+      ? 1
+      : 2)
+  )
+    fail();
   for (const [name, target] of [
     ["admission-stage", "admission.json"],
     ["result-stage", "result.json"],
     ["key-stage", keyName],
   ] as const) {
-    const ownDirectory = [...scope.metadata.keys()].find((path) =>
-      path.endsWith("admission.json")
+    const ownDirectory = [...scope.metadata.keys()].find(
+      (path) =>
+        path.endsWith("admission.json") &&
+        dirname(canonical) === join(dirname(path), name)
     );
     if (
       ownDirectory &&
@@ -405,6 +507,21 @@ export function assertRecoveredGmailCaptureFile(
     !readFileSync(absolute).equals(expected)
   )
     fail();
+}
+export function assertRecoveredGmailCaptureRepair(
+  path: string,
+  bytes: Buffer
+): void {
+  const scope = current();
+  if (
+    !scope ||
+    (scope.phase === "capture"
+      ? !scope.files.get(resolve(path))?.equals(bytes)
+      : scope.phase !== "result" ||
+        !scope.metadata.get(resolve(path))?.equals(bytes))
+  )
+    fail();
+  assertRecoveredGmailCaptureFile(path, bytes);
 }
 /** Own zero-length stages are valid only before their first write. Installation
  * requires the exact flushed bytes and the inode observed at stage creation. */
@@ -508,7 +625,37 @@ function regular(path: string, limit = 16 * 1024 * 1024): Buffer {
     stat.size > limit
   )
     fail();
-  const bytes = readFileSync(path);
+  const fd = openSync(path, "r");
+  let bytes: Buffer;
+  try {
+    const opened = fstatSync(fd);
+    if (
+      opened.dev !== stat.dev ||
+      opened.ino !== stat.ino ||
+      opened.size !== stat.size ||
+      opened.nlink !== stat.nlink
+    )
+      fail();
+    const buffer = Buffer.alloc(stat.size + 1);
+    let length = 0;
+    while (length < buffer.length) {
+      const count = readSync(fd, buffer, length, buffer.length - length, null);
+      if (!count) break;
+      length += count;
+    }
+    if (length !== stat.size) fail();
+    const after = fstatSync(fd);
+    if (
+      after.dev !== stat.dev ||
+      after.ino !== stat.ino ||
+      after.size !== stat.size ||
+      after.nlink !== stat.nlink
+    )
+      fail();
+    bytes = buffer.subarray(0, length);
+  } finally {
+    closeSync(fd);
+  }
   if (bytes.length !== stat.size) fail();
   return bytes;
 }
@@ -620,6 +767,60 @@ function family(root: string): Family[] {
   if (!stat.isDirectory() || stat.isSymbolicLink()) fail();
   const names = readdirSync(path);
   if (names.length > 1000) fail();
+  let total = 0;
+  const observe = (
+    target: string,
+    directory: string,
+    limit: number
+  ): RecoveryInstallationObservation => {
+    const stageNames = existsSync(directory) ? readdirSync(directory) : [];
+    if (stageNames.length > 1)
+      fail("RECOVERY_GMAIL_CAPTURE_STAGE_REQUIRES_REPAIR");
+    const prefix = basename(target) + ".";
+    for (const name of stageNames)
+      if (
+        !name.startsWith(prefix) ||
+        !/^\d+\.[a-f0-9]{16}\.tmp(?:\.\d+\.[a-f0-9]{16}\.tmp)?$/.test(
+          name.slice(prefix.length)
+        )
+      )
+        fail("RECOVERY_GMAIL_CAPTURE_STAGE_REQUIRES_REPAIR");
+    for (const path of [
+      target,
+      ...stageNames.map((name) => join(directory, name)),
+    ])
+      if (existsSync(path)) {
+        total += lstatSync(path).size;
+        if (total > 512 * 1024 * 1024)
+          fail("RECOVERY_GMAIL_CAPTURE_STAGE_CAPACITY");
+      }
+    const active = scopes.getStore(),
+      stage = stageNames[0] ? join(directory, stageNames[0]) : undefined;
+    // Only this invocation's already registered, newly opened stage may be zero
+    // while its first write has not happened. A saved zero stage is never adopted.
+    if (
+      stage &&
+      active?.active &&
+      active.transients.has(stage) &&
+      lstatSync(stage).size === 0
+    ) {
+      const stat = lstatSync(stage);
+      if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1) fail();
+      return {
+        target: existsSync(target)
+          ? {
+              path: target,
+              bytes: readAliased(target, limit),
+              dev: lstatSync(target).dev,
+              ino: lstatSync(target).ino,
+              nlink: lstatSync(target).nlink,
+            }
+          : null,
+        candidate: null,
+      };
+    }
+    return inspectRecoveryInstalledFile(target, directory, limit);
+  };
   return names
     .map((batchId) => {
       if (!hash.test(batchId)) fail();
@@ -632,7 +833,6 @@ function family(root: string): Family[] {
         active?.active &&
         active.metadata.has(join(directory, "admission.json"));
       if (
-        (!entries.includes("admission.json") && !own) ||
         entries.some(
           (name) =>
             ![
@@ -645,7 +845,6 @@ function family(root: string): Family[] {
         )
       )
         fail();
-      // Stages are never silently ignored, deleted, or adopted without authentication.
       for (const stage of ["admission-stage", "result-stage", "key-stage"]) {
         const directory = join(path, batchId, stage);
         if (existsSync(directory)) {
@@ -654,25 +853,30 @@ function family(root: string): Family[] {
             lstatSync(directory).isSymbolicLink()
           )
             fail();
-          for (const name of readdirSync(directory)) {
-            const path = join(directory, name),
-              expected = active?.transients.get(path),
-              stat = lstatSync(path);
-            if (
-              !own ||
-              !expected ||
-              !stat.isFile() ||
-              stat.isSymbolicLink() ||
-              stat.nlink > 2 ||
-              (!readFileSync(path).equals(expected) && stat.size !== 0)
-            )
-              fail("RECOVERY_GMAIL_CAPTURE_STAGE_REQUIRES_REPAIR");
-          }
         }
       }
-      const admission = entries.includes("admission.json")
-        ? readAliased(join(directory, "admission.json"), 65536)
-        : Buffer.from(active!.metadata.get(join(directory, "admission.json"))!);
+      const admissionObservation = observe(
+        join(directory, "admission.json"),
+        join(directory, "admission-stage"),
+        64 * 1024
+      );
+      const resultObservation = observe(
+        join(directory, "result.json"),
+        join(directory, "result-stage"),
+        16 * 1024 * 1024
+      );
+      const keyStage = join(directory, "key-stage");
+      const keyObservation =
+        existsSync(keyStage) && readdirSync(keyStage).length
+          ? observe(join(root, "operator", keyName), keyStage, 16 * 1024)
+          : undefined;
+      const admission =
+        admissionObservation.target?.bytes ??
+        admissionObservation.candidate?.bytes ??
+        (own
+          ? active!.metadata.get(join(directory, "admission.json"))
+          : undefined);
+      if (!admission) fail();
       const record = JSON.parse(
         admission.toString("utf8")
       ) as RecoveryGmailCaptureAdmission;
@@ -686,9 +890,23 @@ function family(root: string): Family[] {
         batchId,
         admission,
         record,
-        ...(entries.includes("result.json")
-          ? { result: readAliased(join(directory, "result.json")) }
+        admissionInstalled: Boolean(admissionObservation.target),
+        ...(resultObservation.target
+          ? { result: resultObservation.target.bytes }
           : {}),
+        ...(resultObservation.candidate && !resultObservation.target
+          ? { resultCandidate: resultObservation.candidate.bytes }
+          : {}),
+        observations: [
+          admissionObservation,
+          resultObservation,
+          ...(keyObservation ? [keyObservation] : []),
+        ],
+        stages: [
+          admissionObservation.candidate,
+          resultObservation.candidate,
+          keyObservation?.candidate,
+        ].filter((stage): stage is RecoveryInstallationFile => Boolean(stage)),
       };
     })
     .sort(
@@ -709,7 +927,37 @@ function readAliased(path: string, limit = 16 * 1024 * 1024): Buffer {
     stat.size > limit
   )
     fail();
-  const bytes = readFileSync(path);
+  const fd = openSync(path, "r");
+  let bytes: Buffer;
+  try {
+    const opened = fstatSync(fd);
+    if (
+      opened.dev !== stat.dev ||
+      opened.ino !== stat.ino ||
+      opened.size !== stat.size ||
+      opened.nlink !== stat.nlink
+    )
+      fail();
+    const buffer = Buffer.alloc(stat.size + 1);
+    let length = 0;
+    while (length < buffer.length) {
+      const count = readSync(fd, buffer, length, buffer.length - length, null);
+      if (!count) break;
+      length += count;
+    }
+    if (length !== stat.size) fail();
+    const after = fstatSync(fd);
+    if (
+      after.dev !== stat.dev ||
+      after.ino !== stat.ino ||
+      after.size !== stat.size ||
+      after.nlink !== stat.nlink
+    )
+      fail();
+    bytes = buffer.subarray(0, length);
+  } finally {
+    closeSync(fd);
+  }
   const after = lstatSync(path);
   if (
     bytes.length !== stat.size ||
@@ -722,11 +970,145 @@ function readAliased(path: string, limit = 16 * 1024 * 1024): Buffer {
     fail();
   return bytes;
 }
+/** Only exact authenticated recipes with a durable source journal row may own
+ * an intake stage. The detached delta proof still validates the complete recipe. */
+function captureStages(
+  root: string,
+  entries: RecoveryRuntimeEntry[],
+  all: Family[],
+  batches: ReturnType<typeof proveRecoveryGmailBatchInventory>,
+  journal: Buffer
+): Map<string, CaptureStage> {
+  const stages = new Map<string, CaptureStage>();
+  const expected = new Map<string, Buffer>();
+  const rows = validateWeeklyJournalRecoverySnapshot(journal).intakeEvidence;
+  const add = (path: string, bytes: Buffer) => {
+    const before = expected.get(path);
+    if (before && !before.equals(bytes)) fail();
+    expected.set(path, bytes);
+  };
+  for (const item of all) {
+    const directory = join(root, "recovery-gmail-capture", item.batchId);
+    const targets = [
+      join(directory, "admission.json"),
+      join(directory, "result.json"),
+      join(root, "operator", keyName),
+    ];
+    for (let index = 0; index < item.observations.length; index++) {
+      const candidate = item.observations[index]!.candidate;
+      if (candidate)
+        stages.set(candidate.path, { ...candidate, target: targets[index]! });
+    }
+    if (!item.admissionInstalled) continue;
+    const batch = batches.batches.find(
+      ({ batch }) => batch.batchId === item.batchId
+    )?.batch;
+    if (!batch) fail();
+    for (const snapshot of batch.snapshots) {
+      let source: Buffer;
+      try {
+        source = selectSteveEmailPlaintext(snapshot.fullMessage.payload).source;
+      } catch {
+        continue;
+      }
+      const sourceSha256 = sha256(source);
+      const receiptId = sha256(
+        canonicalJson([
+          batch.accountSha256,
+          batch.expectedEditionId,
+          sourceSha256,
+        ])
+      );
+      const sourceRow = rows.find(
+        (row) =>
+          row.scope === production &&
+          row.kind === "source" &&
+          row.id === receiptId
+      );
+      if (!sourceRow) continue;
+      const body = join(
+        root,
+        "operator",
+        "email-intake",
+        batch.accountSha256,
+        "bodies",
+        receiptId
+      );
+      const message = join(
+        root,
+        "operator",
+        "email-intake",
+        batch.accountSha256,
+        "messages",
+        sha256(snapshot.rawMessage.id)
+      );
+      add(join(body, "source.txt"), source);
+      add(join(body, "receipt.json"), Buffer.from(sourceRow.bytes, "base64"));
+      const approval = rows.find(
+        (row) =>
+          row.scope === production &&
+          row.kind === "correction" &&
+          row.id === receiptId
+      );
+      if (approval)
+        add(
+          join(body, "correction-approval.json"),
+          Buffer.from(approval.bytes, "base64")
+        );
+      const raw = Buffer.from(snapshot.rawMessage.raw, "base64url");
+      add(join(message, "message.eml"), raw);
+      add(
+        join(message, "capture.json"),
+        Buffer.from(
+          canonicalJson({
+            schemaVersion: 1,
+            messageId: snapshot.rawMessage.id,
+            accountSha256: batch.accountSha256,
+            rawSha256: sha256(raw),
+            sourceSha256,
+            receiptId,
+            receivedAtEpochMs: snapshot.fullMessage.internal_date,
+          }) + "\n"
+        )
+      );
+    }
+  }
+  const grammar =
+    /^(operator\/email-intake\/[a-f0-9]{64}\/(?:messages\/[a-f0-9]{64}\/(?:message\.eml|capture\.json)|bodies\/[a-f0-9]{64}\/(?:source\.txt|receipt\.json|correction-approval\.json)))\.\d+\.[a-f0-9]{16}\.tmp$/;
+  const targets = new Set<string>();
+  for (const entry of entries) {
+    const match = grammar.exec(entry.path);
+    if (!match) continue;
+    const path = join(root, entry.path),
+      target = join(root, match[1]!);
+    const bytes = expected.get(target);
+    if (!bytes || targets.has(target) || entry.kind !== "file")
+      fail("RECOVERY_GMAIL_CAPTURE_STAGE_REQUIRES_REPAIR");
+    targets.add(target);
+    const active = scopes.getStore();
+    if (active?.transients.has(path) && lstatSync(path).size === 0) continue;
+    const observed = inspectRecoveryInstalledFile(
+      target,
+      dirname(target),
+      8 * 1024 * 1024
+    );
+    if (
+      !observed.candidate ||
+      observed.candidate.path !== path ||
+      !observed.candidate.bytes.equals(bytes) ||
+      (observed.target && !observed.target.bytes.equals(bytes))
+    )
+      fail("RECOVERY_GMAIL_CAPTURE_STAGE_REQUIRES_REPAIR");
+    stages.set(path, { ...observed.candidate, target });
+  }
+  return stages;
+}
 function checkpointInventory(
   opened: Opened,
   root: string,
   entries: RecoveryRuntimeEntry[],
-  journal: Buffer
+  journal: Buffer,
+  stages: Map<string, CaptureStage>
 ): Inventory {
   const originals = new Map(
     opened.checkpoint.files.map((file) => [file.area + "/" + file.path, file])
@@ -739,7 +1121,11 @@ function checkpointInventory(
     ...entry,
   }));
   for (const entry of entries) {
-    if (scopes.getStore()?.transients.has(join(root, entry.path))) continue;
+    if (
+      stages.has(join(root, entry.path)) ||
+      scopes.getStore()?.transients.has(join(root, entry.path))
+    )
+      continue;
     if (
       entry.path.startsWith("operator/email-intake/") ||
       entry.path === "operator/email-intake"
@@ -752,7 +1138,7 @@ function checkpointInventory(
           area: "operator",
           path: entry.path.slice(9),
           sha256: entry.sha256,
-          bytes: regular(join(root, entry.path), 8 * 1024 * 1024).toString(
+          bytes: readAliased(join(root, entry.path), 8 * 1024 * 1024).toString(
             "base64"
           ),
         });
@@ -772,7 +1158,9 @@ function checkpointInventory(
 function normalized(
   entries: RecoveryRuntimeEntry[],
   inventory: Inventory,
-  checkpoint: Opened["checkpoint"]
+  checkpoint: Opened["checkpoint"],
+  root: string,
+  stages: Map<string, CaptureStage>
 ): string {
   const old = new Set([
     ...checkpoint.files.map((file) => file.area + "/" + file.path),
@@ -791,6 +1179,7 @@ function normalized(
           !scopes
             .getStore()
             ?.transients.has(join(scopes.getStore()!.root, entry.path)) &&
+          !stages.has(join(root, entry.path)) &&
           !journalPattern.test(entry.path) &&
           entry.path !== "operator/" + keyName &&
           !added.has(entry.path) &&
@@ -812,7 +1201,7 @@ function open(input: RecoveryGmailCaptureInput) {
     !executor?.bytes ||
     !Buffer.from(executor.bytes, "base64")
       .toString("utf8")
-      .includes("recoveryGmailCaptureExecutorVersion = 1") ||
+      .includes("recoveryGmailCaptureExecutorVersion = 2") ||
     !archived.files.some(
       (file) =>
         file.area === "checkout" &&
@@ -851,17 +1240,6 @@ function open(input: RecoveryGmailCaptureInput) {
   };
   assertWorkingKey();
   let initialJournalEntries: RecoveryRuntimeEntry[] | undefined;
-  if (!all.length) {
-    const untouched = opened.inventory();
-    if (
-      untouched.length !== opened.report.entryCount ||
-      sha256(canonicalJson(untouched)) !== opened.report.treeSha256
-    )
-      fail();
-    initialJournalEntries = untouched.filter((entry) =>
-      journalPattern.test(entry.path)
-    );
-  }
   const checkpoint = opened.checkpoint;
   // The signed checkpoint remains bound by opened.report; the prepared journal's
   // specified restoration clears expiry fields before any admission is possible.
@@ -900,6 +1278,17 @@ function open(input: RecoveryGmailCaptureInput) {
       priorCompleted: completed,
       unfinishedAdmissions: [item.admission],
     });
+    if (
+      !item.admissionInstalled &&
+      (item.result || item.resultCandidate || item.observations[2]?.candidate)
+    )
+      fail();
+    for (const observation of item.observations.slice(2))
+      if (observation.candidate)
+        validateRecoveredBackupKeyBytes(
+          observation.candidate.bytes,
+          input.recoveryKey
+        );
     if (item.result)
       completed.push({ admission: item.admission, result: item.result });
     else unfinished = item;
@@ -921,21 +1310,44 @@ function open(input: RecoveryGmailCaptureInput) {
   const journalPath = join(operator, "weekly-runs.sqlite");
   let identity = assertReadOnlySqliteFiles(journalPath);
   const entries = opened.inventoryGmailCapture();
-  const inventory = checkpointInventory(
-    opened,
-    root,
-    entries,
-    all.length
-      ? readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
-      : Buffer.from(checkpoint.journal, "base64")
-  );
+  const installedIntent = all.some((item) => item.admissionInstalled);
+  if (!installedIntent) {
+    // No canonical intent means SQLite has never been opened for capture. Bind
+    // its physical files too; the active-capture inventory deliberately omits them.
+    const untouched = opened
+      .inventory()
+      .filter(
+        (entry) =>
+          entry.path !== "recovery-gmail-capture" &&
+          !entry.path.startsWith("recovery-gmail-capture/")
+      );
+    if (
+      untouched.length !== opened.report.entryCount ||
+      sha256(canonicalJson(untouched)) !== opened.report.treeSha256
+    )
+      fail();
+    initialJournalEntries = untouched.filter((entry) =>
+      journalPattern.test(entry.path)
+    );
+  }
+  const journal = installedIntent
+    ? readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
+    : Buffer.from(checkpoint.journal, "base64");
+  const stages = captureStages(root, entries, all, batches, journal);
+  const inventory = checkpointInventory(opened, root, entries, journal, stages);
   const binding: RecoveryGmailCaptureBinding = {
     capsuleSha256: sha256(input.archive),
     retirementSha256: sha256(input.retirementReceipt),
     checkpointSha256: opened.report.checkpointSha256,
     preparedReceiptSha256: opened.receiptSha256,
     preparedTreeSha256: opened.report.treeSha256,
-    preparedImmutableTreeSha256: normalized(entries, inventory, checkpoint),
+    preparedImmutableTreeSha256: normalized(
+      entries,
+      inventory,
+      checkpoint,
+      root,
+      stages
+    ),
     physicalRoot: root,
     physicalOperatorDirectory: operator,
     physicalNpmPath: resolve(input.npmCli),
@@ -985,7 +1397,14 @@ function open(input: RecoveryGmailCaptureInput) {
           !stat.isFile() ||
           stat.isSymbolicLink() ||
           stat.nlink > 2 ||
-          (stat.size !== 0 && !readFileSync(path).equals(expected))
+          (stat.size === 0 && stages.has(path)) ||
+          (stat.size !== 0 &&
+            !readAliased(path, expected.length).equals(expected)) ||
+          (scopes.getStore()?.transientIdentities.has(path) &&
+            (scopes.getStore()!.transientIdentities.get(path)!.dev !==
+              stat.dev ||
+              scopes.getStore()!.transientIdentities.get(path)!.ino !==
+                stat.ino))
         )
           fail();
       }
@@ -1022,9 +1441,34 @@ function open(input: RecoveryGmailCaptureInput) {
       }
       journal = Buffer.from(checkpoint.journal, "base64");
     }
-    const inventory = checkpointInventory(opened, root, actual, journal);
+    const currentStages = captureStages(
+      root,
+      actual,
+      observedFamily,
+      batches,
+      journal
+    );
+    for (const [path, stage] of currentStages) {
+      const before = stages.get(path),
+        own = scopes.getStore();
+      if (before) {
+        if (
+          before.dev !== stage.dev ||
+          before.ino !== stage.ino ||
+          !before.bytes.equals(stage.bytes)
+        )
+          fail();
+      } else if (!own?.transients.has(path)) fail();
+    }
+    const inventory = checkpointInventory(
+      opened,
+      root,
+      actual,
+      journal,
+      currentStages
+    );
     if (
-      normalized(actual, inventory, checkpoint) !==
+      normalized(actual, inventory, checkpoint, root, currentStages) !==
       binding.preparedImmutableTreeSha256
     )
       fail();
@@ -1045,11 +1489,18 @@ function open(input: RecoveryGmailCaptureInput) {
       const admission = own?.metadata.get(
         join(root, "recovery-gmail-capture", item.batchId, "admission.json")
       );
-      const result = own?.metadata.get(
-        join(root, "recovery-gmail-capture", item.batchId, "result.json")
-      );
+      const result =
+        own?.metadata.get(
+          join(root, "recovery-gmail-capture", item.batchId, "result.json")
+        ) ??
+        all.find((before) => before.batchId === item.batchId)?.resultCandidate;
       if (admission && !item.admission.equals(admission)) fail();
       if (item.result && admission && (!result || !item.result.equals(result)))
+        fail();
+      if (
+        item.resultCandidate &&
+        (!result || !item.resultCandidate.equals(result))
+      )
         fail();
     }
     for (const item of all) {
@@ -1057,7 +1508,9 @@ function open(input: RecoveryGmailCaptureInput) {
       if (
         !now ||
         !now.admission.equals(item.admission) ||
-        (item.result && !now.result?.equals(item.result))
+        (item.result && !now.result?.equals(item.result)) ||
+        (item.resultCandidate &&
+          !(now.result ?? now.resultCandidate)?.equals(item.resultCandidate))
       )
         fail();
     }
@@ -1108,9 +1561,9 @@ function open(input: RecoveryGmailCaptureInput) {
     }
     ownOwnership = actualOwner;
     proofFor(last, inventory, prior, actualOwner);
-    if (last.result)
+    if (last.result || last.resultCandidate)
       same(
-        last.result.toString("base64"),
+        (last.result ?? last.resultCandidate)!.toString("base64"),
         createRecoveryGmailCaptureResult({
           checkpoint,
           recoveryKey: input.recoveryKey,
@@ -1149,6 +1602,8 @@ function open(input: RecoveryGmailCaptureInput) {
     delta,
     proofFor,
     ownOwnership,
+    stages,
+    needsRepair: stages.size > 0,
   };
 }
 
@@ -1166,54 +1621,59 @@ export function inspectRecoveryGmailCaptureAdmission(
 } {
   const opened = open(copyInput(input));
   const selected = opened.selected;
-  const status = selected?.result
-    ? "capture-complete"
-    : selected
-      ? "capture-partial"
-      : "capture-pending";
+  const status =
+    selected?.result && !opened.needsRepair
+      ? "capture-complete"
+      : selected
+        ? "capture-partial"
+        : "capture-pending";
   const rows = validateWeeklyJournalRecoverySnapshot(
     Buffer.from(opened.inventory.journal, "base64")
   ).intakeEvidence;
-  const receipts = selected?.result
-    ? opened.selectedBatch.snapshots
-        .map((snapshot) => {
-          const source = rows
-            .filter((row) => row.kind === "source")
-            .map(
-              (row) =>
-                JSON.parse(
-                  Buffer.from(row.bytes, "base64").toString("utf8")
-                ) as Record<string, unknown>
-            )
-            .find(
-              (receipt) =>
-                receipt.accountSha256 === opened.selectedBatch.accountSha256 &&
-                receipt.editionId === opened.selectedBatch.expectedEditionId &&
-                receipt.sourceSha256 ===
-                  sha256(
-                    selectSteveEmailPlaintext(snapshot.fullMessage.payload)
-                      .source
-                  )
-            );
-          if (!source) return undefined;
-          return {
-            receiptId: String(source.receiptId),
-            sourceSha256: String(source.sourceSha256),
-            firstObservedAtEpochMs: Number(source.firstObservedAtEpochMs),
-            disposition: rows.some(
-              (row) => row.kind === "correction" && row.id === source.receiptId
-            )
-              ? ("ready" as const)
-              : (source.disposition as "ready" | "review-required"),
-          };
-        })
-        .filter(
-          (
-            value
-          ): value is RecoveryGmailCaptureDeltaProof["receipts"][number] =>
-            value !== undefined
-        )
-    : [];
+  const receipts =
+    selected?.result || selected?.resultCandidate
+      ? opened.selectedBatch.snapshots
+          .map((snapshot) => {
+            const source = rows
+              .filter((row) => row.kind === "source")
+              .map(
+                (row) =>
+                  JSON.parse(
+                    Buffer.from(row.bytes, "base64").toString("utf8")
+                  ) as Record<string, unknown>
+              )
+              .find(
+                (receipt) =>
+                  receipt.accountSha256 ===
+                    opened.selectedBatch.accountSha256 &&
+                  receipt.editionId ===
+                    opened.selectedBatch.expectedEditionId &&
+                  receipt.sourceSha256 ===
+                    sha256(
+                      selectSteveEmailPlaintext(snapshot.fullMessage.payload)
+                        .source
+                    )
+              );
+            if (!source) return undefined;
+            return {
+              receiptId: String(source.receiptId),
+              sourceSha256: String(source.sourceSha256),
+              firstObservedAtEpochMs: Number(source.firstObservedAtEpochMs),
+              disposition: rows.some(
+                (row) =>
+                  row.kind === "correction" && row.id === source.receiptId
+              )
+                ? ("ready" as const)
+                : (source.disposition as "ready" | "review-required"),
+            };
+          })
+          .filter(
+            (
+              value
+            ): value is RecoveryGmailCaptureDeltaProof["receipts"][number] =>
+              value !== undefined
+          )
+      : [];
   opened.delta();
   return {
     status,
@@ -1221,7 +1681,9 @@ export function inspectRecoveryGmailCaptureAdmission(
     captureAllowed: false,
     batchId: input.batchId,
     ...(selected ? { admissionSha256: sha256(selected.admission) } : {}),
-    ...(selected?.result ? { resultSha256: sha256(selected.result) } : {}),
+    ...(selected?.result || selected?.resultCandidate
+      ? { resultSha256: sha256((selected.result ?? selected.resultCandidate)!) }
+      : {}),
     receipts,
   };
 }
@@ -1246,7 +1708,7 @@ async function execute(
   )
     fail("RECOVERY_GMAIL_CAPTURE_RETAINED_EXECUTOR_REQUIRED");
   const initial = open(input);
-  if (initial.selected?.result) {
+  if (initial.selected?.result && !initial.needsRepair) {
     const report = inspectRecoveryGmailCaptureAdmission(input);
     return {
       ...report,
@@ -1256,7 +1718,7 @@ async function execute(
     };
   }
   const admission =
-    initial.unfinished?.admission ??
+    initial.selected?.admission ??
     createRecoveryGmailCaptureAdmission({
       checkpoint: initial.checkpoint,
       recoveryKey: input.recoveryKey,
@@ -1267,6 +1729,13 @@ async function execute(
       priorCompleted: initial.completed,
       unfinishedAdmissions: [],
     });
+  const prior = initial.selected
+    ? initial.completed.slice(0, initial.selected.record.priorCompleted.count)
+    : initial.completed;
+  const repairReport =
+    initial.selected?.result || initial.selected?.resultCandidate
+      ? inspectRecoveryGmailCaptureAdmission(input)
+      : undefined;
   const selected: Family = {
     batchId: input.batchId,
     admission,
@@ -1274,9 +1743,12 @@ async function execute(
       checkpoint: initial.checkpoint,
       recoveryKey: input.recoveryKey,
       admission,
-      priorCompleted: initial.completed,
+      priorCompleted: prior,
       unfinishedAdmissions: [admission],
     }),
+    admissionInstalled: Boolean(initial.selected?.admissionInstalled),
+    observations: [],
+    stages: [],
   };
   const directory = join(root, "recovery-gmail-capture", input.batchId),
     admissionPath = join(directory, "admission.json"),
@@ -1311,6 +1783,34 @@ async function execute(
     transients: new Map(),
     transientIdentities: new Map(),
   };
+  for (const item of initial.all) {
+    const path = join(root, "recovery-gmail-capture", item.batchId);
+    scope.metadata.set(join(path, "admission.json"), item.admission);
+    if (item.result || item.resultCandidate)
+      scope.metadata.set(
+        join(path, "result.json"),
+        (item.result ?? item.resultCandidate)!
+      );
+    scope.directories.add(path);
+    for (const stage of ["admission-stage", "result-stage", "key-stage"])
+      scope.directories.add(join(path, stage));
+  }
+  for (const [path, stage] of initial.stages) {
+    scope.transients.set(path, stage.bytes);
+    scope.transientIdentities.set(path, { dev: stage.dev, ino: stage.ino });
+    if (stage.target === join(initial.operator, keyName))
+      scope.metadata.set(stage.target, stage.bytes);
+    if (
+      stage.target.startsWith(
+        join(initial.operator, "email-intake") +
+          (process.platform === "win32" ? "\\" : "/")
+      ) &&
+      existsSync(stage.target)
+    ) {
+      scope.metadata.set(stage.target, stage.bytes);
+      scope.directories.add(dirname(stage.target));
+    }
+  }
   let ownership = scope.ownership;
   scope.assertCurrent = (snapshot) => {
     if (!scope.active || Date.now() >= scope.deadline)
@@ -1327,7 +1827,13 @@ async function execute(
       fail();
     ownership = observed;
     scope.observedOwnership = observed;
-    initial.proofFor(selected, actual, initial.completed, ownership);
+    const tail = initial.all.at(-1);
+    initial.proofFor(
+      repairReport && tail ? tail : selected,
+      actual,
+      repairReport && tail?.result ? initial.completed.slice(0, -1) : prior,
+      ownership
+    );
   };
   const stop = (point: CaptureInterruption) => {
     if (interruption === point)
@@ -1336,6 +1842,12 @@ async function execute(
   try {
     return await scopes.run(scope, async () => {
       scope.assertCurrent();
+      for (const item of initial.all)
+        installRecoveryIntent(
+          join(root, "recovery-gmail-capture", item.batchId, "admission.json"),
+          item.admission,
+          join(root, "recovery-gmail-capture", item.batchId, "admission-stage")
+        );
       installRecoveryIntent(
         admissionPath,
         admission,
@@ -1343,11 +1855,47 @@ async function execute(
       );
       stop("admission-saved");
       scope.phase = "key";
+      for (const item of initial.all)
+        if (item.observations[2]?.candidate)
+          installRecoveredBackupKey(initial.operator, input.recoveryKey, {
+            stagingDirectory: join(
+              root,
+              "recovery-gmail-capture",
+              item.batchId,
+              "key-stage"
+            ),
+          });
       installRecoveredBackupKey(initial.operator, input.recoveryKey, {
         stagingDirectory: join(directory, "key-stage"),
       });
       scope.assertCurrent();
       stop("key-installed");
+      scope.phase = "result";
+      for (const item of initial.all)
+        if (item.result || item.resultCandidate)
+          installRecoveryIntent(
+            join(root, "recovery-gmail-capture", item.batchId, "result.json"),
+            (item.result ?? item.resultCandidate)!,
+            join(root, "recovery-gmail-capture", item.batchId, "result-stage")
+          );
+      for (const stage of initial.stages.values())
+        if (
+          scope.metadata.has(stage.target) &&
+          stage.target.startsWith(
+            join(initial.operator, "email-intake") +
+              (process.platform === "win32" ? "\\" : "/")
+          )
+        )
+          repairRecoveredGmailCaptureFile(stage.target, stage.bytes);
+      if (repairReport) {
+        scope.assertCurrent();
+        return {
+          ...repairReport,
+          status: "capture-complete",
+          admissionSha256: repairReport.admissionSha256!,
+          resultSha256: repairReport.resultSha256!,
+        };
+      }
       scope.phase = "capture";
       for (const snapshot of initial.selectedBatch.snapshots) {
         const intake = {
@@ -1490,6 +2038,9 @@ async function execute(
           // the ordinary intake path with a fresh bounded production lease.
           if (
             correctionMatches &&
+            ![...initial.stages.values()].some(
+              (stage) => scope.files.has(stage.target) && existsSync(stage.path)
+            ) &&
             [...scope.files].every(
               ([path, bytes]) =>
                 existsSync(path) && regular(path, 8 * 1024 * 1024).equals(bytes)
@@ -1522,7 +2073,7 @@ async function execute(
           checkpoint: initial.checkpoint,
           recoveryKey: input.recoveryKey,
           admission,
-          priorCompleted: initial.completed,
+          priorCompleted: prior,
           unfinishedAdmissions: [admission],
           current: actual,
           ownProductionOwnership: ownership,
@@ -1538,7 +2089,7 @@ async function execute(
       const proof = initial.proofFor(
         selected,
         initial.delta(),
-        initial.completed,
+        prior,
         ownership
       );
       return {
@@ -1565,15 +2116,7 @@ export function executeRecoveredGmailBatchCaptureForTest(
   input: RecoveryGmailCaptureInput,
   interruption: CaptureInterruption
 ): Promise<RecoveryGmailCaptureReport> {
-  if (
-    ![
-      "admission-saved",
-      "key-installed",
-      "source-committed",
-      "capture-files-written",
-      "result-saved",
-    ].includes(interruption)
-  )
+  if (!RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS.includes(interruption))
     fail();
   return execute(input, interruption);
 }
