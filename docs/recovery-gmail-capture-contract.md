@@ -18,7 +18,13 @@ effects. A saved signed result must be observed before acquiring a new lease and
 returned unchanged after a lost response. The admission timestamp records intent;
 it never substitutes for the source's actual first observation. Extract and reuse
 normal intake's preparation when validating journal-first repair, including every
-receiver-profile and sender-date field. No current API grants the capture/load or
+receiver-profile and sender-date field. `prepareSteveEmailCapture` now exposes
+that shared content validation and receipt identity calculation without opening
+files or a journal. Ordinary capture uses it too, owns its inputs before parsing
+awaits, and retains the real journal admission clock. FULL-message traversal is
+bounded to 100 visited parts. This helper does not authenticate Gmail acquisition
+or authorize persistence; the recovery executor and effect guards remain pending.
+No current API grants the recovery capture/load or
 activation operations in the contract below.
 
 ```ts

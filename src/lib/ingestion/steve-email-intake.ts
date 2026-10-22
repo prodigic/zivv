@@ -241,14 +241,17 @@ function receiverProfile(
 function plainPart(
   part: GmailMessagePart,
   path: number[] = [],
-  depth = 0
+  depth = 0,
+  visited: { count: number } = { count: 0 }
 ): { part: GmailMessagePart; path: number[] }[] {
+  visited.count++;
+  if (visited.count > 100) fail("GMAIL_PART_LIMIT");
   if (depth > 20 || (part.parts?.length ?? 0) > 100) fail("GMAIL_PART_LIMIT");
   if (part.filename) return [];
   return [
     ...(part.mime_type.toLowerCase() === "text/plain" ? [{ part, path }] : []),
     ...(part.parts ?? []).flatMap((child, index) =>
-      plainPart(child, [...path, index], depth + 1)
+      plainPart(child, [...path, index], depth + 1, visited)
     ),
   ];
 }
@@ -787,6 +790,120 @@ export function resolveRetainedSteveEmailMessages(input: {
   });
 }
 
+export type SteveEmailCapturePreparationInput = {
+  accountId: string;
+  rawMessage: { id: string; raw: string };
+  fullMessage: {
+    id: string;
+    internal_date: number | string;
+    payload: GmailMessagePart;
+  };
+  expectedEditionId: string;
+  observedAtEpochMs: number;
+};
+
+export type PreparedSteveEmailCapture = {
+  accountSha256: string;
+  editionId: string;
+  deliveryId: string;
+  messageId: string;
+  raw: Buffer;
+  rawSha256: string;
+  source: Buffer;
+  sourceSha256: string;
+  receiptId: string;
+  receivedAtEpochMs: number;
+  acquisitionObservedAtEpochMs: number;
+  senderDate: string;
+  partPath: number[];
+  receiverProfile: SteveEmailReceipt["receiverProfile"];
+};
+
+/**
+ * Validate source contents and stable receipt identity without filesystem or journal access.
+ * This validates message content; it does not authenticate Gmail or authorize a write.
+ */
+export async function prepareSteveEmailCapture(
+  input: SteveEmailCapturePreparationInput
+): Promise<PreparedSteveEmailCapture> {
+  const accountId = input.accountId;
+  const rawMessage = { id: input.rawMessage.id, raw: input.rawMessage.raw };
+  const fullId = input.fullMessage.id;
+  const internalDate = input.fullMessage.internal_date;
+  const expectedEditionId = input.expectedEditionId;
+  const observedAtEpochMs = input.observedAtEpochMs;
+  if (
+    !accountId ||
+    accountId.length > 256 ||
+    Array.from(accountId).some((character) => character.charCodeAt(0) < 32) ||
+    !/^[a-f0-9]{1,128}$/.test(rawMessage.id) ||
+    rawMessage.id !== fullId ||
+    !Number.isSafeInteger(observedAtEpochMs) ||
+    observedAtEpochMs > Date.now()
+  )
+    fail("INVALID_GMAIL_CAPTURE");
+  const received = Number(internalDate);
+  if (
+    !Number.isSafeInteger(received) ||
+    received < 0 ||
+    received > observedAtEpochMs
+  )
+    fail("INVALID_GMAIL_RECEIPT_TIME");
+  const raw = decode(rawMessage.raw);
+  // Select and own FULL text synchronously before the first await; this also bounds
+  // traversal using the existing MIME part depth/count checks.
+  const { source, partPath } = selectSteveEmailPlaintext(
+    input.fullMessage.payload
+  );
+  const ownedSource = Buffer.from(source);
+  const ownedPartPath = [...partPath];
+  const parsed = await PostalMime.parse(raw, {
+    maxNestingDepth: 20,
+    maxPartCount: 100,
+    maxHeadersSize: 256 * 1024,
+    forceRfc822Attachments: true,
+  });
+  const senderDate = header(parsed.headers, "date");
+  if (!Number.isFinite(Date.parse(senderDate))) fail("INVALID_SENDER_DATE");
+  const auth = receiverProfile(parsed.headers);
+  const text = new TextDecoder("utf-8", {
+    fatal: true,
+    ignoreBOM: true,
+  }).decode(ownedSource);
+  const comparable = (value: string) =>
+    value
+      .replace(/^\uFEFF/, "")
+      .replace(/\r\n/g, "\n")
+      .replace(/\n+$/, "");
+  if (!parsed.text || comparable(parsed.text) !== comparable(text))
+    fail("GMAIL_MIME_TEXT_MISMATCH");
+  const editionId = edition(text);
+  if (editionId !== expectedEditionId) fail("WRONG_EXPECTED_EDITION");
+  const accountSha256 = sha256(accountId),
+    sourceSha256 = sha256(ownedSource),
+    rawSha256 = sha256(raw),
+    receiptId = sha256(canonicalJson([accountSha256, editionId, sourceSha256]));
+  return {
+    accountSha256,
+    editionId,
+    deliveryId: "gmail-" + receiptId,
+    messageId: rawMessage.id,
+    raw: Buffer.from(raw),
+    rawSha256,
+    source: ownedSource,
+    sourceSha256,
+    receiptId,
+    receivedAtEpochMs: received,
+    acquisitionObservedAtEpochMs: observedAtEpochMs,
+    senderDate,
+    partPath: ownedPartPath,
+    receiverProfile: {
+      ...auth,
+      dkimSigningDomains: [...auth.dkimSigningDomains],
+    },
+  };
+}
+
 /**
  * Capture snapshots obtained through the configured account-bound Gmail connector.
  * Receiver-profile matching is not a signature on arbitrary uploaded JSON/EML.
@@ -809,57 +926,27 @@ export async function captureSteveEmail(input: {
   source: Buffer;
   disposition: "ready" | "review-required";
 }> {
-  assertOperatorInstallationWritable(resolve(input.operatorDirectory));
-  if (
-    !input.accountId ||
-    input.accountId.length > 256 ||
-    Array.from(input.accountId).some(
-      (character) => character.charCodeAt(0) < 32
-    ) ||
-    !/^[a-f0-9]{1,128}$/.test(input.rawMessage.id) ||
-    input.rawMessage.id !== input.fullMessage.id ||
-    !Number.isSafeInteger(input.observedAtEpochMs) ||
-    input.observedAtEpochMs > Date.now()
-  )
-    fail("INVALID_GMAIL_CAPTURE");
-  const received = Number(input.fullMessage.internal_date);
-  if (
-    !Number.isSafeInteger(received) ||
-    received < 0 ||
-    received > input.observedAtEpochMs
-  )
-    fail("INVALID_GMAIL_RECEIPT_TIME");
-  const raw = decode(input.rawMessage.raw);
-  const parsed = await PostalMime.parse(raw, {
-    maxNestingDepth: 20,
-    maxPartCount: 100,
-    maxHeadersSize: 256 * 1024,
-    forceRfc822Attachments: true,
-  });
-  const senderDate = header(parsed.headers, "date");
-  if (!Number.isFinite(Date.parse(senderDate))) fail("INVALID_SENDER_DATE");
-  const auth = receiverProfile(parsed.headers);
-  const { source, partPath } = selectSteveEmailPlaintext(
-    input.fullMessage.payload
-  );
-  const text = new TextDecoder("utf-8", {
-    fatal: true,
-    ignoreBOM: true,
-  }).decode(source);
-  const comparable = (value: string) =>
-    value
-      .replace(/^\uFEFF/, "")
-      .replace(/\r\n/g, "\n")
-      .replace(/\n+$/, "");
-  if (!parsed.text || comparable(parsed.text) !== comparable(text))
-    fail("GMAIL_MIME_TEXT_MISMATCH");
-  const editionId = edition(text);
-  if (editionId !== input.expectedEditionId) fail("WRONG_EXPECTED_EDITION");
-  const accountSha256 = sha256(input.accountId),
-    sourceSha256 = sha256(source),
-    rawSha256 = sha256(raw),
-    receiptId = sha256(canonicalJson([accountSha256, editionId, sourceSha256]));
-  const directory = resolvePrivateCandidateDirectory(input.operatorDirectory);
+  const operatorDirectory = resolve(input.operatorDirectory);
+  const correctionOf = input.correctionOf;
+  assertOperatorInstallationWritable(operatorDirectory);
+  const prepared = await prepareSteveEmailCapture(input);
+  const {
+    accountSha256,
+    editionId,
+    deliveryId,
+    messageId,
+    raw,
+    rawSha256,
+    source,
+    sourceSha256,
+    receiptId,
+    receivedAtEpochMs: received,
+    acquisitionObservedAtEpochMs,
+    senderDate,
+    partPath,
+    receiverProfile: auth,
+  } = prepared;
+  const directory = resolvePrivateCandidateDirectory(operatorDirectory);
   assertOperatorNotQuarantined(directory);
   secureOperatorDirectory(directory);
   const journal = new WeeklyRunJournal(directory);
@@ -868,7 +955,7 @@ export async function captureSteveEmail(input: {
     lease = journal.acquire(scope);
     const owned = lease;
     const root = join(directory, "email-intake", accountSha256),
-      messageDirectory = join(root, "messages", sha256(input.rawMessage.id)),
+      messageDirectory = join(root, "messages", sha256(messageId)),
       bodyRoot = join(root, "bodies"),
       bodyDirectory = join(bodyRoot, receiptId);
     const prior = journal
@@ -877,9 +964,7 @@ export async function captureSteveEmail(input: {
       .filter((r) => r.accountSha256 === accountSha256);
     // Detect mutation before committing another immutable admission.
     if (
-      prior.some(
-        (r) => r.messageId === input.rawMessage.id && r.rawSha256 !== rawSha256
-      )
+      prior.some((r) => r.messageId === messageId && r.rawSha256 !== rawSha256)
     )
       fail("INTAKE_EVIDENCE_CHANGED");
     const rawPath = join(messageDirectory, "message.eml");
@@ -894,19 +979,19 @@ export async function captureSteveEmail(input: {
       if (admittedAt >= mondayAfter(editionId))
         fail("SOURCE_WINDOW_REQUIRES_REVIEW");
       const siblings = prior.filter((r) => r.editionId === editionId);
-      if (input.correctionOf) {
+      if (correctionOf) {
         if (
-          !/^[a-f0-9]{64}$/.test(input.correctionOf) ||
-          !siblings.some((r) => r.receiptId === input.correctionOf)
+          !/^[a-f0-9]{64}$/.test(correctionOf) ||
+          !siblings.some((r) => r.receiptId === correctionOf)
         )
           fail("UNKNOWN_CORRECTION_PARENT");
-        const parent = bodyReceipt(join(bodyRoot, input.correctionOf), journal);
+        const parent = bodyReceipt(join(bodyRoot, correctionOf), journal);
         if (parent.disposition !== "ready") fail("UNKNOWN_CORRECTION_PARENT");
         if (
           siblings.some(
             (r) =>
               bodyReceipt(join(bodyRoot, r.receiptId), journal).correctionOf ===
-              input.correctionOf
+              correctionOf
           )
         )
           fail("COMPETING_CORRECTION_BRANCH");
@@ -916,17 +1001,17 @@ export async function captureSteveEmail(input: {
         receiptId,
         accountSha256,
         editionId,
-        deliveryId: "gmail-" + receiptId,
-        messageId: input.rawMessage.id,
+        deliveryId,
+        messageId,
         rawSha256,
         sourceSha256,
         receivedAtEpochMs: received,
         firstObservedAtEpochMs: admittedAt,
-        acquisitionObservedAtEpochMs: input.observedAtEpochMs,
+        acquisitionObservedAtEpochMs,
         senderDate,
         disposition:
-          siblings.length && !input.correctionOf ? "review-required" : "ready",
-        correctionOf: input.correctionOf ?? null,
+          siblings.length && !correctionOf ? "review-required" : "ready",
+        correctionOf: correctionOf ?? null,
         partPath,
         receiverProfile: auth,
       };
@@ -941,29 +1026,23 @@ export async function captureSteveEmail(input: {
     same(receipt.accountSha256, accountSha256, "CHANGED_INTAKE_ACCOUNT");
     same(receipt.editionId, editionId, "CHANGED_INTAKE_EDITION");
     same(receipt.sourceSha256, sourceSha256, "CHANGED_INTAKE_TEXT");
-    if (
-      receipt.messageId === input.rawMessage.id &&
-      receipt.rawSha256 !== rawSha256
-    )
+    if (receipt.messageId === messageId && receipt.rawSha256 !== rawSha256)
       fail("INTAKE_EVIDENCE_CHANGED");
     let approval = journal.readIntakeEvidence(scope, "correction", receiptId);
-    if (input.correctionOf) {
+    if (correctionOf) {
       if (receipt.disposition === "ready") {
-        if (input.correctionOf !== receipt.correctionOf)
+        if (correctionOf !== receipt.correctionOf)
           fail("CHANGED_CORRECTION_PARENT");
       } else if (approval) {
         const existing = JSON.parse(approval.toString("utf8")) as {
           correctionOf: string;
         };
-        if (existing.correctionOf !== input.correctionOf)
+        if (existing.correctionOf !== correctionOf)
           fail("CHANGED_CORRECTION_PARENT");
       } else {
-        if (
-          !/^[a-f0-9]{64}$/.test(input.correctionOf) ||
-          input.correctionOf === receiptId
-        )
+        if (!/^[a-f0-9]{64}$/.test(correctionOf) || correctionOf === receiptId)
           fail("UNKNOWN_CORRECTION_PARENT");
-        const parent = bodyReceipt(join(bodyRoot, input.correctionOf), journal);
+        const parent = bodyReceipt(join(bodyRoot, correctionOf), journal);
         if (parent.editionId !== editionId || parent.disposition !== "ready")
           fail("UNKNOWN_CORRECTION_PARENT");
         const siblings = prior.filter(
@@ -973,7 +1052,7 @@ export async function captureSteveEmail(input: {
           siblings.some(
             (r) =>
               bodyReceipt(join(bodyRoot, r.receiptId), journal).correctionOf ===
-              input.correctionOf
+              correctionOf
           )
         )
           fail("COMPETING_CORRECTION_BRANCH");
@@ -1004,7 +1083,7 @@ export async function captureSteveEmail(input: {
       receipt = bodyReceipt(bodyDirectory, journal);
       const capture = {
         schemaVersion: 1,
-        messageId: input.rawMessage.id,
+        messageId,
         accountSha256,
         rawSha256,
         sourceSha256,
