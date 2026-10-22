@@ -115,8 +115,9 @@ path remains available.
 
 This requires the earlier private journal, sealed configuration, bundle and key
 to have survived or been restored coherently. It does not recover absent private
-inputs or admit a relocated recovery capsule. A completed historical owner is
-still a separate delivery-adoption recovery boundary when its anchor was lost.
+inputs or admit a relocated recovery capsule. The worker separately probes exact
+historical verification before publication, so a completed owner can be adopted
+without re-entering claim/dispatch when a pending delivery anchor was lost.
 
 When journal verification has succeeded, resume bypasses publication dispatch.
 The retained delivery anchor and acknowledgement completion proof can therefore

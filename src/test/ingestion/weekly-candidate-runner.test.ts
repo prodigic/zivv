@@ -42,6 +42,7 @@ import {
   applyPromotionTransition,
   candidatePublicReleaseId,
   claimPromotion,
+  createCompletionProof,
   createPromotionControl,
   parsePromotionControl,
   promotionAttemptId,
@@ -54,6 +55,7 @@ import {
   PROMOTION_FIXTURE_CHECKS,
   syntheticLegacyPublicSnapshot,
 } from "./fixtures/promotion-control-fixture.js";
+import { findCanonicalWeeklyVerification } from "../../lib/ingestion/weekly-delivery.js";
 
 type Capture =
   typeof import("../../lib/ingestion/source-build.js").captureReviewedSource;
@@ -171,7 +173,12 @@ describe("weekly candidate stages with real sealed bundles", () => {
   }
   function seedVerifiedControl(
     candidate: ReleaseCandidate,
-    wrongCandidate = false
+    wrongCandidate = false,
+    bindings: {
+      requestId?: string;
+      sourceCommit?: string;
+      publicInventorySha256?: string;
+    } = {}
   ) {
     const store = initializeControl();
     const createdAt = "2026-10-14T18:00:00.000Z";
@@ -200,6 +207,7 @@ describe("weekly candidate stages with real sealed bundles", () => {
       purpose: "release",
       publicInventorySha256: promotionDigest(candidate.files),
       expectedVerifiedReleaseId: control.lastVerified.releaseId,
+      ...bindings,
     });
     save();
     const workflowCommit = "b".repeat(40),
@@ -250,7 +258,9 @@ describe("weekly candidate stages with real sealed bundles", () => {
   }
   async function deliveryFixture(
     wrongCandidate = false,
-    purpose: "release" | "preview" = "release"
+    purpose: "release" | "preview" = "release",
+    bindings: { sourceCommit?: string; publicInventorySha256?: string } = {},
+    bindRunId = false
   ) {
     const validated = await runWeeklyImport({
       root,
@@ -264,7 +274,10 @@ describe("weekly candidate stages with real sealed bundles", () => {
       loadBackupKey(home),
       String(stage(validated, "export").evidence!.candidateId)
     );
-    const native = seedVerifiedControl(bundle.candidate, wrongCandidate);
+    const native = seedVerifiedControl(bundle.candidate, wrongCandidate, {
+      ...bindings,
+      ...(bindRunId ? { requestId: validated.runId } : {}),
+    });
     const candidate = Buffer.from(canonicalJson(bundle.candidate) + "\n");
     const run = (
       through: "verify" | "acknowledge",
@@ -438,7 +451,7 @@ describe("weekly candidate stages with real sealed bundles", () => {
         manualPublisherJoined: "true",
         onProgress,
       });
-    const finishNative = () => {
+    const finishNative = (runId = "101") => {
       let current = store.read(),
         control = parsePromotionControl(current.bytes!);
       const operation = control.active!,
@@ -458,7 +471,7 @@ describe("weekly candidate stages with real sealed bundles", () => {
         expect(result.status).toBe("appended");
         current = store.read();
       };
-      const admission = { workflowCommit, runId: "101", runAttempt: 1 };
+      const admission = { workflowCommit, runId, runAttempt: 1 };
       step({ type: "admit-run", ...owner, admission });
       const deployment = { admission, artifactId: "201", deploymentId: "301" };
       step({ type: "deployed", ...owner, deployment });
@@ -477,21 +490,31 @@ describe("weekly candidate stages with real sealed bundles", () => {
         verification: { ...body, receiptId: promotionDigest(body) },
         replayProof: null,
       });
+      return current;
     };
     const claimAnother = () => {
       const current = store.read(),
         control = parsePromotionControl(current.bytes!);
       const planned = JSON.parse(readFileSync(planPath, "utf8"));
-      const claimed = claimPromotion(control, {
+      const request = {
         requestId: "other-publication-owner",
         payloadCommit: planned.payloadCommit,
         candidateId: bundle.candidate.candidateId,
         sourceCommit: bundle.candidate.sourceCommit,
         basePath: "/zivv/",
-        purpose: "release",
+        purpose: "release" as const,
         publicInventorySha256: promotionDigest(bundle.candidate.files),
         expectedVerifiedReleaseId: control.lastVerified.releaseId,
-      });
+      };
+      const claimed = claimPromotion(
+        control,
+        request,
+        createCompletionProof(
+          control.completionRoot,
+          request.requestId,
+          (id, type) => store.readCompletionObject(current.head!, id, type)
+        )
+      );
       expect(
         compare({
           expectedHead: current.head,
@@ -512,6 +535,22 @@ describe("weekly candidate stages with real sealed bundles", () => {
       finishNative,
       claimAnother,
       retainedWrites: () => retainWrites,
+      restoreValidatedCheckpoint: () => {
+        const db = new DatabaseSync(join(home, "weekly-runs.sqlite"));
+        try {
+          db.exec("BEGIN IMMEDIATE");
+          db.prepare(
+            "DELETE FROM stage_artifact WHERE run_id=? AND stage IN ('deploy','verify','acknowledge')"
+          ).run(validated.runId);
+          db.prepare(
+            "UPDATE run_state SET revision=?,payload=? WHERE id=?"
+          ).run(validated.revision, canonicalJson(validated), validated.runId);
+          db.exec("COMMIT");
+        } finally {
+          if (db.isTransaction) db.exec("ROLLBACK");
+          db.close();
+        }
+      },
       nativeAppends: () => vi.mocked(store.compareAndAppend).mock.calls.length,
       interruptAfterClaim: () => {
         interruptClaim = true;
@@ -1323,6 +1362,340 @@ describe("weekly candidate stages with real sealed bundles", () => {
     expect(readSqliteLedger(sqlitePath).runs).toHaveLength(1);
     expect(doubles.build).toHaveBeenCalledTimes(1);
   }, 120_000);
+
+  it("recovers historical delivery and acknowledgement from a validated checkpoint after later ownership, including an interrupted anchor", async () => {
+    const f = await publicationFixture();
+    await f.run("dispatch");
+    const verified = f.finishNative();
+    const original = await f.run("acknowledge");
+    expect(original.stages.every((item) => item.status === "succeeded")).toBe(
+      true
+    );
+    f.claimAnother();
+    const weeklyPath = join(root, "data/ingestion/weekly-editions.json");
+    const weekly = JSON.parse(readFileSync(weeklyPath, "utf8"));
+    weekly.editions.push({
+      editionId: "2026-10-16",
+      startEpochMs: cutoff,
+      endEpochMs: cutoff + 604800000,
+      eventIds: [],
+      datasetVersion: "later-draft",
+      status: "draft",
+    });
+    writeFileSync(weeklyPath, canonicalJson(weekly) + "\n");
+    const laterWeekly = readFileSync(weeklyPath),
+      digest = catalogDigest(),
+      head = f.store.read().head,
+      appends = f.nativeAppends(),
+      retained = f.retainedWrites(),
+      requests = f.requests.length;
+    f.restoreValidatedCheckpoint();
+    unlinkSync(f.planPath);
+    unlinkSync(f.dispatchPath);
+    await expect(
+      f.run("acknowledge", (event) => {
+        if (event.stage === "deploy" && event.phase === "artifact-saved")
+          throw new Error("Pause historical anchor");
+      })
+    ).rejects.toThrow("Pause historical anchor");
+    const readAnchors = () => {
+      const db = new DatabaseSync(join(home, "weekly-runs.sqlite"), {
+        readOnly: true,
+      });
+      try {
+        return db
+          .prepare(
+            "SELECT stage,bytes FROM stage_artifact WHERE run_id=? AND stage IN ('deploy','verify') ORDER BY stage"
+          )
+          .all(f.validated.runId)
+          .map((row) => ({
+            stage: row.stage,
+            bytes: Buffer.from(row.bytes as Uint8Array),
+          }));
+      } finally {
+        db.close();
+      }
+    };
+    const saved = readAnchors();
+    expect(saved).toHaveLength(1);
+    expect(JSON.parse(saved[0].bytes.toString())).toMatchObject({
+      runId: f.validated.runId,
+      controlHead: verified.head,
+      controlSha256: hash(verified.bytes!),
+    });
+    const result = await f.run("acknowledge");
+    expect(result.stages.every((item) => item.status === "succeeded")).toBe(
+      true
+    );
+    expect(result.stages.at(-1)!.evidence).toEqual(
+      original.stages.at(-1)!.evidence
+    );
+    const anchors = readAnchors();
+    expect(anchors).toHaveLength(2);
+    expect(anchors[0].bytes).toEqual(saved[0].bytes);
+    expect(anchors[1].bytes).toEqual(saved[0].bytes);
+    expect(f.store.read().head).toBe(head);
+    expect(
+      parsePromotionControl(f.store.read().bytes!).active!.request.requestId
+    ).toBe("other-publication-owner");
+    expect(f.nativeAppends()).toBe(appends);
+    expect(f.retainedWrites()).toBe(retained);
+    expect(f.requests).toHaveLength(requests);
+    expect(existsSync(f.planPath)).toBe(false);
+    expect(existsSync(f.dispatchPath)).toBe(false);
+    expect(readFileSync(weeklyPath)).toEqual(laterWeekly);
+    expect(catalogDigest()).toBe(digest);
+    expect(doubles.build).toHaveBeenCalledTimes(1);
+    expect(readSqliteLedger(sqlitePath).runs).toHaveLength(1);
+  }, 240_000);
+
+  it.each(["request", "candidate", "source", "inventory"] as const)(
+    "refuses historical verification with a different native %s binding without adopting it",
+    async (binding) => {
+      const f = await deliveryFixture(
+        binding === "candidate",
+        "release",
+        {
+          ...(binding === "source" ? { sourceCommit: "d".repeat(40) } : {}),
+          ...(binding === "inventory"
+            ? { publicInventorySha256: "8".repeat(64) }
+            : {}),
+        },
+        binding !== "request"
+      );
+      const head = f.store.read().head,
+        digest = catalogDigest(),
+        weekly = readFileSync(
+          join(root, "data/ingestion/weekly-editions.json")
+        );
+      const append = vi.spyOn(f.store, "compareAndAppend");
+      const find = () =>
+        findCanonicalWeeklyVerification({
+          runId: f.validated.runId,
+          candidate: f.candidate,
+          store: f.store,
+        });
+      if (binding === "request") expect(find()).toBeNull();
+      else expect(find).toThrow(`Native historical ${binding} mismatch`);
+      expect(append).not.toHaveBeenCalled();
+      expect(f.store.read().head).toBe(head);
+      expect(journalState()).toEqual(f.validated);
+      expect(
+        readFileSync(join(root, "data/ingestion/weekly-editions.json"))
+      ).toEqual(weekly);
+      expect(catalogDigest()).toBe(digest);
+    },
+    90_000
+  );
+
+  it("requires complete unique canonical historical verification and rejects a valid unpublished fork", async () => {
+    const f = await deliveryFixture(false, "release", {}, true);
+    const head = f.store.read().head!,
+      digest = catalogDigest();
+    const read = f.store.readCanonicalHistory!;
+    const verified = read().commits.find(
+      (entry) =>
+        parsePromotionControl(entry.bytes).lastTransition.event.type ===
+        "verified"
+    )!;
+    expect(
+      findCanonicalWeeklyVerification({
+        runId: f.validated.runId,
+        candidate: f.candidate,
+        store: f.store,
+      })
+    ).toEqual({ controlHead: head, controlSha256: hash(verified.bytes) });
+    const { receiptId: _receiptId, ...body } = f.control.active!.verification!;
+    body.verifiedAt = "2026-10-14T18:00:01.000Z";
+    const fork = f.store.prepareAppend({
+      expectedHead: f.deployedHead,
+      bytes: serializePromotionControl(
+        applyPromotionTransition(f.deployed, {
+          type: "verified",
+          ...f.owner,
+          verification: { ...body, receiptId: promotionDigest(body) },
+          replayProof: null,
+        })
+      ),
+      createdAt: f.createdAt,
+    });
+    const append = vi.spyOn(f.store, "compareAndAppend");
+    for (const problem of [
+      "missing",
+      "truncated",
+      "ambiguous",
+      "changed-bytes",
+      "unpublished-fork",
+    ]) {
+      f.store.readCanonicalHistory = (options) => {
+        const history = read(options);
+        const index = history.commits.findIndex(
+          (entry) => entry.head === verified.head
+        );
+        if (problem === "missing") history.commits.splice(index, 1);
+        if (problem === "truncated") history.complete = false;
+        if (problem === "ambiguous")
+          history.commits.push({
+            ...verified,
+            bytes: Buffer.from(verified.bytes),
+            parentBytes: Buffer.from(verified.parentBytes!),
+          });
+        if (problem === "changed-bytes")
+          history.commits[index].bytes = Buffer.from(
+            JSON.stringify(parsePromotionControl(verified.bytes), null, 2) +
+              "\n"
+          );
+        if (problem === "unpublished-fork")
+          history.commits[index] = {
+            ...verified,
+            head: fork.attemptedHead,
+            bytes: Buffer.from(fork.bytes),
+          };
+        return history;
+      };
+      const find = () =>
+        findCanonicalWeeklyVerification({
+          runId: f.validated.runId,
+          candidate: f.candidate,
+          store: f.store,
+        });
+      if (problem === "missing") expect(find()).toBeNull();
+      else expect(find).toThrow();
+    }
+    expect(append).not.toHaveBeenCalled();
+    expect(f.store.read().head).toBe(head);
+    expect(journalState()).toEqual(f.validated);
+    expect(catalogDigest()).toBe(digest);
+  }, 90_000);
+
+  it("keeps a succeeded delivery stage with a missing anchor as corruption", async () => {
+    const f = await deliveryFixture();
+    await f.run("verify");
+    const db = new DatabaseSync(join(home, "weekly-runs.sqlite"));
+    try {
+      db.prepare(
+        "DELETE FROM stage_artifact WHERE run_id=? AND stage='verify'"
+      ).run(f.validated.runId);
+    } finally {
+      db.close();
+    }
+    const head = f.store.read().head,
+      digest = catalogDigest();
+    const append = vi.spyOn(f.store, "compareAndAppend");
+    await expect(f.run("verify")).rejects.toThrow(
+      "Missing delivery authority artifact"
+    );
+    expect(f.store.read().head).toBe(head);
+    expect(append).not.toHaveBeenCalled();
+    expect(catalogDigest()).toBe(digest);
+  }, 90_000);
+
+  it("adopts the original run's historical verification when a later verified owner reuses its candidate", async () => {
+    const f = await publicationFixture();
+    await f.run("dispatch");
+    const original = f.finishNative();
+    const originalControl = parsePromotionControl(original.bytes!);
+    const completed = applyPromotionTransition(originalControl, {
+      type: "acknowledged",
+      operationId: originalControl.active!.operationId,
+      verificationReceiptId: originalControl.active!.verification!.receiptId,
+      acknowledgementId: "9".repeat(64),
+      replayProof: null,
+    });
+    expect(
+      f.store.compareAndAppend({
+        expectedHead: original.head,
+        bytes: serializePromotionControl(completed),
+        createdAt: "2026-10-14T18:00:00.000Z",
+      }).status
+    ).toBe("appended");
+    f.claimAnother();
+    const claimed = f.store.read(),
+      laterOperation = parsePromotionControl(claimed.bytes!).active!;
+    expect(
+      f.store.compareAndAppend({
+        expectedHead: claimed.head,
+        bytes: serializePromotionControl(
+          applyPromotionTransition(parsePromotionControl(claimed.bytes!), {
+            type: "dispatch-intent",
+            operationId: laterOperation.operationId,
+            mode: "promote",
+            attemptId: promotionAttemptId(
+              laterOperation.operationId,
+              "promote",
+              1,
+              f.publication.workflowCommit,
+              1
+            ),
+            attemptNumber: 1,
+            workflowCommit: f.publication.workflowCommit,
+            expectedRunAttempt: 1,
+            dispatchNonce: "7".repeat(64),
+          })
+        ),
+        createdAt: "2026-10-14T18:00:00.000Z",
+      }).status
+    ).toBe("appended");
+    const later = f.finishNative("202"),
+      laterControl = parsePromotionControl(later.bytes!);
+    expect(laterControl.active!.request.candidateId).toBe(
+      originalControl.active!.request.candidateId
+    );
+    expect(laterControl.active!.verification!.receiptId).not.toBe(
+      originalControl.active!.verification!.receiptId
+    );
+    f.restoreValidatedCheckpoint();
+    const appends = f.nativeAppends(),
+      retained = f.retainedWrites(),
+      requests = f.requests.length,
+      digest = catalogDigest(),
+      weekly = readFileSync(join(root, "data/ingestion/weekly-editions.json"));
+    // Deliberately omit publication options: this exercises the adapter's own
+    // historical-first selection, independent of the worker's publication probe.
+    const result = await runWeeklyImport({
+      root,
+      runId: f.validated.runId,
+      stopAfter: "verify",
+      verifiedDelivery: { store: f.store, candidate: f.publication.candidate },
+      controlledPublishing: "enabled",
+      manualPublisherJoined: "true",
+    });
+    expect(result.stages.find((item) => item.stage === "verify")!.status).toBe(
+      "succeeded"
+    );
+    const db = new DatabaseSync(join(home, "weekly-runs.sqlite"), {
+      readOnly: true,
+    });
+    try {
+      const rows = db
+        .prepare(
+          "SELECT bytes FROM stage_artifact WHERE run_id=? AND stage IN ('deploy','verify')"
+        )
+        .all(f.validated.runId);
+      expect(rows).toHaveLength(2);
+      for (const row of rows)
+        expect(
+          JSON.parse(Buffer.from(row.bytes as Uint8Array).toString())
+        ).toMatchObject({
+          controlHead: original.head,
+          controlSha256: hash(original.bytes!),
+        });
+    } finally {
+      db.close();
+    }
+    expect(f.store.read().head).toBe(later.head);
+    expect(
+      parsePromotionControl(f.store.read().bytes!).active!.operationId
+    ).toBe(laterOperation.operationId);
+    expect(f.nativeAppends()).toBe(appends);
+    expect(f.retainedWrites()).toBe(retained);
+    expect(f.requests).toHaveLength(requests);
+    expect(catalogDigest()).toBe(digest);
+    expect(
+      readFileSync(join(root, "data/ingestion/weekly-editions.json"))
+    ).toEqual(weekly);
+    expect(doubles.build).toHaveBeenCalledTimes(1);
+  }, 180_000);
 
   it.each(["deploy", "verify"] as const)(
     "resumes interrupted %s authority artifact without another attempt or native effect",

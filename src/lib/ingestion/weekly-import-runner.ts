@@ -20,7 +20,11 @@ import { assertOperatorNotQuarantined } from "./private-artifacts.js";
 import { WeeklyRunJournal } from "./weekly-run-journal.js";
 import { parseWeeklyEditionLedger } from "./weekly.js";
 import { freezeWeeklyImport } from "./weekly-edition-freeze.js";
-import { journalVerifiedWeeklyDelivery } from "./weekly-delivery.js";
+import {
+  findCanonicalWeeklyVerification,
+  journalVerifiedWeeklyDelivery,
+  type CanonicalWeeklyVerification,
+} from "./weekly-delivery.js";
 import { acknowledgeVerifiedWeeklyRelease } from "./weekly-acknowledgement.js";
 import {
   ensureWeeklyPublication,
@@ -746,25 +750,35 @@ export async function runWeeklyImport(input: {
       });
     }
     if (delivering && verifiedDelivery) {
+      let recoveredAuthority: CanonicalWeeklyVerification | undefined;
       if (
         publication &&
         state.stages.find((s) => s.stage === "verify")?.status !== "succeeded"
       ) {
-        const result = await ensureWeeklyPublication({
-          ...publication,
-          root,
-          operatorDirectory: location.directory,
-          state,
-          journal,
-          lease: owned,
-          controlledPublishing: input.controlledPublishing,
-          manualPublisherJoined: input.manualPublisherJoined,
-          verifyContext,
-          heartbeatMs: Math.max(10, Math.floor(ttl / 3)),
-          onProgress: notify,
-        });
-        state = result.state;
-        if (result.status === "pending") return state;
+        recoveredAuthority =
+          findCanonicalWeeklyVerification({
+            runId: state.runId,
+            candidate: verifiedDelivery.candidate,
+            store: verifiedDelivery.store,
+          }) ?? undefined;
+        verifyContext();
+        if (!recoveredAuthority) {
+          const result = await ensureWeeklyPublication({
+            ...publication,
+            root,
+            operatorDirectory: location.directory,
+            state,
+            journal,
+            lease: owned,
+            controlledPublishing: input.controlledPublishing,
+            manualPublisherJoined: input.manualPublisherJoined,
+            verifyContext,
+            heartbeatMs: Math.max(10, Math.floor(ttl / 3)),
+            onProgress: notify,
+          });
+          state = result.state;
+          if (result.status === "pending") return state;
+        }
       }
       if (input.stopAfter === "dispatch") return state;
       state = await journalVerifiedWeeklyDelivery({
@@ -774,6 +788,7 @@ export async function runWeeklyImport(input: {
         journal,
         lease: owned,
         verifyContext,
+        recoveredAuthority,
         onProgress: notify,
       });
       if (input.stopAfter === "acknowledge") {
