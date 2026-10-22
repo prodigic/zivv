@@ -9,6 +9,7 @@ import {
   type PromotionControlStore,
   type PromotionControlTransport,
   type PromotionControlHistory,
+  type PromotionControlAppend,
 } from "./promotion-control-git.js";
 import {
   createCompletionProof,
@@ -20,6 +21,7 @@ import {
   serializePromotionControl,
   type PromotionPhase,
   type PromotionRequest,
+  type PromotionControl,
 } from "./promotion-control.js";
 import { type OperatorRecoveryCheckpoint } from "./operator-recovery.js";
 import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
@@ -48,6 +50,11 @@ import {
   parseSavedPagesDispatchReceipt,
   type SavedPagesDispatch,
 } from "./pages-dispatch-runner.js";
+import {
+  markWeeklyEditionPublished,
+  parseWeeklyEditionLedger,
+  serializeWeeklyEditionLedger,
+} from "./weekly.js";
 
 interface RecoveryCandidateRemoteInput {
   repositoryRoot: string;
@@ -55,7 +62,7 @@ interface RecoveryCandidateRemoteInput {
   recoveryKey: Buffer;
   runId: string;
   workflowCommit: string;
-  profile?: "pending-dispatch";
+  profile?: "pending-dispatch" | "verified";
 }
 export interface RecoveryCandidateRemoteBinding {
   mainHead: string;
@@ -69,7 +76,10 @@ export interface RecoveryCandidateRemoteBinding {
   candidateId: string;
   ledgerRevision: string;
   workflowCommit: string;
-  profile?: "pending-dispatch";
+  profile?: "pending-dispatch" | "verified";
+  verifiedControlHead?: string;
+  verifiedControlSha256?: string;
+  verifiedAnchorSha256?: string;
   pendingDispatchSha256?: string;
   capturedClaimSha256?: string | null;
   capturedDispatchSha256?: string | null;
@@ -78,6 +88,19 @@ export interface RecoveryCandidateProgress {
   head: string;
   operationId: string | null;
   phase: PromotionPhase | null;
+  acknowledgement?: "pending" | "intent-bound" | "completed";
+}
+export interface RecoveryVerifiedDelivery {
+  readonly operationId: string;
+  readonly attemptId: string;
+  readonly controlHead: string;
+  readonly controlSha256: string;
+  readonly verificationReceiptId: string;
+  readonly deploymentId: string;
+  /** Only the exact sealed preimage or an already authorized publication is admissible. */
+  assertWeekly(bytes: Buffer): void;
+  /** Check one exact own acknowledgement append immediately before its CAS. */
+  assertAppend(append: PromotionControlAppend): void;
 }
 export interface RecoveryCandidateRemote {
   readonly binding: Readonly<RecoveryCandidateRemoteBinding>;
@@ -85,6 +108,7 @@ export interface RecoveryCandidateRemote {
   readonly candidateBytes: Buffer;
   readonly store: PromotionControlStore;
   readonly transport: PromotionControlTransport;
+  readonly verifiedDelivery?: RecoveryVerifiedDelivery;
   readonly pendingDispatch?: {
     readonly operationId: string;
     readonly attemptId: string;
@@ -297,6 +321,7 @@ function retainedCandidate(input: RecoveryCandidateRemoteInput, key: Buffer) {
     baseline,
     candidate,
     candidateBytes: Buffer.from(candidateBytes),
+    frozenWeeklyBytes: lineage.frozenWeeklyBytes,
     files,
     artifact,
     deployAnchor: lineage.optionalArtifact("deploy"),
@@ -464,6 +489,187 @@ function provePendingDispatch(
   };
 }
 
+/** Prove both retained delivery receipts against the original canonical operation. */
+function proveVerifiedDelivery(
+  input: RecoveryCandidateRemoteInput,
+  retained: ReturnType<typeof retainedCandidate>,
+  history: PromotionControlHistory,
+  claim: PromotionControlHistory["commits"][number],
+  payloadReceiptId: string
+) {
+  const owner = parsePromotionControl(claim.bytes).active;
+  if (!owner || !claim.parentHead || !claim.parentBytes)
+    fail("VERIFIED_CLAIM_REQUIRED");
+  const anchorBytes = retained.artifact("deploy");
+  if (!anchorBytes.equals(retained.artifact("verify")))
+    fail("CAPTURED_DELIVERY_ANCHOR_CHANGED");
+  const anchor = object(JSON.parse(anchorBytes.toString("utf8")), [
+    "schemaVersion",
+    "runId",
+    "candidateId",
+    "controlHead",
+    "controlSha256",
+  ]);
+  if (!anchorBytes.equals(Buffer.from(canonicalJson(anchor) + "\n")))
+    fail("CAPTURED_DELIVERY_ANCHOR_CHANGED");
+  const matches = history.commits.filter((record) => {
+    const state = parsePromotionControl(record.bytes);
+    return (
+      state.lastTransition.event.type === "verified" &&
+      state.active?.operationId === owner.operationId
+    );
+  });
+  if (matches.length !== 1) fail("VERIFICATION_MISSING_OR_AMBIGUOUS");
+  const record = matches[0],
+    control = parsePromotionControl(record.bytes),
+    operation = control.active!,
+    event = control.lastTransition.event;
+  if (
+    event.type !== "verified" ||
+    event.mode !== "promote" ||
+    operation.phase !== "verified" ||
+    !operation.verification ||
+    !operation.promotionAttempt ||
+    operation.acknowledgementIntent
+  )
+    fail("VERIFIED_OPERATION_REQUIRED");
+  same(operation.request, owner.request, "VERIFIED_REQUEST_CHANGED");
+  same(
+    operation.request.requestId,
+    retained.run.runId,
+    "VERIFIED_REQUEST_CHANGED"
+  );
+  same(
+    operation.promotionAttempt.workflowCommit,
+    input.workflowCommit,
+    "WORKFLOW_CHANGED"
+  );
+  same(
+    anchor,
+    {
+      schemaVersion: 1,
+      runId: retained.run.runId,
+      candidateId: retained.candidate.candidateId,
+      controlHead: record.head,
+      controlSha256: sha256(record.bytes),
+    },
+    "CAPTURED_DELIVERY_ANCHOR_CHANGED"
+  );
+  const evidence = {
+    candidateId: retained.candidate.candidateId,
+    manifestSha256: retained.candidate.manifestSha256,
+    deploymentId: operation.verification.deployment.deploymentId,
+    destination: "production",
+  };
+  same(retained.run.stages[8].evidence, evidence, "DELIVERY_EVIDENCE_CHANGED");
+  same(retained.run.stages[9].evidence, evidence, "DELIVERY_EVIDENCE_CHANGED");
+  const prefix = "operator/weekly-publication/" + retained.run.runId + "/",
+    planBytes = retained.files.get(prefix + "claim-plan.json");
+  if (planBytes) {
+    const plan: unknown = JSON.parse(planBytes.toString("utf8"));
+    same(
+      plan,
+      {
+        schemaVersion: 1,
+        runId: retained.run.runId,
+        candidateId: retained.candidate.candidateId,
+        workflowCommit: input.workflowCommit,
+        payloadCommit: owner.request.payloadCommit,
+        payloadReceiptId,
+        createdAt: claim.createdAt,
+        claim: {
+          expectedHead: claim.parentHead,
+          attemptedHead: claim.head,
+          bytes: claim.bytes.toString("base64"),
+          createdAt: claim.createdAt,
+        },
+      },
+      "CAPTURED_CLAIM_CHANGED"
+    );
+    if (!planBytes.equals(Buffer.from(canonicalJson(plan) + "\n")))
+      fail("CAPTURED_CLAIM_CHANGED");
+  }
+  const dispatchBytes = retained.files.get(
+    prefix + "dispatch/pages-dispatch.json"
+  );
+  if (dispatchBytes) {
+    const saved = parseSavedPagesDispatch(dispatchBytes),
+      pending = history.commits.find(
+        (entry) => entry.head === saved.pendingAppend.attemptedHead
+      );
+    if (!pending?.parentHead || !pending.parentBytes)
+      fail("CAPTURED_DISPATCH_CHANGED");
+    const pendingEvent = parsePromotionControl(pending.bytes).lastTransition
+      .event;
+    if (
+      pendingEvent.type !== "dispatch-intent" ||
+      pendingEvent.mode !== "promote" ||
+      pendingEvent.operationId !== owner.operationId ||
+      pendingEvent.attemptId !== operation.promotionAttempt.attemptId
+    )
+      fail("CAPTURED_DISPATCH_CHANGED");
+    same(
+      saved.pendingAppend,
+      {
+        expectedHead: pending.parentHead,
+        attemptedHead: pending.head,
+        bytes: pending.bytes.toString("base64"),
+        createdAt: pending.createdAt,
+      },
+      "CAPTURED_DISPATCH_CHANGED"
+    );
+    same(
+      saved.intent,
+      preparePagesWorkflowDispatch({
+        control: parsePromotionControl(pending.parentBytes),
+        controlHead: pending.parentHead,
+        workflowCommit: input.workflowCommit,
+        reviewedMainAncestor: true,
+        mode: "promote",
+        ...(pendingEvent.dispatchNonce
+          ? { dispatchNonce: pendingEvent.dispatchNonce }
+          : {}),
+      }),
+      "CAPTURED_DISPATCH_CHANGED"
+    );
+    if (
+      saved.receipt &&
+      saved.receipt.runId !== operation.promotionAttempt.admission?.runId
+    )
+      fail("CAPTURED_DISPATCH_ADMISSION_CHANGED");
+  }
+  const before = Buffer.from(retained.frozenWeeklyBytes),
+    after = Buffer.from(
+      serializeWeeklyEditionLedger(
+        markWeeklyEditionPublished(
+          parseWeeklyEditionLedger(JSON.parse(before.toString("utf8"))),
+          retained.candidate.editionId
+        ).ledger
+      )
+    );
+  const intent = (createdAt: string) => ({
+    schemaVersion: 1,
+    runId: retained.run.runId,
+    operationId: operation.operationId,
+    requestId: operation.request.requestId,
+    candidateId: retained.candidate.candidateId,
+    verificationReceiptId: operation.verification!.receiptId,
+    before: before.toString("base64"),
+    after: after.toString("base64"),
+    createdAt,
+  });
+  return {
+    operation,
+    controlHead: record.head,
+    controlSha256: sha256(record.bytes),
+    anchorSha256: sha256(anchorBytes),
+    before,
+    after,
+    acknowledgementId: (createdAt: string) =>
+      sha256(canonicalJson(intent(createdAt))),
+  };
+}
+
 function gitRead(root: string, args: string[]): string {
   const env: NodeJS.ProcessEnv = {};
   for (const key of [
@@ -511,7 +717,11 @@ function open(
   input: RecoveryCandidateRemoteInput,
   transport: PromotionControlTransport
 ): RecoveryCandidateRemote {
-  if (input.profile !== undefined && input.profile !== "pending-dispatch")
+  if (
+    input.profile !== undefined &&
+    input.profile !== "pending-dispatch" &&
+    input.profile !== "verified"
+  )
     fail("INVALID_PROFILE");
   if (!Buffer.isBuffer(input.recoveryKey) || input.recoveryKey.length !== 32)
     fail("INVALID_KEY");
@@ -552,8 +762,23 @@ function open(
   const history = store.readCanonicalHistory!();
   if (!history.complete) fail("INCOMPLETE_HISTORY");
   if (!history.head || !history.commits.length) fail("CONTROL_REQUIRED");
+  const claims = history.commits.filter((item) => {
+    const event = parsePromotionControl(item.bytes).lastTransition.event;
+    return (
+      event.type === "claim" && event.request.requestId === retained.run.runId
+    );
+  });
+  if (claims.length > 1) fail("AMBIGUOUS_CLAIM");
+  const claim = claims[0];
+  if (input.profile === "verified" && !claim) fail("VERIFIED_CLAIM_REQUIRED");
+  // A retry can already contain this run's own acknowledgement. Its baseline
+  // remains the last acknowledged predecessor of the original claim.
+  const baselineHistory =
+    input.profile === "verified"
+      ? history.commits.slice(history.commits.indexOf(claim) + 1)
+      : history.commits;
   const current = parsePromotionControl(history.commits[0].bytes),
-    ack = history.commits.find(
+    ack = baselineHistory.find(
       (item) =>
         parsePromotionControl(item.bytes).lastTransition.event.type ===
         "acknowledged"
@@ -640,32 +865,34 @@ function open(
     acknowledgedPayload.receipt.candidate.cutoffEpochMs
   )
     fail("OBSERVATION_BEFORE_ACKNOWLEDGED_CUTOFF");
-  const claims = history.commits.filter((item) => {
-    const event = parsePromotionControl(item.bytes).lastTransition.event;
-    return (
-      event.type === "claim" && event.request.requestId === retained.run.runId
-    );
-  });
-  if (claims.length > 1) fail("AMBIGUOUS_CLAIM");
-  const claim = claims[0],
-    initialControlHead = claim?.parentHead ?? history.head,
+  const initialControlHead = claim?.parentHead ?? history.head,
     initialBytes = claim ? claim.parentBytes : history.commits[0].bytes;
   if (!initialControlHead || !initialBytes) fail("INITIAL_CONTROL_REQUIRED");
   if (parsePromotionControl(initialBytes).active) fail("ACTIVE_OWNER");
   let pending: ReturnType<typeof provePendingDispatch> | undefined;
-  if (input.profile === "pending-dispatch") {
+  let verified: ReturnType<typeof proveVerifiedDelivery> | undefined;
+  if (input.profile === "pending-dispatch" || input.profile === "verified") {
     if (!claim) fail("PENDING_CLAIM_REQUIRED");
     const owner = parsePromotionControl(claim.bytes).active;
     if (!owner) fail("PENDING_CLAIM_REQUIRED");
     const retainedPayload = payload(owner.request, claim.createdAt);
     same(retainedPayload.receipt.candidate, candidate, "CANDIDATE_CHANGED");
-    pending = provePendingDispatch(
-      input,
-      retained,
-      history,
-      claim,
-      retainedPayload.receipt.receiptId
-    );
+    if (input.profile === "pending-dispatch")
+      pending = provePendingDispatch(
+        input,
+        retained,
+        history,
+        claim,
+        retainedPayload.receipt.receiptId
+      );
+    else
+      verified = proveVerifiedDelivery(
+        input,
+        retained,
+        history,
+        claim,
+        retainedPayload.receipt.receiptId
+      );
   }
   const binding = Object.freeze({
     mainHead,
@@ -688,8 +915,19 @@ function open(
           capturedDispatchSha256: pending.dispatchSha256,
         }
       : {}),
+    ...(verified
+      ? {
+          profile: "verified" as const,
+          verifiedControlHead: verified.controlHead,
+          verifiedControlSha256: verified.controlSha256,
+          verifiedAnchorSha256: verified.anchorSha256,
+        }
+      : {}),
   });
   let cached: RecoveryCandidateProgress | undefined;
+  let acceptedAcknowledgement:
+    | { acknowledgementId: string; createdAt: string; head: string }
+    | undefined;
   let admittedRunId = pending?.admittedRunId ?? null;
   let ownPayloadCommit: string | undefined;
   const allowed = new Set([
@@ -743,10 +981,72 @@ function open(
     const following = snapshot.commits.slice(0, index).reverse();
     let operationId: string | null = null,
       phase: PromotionPhase | null = null;
+    let acknowledgement: RecoveryCandidateProgress["acknowledgement"] = verified
+      ? "pending"
+      : undefined;
+    let verifiedSeen = false;
+    let accepted: typeof acceptedAcknowledgement;
     for (const item of following) {
       const state = parsePromotionControl(item.bytes),
         event = state.lastTransition.event,
         operation = state.active;
+      // Once this exact operation has completed, subsequent validated canonical
+      // owners only permit local finalization; they grant no append authority.
+      if (verified && acknowledgement === "completed") continue;
+      if (verified && event.type === "acknowledgement-intent") {
+        if (!verifiedSeen || accepted || !operation || !item.parentBytes)
+          fail("UNRELATED_ACKNOWLEDGEMENT");
+        same(
+          operation.request,
+          verified.operation.request,
+          "UNRELATED_ACKNOWLEDGEMENT"
+        );
+        same(
+          operation.verification,
+          verified.operation.verification,
+          "UNRELATED_ACKNOWLEDGEMENT"
+        );
+        same(
+          event,
+          {
+            type: "acknowledgement-intent",
+            operationId: verified.operation.operationId,
+            verificationReceiptId: verified.operation.verification!.receiptId,
+            acknowledgementId: verified.acknowledgementId(item.createdAt),
+          },
+          "UNRELATED_ACKNOWLEDGEMENT"
+        );
+        accepted = {
+          acknowledgementId: event.acknowledgementId,
+          createdAt: item.createdAt,
+          head: item.head,
+        };
+        acknowledgement = "intent-bound";
+        continue;
+      }
+      if (verified && event.type === "acknowledged") {
+        if (
+          !accepted ||
+          item.parentHead !== accepted.head ||
+          item.createdAt !== accepted.createdAt
+        )
+          fail("UNRELATED_ACKNOWLEDGEMENT");
+        same(
+          event,
+          {
+            type: "acknowledged",
+            operationId: verified.operation.operationId,
+            verificationReceiptId: verified.operation.verification!.receiptId,
+            acknowledgementId: accepted.acknowledgementId,
+            replayProof: null,
+          },
+          "UNRELATED_ACKNOWLEDGEMENT"
+        );
+        acknowledgement = "completed";
+        phase = null;
+        continue;
+      }
+      if (verifiedSeen) fail("UNRELATED_PROGRESS");
       if (!allowed.has(event.type) || !operation) fail("UNRELATED_PROGRESS");
       const request = operation.request;
       if (
@@ -788,25 +1088,192 @@ function open(
       if (pending && operation.promotionAttempt?.admission)
         admittedRunId = operation.promotionAttempt.admission.runId;
       phase = operation.phase;
+      if (verified && item.head === verified.controlHead) {
+        same(
+          sha256(item.bytes),
+          verified.controlSha256,
+          "CAPTURED_DELIVERY_ANCHOR_CHANGED"
+        );
+        same(operation, verified.operation, "VERIFIED_OPERATION_CHANGED");
+        verifiedSeen = true;
+      }
     }
     const tip = snapshot.commits[0];
     if (!snapshot.head || !tip) fail("CONTROL_REQUIRED");
     const active = parsePromotionControl(tip.bytes).active;
     if (!following.length && active) fail("ACTIVE_OWNER");
+    if (verified) {
+      if (!verifiedSeen) fail("VERIFIED_CONTROL_NOT_CANONICAL");
+      if (acknowledgement === "completed") {
+        const tipState = parsePromotionControl(tip.bytes),
+          ownProof = createCompletionProof(
+            tipState.completionRoot,
+            binding.runId,
+            (id, type) => store.readCompletionObject(snapshot.head!, id, type)
+          ),
+          ownCompletion = verifyCompletionProof(
+            tipState.completionRoot,
+            binding.runId,
+            ownProof
+          );
+        if (
+          !ownCompletion ||
+          ownCompletion.outcome !== "acknowledged" ||
+          !accepted
+        )
+          fail("ACKNOWLEDGEMENT_COMPLETION_MISMATCH");
+        same(
+          ownCompletion.operationId,
+          verified.operation.operationId,
+          "ACKNOWLEDGEMENT_COMPLETION_MISMATCH"
+        );
+        same(
+          ownCompletion.request,
+          verified.operation.request,
+          "ACKNOWLEDGEMENT_COMPLETION_MISMATCH"
+        );
+        same(
+          ownCompletion.verification,
+          verified.operation.verification,
+          "ACKNOWLEDGEMENT_COMPLETION_MISMATCH"
+        );
+        same(
+          ownCompletion.acknowledgementId,
+          accepted.acknowledgementId,
+          "ACKNOWLEDGEMENT_COMPLETION_MISMATCH"
+        );
+        same(
+          ownCompletion.terminalAttemptId,
+          verified.operation.promotionAttempt!.attemptId,
+          "ACKNOWLEDGEMENT_COMPLETION_MISMATCH"
+        );
+      }
+    }
     if (
       transport.readMainHead?.() !== binding.mainHead ||
       transport.readHead(store.ref) !== snapshot.head
     )
       fail("REMOTE_CHANGED");
-    cached = { head: snapshot.head, operationId, phase };
+    acceptedAcknowledgement = accepted;
+    cached = {
+      head: snapshot.head,
+      operationId,
+      phase,
+      ...(acknowledgement ? { acknowledgement } : {}),
+    };
     return { ...cached };
   }
   validateProgress(binding.initialControlHead);
   const pendingProof = pending;
+  const verifiedProof = verified;
   return Object.freeze({
     binding,
     store,
     transport,
+    ...(verifiedProof
+      ? {
+          verifiedDelivery: Object.freeze({
+            operationId: verifiedProof.operation.operationId,
+            attemptId: verifiedProof.operation.promotionAttempt!.attemptId,
+            controlHead: verifiedProof.controlHead,
+            controlSha256: verifiedProof.controlSha256,
+            verificationReceiptId:
+              verifiedProof.operation.verification!.receiptId,
+            deploymentId:
+              verifiedProof.operation.verification!.deployment.deploymentId,
+            assertWeekly(bytes: Buffer) {
+              const progress = validateProgress(binding.initialControlHead);
+              if (bytes.equals(verifiedProof.before)) return;
+              if (
+                bytes.equals(verifiedProof.after) &&
+                progress.acknowledgement !== "pending"
+              )
+                return;
+              fail("WEEKLY_STATE_CHANGED");
+            },
+            assertAppend(append: PromotionControlAppend) {
+              const progress = validateProgress(binding.initialControlHead);
+              if (progress.acknowledgement === "completed")
+                fail("ACKNOWLEDGEMENT_ALREADY_COMPLETED");
+              const current = store.read();
+              if (
+                !current.bytes ||
+                current.head !== progress.head ||
+                append.expectedHead !== current.head
+              )
+                fail("ACKNOWLEDGEMENT_CONTROL_CHANGED");
+              const before: PromotionControl = parsePromotionControl(
+                  current.bytes
+                ),
+                next = parsePromotionControl(append.bytes),
+                event = next.lastTransition.event;
+              if (
+                !before.active ||
+                before.active.operationId !==
+                  verifiedProof.operation.operationId
+              )
+                fail("UNRELATED_ACKNOWLEDGEMENT");
+              same(
+                before.active.request,
+                verifiedProof.operation.request,
+                "UNRELATED_ACKNOWLEDGEMENT"
+              );
+              same(
+                before.active.verification,
+                verifiedProof.operation.verification,
+                "UNRELATED_ACKNOWLEDGEMENT"
+              );
+              if (
+                event.type === "acknowledgement-intent" &&
+                progress.acknowledgement === "pending"
+              ) {
+                same(
+                  event,
+                  {
+                    type: "acknowledgement-intent",
+                    operationId: verifiedProof.operation.operationId,
+                    verificationReceiptId:
+                      verifiedProof.operation.verification!.receiptId,
+                    acknowledgementId: verifiedProof.acknowledgementId(
+                      append.createdAt
+                    ),
+                  },
+                  "UNRELATED_ACKNOWLEDGEMENT"
+                );
+              } else if (
+                event.type === "acknowledged" &&
+                progress.acknowledgement === "intent-bound" &&
+                acceptedAcknowledgement
+              ) {
+                same(
+                  append.createdAt,
+                  acceptedAcknowledgement.createdAt,
+                  "ACKNOWLEDGEMENT_TIMESTAMP_CHANGED"
+                );
+                same(
+                  event,
+                  {
+                    type: "acknowledged",
+                    operationId: verifiedProof.operation.operationId,
+                    verificationReceiptId:
+                      verifiedProof.operation.verification!.receiptId,
+                    acknowledgementId:
+                      acceptedAcknowledgement.acknowledgementId,
+                    replayProof: null,
+                  },
+                  "UNRELATED_ACKNOWLEDGEMENT"
+                );
+              } else fail("UNRELATED_ACKNOWLEDGEMENT");
+              if (
+                !serializePromotionControl(
+                  applyPromotionTransition(before, event)
+                ).equals(append.bytes)
+              )
+                fail("ACKNOWLEDGEMENT_APPEND_CHANGED");
+            },
+          }),
+        }
+      : {}),
     ...(pendingProof
       ? {
           pendingDispatch: Object.freeze({

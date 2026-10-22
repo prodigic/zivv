@@ -845,6 +845,63 @@ describe("verified weekly acknowledgement with native control and private journa
     expect(f.store.read().head).toBe(head);
   });
 
+  it("rechecks journal ownership at the native compare-and-append boundary", async () => {
+    const f = fixture(),
+      weekly = readFileSync(f.weeklyPath),
+      head = f.store.read().head;
+    let injectDrift = true,
+      lateCheckRan = false,
+      contextFresh = true;
+    const store: PromotionControlStore = {
+      ...f.store,
+      compareAndAppend(input) {
+        expect(input.checkContext).toBeTypeOf("function");
+        if (!injectDrift) return f.store.compareAndAppend(input);
+        injectDrift = false;
+        let checks = 0;
+        return f.store.compareAndAppend({
+          ...input,
+          checkContext: () => {
+            checks++;
+            if (checks === 2) {
+              lateCheckRan = true;
+              try {
+                contextFresh = false;
+                input.checkContext!();
+              } finally {
+                contextFresh = true;
+              }
+            } else {
+              input.checkContext!();
+            }
+          },
+        });
+      },
+    };
+
+    await expect(
+      f.run({
+        store,
+        verifyContext: () => {
+          f.journal.checkOwnership(f.lease);
+          if (!contextFresh) throw new Error("Synthetic context drift");
+        },
+      })
+    ).rejects.toThrow("Synthetic context drift");
+    expect(lateCheckRan).toBe(true);
+    expect(readFileSync(f.weeklyPath)).toEqual(weekly);
+    expect(f.store.read().head).toBe(head);
+    expect(f.readControl().active!.acknowledgementIntent).toBeUndefined();
+
+    const result = await f.run({ store });
+    expect(result.stages.at(-1)!.status).toBe("succeeded");
+    expect(
+      parseWeeklyEditionLedger(JSON.parse(readFileSync(f.weeklyPath, "utf8")))
+        .publishedCutoffEpochMs
+    ).toBe(cutoff);
+    expect(f.readControl().completedCount).toBe(1);
+  }, 90_000);
+
   it("uses native readback after the final append loses its response", async () => {
     const f = fixture();
     let lost = false,

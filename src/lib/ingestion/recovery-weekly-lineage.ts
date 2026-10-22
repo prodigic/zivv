@@ -52,9 +52,13 @@ function decoded(value: unknown): Buffer {
 export function proveRecoveryWeeklyLineage(input: {
   checkpoint: OperatorRecoveryCheckpoint;
   runId: string;
-  stage: "frozen" | "validated" | "pending-dispatch";
+  stage: "frozen" | "validated" | "pending-dispatch" | "verified";
 }) {
-  if (!["frozen", "validated", "pending-dispatch"].includes(input.stage))
+  if (
+    !["frozen", "validated", "pending-dispatch", "verified"].includes(
+      input.stage
+    )
+  )
     fail("INVALID_STAGE");
   const checkpoint = validateOperatorRecoveryCheckpoint(input.checkpoint);
   const journal = validateWeeklyJournalRecoverySnapshot(
@@ -66,7 +70,8 @@ export function proveRecoveryWeeklyLineage(input: {
   );
   if (!row) fail("RUN_NOT_RETAINED");
   const run = parseWeeklyRunState(JSON.parse(row.payload));
-  const prefix = input.stage === "frozen" ? 5 : 8;
+  const prefix =
+    input.stage === "frozen" ? 5 : input.stage === "verified" ? 10 : 8;
   if (
     run.stages.slice(0, prefix).some((stage) => stage.status !== "succeeded") ||
     (input.stage === "pending-dispatch"
@@ -79,8 +84,17 @@ export function proveRecoveryWeeklyLineage(input: {
         ? "FROZEN_RUN_REQUIRED"
         : input.stage === "pending-dispatch"
           ? "PENDING_DISPATCH_RUN_REQUIRED"
-          : "VALIDATED_RUN_REQUIRED"
+          : input.stage === "verified"
+            ? "VERIFIED_RUN_REQUIRED"
+            : "VALIDATED_RUN_REQUIRED"
     );
+  if (
+    input.stage === "verified" &&
+    journal.stageArtifacts.some(
+      (row) => row.runId === run.runId && row.stage === "acknowledge"
+    )
+  )
+    fail("UNEXPECTED_LATER_ARTIFACT");
   if (
     input.stage === "pending-dispatch" &&
     journal.stageArtifacts.some(
