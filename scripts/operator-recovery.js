@@ -15,6 +15,7 @@ import {
   encryptOperatorRecovery,
   stageOperatorRecovery,
 } from "../dist/lib/ingestion/operator-recovery.js";
+import { inspectOperatorRecoveryLocations } from "../dist/lib/ingestion/operator-recovery-location.js";
 import {
   loadBackupKey,
   secureOperatorDirectory,
@@ -57,7 +58,7 @@ try {
       ? ["root", "out"]
       : command === "verify"
         ? ["file", "key"]
-        : command === "stage"
+        : command === "stage" || command === "inspect"
           ? ["file", "key", "destination"]
           : [];
   if (
@@ -66,7 +67,7 @@ try {
       JSON.stringify(expected.sort())
   )
     throw Error("INVALID_RECOVERY_ARGUMENTS");
-  let checkpoint;
+  let checkpoint, inspection;
   if (command === "capture") {
     const output = resolve(options.out);
     resolvePrivateCandidateDirectory(dirname(output));
@@ -92,10 +93,16 @@ try {
       key = Buffer.from(encoded, "base64");
     if (key.length !== 32 || key.toString("base64") !== encoded)
       throw Error("INVALID_RECOVERY_KEY");
-    checkpoint = decryptOperatorRecovery(
-      privateInput(options.file, 384 * 1024 * 1024),
-      key
-    );
+    const archive = privateInput(options.file, 384 * 1024 * 1024);
+    if (command === "inspect") {
+      inspection = inspectOperatorRecoveryLocations({
+        archive,
+        recoveryKey: key,
+        stagingRoot: resolve(options.destination),
+      }).report;
+    } else {
+      checkpoint = decryptOperatorRecovery(archive, key);
+    }
     if (command === "stage")
       await stageOperatorRecovery(
         checkpoint,
@@ -103,15 +110,17 @@ try {
         key
       );
   }
-  console.log(
-    JSON.stringify({
-      command,
-      status: command === "stage" ? "staged" : "verified",
-      activationAllowed: false,
-      ledgerRevision: checkpoint.ledgerRevision,
-      fileCount: checkpoint.files.length,
-    })
-  );
+  if (inspection) console.log(JSON.stringify({ command, ...inspection }));
+  else
+    console.log(
+      JSON.stringify({
+        command,
+        status: command === "stage" ? "staged" : "verified",
+        activationAllowed: false,
+        ledgerRevision: checkpoint.ledgerRevision,
+        fileCount: checkpoint.files.length,
+      })
+    );
 } catch (error) {
   console.error(
     JSON.stringify({
