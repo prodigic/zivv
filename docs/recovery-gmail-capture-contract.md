@@ -102,7 +102,17 @@ type CaptureInterruption =
   | "key-linked"
   | "result-stage-flushed"
   | "result-linked"
-  | "intake-stage-flushed";
+  | "intake-stage-flushed"
+  | "intake-raw-stage-flushed"
+  | "intake-raw-published"
+  | "intake-source-stage-flushed"
+  | "intake-source-published"
+  | "intake-receipt-stage-flushed"
+  | "intake-receipt-published"
+  | "intake-approval-stage-flushed"
+  | "intake-approval-published"
+  | "intake-manifest-stage-flushed"
+  | "intake-manifest-published";
 ```
 
 The parent and retained coordinator share one fixed interruption whitelist.
@@ -112,6 +122,23 @@ arbitrary caller errors retain the ordinary cleanup behavior. These focused
 exception-based checks establish exact orphan/alias repair, not supervisor
 termination, power-loss durability or stale-lease recovery. Those rehearsals
 remain separate acceptance requirements.
+
+Intake file checkpoints distinguish flushed staging bytes from publication of
+the canonical RAW message, source text, receipt, correction approval and message
+manifest. A publication checkpoint follows normal rename and directory flush,
+or the exclusive link when adopting a previously flushed stage. The latter can
+leave the one exact canonical/stage alias pair for the next normal leased retry
+to clean. File-specific checkpoints still require the private active capture
+scope and exact selected path; they are not callbacks or a scope constructor.
+The generic `intake-stage-flushed` checkpoint retains its original behavior.
+
+Approval-file acceptance needs a genuinely review-required existing receipt.
+A new receipt captured with an explicit correction parent is immediately ready
+and does not create a separate approval row/file. Exercise RAW/source/receipt/
+manifest interruption on the pending-message fixture; exercise approval on a
+second fixture normally replayed without a correction choice before retirement.
+Its original review-only source row and first observation stay immutable while
+the recovery invocation records and repairs the explicit approval.
 
 1. **Compatibility is a real gate.** Base114 retained workers lack the new entry and the effect guards. They remain stage/inspect capable but cannot execute #109. Refuse `RECOVERY_GMAIL_CAPTURE_UNSUPPORTED_RUNTIME` before admission/key/intake writes. Support starts with newly captured v2 capsules whose exact retained worker contains the reviewed implementation and guards. No copying a new module into an old prepared tree, changing a prepared receipt, resigning original batch bytes, or importing host code into the retained worker. Recovering an already retired older capsule requires a separately reviewed runtime migration, not this feature.
 

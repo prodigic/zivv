@@ -5,6 +5,8 @@
     "tsBuildInfoFile": "./node_modules/.tmp/publication-tests.tsbuildinfo"
   },
   "include": [
+    "src/test/ingestion/recovery-gmail-capture-published-runtime.test.ts",
+    "src/test/ingestion/recovery-gmail-capture-canonical-files.test.ts",
     "src/test/ingestion/recovery-gmail-capture-installer-stages.test.ts",
     "src/test/ingestion/recovery-gmail-capture-stage-repair.test.ts",
     "src/test/ingestion/recovery-gmail-capture-framing.test.ts",

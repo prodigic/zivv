@@ -163,6 +163,7 @@ export function writeDurableFile(path: string, bytes: Buffer): void {
         closeSync(directory);
       }
     }
+    observeRecoveredGmailCaptureFileCheckpoint(path, "published");
   } catch (error) {
     if (
       existsSync(temporary) &&

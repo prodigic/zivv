@@ -86,6 +86,16 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "result-stage-flushed",
   "result-linked",
   "intake-stage-flushed",
+  "intake-raw-stage-flushed",
+  "intake-raw-published",
+  "intake-source-stage-flushed",
+  "intake-source-published",
+  "intake-receipt-stage-flushed",
+  "intake-receipt-published",
+  "intake-approval-stage-flushed",
+  "intake-approval-published",
+  "intake-manifest-stage-flushed",
+  "intake-manifest-published",
 ] as const;
 export type CaptureInterruption =
   (typeof RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS)[number];
@@ -113,6 +123,15 @@ type Family = {
   stages: RecoveryInstallationFile[];
 };
 type CaptureStage = RecoveryInstallationFile & { target: string };
+const intakeCaptureFileKinds: Readonly<
+  Record<string, "raw" | "source" | "receipt" | "approval" | "manifest">
+> = {
+  "message.eml": "raw",
+  "source.txt": "source",
+  "receipt.json": "receipt",
+  "correction-approval.json": "approval",
+  "capture.json": "manifest",
+};
 interface Scope {
   active: boolean;
   deadline: number;
@@ -159,7 +178,7 @@ export function isRecoveryGmailCaptureTestInterruption(
 }
 export function observeRecoveredGmailCaptureFileCheckpoint(
   path: string,
-  point: "flushed" | "linked"
+  point: "flushed" | "linked" | "published"
 ): void {
   const scope = current();
   if (!scope?.interruption) return;
@@ -170,28 +189,36 @@ export function observeRecoveredGmailCaptureFileCheckpoint(
     absolute.startsWith(join(scope.root, "recovery-gmail-capture") + "/") ||
     absolute.startsWith(join(scope.root, "recovery-gmail-capture") + "\\")
   ) {
-    if (
-      absolute.includes("key-stage") ||
-      absolute === join(scope.operator, keyName)
-    )
-      selected = point === "flushed" ? "key-stage-flushed" : "key-linked";
-    else if (
-      absolute.includes("admission-stage") ||
-      basename(absolute) === "admission.json"
-    )
-      selected =
-        point === "flushed" ? "admission-stage-flushed" : "admission-linked";
-    else if (
-      absolute.includes("result-stage") ||
-      basename(absolute) === "result.json"
-    )
-      selected = point === "flushed" ? "result-stage-flushed" : "result-linked";
-  } else if (
-    scope.phase === "capture" &&
-    point === "flushed" &&
-    scope.files.has(absolute)
-  )
-    selected = "intake-stage-flushed";
+    if (point !== "published") {
+      if (
+        absolute.includes("key-stage") ||
+        absolute === join(scope.operator, keyName)
+      )
+        selected = point === "flushed" ? "key-stage-flushed" : "key-linked";
+      else if (
+        absolute.includes("admission-stage") ||
+        basename(absolute) === "admission.json"
+      )
+        selected =
+          point === "flushed" ? "admission-stage-flushed" : "admission-linked";
+      else if (
+        absolute.includes("result-stage") ||
+        basename(absolute) === "result.json"
+      )
+        selected =
+          point === "flushed" ? "result-stage-flushed" : "result-linked";
+    }
+  } else if (scope.phase === "capture" && scope.files.has(absolute)) {
+    const kind = intakeCaptureFileKinds[basename(absolute)];
+    if (point === "flushed") {
+      if (scope.interruption === "intake-stage-flushed")
+        selected = "intake-stage-flushed";
+      else if (kind)
+        selected = `intake-${kind}-stage-flushed` as CaptureInterruption;
+    } else {
+      if (kind) selected = `intake-${kind}-published` as CaptureInterruption;
+    }
+  }
   if (selected === scope.interruption) {
     scope.assertCurrent();
     const error = new CaptureTestInterruption();
