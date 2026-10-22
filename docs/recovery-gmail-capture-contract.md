@@ -95,10 +95,31 @@ type CaptureInterruption =
   | "key-installed"
   | "source-committed"
   | "capture-files-written"
-  | "result-saved";
+  | "result-saved"
+  | "admission-stage-flushed"
+  | "admission-linked"
+  | "key-stage-flushed"
+  | "key-linked"
+  | "result-stage-flushed"
+  | "result-linked"
+  | "intake-stage-flushed";
 ```
 
+The parent and retained coordinator share one fixed interruption whitelist.
+The test facade cannot inject a callback or permission. Flushed-stage and linked
+checkpoints preserve files only for the private fixed-point interruption error;
+arbitrary caller errors retain the ordinary cleanup behavior. These focused
+exception-based checks establish exact orphan/alias repair, not supervisor
+termination, power-loss durability or stale-lease recovery. Those rehearsals
+remain separate acceptance requirements.
+
 1. **Compatibility is a real gate.** Base114 retained workers lack the new entry and the effect guards. They remain stage/inspect capable but cannot execute #109. Refuse `RECOVERY_GMAIL_CAPTURE_UNSUPPORTED_RUNTIME` before admission/key/intake writes. Support starts with newly captured v2 capsules whose exact retained worker contains the reviewed implementation and guards. No copying a new module into an old prepared tree, changing a prepared receipt, resigning original batch bytes, or importing host code into the retained worker. Recovering an already retired older capsule requires a separately reviewed runtime migration, not this feature.
+
+   Authenticated stage repair additionally requires capture executor version 2.
+   PR121's executor version 1 does not implement this protocol; the parent and
+   coordinator reject that older worker before executing repair. Capture a new
+   compatible runtime rather than upgrading a prepared worker in place. This
+   executor version is distinct from the capsule format's version.
 
 2. Reuse `openPreparedRuntimeForAdmission`, archive/retirement verification, original-root byte authentication, and exact logical npm relocation proof. Initial admission requires the entire unchanged prepared tree, signed prepared receipt, current Node/ICU/executable/worker/lock/package, existing physical path/link/Git-root validation, and matching physical destination/npm. Preserve the prepared-runtime contract's already allowed internal relative dependency symlinks without widening it. Copy only bounded Buffers after size/type checks. Repeat runtime/receipt/physical checks around computation and effects; never dereference original root/tool paths.
 
@@ -126,13 +147,13 @@ type CaptureInterruption =
 
 14. Journal-first restart is a distinct allowed state, not "uncaptured". Authenticate the original baseline plus the exact own added source/approval rows and selected snapshot recipe even if corresponding canonical files are not yet complete. The ordinary full pure proof remains strict and must not be weakened to accept partial evidence. Reinvoke the normal intake path with the same selected snapshot to finish only missing exact files; existing different bytes fail. No new first-observed time, duplicate receipt, or source refetch is permitted after journal commit.
 
-15. Intakes use `writeDurableFile`, which may leave crash-stage files before rename; `once()` alone does not authenticate/adopt them. #109 needs a narrowly owned exact-path repair check: unique complete expected-byte stages/exact aliases may be adopted under the same lease; unknown/partial/conflicting artifacts are retained and fail closed. Do not claim arbitrary partial-file crashes are automatically repairable. If acceptance requires automatic partial-stage recovery, that is an additional reviewed protocol, not a broad tmp-file omission/deletion rule.
+15. Intakes use `writeDurableFile`, which may leave crash-stage files before rename; `once()` alone does not authenticate/adopt them. Stage repair must use a narrowly owned exact-path check: unique complete expected-byte stages/exact aliases may be adopted under the same lease; unknown/partial/conflicting artifacts are retained and fail closed. Installer metadata candidates use the exact target basename followed by one or two `.pid.hex16.tmp` suffixes; intake candidates use exactly one suffix and only the selected account/message/body recipe paths. Authenticate the signed admission, completed prefix and exact prospective bytes before interpreting a candidate as evidence. An admission candidate does not permit SQL/key effects until it is installed canonically. Reuse its exact signed bytes and timestamp; reuse authenticated key encoding rather than generating new ciphertext. Permit two hard links only when the canonical target and its one owned stage are the same inode; a third link refuses. Ordinary unrelated filenames in a shared installer stage directory stay untouched; the capture coordinator separately validates its entire owned metadata namespace. This is not a broad tmp-file omission/deletion rule, and arbitrary partial-file crashes remain outside automatic repair.
 
 16. Each assertion validates the **allowed delta**, not a mutable-directory exemption. Original archive/batches/receipts/approvals and original run rows/artifacts remain byte-identical; all nonproduction ownership remains at the prepared baseline; only known own production lease bookkeeping may change. All added intake rows/files must derive from authenticated admissions and the current exact selected recipe. Check snapshot logical digest and identities, sidecar/DB inode/link safety, and actual physical files before/after each durable effect and before reporting success.
 
 17. Catalog files/sidecars, configuration, weekly state, retained runtime/dependencies/bootstrap, physical npm, prepared/quarantine markers and unrelated intake remain exact. #109 need not open catalog SQL at all: unchanged prepared physical catalog plus original ledger revision is sufficient. Journal logical delta is checked through the existing readonly snapshot mechanism; guard readers inside an active journal transaction must use a consistent visible snapshot without recursively writing/acquiring leases. Never omit whole SQLite/intake trees from proof.
 
-18. Key installation is its own private phase, pinned to the archive key ID and exact destination/stages; no key generation/export or caller-selected key path. Check installed DPAPI/plaintext key equals supplied authenticated key on every retry. Signed terminal result binds admission, exact canonical receipt/approval/capture hashes and its original+prior+own logical evidence projection, normalizing only permitted production lease bookkeeping. Later known completed admissions extend that projection; arbitrary later rows cannot be ignored. It is not a general prepared-tree replacement. Result repair reuses exact bytes. Lost response after result must verify current own completion and return it without replaying capture effects.
+18. Key installation is its own private phase, pinned to the archive key ID and exact destination/stages; no key generation/export or caller-selected key path. Check installed DPAPI/plaintext key equals supplied authenticated key on every retry. Signed terminal result binds admission, exact canonical receipt/approval/capture hashes and its original+prior+own logical evidence projection, normalizing only permitted production lease bookkeeping. Later known completed admissions extend that projection; arbitrary later rows cannot be ignored. It is not a general prepared-tree replacement. Result repair reuses exact bytes. A valid result candidate or canonical result with an owned alias remains `capture-partial` until the retained child installs/cleans it; the parent must not return early. Completion-only cleanup of current or prior authenticated families must not acquire a new capture lease. Lost response after result must verify current own completion and return it without replaying capture effects.
 
 19. Invalid/spoofed RAW/FULL snapshots can legitimately be archived pending evidence. Normal intake must still refuse them, leaving immutable admission and already completed selected messages available for diagnosis/retry. Return safe errors/redacted hashes only; no result claims complete if any selected message remains unadmitted or partial. Do not delete failed admissions to unlock a different selection.
 

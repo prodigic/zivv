@@ -98,6 +98,16 @@ load. If #106 acceptance includes loading, that phase is required within #106;
 capture-only must not be presented as its completion. General activation remains
 a separate reviewed cutover in either case.
 
+The current integration seams are `listRetainedSteveEmailSources` in
+`steve-email-intake.ts` (validated receipt/source resolution),
+`loadRetainedSteveEmailSources` in `steve-email-load.ts` (loads **all** ready
+retained sources), and `assertRecoveredImportInvocation` in
+`recovery-import-admission.ts` (rejects source-based invocation in the existing
+run-only scope). The all-ready loader is not a selected-receipt executor.
+Extract/reuse normal deterministic import behavior behind a separately reviewed
+exact-receipt admission; do not reuse a capture result as import permission or
+widen the existing run-only scope to accept arbitrary source bytes.
+
 ## Required acceptance and ownership
 
 1. Actual fake-API two-message batch, interrupted after first receipt; normalized
