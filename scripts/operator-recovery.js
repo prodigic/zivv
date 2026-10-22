@@ -121,7 +121,8 @@ try {
                 ...(command === "recapture-frozen" ? ["out"] : []),
               ]
             : command === "prepare-runtime" ||
-                command === "verify-prepared-runtime"
+                command === "verify-prepared-runtime" ||
+                command === "inspect-gmail"
               ? ["file", "key", "receipt", "destination", "npm-cli"]
               : command === "stage" || command === "inspect"
                 ? ["file", "key", "destination"]
@@ -202,7 +203,8 @@ try {
       command === "recapture-frozen" ||
       command === "resume-frozen" ||
       command === "prepare-runtime" ||
-      command === "verify-prepared-runtime"
+      command === "verify-prepared-runtime" ||
+      command === "inspect-gmail"
     ) {
       const input = {
         archive,
@@ -263,7 +265,11 @@ try {
                     })
                   : command === "prepare-runtime"
                     ? await prepareOperatorRecoveryRuntime(input)
-                    : verifyPreparedOperatorRuntime(input);
+                    : command === "inspect-gmail"
+                      ? (
+                          await import("../dist/lib/ingestion/recovery-gmail-inspector.js")
+                        ).inspectOperatorRecoveryGmailBatches(input)
+                      : verifyPreparedOperatorRuntime(input);
     } else if (command === "verify-retirement") {
       ({ checkpoint } = verifyOperatorRetirementEvidence({
         archive,

@@ -7,7 +7,7 @@ import {
 import { setImmediate as yieldToReporter } from "node:timers/promises";
 import { gzipSync, gunzipSync } from "node:zlib";
 import { join } from "node:path";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { createRecoveryResultChainFixture } from "./fixtures/recovery-result-chain-fixture.js";
 import { createOperatorRetirementReceipt } from "../../lib/ingestion/operator-installation.js";
 import {
@@ -90,9 +90,16 @@ describe("captured frozen-result chain content proof", () => {
     };
   };
   beforeAll(async () => {
-    const created = await createRecoveryResultChainFixture();
-    ({ directory, key, successor, members, fixture } = created);
-    cleanup = created.cleanup;
+    // Exercise capture and retirement within one clock tick, so fixture
+    // validity cannot depend on taking long enough to consume invented delays.
+    const clock = vi.spyOn(Date, "now").mockReturnValue(Date.now());
+    try {
+      const created = await createRecoveryResultChainFixture();
+      ({ directory, key, successor, members, fixture } = created);
+      cleanup = created.cleanup;
+    } finally {
+      clock.mockRestore();
+    }
   }, 180_000);
   afterAll(() => cleanup?.());
 

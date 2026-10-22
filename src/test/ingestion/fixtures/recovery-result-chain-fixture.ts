@@ -63,7 +63,7 @@ export async function createRecoveryResultChainFixture() {
           ledgerRevision: checkpoint.ledgerRevision,
           originalOperatorDirectory: checkpoint.originalOperatorDirectory,
           installationId: id,
-          retiredAtEpochMs: checkpoint.createdAtEpochMs + 100,
+          retiredAtEpochMs: checkpoint.createdAtEpochMs,
         },
         key
       );
@@ -131,7 +131,6 @@ export async function createRecoveryResultChainFixture() {
         "weekly-candidates/r-" + sha256(fixture.state.runId).slice(0, 16);
     successor.originalOperatorDirectory = operator;
     successor.originalCheckout = join(root, "checkout");
-    successor.createdAtEpochMs = original.createdAtEpochMs + 2000;
     for (const file of successor.files)
       if (
         file.area === "operator" &&
@@ -403,6 +402,9 @@ export async function createRecoveryResultChainFixture() {
     successor.directories.sort((a, b) =>
       a.area + "/" + a.path < b.area + "/" + b.path ? -1 : 1
     );
+    // Keep the synthetic same-millisecond retirement ordering without inventing
+    // a future successor capture, which detached checkpoint proof must reject.
+    successor.createdAtEpochMs = Date.now();
     const originalArchive = encryptOperatorRecovery(original, key),
       successorArchive = encryptOperatorRecovery(successor, key),
       originalRetirementReceipt = retire(

@@ -86,12 +86,15 @@ import {
   assertRecoveryResultCaptureCurrent,
   finalizeRecoveryResultCapture,
 } from "./recovery-result-recapture.js";
+import { proveRecoveryGmailBatchInventory } from "./recovery-gmail-batch-proof.js";
+import { repairSteveGmailBatchStagingForRecovery } from "./steve-gmail-handoff.js";
 
 const scope = "prodigic/zivv/production";
 const format = "zivv-operator-recovery";
 const maxBytes = 256 * 1024 * 1024;
 const maxFiles = 50000;
 const operatorTrees = [
+  "email-acquisition",
   "email-intake",
   "weekly-candidates",
   "weekly-publication",
@@ -194,6 +197,8 @@ function safePath(value: unknown): value is string {
 function allowed(area: string, path: string): boolean {
   const components = path.split("/");
   if (components.some((part) => omitted.has(part))) return false;
+  if (area === "operator" && components[0] === "email-acquisition")
+    return /^email-acquisition\/batches\/[a-f0-9]{64}\.json$/.test(path);
   return area === "operator"
     ? operatorTrees.some((tree) => path.startsWith(tree + "/"))
     : area === "checkout" &&
@@ -242,6 +247,13 @@ function inventory(
     });
   }
   function tree(area: RecoveryFile["area"], root: string, path: string) {
+    const acquisition =
+      area === "operator" && path.split("/")[0] === "email-acquisition";
+    if (
+      acquisition &&
+      !["email-acquisition", "email-acquisition/batches"].includes(path)
+    )
+      fail();
     const absolute = join(root, path);
     if (!existsSync(absolute)) return;
     const stat = lstatSync(absolute);
@@ -249,7 +261,7 @@ function inventory(
     directories.push({ area, path });
     if (directories.length > maxFiles) fail();
     for (const name of readdirSync(absolute).sort()) {
-      if (omitted.has(name)) continue;
+      if (omitted.has(name) && !acquisition) continue;
       const child = path + "/" + name,
         info = lstatSync(join(root, child));
       if (info.isDirectory() && !info.isSymbolicLink()) tree(area, root, child);
@@ -385,6 +397,11 @@ export function validateOperatorRecoveryCheckpoint(
       fail();
     const trees = dir.area === "operator" ? operatorTrees : checkoutTrees;
     if (
+      (dir.area === "operator" &&
+        dir.path.split("/")[0] === "email-acquisition" &&
+        !["email-acquisition", "email-acquisition/batches"].includes(
+          dir.path
+        )) ||
       !trees.some(
         (tree) =>
           dir.path === tree || (dir.path as string).startsWith(tree + "/")
@@ -735,6 +752,10 @@ async function captureCheckpoint(
     else assertOperatorNotQuarantined(operator);
   };
   assertCapture();
+  // Registration repair owns its own lease; never nest it inside capture's locks.
+  await repairSteveGmailBatchStagingForRecovery({
+    operatorDirectory: operator,
+  });
   const bootstrapNpm =
     npmCli === undefined ? undefined : captureNpmExecutionTool(npmCli);
   const journal = new WeeklyRunJournal(operator);
@@ -773,10 +794,26 @@ async function captureCheckpoint(
           canonicalJson(inventory(operator, checkout))
         )
           throw new Error("RECOVERY_INPUTS_CHANGED");
+        proveRecoveryGmailBatchInventory({
+          checkpoint,
+          ...(checkpoint.files.some(
+            (file) =>
+              file.area === "operator" &&
+              file.path.startsWith("email-acquisition/")
+          )
+            ? { recoveryKey: loadBackupKey(operator, false) }
+            : {}),
+        });
         journal.checkOwnership(owned);
         if (bootstrapNpm && npmCli !== undefined)
           verifyNpmExecutionTool(bootstrapNpm, npmCli);
         assertCapture();
+        if (
+          canonicalJson(captured) !==
+          canonicalJson(inventory(operator, checkout))
+        )
+          throw new Error("RECOVERY_INPUTS_CHANGED");
+        journal.checkOwnership(owned);
         finalize?.(checkpoint);
         return checkpoint;
       })
@@ -1046,6 +1083,7 @@ export function encryptOperatorRecovery(
   validateOperatorRecoveryCheckpoint(checkpoint);
   if (key.length !== 32) fail();
   verifyRecoveryCandidates(checkpoint, key);
+  proveRecoveryGmailBatchInventory({ checkpoint, recoveryKey: key });
   const clear = Buffer.from(canonicalJson(checkpoint));
   if (clear.length > maxBytes) throw new Error("RECOVERY_CAPSULE_LIMIT");
   const header = {
@@ -1122,6 +1160,7 @@ export function decryptOperatorRecovery(
     )
   );
   verifyRecoveryCandidates(checkpoint, key);
+  proveRecoveryGmailBatchInventory({ checkpoint, recoveryKey: key });
   return checkpoint;
 }
 
@@ -1134,6 +1173,7 @@ export async function stageOperatorRecovery(
   checkpoint = structuredClone(checkpoint);
   validateOperatorRecoveryCheckpoint(checkpoint);
   verifyRecoveryCandidates(checkpoint, recoveryKey);
+  proveRecoveryGmailBatchInventory({ checkpoint, recoveryKey });
   const root = resolvePrivateCandidateDirectory(destination);
   if (existsSync(root)) throw new Error("RECOVERY_DESTINATION_EXISTS");
   mkdirSync(root, { recursive: false, mode: 0o700 });

@@ -119,6 +119,9 @@ tracks authenticated inventory, successor-host admission and preservation of
 pre-cutoff capture/load obligations. Batch signatures bind the original physical
 operator directory; copying them to another host does not grant replay authority.
 This gap must be resolved before unattended acquisition/recovery acceptance.
+The [batch recovery plan](gmail-batch-recovery-plan.md) separates authenticated
+inventory/read support from the closed capture (#109) and selected-source load
+(#110) admissions; a pure proof result grants none of those permissions.
 
 ## Verification and remaining acceptance
 

@@ -10,7 +10,7 @@ import {
   readdirSync,
   unlinkSync,
 } from "node:fs";
-import { basename, join, resolve } from "node:path";
+import { basename, join, posix, resolve, win32 } from "node:path";
 import {
   loadBackupKey,
   secureOperatorDirectory,
@@ -410,6 +410,35 @@ function validBatchFilename(name: string, batchId: string): boolean {
   );
 }
 
+/** Authenticate supplied canonical batch bytes, without reading the original root.
+ * This proves saved acquisition provenance only; it grants no intake or write authority.
+ */
+export function authenticateSteveGmailBatchBytes(input: {
+  bytes: Buffer;
+  fileName: string;
+  originalOperatorDirectory: string;
+  recoveryKey: Buffer;
+}): SteveGmailHandoffBatch {
+  const root = input.originalOperatorDirectory;
+  if (
+    typeof root !== "string" ||
+    root.length > 4096 ||
+    [...root].some((character) => character.charCodeAt(0) < 32) ||
+    root.startsWith("\\\\") ||
+    root.startsWith("//") ||
+    !Buffer.isBuffer(input.bytes) ||
+    !Buffer.isBuffer(input.recoveryKey) ||
+    input.recoveryKey.length !== 32 ||
+    typeof input.fileName !== "string" ||
+    !/^[a-f0-9]{64}\.json$/.test(input.fileName)
+  )
+    fail("INVALID_GMAIL_BATCH");
+  const flavor = /^[A-Za-z]:\\/.test(root) ? win32 : posix;
+  if (!flavor.isAbsolute(root) || flavor.resolve(root) !== root)
+    fail("INVALID_GMAIL_BATCH");
+  return parseBatch(input.bytes, input.fileName, root, input.recoveryKey);
+}
+
 function readBatchFile(
   path: string,
   operatorDirectory: string,
@@ -482,6 +511,15 @@ function registryEntries(
       fail("GMAIL_BATCH_RETENTION_LIMIT");
   }
   return names;
+}
+
+/** Normalize only existing authenticated stages before recovery capture takes its locks.
+ * Uses the ordinary writer/quarantine checks and grants no relocated-read authority.
+ */
+export function repairSteveGmailBatchStagingForRecovery(input: {
+  operatorDirectory: string;
+}): Promise<void> {
+  return recoverSteveGmailBatchStaging(operatorPath(input.operatorDirectory));
 }
 
 /** Repair under the same lease as registration; capture never nests that lease. */

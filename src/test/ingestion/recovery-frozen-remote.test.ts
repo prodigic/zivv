@@ -88,7 +88,7 @@ describe("frozen recovery canonical baseline", () => {
     expect(fixture.refs()).toBe(refs);
     expect(fixture.git(["symbolic-ref", "HEAD"])).toBe(head);
   }, 60_000);
-  it("refuses obsolete main, control ownership and missing acknowledged retention instead of rebinding", async () => {
+  it("refuses an obsolete main instead of rebinding", async () => {
     await yieldToReporter();
     const context = open();
     fixture.main(fixture.payloadCommit);
@@ -97,16 +97,28 @@ describe("frozen recovery canonical baseline", () => {
       expect(() => open()).toThrow("SOURCE_NOT_ON_MAIN");
     } finally {
       fixture.main(fixture.sourceCommit);
+      fixture.setControl(context.binding.controlHead);
     }
+    expect(() => open(fixture.checkpoint, "f".repeat(40))).toThrow(
+      "SOURCE_NOT_ON_MAIN"
+    );
+    expect(() => open(fixture.checkpoint, "main")).toThrow("SOURCE_REQUIRED");
+  }, 150_000);
+  it("refuses an active control owner instead of rebinding", async () => {
     await yieldToReporter();
+    const context = open();
     fixture.setControl(fixture.claimHead);
     try {
       expect(context.assertCurrent).toThrow("REMOTE_CHANGED");
       expect(() => open()).toThrow("ACTIVE_OWNER");
     } finally {
+      fixture.main(fixture.sourceCommit);
       fixture.setControl(context.binding.controlHead);
     }
+  }, 150_000);
+  it("refuses missing acknowledged retention instead of rebinding", async () => {
     await yieldToReporter();
+    const context = open();
     fixture.git([
       "push",
       "--quiet",
@@ -122,12 +134,9 @@ describe("frozen recovery canonical baseline", () => {
         fixture.payloadCommit,
         null
       );
+      fixture.main(fixture.sourceCommit);
+      fixture.setControl(context.binding.controlHead);
     }
-    await yieldToReporter();
-    expect(() => open(fixture.checkpoint, "f".repeat(40))).toThrow(
-      "SOURCE_NOT_ON_MAIN"
-    );
-    expect(() => open(fixture.checkpoint, "main")).toThrow("SOURCE_REQUIRED");
   }, 150_000);
   it("requires exactly frozen stage records and refuses even a rehashed pending-stage artifact", () => {
     const started = rewrite((journal) => {
