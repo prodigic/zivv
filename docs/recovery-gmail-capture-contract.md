@@ -1,6 +1,8 @@
 # Closed cached Gmail capture admission (#109)
 
-Design only, based on PR114. No activation, catalog load, Gmail request, credential provisioning, or current private effect is authorized by this packet.
+Contract based on PR114. Closed executor implementation is in progress and its
+acceptance is unproven. No activation, live catalog load, Gmail request or
+credential provisioning is authorized by this packet.
 
 The pure evidence checkpoint in
 `src/lib/ingestion/recovery-gmail-capture-admission-proof.ts` implements bounded,
@@ -23,9 +25,43 @@ that shared content validation and receipt identity calculation without opening
 files or a journal. Ordinary capture uses it too, owns its inputs before parsing
 awaits, and retains the real journal admission clock. FULL-message traversal is
 bounded to 100 visited parts. This helper does not authenticate Gmail acquisition
-or authorize persistence; the recovery executor and effect guards remain pending.
-No current API grants the recovery capture/load or
-activation operations in the contract below.
+or authorize persistence. Draft executor and effect guards are being validated
+against the requirements below; their presence is not an acceptance claim.
+Detached evidence and returned reports grant no recovery capture/load or
+activation permission.
+
+The executor's intent additionally binds `preparedImmutableTreeSha256`: the exact
+initial prepared inventory excluding only journal main/WAL/SHM bytes and the exact
+platform working-key path. Later selected intake additions are removed from that
+comparison only after their individual authenticated delta is proved; the fixed
+intent/result/key family is checked separately. Catalog and runtime files remain
+included. Before any admission exists, inspection proves the complete original
+prepared tree and uses its authenticated journal snapshot with preparation's
+specified expiry reset. It does not open SQLite: even a read-only SQLite open can
+materialize WAL/SHM files. After durable intent, actual journal snapshots and
+separately checked database/sidecar identities govern the permitted logical delta.
+
+## Implementation checkpoint, October 22
+
+The draft closed executor and parent/CLI handoff now pass a genuine retained-worker
+fixture with deleted original roots and relocated npm. It exercises read-only
+inspection, direct-execution refusal, journal-first interruption, exact repair,
+explicit correction, preserved observation and completion replay without a new
+lease. The targeted intake/retirement/proof/framing/lease/CLI batch passed 125
+checks; the final retained-worker and ordinary installer batch passed eight.
+These checks do not prove the complete acceptance matrix below.
+
+Still required for #109: authenticated adoption of complete saved installer/intake
+stages, every canonical-file interruption, active-scope SQL/catalog/escaped/expired
+and drift probes, multiple selected batches, and Monday/invalid-MIME refusal
+rehearsals. Saved stages currently refuse rather than being silently removed.
+This checkpoint does not complete #109, #106, #78 or the Friday delivery goal.
+
+The production CLI entry is `operator-recovery.js capture-gmail` with `--file`,
+`--key`, `--receipt`, `--destination`, `--npm-cli` and `--batch-id`. Optional
+`--corrections-file` points to a private JSON message-ID-to-parent-receipt map.
+It accepts no repository, run, workflow, token or activation option. These are
+recovery-fixture/operator interfaces, not approval for a live recovery operation.
 
 ```ts
 interface RecoveryGmailCaptureInput extends RecoveryRuntimeInput {

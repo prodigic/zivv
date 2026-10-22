@@ -71,6 +71,7 @@ beforeAll(async () => {
       checkpointSha256: "3".repeat(64),
       preparedReceiptSha256: "4".repeat(64),
       preparedTreeSha256: "5".repeat(64),
+      preparedImmutableTreeSha256: "6".repeat(64),
       physicalRoot: fixture.physicalRoot,
       physicalOperatorDirectory: fixture.physicalOperatorDirectory,
       physicalNpmPath:
@@ -90,6 +91,44 @@ beforeAll(async () => {
 afterAll(() => fixture?.cleanup());
 
 describe("detached immutable Gmail capture admission and exact progress", () => {
+  it("preserves implicit original archive ancestors without admitting arbitrary additions", () => {
+    const checkpoint = structuredClone(fixture.checkpoint),
+      bytes = Buffer.from("retained worker fixture\n");
+    checkpoint.files.push({
+      area: "checkout",
+      path: "dist/lib/implicit.js",
+      bytes: bytes.toString("base64"),
+      sha256: sha256(bytes),
+    });
+    checkpoint.directories.push({ area: "checkout", path: "dist/lib" });
+    for (const values of [checkpoint.files, checkpoint.directories])
+      values.sort((a, b) =>
+        a.area + "/" + a.path < b.area + "/" + b.path ? -1 : 1
+      );
+    const selected = createRecoveryGmailCaptureAdmission({
+      ...admissionInput,
+      checkpoint,
+    });
+    expect(
+      proveRecoveryGmailCaptureDelta({
+        ...input(checkpoint, selected),
+        checkpoint,
+      }).status
+    ).toBe("capture-pending");
+    const changed = structuredClone(checkpoint);
+    changed.files.push({
+      area: "checkout",
+      path: "dist/unrelated.txt",
+      bytes: bytes.toString("base64"),
+      sha256: sha256(bytes),
+    });
+    expect(() =>
+      proveRecoveryGmailCaptureDelta({
+        ...input(changed, selected),
+        checkpoint,
+      })
+    ).toThrow("INVALID_RECOVERY_GMAIL_CAPTURE_ADMISSION_PROOF");
+  });
   it("binds intent deterministically and grants no capture or physical authority", () => {
     expect(createRecoveryGmailCaptureAdmission(admissionInput)).toEqual(
       admission

@@ -1,4 +1,9 @@
 import {
+  assertNoRecoveredGmailCapture,
+  assertRecoveredGmailCaptureFile,
+  assertRecoveredGmailCaptureKey,
+} from "./recovery-gmail-capture-admission.js";
+import {
   createCipheriv,
   createDecipheriv,
   createHash,
@@ -126,16 +131,23 @@ export function decryptLedgerSnapshot(
 
 /** Flush a private/operator artifact before an atomic same-directory replacement. */
 export function writeDurableFile(path: string, bytes: Buffer): void {
+  assertRecoveredGmailCaptureFile(path, bytes);
+  assertRecoveredGmailCaptureFile(dirname(path), undefined, "directory");
   mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
   const temporary = `${path}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`;
+  assertRecoveredGmailCaptureFile(temporary, bytes);
   const fd = openSync(temporary, "wx", 0o600);
   try {
     try {
+      assertRecoveredGmailCaptureFile(temporary, bytes);
       writeFileSync(fd, bytes);
+      assertRecoveredGmailCaptureFile(temporary, bytes, "install");
       fsyncSync(fd);
     } finally {
       closeSync(fd);
     }
+    assertRecoveredGmailCaptureFile(path, bytes);
+    assertRecoveredGmailCaptureFile(temporary, bytes, "install");
     renameSync(temporary, path);
     if (process.platform !== "win32") {
       const directory = openSync(dirname(path), "r");
@@ -146,7 +158,10 @@ export function writeDurableFile(path: string, bytes: Buffer): void {
       }
     }
   } catch (error) {
-    if (existsSync(temporary)) unlinkSync(temporary);
+    if (existsSync(temporary)) {
+      assertRecoveredGmailCaptureFile(temporary, bytes, "unlink");
+      unlinkSync(temporary);
+    }
     throw error;
   }
 }
@@ -155,6 +170,7 @@ export function writeDurableFile(path: string, bytes: Buffer): void {
 export async function synchronizeEncryptedSnapshot(
   root: string
 ): Promise<void> {
+  assertNoRecoveredGmailCapture();
   const location = projectLedgerLocation(root);
   if (location.backend !== "sqlite") return;
   const key = loadBackupKey(location.directory);
@@ -199,6 +215,24 @@ function protectForWindows(bytes: Buffer, unprotect = false): Buffer {
   return Buffer.from(result.stdout.trim(), "base64");
 }
 
+/** Authenticate existing DPAPI/plaintext bytes without installing or changing them. */
+export function validateRecoveredBackupKeyBytes(
+  bytes: Buffer,
+  expected: Buffer
+): void {
+  if (
+    !Buffer.isBuffer(bytes) ||
+    bytes.length > 16 * 1024 ||
+    !Buffer.isBuffer(expected) ||
+    expected.length !== 32
+  )
+    throw Error("RECOVERY_IMPORT_WORKING_KEY_MISMATCH");
+  const clear =
+    process.platform === "win32" ? protectForWindows(bytes, true) : bytes;
+  if (!clear.equals(expected))
+    throw Error("RECOVERY_IMPORT_WORKING_KEY_MISMATCH");
+}
+
 /** Install a fully flushed key exactly once, even when two operators initialize together. */
 function installKeyOnce(
   path: string,
@@ -211,6 +245,8 @@ function installKeyOnce(
   );
   writeDurableFile(temporary, bytes);
   try {
+    assertRecoveredGmailCaptureFile(path, bytes);
+    assertRecoveredGmailCaptureFile(temporary, bytes, "install");
     linkSync(temporary, path);
   } catch (error) {
     if (
@@ -220,6 +256,7 @@ function installKeyOnce(
     )
       throw error;
   } finally {
+    assertRecoveredGmailCaptureFile(temporary, bytes, "unlink");
     unlinkSync(temporary);
   }
   if (process.platform !== "win32") {
@@ -280,6 +317,7 @@ export function readRecoveryInstalledFile(
         const current = lstatSync(target);
         if (current.ino !== before.ino || current.dev !== before.dev)
           throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+        assertRecoveredGmailCaptureFile(temporary, bytes, "unlink");
         unlinkSync(temporary);
       }
     }
@@ -326,6 +364,7 @@ function secureRecoveryStagingDirectory(directory: string): void {
 
 /** Restrict the permanent operator directory before putting private artifacts in it. */
 export function secureOperatorDirectory(directory: string): void {
+  assertRecoveredGmailCaptureFile(directory, undefined, "directory");
   mkdirSync(directory, { recursive: true, mode: 0o700 });
   if (process.platform !== "win32") {
     chmodSync(directory, 0o700);
@@ -350,11 +389,13 @@ export function secureOperatorDirectory(directory: string): void {
 
 /** Generate once; Windows keeps the working key encrypted under the current user's DPAPI. */
 export function loadBackupKey(directory: string, create = false): Buffer {
+  assertRecoveredGmailCaptureKey(directory);
   const path = join(
     directory,
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
   );
   if (!existsSync(path)) {
+    assertNoRecoveredGmailCapture();
     if (!create)
       throw new Error(
         "Backup key missing. Import the separately saved recovery key; never generate a replacement to decrypt an existing snapshot."
@@ -378,6 +419,7 @@ export function exportRecoveryKey(
   directory: string,
   destination: string
 ): void {
+  assertNoRecoveredGmailCapture();
   let ancestor = resolve(dirname(destination));
   while (true) {
     if (existsSync(join(ancestor, ".git")))
@@ -416,6 +458,7 @@ export function exportRecoveryKey(
 
 /** Install a portable key without ever overwriting an existing operator key. */
 export function importRecoveryKey(directory: string, source: string): void {
+  assertNoRecoveredGmailCapture();
   const destination = join(
     directory,
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
@@ -436,6 +479,7 @@ export function installRecoveredBackupKey(
   suppliedKey: Buffer,
   options?: { stagingDirectory: string }
 ): void {
+  assertRecoveredGmailCaptureKey(directory, suppliedKey);
   const key = Buffer.from(suppliedKey);
   const destination = join(
     directory,

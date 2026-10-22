@@ -39,6 +39,7 @@ export interface RecoveryGmailCaptureBinding {
   checkpointSha256: string;
   preparedReceiptSha256: string;
   preparedTreeSha256: string;
+  preparedImmutableTreeSha256: string;
   physicalRoot: string;
   physicalOperatorDirectory: string;
   physicalNpmPath: string;
@@ -199,6 +200,7 @@ function binding(
       "checkpointSha256",
       "preparedReceiptSha256",
       "preparedTreeSha256",
+      "preparedImmutableTreeSha256",
       "physicalRoot",
       "physicalOperatorDirectory",
       "physicalNpmPath",
@@ -211,6 +213,7 @@ function binding(
     "checkpointSha256",
     "preparedReceiptSha256",
     "preparedTreeSha256",
+    "preparedImmutableTreeSha256",
     "keyId",
   ] as const)
     if (!hashPattern.test(value[name])) fail();
@@ -885,13 +888,32 @@ function prove(input: RecoveryGmailCaptureDeltaInput) {
     if (!actualDirectories.has(name(directory))) fail();
   for (const directory of input.current.directories)
     if (!expectedDirectories.has(name(directory))) fail();
+  // Selected archive trees record their own root, not every shared ancestor
+  // (for example dist/lib is retained while dist itself is implicit). Those
+  // authenticated original ancestors are physical baseline obligations; they
+  // must not be mistaken for missing newly admitted intake directories.
+  const originalAncestors = new Set<string>();
+  for (const entry of [
+    ...input.checkpoint.files,
+    ...input.checkpoint.directories,
+  ])
+    for (
+      let parent = posix.dirname(entry.path);
+      parent !== ".";
+      parent = posix.dirname(parent)
+    )
+      originalAncestors.add(entry.area + "/" + parent);
   for (const file of input.current.files)
     for (
       let parent = posix.dirname(file.path);
       parent !== ".";
       parent = posix.dirname(parent)
     )
-      if (!actualDirectories.has(file.area + "/" + parent)) fail();
+      if (
+        !actualDirectories.has(file.area + "/" + parent) &&
+        !originalAncestors.has(file.area + "/" + parent)
+      )
+        fail();
   const selected = proveRecoveryGmailCaptureSelection({
     checkpoint: { ...base, createdAtEpochMs: admission.admittedAtEpochMs },
     recoveryKey: input.recoveryKey,

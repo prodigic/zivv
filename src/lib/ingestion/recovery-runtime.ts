@@ -105,7 +105,8 @@ function inside(root: string, path: string): boolean {
 function inventory(
   root: string,
   omit?: (entry: RecoveryRuntimeEntry) => boolean,
-  buildNamespace?: string
+  buildNamespace?: string,
+  gmailCapture = false
 ): RecoveryRuntimeEntry[] {
   noLinks(root);
   const entries: RecoveryRuntimeEntry[] = [],
@@ -113,6 +114,32 @@ function inventory(
     modules = join(root, "checkout/node_modules");
   let total = 0,
     visited = 0;
+  const linked = new Map<
+    string,
+    { path: string; target: string; sha256: string }[]
+  >();
+  const workingKey =
+    process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin";
+  function captureAliasTarget(path: string): string | undefined {
+    if (path === "operator/" + workingKey) return path;
+    const metadata =
+      /^recovery-gmail-capture\/([a-f0-9]{64})\/(admission|result)\.json$/.exec(
+        path
+      );
+    if (metadata) return path;
+    const stage =
+      /^recovery-gmail-capture\/([a-f0-9]{64})\/(admission|result)-stage\/(admission|result)\.json\.\d+\.[a-f0-9]{16}\.tmp$/.exec(
+        path
+      );
+    if (stage && stage[2] === stage[3])
+      return `recovery-gmail-capture/${stage[1]}/${stage[2]}.json`;
+    const keyStage =
+      /^recovery-gmail-capture\/[a-f0-9]{64}\/key-stage\/(backup-key\.(?:dpapi|bin))\.\d+\.[a-f0-9]{16}\.tmp$/.exec(
+        path
+      );
+    if (keyStage?.[1] === workingKey) return "operator/" + workingKey;
+    return undefined;
+  }
   function walk(directory: string, prefix: string): void {
     for (const name of readdirSync(directory).sort()) {
       const path = prefix + name,
@@ -150,7 +177,8 @@ function inventory(
       } else {
         if (
           !stat.isFile() ||
-          stat.nlink !== 1 ||
+          (stat.nlink !== 1 &&
+            !(gmailCapture && stat.nlink === 2 && captureAliasTarget(path))) ||
           (total += stat.size) > maxBytes
         )
           fail();
@@ -158,16 +186,44 @@ function inventory(
           continue;
         const bytes = readFileSync(physical);
         if (bytes.length !== stat.size) fail();
+        const digest = sha256(bytes);
+        if (gmailCapture && stat.nlink === 2) {
+          const after = lstatSync(physical);
+          if (
+            after.ino !== stat.ino ||
+            after.dev !== stat.dev ||
+            after.nlink !== 2 ||
+            after.size !== stat.size
+          )
+            fail();
+          const identity = `${stat.dev}:${stat.ino}`;
+          const aliases = linked.get(identity) ?? [];
+          aliases.push({
+            path,
+            target: captureAliasTarget(path)!,
+            sha256: digest,
+          });
+          linked.set(identity, aliases);
+        }
         entries.push({
           path,
           kind: "file",
           size: bytes.length,
-          sha256: sha256(bytes),
+          sha256: digest,
         });
       }
     }
   }
   walk(root, "");
+  for (const aliases of linked.values()) {
+    if (
+      aliases.length !== 2 ||
+      aliases[0]!.target !== aliases[1]!.target ||
+      aliases[0]!.sha256 !== aliases[1]!.sha256 ||
+      aliases.filter((entry) => entry.path === entry.target).length !== 1
+    )
+      fail();
+  }
   return entries.sort((a, b) =>
     a.path < b.path ? -1 : a.path > b.path ? 1 : 0
   );
@@ -320,6 +376,19 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
       )
         fail();
       return inventory(root, omit, buildNamespace);
+    },
+    /** Read-only enumeration for closed Gmail capture. Only exact complete
+     * installer alias pairs may have two links; callers still authenticate their
+     * bytes, signed intent and allowed logical delta. This grants no write scope. */
+    inventoryGmailCapture: () => {
+      assertReceipt();
+      return inventory(
+        root,
+        (entry) =>
+          /^operator\/weekly-runs\.sqlite(?:-wal|-shm)?$/.test(entry.path),
+        undefined,
+        true
+      );
     },
     assertRuntime: () => {
       authenticate(input);
