@@ -22,10 +22,14 @@ describe("weekly delivery CLI activation boundary", () => {
       }
     );
   }
-  it.each(["verify", "acknowledge"])(
+  it.each(["dispatch", "verify", "acknowledge"])(
     "rejects %s before opening a candidate or operator store when disabled",
     (stage) => {
-      const result = run(stage, ["--candidate", "missing-private-candidate"]);
+      const result = run(stage, [
+        "--candidate",
+        "missing-private-candidate",
+        ...(stage === "dispatch" ? ["--workflow-commit", "b".repeat(40)] : []),
+      ]);
       expect(result.status, result.stderr).toBe(1);
       expect(result.stdout).toBe("");
       expect(result.stderr).toContain("Verified weekly delivery stopped");
@@ -49,12 +53,27 @@ describe("weekly delivery CLI activation boundary", () => {
     const result = run("load", ["--candidate", "missing-private-candidate"]);
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "--candidate requires --through verify or acknowledge"
+      "--candidate requires --through dispatch, verify or acknowledge"
     );
   });
   it("does not advertise an unsupported deploy-only resume", () => {
     const result = run("deploy");
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("Unsupported --through stage");
+  });
+  it("requires an exact reviewed workflow for dispatch", () => {
+    const result = run("dispatch", [
+      "--candidate",
+      "missing-private-candidate",
+    ]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("Dispatch requires --workflow-commit");
+  });
+  it("rejects a publisher workflow option on the manual import-only path", () => {
+    const result = run("load", ["--workflow-commit", "b".repeat(40)]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "Reviewed workflow commit requires a delivery stage"
+    );
   });
 });
