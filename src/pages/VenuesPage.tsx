@@ -8,6 +8,7 @@ import { DirectoryContent } from "@/components/layout/DirectoryContent.tsx";
 import { isEventUpcoming } from "@/lib/discovery.ts";
 import PriceWidget from "@/components/ui/PriceWidget.js";
 import EventPosterLink from "@/components/ui/EventPosterLink.js";
+import { isEventPoster } from "@/utils/event-poster.js";
 import NewBadge from "@/components/ui/NewBadge.js";
 import {
   VenueCardSkeleton,
@@ -546,23 +547,31 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                               e.dateEpochMs <= dateWindow.end
                           )
                         : venue.upcomingEvents;
+                      const hasPosters = venue.upcomingEvents.some((event) =>
+                        isEventPoster(event.poster)
+                      );
                       return (
                         visibleEvents.length > 0 && (
                           <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
                             {visibleEvents.map((event) => (
                               <div
                                 key={event.id}
-                                className="flex items-center gap-1.5"
+                                className={`grid min-h-11 ${
+                                  hasPosters
+                                    ? "grid-cols-[2.25rem_minmax(0,1fr)]"
+                                    : "grid-cols-1"
+                                } items-center gap-1.5`}
                               >
                                 <EventPosterLink
                                   poster={event.poster}
                                   showName={event.headlinerName || "Show"}
+                                  reserve={hasPosters}
                                 />
                                 <Link
                                   key={event.id}
                                   to={`/events/${event.slug}`}
                                   onClick={(e) => e.stopPropagation()}
-                                  className="flex min-w-0 flex-1 items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                  className="grid min-w-0 grid-cols-[3.5rem_minmax(0,1fr)_auto_0.875rem] items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                 >
                                   <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
                                     {new Date(
@@ -572,7 +581,7 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                                       day: "numeric",
                                     })}
                                   </span>
-                                  <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium flex-1">
+                                  <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium">
                                     {event.headlinerName || "Show"}
                                   </span>
                                   <PriceWidget

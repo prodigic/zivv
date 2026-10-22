@@ -56101,91 +56101,91 @@
       "slug": "san-francisco",
       "eventCount": 2356,
       "venueCount": 224,
-      "upcomingEventCount": 606
+      "upcomingEventCount": 529
     },
     {
       "name": "Berkeley",
       "slug": "berkeley",
       "eventCount": 432,
       "venueCount": 30,
-      "upcomingEventCount": 99
+      "upcomingEventCount": 88
     },
     {
       "name": "Oakland",
       "slug": "oakland",
       "eventCount": 430,
       "venueCount": 77,
-      "upcomingEventCount": 99
+      "upcomingEventCount": 86
     },
     {
       "name": "Santa Cruz",
       "slug": "santa-cruz",
       "eventCount": 222,
       "venueCount": 23,
-      "upcomingEventCount": 40
+      "upcomingEventCount": 38
     },
     {
       "name": "Albany",
       "slug": "albany",
       "eventCount": 165,
       "venueCount": 1,
-      "upcomingEventCount": 38
+      "upcomingEventCount": 33
     },
     {
       "name": "San Jose",
       "slug": "san-jose",
       "eventCount": 156,
       "venueCount": 35,
-      "upcomingEventCount": 23
+      "upcomingEventCount": 20
     },
     {
       "name": "Napa",
       "slug": "napa",
       "eventCount": 108,
       "venueCount": 12,
-      "upcomingEventCount": 28
+      "upcomingEventCount": 27
     },
     {
       "name": "Saratoga",
       "slug": "saratoga",
       "eventCount": 78,
       "venueCount": 3,
-      "upcomingEventCount": 6
+      "upcomingEventCount": 3
     },
     {
       "name": "Novato",
       "slug": "novato",
       "eventCount": 72,
       "venueCount": 3,
-      "upcomingEventCount": 21
+      "upcomingEventCount": 17
     },
     {
       "name": "Petaluma",
       "slug": "petaluma",
       "eventCount": 70,
       "venueCount": 12,
-      "upcomingEventCount": 12
+      "upcomingEventCount": 10
     },
     {
       "name": "Sebastopol",
       "slug": "sebastopol",
       "eventCount": 47,
       "venueCount": 3,
-      "upcomingEventCount": 21
+      "upcomingEventCount": 19
     },
     {
       "name": "Walnut Creek",
       "slug": "walnut-creek",
       "eventCount": 47,
       "venueCount": 3,
-      "upcomingEventCount": 8
+      "upcomingEventCount": 7
     },
     {
       "name": "Richmond",
       "slug": "richmond",
       "eventCount": 44,
       "venueCount": 10,
-      "upcomingEventCount": 8
+      "upcomingEventCount": 5
     },
     {
       "name": "Santa Rosa",
@@ -56199,7 +56199,7 @@
       "slug": "sf",
       "eventCount": 33,
       "venueCount": 3,
-      "upcomingEventCount": 7
+      "upcomingEventCount": 6
     },
     {
       "name": "San Anselmo",
@@ -56213,28 +56213,28 @@
       "slug": "mill-valley",
       "eventCount": 30,
       "venueCount": 5,
-      "upcomingEventCount": 2
+      "upcomingEventCount": 1
     },
     {
       "name": "Orinda",
       "slug": "orinda",
       "eventCount": 29,
       "venueCount": 3,
-      "upcomingEventCount": 6
+      "upcomingEventCount": 4
     },
     {
       "name": "Menlo Park",
       "slug": "menlo-park",
       "eventCount": 26,
       "venueCount": 3,
-      "upcomingEventCount": 7
+      "upcomingEventCount": 4
     },
     {
       "name": "San Leandro",
       "slug": "san-leandro",
       "eventCount": 23,
       "venueCount": 6,
-      "upcomingEventCount": 5
+      "upcomingEventCount": 3
     },
     {
       "name": "Mountain View",
@@ -56248,7 +56248,7 @@
       "slug": "pacifica",
       "eventCount": 20,
       "venueCount": 4,
-      "upcomingEventCount": 3
+      "upcomingEventCount": 2
     },
     {
       "name": "Pleasanton",
@@ -56262,7 +56262,7 @@
       "slug": "alameda",
       "eventCount": 16,
       "venueCount": 12,
-      "upcomingEventCount": 3
+      "upcomingEventCount": 2
     },
     {
       "name": "Vallejo",
@@ -56290,14 +56290,14 @@
       "slug": "stanford",
       "eventCount": 12,
       "venueCount": 3,
-      "upcomingEventCount": 1
+      "upcomingEventCount": 0
     },
     {
       "name": "Emeryville",
       "slug": "emeryville",
       "eventCount": 12,
       "venueCount": 5,
-      "upcomingEventCount": 2
+      "upcomingEventCount": 1
     },
     {
       "name": "Hayward",
@@ -56591,7 +56591,7 @@
       "slug": "la-honda",
       "eventCount": 1,
       "venueCount": 1,
-      "upcomingEventCount": 1
+      "upcomingEventCount": 0
     },
     {
       "name": "Forest Knolls",
@@ -56790,7 +56790,7 @@
     }
   },
   "searchIndex": {
-    "indexedAt": 1792198816505,
+    "indexedAt": 1792702202329,
     "totalDocuments": 14230,
     "fields": [
       "name",

@@ -104,3 +104,71 @@ it("keeps official poster links separate from internal show navigation", () => {
     screen.getByRole("heading", { name: "Hopmonk Tavern", exact: true })
   ).toBeVisible();
 });
+
+it("reserves identical poster and detail columns for every row in a venue with posters", () => {
+  const first = [...useAppStore.getState().venues.values()][0];
+  first.upcomingEvents[0].poster = {
+    imageUrl: "https://venue.example/flyer.jpg",
+    eventUrl: "https://venue.example/show",
+    kind: "poster",
+    checkedOn: "2026-10-10",
+  };
+  first.upcomingEvents[0].priceMin = 20;
+  first.upcomingEvents[1].isFree = true;
+
+  const { container } = render(
+    <MemoryRouter>
+      <VenuesPage />
+    </MemoryRouter>
+  );
+  const card = screen
+    .getByRole("heading", {
+      name: "Hopmonk Tavern",
+      exact: true,
+    })
+    .closest(".venue-card");
+  const rows = card?.querySelectorAll(".border-t > div");
+  expect(rows).toHaveLength(3);
+  expect(
+    rows?.[0].querySelector('a[aria-label^="View Band 1-0 poster"]')
+  ).toBeTruthy();
+  expect(rows?.[1].querySelector('[aria-hidden="true"]')).toBeTruthy();
+  expect(rows?.[2].querySelector('[aria-hidden="true"]')).toBeTruthy();
+
+  for (const row of rows ?? []) {
+    expect(row).toHaveClass("grid");
+    const eventLink = row.querySelector("a[href^='/events/']");
+    expect(eventLink).toHaveClass(
+      "grid",
+      "grid-cols-[3.5rem_minmax(0,1fr)_auto_0.875rem]"
+    );
+    expect(eventLink?.querySelector("span.w-14")).toBeTruthy();
+    expect(eventLink?.querySelector("span.truncate")).toBeTruthy();
+  }
+  expect(rows?.[0].querySelector('[title="$20"]')).toBeTruthy();
+  expect(rows?.[1].querySelector('[title="Free"]')).toBeTruthy();
+  expect(container.querySelectorAll(".venue-card")).toHaveLength(3);
+});
+
+it("lets event links use the full row when the venue has no artwork", () => {
+  const { container } = render(
+    <MemoryRouter>
+      <VenuesPage />
+    </MemoryRouter>
+  );
+  const card = screen
+    .getByRole("heading", {
+      name: "Smiley's",
+      exact: true,
+    })
+    .closest(".venue-card");
+  const rows = card?.querySelectorAll(".border-t > div");
+
+  expect(rows).toHaveLength(2);
+  for (const row of rows ?? []) {
+    expect(row).toHaveClass("grid-cols-1");
+    expect(row.querySelector("[aria-hidden='true']")).toBeNull();
+    expect(row.querySelector("a[href^='/events/']")).toBeInTheDocument();
+  }
+  expect(container.querySelectorAll(".venue-card")).toHaveLength(3);
+});
