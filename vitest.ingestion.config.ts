@@ -7,7 +7,9 @@ export default defineConfig({
   test: {
     // Message-channel transport stays responsive during long SQLite/Git suites.
     pool: "threads",
-    maxWorkers: 4,
+    // Native Git/SQLite fixtures are synchronous; limit competing worker IO so
+    // refusal checks retain their existing deadlines under the complete suite.
+    maxWorkers: 2,
     setupFiles: ["./src/test/ingestion/setup.ts"],
     environment: "node",
     include: [
