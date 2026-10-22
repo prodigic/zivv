@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import {
   cpSync,
   closeSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
   openSync,
@@ -11,7 +12,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { acknowledgeVerifiedWeeklyRelease } from "../../lib/ingestion/weekly-acknowledgement.js";
@@ -23,7 +24,17 @@ import {
   type WeeklyRunStage,
 } from "../../lib/ingestion/weekly-run-state.js";
 import { CANDIDATE_CONFIG_FILES } from "../../lib/ingestion/export-configuration.js";
-import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
+import {
+  canonicalJson,
+  ledgerDigest,
+  readSqliteLedger,
+  writeSqliteLedger,
+} from "../../lib/ingestion/sqlite-store.js";
+import { bootstrapLedger } from "../../lib/ingestion/ledger.js";
+import {
+  decryptLedgerSnapshot,
+  loadBackupKey,
+} from "../../lib/ingestion/encrypted-backup.js";
 import {
   parseReleaseCandidate,
   type ReleaseCandidate,
@@ -255,6 +266,27 @@ function fixture(correction = false) {
     candidateId: candidate.candidateId,
     manifestSha256: candidate.manifestSha256,
   };
+  const build = {
+    sourceCommit: candidate.sourceCommit,
+    purpose: "release",
+    basePath: candidate.basePath,
+    npmCli: join(root, "synthetic-npm-cli.js"),
+  };
+  const enrichment = Buffer.from(
+    canonicalJson({
+      schemaVersion: 1,
+      build,
+      configuration: Object.fromEntries(
+        CANDIDATE_CONFIG_FILES.map((path) => [
+          path,
+          path === "ingestion/weekly-editions.json"
+            ? readFileSync(join(root, "data", path)).toString("base64")
+            : null,
+        ])
+      ),
+      configSha256: candidate.configSha256,
+    }) + "\n"
+  );
   const stageEvidence: Partial<Record<WeeklyRunStage, StageEvidence>> = {
     acquire: {
       rawSha256: state.source.rawSha256,
@@ -284,7 +316,10 @@ function fixture(correction = false) {
       mode: correction ? "correction" : "initial",
       ledgerRevision: candidate.ledgerRevision,
     },
-    enrich: { configSha256: candidate.configSha256 },
+    enrich: {
+      configSha256: candidate.configSha256,
+      buildSha256: hash(canonicalJson(build)),
+    },
     export: {
       ...common,
       ledgerRevision: candidate.ledgerRevision,
@@ -315,6 +350,8 @@ function fixture(correction = false) {
         state.revision,
         lease
       );
+      if (stage === "enrich" && transition.status === "running")
+        journal.writeArtifact(state.runId, "enrich", enrichment, lease);
     }
   }
   const store = controlStore(root),
@@ -336,6 +373,24 @@ function fixture(correction = false) {
       verifyContext: () => journal.checkOwnership(lease),
       ...options,
     });
+  const staleCapsule = () => {
+    const db = new DatabaseSync(journal.path);
+    try {
+      db.exec("BEGIN IMMEDIATE");
+      db.prepare(
+        "DELETE FROM stage_artifact WHERE run_id=? AND stage='acknowledge'"
+      ).run(state.runId);
+      db.prepare("UPDATE run_state SET revision=?,payload=? WHERE id=?").run(
+        state.revision,
+        canonicalJson(state),
+        state.runId
+      );
+      db.exec("COMMIT");
+    } finally {
+      if (db.isTransaction) db.exec("ROLLBACK");
+      db.close();
+    }
+  };
   return {
     root,
     journal,
@@ -347,10 +402,12 @@ function fixture(correction = false) {
     current,
     readControl,
     run,
+    staleCapsule,
     deployedHead: template.deployedHead,
   };
 }
 afterEach(() => {
+  vi.unstubAllEnvs();
   for (const journal of opened.splice(0)) journal.close();
   for (const path of disposable.splice(0)) {
     if (
@@ -370,6 +427,227 @@ afterAll(() => {
 });
 
 describe("verified weekly acknowledgement with native control and private journal", () => {
+  it("reconstructs an accepted acknowledgement intent from canonical history with its original bytes, digest and timestamp", async () => {
+    const f = fixture(),
+      before = readFileSync(f.weeklyPath);
+    await expect(
+      f.run({
+        onProgress: async (phase) => {
+          if (phase === "intent-bound")
+            throw new Error("Synthetic bound interruption");
+        },
+      })
+    ).rejects.toThrow("Synthetic bound interruption");
+    const original = f.journal.readArtifact(f.state.runId, "acknowledge", 1)!;
+    const binding = f.readControl().active!.acknowledgementIntent!;
+    const boundHead = f.store.read().head!;
+    expect(readFileSync(f.weeklyPath)).toEqual(before);
+    f.staleCapsule();
+    const append = vi.fn(f.store.compareAndAppend);
+    const result = await f.run({
+      store: { ...f.store, compareAndAppend: append },
+    });
+    expect(result.stages.at(-1)!.status).toBe("succeeded");
+    expect(result.stages.at(-1)!.evidence!.acknowledgementId).toBe(
+      binding.acknowledgementId
+    );
+    expect(f.journal.readArtifact(f.state.runId, "acknowledge", 1)).toEqual(
+      original
+    );
+    expect(append).toHaveBeenCalledTimes(1);
+    expect(append.mock.calls[0][0].expectedHead).toBe(boundHead);
+    expect(f.readControl().completedCount).toBe(1);
+  }, 90_000);
+
+  it.each([false, true])(
+    "repairs a stale draft after remote completion and private artifact loss (later owner %s) without another native append",
+    async (laterOwner) => {
+      const f = fixture(),
+        before = readFileSync(f.weeklyPath);
+      await expect(
+        f.run({
+          onProgress: async (phase) => {
+            if (phase === "remote-completed")
+              throw new Error("Synthetic completed interruption");
+          },
+        })
+      ).rejects.toThrow("Synthetic completed interruption");
+      const original = f.journal.readArtifact(f.state.runId, "acknowledge", 1)!;
+      const after = readFileSync(f.weeklyPath),
+        completedHead = f.store.read().head!;
+      if (laterOwner) {
+        const read = f.store.read(),
+          control = parsePromotionControl(read.bytes!);
+        if (control.lastVerified.kind !== "candidateRelease")
+          throw new Error("Expected completed candidate");
+        const request = {
+          ...control.lastVerified.request,
+          requestId: "later-recovery-owner",
+          expectedVerifiedReleaseId: control.lastVerified.releaseId,
+        };
+        const next = claimPromotion(
+          control,
+          request,
+          createCompletionProof(
+            control.completionRoot,
+            request.requestId,
+            (id, type) => f.store.readCompletionObject(read.head!, id, type)
+          )
+        );
+        expect(
+          f.store.compareAndAppend({
+            expectedHead: read.head,
+            bytes: serializePromotionControl(next),
+            createdAt,
+          }).status
+        ).toBe("appended");
+      }
+      const authoritativeHead = f.store.read().head;
+      writeFileSync(f.weeklyPath, before);
+      f.staleCapsule();
+      const append = vi.fn(f.store.compareAndAppend);
+      let locked = false;
+      const result = await f.run({
+        store: { ...f.store, compareAndAppend: append },
+        verifyContext: () => {
+          f.journal.checkOwnership(f.lease);
+          const path = join(f.root, "data/ingestion/.writer.lock");
+          if (existsSync(path)) {
+            locked = true;
+            expect(() => {
+              const fd = openSync(path, "wx");
+              closeSync(fd);
+            }).toThrow(/EEXIST/);
+          }
+        },
+      });
+      expect(locked).toBe(true);
+      expect(readFileSync(f.weeklyPath)).toEqual(after);
+      expect(f.journal.readArtifact(f.state.runId, "acknowledge", 1)).toEqual(
+        original
+      );
+      expect(result.stages.at(-1)!.status).toBe("succeeded");
+      expect(result.stages.at(-1)!.evidence!.controlHead).toBe(completedHead);
+      expect(append).not.toHaveBeenCalled();
+      expect(f.store.read().head).toBe(authoritativeHead);
+      if (laterOwner)
+        expect(f.readControl().active!.request.requestId).toBe(
+          "later-recovery-owner"
+        );
+    },
+    // Real completion-trie validation and canonical history reconstruction
+    // measured 62–65 seconds on Windows; assertions completed without failure.
+    90_000
+  );
+
+  it.each([
+    "missing-preimage",
+    "wrong-preimage",
+    "incomplete-history",
+    "ambiguous-history",
+  ])(
+    "refuses canonical recovery with %s before weekly writes or native appends",
+    async (problem) => {
+      const f = fixture();
+      await expect(
+        f.run({
+          onProgress: async (phase) => {
+            if (phase === "intent-bound")
+              throw new Error("Synthetic bound interruption");
+          },
+        })
+      ).rejects.toThrow("Synthetic bound interruption");
+      f.staleCapsule();
+      if (problem.endsWith("preimage")) {
+        const db = new DatabaseSync(f.journal.path);
+        try {
+          if (problem === "missing-preimage")
+            db.prepare(
+              "DELETE FROM stage_artifact WHERE run_id=? AND stage='enrich'"
+            ).run(f.state.runId);
+          else {
+            const original = f.journal.readArtifact(
+              f.state.runId,
+              "enrich",
+              1
+            )!;
+            const artifact: { configuration: Record<string, string | null> } =
+              JSON.parse(original.toString());
+            artifact.configuration["ingestion/weekly-editions.json"] =
+              Buffer.concat([
+                readFileSync(f.weeklyPath),
+                Buffer.from("\n"),
+              ]).toString("base64");
+            const changed = Buffer.from(canonicalJson(artifact) + "\n");
+            db.prepare(
+              "UPDATE stage_artifact SET identity=?,bytes=? WHERE run_id=? AND stage='enrich'"
+            ).run(hash(changed), changed, f.state.runId);
+          }
+        } finally {
+          db.close();
+        }
+      }
+      const append = vi.fn(f.store.compareAndAppend);
+      const store: PromotionControlStore = {
+        ...f.store,
+        compareAndAppend: append,
+        readCanonicalHistory(options) {
+          const history = f.store.readCanonicalHistory!(options);
+          if (problem === "incomplete-history") history.complete = false;
+          if (problem === "ambiguous-history") {
+            const entry = history.commits.find(
+              (item) =>
+                parsePromotionControl(item.bytes).lastTransition.event.type ===
+                "acknowledgement-intent"
+            );
+            if (!entry)
+              throw new Error("Missing fixture acknowledgement event");
+            history.commits.unshift({
+              ...entry,
+              bytes: Buffer.from(entry.bytes),
+              parentBytes:
+                entry.parentBytes === null
+                  ? null
+                  : Buffer.from(entry.parentBytes),
+            });
+          }
+          return history;
+        },
+      };
+      const head = f.store.read().head,
+        weekly = readFileSync(f.weeklyPath);
+      await expect(f.run({ store })).rejects.toThrow();
+      expect(readFileSync(f.weeklyPath)).toEqual(weekly);
+      expect(f.store.read().head).toBe(head);
+      expect(append).not.toHaveBeenCalled();
+      expect(
+        f.journal.readArtifact(f.state.runId, "acknowledge", 1)
+      ).toBeNull();
+    }
+  );
+
+  it("keeps a missing already-succeeded acknowledgement artifact as corruption instead of implicit recovery", async () => {
+    const f = fixture();
+    await f.run();
+    const db = new DatabaseSync(f.journal.path);
+    try {
+      db.prepare(
+        "DELETE FROM stage_artifact WHERE run_id=? AND stage='acknowledge'"
+      ).run(f.state.runId);
+    } finally {
+      db.close();
+    }
+    const head = f.store.read().head,
+      weekly = readFileSync(f.weeklyPath);
+    const append = vi.fn(f.store.compareAndAppend);
+    await expect(
+      f.run({ store: { ...f.store, compareAndAppend: append } })
+    ).rejects.toThrow("Missing completed acknowledgement intent");
+    expect(readFileSync(f.weeklyPath)).toEqual(weekly);
+    expect(f.store.read().head).toBe(head);
+    expect(append).not.toHaveBeenCalled();
+  });
+
   it("writes the exact cutoff before remote completion, then journals success and replays without another effect", async () => {
     const f = fixture(),
       original = readFileSync(f.weeklyPath),
@@ -467,7 +745,10 @@ describe("verified weekly acknowledgement with native control and private journa
       ).toBe("2");
       expect(f.readControl().completedCount).toBe(1);
       expect(await f.run()).toEqual(result);
-    }
+    },
+    // Remote-completed replay now rechecks its native proof under both locks;
+    // this measured 70 seconds on Windows with all assertions completing.
+    90_000
   );
 
   it.each(["missing", "unverified"])(
@@ -736,4 +1017,75 @@ describe("verified weekly acknowledgement with native control and private journa
     expect(readFileSync(f.weeklyPath)).toEqual(weekly);
     expect(f.store.read().head).toBe(head);
   });
+
+  it("refuses completed recovery when the stale draft contains an unrelated byte change", async () => {
+    const f = fixture(),
+      before = readFileSync(f.weeklyPath);
+    await expect(
+      f.run({
+        onProgress: async (phase) => {
+          if (phase === "remote-completed")
+            throw new Error("Synthetic completed interruption");
+        },
+      })
+    ).rejects.toThrow("Synthetic completed interruption");
+    f.staleCapsule();
+    const changed = Buffer.concat([before, Buffer.from("\n")]);
+    writeFileSync(f.weeklyPath, changed);
+    const head = f.store.read().head,
+      append = vi.fn(f.store.compareAndAppend);
+    await expect(
+      f.run({ store: { ...f.store, compareAndAppend: append } })
+    ).rejects.toThrow("Completed weekly edition changed");
+    expect(readFileSync(f.weeklyPath)).toEqual(changed);
+    expect(f.store.read().head).toBe(head);
+    expect(append).not.toHaveBeenCalled();
+  }, 90_000);
+
+  it("repairs a completed stale draft through the shared SQLite lock and refreshes an exact unchanged catalog snapshot", async () => {
+    const f = fixture(),
+      before = readFileSync(f.weeklyPath);
+    const completed = await f.run();
+    const after = readFileSync(f.weeklyPath),
+      head = f.store.read().head;
+    const originalArtifact = f.journal.readArtifact(
+      f.state.runId,
+      "acknowledge",
+      1
+    );
+    const home = dirname(f.journal.path),
+      sqlitePath = join(home, "ledger.sqlite");
+    vi.stubEnv("ZIVV_LEDGER_HOME", home);
+    writeFileSync(
+      join(f.root, "data/ingestion/store.json"),
+      canonicalJson({ schemaVersion: 1, backend: "sqlite", namespace: "zivv" })
+    );
+    const key = loadBackupKey(home, true);
+    await writeSqliteLedger(
+      sqlitePath,
+      bootstrapLedger({ events: [], artists: [], venues: [] }, 1000),
+      true
+    );
+    const digest = ledgerDigest(readSqliteLedger(sqlitePath));
+    const snapshotPath = join(
+      f.root,
+      "data/ingestion/backups/ledger.snapshot.enc"
+    );
+    expect(existsSync(snapshotPath)).toBe(false);
+    writeFileSync(f.weeklyPath, before);
+    const append = vi.fn(f.store.compareAndAppend);
+    expect(
+      await f.run({ store: { ...f.store, compareAndAppend: append } })
+    ).toEqual(completed);
+    expect(readFileSync(f.weeklyPath)).toEqual(after);
+    expect(f.journal.readArtifact(f.state.runId, "acknowledge", 1)).toEqual(
+      originalArtifact
+    );
+    expect(ledgerDigest(readSqliteLedger(sqlitePath))).toBe(digest);
+    expect(
+      ledgerDigest(decryptLedgerSnapshot(readFileSync(snapshotPath), key))
+    ).toBe(digest);
+    expect(f.store.read().head).toBe(head);
+    expect(append).not.toHaveBeenCalled();
+  }, 90_000);
 });
