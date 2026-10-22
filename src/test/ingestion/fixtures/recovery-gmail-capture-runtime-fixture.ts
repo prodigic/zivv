@@ -19,7 +19,11 @@ import { retireAndCaptureOperatorRecovery } from "../../../lib/ingestion/operato
 import { prepareOperatorRecoveryRuntime } from "../../../lib/ingestion/recovery-runtime.js";
 import { writeSqliteLedger } from "../../../lib/ingestion/sqlite-store.js";
 import { listRetainedSteveEmailSources } from "../../../lib/ingestion/steve-email-intake.js";
-import { captureSteveGmailWindow } from "../../../lib/ingestion/steve-gmail-handoff.js";
+import {
+  captureSteveGmailWindow,
+  readAuthenticatedSteveGmailBatches,
+  replaySteveGmailBatch,
+} from "../../../lib/ingestion/steve-gmail-handoff.js";
 import { WeeklyRunJournal } from "../../../lib/ingestion/weekly-run-journal.js";
 import type { RecoveryRuntimeInput } from "../../../lib/ingestion/recovery-runtime.js";
 
@@ -168,8 +172,12 @@ function assertOwnedDirectory(base: string, target: string): string {
   return path;
 }
 
-/** Prepare an offline retained worker with one captured and one pending Gmail message. */
-export async function createRecoveryGmailCaptureRuntimeFixture(): Promise<RecoveryGmailCaptureRuntimeFixture> {
+/** Prepare an offline retained worker, normally with one captured and one pending
+ * message. The optional review mode normally replays the second message before
+ * retirement so recovery can exercise explicit approval of an existing receipt. */
+export async function createRecoveryGmailCaptureRuntimeFixture(
+  options: { reviewSecondMessage?: boolean } = {}
+): Promise<RecoveryGmailCaptureRuntimeFixture> {
   const base = mkdtempSync(
     join(tmpdir(), "zivv-recovery-gmail-capture-runtime-")
   );
@@ -281,16 +289,40 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
     if (!interrupted)
       throw new Error("Expected pending Gmail source interruption");
 
+    if (options.reviewSecondMessage) {
+      // Replay the authenticated saved batch through ordinary intake without a
+      // correction choice. Its second body is genuinely retained for review;
+      // recovery can later approve it while preserving its original source row.
+      const batch = readAuthenticatedSteveGmailBatches({
+        operatorDirectory: operator,
+      })[0];
+      if (!batch) throw new Error("Expected retained Gmail batch");
+      const replay = await replaySteveGmailBatch({
+        operatorDirectory: operator,
+        batchId: batch.batchId,
+        expectedAccountId: account,
+        expectedEditionId: editionId,
+      });
+      if (replay.status !== "captured")
+        throw new Error("Expected normal capture of the review-only message");
+    }
+
     const sourceReceipts = listRetainedSteveEmailSources({
       operatorDirectory: operator,
       accountId: account,
       expectedEditionId: editionId,
     });
     if (
-      sourceReceipts.length !== 1 ||
-      sourceReceipts[0]?.receipt.messageId !== "a1"
+      sourceReceipts.length !== (options.reviewSecondMessage ? 2 : 1) ||
+      !sourceReceipts.some(({ receipt }) => receipt.messageId === "a1") ||
+      (options.reviewSecondMessage &&
+        !sourceReceipts.some(
+          ({ receipt }) =>
+            receipt.messageId === "b1" &&
+            receipt.disposition === "review-required"
+        ))
     )
-      throw new Error("Expected only the first Gmail source to be captured");
+      throw new Error("Unexpected captured/review-only Gmail fixture sources");
     const batchDirectory = join(operator, "email-acquisition/batches");
     const batchIds = readdirSync(batchDirectory)
       .filter((name) => /^[a-f0-9]{64}\.json$/.test(name))
