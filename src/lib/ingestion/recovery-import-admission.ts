@@ -6,6 +6,7 @@ import {
   lstatSync,
   readFileSync,
   realpathSync,
+  readdirSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, join, resolve, relative, isAbsolute } from "node:path";
@@ -52,16 +53,47 @@ import {
 import { createRecoveryCandidateLocations } from "./recovery-candidate-locations.js";
 import type { WeeklyPublicationOptions } from "./weekly-publication.js";
 import { parsePromotionControl } from "./promotion-control.js";
+import {
+  openRecoveryFrozenRemote,
+  openRecoveryFrozenRemoteForTest,
+  type RecoveryFrozenRemote,
+} from "./recovery-frozen-remote.js";
+import {
+  captureExportConfiguration,
+  configurationDigest,
+  type CandidateConfiguration,
+} from "./export-configuration.js";
+import {
+  verifyCapturedSource,
+  parseApplicationBuildReceipt,
+  verifyBuildExecutionToolIdentity,
+  verifyCompiledEtl,
+  type CapturedSource,
+} from "./source-build.js";
+import type { WeeklyCandidateBuildOptions } from "./weekly-candidate-runner.js";
 
 const recordName = "recovery-import.json";
 const resultName = "recovery-import-result.json";
-type RecoveryMode = "load" | "dispatch";
+type RecoveryMode = "load" | "dispatch" | "validate";
 const scopes = new AsyncLocalStorage<{
   active: boolean;
   root: string;
   operator: string;
   runId: string;
   mode: RecoveryMode;
+  build?: {
+    options: WeeklyCandidateBuildOptions;
+    repositoryRoot: string;
+    mainHead: string;
+    configuration: CandidateConfiguration;
+    parent: string;
+    alterBuiltModule?: "module" | "manifest" | "manifest-addition";
+    module?: {
+      sourceRoot: string;
+      files: ReadonlyMap<string, string>;
+      manifests: ReadonlyMap<string, string | null>;
+    };
+  };
   candidate?: {
     publication: WeeklyPublicationOptions;
     repositoryRoot: string;
@@ -80,6 +112,17 @@ export interface RecoveryImportInput extends RecoveryRuntimeInput {
 export interface RecoveryCandidateInput extends RecoveryImportInput {
   workflowCommit: string;
   githubToken: string;
+}
+export interface RecoveryFrozenInput extends RecoveryImportInput {
+  sourceCommit: string;
+}
+export interface RecoveredFrozenReport {
+  status: "candidate-validated";
+  activationAllowed: false;
+  runId: string;
+  ledgerRevision: string;
+  admissionSha256: string;
+  candidateId: string;
 }
 export interface RecoveredImportReport {
   status: "load-complete";
@@ -107,6 +150,7 @@ interface TestOptions {
   interruptAt?: "plan" | "claim" | "dispatch";
   enforcePublicationFlags?: boolean;
   alterDependencyAfterPlan?: boolean;
+  alterBuiltModule?: "module" | "manifest" | "manifest-addition";
 }
 function candidateInput(input: RecoveryImportInput): RecoveryCandidateInput {
   const value = input as Partial<RecoveryCandidateInput>;
@@ -118,6 +162,23 @@ function candidateInput(input: RecoveryImportInput): RecoveryCandidateInput {
   )
     fail("INVALID_RECOVERY_CANDIDATE_INPUT");
   return input as RecoveryCandidateInput;
+}
+function frozenInput(input: RecoveryImportInput): RecoveryFrozenInput {
+  const value = input as Partial<RecoveryFrozenInput>;
+  if (
+    typeof value.sourceCommit !== "string" ||
+    !/^[a-f0-9]{40}$/.test(value.sourceCommit)
+  )
+    fail("INVALID_RECOVERY_FROZEN_INPUT");
+  return input as RecoveryFrozenInput;
+}
+function buildNamespace(runId: string): string {
+  // The full run identity is signed; this collision-refusing location is only
+  // a compact physical role so Windows can spawn nested native build tools.
+  return "operator/weekly-candidates/r-" + sha256(runId).slice(0, 16);
+}
+function buildParent(root: string, runId: string): string {
+  return join(root, buildNamespace(runId));
 }
 function fail(code = "INVALID_RECOVERY_IMPORT_ADMISSION"): never {
   throw new Error(code);
@@ -181,6 +242,12 @@ function mutable(
 ): boolean {
   const path = entry.path;
   const names = admissionNames(mode);
+  if (mode === "validate" && !retained.has(path)) {
+    const parent = buildNamespace(runId);
+    if (entry.kind === "directory" && path === "operator/weekly-candidates")
+      return true;
+    if (path === parent || path.startsWith(parent + "/")) return true;
+  }
   if (mode === "dispatch") {
     const publication = "operator/weekly-publication/" + runId;
     if (!retained.has(path)) {
@@ -271,12 +338,35 @@ function retainedRun(
   );
   if (!row) fail("RECOVERY_IMPORT_RUN_NOT_RETAINED");
   const run = parseWeeklyRunState(JSON.parse(row.payload));
-  if (mode === "dispatch") {
+  if (mode === "dispatch" || mode === "validate") {
+    const prefix = mode === "dispatch" ? 8 : 5;
     if (
-      run.stages.slice(0, 8).some((stage) => stage.status !== "succeeded") ||
-      run.stages.slice(8).some((stage) => stage.status !== "pending")
+      run.stages
+        .slice(0, prefix)
+        .some((stage) => stage.status !== "succeeded") ||
+      run.stages.slice(prefix).some((stage) => stage.status !== "pending")
     )
-      fail("RECOVERY_VALIDATED_CANDIDATE_REQUIRED");
+      fail(
+        mode === "dispatch"
+          ? "RECOVERY_VALIDATED_CANDIDATE_REQUIRED"
+          : "RECOVERY_FROZEN_CHECKPOINT_REQUIRED"
+      );
+    if (
+      mode === "validate" &&
+      snapshot.stageArtifacts.some(
+        (artifact) =>
+          artifact.runId === run.runId &&
+          [
+            "enrich",
+            "export",
+            "validate",
+            "deploy",
+            "verify",
+            "acknowledge",
+          ].includes(artifact.stage)
+      )
+    )
+      fail("RECOVERY_FROZEN_CHECKPOINT_REQUIRED");
   } else if (
     run.stages[3].status !== "pending" ||
     run.stages.slice(0, 3).some((stage) => stage.status !== "succeeded") ||
@@ -306,14 +396,20 @@ function currentRun(
     const run = parseWeeklyRunState(JSON.parse(row.payload));
     same(run.source, expected.source);
     same(
-      run.stages.slice(0, mode === "dispatch" ? 8 : 3),
-      expected.stages.slice(0, mode === "dispatch" ? 8 : 3)
+      run.stages.slice(
+        0,
+        mode === "dispatch" ? 8 : mode === "validate" ? 5 : 3
+      ),
+      expected.stages.slice(
+        0,
+        mode === "dispatch" ? 8 : mode === "validate" ? 5 : 3
+      )
     );
     if (
       (mode === "dispatch" &&
         !["pending", "running"].includes(run.stages[8].status)) ||
       run.stages
-        .slice(mode === "dispatch" ? 9 : 4)
+        .slice(mode === "dispatch" ? 9 : mode === "validate" ? 8 : 4)
         .some((stage) => stage.status !== "pending")
     )
       fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
@@ -325,10 +421,15 @@ function currentRun(
 function admissionNames(mode: RecoveryMode) {
   return mode === "load"
     ? { record: recordName, result: resultName }
-    : {
-        record: "recovery-candidate.json",
-        result: "recovery-candidate-result.json",
-      };
+    : mode === "validate"
+      ? {
+          record: "recovery-frozen.json",
+          result: "recovery-frozen-result.json",
+        }
+      : {
+          record: "recovery-candidate.json",
+          result: "recovery-candidate-result.json",
+        };
 }
 function ensureAdmission(
   input: RecoveryImportInput,
@@ -438,38 +539,67 @@ function ensureAdmission(
           },
         }
       : undefined;
-  const remote: RecoveryImportRemote | RecoveryCandidateRemote =
-    mode === "dispatch"
+  const remote:
+    | RecoveryImportRemote
+    | RecoveryCandidateRemote
+    | RecoveryFrozenRemote =
+    mode === "validate"
       ? test
-        ? openRecoveryCandidateRemoteForTest({
-            ...remoteInput!,
+        ? openRecoveryFrozenRemoteForTest({
+            ...frozenInput(input),
             checkpoint: opened.checkpoint,
             bareDirectory: test.bareDirectory,
           })
-        : openRecoveryCandidateRemote({
-            ...remoteInput!,
+        : openRecoveryFrozenRemote({
+            ...frozenInput(input),
             checkpoint: opened.checkpoint,
           })
-      : test
-        ? openRecoveryImportRemoteForTest({
-            ...input,
-            checkpoint: opened.checkpoint,
-            bareDirectory: test.bareDirectory,
-          })
-        : openRecoveryImportRemote({ ...input, checkpoint: opened.checkpoint });
+      : mode === "dispatch"
+        ? test
+          ? openRecoveryCandidateRemoteForTest({
+              ...remoteInput!,
+              checkpoint: opened.checkpoint,
+              bareDirectory: test.bareDirectory,
+            })
+          : openRecoveryCandidateRemote({
+              ...remoteInput!,
+              checkpoint: opened.checkpoint,
+            })
+        : test
+          ? openRecoveryImportRemoteForTest({
+              ...input,
+              checkpoint: opened.checkpoint,
+              bareDirectory: test.bareDirectory,
+            })
+          : openRecoveryImportRemote({
+              ...input,
+              checkpoint: opened.checkpoint,
+            });
   const names = admissionNames(mode);
+  const configuration =
+    mode === "validate"
+      ? captureExportConfiguration(join(root, "checkout"))
+      : undefined;
+  const parent =
+    mode === "validate" ? buildParent(root, input.runId) : undefined;
+  if (parent && !existsSync(join(root, names.record)) && existsSync(parent))
+    fail("RECOVERY_FROZEN_WORKSPACE_EXISTS");
   const path = join(root, names.record),
     scratch = join(dirname(root), ".zivv-recovery-install-" + sha256(root));
   const fixed = {
     kind:
       mode === "load"
         ? "zivv-recovery-import-admission"
-        : "zivv-recovery-candidate-admission",
+        : mode === "validate"
+          ? "zivv-recovery-frozen-admission"
+          : "zivv-recovery-candidate-admission",
     version: 1,
     scope:
       mode === "load"
         ? "one-retained-run-through-load"
-        : "one-validated-run-through-dispatch",
+        : mode === "validate"
+          ? "one-frozen-run-through-validate"
+          : "one-validated-run-through-dispatch",
     activationAllowed: false,
     root,
     operator,
@@ -484,6 +614,13 @@ function ensureAdmission(
     reportPath,
     ...(mode === "dispatch"
       ? { workflowCommit: candidateInput(input).workflowCommit, workDirectory }
+      : {}),
+    ...(configuration && parent
+      ? {
+          sourceCommit: frozenInput(input).sourceCommit,
+          configurationSha256: configurationDigest(configuration),
+          buildParent: parent,
+        }
       : {}),
     remote: remote.binding,
     transport: test
@@ -530,8 +667,9 @@ function ensureAdmission(
   const assertImmutable = () => {
     const actual = sha256(
       canonicalJson(
-        opened.inventoryImmutable((entry) =>
-          mutable(entry, retained, reportPath, mode, input.runId)
+        opened.inventoryImmutable(
+          (entry) => mutable(entry, retained, reportPath, mode, input.runId),
+          mode === "validate" ? buildNamespace(input.runId) : undefined
         )
       )
     );
@@ -599,7 +737,7 @@ function ensureAdmission(
     }
   };
   currentRun(operator, original, mode);
-  if (mode === "dispatch")
+  if (mode === "dispatch" || mode === "validate")
     same(
       ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
       opened.checkpoint.ledgerRevision
@@ -624,6 +762,21 @@ function ensureAdmission(
               opened.checkpoint,
               root
             ),
+          }
+        : undefined,
+    build:
+      mode === "validate" && configuration && parent
+        ? {
+            options: Object.freeze({
+              sourceCommit: frozenInput(input).sourceCommit,
+              purpose: "release" as const,
+              basePath: "/zivv/",
+              npmCli: resolve(input.npmCli),
+            }),
+            repositoryRoot: realpathSync(input.repositoryRoot),
+            mainHead: remote.binding.mainHead,
+            configuration,
+            parent,
           }
         : undefined,
   };
@@ -657,8 +810,10 @@ export function assertRecoveredImportInvocation(input: {
     input.runId !== scope.runId ||
     input.stopAfter !== scope.mode ||
     input.source ||
-    input.candidateBuild ||
-    (scope.mode === "load"
+    (scope.mode === "validate"
+      ? input.candidateBuild !== scope.build?.options
+      : input.candidateBuild !== undefined) ||
+    (scope.mode !== "dispatch"
       ? input.publication !== undefined
       : input.publication !== scope.candidate?.publication ||
         input.controlledPublishing !== "enabled" ||
@@ -677,6 +832,12 @@ export function resolveRecoveredCandidateWorkDirectory(
   const scope = scopes.getStore();
   if (!scope?.active) return original;
   scope.assertCurrent();
+  if (scope.mode === "validate" && scope.build) {
+    const child = relative(scope.build.parent, resolve(original));
+    if (!/^candidate-work-[A-Za-z0-9_-]+$/.test(child))
+      fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+    return original;
+  }
   if (
     scope.mode !== "dispatch" ||
     !scope.candidate ||
@@ -684,6 +845,219 @@ export function resolveRecoveredCandidateWorkDirectory(
   )
     fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
   return scope.candidate.resolveDirectory(original);
+}
+/** Only a frozen admission may choose a new build context on the replacement host. */
+export function recoveredCandidateBuildContext(defaultRoot: string): {
+  repositoryRoot: string;
+  mainHead?: string;
+  configuration?: CandidateConfiguration;
+} {
+  const scope = scopes.getStore();
+  if (!scope?.active) return { repositoryRoot: defaultRoot };
+  scope.assertCurrent();
+  if (
+    scope.mode !== "validate" ||
+    !scope.build ||
+    ![scope.root, scope.build.repositoryRoot].includes(resolve(defaultRoot))
+  )
+    fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+  return {
+    repositoryRoot: scope.build.repositoryRoot,
+    mainHead: scope.build.mainHead,
+    configuration: Object.fromEntries(
+      Object.entries(scope.build.configuration).map(([path, bytes]) => [
+        path,
+        bytes === null ? null : Buffer.from(bytes),
+      ])
+    ) as CandidateConfiguration,
+  };
+}
+/** Keep new build outputs in one signed run-specific namespace. */
+export function recoveredCandidateWorkParent(defaultParent: string): string {
+  const scope = scopes.getStore();
+  if (!scope?.active) return defaultParent;
+  scope.assertCurrent();
+  if (resolve(defaultParent) !== join(scope.operator, "weekly-candidates"))
+    fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+  return scope.mode === "validate" && scope.build
+    ? scope.build.parent
+    : defaultParent;
+}
+/** Bind the isolated recipe before it can capture source or execute npm. */
+export function assertRecoveredCandidateBuild(input: {
+  repositoryRoot: string;
+  privateDirectory: string;
+  sourceCommit: string;
+  purpose: string;
+  basePath: string;
+  npmCli: string;
+}): void {
+  const scope = scopes.getStore();
+  if (!scope?.active) return;
+  if (scope.mode !== "validate" || !scope.build)
+    fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+  scope.assertCurrent();
+  scope.assertRemote();
+  if (
+    ![scope.root, scope.build.repositoryRoot].includes(
+      resolve(input.repositoryRoot)
+    ) ||
+    input.sourceCommit !== scope.build.options.sourceCommit ||
+    input.purpose !== "release" ||
+    input.basePath !== "/zivv/" ||
+    resolve(input.npmCli) !== scope.build.options.npmCli ||
+    !/^candidate-work-[A-Za-z0-9_-]+$/.test(
+      relative(scope.build.parent, resolve(input.privateDirectory))
+    )
+  )
+    fail("RECOVERY_BUILD_CONTEXT_CHANGED");
+}
+/** Grant the loader only the newly verified reviewed ETL tree, for this active run. */
+export function authorizeRecoveredCandidateBuildModules(
+  source: CapturedSource,
+  bytes: Buffer
+): void {
+  const scope = scopes.getStore();
+  if (!scope?.active) return;
+  if (scope.mode !== "validate" || !scope.build)
+    fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+  scope.assertCurrent();
+  scope.assertRemote();
+  const suffix = relative(scope.build.parent, source.sourceRoot)
+    .split("\\")
+    .join("/");
+  if (
+    !/^candidate-work-[A-Za-z0-9_-]+\/source-build-[A-Za-z0-9_-]+\/source$/.test(
+      suffix
+    )
+  )
+    fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+  const receipt = parseApplicationBuildReceipt(bytes);
+  verifyCapturedSource(source);
+  if (
+    source.sourceCommit !== scope.build.options.sourceCommit ||
+    source.purpose !== "release" ||
+    receipt.schemaVersion !== 2 ||
+    receipt.sourceCommit !== source.sourceCommit ||
+    receipt.sourceTree !== source.sourceTree ||
+    receipt.basePath !== "/zivv/" ||
+    !regular(join(source.directory, "application-build.json")).equals(bytes)
+  )
+    fail("RECOVERY_BUILD_CONTEXT_CHANGED");
+  verifyBuildExecutionToolIdentity(
+    receipt,
+    regular(join(source.directory, "execution-tools.json"))
+  );
+  verifyCompiledEtl(source.sourceRoot, receipt.etlInventorySha256);
+  const files = new Map<string, string>();
+  const manifests = new Map<string, string | null>();
+  const recordManifest = (directory: string): void => {
+    const path = join(directory, "package.json");
+    manifests.set(path, existsSync(path) ? sha256(regular(path)) : null);
+  };
+  recordManifest(realpathSync(source.sourceRoot));
+  let entries = 0,
+    total = 0;
+  for (const name of ["dist", "node_modules"]) {
+    const base = join(realpathSync(source.sourceRoot), name);
+    const walk = (directory: string): void => {
+      recordManifest(directory);
+      for (const child of readdirSync(directory)) {
+        if (++entries > 50_000) fail("RECOVERY_BUILD_MODULE_LIMIT");
+        const path = join(directory, child),
+          stat = lstatSync(path);
+        if (stat.isSymbolicLink()) {
+          const suffix = relative(base, realpathSync(path));
+          if (
+            suffix === ".." ||
+            suffix.startsWith("../") ||
+            suffix.startsWith("..\\") ||
+            isAbsolute(suffix)
+          )
+            fail("RECOVERY_BUILD_MODULE_LINK");
+        } else if (stat.isDirectory()) walk(path);
+        else {
+          if (
+            !stat.isFile() ||
+            stat.nlink !== 1 ||
+            (total += stat.size) > 512 * 1024 * 1024
+          )
+            fail("RECOVERY_BUILD_MODULE_LIMIT");
+          files.set(
+            realpathSync(path),
+            sha256(regular(path, 512 * 1024 * 1024))
+          );
+        }
+      }
+    };
+    walk(base);
+  }
+  scope.build.module = {
+    sourceRoot: realpathSync(source.sourceRoot),
+    files,
+    manifests,
+  };
+  if (scope.build.alterBuiltModule) {
+    const target =
+      scope.build.alterBuiltModule === "module"
+        ? join(source.sourceRoot, "dist/lib/etl/processor.js")
+        : scope.build.alterBuiltModule === "manifest"
+          ? join(source.sourceRoot, "package.json")
+          : join(source.sourceRoot, "dist/package.json");
+    const existing = existsSync(target)
+      ? readFileSync(target)
+      : Buffer.alloc(0);
+    writeFileSync(
+      target,
+      scope.build.alterBuiltModule === "module"
+        ? Buffer.concat([
+            existing,
+            Buffer.from("\n// changed after module authorization\n"),
+          ])
+        : scope.build.alterBuiltModule === "manifest"
+          ? Buffer.concat([existing, Buffer.from("\n ")])
+          : Buffer.from('{"type":"module"}\n')
+    );
+  }
+}
+/** Bind resolver metadata, including explicit absence, before resolving a build module. */
+export function assertRecoveredBuildResolutionCurrent(): void {
+  const scope = scopes.getStore();
+  const build = scope?.build?.module;
+  if (!scope?.active || scope.mode !== "validate" || !build) return;
+  scope.assertCurrent();
+  for (const [path, expected] of build.manifests) {
+    const actual = existsSync(path) ? sha256(regular(path)) : null;
+    if (actual !== expected) fail("RECOVERY_BUILD_MODULE_METADATA_CHANGED");
+  }
+}
+/** Called by the retained module boundary; no active verified build grants no access. */
+export function isRecoveredBuildModuleAllowed(path: string): boolean {
+  const scope = scopes.getStore();
+  const build = scope?.build?.module;
+  if (!scope?.active || scope.mode !== "validate" || !build) return false;
+  scope.assertCurrent();
+  const suffix = relative(build.sourceRoot, realpathSync(path));
+  if (
+    !suffix ||
+    isAbsolute(suffix) ||
+    suffix === ".." ||
+    suffix.startsWith("..\\") ||
+    suffix.startsWith("../")
+  )
+    return false;
+  if (
+    !suffix.startsWith("dist/") &&
+    !suffix.startsWith("dist\\") &&
+    !suffix.startsWith("node_modules/") &&
+    !suffix.startsWith("node_modules\\")
+  )
+    return false;
+  const expected = build.files.get(realpathSync(path));
+  if (expected === undefined) return false;
+  if (sha256(regular(path, 512 * 1024 * 1024)) !== expected)
+    fail("RECOVERY_BUILD_MODULE_CHANGED");
+  return true;
 }
 /** Retained files and authoritative Git operations have separately bound roots. */
 export function recoveredPublicationRepository(defaultRoot: string): {
@@ -736,11 +1110,18 @@ function execute(
   test: TestOptions | undefined,
   mode: "dispatch"
 ): Promise<RecoveredCandidateReport>;
+function execute(
+  input: RecoveryFrozenInput,
+  test: TestOptions | undefined,
+  mode: "validate"
+): Promise<RecoveredFrozenReport>;
 async function execute(
   input: RecoveryImportInput,
   test?: TestOptions,
   mode: RecoveryMode = "load"
-): Promise<RecoveredImportReport | RecoveredCandidateReport> {
+): Promise<
+  RecoveredImportReport | RecoveredCandidateReport | RecoveredFrozenReport
+> {
   const root = resolve(input.destination),
     checkout = join(root, "checkout"),
     runtimeRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -794,6 +1175,16 @@ async function execute(
     operator: admitted.operator,
     runId: input.runId,
     mode,
+    ...(admitted.build
+      ? {
+          build: {
+            ...admitted.build,
+            ...(test?.alterBuiltModule
+              ? { alterBuiltModule: test.alterBuiltModule }
+              : {}),
+          },
+        }
+      : {}),
     ...(candidate && publication
       ? {
           candidate: {
@@ -821,6 +1212,7 @@ async function execute(
         root: checkout,
         runId: input.runId,
         stopAfter: mode,
+        ...(admitted.build ? { candidateBuild: admitted.build.options } : {}),
         ...(publication
           ? {
               publication,
@@ -832,6 +1224,52 @@ async function execute(
           if (event.stage === "deploy" && event.phase === "effect-committed")
             dispatchObserved = true;
           if (!test) return;
+          if (
+            mode === "validate" &&
+            event.stage === "enrich" &&
+            event.phase === "started" &&
+            test.probeRestrictedConsumers
+          ) {
+            const { assertOperatorNotQuarantined } =
+              await import("./private-artifacts.js");
+            let denied = false;
+            try {
+              assertOperatorNotQuarantined(admitted.operator);
+            } catch (error) {
+              if (
+                !(error instanceof Error) ||
+                error.message !== "RECOVERY_INSTALLATION_NOT_ACTIVATED"
+              )
+                throw error;
+              denied = true;
+            }
+            if (!denied) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+            for (const change of [
+              { runId: "another-run" },
+              { stopAfter: "dispatch" as const },
+              { candidateBuild: { ...admitted.build!.options } },
+              { freezeCutoffEpochMs: Date.now() },
+            ]) {
+              denied = false;
+              try {
+                await runWeeklyImport({
+                  root: checkout,
+                  runId: input.runId,
+                  stopAfter: "validate",
+                  candidateBuild: admitted.build!.options,
+                  ...change,
+                });
+              } catch (error) {
+                if (
+                  !(error instanceof Error) ||
+                  error.message !== "RECOVERY_IMPORT_SCOPE_EXCEEDED"
+                )
+                  throw error;
+                denied = true;
+              }
+              if (!denied) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+            }
+          }
           if (
             mode === "dispatch" &&
             event.stage === "deploy" &&
@@ -979,7 +1417,7 @@ async function execute(
           state.stages.slice(4).some((stage) => stage.status !== "pending"))
       )
         fail();
-      if (mode === "dispatch") {
+      if (mode === "dispatch" || mode === "validate") {
         currentRun(admitted.operator, admitted.original, mode);
         same(
           ledgerDigest(
@@ -998,8 +1436,23 @@ async function execute(
         ),
         admissionSha256: sha256(admitted.bytes),
       };
-      let report: RecoveredImportReport | RecoveredCandidateReport;
-      if (candidate) {
+      let report:
+        | RecoveredImportReport
+        | RecoveredCandidateReport
+        | RecoveredFrozenReport;
+      if (mode === "validate") {
+        const candidateId = state.stages[7].evidence?.candidateId;
+        if (
+          state.stages
+            .slice(5, 8)
+            .some((stage) => stage.status !== "succeeded") ||
+          typeof candidateId !== "string" ||
+          !/^[a-f0-9]{64}$/.test(candidateId)
+        )
+          fail("RECOVERY_CANDIDATE_NOT_VALIDATED");
+        admitted.remote.assertCurrent();
+        report = { ...base, status: "candidate-validated", candidateId };
+      } else if (candidate) {
         const progress = candidate.remote.validateProgress(
           candidate.remote.binding.initialControlHead
         );
@@ -1043,6 +1496,11 @@ export const executeRecoveredCandidate = (input: RecoveryCandidateInput) =>
 export const executeRecoveredCandidateForTest = (
   input: RecoveryCandidateInput & TestOptions
 ) => execute(input, input, "dispatch");
+export const executeRecoveredFrozen = (input: RecoveryFrozenInput) =>
+  execute(input, undefined, "validate");
+export const executeRecoveredFrozenForTest = (
+  input: RecoveryFrozenInput & TestOptions
+) => execute(input, input, "validate");
 
 function launch(
   input: RecoveryImportInput,
@@ -1054,11 +1512,18 @@ function launch(
   test: TestOptions | undefined,
   mode: "dispatch"
 ): Promise<RecoveredCandidateReport>;
+function launch(
+  input: RecoveryFrozenInput,
+  test: TestOptions | undefined,
+  mode: "validate"
+): Promise<RecoveredFrozenReport>;
 async function launch(
   supplied: RecoveryImportInput,
   test?: TestOptions,
   mode: RecoveryMode = "load"
-): Promise<RecoveredImportReport | RecoveredCandidateReport> {
+): Promise<
+  RecoveredImportReport | RecoveredCandidateReport | RecoveredFrozenReport
+> {
   const input = {
     ...supplied,
     archive: Buffer.from(supplied.archive),
@@ -1072,7 +1537,7 @@ async function launch(
       join(root, "checkout/dist/lib/ingestion/recovery-import-admission.js")
     ).href;
   const script = `
-    const {${mode === "load" ? (test ? "executeRecoveredImportForTest" : "executeRecoveredImport") : test ? "executeRecoveredCandidateForTest" : "executeRecoveredCandidate"}:execute}=await import(${JSON.stringify(entry)});
+    const {${mode === "load" ? (test ? "executeRecoveredImportForTest" : "executeRecoveredImport") : mode === "validate" ? (test ? "executeRecoveredFrozenForTest" : "executeRecoveredFrozen") : test ? "executeRecoveredCandidateForTest" : "executeRecoveredCandidate"}:execute}=await import(${JSON.stringify(entry)});
     try {
       let size=0;const chunks=[];for await(const chunk of process.stdin){if((size+=chunk.length)>512*1024*1024)throw Error('RECOVERY_IMPORT_INPUT_TOO_LARGE');chunks.push(chunk);}
       const value=JSON.parse(Buffer.concat(chunks).toString('utf8'));
@@ -1096,6 +1561,7 @@ async function launch(
   ])
     if (process.env[name] !== undefined) env[name] = process.env[name];
   env.ZIVV_LEDGER_HOME = join(root, "operator");
+  env.ZIVV_RECOVERY_EXECUTOR = "1";
   if (mode === "dispatch" && (!test || test.enforcePublicationFlags)) {
     env.ZIVV_CONTROLLED_PUBLISHING = process.env.ZIVV_CONTROLLED_PUBLISHING;
     env.ZIVV_MANUAL_PUBLISHER_JOINED = process.env.ZIVV_MANUAL_PUBLISHER_JOINED;
@@ -1179,7 +1645,8 @@ async function launch(
           fail();
         const report = result as
           | RecoveredImportReport
-          | RecoveredCandidateReport;
+          | RecoveredCandidateReport
+          | RecoveredFrozenReport;
         same(
           Object.keys(report).sort(),
           [
@@ -1189,14 +1656,17 @@ async function launch(
             "runId",
             "status",
             ...(mode === "dispatch" ? ["candidateId", "operationId"] : []),
+            ...(mode === "validate" ? ["candidateId"] : []),
           ].sort()
         );
         if (
           (mode === "load"
             ? report.status !== "load-complete"
-            : !["dispatch-observed", "dispatch-pending"].includes(
-                report.status
-              )) ||
+            : mode === "validate"
+              ? report.status !== "candidate-validated"
+              : !["dispatch-observed", "dispatch-pending"].includes(
+                  report.status
+                )) ||
           report.activationAllowed !== false ||
           report.runId !== input.runId ||
           !/^[a-f0-9]{64}$/.test(report.ledgerRevision) ||
@@ -1204,10 +1674,11 @@ async function launch(
         )
           fail();
         if (
-          mode === "dispatch" &&
+          (mode === "dispatch" || mode === "validate") &&
           (!("candidateId" in report) ||
             !/^[a-f0-9]{64}$/.test(report.candidateId) ||
-            (report.operationId !== null &&
+            ("operationId" in report &&
+              report.operationId !== null &&
               !/^[a-f0-9]{64}$/.test(report.operationId)))
         )
           fail();
@@ -1226,6 +1697,12 @@ export const resumeOperatorRecoveryImport = (input: RecoveryImportInput) =>
 export const resumeOperatorRecoveryImportForTest = (
   input: RecoveryImportInput & TestOptions
 ) => launch(input, input);
+/** Build only the original frozen run through validation; never publish or acknowledge. */
+export const resumeOperatorRecoveryFrozen = (input: RecoveryFrozenInput) =>
+  launch(input, undefined, "validate");
+export const resumeOperatorRecoveryFrozenForTest = (
+  input: RecoveryFrozenInput & TestOptions
+) => launch(input, input, "validate");
 /** Explicit same-candidate dispatch; quarantine is not generally activated. */
 export const resumeOperatorRecoveryCandidate = (
   input: RecoveryCandidateInput

@@ -205,7 +205,8 @@ export interface CapturedSource {
   archiveSha256: string;
   purpose: "preview" | "release";
 }
-function verifyCapturedSource(source: CapturedSource): void {
+/** Verify the retained source receipt, exact Git blobs and permitted build outputs. */
+export function verifyCapturedSource(source: CapturedSource): void {
   const directory = resolvePrivateCandidateDirectory(source.directory);
   if (
     directory !== source.directory ||
@@ -316,10 +317,13 @@ export function captureReviewedSource(input: {
   privateDirectory: string;
   sourceCommit: string;
   purpose: "preview" | "release";
+  expectedMainHead?: string;
 }): CapturedSource {
   if (
     !/^[a-f0-9]{40}$/.test(input.sourceCommit) ||
-    !["preview", "release"].includes(input.purpose)
+    !["preview", "release"].includes(input.purpose) ||
+    (input.expectedMainHead !== undefined &&
+      !/^[a-f0-9]{40}$/.test(input.expectedMainHead))
   )
     throw new Error("Invalid source capture identity");
   const root = resolve(input.repositoryRoot);
@@ -342,8 +346,17 @@ export function captureReviewedSource(input: {
     .toString("utf8")
     .trim();
   if (commit !== input.sourceCommit) throw new Error("Source commit changed");
-  if (input.purpose === "release")
-    git(root, ["merge-base", "--is-ancestor", commit, "origin/main"]);
+  if (input.purpose === "release") {
+    const main = input.expectedMainHead ?? "origin/main";
+    if (
+      input.expectedMainHead !== undefined &&
+      git(root, ["rev-parse", "--verify", `${main}^{commit}`])
+        .toString("utf8")
+        .trim() !== main
+    )
+      throw new Error("Expected main commit changed");
+    git(root, ["merge-base", "--is-ancestor", commit, main]);
+  }
   const sourceTree = git(root, ["rev-parse", commit + "^{tree}"])
     .toString("utf8")
     .trim();

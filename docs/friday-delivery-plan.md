@@ -121,6 +121,7 @@ Until these gates pass, the operator uses the preserved manual path. No schedule
 - [Quarantined recovery runtime preparation](recovery-runtime-preparation.md)
 - [Retained same-run import admission](recovery-import-admission.md)
 - [Validated-candidate recovery through dispatch](recovery-candidate-admission.md)
+- [Frozen-run recovery through candidate validation](recovery-frozen-admission.md)
 - [Weekly editions](weekly-editions.md)
 - [Architecture experiment review](architecture/2026-08-reorganization-review.md)
 - [Enrichment quality protocol](research/enrichment-quality-protocol.md)

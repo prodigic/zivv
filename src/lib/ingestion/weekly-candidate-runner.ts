@@ -14,7 +14,11 @@ import {
   secureOperatorDirectory,
 } from "./encrypted-backup.js";
 import { resolvePrivateCandidateDirectory } from "./private-artifacts.js";
-import { resolveRecoveredCandidateWorkDirectory } from "./recovery-import-admission.js";
+import {
+  recoveredCandidateBuildContext,
+  recoveredCandidateWorkParent,
+  resolveRecoveredCandidateWorkDirectory,
+} from "./recovery-import-admission.js";
 import {
   buildReviewedWeeklyCandidate,
   readPublishableCandidate,
@@ -157,7 +161,9 @@ export async function runWeeklyCandidateStages(input: {
   )
     fail("INVALID_CANDIDATE_STAGE_ARTIFACT");
   const parent = resolvePrivateCandidateDirectory(
-    join(input.operatorDirectory, "weekly-candidates")
+    recoveredCandidateWorkParent(
+      join(input.operatorDirectory, "weekly-candidates")
+    )
   );
   secureOperatorDirectory(parent);
   const newDirectory = () => {
@@ -221,7 +227,12 @@ export async function runWeeklyCandidateStages(input: {
       configurationDigest(configuration) !== value.configSha256
     )
       fail("INVALID_CANDIDATE_STAGE_ARTIFACT");
-    return { build, buildSha256, configSha256: String(value.configSha256) };
+    return {
+      build,
+      buildSha256,
+      configuration,
+      configSha256: String(value.configSha256),
+    };
   }
   const key = loadBackupKey(input.operatorDirectory);
   function exportIntent() {
@@ -326,14 +337,25 @@ export async function runWeeklyCandidateStages(input: {
               build.purpose !== input.requiredPurpose
             )
               fail("CANDIDATE_BUILD_PURPOSE_MISMATCH");
+            const context = recoveredCandidateBuildContext(input.root);
             const source = captureReviewedSource({
-              repositoryRoot: input.root,
+              repositoryRoot: context.repositoryRoot,
               privateDirectory: newDirectory(),
               sourceCommit: build.sourceCommit,
               purpose: build.purpose,
+              expectedMainHead: context.mainHead,
             });
             input.verifyContext();
-            const configuration = captureExportConfiguration(source.sourceRoot);
+            const configuration = context.configuration
+              ? (Object.fromEntries(
+                  CANDIDATE_CONFIG_FILES.map((name) => [
+                    name,
+                    context.configuration![name] === null
+                      ? null
+                      : Buffer.from(context.configuration![name]),
+                  ])
+                ) as CandidateConfiguration)
+              : captureExportConfiguration(source.sourceRoot);
             configuration["ingestion/weekly-editions.json"] = weeklyBytes;
             saveArtifact(stage, {
               schemaVersion: 1,
@@ -385,10 +407,13 @@ export async function runWeeklyCandidateStages(input: {
           timer.unref();
           let result;
           try {
+            const context = recoveredCandidateBuildContext(input.root);
             result = await buildReviewedWeeklyCandidate({
-              repositoryRoot: input.root,
+              repositoryRoot: context.repositoryRoot,
               privateDirectory: intent.workDirectory,
               ...captured.build,
+              expectedMainHead: context.mainHead,
+              configuration: captured.configuration,
               editionId: edition!.editionId,
               weeklyEditionBytes: weeklyBytes,
               ledger: frozen.ledger,

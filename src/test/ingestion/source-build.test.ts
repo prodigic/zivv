@@ -237,6 +237,50 @@ describe("reviewed source capture and isolated application build", () => {
     expect(capture("release").purpose).toBe("release");
   }, 30_000);
 
+  it("captures a release against the exact supplied main commit while leaving a stale origin/main unchanged", () => {
+    const cachedMain = sourceCommit;
+    write("fresh-main.ts", "export const reviewedMain = true;\n");
+    sourceCommit = commit();
+    expect(() => capture("release")).toThrow();
+    const source = captureReviewedSource({
+      repositoryRoot,
+      privateDirectory,
+      sourceCommit,
+      purpose: "release",
+      expectedMainHead: sourceCommit,
+    });
+    expect(source.sourceCommit).toBe(sourceCommit);
+    expect(readFileSync(join(source.sourceRoot, "fresh-main.ts"), "utf8")).toBe(
+      "export const reviewedMain = true;\n"
+    );
+    expect(git(["rev-parse", "refs/remotes/origin/main"])).toBe(cachedMain);
+    expect(() =>
+      captureReviewedSource({
+        repositoryRoot,
+        privateDirectory,
+        sourceCommit,
+        purpose: "release",
+        expectedMainHead: cachedMain,
+      })
+    ).toThrow();
+  }, 30_000);
+
+  it.each(["main", "a".repeat(39), "a".repeat(41)])(
+    "rejects a non-SHA expected main identity before source effects: %s",
+    (expectedMainHead) => {
+      expect(() =>
+        captureReviewedSource({
+          repositoryRoot,
+          privateDirectory,
+          sourceCommit,
+          purpose: "release",
+          expectedMainHead,
+        })
+      ).toThrow("Invalid source capture identity");
+      expect(existsSync(privateDirectory)).toBe(false);
+    }
+  );
+
   it("ignores Git replacement objects when capturing a nominated reviewed commit", () => {
     const reviewedCommit = sourceCommit;
     const reviewedTree = git(["rev-parse", reviewedCommit + "^{tree}"]);

@@ -104,7 +104,8 @@ function inside(root: string, path: string): boolean {
 /** Include dependencies and private bootstrap files; never follow package links. */
 function inventory(
   root: string,
-  omit?: (entry: RecoveryRuntimeEntry) => boolean
+  omit?: (entry: RecoveryRuntimeEntry) => boolean,
+  buildNamespace?: string
 ): RecoveryRuntimeEntry[] {
   noLinks(root);
   const entries: RecoveryRuntimeEntry[] = [],
@@ -123,12 +124,21 @@ function inventory(
       const stat = lstatSync(physical);
       if (stat.isSymbolicLink()) {
         const target = readlinkSync(physical);
+        const scopedModules =
+          buildNamespace && path.startsWith(buildNamespace + "/")
+            ? new RegExp(
+                "^" +
+                  buildNamespace.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") +
+                  "/candidate-work-[A-Za-z0-9_-]+/source-build-[A-Za-z0-9_-]+/source/node_modules/"
+              ).exec(path)?.[0]
+            : undefined;
+        const moduleRoot = scopedModules ? join(root, scopedModules) : modules;
         if (
-          !path.startsWith("checkout/node_modules/") ||
+          (!path.startsWith("checkout/node_modules/") && !scopedModules) ||
           isAbsolute(target) ||
           target.includes("\0") ||
-          !inside(modules, resolve(dirname(physical), target)) ||
-          !inside(modules, realpathSync(physical))
+          !inside(moduleRoot, resolve(dirname(physical), target)) ||
+          !inside(moduleRoot, realpathSync(physical))
         )
           fail();
         const entry = { path, kind: "symlink" as const, target };
@@ -299,9 +309,17 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
       return inventory(root);
     },
     /** Active SQLite bytes are governed by transactions, never read as flat files. */
-    inventoryImmutable: (omit: (entry: RecoveryRuntimeEntry) => boolean) => {
+    inventoryImmutable: (
+      omit: (entry: RecoveryRuntimeEntry) => boolean,
+      buildNamespace?: string
+    ) => {
       assertReceipt();
-      return inventory(root, omit);
+      if (
+        buildNamespace &&
+        !/^operator\/weekly-candidates\/r-[a-f0-9]{16}$/.test(buildNamespace)
+      )
+        fail();
+      return inventory(root, omit, buildNamespace);
     },
     assertRuntime: () => {
       authenticate(input);
@@ -448,8 +466,10 @@ export async function prepareOperatorRecoveryRuntime(
     import { realpathSync } from 'node:fs';
     import { isAbsolute, relative } from 'node:path';
     import { fileURLToPath } from 'node:url';
+    let admission;
     const roots = ${JSON.stringify([join(root, "checkout"), dirname(dirname(npmCli))])};
     registerHooks({resolve(specifier, context, nextResolve) {
+      if(!specifier.startsWith('node:')) admission?.assertRecoveredBuildResolutionCurrent?.();
       const result = nextResolve(specifier, context);
       if(result.url.startsWith('node:')) return result;
       if(!result.url.startsWith('file:')) throw Error('RECOVERY_MODULE_OUTSIDE_RUNTIME');
@@ -457,9 +477,11 @@ export async function prepareOperatorRecoveryRuntime(
       if(!roots.some(root => {
         const suffix = relative(root,path);
         return suffix !== '..' && !suffix.startsWith('../') && !suffix.startsWith('..\\\\') && !isAbsolute(suffix);
-      })) throw Error('RECOVERY_MODULE_OUTSIDE_RUNTIME');
+      }) && !admission?.isRecoveredBuildModuleAllowed?.(path)) throw Error('RECOVERY_MODULE_OUTSIDE_RUNTIME');
       return result;
     }});
+    if(process.env.ZIVV_RECOVERY_EXECUTOR === '1')
+      admission = await import(${JSON.stringify(pathToFileURL(join(root, "checkout/dist/lib/ingestion/recovery-import-admission.js")).href)});
   `,
     { flag: "wx", mode: 0o600 }
   );

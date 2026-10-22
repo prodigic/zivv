@@ -693,7 +693,8 @@ describe("weekly candidate stages with real sealed bundles", () => {
         sourceCommit: input.sourceCommit,
         purpose: input.purpose,
       });
-      const configuration = captureExportConfiguration(captured.sourceRoot);
+      const configuration =
+        input.configuration ?? captureExportConfiguration(captured.sourceRoot);
       configuration["ingestion/weekly-editions.json"] = Buffer.from(
         input.weeklyEditionBytes
       );
@@ -952,6 +953,49 @@ describe("weekly candidate stages with real sealed bundles", () => {
     });
     expect(stage(enriched, "export").status).toBe("pending");
     expect(catalogDigest()).toBe(before);
+  });
+
+  it("passes the captured enrichment configuration unchanged into the export recipe", async () => {
+    const captureSource = doubles.capture.getMockImplementation();
+    if (!captureSource)
+      throw new Error("Missing source fixture implementation");
+    let captures = 0;
+    const retained = Buffer.from('{"sources":[]}\n');
+    doubles.capture.mockImplementation((input) => {
+      const captured = captureSource(input);
+      writeFileSync(
+        join(captured.sourceRoot, "data/venue-sources.json"),
+        captures++ === 0
+          ? retained
+          : Buffer.from('{"sources":[],"changed":true}\n')
+      );
+      return captured;
+    });
+    const enriched = await runWeeklyImport({
+      root,
+      source,
+      stopAfter: "enrich",
+      freezeCutoffEpochMs: cutoff,
+      candidateBuild: build,
+    });
+    const validated = await runWeeklyImport({
+      root,
+      runId: enriched.runId,
+      stopAfter: "validate",
+    });
+    expect(doubles.build).toHaveBeenCalledTimes(1);
+    expect(
+      doubles.build.mock.calls[0][0].configuration?.["venue-sources.json"]
+    ).toEqual(retained);
+    expect(
+      readFileSync(
+        join(bundles[0].directory, "workspace/data/venue-sources.json")
+      )
+    ).toEqual(retained);
+    expect(stage(validated, "enrich").evidence).toEqual(
+      stage(enriched, "enrich").evidence
+    );
+    expect(stage(validated, "validate").status).toBe("succeeded");
   });
 
   it("rejects changed source commit, purpose, base or installer after option capture", async () => {

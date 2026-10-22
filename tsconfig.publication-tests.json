@@ -27,6 +27,8 @@
     "src/test/ingestion/recovery-candidate-locations.test.ts",
     "src/test/ingestion/recovery-candidate-remote.test.ts",
     "src/test/ingestion/recovery-candidate-admission.test.ts",
+    "src/test/ingestion/recovery-frozen-remote.test.ts",
+    "src/test/ingestion/recovery-frozen-admission.test.ts",
     "src/test/ingestion/operator-recovery-location.test.ts",
     "src/test/ingestion/operator-recovery-candidate.test.ts",
     "src/test/ingestion/steve-email-intake.test.ts",
