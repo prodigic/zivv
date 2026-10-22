@@ -4,6 +4,50 @@ Contract based on PR114. Closed executor implementation is in progress and its
 acceptance is unproven. No activation, live catalog load, Gmail request or
 credential provisioning is authorized by this packet.
 
+## Fixed active-capture authority probes
+
+The retained test facade has one fixed `authority-negatives-before-source`
+selection. It runs compiled probes after normal production lease acquisition and
+receipt construction, before the first source journal save. The selector exposes
+no scope, permit, callback, path override or CLI option. Ordinary capture does
+not select or run these probes. Older workers reject the unknown test selection;
+their production capture protocol is unchanged.
+
+The probes compare exact logical journal bytes and a bounded physical prepared
+tree inventory immediately around each operation, including WAL/SHM bytes,
+inode/link identity and modification metadata. Unstable reads are inconclusive
+failures. Only after every fixed refusal and unchanged-state check succeeds does
+the child return the safe `AUTHORITY_NEGATIVES_VERIFIED` diagnostic. That error
+is not a signed completion result. A subsequent normal invocation still has to
+complete capture and prove unchanged seeded run/artifact history and saved replay.
+
+For the nested journal-guard probe, the physical snapshots surround the allowed
+outer transaction. Inside that transaction the matching-lease borrowed journal
+snapshot proves unchanged logical state around the nested refusal. This avoids
+raw reads of SQLite byte ranges locked by Windows without excluding those files
+from the before/after physical comparison.
+
+Ordinary positive controls establish valid create/save/artifact arguments, valid
+snapshot restoration into an empty journal, and catalog initialization and
+revision-aware writes. In capture, restore targets its necessarily populated
+journal: its exact scope refusal proves the early gate, not an otherwise valid
+restore destination. Likewise the unversioned existing-catalog write probes the
+entry gate; a separate valid new-catalog initialization probes an operation that
+would succeed normally. The import probe proves its entry gate before parsing or
+loading, not a successful ordinary import of the synthetic fixture text.
+
+Wrong-scope acquisition and wrong-owner/fence guards retain the distinct Gmail
+lease-identity error. Renew/release retain their ordinary fencing rejection;
+these are labelled fencing controls rather than Gmail-gate coverage. Nested
+journal guard misuse retains its existing error. Snapshot export inside a
+matching outer journal guard remains an intentional borrowed read; the export
+probe exercises the unguarded transaction path, which must refuse.
+
+This packet does not complete #109: expired/escaped scope, runtime/data drift,
+nested retained execution, multi-batch/prospective-parent composition, Monday and
+invalid-message cases, hard death, stale lease and lost-response acceptance
+remain required alongside the other contract gates below.
+
 The pure evidence checkpoint in
 `src/lib/ingestion/recovery-gmail-capture-admission-proof.ts` implements bounded,
 domain-separated signed intent/result records and exact original/prior/current

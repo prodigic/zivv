@@ -24,6 +24,7 @@ import {
   assertRecoveredGmailCaptureInvocation,
   assertRecoveredGmailCaptureFile,
   recoveredGmailCaptureLeaseOwner,
+  recoveredGmailCaptureAuthorityProbeMode,
 } from "./recovery-gmail-capture-admission.js";
 
 const scope = "prodigic/zivv/production";
@@ -1028,6 +1029,17 @@ export async function captureSteveEmail(input: {
         receiverProfile: auth,
       };
       // Commit the first admission before filesystem effects: retries cannot recapture time.
+      if (recoveredGmailCaptureAuthorityProbeMode()) {
+        const { runRecoveryGmailCaptureAuthorityProbes } =
+          await import("./recovery-gmail-capture-authority-probes.js");
+        await runRecoveryGmailCaptureAuthorityProbes({
+          journal,
+          lease: owned,
+          input,
+          prepared,
+          receipt,
+        });
+      }
       receiptBytes = journal.saveIntakeEvidence(
         "source",
         receiptId,
