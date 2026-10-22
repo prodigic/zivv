@@ -6,7 +6,20 @@ credential provisioning is authorized by this packet.
 
 ## Fixed active-capture authority probes
 
-The retained test facade has one fixed `authority-negatives-before-source`
+The fixed `expire-after-admission` selection only shortens the private deadline
+after durable admission and before key installation. It then lets the actual
+next key-installation guard reject the expired scope; it does not inject an
+expiry-shaped error, replace the clock or restore authority. No intake lease has
+been acquired, so normal finalization can revoke the scope and wipe its key
+without an expired scope blocking lease release. The rehearsal retains the
+admission, proves no key/result/intake or ownership change, then requires normal
+capture and unchanged saved-result replay on retry. This is before-key expiry
+coverage, not proof of expiry during an active intake transaction or lease.
+Admission verification can materialize its ordinary read-only journal sidecars:
+the rehearsal inventories them explicitly, requires an empty WAL and the normal
+bounded SHM file, and compares all pre-existing files before further inspection.
+
+The retained test facade uses the fixed `authority-negatives-before-source`
 selection. It runs compiled probes after normal production lease acquisition and
 receipt construction, before the first source journal save. The selector exposes
 no scope, permit, callback, path override or CLI option. Ordinary capture does
