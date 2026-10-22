@@ -67,6 +67,10 @@ visible rather than granting compatibility. Legacy captured builds do not retain
 the npm package identity, so `npmIdentity` is `not-retained`. New schema 2 builds
 retain [private execution-tool provenance](build-execution-tool-identity.md), and
 inspection reports `retained-build-identities` when this evidence is present.
+Explicit v2 captures additionally retain a bootstrap npm profile before a build;
+inspection reports `retained-bootstrap-identity` for these checkpoints. The
+separate [runtime preparation command](recovery-runtime-preparation.md) verifies
+the physical tool and installs/probes production dependencies in quarantine.
 This does not verify a replacement installation or imply coverage of every run. Successful
 decryption proves possession of the capsule key, not installation of a working
 operator key or approval of a replacement execution tool.

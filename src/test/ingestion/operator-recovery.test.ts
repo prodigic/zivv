@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  cpSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -21,7 +22,10 @@ import {
   encryptOperatorRecovery,
   stageOperatorRecovery,
   validateOperatorRecoveryCheckpoint,
+  retireAndCaptureOperatorRecovery,
+  verifyOperatorRetirementEvidence,
 } from "../../lib/ingestion/operator-recovery.js";
+import { captureNpmExecutionTool } from "../../lib/ingestion/execution-tool-identity.js";
 import { bootstrapLedger } from "../../lib/ingestion/ledger.js";
 import {
   canonicalJson,
@@ -39,6 +43,26 @@ describe("offline operator recovery capsules", () => {
   function write(path: string, bytes: string | Buffer) {
     mkdirSync(join(path, ".."), { recursive: true });
     writeFileSync(path, bytes);
+  }
+  function npmFixture() {
+    const packageRoot = join(directory, "npm package; capture only"),
+      npmCli = join(packageRoot, "bin/npm-cli.js"),
+      dependency = join(packageRoot, "node_modules/fixture/index.js");
+    write(npmCli, "throw new Error('capture must never execute npm');\n");
+    write(
+      join(packageRoot, "package.json"),
+      '{"name":"npm","version":"11.6.0"}\n'
+    );
+    write(dependency, "module.exports = 'private fixture dependency';\n");
+    return { packageRoot, npmCli, dependency };
+  }
+  function ownership() {
+    const db = new DatabaseSync(join(operator, "weekly-runs.sqlite"));
+    try {
+      return db.prepare("SELECT * FROM ownership ORDER BY scope").all();
+    } finally {
+      db.close();
+    }
   }
   beforeEach(async () => {
     directory = mkdtempSync(join(tmpdir(), "zivv-recover-"));
@@ -90,6 +114,7 @@ describe("offline operator recovery capsules", () => {
     );
   });
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllEnvs();
     const rel = relative(resolve(tmpdir()), resolve(directory));
     if (!rel.startsWith("zivv-recover-") || rel.startsWith(".."))
@@ -99,6 +124,8 @@ describe("offline operator recovery capsules", () => {
   it("captures, encrypts and stages catalog, journal, evidence and empty attempts without activation", async () => {
     const checkpoint = await captureOperatorRecoveryCheckpoint(root),
       key = randomBytes(32);
+    expect(checkpoint.version).toBe(1);
+    expect(Object.hasOwn(checkpoint.runtime, "bootstrapNpm")).toBe(false);
     const archive = encryptOperatorRecovery(checkpoint, key);
     expect(archive.includes(Buffer.from("private fixture claim"))).toBe(false);
     const decoded = decryptOperatorRecovery(archive, key);
@@ -136,6 +163,187 @@ describe("offline operator recovery capsules", () => {
     }
     expect(existsSync(join(target, "operator/backup-key.bin"))).toBe(false);
     expect(existsSync(join(target, "operator/backup-key.dpapi"))).toBe(false);
+  });
+  it("authenticates explicit v2 bootstrap npm metadata without executing or retaining package bytes", async () => {
+    const tool = npmFixture(),
+      expected = captureNpmExecutionTool(tool.npmCli),
+      checkpoint = await captureOperatorRecoveryCheckpoint(root, {
+        npmCli: tool.npmCli,
+      }),
+      key = randomBytes(32);
+    expect(checkpoint.version).toBe(2);
+    expect(checkpoint.runtime.bootstrapNpm).toEqual(expected);
+    expect(canonicalJson(checkpoint)).not.toContain(
+      "capture must never execute npm"
+    );
+    expect(canonicalJson(checkpoint)).not.toContain(
+      "private fixture dependency"
+    );
+    rmSync(tool.packageRoot, { recursive: true });
+    expect(validateOperatorRecoveryCheckpoint(checkpoint)).toEqual(checkpoint);
+    const archive = encryptOperatorRecovery(checkpoint, key),
+      decoded = decryptOperatorRecovery(archive, key),
+      target = join(directory, "v2-staged");
+    expect(decoded).toEqual(checkpoint);
+    await stageOperatorRecovery(decoded, target, key);
+    expect(
+      JSON.parse(readFileSync(join(target, "recovery-state.json"), "utf8"))
+    ).toMatchObject({
+      status: "staged",
+      activationAllowed: false,
+      runtime: { bootstrapNpm: expected },
+    });
+    expect(() =>
+      assertOperatorNotQuarantined(join(target, "operator"))
+    ).toThrow("RECOVERY_INSTALLATION_NOT_ACTIVATED");
+    expect(existsSync(join(target, "operator/backup-key.dpapi"))).toBe(false);
+    expect(existsSync(join(target, "operator/backup-key.bin"))).toBe(false);
+  });
+
+  it("strictly separates legacy v1 metadata from required v2 bootstrap identity", async () => {
+    const tool = npmFixture(),
+      checkpoint = await captureOperatorRecoveryCheckpoint(root, {
+        npmCli: tool.npmCli,
+      }),
+      identity = checkpoint.runtime.bootstrapNpm!,
+      { bootstrapNpm: _profile, ...legacyRuntime } = checkpoint.runtime;
+    const malformed: unknown[] = [
+      { ...checkpoint, version: 1 },
+      { ...checkpoint, version: 2, runtime: legacyRuntime },
+      { ...checkpoint, version: 3 },
+      { ...checkpoint, runtime: { ...checkpoint.runtime, extra: true } },
+      ...[
+        undefined,
+        null,
+        [],
+        "npm",
+        { ...identity, extra: true },
+        { ...identity, identitySha256: "0".repeat(64) },
+        { ...identity, originalCli: identity.originalCli + ".changed" },
+        {
+          ...identity,
+          files: identity.files.map((file, index) =>
+            index === 0 ? { ...file, sha256: "f".repeat(64) } : file
+          ),
+        },
+      ].map((bootstrapNpm) => ({
+        ...checkpoint,
+        runtime: { ...checkpoint.runtime, bootstrapNpm },
+      })),
+    ];
+    for (const value of malformed)
+      expect(() => validateOperatorRecoveryCheckpoint(value)).toThrow();
+    const legacy = { ...checkpoint, version: 1, runtime: legacyRuntime };
+    expect(validateOperatorRecoveryCheckpoint(legacy)).toEqual(legacy);
+  });
+
+  it("refuses invalid bootstrap npm before changing journal ownership", async () => {
+    const tool = npmFixture(),
+      before = ownership();
+    write(join(tool.packageRoot, ".npmrc"), "private configuration");
+    await expect(
+      captureOperatorRecoveryCheckpoint(root, { npmCli: tool.npmCli })
+    ).rejects.toThrow("INVALID_NPM_EXECUTION_TOOL");
+    expect(ownership()).toEqual(before);
+  });
+
+  it("rechecks the real bootstrap package under both checkpoint locks before finalization", async () => {
+    const tool = npmFixture(),
+      original = WeeklyRunJournal.prototype.exportRecoverySnapshot,
+      revision = ledgerDigest(
+        readSqliteLedger(join(operator, "ledger.sqlite"))
+      );
+    vi.spyOn(
+      WeeklyRunJournal.prototype,
+      "exportRecoverySnapshot"
+    ).mockImplementation(function (this: WeeklyRunJournal, lease) {
+      const bytes = original.call(this, lease);
+      write(tool.dependency, "changed after initial tool capture\n");
+      return bytes;
+    });
+    await expect(
+      captureOperatorRecoveryCheckpoint(root, { npmCli: tool.npmCli })
+    ).rejects.toThrow("INVALID_NPM_EXECUTION_TOOL");
+    expect(
+      ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite")))
+    ).toBe(revision);
+    const journal = new WeeklyRunJournal(operator),
+      lease = journal.acquire("prodigic/zivv/production");
+    journal.release(lease);
+    journal.close();
+    expect(existsSync(join(operator, "operator-retired.json"))).toBe(false);
+  });
+
+  it("binds a v2 retirement profile and preserves it on relocated, absent and conflicting tool retries", async () => {
+    const tool = npmFixture(),
+      key = loadBackupKey(operator, true),
+      out = join(directory, "final-v2.enc"),
+      result = await retireAndCaptureOperatorRecovery({
+        root,
+        out,
+        npmCli: tool.npmCli,
+      }),
+      archive = readFileSync(out),
+      receipt = Buffer.from(result.retirementReceipt),
+      before = ownership(),
+      movedRoot = join(directory, "relocated npm"),
+      movedCli = join(movedRoot, "bin/npm-cli.js");
+    expect(result.checkpoint.version).toBe(2);
+    expect(
+      verifyOperatorRetirementEvidence({
+        archive,
+        retirementReceipt: receipt,
+        recoveryKey: key,
+      }).checkpoint
+    ).toEqual(result.checkpoint);
+    cpSync(tool.packageRoot, movedRoot, { recursive: true });
+    rmSync(tool.packageRoot, { recursive: true });
+    rmSync(out + ".retirement.json");
+    expect(
+      (await retireAndCaptureOperatorRecovery({ root, out })).checkpoint
+    ).toEqual(result.checkpoint);
+    expect(
+      (await retireAndCaptureOperatorRecovery({ root, out, npmCli: movedCli }))
+        .checkpoint
+    ).toEqual(result.checkpoint);
+    expect(readFileSync(out + ".retirement.json")).toEqual(receipt);
+    write(join(movedRoot, "node_modules/fixture/index.js"), "different tool");
+    await expect(
+      retireAndCaptureOperatorRecovery({ root, out, npmCli: movedCli })
+    ).rejects.toThrow("INVALID_NPM_EXECUTION_TOOL");
+    const changed = structuredClone(result.checkpoint);
+    changed.runtime.bootstrapNpm = captureNpmExecutionTool(movedCli);
+    expect(() =>
+      verifyOperatorRetirementEvidence({
+        archive: encryptOperatorRecovery(changed, key),
+        retirementReceipt: receipt,
+        recoveryKey: key,
+      })
+    ).toThrow("RETIREMENT_EVIDENCE_MISMATCH");
+    expect(readFileSync(out)).toEqual(archive);
+    expect(readFileSync(join(operator, "operator-retired.json"))).toEqual(
+      receipt
+    );
+    expect(ownership()).toEqual(before);
+  });
+
+  it("does not silently add bootstrap authority to a legacy retirement retry", async () => {
+    const tool = npmFixture();
+    loadBackupKey(operator, true);
+    const out = join(directory, "legacy-retirement.enc"),
+      result = await retireAndCaptureOperatorRecovery({ root, out }),
+      archive = readFileSync(out);
+    expect(result.checkpoint.version).toBe(1);
+    expect(Object.hasOwn(result.checkpoint.runtime, "bootstrapNpm")).toBe(
+      false
+    );
+    await expect(
+      retireAndCaptureOperatorRecovery({ root, out, npmCli: tool.npmCli })
+    ).rejects.toThrow("RECOVERY_BOOTSTRAP_NPM_REQUIRED");
+    expect(readFileSync(out)).toEqual(archive);
+    expect(
+      (await retireAndCaptureOperatorRecovery({ root, out })).checkpoint
+    ).toEqual(result.checkpoint);
   });
   it("uses fresh encryption nonces and rejects wrong keys, changed ciphertext and authenticated header drift", async () => {
     const checkpoint = await captureOperatorRecoveryCheckpoint(root),
