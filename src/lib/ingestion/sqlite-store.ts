@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import { assertNoRecoveredGmailCapture } from "./recovery-gmail-capture-admission.js";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -50,6 +51,7 @@ export function ledgerDigest(ledger: IngestionLedger): string {
 
 /** Open the local WAL store; an absent ledger never becomes an empty catalog. */
 export function openStore(path: string, create = false): DatabaseSync {
+  assertNoRecoveredGmailCapture();
   if (create) assertOperatorInstallationWritable(dirname(resolve(path)));
   if (!create && !existsSync(path))
     throw new Error(

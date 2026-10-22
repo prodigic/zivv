@@ -69,6 +69,8 @@ try {
         "run-id",
         "workflow-commit",
         "source-commit",
+        "batch-id",
+        "corrections-file",
       ].includes(key) ||
       Object.hasOwn(options, key) ||
       !value ||
@@ -120,13 +122,23 @@ try {
                   : []),
                 ...(command === "recapture-frozen" ? ["out"] : []),
               ]
-            : command === "prepare-runtime" ||
-                command === "verify-prepared-runtime" ||
-                command === "inspect-gmail"
-              ? ["file", "key", "receipt", "destination", "npm-cli"]
-              : command === "stage" || command === "inspect"
-                ? ["file", "key", "destination"]
-                : [];
+            : command === "capture-gmail"
+              ? [
+                  "file",
+                  "key",
+                  "receipt",
+                  "destination",
+                  "npm-cli",
+                  "batch-id",
+                  ...(options["corrections-file"] ? ["corrections-file"] : []),
+                ]
+              : command === "prepare-runtime" ||
+                  command === "verify-prepared-runtime" ||
+                  command === "inspect-gmail"
+                ? ["file", "key", "receipt", "destination", "npm-cli"]
+                : command === "stage" || command === "inspect"
+                  ? ["file", "key", "destination"]
+                  : [];
   if (
     !expected.length ||
     JSON.stringify(Object.keys(options).sort()) !==
@@ -204,6 +216,7 @@ try {
       command === "resume-frozen" ||
       command === "prepare-runtime" ||
       command === "verify-prepared-runtime" ||
+      command === "capture-gmail" ||
       command === "inspect-gmail"
     ) {
       const input = {
@@ -214,62 +227,79 @@ try {
         npmCli: resolve(options["npm-cli"]),
       };
       inspection =
-        command === "recapture-frozen"
-          ? await recaptureOperatorRecoveryFrozenResult({
+        command === "capture-gmail"
+          ? await (
+              await import("../dist/lib/ingestion/recovery-gmail-capture.js")
+            ).resumeOperatorRecoveryGmailBatch({
               ...input,
-              repositoryRoot: resolve(options.repository),
-              runId: options["run-id"],
-              sourceCommit: options["source-commit"],
-              out: resolve(options.out),
-              ...(process.env.GITHUB_TOKEN
-                ? { credentials: { token: process.env.GITHUB_TOKEN } }
+              batchId: options["batch-id"],
+              ...(options["corrections-file"]
+                ? {
+                    correctionOfByMessageId: JSON.parse(
+                      new TextDecoder("utf-8", { fatal: true }).decode(
+                        privateInput(options["corrections-file"], 64 * 1024)
+                      )
+                    ),
+                  }
                 : {}),
             })
-          : command === "resume-verified"
-            ? await resumeOperatorRecoveryVerified({
+          : command === "recapture-frozen"
+            ? await recaptureOperatorRecoveryFrozenResult({
                 ...input,
                 repositoryRoot: resolve(options.repository),
                 runId: options["run-id"],
-                workflowCommit: options["workflow-commit"],
+                sourceCommit: options["source-commit"],
+                out: resolve(options.out),
                 ...(process.env.GITHUB_TOKEN
                   ? { credentials: { token: process.env.GITHUB_TOKEN } }
                   : {}),
               })
-            : command === "resume-frozen"
-              ? await resumeOperatorRecoveryFrozen({
+            : command === "resume-verified"
+              ? await resumeOperatorRecoveryVerified({
                   ...input,
                   repositoryRoot: resolve(options.repository),
                   runId: options["run-id"],
-                  sourceCommit: options["source-commit"],
+                  workflowCommit: options["workflow-commit"],
                   ...(process.env.GITHUB_TOKEN
                     ? { credentials: { token: process.env.GITHUB_TOKEN } }
                     : {}),
                 })
-              : command === "resume-candidate" || command === "resume-dispatch"
-                ? await (
-                    command === "resume-dispatch"
-                      ? resumeOperatorRecoveryDispatch
-                      : resumeOperatorRecoveryCandidate
-                  )({
+              : command === "resume-frozen"
+                ? await resumeOperatorRecoveryFrozen({
                     ...input,
                     repositoryRoot: resolve(options.repository),
                     runId: options["run-id"],
-                    workflowCommit: options["workflow-commit"],
-                    githubToken: process.env.GITHUB_TOKEN,
+                    sourceCommit: options["source-commit"],
+                    ...(process.env.GITHUB_TOKEN
+                      ? { credentials: { token: process.env.GITHUB_TOKEN } }
+                      : {}),
                   })
-                : command === "resume-import"
-                  ? await resumeOperatorRecoveryImport({
+                : command === "resume-candidate" ||
+                    command === "resume-dispatch"
+                  ? await (
+                      command === "resume-dispatch"
+                        ? resumeOperatorRecoveryDispatch
+                        : resumeOperatorRecoveryCandidate
+                    )({
                       ...input,
                       repositoryRoot: resolve(options.repository),
                       runId: options["run-id"],
+                      workflowCommit: options["workflow-commit"],
+                      githubToken: process.env.GITHUB_TOKEN,
                     })
-                  : command === "prepare-runtime"
-                    ? await prepareOperatorRecoveryRuntime(input)
-                    : command === "inspect-gmail"
-                      ? (
-                          await import("../dist/lib/ingestion/recovery-gmail-inspector.js")
-                        ).inspectOperatorRecoveryGmailBatches(input)
-                      : verifyPreparedOperatorRuntime(input);
+                  : command === "resume-import"
+                    ? await resumeOperatorRecoveryImport({
+                        ...input,
+                        repositoryRoot: resolve(options.repository),
+                        runId: options["run-id"],
+                      })
+                    : command === "prepare-runtime"
+                      ? await prepareOperatorRecoveryRuntime(input)
+                      : command === "inspect-gmail"
+                        ? (
+                            await import("../dist/lib/ingestion/recovery-gmail-inspector.js")
+                          ).inspectOperatorRecoveryGmailBatches(input)
+                        : verifyPreparedOperatorRuntime(input);
     } else if (command === "verify-retirement") {
       ({ checkpoint } = verifyOperatorRetirementEvidence({
         archive,

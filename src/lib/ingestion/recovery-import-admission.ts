@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { spawn } from "node:child_process";
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { assertNoRecoveredGmailCapture } from "./recovery-gmail-capture-admission.js";
 import {
   existsSync,
   lstatSync,
@@ -1303,6 +1304,9 @@ export function observeRecoveryFrozenResultRecapture(
 }
 
 /** Only the coordinator below can establish this scope; ordinary staging stays blocked. */
+export function assertNoRecoveredImportScope(): void {
+  if (scopes.getStore()) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
+}
 export function hasRecoveredImportAuthority(directory: string): boolean {
   const scope = scopes.getStore();
   if (!scope?.active || scope.operator !== resolve(directory)) return false;
@@ -1323,6 +1327,7 @@ export function assertRecoveredImportInvocation(input: {
   controlledPublishing?: string;
   manualPublisherJoined?: string;
 }): void {
+  assertNoRecoveredGmailCapture();
   const scope = scopes.getStore();
   if (!scope?.active) return;
   if (

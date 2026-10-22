@@ -19,6 +19,11 @@ import {
   type WeeklyRunLease,
 } from "./weekly-run-journal.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
+import {
+  assertRecoveredGmailCaptureInvocation,
+  assertRecoveredGmailCaptureFile,
+  recoveredGmailCaptureLeaseOwner,
+} from "./recovery-gmail-capture-admission.js";
 
 const scope = "prodigic/zivv/production";
 const provider = "sp.eocampaign1.com";
@@ -106,11 +111,13 @@ function regular(path: string): Buffer {
   return readFileSync(path);
 }
 function privateDirectory(path: string): void {
+  assertRecoveredGmailCaptureFile(path, undefined, "directory");
   if (resolvePrivateCandidateDirectory(path) !== resolve(path))
     fail("UNSAFE_INTAKE_DIRECTORY");
   secureOperatorDirectory(path);
 }
 function once(path: string, bytes: Buffer) {
+  assertRecoveredGmailCaptureFile(path, bytes);
   if (existsSync(path)) {
     if (!regular(path).equals(bytes)) fail("INTAKE_EVIDENCE_CHANGED");
   } else writeDurableFile(path, bytes);
@@ -928,8 +935,10 @@ export async function captureSteveEmail(input: {
 }> {
   const operatorDirectory = resolve(input.operatorDirectory);
   const correctionOf = input.correctionOf;
-  assertOperatorInstallationWritable(operatorDirectory);
+  assertRecoveredGmailCaptureInvocation(input);
+  assertOperatorInstallationWritable(operatorDirectory, "steve-email-capture");
   const prepared = await prepareSteveEmailCapture(input);
+  assertRecoveredGmailCaptureInvocation(input, prepared);
   const {
     accountSha256,
     editionId,
@@ -947,8 +956,8 @@ export async function captureSteveEmail(input: {
     receiverProfile: auth,
   } = prepared;
   const directory = resolvePrivateCandidateDirectory(operatorDirectory);
-  assertOperatorNotQuarantined(directory);
-  secureOperatorDirectory(directory);
+  assertOperatorNotQuarantined(directory, "steve-email-capture");
+  if (!recoveredGmailCaptureLeaseOwner()) secureOperatorDirectory(directory);
   const journal = new WeeklyRunJournal(directory);
   let lease: WeeklyRunLease | undefined;
   try {
