@@ -42,6 +42,7 @@ import {
   verifyBuildExecutionToolIdentity,
 } from "./source-build.js";
 import { validateNpmExecutionToolIdentity } from "./execution-tool-identity.js";
+import { decryptRecoveryResultChain } from "./recovery-result-chain.js";
 import { readPublicationPayloadGit } from "./publication-git.js";
 import { verifyPublicationPayload } from "./publication-payload.js";
 import { preparePagesWorkflowDispatch } from "./pages-dispatch.js";
@@ -144,7 +145,11 @@ function decoded(value: unknown): Buffer {
 }
 
 /** Prove the single captured import, its frozen edition and its already sealed bundle. */
-function retainedCandidate(input: RecoveryCandidateRemoteInput, key: Buffer) {
+function retainedCandidate(
+  input: RecoveryCandidateRemoteInput,
+  key: Buffer,
+  chain?: ReturnType<typeof decryptRecoveryResultChain>
+) {
   let lineage: ReturnType<typeof proveRecoveryWeeklyLineage>;
   try {
     lineage = proveRecoveryWeeklyLineage({
@@ -213,14 +218,35 @@ function retainedCandidate(input: RecoveryCandidateRemoteInput, key: Buffer) {
   same(exported.schemaVersion, 1);
   if (typeof exported.workDirectory !== "string")
     fail("INVALID_CANDIDATE_DIRECTORY");
-  const paths = win32.isAbsolute(checkpoint.originalOperatorDirectory)
+  const paths = /^[A-Za-z]:\\/.test(checkpoint.originalOperatorDirectory)
     ? win32
     : posix;
   const relative = paths
     .relative(checkpoint.originalOperatorDirectory, exported.workDirectory)
     .split(paths.sep)
     .join("/");
-  if (!/^weekly-candidates\/candidate-work-[A-Za-z0-9_-]+$/.test(relative))
+  if (chain) {
+    const namespace = "weekly-candidates/r-" + sha256(run.runId).slice(0, 16);
+    same(checkpoint, chain.successorCheckpoint, "CHAIN_CHECKPOINT_CHANGED");
+    same(
+      relative,
+      chain.certificate.exportRole.workRelative,
+      "CHAIN_ROLE_CHANGED"
+    );
+    same(
+      exported.workDirectory,
+      chain.certificate.exportRole.workDirectory,
+      "CHAIN_ROLE_CHANGED"
+    );
+    if (
+      !new RegExp("^" + namespace + "/candidate-work-[A-Za-z0-9_-]+$").test(
+        relative
+      )
+    )
+      fail("CHAIN_ROLE_CHANGED");
+  } else if (
+    !/^weekly-candidates\/candidate-work-[A-Za-z0-9_-]+$/.test(relative)
+  )
     fail("INVALID_CANDIDATE_DIRECTORY");
   const directories = checkpoint.directories.filter(
     (item) =>
@@ -232,6 +258,15 @@ function retainedCandidate(input: RecoveryCandidateRemoteInput, key: Buffer) {
   const prefix = "operator/" + directories[0].path + "/",
     candidateBytes = required(prefix + "candidate.json"),
     candidate = parseReleaseCandidate(candidateBytes);
+  if (chain) {
+    same(
+      directories[0].path,
+      chain.certificate.exportRole.bundleRelative,
+      "CHAIN_ROLE_CHANGED"
+    );
+    if (!candidateBytes.equals(chain.candidateBytes))
+      fail("CHAIN_CANDIDATE_CHANGED");
+  }
   same(JSON.parse(required(prefix + "complete.json").toString("utf8")), {
     schemaVersion: 1,
     candidateId: candidate.candidateId,
@@ -715,7 +750,8 @@ function gitRead(root: string, args: string[]): string {
 }
 function open(
   input: RecoveryCandidateRemoteInput,
-  transport: PromotionControlTransport
+  transport: PromotionControlTransport,
+  chain?: ReturnType<typeof decryptRecoveryResultChain>
 ): RecoveryCandidateRemote {
   if (
     input.profile !== undefined &&
@@ -727,7 +763,7 @@ function open(
     fail("INVALID_KEY");
   if (!/^[a-f0-9]{40}$/.test(input.workflowCommit)) fail("WORKFLOW_REQUIRED");
   const key = Buffer.from(input.recoveryKey),
-    retained = retainedCandidate(input, key),
+    retained = retainedCandidate(input, key, chain),
     candidate = retained.candidate,
     root = realpathSync(input.repositoryRoot),
     mainHead = transport.readMainHead?.();
@@ -924,6 +960,21 @@ function open(
         }
       : {}),
   });
+  if (chain) {
+    const prior = chain.certificate.remote;
+    for (const field of [
+      "acknowledgedOperationId",
+      "acknowledgedCandidateId",
+      "acknowledgedLedgerRevision",
+      "acknowledgedCutoffEpochMs",
+    ] as const)
+      same(binding[field], prior[field], "CHAIN_BASELINE_CHANGED");
+    const anchor = history.commits.find(
+      (item) => item.head === prior.controlHead
+    );
+    if (!anchor || sha256(anchor.bytes) !== prior.controlSha256)
+      fail("CHAIN_CONTROL_ANCHOR_CHANGED");
+  }
   let cached: RecoveryCandidateProgress | undefined;
   let acceptedAcknowledgement:
     | { acknowledgementId: string; createdAt: string; head: string }
@@ -1326,6 +1377,54 @@ export function openRecoveryCandidateRemoteForTest(
   input: RecoveryCandidateRemoteInput & { bareDirectory: string }
 ): RecoveryCandidateRemote {
   return open(
+    input,
+    createBareTestPromotionControlTransport(
+      input.repositoryRoot,
+      input.bareDirectory
+    )
+  );
+}
+
+interface RecoveryResultChainCandidateRemoteInput {
+  chain: Buffer;
+  recoveryKey: Buffer;
+  repositoryRoot: string;
+  workflowCommit: string;
+  credentials?: { token: string };
+}
+function openChain(
+  input: RecoveryResultChainCandidateRemoteInput,
+  transport: PromotionControlTransport
+): RecoveryCandidateRemote {
+  const proof = decryptRecoveryResultChain(input.chain, input.recoveryKey);
+  return open(
+    {
+      repositoryRoot: input.repositoryRoot,
+      recoveryKey: input.recoveryKey,
+      checkpoint: proof.successorCheckpoint,
+      runId: proof.certificate.runId,
+      workflowCommit: input.workflowCommit,
+    },
+    transport,
+    proof
+  );
+}
+/** Closed namespaced gate: a bare checkpoint or supplied role never suffices. */
+export function openRecoveryResultChainCandidateRemote(
+  input: RecoveryResultChainCandidateRemoteInput
+): RecoveryCandidateRemote {
+  return openChain(
+    input,
+    createAuthoritativePromotionControlTransport(
+      input.repositoryRoot,
+      input.credentials
+    )
+  );
+}
+export function openRecoveryResultChainCandidateRemoteForTest(
+  input: RecoveryResultChainCandidateRemoteInput & { bareDirectory: string }
+): RecoveryCandidateRemote {
+  return openChain(
     input,
     createBareTestPromotionControlTransport(
       input.repositoryRoot,

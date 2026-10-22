@@ -5,6 +5,7 @@ import { dirname, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import type { IngestionLedger } from "../../types/ingestion.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
+import { assertReadOnlySqliteFiles } from "./readonly-sqlite-files.js";
 
 interface StoreSession {
   path: string;
@@ -187,6 +188,40 @@ export function readSqliteLedger(path: string): IngestionLedger {
     const ledger = readFrom(db, path);
     db.exec("COMMIT");
     return ledger;
+  } finally {
+    db.close();
+  }
+}
+
+/** Observe a retired catalog without opening a writable connection or borrowing a transaction. */
+export function readSqliteLedgerReadOnly(path: string): IngestionLedger {
+  const absolute = resolve(path);
+  assertNoActiveStoreTransaction(absolute);
+  const identity = assertReadOnlySqliteFiles(absolute);
+  const db = new DatabaseSync(absolute, { readOnly: true });
+  try {
+    db.exec("PRAGMA foreign_keys=ON; BEGIN;");
+    if (
+      db.prepare("PRAGMA user_version").get()?.user_version !== 1 ||
+      db.prepare("PRAGMA journal_mode").get()?.journal_mode !== "wal"
+    )
+      throw new Error("Unsupported read-only shared ledger schema.");
+    const integrity = db.prepare("PRAGMA integrity_check").all();
+    if (
+      integrity.length !== 1 ||
+      integrity[0].integrity_check !== "ok" ||
+      db.prepare("PRAGMA foreign_key_check").all().length
+    )
+      throw new Error("Corrupt read-only shared ledger.");
+    const ledger = readFrom(db, absolute);
+    // Observations are evidence only, never a revision token for a later save.
+    revisions.delete(ledger);
+    db.exec("ROLLBACK;");
+    assertReadOnlySqliteFiles(absolute, identity);
+    return ledger;
+  } catch (error) {
+    if (db.isTransaction) db.exec("ROLLBACK;");
+    throw error;
   } finally {
     db.close();
   }

@@ -164,6 +164,38 @@ describe("offline operator recovery capsules", () => {
     expect(existsSync(join(target, "operator/backup-key.bin"))).toBe(false);
     expect(existsSync(join(target, "operator/backup-key.dpapi"))).toBe(false);
   });
+  it.each(["empty", "batch", "partial"] as const)(
+    "refuses unsupported Gmail acquisition %s state before retirement or archive output",
+    async (kind) => {
+      loadBackupKey(operator, true);
+      const batchDirectory = join(operator, "email-acquisition/batches");
+      mkdirSync(batchDirectory, { recursive: true });
+      const evidencePath = join(
+        batchDirectory,
+        kind === "partial" ? "retained.json.tmp" : "retained.json"
+      );
+      const evidence = Buffer.from("synthetic retained acquisition evidence\n");
+      if (kind !== "empty") writeFileSync(evidencePath, evidence);
+      const before = ledgerDigest(
+        readSqliteLedger(join(operator, "ledger.sqlite"))
+      );
+      const out = join(directory, "unsupported-email-recovery.enc");
+      await expect(captureOperatorRecoveryCheckpoint(root)).rejects.toThrow(
+        "UNCLASSIFIED_OPERATOR_ARTIFACT"
+      );
+      await expect(
+        retireAndCaptureOperatorRecovery({ root, out })
+      ).rejects.toThrow("UNCLASSIFIED_OPERATOR_ARTIFACT");
+      expect(existsSync(out)).toBe(false);
+      expect(existsSync(out + ".retirement.json")).toBe(false);
+      expect(existsSync(join(operator, "operator-retired.json"))).toBe(false);
+      expect(
+        ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite")))
+      ).toBe(before);
+      if (kind !== "empty")
+        expect(readFileSync(evidencePath)).toEqual(evidence);
+    }
+  );
   it("authenticates explicit v2 bootstrap npm metadata without executing or retaining package bytes", async () => {
     const tool = npmFixture(),
       expected = captureNpmExecutionTool(tool.npmCli),

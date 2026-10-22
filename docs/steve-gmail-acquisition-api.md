@@ -1,0 +1,89 @@
+# Gmail API acquisition contract for Steve's List
+
+This note separates Gmail API facts from a proposed local adapter contract. It describes how an account-bound read-only adapter can produce the private JSON snapshot consumed by `scripts/capture-steve-email.js` and `src/lib/ingestion/steve-email-intake.ts`. It does not authorize or perform a mailbox acquisition.
+
+## Google API facts
+
+### Bind the authenticated account
+
+Call [`users.getProfile`](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users/getProfile) with `userId=me`. The response includes `emailAddress`, message and thread counts, and a `historyId`. The method accepts `me` as the authenticated user; a literal email address is also permitted as the user ID. The returned address is the account identity to bind to the acquisition. A configured expected mailbox should be compared with this response before searching or fetching messages.
+
+### Search and enumerate all pages
+
+[`users.messages.list`](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list) accepts a Gmail search expression in `q`, `maxResults` (default 100, maximum 500), and `pageToken`. Its response includes `messages`, `nextPageToken`, and an estimated result count. Each item from list contains only `id` and `threadId`; fetch the message details separately with `users.messages.get`. Continue with each returned `nextPageToken` until none remains. The result count is explicitly an estimate, so it is not a completion signal.
+
+The Gmail query guide says `q` supports most Gmail search syntax. Date-only terms are interpreted as midnight in PST; for precise boundaries outside that fixed interpretation, pass Unix epoch seconds in the query. Build the search bounds from the intended timezone's instants, including the correct daylight-saving offset for each endpoint, and use seconds in `after:` / `before:`. The API search does not perform Gmail UI alias expansion. [`gmail.metadata`](https://developers.google.com/workspace/gmail/api/auth/scopes) cannot be used with `q`; it also exposes message metadata such as labels and headers, not message bodies. The acquisition requires search and message content, so the appropriate read-only scope is `https://www.googleapis.com/auth/gmail.readonly`, which the list, get, and attachment-get methods accept. [Filtering guide](https://developers.google.com/workspace/gmail/api/guides/filtering) · [scope reference](https://developers.google.com/workspace/gmail/api/auth/scopes)
+
+### Fetch structured and original representations
+
+[`users.messages.get`](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/get) supports `format=FULL`, `RAW`, `METADATA`, and `MINIMAL`. For `FULL`, Gmail returns parsed payload structure; for `RAW`, it returns the entire RFC 2822 message as base64url in `raw`. The resource reference defines `internalDate` as epoch milliseconds serialized as a string and describes it as the Gmail receipt/ordering timestamp for normal SMTP mail (with a caveat for API-migrated messages). The `payload` is a recursive MIME tree: each part can include `mimeType`, `filename`, headers, body, and child `parts`; a container part can have an empty body. The top-level part carries ordinary message headers such as From and Subject. [Message resource](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages)
+
+An attachment may have a `body.attachmentId` instead of inline `body.data`. [`users.messages.attachments.get`](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages.attachments/get) takes the message ID and attachment ID and returns a `MessagePartBody`; its `data` is base64url content and `size` is its byte length. An adapter that needs such content must fetch it separately. This intake does not use an attachment as a substitute for the newsletter's plain-text body.
+
+### OAuth credential prerequisite
+
+The Google OAuth web-server flow is designed for applications able to keep confidential information and state. Google documents requesting offline access to obtain a refresh token so an authorized application can refresh access after the user is absent; the exact behavior depends on consent and the client flow. [OAuth web-server flow](https://developers.google.com/identity/protocols/oauth2/web-server)
+
+The local intake documentation says a Node process does not inherit the agent Gmail connector's authentication. Therefore, any unattended/local adapter requires a separately configured OAuth client and an authorized refresh credential with the read-only Gmail scope. Store the client secret and refresh token in the operator's private installation storage, outside the repository and worktrees; do not put tokens or message bodies in source control, command arguments, or logs. This is a local installation prerequisite, not a Gmail API guarantee. See [`docs/steve-email-intake.md`](steve-email-intake.md).
+
+## Proposed adapter contract (local design)
+
+1. Read the private expected mailbox configuration, call `getProfile(me)`, and compare the returned `emailAddress` case-insensitively with that configured mailbox. Stop before search on absent, malformed, or unexpected identity. Use the profile email as `accountId` in the snapshot.
+2. Search with a narrowly bounded sender and time query, using epoch-second endpoints derived from the intended timezone. Keep the exact query and bounds in private operator diagnostics if needed, without logging message content. Consume every page token; collect message IDs, deduplicate IDs, and do not treat `resultSizeEstimate` as authoritative.
+3. For each selected ID, obtain a full message (`format=FULL`) and the raw message (`format=RAW`) under the same authenticated account. Require both returned IDs to equal the listed ID. Prefer raw as the source of immutable RFC 2822 bytes; the structured representation supplies `internalDate` and the MIME tree used by the existing intake checks.
+4. Map the Gmail fields to the existing camel-to-snake snapshot contract:
+
+   | Gmail API                            | Private snapshot field      | Conversion                                                                                                                                                               |
+   | ------------------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+   | `getProfile.emailAddress`            | `accountId`                 | Preserve address; intake hashes it for the receipt.                                                                                                                      |
+   | `get(..., format=RAW).id`            | `rawMessage.id`             | Preserve the Gmail message ID.                                                                                                                                           |
+   | `get(..., format=RAW).raw`           | `rawMessage.raw`            | Preserve base64url text exactly; local intake validates and decodes it.                                                                                                  |
+   | `get(..., format=FULL).id`           | `fullMessage.id`            | Must equal `rawMessage.id`.                                                                                                                                              |
+   | `get(..., format=FULL).internalDate` | `fullMessage.internal_date` | Convert the API string to a safe integer without changing milliseconds.                                                                                                  |
+   | `get(..., format=FULL).payload`      | `fullMessage.payload`       | Recursively map `mimeType`→`mime_type`; preserve `filename`, headers, child `parts`; map body `size`, `data`→`base64_url_content`, and optional decoded UTF-8 `content`. |
+   | Local acquisition clock              | `observedAtEpochMs`         | Capture once when the message representations are acquired; do not derive it from sender `Date` or Gmail `internalDate`.                                                 |
+
+   The intake's `GmailMessagePart` permits `mime_type`, `filename`, `headers`, `body.size`, `body.base64_url_content` or `body.content`, and recursive `parts`. `captureSteveEmail` expects `rawMessage: {id, raw}`, `fullMessage: {id, internal_date, payload}`, account ID, expected edition ID, and observation time. Its README-level contract requires plain-text body bytes, raw MIME parsing, declared body size, and both text representations to agree. See [`docs/steve-email-intake.md`](steve-email-intake.md) and [`steve-email-intake.ts`](../src/lib/ingestion/steve-email-intake.ts).
+
+5. If a body part has inline `data`, decode base64url strictly and retain its declared byte count. If a required attachment has only an `attachmentId`, fetch it with the same account and message ID, verify decoded byte count against `size`, and record the part identity. Treat a missing attachment, failed fetch, absent required plain-text body, or incomplete MIME tree as an incomplete acquisition; never silently substitute an attachment, HTML body, or snippet.
+6. If fetching either representation returns an error, the IDs disagree, an attachment cannot be fetched, or a repeated fetch of the same ID yields different raw bytes, preserve only non-sensitive diagnostics (message ID, operation, status/error class) in private storage and fail that message's acquisition. Do not pass a partial snapshot to intake or mark a search window complete. Retry only transient transport/server failures with bounded backoff; surface authentication/scope failures for operator reauthorization. The local intake independently rejects changed raw bytes for a previously admitted Gmail message ID and checks the raw/full IDs match.
+7. Write the complete JSON snapshot directly into the protected private operator path and invoke the existing local capture flow. Keep authorization tokens, raw mail, decoded body, and attachment bytes out of stdout/stderr and Git. A successful API read is only acquisition evidence; local intake validation remains the admission boundary.
+
+The existing local intake uses snake_case for Gmail API projections because its snapshot format predates a direct API client. The mapping above is adapter design; it does not change the API's camelCase schema or claim that Gmail API responses by themselves prove sender authenticity.
+
+## Implemented projection boundary
+
+`projectSteveGmailSnapshot` in `src/lib/ingestion/steve-gmail-projection.ts` validates and detaches the API responses into the existing snapshot shape. It binds the configured/profile mailbox and listed/RAW/FULL message IDs, requires a digit-string receipt timestamp, bounds MIME nesting and total body/metadata bytes, and refuses incomplete newsletter text. It leaves sender authentication and newsletter admission to the existing intake.
+
+Seventeen fake-response tests, explicit test TypeScript checking, ESLint and formatting passed. Root review corrected timestamp coercion, mailbox control characters, missing empty-text data and aggregate metadata limits; the strict test check also caught fixture typing gaps missed by transpilation. This module performs no network or filesystem operations. The HTTP reader and same-host durable handoff are described below; private credential setup and unattended acceptance remain unfinished.
+
+## Implemented read-only window reader
+
+`readSteveGmailWindow` now performs the bounded HTTP read using one access token supplied by its caller. It binds the profile before listing, searches the fixed sender with conservative epoch-second bounds, consumes complete pagination with cycle/ID limits, fetches both representations, filters the exact millisecond interval, rechecks the account and returns sorted snapshots only after the whole window succeeds. The transport uses a fixed Gmail origin, refuses redirects, limits each streamed JSON response to 24 MiB and total retained snapshots to 32 MiB, and emits only safe error codes.
+
+The combined projection/transport suite passed 34 fake-response tests. Review additionally corrected null list pages being mistaken for empty results and ensured unread early-error bodies are cancelled. No real mailbox was accessed. The [durable handoff](steve-gmail-durable-handoff.md) now saves complete windows and supports explicit correction selection, cached replay, local loading and freeze obligations. Private credential provisioning, supervisor integration and batch portability remain unfinished; returning a snapshot is not an imported or published edition.
+
+## OAuth refresh callback
+
+`createGmailAccessTokenProvider` supplies the existing reader's `getAccessToken`
+callback. It accepts private client/refresh credentials and a required durable
+refresh-token persistence callback. It posts to Google's fixed token endpoint,
+shares concurrent refreshes and caches access only until a conservative monotonic
+deadline. Exchanges have a 30-second transport deadline and 64 KiB response cap;
+redirects and malformed tokens refuse. HTTP/transport/storage failures expose
+safe codes without provider bodies or credentials. A supplied scope response must
+include Gmail read-only; mailbox identity is still checked by the reader.
+
+A changed refresh token must be saved before access is returned. If that save
+fails, the provider retains the pending token in memory and retries persistence
+before using its cache or sending another request. It does not implement crash-safe
+credential storage: the installation must provide that callback, OAuth consent,
+scope/account verification and recovery. Nothing reads an agent connector's
+credentials or a repository-local secret file.
+
+The adapter implements the refresh exchange only, following Google's
+[desktop refresh contract](https://developers.google.com/identity/protocols/oauth2/native-app#refresh).
+Initial desktop consent requires the documented PKCE/loopback flow; web clients
+must use their appropriate flow. This adapter does not mint consent, implement
+DPoP proof keys, activate a scheduler or access an actual account. Provisioning
+and credential loss/expiry drills remain required for #30/#29 acceptance.

@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 import { secureOperatorDirectory } from "./encrypted-backup.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
+import { assertReadOnlySqliteFiles } from "./readonly-sqlite-files.js";
 import {
   WEEKLY_RUN_STAGES,
   parseWeeklyRunState,
@@ -132,6 +133,109 @@ function recoveryBytes(input: unknown): Buffer {
   );
   if (bytes.length > maxRecoveryBytes) recoveryFailure();
   return bytes;
+}
+
+function assertRecoveryDatabase(db: DatabaseSync): void {
+  const names = db
+    .prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+    .all()
+    .map((row) => row.name);
+  if (
+    db.prepare("PRAGMA user_version").get()?.user_version !== 3 ||
+    db.prepare("PRAGMA application_id").get()?.application_id !== 1514759762 ||
+    canonicalJson(names) !==
+      canonicalJson([
+        "intake_evidence",
+        "ownership",
+        "run_state",
+        "stage_artifact",
+      ])
+  )
+    throw new Error("Unsupported journal recovery schema");
+  const integrity = db.prepare("PRAGMA integrity_check").all();
+  if (
+    integrity.length !== 1 ||
+    integrity[0].integrity_check !== "ok" ||
+    db.prepare("PRAGMA foreign_key_check").all().length
+  )
+    throw new Error("Corrupt journal recovery database");
+}
+
+function recoverySnapshot(db: DatabaseSync): Buffer {
+  for (const table of [
+    "ownership",
+    "run_state",
+    "stage_artifact",
+    "intake_evidence",
+  ])
+    if (
+      Number(
+        db.prepare(`SELECT COUNT(*) AS total FROM ${table}`).get()?.total
+      ) > maxRecoveryRows
+    )
+      recoveryFailure();
+  const size = db
+    .prepare(
+      "SELECT (SELECT COALESCE(SUM(length(payload)),0) FROM run_state)+(SELECT COALESCE(SUM(length(bytes)),0) FROM stage_artifact)+(SELECT COALESCE(SUM(length(bytes)),0) FROM intake_evidence) AS total"
+    )
+    .get()?.total;
+  if (!recoveryInteger(size) || size > (maxRecoveryBytes * 3) / 4)
+    recoveryFailure();
+  const encode = (
+    row: Record<string, string | number | bigint | Uint8Array | null>
+  ) => {
+    if (!(row.bytes instanceof Uint8Array)) recoveryFailure();
+    return { ...row, bytes: Buffer.from(row.bytes).toString("base64") };
+  };
+  const bytes = recoveryBytes({
+    format: "zivv-weekly-journal-recovery",
+    version: 1,
+    journalSchemaVersion: 3,
+    ownership: db
+      .prepare(
+        "SELECT scope,owner,fence,expires_at AS expiresAtEpochMs FROM ownership ORDER BY scope"
+      )
+      .all(),
+    runState: db
+      .prepare("SELECT id,scope,revision,payload FROM run_state ORDER BY id")
+      .all(),
+    stageArtifacts: db
+      .prepare(
+        "SELECT run_id AS runId,stage,attempt,identity,bytes FROM stage_artifact ORDER BY run_id,stage,attempt"
+      )
+      .all()
+      .map(encode),
+    intakeEvidence: db
+      .prepare(
+        "SELECT scope,kind,id,identity,bytes FROM intake_evidence ORDER BY scope,kind,id"
+      )
+      .all()
+      .map(encode),
+  });
+  validateWeeklyJournalRecoverySnapshot(bytes);
+  return bytes;
+}
+
+/** Read a validated schema-3 journal snapshot without constructing a writer or migrating storage. */
+export function readWeeklyJournalRecoverySnapshotReadOnly(
+  path: string
+): Buffer {
+  const absolute = resolve(path);
+  const fileSnapshot = assertReadOnlySqliteFiles(absolute);
+  const db = new DatabaseSync(absolute, { readOnly: true });
+  try {
+    db.exec("PRAGMA foreign_keys=ON; BEGIN;");
+    assertRecoveryDatabase(db);
+    const bytes = recoverySnapshot(db);
+    db.exec("ROLLBACK;");
+    assertReadOnlySqliteFiles(absolute, fileSnapshot);
+    return bytes;
+  } catch (error) {
+    if (db.isTransaction) db.exec("ROLLBACK;");
+    throw error;
+  } finally {
+    db.close();
+  }
 }
 
 /** Validate the entire opaque snapshot before a recovery orchestrator uses its rows. */
@@ -437,87 +541,11 @@ export class WeeklyRunJournal {
   }
 
   private assertRecoveryDatabase(): void {
-    const names = this.db
-      .prepare(
-        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
-      )
-      .all()
-      .map((row) => row.name);
-    if (
-      this.db.prepare("PRAGMA user_version").get()?.user_version !== 3 ||
-      this.db.prepare("PRAGMA application_id").get()?.application_id !==
-        1514759762 ||
-      canonicalJson(names) !==
-        canonicalJson([
-          "intake_evidence",
-          "ownership",
-          "run_state",
-          "stage_artifact",
-        ])
-    )
-      throw new Error("Unsupported journal recovery schema");
-    const integrity = this.db.prepare("PRAGMA integrity_check").all();
-    if (
-      integrity.length !== 1 ||
-      integrity[0].integrity_check !== "ok" ||
-      this.db.prepare("PRAGMA foreign_key_check").all().length
-    )
-      throw new Error("Corrupt journal recovery database");
+    assertRecoveryDatabase(this.db);
   }
 
   private recoverySnapshot(): Buffer {
-    for (const table of [
-      "ownership",
-      "run_state",
-      "stage_artifact",
-      "intake_evidence",
-    ])
-      if (
-        Number(
-          this.db.prepare(`SELECT COUNT(*) AS total FROM ${table}`).get()?.total
-        ) > maxRecoveryRows
-      )
-        recoveryFailure();
-    const size = this.db
-      .prepare(
-        "SELECT (SELECT COALESCE(SUM(length(payload)),0) FROM run_state)+(SELECT COALESCE(SUM(length(bytes)),0) FROM stage_artifact)+(SELECT COALESCE(SUM(length(bytes)),0) FROM intake_evidence) AS total"
-      )
-      .get()?.total;
-    if (!recoveryInteger(size) || size > (maxRecoveryBytes * 3) / 4)
-      recoveryFailure();
-    const encode = (
-      row: Record<string, string | number | bigint | Uint8Array | null>
-    ) => {
-      if (!(row.bytes instanceof Uint8Array)) recoveryFailure();
-      return { ...row, bytes: Buffer.from(row.bytes).toString("base64") };
-    };
-    const bytes = recoveryBytes({
-      format: "zivv-weekly-journal-recovery",
-      version: 1,
-      journalSchemaVersion: 3,
-      ownership: this.db
-        .prepare(
-          "SELECT scope,owner,fence,expires_at AS expiresAtEpochMs FROM ownership ORDER BY scope"
-        )
-        .all(),
-      runState: this.db
-        .prepare("SELECT id,scope,revision,payload FROM run_state ORDER BY id")
-        .all(),
-      stageArtifacts: this.db
-        .prepare(
-          "SELECT run_id AS runId,stage,attempt,identity,bytes FROM stage_artifact ORDER BY run_id,stage,attempt"
-        )
-        .all()
-        .map(encode),
-      intakeEvidence: this.db
-        .prepare(
-          "SELECT scope,kind,id,identity,bytes FROM intake_evidence ORDER BY scope,kind,id"
-        )
-        .all()
-        .map(encode),
-    });
-    validateWeeklyJournalRecoverySnapshot(bytes);
-    return bytes;
+    return recoverySnapshot(this.db);
   }
 
   /** Capture all committed evidence under the valid production owner, borrowing its guard if present. */

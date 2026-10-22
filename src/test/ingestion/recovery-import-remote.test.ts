@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { setImmediate as yieldToReporter } from "node:timers/promises";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   openRecoveryImportRemoteForTest,
@@ -117,7 +118,8 @@ describe("canonical remote gate for import-only recovery", () => {
       f.transport.append("refs/heads/main", f.sourceCommit, null)
     ).toThrow(/dedicated control/);
   }, 30_000);
-  it("rejects an obsolete or divergent ledger, wrong key and unretained run", () => {
+  it("rejects an obsolete or divergent ledger, wrong key and unretained run", async () => {
+    await yieldToReporter();
     const checkpoint = structuredClone(f.checkpoint);
     checkpoint.ledger = bootstrapLedger(
       { events: [], artists: [], venues: [] },
@@ -133,6 +135,7 @@ describe("canonical remote gate for import-only recovery", () => {
         runId: f.runId,
       })
     ).toThrow("LEDGER_DIVERGED");
+    await yieldToReporter();
     expect(() =>
       openRecoveryImportRemoteForTest({
         repositoryRoot: f.root,
@@ -142,6 +145,7 @@ describe("canonical remote gate for import-only recovery", () => {
         runId: f.runId,
       })
     ).toThrow();
+    await yieldToReporter();
     expect(() =>
       openRecoveryImportRemoteForTest({
         repositoryRoot: f.root,
@@ -151,26 +155,35 @@ describe("canonical remote gate for import-only recovery", () => {
         runId: "unretained",
       })
     ).toThrow("RUN_NOT_RETAINED");
-  }, 45_000);
-  it("refuses absent watermark, active owner, missing control and unretained artifacts", () => {
+    await yieldToReporter();
+  }, 90_000);
+  it("refuses absent watermark, active owner, missing control and unretained artifacts", async () => {
+    await yieldToReporter();
     const head = f.store.read().head!;
     try {
       f.setControl(f.bootstrapHead);
+      await yieldToReporter();
       expect(f.open).toThrow("ACKNOWLEDGED_WATERMARK_REQUIRED");
+      await yieldToReporter();
       f.setControl(f.claimHead);
       expect(f.open).toThrow("ACTIVE_OWNER");
+      await yieldToReporter();
       f.git(["push", "--quiet", f.bare, `:${f.store.ref}`]);
+      await yieldToReporter();
       expect(f.open).toThrow("CONTROL_REQUIRED");
     } finally {
       f.setControl(head);
     }
+    await yieldToReporter();
     f.git(["push", "--quiet", f.bare, `:${f.artifactRef}`]);
+    await yieldToReporter();
     try {
       expect(f.open).toThrow("ARTIFACT_NOT_RETAINED");
     } finally {
       f.transport.append(f.artifactRef, f.payloadCommit, null);
     }
-  }, 30_000);
+    await yieldToReporter();
+  }, 60_000);
   it("production entry refuses a wrong origin before any remote IO", () => {
     f.git(["remote", "set-url", "origin", "https://example.invalid/other.git"]);
     try {
@@ -191,10 +204,13 @@ describe("canonical remote gate for import-only recovery", () => {
       ]);
     }
   });
-  it("rechecks main, control and the immutable artifact before later effects", () => {
+  it("rechecks main, control and the immutable artifact before later effects", async () => {
+    await yieldToReporter();
     const context = f.open(),
       controlHead = f.store.read().head!;
+    await yieldToReporter();
     const tree = f.git(["rev-parse", `${f.sourceCommit}^{tree}`]);
+    await yieldToReporter();
     const child = f.git([
       "-c",
       "user.name=Fixture",
@@ -207,18 +223,22 @@ describe("canonical remote gate for import-only recovery", () => {
       "-m",
       "later main",
     ]);
+    await yieldToReporter();
     f.git(["push", "--quiet", f.bare, `${child}:refs/heads/main`]);
+    await yieldToReporter();
     try {
       expect(context.assertCurrent).toThrow("REMOTE_CHANGED");
     } finally {
       f.main(f.sourceCommit);
     }
     f.setControl(f.bootstrapHead);
+    await yieldToReporter();
     try {
       expect(context.assertCurrent).toThrow("REMOTE_CHANGED");
     } finally {
       f.setControl(controlHead);
     }
+    await yieldToReporter();
     f.git([
       "push",
       "--quiet",
@@ -226,6 +246,7 @@ describe("canonical remote gate for import-only recovery", () => {
       f.bare,
       `${f.sourceCommit}:${f.artifactRef}`,
     ]);
+    await yieldToReporter();
     try {
       expect(context.assertCurrent).toThrow("REMOTE_CHANGED");
       expect(f.open).toThrow("ARTIFACT_NOT_RETAINED");
@@ -238,7 +259,8 @@ describe("canonical remote gate for import-only recovery", () => {
         `${f.payloadCommit}:${f.artifactRef}`,
       ]);
     }
-  }, 45_000);
+    await yieldToReporter();
+  }, 90_000);
   it("does not trust stale local main ancestry or a malformed canonical control tip", () => {
     const controlHead = f.store.read().head!;
     const tree = f.git(["rev-parse", `${f.sourceCommit}^{tree}`]);

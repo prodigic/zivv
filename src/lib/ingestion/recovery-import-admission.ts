@@ -37,9 +37,15 @@ import {
   canonicalJson,
   ledgerDigest,
   readSqliteLedger,
+  readSqliteLedgerReadOnly,
 } from "./sqlite-store.js";
+import type { RecoveryResultPlanContext } from "./recovery-result-plan.js";
+import { assertReadOnlySqliteFiles } from "./readonly-sqlite-files.js";
 import { sha256 } from "./steve-preflight.js";
-import { validateWeeklyJournalRecoverySnapshot } from "./weekly-run-journal.js";
+import {
+  validateWeeklyJournalRecoverySnapshot,
+  readWeeklyJournalRecoverySnapshotReadOnly,
+} from "./weekly-run-journal.js";
 import {
   parseWeeklyRunState,
   type WeeklyRunState,
@@ -48,9 +54,18 @@ import { runWeeklyImport } from "./weekly-import-runner.js";
 import {
   openRecoveryCandidateRemote,
   openRecoveryCandidateRemoteForTest,
+  openRecoveryResultChainCandidateRemote,
+  openRecoveryResultChainCandidateRemoteForTest,
   type RecoveryCandidateRemote,
 } from "./recovery-candidate-remote.js";
-import { createRecoveryCandidateLocations } from "./recovery-candidate-locations.js";
+import {
+  createRecoveryCandidateLocations,
+  createRecoveryResultChainCandidateLocations,
+} from "./recovery-candidate-locations.js";
+import {
+  openRecoveryResultChainPreparation,
+  type RecoveryChainHostInput,
+} from "./recovery-chain-preparation.js";
 import type { WeeklyPublicationOptions } from "./weekly-publication.js";
 import { parsePromotionControl } from "./promotion-control.js";
 import {
@@ -143,6 +158,17 @@ export interface RecoveryCandidateInput extends RecoveryImportInput {
   workflowCommit: string;
   githubToken: string;
 }
+export interface RecoveryResultChainCandidateInput extends RecoveryChainHostInput {
+  repositoryRoot: string;
+  workflowCommit: string;
+  githubToken: string;
+  credentials?: { token: string };
+}
+export interface RecoveredResultChainCandidateReport extends RecoveredCandidateReport {
+  chainId: string;
+  chainSha256: string;
+}
+type ChainAdmission = ReturnType<typeof openRecoveryResultChainPreparation>;
 export interface RecoveryVerifiedInput extends RecoveryImportInput {
   workflowCommit: string;
 }
@@ -158,6 +184,9 @@ export interface RecoveredVerifiedReport {
 }
 export interface RecoveryFrozenInput extends RecoveryImportInput {
   sourceCommit: string;
+}
+export interface RecoveryFrozenResultRecaptureInput extends RecoveryFrozenInput {
+  out: string;
 }
 export interface RecoveredFrozenReport {
   status: "candidate-validated";
@@ -471,6 +500,7 @@ function currentRun(
   database?: DatabaseSync
 ): WeeklyRunState {
   const path = join(operator, "weekly-runs.sqlite");
+  const identity = assertReadOnlySqliteFiles(path);
   regular(path, 512 * 1024 * 1024);
   const db = database ?? new DatabaseSync(path, { readOnly: true });
   try {
@@ -531,7 +561,11 @@ function currentRun(
       fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
     return run;
   } finally {
-    if (!database) db.close();
+    try {
+      assertReadOnlySqliteFiles(path, identity);
+    } finally {
+      if (!database) db.close();
+    }
   }
 }
 function admissionNames(mode: RecoveryMode) {
@@ -557,11 +591,18 @@ function admissionNames(mode: RecoveryMode) {
           result: "recovery-candidate-result.json",
         };
 }
-function ensureAdmission(
+function openAdmission(
   input: RecoveryImportInput,
   test?: TestOptions,
-  mode: RecoveryMode = "load"
+  mode: RecoveryMode = "load",
+  recapture?: {
+    readOnly: boolean;
+    exactFiles: ReadonlyMap<string, Buffer>;
+  },
+  chain?: ChainAdmission
 ) {
+  if (chain && mode !== "dispatch") fail("RECOVERY_CHAIN_SCOPE_EXCEEDED");
+  chain?.assertCurrent();
   if (candidateMode(mode)) {
     if (
       (!test || test.enforcePublicationFlags) &&
@@ -673,8 +714,25 @@ function ensureAdmission(
   const remote:
     | RecoveryImportRemote
     | RecoveryCandidateRemote
-    | RecoveryFrozenRemote =
-    mode === "validate"
+    | RecoveryFrozenRemote = chain
+    ? test
+      ? openRecoveryResultChainCandidateRemoteForTest({
+          chain: chain.chain,
+          recoveryKey: input.recoveryKey,
+          repositoryRoot: input.repositoryRoot,
+          workflowCommit: candidateInput(input).workflowCommit,
+          bareDirectory: test.bareDirectory,
+        })
+      : openRecoveryResultChainCandidateRemote({
+          chain: chain.chain,
+          recoveryKey: input.recoveryKey,
+          repositoryRoot: input.repositoryRoot,
+          workflowCommit: candidateInput(input).workflowCommit,
+          credentials: input.credentials ?? {
+            token: candidateInput(input).githubToken,
+          },
+        })
+    : mode === "validate"
       ? test
         ? openRecoveryFrozenRemoteForTest({
             ...frozenInput(input),
@@ -707,6 +765,18 @@ function ensureAdmission(
               checkpoint: opened.checkpoint,
             });
   const names = admissionNames(mode);
+  const recaptureMutable = (entry: RecoveryRuntimeEntry) => {
+    const exact = recapture?.exactFiles.get(entry.path);
+    if (exact !== undefined) {
+      if (
+        entry.kind !== "file" ||
+        !regular(join(root, entry.path)).equals(exact)
+      )
+        fail("RECOVERY_RESULT_RECAPTURE_METADATA_CHANGED");
+      return true;
+    }
+    return mutable(entry, retained, reportPath, mode, input.runId);
+  };
   const configuration =
     mode === "validate"
       ? captureExportConfiguration(join(root, "checkout"))
@@ -762,6 +832,20 @@ function ensureAdmission(
         }
       : {}),
     remote: remote.binding,
+    ...(chain
+      ? {
+          chain: {
+            chainId: chain.proof.chainId,
+            chainSha256: chain.binding.chainSha256,
+            chainSize: chain.chain.length,
+            preparationSha256: chain.companionSha256,
+            sourceCommit: chain.proof.certificate.sourceCommit,
+            candidateId: chain.proof.candidate.candidateId,
+            candidateSha256: sha256(chain.proof.candidateBytes),
+            exportRole: chain.proof.certificate.exportRole,
+          },
+        }
+      : {}),
     transport: test
       ? {
           kind: "temporary-bare-test",
@@ -770,6 +854,7 @@ function ensureAdmission(
       : { kind: "authoritative-https" },
   };
   if (!existsSync(path)) {
+    if (recapture) fail("RECOVERY_RESULT_RECAPTURE_RESULT_REQUIRED");
     verifyPreparedOperatorRuntime(input);
     const initial = opened.inventory();
     remote.assertCurrent();
@@ -779,16 +864,20 @@ function ensureAdmission(
       scratch
     );
   }
-  const bytes = readRecoveryInstalledFile(path, scratch, (current) => {
-      const saved = authenticated(current, input.recoveryKey);
-      if (
-        typeof saved.immutableSha256 !== "string" ||
-        !/^[a-f0-9]{64}$/.test(saved.immutableSha256)
-      )
-        fail();
-      same(saved, { ...fixed, immutableSha256: saved.immutableSha256 });
-    }),
+  const validateRecord = (current: Buffer) => {
+    const saved = authenticated(current, input.recoveryKey);
+    if (
+      typeof saved.immutableSha256 !== "string" ||
+      !/^[a-f0-9]{64}$/.test(saved.immutableSha256)
+    )
+      fail();
+    same(saved, { ...fixed, immutableSha256: saved.immutableSha256 });
+  };
+  const bytes = recapture?.readOnly
+      ? regular(path)
+      : readRecoveryInstalledFile(path, scratch, validateRecord),
     record = authenticated(bytes, input.recoveryKey);
+  validateRecord(bytes);
   if (
     typeof record.immutableSha256 !== "string" ||
     !/^[a-f0-9]{64}$/.test(record.immutableSha256)
@@ -799,7 +888,7 @@ function ensureAdmission(
     operator,
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
   );
-  if (existsSync(keyPath))
+  if (!recapture?.readOnly && existsSync(keyPath))
     installRecoveredBackupKey(operator, input.recoveryKey, {
       stagingDirectory: scratch,
     });
@@ -862,7 +951,7 @@ function ensureAdmission(
     const actual = sha256(
       canonicalJson(
         opened.inventoryImmutable(
-          (entry) => mutable(entry, retained, reportPath, mode, input.runId),
+          recaptureMutable,
           mode === "validate" ? buildNamespace(input.runId) : undefined
         )
       )
@@ -874,6 +963,7 @@ function ensureAdmission(
   if (test?.crashAfterIntent) fail("RECOVERY_IMPORT_TEST_AFTER_INTENT");
   // Key installation follows the durable admission intent, never the reverse.
   if (!existsSync(keyPath)) {
+    if (recapture?.readOnly) fail("RECOVERY_IMPORT_WORKING_KEY_MISMATCH");
     try {
       installRecoveredBackupKey(operator, input.recoveryKey, {
         stagingDirectory: scratch,
@@ -892,7 +982,42 @@ function ensureAdmission(
     journal: lstatSync(join(operator, "weekly-runs.sqlite")),
   };
   const assertCurrent = () => {
-    assertOperatorInstallationWritable(operator);
+    chain?.assertCurrent();
+    if (!recapture?.readOnly) assertOperatorInstallationWritable(operator);
+    if (chain) {
+      currentRun(operator, original, "dispatch");
+      const actual = validateWeeklyJournalRecoverySnapshot(
+        readWeeklyJournalRecoverySnapshotReadOnly(
+          join(operator, "weekly-runs.sqlite")
+        )
+      );
+      same(
+        actual.runState.filter((row) => row.id !== original.runId),
+        journal.runState.filter((row) => row.id !== original.runId)
+      );
+      same(
+        actual.stageArtifacts.filter(
+          (row) => row.runId !== original.runId || row.stage !== "deploy"
+        ),
+        journal.stageArtifacts
+      );
+      same(actual.intakeEvidence, journal.intakeEvidence);
+      same(
+        actual.ownership.filter(
+          (row) => row.scope !== "prodigic/zivv/production"
+        ),
+        journal.ownership
+          .filter((row) => row.scope !== "prodigic/zivv/production")
+          .map((row) => ({ ...row, expiresAtEpochMs: 0 }))
+      );
+      same(
+        ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
+        opened.checkpoint.ledgerRevision
+      );
+    }
+    for (const [path, expected] of recapture?.exactFiles ?? [])
+      if (!regular(join(root, path)).equals(expected))
+        fail("RECOVERY_RESULT_RECAPTURE_METADATA_CHANGED");
     if (mode === "acknowledge") {
       same(
         ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
@@ -963,7 +1088,11 @@ function ensureAdmission(
   currentRun(operator, original, mode);
   if (candidateMode(mode) || mode === "validate")
     same(
-      ledgerDigest(readSqliteLedger(join(operator, "ledger.sqlite"))),
+      ledgerDigest(
+        (recapture?.readOnly ? readSqliteLedgerReadOnly : readSqliteLedger)(
+          join(operator, "ledger.sqlite")
+        )
+      ),
       opened.checkpoint.ledgerRevision
     );
   remote.assertCurrent();
@@ -982,10 +1111,13 @@ function ensureAdmission(
         ? {
             remote,
             workDirectory,
-            locations: createRecoveryCandidateLocations(
-              opened.checkpoint,
-              root
-            ),
+            locations: chain
+              ? createRecoveryResultChainCandidateLocations({
+                  chain: chain.chain,
+                  recoveryKey: input.recoveryKey,
+                  preparedRoot: root,
+                })
+              : createRecoveryCandidateLocations(opened.checkpoint, root),
           }
         : undefined,
     build:
@@ -1004,6 +1136,170 @@ function ensureAdmission(
           }
         : undefined,
   };
+}
+
+function ensureAdmission(
+  input: RecoveryImportInput,
+  test?: TestOptions,
+  mode: RecoveryMode = "load",
+  recapture?: { readOnly: false; exactFiles: ReadonlyMap<string, Buffer> },
+  chain?: ChainAdmission
+) {
+  return openAdmission(input, test, mode, recapture, chain);
+}
+
+const recaptureSelectionName = "recovery-frozen-recapture.json";
+
+/** Authenticate fixed source metadata; this returns evidence, never capture authority. */
+export function inspectRecoveryFrozenResultRecapture(
+  input: RecoveryFrozenResultRecaptureInput
+) {
+  frozenInput(input);
+  const opened = openPreparedRuntimeForAdmission(input),
+    root = resolve(input.destination),
+    admissionReceipt = regular(join(root, "recovery-frozen.json")),
+    resultReceipt = regular(join(root, "recovery-frozen-result.json")),
+    preparedReceipt = regular(join(root, "prepared-runtime.json"), 16 * 1024),
+    original = retainedRun(input, opened.checkpoint, "validate"),
+    result = authenticated(resultReceipt, input.recoveryKey);
+  same(result, {
+    status: "candidate-validated",
+    activationAllowed: false,
+    runId: original.runId,
+    ledgerRevision: opened.checkpoint.ledgerRevision,
+    admissionSha256: sha256(admissionReceipt),
+    candidateId: result.candidateId,
+  });
+  if (
+    typeof result.candidateId !== "string" ||
+    !/^[a-f0-9]{64}$/.test(result.candidateId)
+  )
+    fail("RECOVERY_RESULT_RECAPTURE_RESULT_REQUIRED");
+  const context: RecoveryResultPlanContext = {
+    root,
+    operator: join(root, "operator"),
+    repositoryRoot: realpathSync(input.repositoryRoot),
+    npmCli: resolve(input.npmCli),
+    out: resolve(input.out),
+    runId: original.runId,
+    admissionSha256: sha256(admissionReceipt),
+    resultSha256: sha256(resultReceipt),
+    preparedReceiptSha256: sha256(preparedReceipt),
+  };
+  const payload = {
+    kind: "zivv-recovery-frozen-result-recapture",
+    version: 1,
+    activationAllowed: false,
+    context,
+    archiveSha256: sha256(input.archive),
+    retirementSha256: sha256(input.retirementReceipt),
+    sourceCommit: input.sourceCommit,
+    candidateId: result.candidateId,
+  };
+  const selectionBytes = Buffer.from(
+    canonicalJson({
+      payload,
+      signature: createHmac("sha256", input.recoveryKey)
+        .update("zivv-recovery-frozen-result-recapture/v1\0")
+        .update(canonicalJson(payload))
+        .digest("hex"),
+    }) + "\n"
+  );
+  const selectionPath = join(root, recaptureSelectionName);
+  if (existsSync(selectionPath))
+    readRecoveryInstalledFile(
+      selectionPath,
+      join(dirname(root), ".zivv-recovery-install-" + sha256(root)),
+      (current) => {
+        if (!current.equals(selectionBytes))
+          fail("RECOVERY_RESULT_RECAPTURE_SELECTION_CONFLICT");
+      }
+    );
+  return {
+    context,
+    opened,
+    original,
+    result,
+    admissionReceipt,
+    resultReceipt,
+    preparedReceipt,
+    selectionBytes,
+    selectionPath,
+  };
+}
+
+function openFrozenResultRecapture(
+  input: RecoveryFrozenResultRecaptureInput,
+  readOnly: boolean,
+  test?: { bareDirectory: string }
+) {
+  const selected = inspectRecoveryFrozenResultRecapture(input),
+    exactFiles = new Map<string, Buffer>();
+  if (existsSync(selected.selectionPath))
+    exactFiles.set(recaptureSelectionName, selected.selectionBytes);
+  const marker = join(selected.context.operator, "operator-retired.json");
+  if (readOnly && existsSync(marker))
+    exactFiles.set(
+      "operator/operator-retired.json",
+      regular(marker, 16 * 1024)
+    );
+  const ledgerPath = join(selected.context.operator, "ledger.sqlite"),
+    ledgerFiles = assertReadOnlySqliteFiles(ledgerPath);
+  const admitted = readOnly
+    ? openAdmission(input, test, "validate", { readOnly: true, exactFiles })
+    : ensureAdmission(input, test, "validate", { readOnly: false, exactFiles });
+  const assertCurrent = () => {
+    assertReadOnlySqliteFiles(ledgerPath, readOnly ? ledgerFiles : undefined);
+    admitted.assertCurrent();
+    admitted.opened.assertRuntime();
+    admitted.assertImmutable();
+    admitted.remote.assertCurrent();
+    same(
+      regular(join(admitted.root, "recovery-frozen-result.json")).toString(
+        "base64"
+      ),
+      selected.resultReceipt.toString("base64")
+    );
+    const run = currentRun(admitted.operator, admitted.original, "validate");
+    if (
+      run.stages.slice(0, 8).some((stage) => stage.status !== "succeeded") ||
+      run.stages.slice(8).some((stage) => stage.status !== "pending") ||
+      run.stages[7].evidence?.candidateId !== selected.result.candidateId
+    )
+      fail("RECOVERY_RESULT_RECAPTURE_RESULT_REQUIRED");
+    same(
+      ledgerDigest(
+        (readOnly ? readSqliteLedgerReadOnly : readSqliteLedger)(
+          join(admitted.operator, "ledger.sqlite")
+        )
+      ),
+      admitted.opened.checkpoint.ledgerRevision
+    );
+    assertReadOnlySqliteFiles(ledgerPath, readOnly ? ledgerFiles : undefined);
+    if (
+      existsSync(selected.selectionPath) &&
+      !regular(selected.selectionPath).equals(selected.selectionBytes)
+    )
+      fail("RECOVERY_RESULT_RECAPTURE_SELECTION_CONFLICT");
+  };
+  assertCurrent();
+  return { ...selected, assertCurrent };
+}
+
+/** Writable pre-fence admission, restricted to an already completed frozen result. */
+export function admitRecoveryFrozenResultRecapture(
+  input: RecoveryFrozenResultRecaptureInput,
+  test?: { bareDirectory: string }
+) {
+  return openFrozenResultRecapture(input, false, test);
+}
+
+/** Post-fence verification performs no admission/key installation or writable SQL. */
+export function observeRecoveryFrozenResultRecapture(
+  input: RecoveryFrozenResultRecaptureInput,
+  test?: { bareDirectory: string }
+) {
+  return openFrozenResultRecapture(input, true, test);
 }
 
 /** Only the coordinator below can establish this scope; ordinary staging stays blocked. */
@@ -1100,16 +1396,19 @@ export function recoveredCandidateBuildContext(defaultRoot: string): {
     ) as CandidateConfiguration,
   };
 }
-/** Keep new build outputs in one signed run-specific namespace. */
+/** Use the exact admitted export parent, or the signed new-build namespace. */
 export function recoveredCandidateWorkParent(defaultParent: string): string {
   const scope = scopes.getStore();
   if (!scope?.active) return defaultParent;
   scope.assertCurrent();
   if (resolve(defaultParent) !== join(scope.operator, "weekly-candidates"))
     fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
-  return scope.mode === "validate" && scope.build
-    ? scope.build.parent
-    : defaultParent;
+  if (scope.mode === "validate" && scope.build) return scope.build.parent;
+  if (candidateMode(scope.mode) && scope.candidate)
+    return dirname(
+      scope.candidate.resolveDirectory(scope.candidate.workDirectory)
+    );
+  return defaultParent;
 }
 /** Bind the isolated recipe before it can capture source or execute npm. */
 export function assertRecoveredCandidateBuild(input: {
@@ -1366,7 +1665,8 @@ function execute(
 function execute(
   input: RecoveryCandidateInput,
   test: TestOptions | undefined,
-  mode: "dispatch" | "reconcile"
+  mode: "dispatch" | "reconcile",
+  chain?: ChainAdmission
 ): Promise<RecoveredCandidateReport>;
 function execute(
   input: RecoveryVerifiedInput,
@@ -1381,7 +1681,8 @@ function execute(
 async function execute(
   input: RecoveryImportInput,
   test?: TestOptions,
-  mode: RecoveryMode = "load"
+  mode: RecoveryMode = "load",
+  chain?: ChainAdmission
 ): Promise<
   | RecoveredImportReport
   | RecoveredCandidateReport
@@ -1400,10 +1701,10 @@ async function execute(
     )
   )
     fail("RECOVERY_IMPORT_RETAINED_EXECUTOR_REQUIRED");
-  const admitted = ensureAdmission(input, test, mode);
+  const admitted = ensureAdmission(input, test, mode, undefined, chain);
   const candidate = admitted.candidate;
   const store =
-    candidate && mode === "acknowledge"
+    candidate && (mode === "acknowledge" || chain)
       ? {
           ...candidate.remote.store,
           compareAndAppend: ((append) => {
@@ -1412,14 +1713,24 @@ async function execute(
               admitted.opened.assertRuntime();
               admitted.assertImmutable();
               candidate.remote.assertCurrent();
-              candidate.remote.verifiedDelivery!.assertAppend(append);
+              if (mode === "acknowledge")
+                candidate.remote.verifiedDelivery!.assertAppend(append);
               append.checkContext?.();
             };
             verify();
-            return candidate.remote.store.compareAndAppend({
+            const result = candidate.remote.store.compareAndAppend({
               ...append,
               checkContext: verify,
             });
+            if (
+              chain &&
+              test?.interruptAt === "claim" &&
+              result.status === "appended" &&
+              parsePromotionControl(append.bytes).lastTransition.event.type ===
+                "claim"
+            )
+              fail("RECOVERY_CANDIDATE_TEST_INTERRUPTION");
+            return result;
           }) satisfies typeof candidate.remote.store.compareAndAppend,
         }
       : candidate && mode === "reconcile"
@@ -1931,6 +2242,43 @@ export const executeRecoveredFrozenForTest = (
   input: RecoveryFrozenInput & TestOptions
 ) => execute(input, input, "validate");
 
+function chainCandidate(input: RecoveryResultChainCandidateInput) {
+  const opened = openRecoveryResultChainPreparation(input);
+  const candidate: RecoveryCandidateInput = {
+    ...opened.runtimeInput,
+    repositoryRoot: input.repositoryRoot,
+    workflowCommit: input.workflowCommit,
+    githubToken: input.githubToken,
+    credentials: input.credentials,
+    runId: opened.proof.certificate.runId,
+  };
+  candidateInput(candidate);
+  return { opened, candidate };
+}
+async function executeChainCandidate(
+  input: RecoveryResultChainCandidateInput,
+  test?: TestOptions
+): Promise<RecoveredResultChainCandidateReport> {
+  const { opened, candidate } = chainCandidate(input),
+    result = await execute(candidate, test, "dispatch", opened);
+  return {
+    ...result,
+    chainId: opened.proof.chainId,
+    chainSha256: opened.binding.chainSha256,
+  };
+}
+/** Closed retained-worker entry; full binary chain and new preparation reauthenticate here. */
+export const executeRecoveredResultChainCandidate = (
+  input: RecoveryResultChainCandidateInput
+) => executeChainCandidate(input);
+export const executeRecoveredResultChainCandidateForTest = (
+  input: RecoveryResultChainCandidateInput & TestOptions
+) => executeChainCandidate(input, input);
+
+const chainWireMagic = Buffer.from("ZIVV-CHAIN-CANDIDATE\0");
+const chainWireHeader = chainWireMagic.length + 9;
+const maxChainWire = 752_242_215;
+
 function launch(
   input: RecoveryImportInput,
   test?: TestOptions,
@@ -1939,7 +2287,8 @@ function launch(
 function launch(
   input: RecoveryCandidateInput,
   test: TestOptions | undefined,
-  mode: "dispatch" | "reconcile"
+  mode: "dispatch" | "reconcile",
+  chain?: ChainAdmission
 ): Promise<RecoveredCandidateReport>;
 function launch(
   input: RecoveryVerifiedInput,
@@ -1954,7 +2303,8 @@ function launch(
 async function launch(
   supplied: RecoveryImportInput,
   test?: TestOptions,
-  mode: RecoveryMode = "load"
+  mode: RecoveryMode = "load",
+  chain?: ChainAdmission
 ): Promise<
   | RecoveredImportReport
   | RecoveredCandidateReport
@@ -1968,17 +2318,27 @@ async function launch(
     recoveryKey: Buffer.from(supplied.recoveryKey),
   };
   // Parent validates the loader/module tree before any retained code is evaluated.
-  ensureAdmission(input, test, mode);
+  ensureAdmission(input, test, mode, undefined, chain);
   const root = resolve(input.destination),
     entry = pathToFileURL(
       join(root, "checkout/dist/lib/ingestion/recovery-import-admission.js")
     ).href;
   const script = `
-    const {${mode === "acknowledge" ? (test ? "executeRecoveredVerifiedForTest" : "executeRecoveredVerified") : mode === "load" ? (test ? "executeRecoveredImportForTest" : "executeRecoveredImport") : mode === "validate" ? (test ? "executeRecoveredFrozenForTest" : "executeRecoveredFrozen") : mode === "reconcile" ? (test ? "executeRecoveredDispatchForTest" : "executeRecoveredDispatch") : test ? "executeRecoveredCandidateForTest" : "executeRecoveredCandidate"}:execute}=await import(${JSON.stringify(entry)});
+    const {${chain ? (test ? "executeRecoveredResultChainCandidateForTest" : "executeRecoveredResultChainCandidate") : mode === "acknowledge" ? (test ? "executeRecoveredVerifiedForTest" : "executeRecoveredVerified") : mode === "load" ? (test ? "executeRecoveredImportForTest" : "executeRecoveredImport") : mode === "validate" ? (test ? "executeRecoveredFrozenForTest" : "executeRecoveredFrozen") : mode === "reconcile" ? (test ? "executeRecoveredDispatchForTest" : "executeRecoveredDispatch") : test ? "executeRecoveredCandidateForTest" : "executeRecoveredCandidate"}:execute}=await import(${JSON.stringify(entry)});
     try {
-      let size=0;const chunks=[];for await(const chunk of process.stdin){if((size+=chunk.length)>512*1024*1024)throw Error('RECOVERY_IMPORT_INPUT_TOO_LARGE');chunks.push(chunk);}
-      const value=JSON.parse(Buffer.concat(chunks).toString('utf8'));
-      for(const key of ['archive','retirementReceipt','recoveryKey'])value[key]=Buffer.from(value[key],'base64');
+      let size=0;const chunks=[];for await(const chunk of process.stdin){if((size+=chunk.length)>${chain ? maxChainWire + chainWireHeader + 65536 : 512 * 1024 * 1024})throw Error('RECOVERY_IMPORT_INPUT_TOO_LARGE');chunks.push(chunk);}
+      const wire=Buffer.concat(chunks);
+      ${
+        chain
+          ? `const magic=Buffer.from('ZIVV-CHAIN-CANDIDATE\\0');
+      if(wire.length<${chainWireHeader}||!wire.subarray(0,magic.length).equals(magic)||wire[magic.length]!==1)throw Error('RECOVERY_CHAIN_INVALID_WIRE');
+      const metadataLength=wire.readUInt32BE(magic.length+1),chainLength=wire.readUInt32BE(magic.length+5);
+      if(!metadataLength||metadataLength>65536||!chainLength||chainLength>${maxChainWire}||wire.length!==${chainWireHeader}+metadataLength+chainLength)throw Error('RECOVERY_CHAIN_INVALID_WIRE');
+      const value=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(wire.subarray(${chainWireHeader},${chainWireHeader}+metadataLength)));
+      value.recoveryKey=Buffer.from(value.recoveryKey,'base64');value.chain=wire.subarray(${chainWireHeader}+metadataLength);`
+          : `const value=JSON.parse(wire.toString('utf8'));
+      for(const key of ['archive','retirementReceipt','recoveryKey'])value[key]=Buffer.from(value[key],'base64');`
+      }
       console.log(JSON.stringify(await execute(value)));
     }catch(error){console.error(JSON.stringify({recoveryImportError:error instanceof Error&&/^[A-Z_]{1,64}$/.test(error.message)?error.message:'RECOVERY_IMPORT_EXECUTION_FAILED'}));process.exitCode=1;}
   `;
@@ -2003,15 +2363,51 @@ async function launch(
     env.ZIVV_CONTROLLED_PUBLISHING = process.env.ZIVV_CONTROLLED_PUBLISHING;
     env.ZIVV_MANUAL_PUBLISHER_JOINED = process.env.ZIVV_MANUAL_PUBLISHER_JOINED;
   }
-  const wire = JSON.stringify({
-    ...input,
-    ...test,
-    archive: input.archive.toString("base64"),
-    retirementReceipt: input.retirementReceipt.toString("base64"),
-    recoveryKey: input.recoveryKey.toString("base64"),
-  });
-  if (Buffer.byteLength(wire) > 512 * 1024 * 1024)
+  const wire = chain
+    ? undefined
+    : JSON.stringify({
+        ...input,
+        ...test,
+        archive: input.archive.toString("base64"),
+        retirementReceipt: input.retirementReceipt.toString("base64"),
+        recoveryKey: input.recoveryKey.toString("base64"),
+      });
+  if (wire !== undefined && Buffer.byteLength(wire) > 512 * 1024 * 1024)
     fail("RECOVERY_IMPORT_INPUT_TOO_LARGE");
+  let chainMetadata: Buffer | undefined, chainHeader: Buffer | undefined;
+  if (chain) {
+    chainMetadata = Buffer.from(
+      JSON.stringify({
+        destination: input.destination,
+        npmCli: input.npmCli,
+        repositoryRoot: input.repositoryRoot,
+        workflowCommit: candidateInput(input).workflowCommit,
+        githubToken: candidateInput(input).githubToken,
+        credentials: input.credentials,
+        recoveryKey: input.recoveryKey.toString("base64"),
+        ...(test
+          ? {
+              bareDirectory: test.bareDirectory,
+              pagesApiBaseUrl: test.pagesApiBaseUrl,
+              interruptAt: test.interruptAt,
+              enforcePublicationFlags: test.enforcePublicationFlags,
+              probeRestrictedConsumers: test.probeRestrictedConsumers,
+            }
+          : {}),
+      })
+    );
+    if (
+      !chain.chain.length ||
+      chain.chain.length > maxChainWire ||
+      chainMetadata.length > 65536
+    )
+      fail("RECOVERY_IMPORT_INPUT_TOO_LARGE");
+    chainHeader = Buffer.alloc(chainWireHeader);
+    chainWireMagic.copy(chainHeader);
+    chainHeader[chainWireMagic.length] = 1;
+    chainHeader.writeUInt32BE(chainMetadata.length, chainWireMagic.length + 1);
+    chainHeader.writeUInt32BE(chain.chain.length, chainWireMagic.length + 5);
+  }
   return new Promise((resolveChild, reject) => {
     const child = spawn(
       process.execPath,
@@ -2096,6 +2492,7 @@ async function launch(
             ...(candidateMode(mode) ? ["candidateId", "operationId"] : []),
             ...(mode === "acknowledge" ? ["acknowledgementId"] : []),
             ...(mode === "validate" ? ["candidateId"] : []),
+            ...(chain ? ["chainId", "chainSha256"] : []),
           ].sort()
         );
         if (
@@ -2114,6 +2511,13 @@ async function launch(
           !/^[a-f0-9]{64}$/.test(report.admissionSha256)
         )
           fail();
+        if (chain) {
+          const chained = report as RecoveredResultChainCandidateReport;
+          same(chained.chainId, chain.proof.chainId);
+          same(chained.chainSha256, chain.binding.chainSha256);
+          same(chained.candidateId, chain.proof.candidate.candidateId);
+          chain.assertCurrent();
+        }
         if (
           (candidateMode(mode) || mode === "validate") &&
           (!("candidateId" in report) ||
@@ -2136,7 +2540,11 @@ async function launch(
         reject(new Error("RECOVERY_IMPORT_EXECUTION_FAILED"));
       }
     });
-    child.stdin.end(wire);
+    if (chain && chainHeader && chainMetadata) {
+      child.stdin.write(chainHeader);
+      child.stdin.write(chainMetadata);
+      child.stdin.end(chain.chain);
+    } else child.stdin.end(wire);
   });
 }
 /** Resume only the retained import through load; production admission is not implied. */
@@ -2173,3 +2581,22 @@ export const resumeOperatorRecoveryVerified = (input: RecoveryVerifiedInput) =>
 export const resumeOperatorRecoveryVerifiedForTest = (
   input: RecoveryVerifiedInput & TestOptions
 ) => launch(input, input, "acknowledge");
+
+async function launchChainCandidate(
+  input: RecoveryResultChainCandidateInput,
+  test?: TestOptions
+): Promise<RecoveredResultChainCandidateReport> {
+  const { opened, candidate } = chainCandidate(input),
+    result = await launch(candidate, test, "dispatch", opened);
+  return {
+    ...result,
+    chainId: opened.proof.chainId,
+    chainSha256: opened.binding.chainSha256,
+  };
+}
+export const resumeOperatorRecoveryResultChainCandidate = (
+  input: RecoveryResultChainCandidateInput
+) => launchChainCandidate(input);
+export const resumeOperatorRecoveryResultChainCandidateForTest = (
+  input: RecoveryResultChainCandidateInput & TestOptions
+) => launchChainCandidate(input, input);

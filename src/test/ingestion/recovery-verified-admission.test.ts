@@ -317,7 +317,16 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
     ["acknowledge-remote-completed", 2, true],
   ] as const) {
     it(`resumes the same acknowledgement after ${interruptAt}`, async () => {
+      const progressStartedAt = Date.now();
+      const progress = (phase: string) => {
+        if (process.env.ZIVV_RECOVERY_TEST_PROGRESS === "1")
+          process.stderr.write(
+            `RECOVERY_TEST_PROGRESS ${JSON.stringify({ phase, interruptAt, elapsedMs: Date.now() - progressStartedAt })}\n`
+          );
+      };
+      progress("before-prepare");
       const f = await fixture.prepare(`interrupt-${interruptAt}`);
+      progress("prepared");
       vi.stubEnv("ZIVV_CONTROLLED_PUBLISHING", "enabled");
       vi.stubEnv("ZIVV_MANUAL_PUBLISHER_JOINED", "true");
       // Keep the staged SQLite tree pristine until the first admission.
@@ -339,6 +348,7 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
         message: "RECOVERY_IMPORT_EXECUTION_FAILED",
         cause: { message: "RECOVERY_VERIFIED_TEST_INTERRUPTION" },
       });
+      progress("interrupted-invoke-complete");
       expect(f.input.destination).toBe(destination);
       expect(f.hasCapsule()).toBe(true);
       expect(f.control().revision).toBe(
@@ -353,6 +363,7 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
       assertSignedCapsule(capsule);
 
       const result = await invoke(f.input);
+      progress("recovery-invoke-complete");
       expect(result).toMatchObject({
         status: "acknowledgement-complete",
         activationAllowed: false,
@@ -366,6 +377,7 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
       expect(f.capsuleBytes()).toEqual(capsule);
       expect(f.acknowledgementArtifactBytes()).toBe(acknowledgementArtifact);
       expect(await invoke(f.input)).toEqual(result);
+      progress("replay-complete");
       expect(readFileSync(weeklyPath)).toEqual(weeklyAfterRecovery);
       expect(f.control().revision).toBe(beforeControl.revision + 2);
       expect(f.control().active).toBeNull();
@@ -380,6 +392,7 @@ describe("verified delivery acknowledgement recovery after retirement", () => {
         beforeReferences,
         expectedWeeklyBytes
       );
+      progress("final-assertions-complete");
     });
   }
 });

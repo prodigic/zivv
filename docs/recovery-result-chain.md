@@ -32,9 +32,19 @@ requires a resulting first-eight-stage success prefix with deployment,
 verification and acknowledgement pending. Signed but inconsistent members,
 unexplained output, partial builds or mixed identities must be refused.
 The initial format covers a clean first attempt at enrichment, export and
-validation with one retained source-build recipe. A successful result following
+validation with one retained export build recipe and exactly one source-only
+enrichment capture. The enrichment capture must contain the same authenticated
+Git inventory, blob stream and source bytes as the export recipe, with its own
+exact physical capture paths and no build outputs. A successful result following
 failed build attempts requires additional chain support and remains part of the
 interrupted-build work; it is not silently accepted by this first format.
+
+Compiler cache files outside the standard capsule omissions are not supported
+without separate content provenance. In particular, an unreceipted
+`source/.cache/*.tsbuildinfo` is refused. The genuine fixture places TypeScript
+build metadata under `node_modules/.tmp`, matching the current repository's
+compiler configuration and existing dependency omission; this does not add
+general compiler-cache recovery support.
 
 The library exposes `proveRecoveryResultChain`, `encryptRecoveryResultChain` and
 `decryptRecoveryResultChain`. Fixed binary frames carry raw members under
@@ -52,7 +62,7 @@ cannot reconstruct that omitted physical inventory or establish fresh remote
 heads. Its detached proof therefore requires physical and fresh canonical
 validation, and always carries `activationAllowed: false`.
 
-The later recapture coordinator must verify the actual bounded result under the
+The [recapture coordinator](recovery-result-recapture.md) verifies the bounded result under the
 existing journal/catalog locks. Ordinary capture of quarantined state remains
 forbidden. A narrowly minted internal capture capability must grant no weekly
 runner authority. Persist the exact encrypted handoff plan durably before fencing
@@ -63,6 +73,32 @@ New-host preparation and admission must separately authenticate this chain,
 provision the exact runtime, map only its signed export role and recheck fresh
 canonical authority. They must retain the original request/candidate/attempt
 identity and the existing lost-response reconciliation rules.
+
+## Durable plan and retired-source observation
+
+`recovery-result-plan.ts` stores an authenticated plan containing the exact
+encrypted chain bytes before a future coordinator may retire the intermediate
+installation. The plan binds its physical root, operator, repository, npm CLI,
+output, run and original receipt hashes. Its portable output receipt omits the
+physical output path. Exclusive installation, authenticated orphan-stage recovery
+and byte-identical output repair preserve the same chain on retries. The storage
+primitive requires a caller-supplied fence assertion around output publication;
+it cannot establish that assertion or retire an installation itself.
+
+`observeRetiredOperatorRecoveryCheckpoint` authenticates a standard final archive
+and retirement receipt, checks the exact on-disk fence, and compares actual
+catalog, journal, retained files and runtime with that final checkpoint. It uses
+read-only SQLite connections and never constructs a journal writer or acquires
+a lease. Only the production lease bookkeeping may differ after permitted final
+capture cleanup; other journal content must match. Two observations must agree.
+SQLite may create WAL/SHM sidecars during a read, so this is logical read-only
+verification rather than a guarantee of unchanged filesystem metadata.
+
+The observer does not cover preparation metadata or dependency inventory omitted
+from standard capsules, fresh canonical heads, or a new host. The coordinator must
+verify those separately. These storage and observer primitives grant no capture
+authority by themselves; the separate coordinator owns the narrow recapture
+command. Native composed acceptance and new-host admission remain unfinished.
 
 ## Acceptance still required
 

@@ -27,6 +27,7 @@ import { resumeOperatorRecoveryCandidate } from "../dist/lib/ingestion/recovery-
 import { resumeOperatorRecoveryFrozen } from "../dist/lib/ingestion/recovery-frozen-admission.js";
 import { resumeOperatorRecoveryDispatch } from "../dist/lib/ingestion/recovery-dispatch-admission.js";
 import { resumeOperatorRecoveryVerified } from "../dist/lib/ingestion/recovery-verified-admission.js";
+import { recaptureOperatorRecoveryFrozenResult } from "../dist/lib/ingestion/recovery-result-recapture.js";
 import {
   loadBackupKey,
   secureOperatorDirectory,
@@ -76,8 +77,18 @@ try {
       throw Error("INVALID_RECOVERY_ARGUMENTS");
     options[key] = value;
   }
-  const expected =
-    command === "capture" || command === "retire"
+  const chainCommand = ["prepare-chain", "resume-chain"].includes(command);
+  const expected = chainCommand
+    ? [
+        "file",
+        "key",
+        "destination",
+        "npm-cli",
+        ...(command === "resume-chain"
+          ? ["repository", "workflow-commit"]
+          : []),
+      ]
+    : command === "capture" || command === "retire"
       ? ["root", "out", ...(options["npm-cli"] ? ["npm-cli"] : [])]
       : command === "verify"
         ? ["file", "key"]
@@ -87,6 +98,7 @@ try {
               command === "resume-candidate" ||
               command === "resume-dispatch" ||
               command === "resume-verified" ||
+              command === "recapture-frozen" ||
               command === "resume-frozen"
             ? [
                 "file",
@@ -103,7 +115,10 @@ try {
                 ].includes(command)
                   ? ["workflow-commit"]
                   : []),
-                ...(command === "resume-frozen" ? ["source-commit"] : []),
+                ...(["resume-frozen", "recapture-frozen"].includes(command)
+                  ? ["source-commit"]
+                  : []),
+                ...(command === "recapture-frozen" ? ["out"] : []),
               ]
             : command === "prepare-runtime" ||
                 command === "verify-prepared-runtime"
@@ -152,12 +167,39 @@ try {
       key = Buffer.from(encoded, "base64");
     if (key.length !== 32 || key.toString("base64") !== encoded)
       throw Error("INVALID_RECOVERY_KEY");
-    const archive = privateInput(options.file, 384 * 1024 * 1024);
-    if (
+    const archive = privateInput(
+      options.file,
+      (chainCommand ? 768 : 384) * 1024 * 1024
+    );
+    if (chainCommand) {
+      const {
+        prepareOperatorRecoveryResultChain,
+        resumeOperatorRecoveryResultChainCandidate,
+      } = await import("../dist/lib/ingestion/recovery-chain-admission.js");
+      const input = {
+        chain: archive,
+        recoveryKey: key,
+        destination: resolve(options.destination),
+        npmCli: resolve(options["npm-cli"]),
+      };
+      inspection =
+        command === "prepare-chain"
+          ? await prepareOperatorRecoveryResultChain(input)
+          : await resumeOperatorRecoveryResultChainCandidate({
+              ...input,
+              repositoryRoot: resolve(options.repository),
+              workflowCommit: options["workflow-commit"],
+              githubToken: process.env.GITHUB_TOKEN,
+              ...(process.env.GITHUB_TOKEN
+                ? { credentials: { token: process.env.GITHUB_TOKEN } }
+                : {}),
+            });
+    } else if (
       command === "resume-import" ||
       command === "resume-candidate" ||
       command === "resume-dispatch" ||
       command === "resume-verified" ||
+      command === "recapture-frozen" ||
       command === "resume-frozen" ||
       command === "prepare-runtime" ||
       command === "verify-prepared-runtime"
@@ -170,47 +212,58 @@ try {
         npmCli: resolve(options["npm-cli"]),
       };
       inspection =
-        command === "resume-verified"
-          ? await resumeOperatorRecoveryVerified({
+        command === "recapture-frozen"
+          ? await recaptureOperatorRecoveryFrozenResult({
               ...input,
               repositoryRoot: resolve(options.repository),
               runId: options["run-id"],
-              workflowCommit: options["workflow-commit"],
+              sourceCommit: options["source-commit"],
+              out: resolve(options.out),
               ...(process.env.GITHUB_TOKEN
                 ? { credentials: { token: process.env.GITHUB_TOKEN } }
                 : {}),
             })
-          : command === "resume-frozen"
-            ? await resumeOperatorRecoveryFrozen({
+          : command === "resume-verified"
+            ? await resumeOperatorRecoveryVerified({
                 ...input,
                 repositoryRoot: resolve(options.repository),
                 runId: options["run-id"],
-                sourceCommit: options["source-commit"],
+                workflowCommit: options["workflow-commit"],
                 ...(process.env.GITHUB_TOKEN
                   ? { credentials: { token: process.env.GITHUB_TOKEN } }
                   : {}),
               })
-            : command === "resume-candidate" || command === "resume-dispatch"
-              ? await (
-                  command === "resume-dispatch"
-                    ? resumeOperatorRecoveryDispatch
-                    : resumeOperatorRecoveryCandidate
-                )({
+            : command === "resume-frozen"
+              ? await resumeOperatorRecoveryFrozen({
                   ...input,
                   repositoryRoot: resolve(options.repository),
                   runId: options["run-id"],
-                  workflowCommit: options["workflow-commit"],
-                  githubToken: process.env.GITHUB_TOKEN,
+                  sourceCommit: options["source-commit"],
+                  ...(process.env.GITHUB_TOKEN
+                    ? { credentials: { token: process.env.GITHUB_TOKEN } }
+                    : {}),
                 })
-              : command === "resume-import"
-                ? await resumeOperatorRecoveryImport({
+              : command === "resume-candidate" || command === "resume-dispatch"
+                ? await (
+                    command === "resume-dispatch"
+                      ? resumeOperatorRecoveryDispatch
+                      : resumeOperatorRecoveryCandidate
+                  )({
                     ...input,
                     repositoryRoot: resolve(options.repository),
                     runId: options["run-id"],
+                    workflowCommit: options["workflow-commit"],
+                    githubToken: process.env.GITHUB_TOKEN,
                   })
-                : command === "prepare-runtime"
-                  ? await prepareOperatorRecoveryRuntime(input)
-                  : verifyPreparedOperatorRuntime(input);
+                : command === "resume-import"
+                  ? await resumeOperatorRecoveryImport({
+                      ...input,
+                      repositoryRoot: resolve(options.repository),
+                      runId: options["run-id"],
+                    })
+                  : command === "prepare-runtime"
+                    ? await prepareOperatorRecoveryRuntime(input)
+                    : verifyPreparedOperatorRuntime(input);
     } else if (command === "verify-retirement") {
       ({ checkpoint } = verifyOperatorRetirementEvidence({
         archive,
