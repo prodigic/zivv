@@ -4,6 +4,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { secureOperatorDirectory } from "./encrypted-backup.js";
 import { canonicalJson } from "./sqlite-store.js";
+import { assertOperatorInstallationWritable } from "./operator-installation.js";
 import {
   WEEKLY_RUN_STAGES,
   parseWeeklyRunState,
@@ -303,6 +304,7 @@ export class WeeklyRunJournal {
   private guardedLease: WeeklyRunLease | null = null;
 
   constructor(directory: string, clock: () => number = Date.now) {
+    assertOperatorInstallationWritable(resolve(directory));
     this.clock = clock;
     let ancestor = resolve(directory);
     while (!existsSync(ancestor)) ancestor = dirname(ancestor);
@@ -341,6 +343,7 @@ export class WeeklyRunJournal {
       this.db.exec(
         "PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON; BEGIN IMMEDIATE;"
       );
+      assertOperatorInstallationWritable(dirname(this.path));
       const schema = Number(
         this.db.prepare("PRAGMA user_version").get()?.user_version
       );
@@ -622,6 +625,7 @@ export class WeeklyRunJournal {
     lease: WeeklyRunLease,
     work: () => Promise<T>
   ): Promise<T> {
+    assertOperatorInstallationWritable(dirname(this.path));
     if (this.guardedLease || this.db.isTransaction)
       throw new Error("Nested guarded journal operation refused");
     this.db.exec("BEGIN IMMEDIATE");
@@ -648,9 +652,12 @@ export class WeeklyRunJournal {
   }
 
   private transaction<T>(work: () => T): T {
+    assertOperatorInstallationWritable(dirname(this.path));
     this.db.exec("BEGIN IMMEDIATE");
     try {
+      assertOperatorInstallationWritable(dirname(this.path));
       const result = work();
+      assertOperatorInstallationWritable(dirname(this.path));
       this.db.exec("COMMIT");
       return result;
     } catch (error) {
@@ -660,6 +667,7 @@ export class WeeklyRunJournal {
   }
 
   private assertLease(lease: WeeklyRunLease): void {
+    assertOperatorInstallationWritable(dirname(this.path));
     const row = this.db
       .prepare(
         "SELECT scope,owner,fence,expires_at FROM ownership WHERE scope=?"

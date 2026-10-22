@@ -1,4 +1,6 @@
 import { readPublicationPayloadGit } from "./publication-git.js";
+import { projectLedgerLocation } from "./store-location.js";
+import { assertOperatorInstallationWritable } from "./operator-installation.js";
 import {
   verifyPublicationPayload,
   type PublicationExpectation,
@@ -32,6 +34,11 @@ export function retainPublicationArtifact(
     transport: PublicationArtifactTransport;
   }
 ): RetainedPublicationArtifact {
+  const writable = () =>
+    assertOperatorInstallationWritable(
+      projectLedgerLocation(input.repositoryRoot).directory
+    );
+  writable();
   if (
     input.transport.repository !== "prodigic/zivv" ||
     !/^[a-f0-9]{40}$/.test(input.payloadCommit)
@@ -79,6 +86,7 @@ export function retainPublicationArtifact(
   const previous = transport.readHead(ref);
   if (previous !== null) return observe();
   try {
+    writable();
     transport.append(ref, payloadCommit, null);
   } catch {
     // A lost response can follow a successful push; observe the same immutable ref.

@@ -109,7 +109,7 @@ Sol high owns architecture, ambiguous identities, transaction/concurrency/cutoff
 - Hosting/runtime and AI research budgets; enforce them before unattended research activation.
 - GitHub Pages preview repository is prodigic/zivv-test, public and approved. Verify deployment credentials, branch permissions and /zivv-test/ base path before publishing artifacts; production remains /zivv/.
 - Source-access credentials, exact expected edition identification and credential renewal.
-- Alert email destination and independent monitoring provider.
+- Notification account/destination (operator decision October 17): the same Gmail account receiving Steve's List. Keep its address and credentials in private operator configuration. Unattended credentials, delivery/reconciliation and the independent monitoring provider still require setup and verification.
 - Fresh-environment restoration of encrypted ledger plus versioned weekly/configuration state, with a separately stored recovery key.
 - Representative successful end-to-end rehearsal and failure drills, followed by two observed Friday editions.
 

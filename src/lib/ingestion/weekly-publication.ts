@@ -1,5 +1,6 @@
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { assertOperatorInstallationWritable } from "./operator-installation.js";
 import { canonicalJson } from "./sqlite-store.js";
 import {
   loadBackupKey,
@@ -111,6 +112,15 @@ export async function ensureWeeklyPublication(
     ) => Promise<void>;
   }
 ): Promise<{ state: WeeklyRunState; status: "pending" | "verified" }> {
+  const verifyOriginalContext = input.verifyContext;
+  input = {
+    ...input,
+    verifyContext: () => {
+      assertOperatorInstallationWritable(input.operatorDirectory);
+      verifyOriginalContext();
+    },
+  };
+  input.verifyContext();
   if (
     input.controlledPublishing !== "enabled" ||
     input.manualPublisherJoined !== "true" ||

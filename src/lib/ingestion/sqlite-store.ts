@@ -4,6 +4,7 @@ import { existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import type { IngestionLedger } from "../../types/ingestion.js";
+import { assertOperatorInstallationWritable } from "./operator-installation.js";
 
 interface StoreSession {
   path: string;
@@ -14,6 +15,12 @@ const revisions = new WeakMap<
   IngestionLedger,
   { path: string; generation: number }
 >();
+
+/** A final recovery checkpoint must own its catalog transaction, never borrow uncommitted state. */
+export function assertNoActiveStoreTransaction(path: string): void {
+  if (sessions.getStore()?.path === resolve(path))
+    throw new Error("RECOVERY_REQUIRES_OWN_CATALOG_TRANSACTION");
+}
 
 /** Carry the loaded revision through pure reconciliation or an explicitly checked restore. */
 export function inheritStoreRevision(
@@ -42,6 +49,7 @@ export function ledgerDigest(ledger: IngestionLedger): string {
 
 /** Open the local WAL store; an absent ledger never becomes an empty catalog. */
 export function openStore(path: string, create = false): DatabaseSync {
+  if (create) assertOperatorInstallationWritable(dirname(resolve(path)));
   if (!create && !existsSync(path))
     throw new Error(
       `Shared ledger missing: ${path}. Restore an encrypted snapshot or run ledger:migrate.`
@@ -65,7 +73,8 @@ export function openStore(path: string, create = false): DatabaseSync {
         "Shared ledger requires SQLite 3.51.3 or later (WAL recovery fixes)."
       );
     db.exec("PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL;");
-    if (create) {
+    if (create && schema === 0) {
+      assertOperatorInstallationWritable(dirname(resolve(path)));
       db.exec(`PRAGMA journal_mode=WAL;
         CREATE TABLE IF NOT EXISTS metadata (id INTEGER PRIMARY KEY CHECK(id=1), generation INTEGER NOT NULL, digest TEXT NOT NULL, payload TEXT NOT NULL) STRICT;
         CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, position INTEGER NOT NULL, payload TEXT NOT NULL) STRICT;
@@ -117,12 +126,16 @@ export async function withStoreTransaction<T>(
   work: () => Promise<T>,
   create = false
 ): Promise<T> {
+  const directory = dirname(resolve(path));
+  assertOperatorInstallationWritable(directory);
   const active = sessions.getStore();
   if (active?.path === resolve(path)) return work();
   const db = openStore(path, create);
   try {
     await beginWrite(db);
+    assertOperatorInstallationWritable(directory);
     const result = await sessions.run({ path: resolve(path), db }, work);
+    assertOperatorInstallationWritable(directory);
     db.exec("COMMIT");
     return result;
   } catch (error) {
@@ -294,6 +307,8 @@ export async function writeSqliteLedger(
   ledger: IngestionLedger,
   initialize = false
 ): Promise<void> {
+  const directory = dirname(resolve(path));
+  assertOperatorInstallationWritable(directory);
   const active = sessions.getStore();
   if (active?.path === resolve(path)) {
     writeTo(active.db, path, ledger, initialize);
@@ -302,7 +317,9 @@ export async function writeSqliteLedger(
   const db = openStore(path, initialize);
   try {
     await beginWrite(db);
+    assertOperatorInstallationWritable(directory);
     writeTo(db, path, ledger, initialize);
+    assertOperatorInstallationWritable(directory);
     db.exec("COMMIT");
   } catch (error) {
     if (db.isTransaction) db.exec("ROLLBACK");

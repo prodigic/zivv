@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 import { realpathSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { isAbsolute, relative, resolve, sep } from "node:path";
+import { projectLedgerLocation } from "./store-location.js";
+import { assertOperatorInstallationWritable } from "./operator-installation.js";
 
 export type PromotionGitDestination = "production" | "preview";
 
@@ -787,6 +789,7 @@ function createStore(
       return prepare(captured, previous, completionTree);
     },
     compareAndAppend(input) {
+      assertOperatorInstallationWritable(projectLedgerLocation(root).directory);
       const captured = capture(input);
       const { bytes, expectedHead } = captured;
       const completionTree = validateState(Buffer.from(bytes), destination);
@@ -803,6 +806,7 @@ function createStore(
         current.bytes,
         completionTree
       );
+      assertOperatorInstallationWritable(projectLedgerLocation(root).directory);
       try {
         if (transport) transport.append(ref, attemptedHead, expectedHead);
         else
@@ -925,6 +929,7 @@ function remoteTransport(
       readObject(root, "commit", commit);
     },
     append(ref, commit, expectedHead) {
+      assertOperatorInstallationWritable(projectLedgerLocation(root).directory);
       validateRef(ref);
       validateSha(commit);
       validateHead(expectedHead);
@@ -948,6 +953,7 @@ function remoteTransport(
       // Restricted append-only controller writers and non-force fast-forward
       // updates make competing sole-parent appends conflict. No ref refresh or
       // reparent occurs here, and no configured push refspec is used.
+      assertOperatorInstallationWritable(projectLedgerLocation(root).directory);
       run([
         "push",
         "--porcelain",
