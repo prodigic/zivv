@@ -25,6 +25,7 @@ import {
   replaySteveGmailBatch,
 } from "../../../lib/ingestion/steve-gmail-handoff.js";
 import { WeeklyRunJournal } from "../../../lib/ingestion/weekly-run-journal.js";
+import { createRecoveryGmailCaptureProbeControls } from "../../../lib/ingestion/recovery-gmail-capture-probe-controls.js";
 import type { RecoveryRuntimeInput } from "../../../lib/ingestion/recovery-runtime.js";
 
 const account = "capture-runtime@fixture.invalid";
@@ -176,7 +177,10 @@ function assertOwnedDirectory(base: string, target: string): string {
  * message. The optional review mode normally replays the second message before
  * retirement so recovery can exercise explicit approval of an existing receipt. */
 export async function createRecoveryGmailCaptureRuntimeFixture(
-  options: { reviewSecondMessage?: boolean } = {}
+  options: {
+    reviewSecondMessage?: boolean;
+    seedAuthorityControls?: boolean;
+  } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
   const base = mkdtempSync(
     join(tmpdir(), "zivv-recovery-gmail-capture-runtime-")
@@ -327,6 +331,33 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
     const batchIds = readdirSync(batchDirectory)
       .filter((name) => /^[a-f0-9]{64}\.json$/.test(name))
       .map((name) => name.slice(0, -5));
+
+    if (options.seedAuthorityControls) {
+      // Ordinary production journal APIs establish the valid running control
+      // before retirement. The retained probe may refuse its next transition;
+      // it must not pass merely because the run or artifact attempt is invalid.
+      const controls = createRecoveryGmailCaptureProbeControls();
+      const journal = new WeeklyRunJournal(operator);
+      try {
+        const lease = journal.acquire("prodigic/zivv/production", 60_000);
+        try {
+          journal.create(
+            controls.seed.initialState,
+            lease,
+            controls.seed.rawSource
+          );
+          journal.save(
+            controls.seed.runningState,
+            controls.seed.initialState.revision,
+            lease
+          );
+        } finally {
+          journal.release(lease);
+        }
+      } finally {
+        journal.close();
+      }
+    }
 
     const out = join(base, "retired-operator.enc");
     await retireAndCaptureOperatorRecovery({ root, out, npmCli });

@@ -96,6 +96,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "intake-approval-published",
   "intake-manifest-stage-flushed",
   "intake-manifest-published",
+  "authority-negatives-before-source",
 ] as const;
 export type CaptureInterruption =
   (typeof RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS)[number];
@@ -273,6 +274,16 @@ export function hasRecoveredGmailCaptureAuthority(directory: string): boolean {
 /** Return only the closed executor's preselected production lease identity. */
 export function recoveredGmailCaptureLeaseOwner(): string | undefined {
   return current()?.owner;
+}
+/** A fixed test selection only; this neither exposes nor establishes authority. */
+export function recoveredGmailCaptureAuthorityProbeMode():
+  | "authority-negatives-before-source"
+  | undefined {
+  const scope = current();
+  return scope?.phase === "capture" &&
+    scope.interruption === "authority-negatives-before-source"
+    ? "authority-negatives-before-source"
+    : undefined;
 }
 export function assertRecoveredGmailCaptureInvocation(
   input: SteveEmailCapturePreparationInput & {

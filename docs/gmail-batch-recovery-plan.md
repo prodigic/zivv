@@ -8,6 +8,11 @@ adds read-only replacement-host inspection with eleven native prepared-runtime
 and CLI cases. Closed capture (#109) is the next required authority step.
 The [closed capture contract](recovery-gmail-capture-contract.md) records its
 effect-specific journal guards, retained-worker compatibility and required drills.
+The current focused authority rehearsal uses a fixed retained test selection
+before source commit, with ordinary journal/catalog positive controls and exact
+per-operation refusal/state checks. Its scope and early-entry-check limitations
+are recorded in that contract; it does not replace multi-batch, expiry/escape,
+drift, hard-death or selected-receipt-load acceptance.
 These stages replace the baseline's blanket acquisition-tree refusal with exact
 authenticated support; recovery remains incomplete until closed capture,
 selected-receipt loading and composed acceptance below are verified.
