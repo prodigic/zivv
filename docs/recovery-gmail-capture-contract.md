@@ -2,6 +2,25 @@
 
 Design only, based on PR114. No activation, catalog load, Gmail request, credential provisioning, or current private effect is authorized by this packet.
 
+The pure evidence checkpoint in
+`src/lib/ingestion/recovery-gmail-capture-admission-proof.ts` implements bounded,
+domain-separated signed intent/result records and exact original/prior/current
+inventory and journal projections. It recognizes journal-before-file restart
+states without relaxing the ordinary batch proof. A completed prefix is bound by
+an ordered count/digest; all supplied predecessor pairs are still revalidated.
+The unfinished admission family must be explicitly supplied and cannot select a
+different batch or correction on retry.
+
+These are detached evidence functions, not an executor or permission grant. The
+future closed executor must prove complete physical enumeration, runtime and DB
+identities, exact lease provenance, and normal MIME/receiver admission before
+effects. A saved signed result must be observed before acquiring a new lease and
+returned unchanged after a lost response. The admission timestamp records intent;
+it never substitutes for the source's actual first observation. Extract and reuse
+normal intake's preparation when validating journal-first repair, including every
+receiver-profile and sender-date field. No current API grants the capture/load or
+activation operations in the contract below.
+
 ```ts
 interface RecoveryGmailCaptureInput extends RecoveryRuntimeInput {
   batchId: string;
