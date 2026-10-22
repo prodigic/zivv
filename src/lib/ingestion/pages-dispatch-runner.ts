@@ -1,6 +1,10 @@
 import { execFileSync } from "node:child_process";
 import { projectLedgerLocation } from "./store-location.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
+import {
+  assertRecoveredPublicationEffect,
+  recoveredPublicationRepository,
+} from "./recovery-import-admission.js";
 import { randomBytes } from "node:crypto";
 import {
   closeSync,
@@ -78,6 +82,8 @@ export function verifyReviewedPagesWorkflowCommit(
 ): void {
   if (!sha(workflowCommit))
     throw new Error("A full reviewed workflow SHA is required");
+  assertRecoveredPublicationEffect();
+  const repository = recoveredPublicationRepository(repositoryRoot);
   const env: NodeJS.ProcessEnv = {};
   for (const key of [
     "PATH",
@@ -112,7 +118,7 @@ export function verifyReviewedPagesWorkflowCommit(
         ...args,
       ],
       {
-        cwd: repositoryRoot,
+        cwd: repository.root,
         env,
         windowsHide: true,
         timeout: 30_000,
@@ -137,13 +143,12 @@ export function verifyReviewedPagesWorkflowCommit(
       workflowCommit
     )
       throw new Error();
-    git(["rev-parse", "--verify", "refs/remotes/origin/main^{commit}"]);
-    git([
-      "merge-base",
-      "--is-ancestor",
-      workflowCommit,
-      "refs/remotes/origin/main",
-    ]);
+    const main = repository.mainHead ?? "refs/remotes/origin/main";
+    if (repository.mainHead && !sha(repository.mainHead)) throw new Error();
+    const mainHead = git(["rev-parse", "--verify", `${main}^{commit}`]);
+    if (repository.mainHead && mainHead !== repository.mainHead)
+      throw new Error();
+    git(["merge-base", "--is-ancestor", workflowCommit, main]);
     if (
       git([
         "cat-file",
@@ -345,6 +350,10 @@ export async function runPagesCandidateDispatch(
       originalContext?.();
     },
   };
+  const checkEffect = () => {
+    assertRecoveredPublicationEffect();
+    options.checkContext?.();
+  };
   options.checkContext?.();
   if (options.recovery && options.command !== "recover")
     throw new Error("Canonical history selection is recovery-only");
@@ -474,27 +483,38 @@ export async function runPagesCandidateDispatch(
       createdAt: pending.createdAt,
     },
   };
+  assertRecoveredPublicationEffect();
+  options.checkContext?.();
   const tag = await ensureReviewedPagesWorkflowTag({
     ...http,
     workflowCommit: options.workflowCommit,
     reviewedMainAncestor: true,
+    checkContext: checkEffect,
   });
   options.checkContext?.();
   if (tag.status !== "verified")
     return { status: "uncertain" as const, reason: "workflow-tag", tag };
+  assertRecoveredPublicationEffect();
+  options.checkContext?.();
   return requestGithubPagesWorkflowDispatch({
     ...http,
     intent,
     onIntent: async () => {
       options.checkContext?.();
       saveOnce(path, saved);
-      const result = options.store.compareAndAppend(pending);
+      assertRecoveredPublicationEffect();
+      options.checkContext?.();
+      const result = options.store.compareAndAppend({
+        ...pending,
+        checkContext: checkEffect,
+      });
       if (
         result.status !== "appended" ||
         result.attemptedHead !== pending.attemptedHead ||
         result.observedHead !== pending.attemptedHead
       )
         throw new Error("Exact prepared controller append did not win");
+      assertRecoveredPublicationEffect();
       options.checkContext?.();
       return { controlHead: pending.attemptedHead };
     },

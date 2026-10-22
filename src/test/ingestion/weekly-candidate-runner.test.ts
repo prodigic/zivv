@@ -145,6 +145,21 @@ describe("weekly candidate stages with real sealed bundles", () => {
       db.close();
     }
   }
+  function validationBytes(state: WeeklyRunState): Buffer | null {
+    const db = new DatabaseSync(join(home, "weekly-runs.sqlite"), {
+      readOnly: true,
+    });
+    try {
+      const row = db
+        .prepare(
+          "SELECT bytes FROM stage_artifact WHERE run_id=? AND stage='validate' AND attempt=?"
+        )
+        .get(state.runId, stage(state, "validate").attempt);
+      return row ? Buffer.from(row.bytes as Uint8Array) : null;
+    } finally {
+      db.close();
+    }
+  }
   function initializeControl() {
     const env = { ...process.env };
     for (const key of Object.keys(env))
@@ -796,6 +811,39 @@ describe("weekly candidate stages with real sealed bundles", () => {
       candidateId: verified.candidate.candidateId,
       manifestSha256: verified.candidate.manifestSha256,
     });
+    const expectedValidationBytes = Buffer.from(
+      canonicalJson({
+        schemaVersion: 1,
+        candidateId: verified.candidate.candidateId,
+        manifestSha256: verified.candidate.manifestSha256,
+      }) + "\n"
+    );
+    expect(validationBytes(validated)).toEqual(expectedValidationBytes);
+    const journal = new WeeklyRunJournal(home);
+    const lease = journal.acquire("prodigic/zivv/production");
+    try {
+      const recovery = JSON.parse(
+        journal.exportRecoverySnapshot(lease).toString("utf8")
+      ) as {
+        stageArtifacts: {
+          runId: string;
+          stage: string;
+          attempt: number;
+          bytes: string;
+        }[];
+      };
+      expect(
+        recovery.stageArtifacts.find(
+          (item) =>
+            item.runId === validated.runId &&
+            item.stage === "validate" &&
+            item.attempt === stage(validated, "validate").attempt
+        )?.bytes
+      ).toBe(expectedValidationBytes.toString("base64"));
+    } finally {
+      journal.release(lease);
+      journal.close();
+    }
     const before = catalogDigest();
     expect(
       await runWeeklyImport({
@@ -808,6 +856,82 @@ describe("weekly candidate stages with real sealed bundles", () => {
     expect(catalogDigest()).toBe(before);
     expect(readSqliteLedger(sqlitePath).runs).toHaveLength(1);
   });
+
+  it("resumes a persisted validation artifact after interruption without rebuilding or changing its bytes", async () => {
+    await expect(
+      runWeeklyImport({
+        root,
+        source,
+        stopAfter: "validate",
+        freezeCutoffEpochMs: cutoff,
+        candidateBuild: build,
+        onProgress(event) {
+          if (event.stage === "validate" && event.phase === "artifact-saved")
+            throw new Error("Crash after validation artifact");
+        },
+      })
+    ).rejects.toThrow("Crash after validation artifact");
+    const interrupted = journalState();
+    expect(stage(interrupted, "validate").status).toBe("running");
+    const before = validationBytes(interrupted);
+    expect(before).not.toBeNull();
+    const resumed = await runWeeklyImport({
+      root,
+      runId: interrupted.runId,
+      stopAfter: "validate",
+    });
+    expect(stage(resumed, "validate").status).toBe("succeeded");
+    expect(stage(resumed, "validate").attempt).toBe(
+      stage(interrupted, "validate").attempt
+    );
+    expect(validationBytes(resumed)).toEqual(before);
+    expect(doubles.build).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(["missing", "changed"] as const)(
+    "refuses a %s artifact on succeeded validation rather than inventing evidence",
+    async (corruption) => {
+      const validated = await runWeeklyImport({
+        root,
+        source,
+        stopAfter: "validate",
+        freezeCutoffEpochMs: cutoff,
+        candidateBuild: build,
+      });
+      const db = new DatabaseSync(join(home, "weekly-runs.sqlite"));
+      try {
+        if (corruption === "missing")
+          db.prepare(
+            "DELETE FROM stage_artifact WHERE run_id=? AND stage='validate'"
+          ).run(validated.runId);
+        else {
+          const bytes = Buffer.from(
+            canonicalJson({
+              schemaVersion: 1,
+              candidateId: "f".repeat(64),
+              manifestSha256: "e".repeat(64),
+            }) + "\n"
+          );
+          db.prepare(
+            "UPDATE stage_artifact SET bytes=?,identity=? WHERE run_id=? AND stage='validate'"
+          ).run(bytes, hash(bytes), validated.runId);
+        }
+      } finally {
+        db.close();
+      }
+      const before = validationBytes(validated);
+      await expect(
+        runWeeklyImport({ root, runId: validated.runId, stopAfter: "validate" })
+      ).rejects.toThrow(
+        corruption === "missing"
+          ? "MISSING_STAGE_ARTIFACT"
+          : "INVALID_CANDIDATE_STAGE_ARTIFACT"
+      );
+      expect(validationBytes(validated)).toEqual(before);
+      expect(journalState()).toEqual(validated);
+      expect(doubles.build).toHaveBeenCalledTimes(1);
+    }
+  );
 
   it("requires initial candidate options and permits an explicit retry with valid options", async () => {
     const frozen = await frozenRun();

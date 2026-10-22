@@ -82,7 +82,9 @@ Success writes a private HMAC-signed `recovery-import-result.json` and reports
 longer the verifier for a destination whose databases have legitimately changed;
 the admission record and bounded retry checks cover that state.
 
-This is one recovery scope. Post-load/build, dispatched-publication and
+This is one recovery scope. The separate
+[validated-candidate admission](recovery-candidate-admission.md) covers a sealed
+bundle through dispatch. Post-load/build, separately captured dispatched-publication and
 verified-before-acknowledgement recovery, off-machine durability, unattended
 credentials, scheduling/notifications and observed Friday runs remain separate
 acceptance work in [#36](https://github.com/prodigic/zivv/issues/36).

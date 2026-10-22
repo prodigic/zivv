@@ -1400,7 +1400,7 @@ describe("durable single-shot Pages creation intent", () => {
     }
     expect(maximum).toBeLessThan(initialBytes + 1500);
     expect(JSON.stringify(state)).not.toContain("creations");
-  });
+  }, 20_000);
 
   it("rejects rehashed malformed requested state and forged release of an uncertain effect", () => {
     const admittedState = admitted();

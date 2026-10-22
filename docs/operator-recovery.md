@@ -87,6 +87,9 @@ probes an exact v2 runtime in quarantine after authenticating that receipt.
 The optional [same-run import admission](recovery-import-admission.md) can then
 resume one captured before-load run through load while keeping quarantine and
 publication restrictions in place.
+For a run already validated before retirement,
+[candidate admission](recovery-candidate-admission.md) resumes its original sealed
+bundle through dispatch using separately authenticated Git authority.
 
 Destination must not exist and must be private/local/outside Git. A failed
 restore leaves an `incomplete` marker; inspect/preserve that staging and choose a
