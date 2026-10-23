@@ -7,6 +7,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ContentArea } from "@/components/layout/AppShell.js";
 import PriceWidget from "@/components/ui/PriceWidget.js";
 import EventPosterLink from "@/components/ui/EventPosterLink.js";
+import { isEventPoster } from "@/utils/event-poster.js";
 import VenueMapPreview from "@/components/ui/VenueMapPreview.js";
 import VenueNameLink from "@/components/ui/VenueNameLink.js";
 import { useAppStore } from "@/stores/appStore.js";
@@ -52,6 +53,10 @@ const VenueDetailPage: React.FC = () => {
       </ContentArea>
     );
   }
+
+  const reservePosterSlot = venue.upcomingEvents.some((event) =>
+    isEventPoster(event.poster)
+  );
 
   return (
     <ContentArea
@@ -158,6 +163,7 @@ const VenueDetailPage: React.FC = () => {
                     <EventPosterLink
                       poster={event.poster}
                       showName={event.headlinerName || "Show"}
+                      reserve={reservePosterSlot}
                     />
                     <Link
                       key={event.id}

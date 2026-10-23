@@ -8,6 +8,7 @@ import { DirectoryContent } from "@/components/layout/DirectoryContent.tsx";
 import { isEventUpcoming } from "@/lib/discovery.ts";
 import PriceWidget from "@/components/ui/PriceWidget.js";
 import EventPosterLink from "@/components/ui/EventPosterLink.js";
+import { isEventPoster } from "@/utils/event-poster.js";
 import NewBadge from "@/components/ui/NewBadge.js";
 import {
   VenueCardSkeleton,
@@ -546,6 +547,9 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                               e.dateEpochMs <= dateWindow.end
                           )
                         : venue.upcomingEvents;
+                      const reservePosterSlot = visibleEvents.some((event) =>
+                        isEventPoster(event.poster)
+                      );
                       return (
                         visibleEvents.length > 0 && (
                           <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
@@ -557,6 +561,7 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                                 <EventPosterLink
                                   poster={event.poster}
                                   showName={event.headlinerName || "Show"}
+                                  reserve={reservePosterSlot}
                                 />
                                 <Link
                                   key={event.id}
