@@ -17,6 +17,20 @@ around the nested invocation. The observer always closes, and normal outer
 cleanup still revokes the scope and wipes its key before the caller receives a
 verified diagnostic. A fresh ordinary invocation must complete and replay.
 
+The fixed `lease-expires-before-source` probe requests a shorter real lease
+before acquisition and leaves the private scope deadline unchanged. It waits
+for the recorded lease to expire, then calls the normal source-evidence writer.
+The ordinary journal ownership check runs before the capture source hook, so
+the expected refusal is `Expired or fenced weekly run owner`, not a fabricated
+capture-hook error. Normal release must still be attempted and the journal
+closed. An observation diagnostic requires proof of both actual refusals,
+successful close, unchanged full logical/physical state across the failed
+source call, and no source evidence. Final journal bytes may reflect legitimate
+lease acquisition and close bookkeeping; final acceptance instead pins the
+exact expired owner/fence, unchanged non-ownership evidence and all non-journal
+files. No cleanup permission, deadline restoration or expiry reset is granted.
+A fresh normal retry must complete using a new fence and real admission time.
+
 The separate `startRecoveryGmailCaptureDriftProbeForTest` launcher adds a fixed
 IPC pause/resume seam without changing production launch or binary framing.
 It exposes only `paused`, `result`, `resume()` and joined `stop()` controls;

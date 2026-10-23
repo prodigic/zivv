@@ -103,6 +103,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "expire-after-admission",
   "authority-escaped-after-admission",
   "authority-nested-executor-after-admission",
+  "lease-expires-before-source",
   "pause-before-key-guard",
 ] as const;
 export type CaptureInterruption =
@@ -500,6 +501,16 @@ export function recoveredGmailCaptureAuthorityProbeMode():
   return scope?.phase === "capture" &&
     scope.interruption === "authority-negatives-before-source"
     ? "authority-negatives-before-source"
+    : undefined;
+}
+/** Fixed observation selection only; callers cannot supply a TTL or authority. */
+export function recoveredGmailCaptureLeaseExpiryProbeMode():
+  | "lease-expires-before-source"
+  | undefined {
+  const scope = current();
+  return scope?.phase === "capture" &&
+    scope.interruption === "lease-expires-before-source"
+    ? "lease-expires-before-source"
     : undefined;
 }
 export function assertRecoveredGmailCaptureInvocation(

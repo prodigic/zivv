@@ -151,6 +151,9 @@ function physicalSnapshot(root: string): string {
   return createHash("sha256").update(canonicalJson(entries)).digest("hex");
 }
 
+/** Pure bounded read-only observation; never establishes an effect scope. */
+export { physicalSnapshot as snapshotRecoveryGmailCaptureProbeTree };
+
 /** Fixed compiled probes only. This entry cannot establish capture authority,
  * select arbitrary work, provide callbacks, or bypass any production guard. */
 export async function runRecoveryGmailCaptureAuthorityProbes(input: {
