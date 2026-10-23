@@ -102,6 +102,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "authority-negatives-before-source",
   "expire-after-admission",
   "authority-escaped-after-admission",
+  "authority-nested-executor-after-admission",
   "pause-before-key-guard",
 ] as const;
 export type CaptureInterruption =
@@ -2184,6 +2185,50 @@ async function execute(
           (): EscapedTaskOutcome => "wrong-refusal"
         );
         return { kind: "escaped-after-admission", before, outcome };
+      }
+      if (interruption === "authority-nested-executor-after-admission") {
+        // The nested call must take the genuine retained entry and encounter
+        // the existing installation-writer preflight with this admission scope.
+        assertRecoveredGmailCaptureFile(admissionPath, admission);
+        const journalPath = join(initial.operator, "weekly-runs.sqlite");
+        const observer = new DatabaseSync(journalPath, { readOnly: true });
+        escapeObservation.observer = observer;
+        try {
+          observer.prepare("SELECT count(*) FROM sqlite_schema").get();
+          escapedTaskSnapshot(root, journalPath);
+          const before = escapedTaskSnapshot(root, journalPath);
+          if (escapedTaskSnapshot(root, journalPath) !== before)
+            fail("RECOVERY_GMAIL_CAPTURE_NESTED_EXECUTOR_UNSTABLE");
+          if (
+            !scope.active ||
+            Date.now() >= scope.deadline ||
+            scope.phase !== "admission" ||
+            scope.lease
+          )
+            fail("RECOVERY_GMAIL_CAPTURE_NESTED_EXECUTOR_CONTEXT");
+          try {
+            await executeRecoveredGmailBatchCapture(input);
+          } catch (error) {
+            if (
+              !(error instanceof Error) ||
+              error.message !== "RECOVERY_GMAIL_CAPTURE_SCOPE_EXCEEDED"
+            )
+              fail("RECOVERY_GMAIL_CAPTURE_NESTED_EXECUTOR_REFUSAL");
+            if (escapedTaskSnapshot(root, journalPath) !== before)
+              fail("RECOVERY_GMAIL_CAPTURE_NESTED_EXECUTOR_CHANGED");
+            if (
+              scopes.getStore() !== scope ||
+              !scope.active ||
+              scope.phase !== "admission" ||
+              scope.lease
+            )
+              fail("RECOVERY_GMAIL_CAPTURE_NESTED_EXECUTOR_CONTEXT");
+            fail("RECOVERY_GMAIL_CAPTURE_NESTED_EXECUTOR_VERIFIED");
+          }
+          fail("RECOVERY_GMAIL_CAPTURE_NESTED_EXECUTOR_ALLOWED");
+        } finally {
+          closeEscapeObservation();
+        }
       }
       scope.phase = "key";
       if (interruption === "pause-before-key-guard") {

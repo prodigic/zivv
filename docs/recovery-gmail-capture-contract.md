@@ -6,6 +6,17 @@ credential provisioning is authorized by this packet.
 
 ## Fixed active-capture authority probes
 
+The fixed `authority-nested-executor-after-admission` selection calls the actual
+exported capture executor recursively with the same genuine full recovery input
+inside its active scope, after admission but before key or lease acquisition.
+Its existing installation-writer preflight must reject with the exact scope
+error. That preflight runs before the later explicit scope-presence check;
+neither guard is bypassed to reach a preferred refusal. A fixed read-only
+journal observer and whole logical/physical snapshots prove unchanged state
+around the nested invocation. The observer always closes, and normal outer
+cleanup still revokes the scope and wipes its key before the caller receives a
+verified diagnostic. A fresh ordinary invocation must complete and replay.
+
 The separate `startRecoveryGmailCaptureDriftProbeForTest` launcher adds a fixed
 IPC pause/resume seam without changing production launch or binary framing.
 It exposes only `paused`, `result`, `resume()` and joined `stop()` controls;
