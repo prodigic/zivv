@@ -547,7 +547,7 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                               e.dateEpochMs <= dateWindow.end
                           )
                         : venue.upcomingEvents;
-                      const hasPosters = venue.upcomingEvents.some((event) =>
+                      const hasPosters = visibleEvents.some((event) =>
                         isEventPoster(event.poster)
                       );
                       return (

@@ -172,3 +172,43 @@ it("lets event links use the full row when the venue has no artwork", () => {
   }
   expect(container.querySelectorAll(".venue-card")).toHaveLength(3);
 });
+
+it("reserves poster slots for posterless rows in mixed-artwork venues only", () => {
+  const storeVenues = useAppStore.getState().venues;
+  const first = [...storeVenues.values()][0];
+  first.upcomingEvents[0].poster = {
+    imageUrl: "https://venue.example/flyer.jpg",
+    eventUrl: "https://venue.example/show",
+    kind: "poster",
+    checkedOn: "2026-10-10",
+  };
+
+  const { container } = render(
+    <MemoryRouter>
+      <VenuesPage />
+    </MemoryRouter>
+  );
+  const row = (slug: string) =>
+    container.querySelector(`.venue-card .border-t a[href="/events/${slug}"]`)
+      ?.parentElement;
+  const artworkRow = row("show-1-0");
+  const posterlessRow = row("show-1-1");
+  const allPosterlessVenueRow = row("show-2-0");
+
+  expect(artworkRow?.firstElementChild).toHaveAttribute(
+    "href",
+    "https://venue.example/show"
+  );
+  expect(posterlessRow?.firstElementChild).toMatchObject({
+    tagName: "SPAN",
+    className: expect.stringContaining("h-11 w-9"),
+  });
+  expect(posterlessRow?.firstElementChild).toHaveAttribute(
+    "aria-hidden",
+    "true"
+  );
+  expect(allPosterlessVenueRow?.firstElementChild).toHaveAttribute(
+    "href",
+    "/events/show-2-0"
+  );
+});
