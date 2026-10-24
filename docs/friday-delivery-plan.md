@@ -65,6 +65,10 @@ Production promotion follows successful preview/live/recovery checks. Attach the
 
 ## Delegation plan
 
+Use the [ingestion test scope policy](ingestion-test-policy.md) to distinguish
+routine and targeted checks from full recovery milestones. This does not remove
+the recovery acceptance requirements or activate automation.
+
 Terra/Luna assignments below are candidates for small measured trials, not proven model choices or authorization for automatic model substitution. Use available requested models; ask before substituting unavailable ones. Require bounded inputs, structured outputs or specific files, evidence, checks performed and explicit unresolved cases. Share cached source evidence and separate file ownership.
 
 Sol high owns architecture, ambiguous identities, transaction/concurrency/cutoff semantics, credential permissions, canonical repairs, integration and promotion decisions. Smaller-model research agents produce candidates; they do not directly write unchecked canonical facts. Audit the first batch, periodically sample positive and negative results, and review every ambiguous identity or canonical correction. Escalate systematic extraction defects across the affected method. Report accepted outputs, failures, rework and actual token telemetry when available; do not invent cost measurements. Trial fixture creation, inventories and official-link extraction first. Unattended research remains disabled pending the deferred decisions.

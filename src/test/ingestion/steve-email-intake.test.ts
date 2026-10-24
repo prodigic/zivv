@@ -589,6 +589,39 @@ describe("private Steve email acquisition", () => {
     ).rejects.toThrow();
   });
 
+  it("snapshots the operator directory and correction link before async preparation", async () => {
+    const { operatorDirectory } = fixture();
+    const alternate = fixture();
+    const first = await capture(operatorDirectory);
+    const revised = {
+      id: "a3",
+      text: plain + "Correction: Synthetic show cancelled\n",
+    };
+    vi.mocked(Date.now).mockReturnValue(observedAt + 60_000);
+    await capture(operatorDirectory, revised, {
+      observedAtEpochMs: observedAt + 60_000,
+    });
+
+    const args = {
+      ...input(operatorDirectory, message(revised)),
+      correctionOf: first.receipt.receiptId,
+    };
+    vi.mocked(Date.now).mockReturnValue(observedAt + 120_000);
+    const capturing = captureSteveEmail(args);
+    args.operatorDirectory = alternate.operatorDirectory;
+    args.correctionOf = "f".repeat(64);
+
+    const result = await capturing;
+    expect(result.receipt.correctionOf).toBe(first.receipt.receiptId);
+    expect(result.disposition).toBe("ready");
+    expect(existsSync(join(operatorDirectory, "weekly-runs.sqlite"))).toBe(
+      true
+    );
+    expect(
+      existsSync(join(alternate.operatorDirectory, "weekly-runs.sqlite"))
+    ).toBe(false);
+  });
+
   it("serializes capture with the production weekly worker lease", async () => {
     const { operatorDirectory } = fixture();
     const journal = openJournal(operatorDirectory);

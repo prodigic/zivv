@@ -1,5 +1,6 @@
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import PostalMime, { addressParser, type Header } from "postal-mime";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
@@ -7,6 +8,7 @@ import { localDateStartEpochMs } from "./weekly.js";
 import {
   secureOperatorDirectory,
   writeDurableFile,
+  repairRecoveredGmailCaptureFile,
 } from "./encrypted-backup.js";
 import {
   assertOperatorNotQuarantined,
@@ -19,6 +21,13 @@ import {
   type WeeklyRunLease,
 } from "./weekly-run-journal.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
+import {
+  assertRecoveredGmailCaptureInvocation,
+  assertRecoveredGmailCaptureFile,
+  recoveredGmailCaptureLeaseOwner,
+  recoveredGmailCaptureAuthorityProbeMode,
+  recoveredGmailCaptureLeaseExpiryProbeMode,
+} from "./recovery-gmail-capture-admission.js";
 
 const scope = "prodigic/zivv/production";
 const provider = "sp.eocampaign1.com";
@@ -106,11 +115,15 @@ function regular(path: string): Buffer {
   return readFileSync(path);
 }
 function privateDirectory(path: string): void {
+  assertRecoveredGmailCaptureFile(path, undefined, "directory");
   if (resolvePrivateCandidateDirectory(path) !== resolve(path))
     fail("UNSAFE_INTAKE_DIRECTORY");
   secureOperatorDirectory(path);
 }
 function once(path: string, bytes: Buffer) {
+  assertRecoveredGmailCaptureFile(path, bytes);
+  if (recoveredGmailCaptureLeaseOwner())
+    repairRecoveredGmailCaptureFile(path, bytes);
   if (existsSync(path)) {
     if (!regular(path).equals(bytes)) fail("INTAKE_EVIDENCE_CHANGED");
   } else writeDurableFile(path, bytes);
@@ -241,14 +254,17 @@ function receiverProfile(
 function plainPart(
   part: GmailMessagePart,
   path: number[] = [],
-  depth = 0
+  depth = 0,
+  visited: { count: number } = { count: 0 }
 ): { part: GmailMessagePart; path: number[] }[] {
+  visited.count++;
+  if (visited.count > 100) fail("GMAIL_PART_LIMIT");
   if (depth > 20 || (part.parts?.length ?? 0) > 100) fail("GMAIL_PART_LIMIT");
   if (part.filename) return [];
   return [
     ...(part.mime_type.toLowerCase() === "text/plain" ? [{ part, path }] : []),
     ...(part.parts ?? []).flatMap((child, index) =>
-      plainPart(child, [...path, index], depth + 1)
+      plainPart(child, [...path, index], depth + 1, visited)
     ),
   ];
 }
@@ -787,6 +803,120 @@ export function resolveRetainedSteveEmailMessages(input: {
   });
 }
 
+export type SteveEmailCapturePreparationInput = {
+  accountId: string;
+  rawMessage: { id: string; raw: string };
+  fullMessage: {
+    id: string;
+    internal_date: number | string;
+    payload: GmailMessagePart;
+  };
+  expectedEditionId: string;
+  observedAtEpochMs: number;
+};
+
+export type PreparedSteveEmailCapture = {
+  accountSha256: string;
+  editionId: string;
+  deliveryId: string;
+  messageId: string;
+  raw: Buffer;
+  rawSha256: string;
+  source: Buffer;
+  sourceSha256: string;
+  receiptId: string;
+  receivedAtEpochMs: number;
+  acquisitionObservedAtEpochMs: number;
+  senderDate: string;
+  partPath: number[];
+  receiverProfile: SteveEmailReceipt["receiverProfile"];
+};
+
+/**
+ * Validate source contents and stable receipt identity without filesystem or journal access.
+ * This validates message content; it does not authenticate Gmail or authorize a write.
+ */
+export async function prepareSteveEmailCapture(
+  input: SteveEmailCapturePreparationInput
+): Promise<PreparedSteveEmailCapture> {
+  const accountId = input.accountId;
+  const rawMessage = { id: input.rawMessage.id, raw: input.rawMessage.raw };
+  const fullId = input.fullMessage.id;
+  const internalDate = input.fullMessage.internal_date;
+  const expectedEditionId = input.expectedEditionId;
+  const observedAtEpochMs = input.observedAtEpochMs;
+  if (
+    !accountId ||
+    accountId.length > 256 ||
+    Array.from(accountId).some((character) => character.charCodeAt(0) < 32) ||
+    !/^[a-f0-9]{1,128}$/.test(rawMessage.id) ||
+    rawMessage.id !== fullId ||
+    !Number.isSafeInteger(observedAtEpochMs) ||
+    observedAtEpochMs > Date.now()
+  )
+    fail("INVALID_GMAIL_CAPTURE");
+  const received = Number(internalDate);
+  if (
+    !Number.isSafeInteger(received) ||
+    received < 0 ||
+    received > observedAtEpochMs
+  )
+    fail("INVALID_GMAIL_RECEIPT_TIME");
+  const raw = decode(rawMessage.raw);
+  // Select and own FULL text synchronously before the first await; this also bounds
+  // traversal using the existing MIME part depth/count checks.
+  const { source, partPath } = selectSteveEmailPlaintext(
+    input.fullMessage.payload
+  );
+  const ownedSource = Buffer.from(source);
+  const ownedPartPath = [...partPath];
+  const parsed = await PostalMime.parse(raw, {
+    maxNestingDepth: 20,
+    maxPartCount: 100,
+    maxHeadersSize: 256 * 1024,
+    forceRfc822Attachments: true,
+  });
+  const senderDate = header(parsed.headers, "date");
+  if (!Number.isFinite(Date.parse(senderDate))) fail("INVALID_SENDER_DATE");
+  const auth = receiverProfile(parsed.headers);
+  const text = new TextDecoder("utf-8", {
+    fatal: true,
+    ignoreBOM: true,
+  }).decode(ownedSource);
+  const comparable = (value: string) =>
+    value
+      .replace(/^\uFEFF/, "")
+      .replace(/\r\n/g, "\n")
+      .replace(/\n+$/, "");
+  if (!parsed.text || comparable(parsed.text) !== comparable(text))
+    fail("GMAIL_MIME_TEXT_MISMATCH");
+  const editionId = edition(text);
+  if (editionId !== expectedEditionId) fail("WRONG_EXPECTED_EDITION");
+  const accountSha256 = sha256(accountId),
+    sourceSha256 = sha256(ownedSource),
+    rawSha256 = sha256(raw),
+    receiptId = sha256(canonicalJson([accountSha256, editionId, sourceSha256]));
+  return {
+    accountSha256,
+    editionId,
+    deliveryId: "gmail-" + receiptId,
+    messageId: rawMessage.id,
+    raw: Buffer.from(raw),
+    rawSha256,
+    source: ownedSource,
+    sourceSha256,
+    receiptId,
+    receivedAtEpochMs: received,
+    acquisitionObservedAtEpochMs: observedAtEpochMs,
+    senderDate,
+    partPath: ownedPartPath,
+    receiverProfile: {
+      ...auth,
+      dkimSigningDomains: [...auth.dkimSigningDomains],
+    },
+  };
+}
+
 /**
  * Capture snapshots obtained through the configured account-bound Gmail connector.
  * Receiver-profile matching is not a signature on arbitrary uploaded JSON/EML.
@@ -809,66 +939,96 @@ export async function captureSteveEmail(input: {
   source: Buffer;
   disposition: "ready" | "review-required";
 }> {
-  assertOperatorInstallationWritable(resolve(input.operatorDirectory));
-  if (
-    !input.accountId ||
-    input.accountId.length > 256 ||
-    Array.from(input.accountId).some(
-      (character) => character.charCodeAt(0) < 32
-    ) ||
-    !/^[a-f0-9]{1,128}$/.test(input.rawMessage.id) ||
-    input.rawMessage.id !== input.fullMessage.id ||
-    !Number.isSafeInteger(input.observedAtEpochMs) ||
-    input.observedAtEpochMs > Date.now()
-  )
-    fail("INVALID_GMAIL_CAPTURE");
-  const received = Number(input.fullMessage.internal_date);
-  if (
-    !Number.isSafeInteger(received) ||
-    received < 0 ||
-    received > input.observedAtEpochMs
-  )
-    fail("INVALID_GMAIL_RECEIPT_TIME");
-  const raw = decode(input.rawMessage.raw);
-  const parsed = await PostalMime.parse(raw, {
-    maxNestingDepth: 20,
-    maxPartCount: 100,
-    maxHeadersSize: 256 * 1024,
-    forceRfc822Attachments: true,
-  });
-  const senderDate = header(parsed.headers, "date");
-  if (!Number.isFinite(Date.parse(senderDate))) fail("INVALID_SENDER_DATE");
-  const auth = receiverProfile(parsed.headers);
-  const { source, partPath } = selectSteveEmailPlaintext(
-    input.fullMessage.payload
-  );
-  const text = new TextDecoder("utf-8", {
-    fatal: true,
-    ignoreBOM: true,
-  }).decode(source);
-  const comparable = (value: string) =>
-    value
-      .replace(/^\uFEFF/, "")
-      .replace(/\r\n/g, "\n")
-      .replace(/\n+$/, "");
-  if (!parsed.text || comparable(parsed.text) !== comparable(text))
-    fail("GMAIL_MIME_TEXT_MISMATCH");
-  const editionId = edition(text);
-  if (editionId !== input.expectedEditionId) fail("WRONG_EXPECTED_EDITION");
-  const accountSha256 = sha256(input.accountId),
-    sourceSha256 = sha256(source),
-    rawSha256 = sha256(raw),
-    receiptId = sha256(canonicalJson([accountSha256, editionId, sourceSha256]));
-  const directory = resolvePrivateCandidateDirectory(input.operatorDirectory);
-  assertOperatorNotQuarantined(directory);
-  secureOperatorDirectory(directory);
+  const operatorDirectory = resolve(input.operatorDirectory);
+  const correctionOf = input.correctionOf;
+  assertRecoveredGmailCaptureInvocation(input);
+  assertOperatorInstallationWritable(operatorDirectory, "steve-email-capture");
+  const prepared = await prepareSteveEmailCapture(input);
+  assertRecoveredGmailCaptureInvocation(input, prepared);
+  const {
+    accountSha256,
+    editionId,
+    deliveryId,
+    messageId,
+    raw,
+    rawSha256,
+    source,
+    sourceSha256,
+    receiptId,
+    receivedAtEpochMs: received,
+    acquisitionObservedAtEpochMs,
+    senderDate,
+    partPath,
+    receiverProfile: auth,
+  } = prepared;
+  const directory = resolvePrivateCandidateDirectory(operatorDirectory);
+  assertOperatorNotQuarantined(directory, "steve-email-capture");
+  if (!recoveredGmailCaptureLeaseOwner()) secureOperatorDirectory(directory);
+  const expiryProbeMode = recoveredGmailCaptureLeaseExpiryProbeMode();
+  const physicalSnapshot = expiryProbeMode
+    ? (await import("./recovery-gmail-capture-authority-probes.js"))
+        .snapshotRecoveryGmailCaptureProbeTree
+    : undefined;
   const journal = new WeeklyRunJournal(directory);
+  const expiryObservation:
+    | {
+        observer?: DatabaseSync;
+        initialJournal?: Buffer;
+        sourceAttempted: boolean;
+        sourceFailure?: { error: unknown };
+        sourceWindowVerified: boolean;
+      }
+    | undefined = expiryProbeMode
+    ? { sourceAttempted: false, sourceWindowVerified: false }
+    : undefined;
+  const observeSourceWindow = () => {
+    if (!expiryObservation || !physicalSnapshot)
+      fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_SETUP");
+    const bytes = readWeeklyJournalRecoverySnapshotReadOnly(journal.path);
+    validateWeeklyJournalRecoverySnapshot(bytes);
+    return canonicalJson({
+      journal: bytes.toString("base64"),
+      physical: physicalSnapshot(dirname(directory)),
+    });
+  };
+  const closeExpiryObserver = () => {
+    const observer = expiryObservation?.observer;
+    if (expiryObservation) delete expiryObservation.observer;
+    observer?.close();
+  };
   let lease: WeeklyRunLease | undefined;
   try {
-    lease = journal.acquire(scope);
+    lease = expiryProbeMode
+      ? journal.acquire(scope, 3000)
+      : journal.acquire(scope);
     const owned = lease;
+    if (expiryObservation) {
+      // Sample immediately after the actual acquire returns, before proof reads
+      // consume the deliberately short TTL. Later expiry during setup is real.
+      const acquiredAtEpochMs = Date.now();
+      if (
+        owned.expiresAtEpochMs <= acquiredAtEpochMs ||
+        owned.expiresAtEpochMs > acquiredAtEpochMs + 3000
+      )
+        fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_SETUP");
+      const initial = readWeeklyJournalRecoverySnapshotReadOnly(journal.path);
+      const state = validateWeeklyJournalRecoverySnapshot(initial);
+      if (
+        canonicalJson(state.ownership.find((row) => row.scope === scope)) !==
+          canonicalJson(owned) ||
+        state.intakeEvidence.some(
+          (row) =>
+            row.scope === scope && row.kind === "source" && row.id === receiptId
+        )
+      )
+        fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_SETUP");
+      expiryObservation.initialJournal = initial;
+      const observer = new DatabaseSync(journal.path, { readOnly: true });
+      expiryObservation.observer = observer;
+      observer.prepare("SELECT count(*) FROM sqlite_schema").get();
+    }
     const root = join(directory, "email-intake", accountSha256),
-      messageDirectory = join(root, "messages", sha256(input.rawMessage.id)),
+      messageDirectory = join(root, "messages", sha256(messageId)),
       bodyRoot = join(root, "bodies"),
       bodyDirectory = join(bodyRoot, receiptId);
     const prior = journal
@@ -877,9 +1037,7 @@ export async function captureSteveEmail(input: {
       .filter((r) => r.accountSha256 === accountSha256);
     // Detect mutation before committing another immutable admission.
     if (
-      prior.some(
-        (r) => r.messageId === input.rawMessage.id && r.rawSha256 !== rawSha256
-      )
+      prior.some((r) => r.messageId === messageId && r.rawSha256 !== rawSha256)
     )
       fail("INTAKE_EVIDENCE_CHANGED");
     const rawPath = join(messageDirectory, "message.eml");
@@ -894,19 +1052,19 @@ export async function captureSteveEmail(input: {
       if (admittedAt >= mondayAfter(editionId))
         fail("SOURCE_WINDOW_REQUIRES_REVIEW");
       const siblings = prior.filter((r) => r.editionId === editionId);
-      if (input.correctionOf) {
+      if (correctionOf) {
         if (
-          !/^[a-f0-9]{64}$/.test(input.correctionOf) ||
-          !siblings.some((r) => r.receiptId === input.correctionOf)
+          !/^[a-f0-9]{64}$/.test(correctionOf) ||
+          !siblings.some((r) => r.receiptId === correctionOf)
         )
           fail("UNKNOWN_CORRECTION_PARENT");
-        const parent = bodyReceipt(join(bodyRoot, input.correctionOf), journal);
+        const parent = bodyReceipt(join(bodyRoot, correctionOf), journal);
         if (parent.disposition !== "ready") fail("UNKNOWN_CORRECTION_PARENT");
         if (
           siblings.some(
             (r) =>
               bodyReceipt(join(bodyRoot, r.receiptId), journal).correctionOf ===
-              input.correctionOf
+              correctionOf
           )
         )
           fail("COMPETING_CORRECTION_BRANCH");
@@ -916,21 +1074,76 @@ export async function captureSteveEmail(input: {
         receiptId,
         accountSha256,
         editionId,
-        deliveryId: "gmail-" + receiptId,
-        messageId: input.rawMessage.id,
+        deliveryId,
+        messageId,
         rawSha256,
         sourceSha256,
         receivedAtEpochMs: received,
         firstObservedAtEpochMs: admittedAt,
-        acquisitionObservedAtEpochMs: input.observedAtEpochMs,
+        acquisitionObservedAtEpochMs,
         senderDate,
         disposition:
-          siblings.length && !input.correctionOf ? "review-required" : "ready",
-        correctionOf: input.correctionOf ?? null,
+          siblings.length && !correctionOf ? "review-required" : "ready",
+        correctionOf: correctionOf ?? null,
         partPath,
         receiverProfile: auth,
       };
       // Commit the first admission before filesystem effects: retries cannot recapture time.
+      if (recoveredGmailCaptureAuthorityProbeMode()) {
+        const { runRecoveryGmailCaptureAuthorityProbes } =
+          await import("./recovery-gmail-capture-authority-probes.js");
+        await runRecoveryGmailCaptureAuthorityProbes({
+          journal,
+          lease: owned,
+          input,
+          prepared,
+          receipt,
+        });
+      }
+      if (expiryObservation) {
+        // No clock/deadline mutation: wait only for the real persisted lease.
+        observeSourceWindow();
+        if (observeSourceWindow() !== observeSourceWindow())
+          fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_UNSTABLE");
+        const wait = Math.max(0, owned.expiresAtEpochMs + 25 - Date.now());
+        if (wait > 3025) fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_SETUP");
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        try {
+          await new Promise<void>((accept) => {
+            timer = setTimeout(accept, wait);
+          });
+        } finally {
+          if (timer !== undefined) clearTimeout(timer);
+        }
+        if (
+          !recoveredGmailCaptureLeaseExpiryProbeMode() ||
+          Date.now() < owned.expiresAtEpochMs
+        )
+          fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_SETUP");
+        const current = readWeeklyJournalRecoverySnapshotReadOnly(journal.path);
+        if (!expiryObservation.initialJournal?.equals(current))
+          fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_CHANGED");
+        const before = observeSourceWindow();
+        expiryObservation.sourceAttempted = true;
+        try {
+          // This is the real source entry with its normal receipt and owner.
+          // Its ordinary assertLease precedes the later Gmail source hook.
+          journal.saveIntakeEvidence(
+            "source",
+            receiptId,
+            Buffer.from(canonicalJson(receipt) + "\n"),
+            owned
+          );
+        } catch (error) {
+          expiryObservation.sourceFailure = { error };
+        }
+        if (observeSourceWindow() !== before)
+          fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_CHANGED");
+        expiryObservation.sourceWindowVerified = true;
+        const failure = expiryObservation.sourceFailure;
+        if (!failure) fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_NOT_REFUSED");
+        throw failure.error;
+      }
       receiptBytes = journal.saveIntakeEvidence(
         "source",
         receiptId,
@@ -941,29 +1154,23 @@ export async function captureSteveEmail(input: {
     same(receipt.accountSha256, accountSha256, "CHANGED_INTAKE_ACCOUNT");
     same(receipt.editionId, editionId, "CHANGED_INTAKE_EDITION");
     same(receipt.sourceSha256, sourceSha256, "CHANGED_INTAKE_TEXT");
-    if (
-      receipt.messageId === input.rawMessage.id &&
-      receipt.rawSha256 !== rawSha256
-    )
+    if (receipt.messageId === messageId && receipt.rawSha256 !== rawSha256)
       fail("INTAKE_EVIDENCE_CHANGED");
     let approval = journal.readIntakeEvidence(scope, "correction", receiptId);
-    if (input.correctionOf) {
+    if (correctionOf) {
       if (receipt.disposition === "ready") {
-        if (input.correctionOf !== receipt.correctionOf)
+        if (correctionOf !== receipt.correctionOf)
           fail("CHANGED_CORRECTION_PARENT");
       } else if (approval) {
         const existing = JSON.parse(approval.toString("utf8")) as {
           correctionOf: string;
         };
-        if (existing.correctionOf !== input.correctionOf)
+        if (existing.correctionOf !== correctionOf)
           fail("CHANGED_CORRECTION_PARENT");
       } else {
-        if (
-          !/^[a-f0-9]{64}$/.test(input.correctionOf) ||
-          input.correctionOf === receiptId
-        )
+        if (!/^[a-f0-9]{64}$/.test(correctionOf) || correctionOf === receiptId)
           fail("UNKNOWN_CORRECTION_PARENT");
-        const parent = bodyReceipt(join(bodyRoot, input.correctionOf), journal);
+        const parent = bodyReceipt(join(bodyRoot, correctionOf), journal);
         if (parent.editionId !== editionId || parent.disposition !== "ready")
           fail("UNKNOWN_CORRECTION_PARENT");
         const siblings = prior.filter(
@@ -973,7 +1180,7 @@ export async function captureSteveEmail(input: {
           siblings.some(
             (r) =>
               bodyReceipt(join(bodyRoot, r.receiptId), journal).correctionOf ===
-              input.correctionOf
+              correctionOf
           )
         )
           fail("COMPETING_CORRECTION_BRANCH");
@@ -1004,7 +1211,7 @@ export async function captureSteveEmail(input: {
       receipt = bodyReceipt(bodyDirectory, journal);
       const capture = {
         schemaVersion: 1,
-        messageId: input.rawMessage.id,
+        messageId,
         accountSha256,
         rawSha256,
         sourceSha256,
@@ -1019,10 +1226,83 @@ export async function captureSteveEmail(input: {
       return { receipt, source, disposition: receipt.disposition };
     });
   } finally {
-    try {
-      if (lease) journal.release(lease);
-    } finally {
-      journal.close();
+    if (!expiryObservation) {
+      try {
+        if (lease) journal.release(lease);
+      } finally {
+        journal.close();
+      }
+    } else {
+      let releaseAttempted = false;
+      let releaseFailure: { error: unknown } | undefined;
+      let closeFailure: { error: unknown } | undefined;
+      let closed = false;
+      try {
+        if (lease) {
+          releaseAttempted = true;
+          journal.release(lease);
+        }
+      } catch (error) {
+        releaseFailure = { error };
+      } finally {
+        try {
+          journal.close();
+          closed = true;
+        } catch (error) {
+          closeFailure = { error };
+        }
+      }
+      const finishLeaseExpiryObservation = () => {
+        try {
+          if (closeFailure) throw closeFailure.error;
+          if (!expiryObservation.sourceAttempted) {
+            // Preserve the ordinary cleanup-error ordering on a setup failure.
+            if (releaseFailure) throw releaseFailure.error;
+          } else {
+            const sourceError = expiryObservation.sourceFailure?.error;
+            if (
+              !expiryObservation.sourceWindowVerified ||
+              !(sourceError instanceof Error) ||
+              sourceError.message !== "Expired or fenced weekly run owner" ||
+              !releaseAttempted ||
+              !(releaseFailure?.error instanceof Error) ||
+              releaseFailure.error.message !==
+                "Expired or fenced weekly run owner" ||
+              !closed ||
+              !lease ||
+              lease.expiresAtEpochMs > Date.now() ||
+              !recoveredGmailCaptureLeaseExpiryProbeMode()
+            )
+              fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_CLEANUP");
+            const afterClose = readWeeklyJournalRecoverySnapshotReadOnly(
+              journal.path
+            );
+            const state = validateWeeklyJournalRecoverySnapshot(afterClose);
+            if (
+              !expiryObservation.initialJournal?.equals(afterClose) ||
+              canonicalJson(
+                state.ownership.find((row) => row.scope === scope)
+              ) !== canonicalJson(lease) ||
+              state.intakeEvidence.some(
+                (row) =>
+                  row.scope === scope &&
+                  row.kind === "source" &&
+                  row.id === receiptId
+              )
+            )
+              fail("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_CHANGED");
+            closeExpiryObserver();
+            // Honest test observation of the actual ordinary source/cleanup
+            // failures, not an existing Gmail guard error or durable receipt.
+            throw new Error("RECOVERY_GMAIL_CAPTURE_SOURCE_EXPIRY_OBSERVED", {
+              cause: sourceError,
+            });
+          }
+        } finally {
+          closeExpiryObserver();
+        }
+      };
+      finishLeaseExpiryObservation();
     }
   }
 }

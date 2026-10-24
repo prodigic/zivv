@@ -32,7 +32,11 @@ import {
   readVerifiedCandidateBundle,
 } from "../../lib/ingestion/candidate-bundle.js";
 import { captureExportConfiguration } from "../../lib/ingestion/export-configuration.js";
-import type { ApplicationBuildReceipt } from "../../lib/ingestion/source-build.js";
+import {
+  captureReviewedSource,
+  type ApplicationBuildReceipt,
+} from "../../lib/ingestion/source-build.js";
+import { buildReviewedWeeklyCandidate } from "../../lib/ingestion/reviewed-candidate.js";
 import type { ReleaseCandidate } from "../../lib/ingestion/release-candidate.js";
 import {
   createLocalPromotionControlStore,
@@ -61,25 +65,14 @@ type Capture =
   typeof import("../../lib/ingestion/source-build.js").captureReviewedSource;
 type Build =
   typeof import("../../lib/ingestion/reviewed-candidate.js").buildReviewedWeeklyCandidate;
-const doubles = vi.hoisted(() => ({
-  capture: vi.fn<Capture>(),
-  build: vi.fn<Build>(),
-}));
-vi.mock("../../lib/ingestion/source-build.js", async (importOriginal) => ({
-  ...(await importOriginal<
-    typeof import("../../lib/ingestion/source-build.js")
-  >()),
-  captureReviewedSource: doubles.capture,
-}));
-vi.mock(
-  "../../lib/ingestion/reviewed-candidate.js",
-  async (importOriginal) => ({
-    ...(await importOriginal<
-      typeof import("../../lib/ingestion/reviewed-candidate.js")
-    >()),
-    buildReviewedWeeklyCandidate: doubles.build,
-  })
-);
+// Preserve live export bindings across the recovery module graph; async partial
+// mocks can re-enter importOriginal and leak the real capture implementation.
+vi.mock("../../lib/ingestion/source-build.js", { spy: true });
+vi.mock("../../lib/ingestion/reviewed-candidate.js", { spy: true });
+const doubles = {
+  capture: vi.mocked(captureReviewedSource),
+  build: vi.mocked(buildReviewedWeeklyCandidate),
+};
 
 // Source capture and compilation are covered by source-build.test.ts. Here only
 // those expensive boundaries are replaced; ETL, sealing, authenticated snapshot,
@@ -772,7 +765,9 @@ describe("weekly candidate stages with real sealed bundles", () => {
     });
   });
   afterEach(() => {
-    vi.restoreAllMocks();
+    // Keep module spies installed between cases; restoring them would make the
+    // next case call the real Git/build boundaries instead of these fixtures.
+    vi.resetAllMocks();
     vi.unstubAllEnvs();
     if (
       !resolve(directory).startsWith(
