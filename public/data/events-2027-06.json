@@ -1,10 +1,59 @@
 {
   "chunkId": "2027-06",
   "dateRange": {
-    "startEpochMs": 1812110400000,
+    "startEpochMs": 1811851200000,
     "endEpochMs": 1813406400000
   },
   "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "5+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        123023705
+      ],
+      "createdAtEpochMs": 1792803818000,
+      "date": "2027-06-01",
+      "dateEpochMs": 1811851200000,
+      "firstImportRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1792803818000,
+      "headlinerArtistId": 123023705,
+      "id": 1952728614,
+      "isFree": false,
+      "notes": "sold out",
+      "priceMax": 56,
+      "priceMin": 56,
+      "provenanceConflicts": [],
+      "slug": "2027-06-01-hazlett-august-hall",
+      "sourceLineNumber": 1024,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:aa365ecd39eb62ea",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1792803818000,
+          "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1792803818000,
+          "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
+          "originalVenueId": 811075932,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1811905200000,
+      "status": "sold-out",
+      "tags": [
+        "sold-out"
+      ],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1792803818000,
+      "venueId": 811075932,
+      "venueType": "major"
+    },
     {
       "addedDateProvenance": "observed",
       "ageRestriction": "all-ages",
@@ -24,7 +73,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-06-04-a-perfect-circle-the-cow-palace",
-      "sourceLineNumber": 1072,
+      "sourceLineNumber": 1025,
       "sources": [
         {
           "canonicalUrl": null,
@@ -34,8 +83,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1792198061662,
-          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "lastSeenAtEpochMs": 1792803818000,
+          "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "originalVenueId": 850321337,
           "session": null,
           "sourceId": "steveslist"
@@ -68,7 +117,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-06-11-she-past-away-the-regency-ballroom",
-      "sourceLineNumber": 1073,
+      "sourceLineNumber": 1026,
       "sources": [
         {
           "canonicalUrl": null,
@@ -78,8 +127,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1792198061662,
-          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "lastSeenAtEpochMs": 1792803818000,
+          "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "originalVenueId": 2133080253,
           "session": null,
           "sourceId": "steveslist"
@@ -112,7 +161,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-06-18-the-airborne-toxic-event-the-guild-theater",
-      "sourceLineNumber": 1074,
+      "sourceLineNumber": 1027,
       "sources": [
         {
           "canonicalUrl": null,
@@ -122,8 +171,8 @@
           "firstSeenAtEpochMs": 1789172046956,
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1792198061662,
-          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "lastSeenAtEpochMs": 1792803818000,
+          "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "originalVenueId": 112130441,
           "session": null,
           "sourceId": "steveslist"
@@ -175,7 +224,7 @@
         }
       ],
       "slug": "2027-06-19-the-airborne-toxic-event-the-guild-theater",
-      "sourceLineNumber": 1075,
+      "sourceLineNumber": 1028,
       "sources": [
         {
           "canonicalUrl": null,
@@ -185,8 +234,8 @@
           "firstSeenAtEpochMs": 1789172046956,
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1792198061662,
-          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "lastSeenAtEpochMs": 1792803818000,
+          "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "originalVenueId": 112130441,
           "session": null,
           "sourceId": "steveslist"

@@ -320,10 +320,12 @@ export class EventParser {
         // Determine event status
         let status: Event["status"] = "confirmed";
         if (venueInfo.tags.includes("sold-out")) status = "sold-out";
-        // Only an explicit whole-show note cancels the event; a cancelled
-        // support act does not change the status of the remaining bill.
+        // Only explicit whole-show notes change status; a support-act
+        // annotation does not change the status of the remaining bill.
         if (/\(\s*cancelled\s*\)/i.test(rawEvent.venueLine))
           status = "cancelled";
+        else if (/\(\s*postponed\s*\)/i.test(rawEvent.venueLine))
+          status = "postponed";
 
         // Create event
         const event: Event = {

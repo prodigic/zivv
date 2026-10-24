@@ -34,6 +34,7 @@ import {
 import { loadBackupKey } from "../../lib/ingestion/encrypted-backup.js";
 import { normalizeLatestContent } from "../../lib/etl/latest-content.js";
 import {
+  CURRENT_STEVE_IMPORTER,
   parseSteveImportReview,
   parseImportObservation,
 } from "../../lib/ingestion/steve-import-review.js";
@@ -109,7 +110,7 @@ describe("reviewed Steve import", () => {
     );
     expect(result.receipt).toMatchObject({
       schemaVersion: 1,
-      importer: "steveslist-v5",
+      importer: CURRENT_STEVE_IMPORTER,
       inputSha256: hash(content),
       observedAtEpochMs: observedAt,
       importRunId: result.report.runId,
@@ -119,88 +120,102 @@ describe("reviewed Steve import", () => {
     expect(reviewId).toBe(hash(canonicalJson(identity)));
   });
 
-  const legacyRunId = () =>
-    `steveslist-v4-${hash(
+  const historicalRunId = (importer: "steveslist-v4" | "steveslist-v5") =>
+    `${importer}-${hash(
       JSON.stringify({
-        importer: "steveslist-v4",
+        importer,
         schema: 1,
         content: normalizeLatestContent(content),
         aliases: [],
       })
     )}`;
 
-  it("retains historical v4 receipt hashes but refuses to load an uncommitted legacy review", async () => {
-    const { receipt, report } = await reviewSteveImport(
-      root,
-      content,
-      observedAt
-    );
-    const legacy = reseal(receipt, {
-      importer: "steveslist-v4",
-      importRunId: legacyRunId(),
-      reportSha256: hash(canonicalJson({ ...report, runId: legacyRunId() })),
-    });
-    expect(parseSteveImportReview(legacy)).toEqual(legacy);
-    const before = ledgerBytes();
-    await expect(
-      loadReviewedSteveImport(root, content, legacy, assertOwnership)
-    ).rejects.toMatchObject({ code: "NO_COMMITTED_IMPORT" });
-    expect(ledgerBytes()).toEqual(before);
-    expect(existsSync(reportsDirectory())).toBe(false);
-  });
+  it.each(["steveslist-v4", "steveslist-v5"] as const)(
+    "retains historical %s receipt hashes but refuses an uncommitted historical review",
+    async (importer) => {
+      const { receipt, report } = await reviewSteveImport(
+        root,
+        content,
+        observedAt
+      );
+      const legacy = reseal(receipt, {
+        importer,
+        importRunId: historicalRunId(importer),
+        reportSha256: hash(
+          canonicalJson({
+            ...report,
+            runId: historicalRunId(importer),
+          })
+        ),
+      });
+      expect(parseSteveImportReview(legacy)).toEqual(legacy);
+      const before = ledgerBytes();
+      await expect(
+        loadReviewedSteveImport(root, content, legacy, assertOwnership)
+      ).rejects.toMatchObject({ code: "NO_COMMITTED_IMPORT" });
+      expect(ledgerBytes()).toEqual(before);
+      expect(existsSync(reportsDirectory())).toBe(false);
+    }
+  );
 
-  it("recovers an exact committed v4 run without creating v5 work or changing first-added history", async () => {
-    const { receipt } = await reviewSteveImport(root, content, observedAt);
-    await loadReviewedSteveImport(root, content, receipt, assertOwnership);
-    const saved = JSON.parse(
-      readFileSync(reportPath(receipt.importRunId), "utf8")
-    );
-    const historicalReport = { ...saved, runId: legacyRunId() };
-    const ledger = await loadLedger(ledgerPath);
-    // Simulate the pre-v5 durable identity on a semantically unchanged source.
-    // Full ledger validation still runs on save, including provenance references.
-    const historicalLedger = JSON.parse(
-      JSON.stringify(ledger).replaceAll(receipt.importRunId, legacyRunId())
-    );
-    Object.assign(ledger, historicalLedger);
-    await saveLedgerAtomic(ledgerPath, ledger);
-    writeFileSync(reportPath(legacyRunId()), canonicalJson(historicalReport));
-    const legacy = reseal(receipt, {
-      importer: "steveslist-v4",
-      importRunId: legacyRunId(),
-      reportSha256: hash(canonicalJson(historicalReport)),
-    });
-    const before = ledgerBytes();
-    const replay = await recoverReviewedSteveImport(
-      root,
-      content,
-      legacy,
-      assertOwnership
-    );
-    expect(replay.report.replay).toBe(true);
-    expect(replay.report.runId).toBe(legacyRunId());
-    expect(ledgerBytes()).toEqual(before);
-    expect(replay.ledger.runs).toHaveLength(1);
-    expect(replay.ledger.events[0].createdAtEpochMs).toBe(observedAt);
-    expect(replay.ledger.events[0].firstImportRunId).toBe(legacyRunId());
-  });
+  it.each(["steveslist-v4", "steveslist-v5"] as const)(
+    "recovers an exact committed %s run without creating current-version work or changing first-added history",
+    async (importer) => {
+      const { receipt } = await reviewSteveImport(root, content, observedAt);
+      await loadReviewedSteveImport(root, content, receipt, assertOwnership);
+      const saved = JSON.parse(
+        readFileSync(reportPath(receipt.importRunId), "utf8")
+      );
+      const runId = historicalRunId(importer);
+      const historicalReport = { ...saved, runId };
+      const ledger = await loadLedger(ledgerPath);
+      // Simulate the pre-v5 durable identity on a semantically unchanged source.
+      // Full ledger validation still runs on save, including provenance references.
+      const historicalLedger = JSON.parse(
+        JSON.stringify(ledger).replaceAll(receipt.importRunId, runId)
+      );
+      Object.assign(ledger, historicalLedger);
+      await saveLedgerAtomic(ledgerPath, ledger);
+      writeFileSync(reportPath(runId), canonicalJson(historicalReport));
+      const legacy = reseal(receipt, {
+        importer,
+        importRunId: runId,
+        reportSha256: hash(canonicalJson(historicalReport)),
+      });
+      const before = ledgerBytes();
+      const replay = await recoverReviewedSteveImport(
+        root,
+        content,
+        legacy,
+        assertOwnership
+      );
+      expect(replay.report.replay).toBe(true);
+      expect(replay.report.runId).toBe(runId);
+      expect(ledgerBytes()).toEqual(before);
+      expect(replay.ledger.runs).toHaveLength(1);
+      expect(replay.ledger.events[0].createdAtEpochMs).toBe(observedAt);
+      expect(replay.ledger.events[0].firstImportRunId).toBe(runId);
+    }
+  );
 
   it("rejects mixed importer/run versions even when the receipt is resealed", async () => {
     const { receipt } = await reviewSteveImport(root, content, observedAt);
     for (const mixed of [
       reseal(receipt, { importer: "steveslist-v4" }),
-      reseal(receipt, { importRunId: legacyRunId() }),
+      reseal(receipt, {
+        importRunId: historicalRunId("steveslist-v4"),
+      }),
     ])
       expect(() => parseSteveImportReview(mixed)).toThrow(
         "INVALID_IMPORT_REVIEW"
       );
   });
 
-  it("reviews and loads v5 whole-show cancellations with the matching receipt identity", async () => {
+  it("reviews and loads current-version whole-show cancellations with the matching receipt identity", async () => {
     const cancelled = content.trimEnd() + " (cancelled)\n";
     const { receipt } = await reviewSteveImport(root, cancelled, observedAt);
-    expect(receipt.importer).toBe("steveslist-v5");
-    expect(receipt.importRunId).toMatch(/^steveslist-v5-/);
+    expect(receipt.importer).toBe(CURRENT_STEVE_IMPORTER);
+    expect(receipt.importRunId).toMatch(/^steveslist-v6-/);
     const loaded = await loadReviewedSteveImport(
       root,
       cancelled,

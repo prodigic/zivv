@@ -23,6 +23,7 @@ import {
   loadRetainedSteveEmailSources,
   SteveEmailLoadError,
 } from "../../lib/ingestion/steve-email-load.js";
+import { CURRENT_STEVE_IMPORTER } from "../../lib/ingestion/steve-import-review.js";
 
 const accountId = "synthetic-account@fixture.invalid";
 const editionId = "2026-10-16";
@@ -184,8 +185,12 @@ describe("local load of retained Steve email receipts", () => {
     expect(event?.createdAtEpochMs).toBe(
       captured.receipt.firstObservedAtEpochMs
     );
-    expect(event?.firstImportRunId).toMatch(/^steveslist-v5-/);
-    expect(event?.sources[0]?.firstSeenRunId).toMatch(/^steveslist-v5-/);
+    expect(event?.firstImportRunId).toMatch(
+      new RegExp(`^${CURRENT_STEVE_IMPORTER}-`)
+    );
+    expect(event?.sources[0]?.firstSeenRunId).toMatch(
+      new RegExp(`^${CURRENT_STEVE_IMPORTER}-`)
+    );
     expect(canonicalJson(secondLedger)).toBe(canonicalJson(firstLedger));
     expect(progress.some((entry) => entry.endsWith(":load:completed"))).toBe(
       true
@@ -234,7 +239,9 @@ describe("local load of retained Steve email receipts", () => {
     });
     expect(loaded?.disposition).toBe("loaded");
     expect(ledger.runs).toHaveLength(1);
-    expect(ledger.runs[0]?.runId).toMatch(/^steveslist-v5-/);
+    expect(ledger.runs[0]?.runId).toMatch(
+      new RegExp(`^${CURRENT_STEVE_IMPORTER}-`)
+    );
     expect(loaded?.runId).toEqual(expect.any(String));
   }, 30_000);
 

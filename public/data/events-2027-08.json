@@ -26,18 +26,18 @@
       "priceMin": 67.75,
       "provenanceConflicts": [],
       "slug": "2027-08-12-red-clay-strays-the-greek-theater",
-      "sourceLineNumber": 1077,
+      "sourceLineNumber": 1030,
       "sources": [
         {
           "canonicalUrl": null,
-          "contentHash": "fnv1a64:8b1689525737a1ae",
+          "contentHash": "fnv1a64:44dfa4e0addb1640",
           "evidence": null,
           "externalEventId": null,
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1792198061662,
-          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "lastSeenAtEpochMs": 1792803818000,
+          "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "originalVenueId": 474218142,
           "session": null,
           "sourceId": "steveslist"
@@ -74,20 +74,30 @@
       "notes": "$399 vip",
       "priceMax": 179,
       "priceMin": 179,
-      "provenanceConflicts": [],
+      "provenanceConflicts": [
+        {
+          "detectedAtEpochMs": 1792803818000,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "club",
+          "field": "venueType",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": "diy",
+          "reason": "source-update"
+        }
+      ],
       "slug": "2027-08-15-slipknot-golden-gate-park",
-      "sourceLineNumber": 1078,
+      "sourceLineNumber": 1031,
       "sources": [
         {
           "canonicalUrl": null,
-          "contentHash": "fnv1a64:7995b167891233af",
+          "contentHash": "fnv1a64:aaa361622351878b",
           "evidence": null,
           "externalEventId": null,
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1792198061662,
-          "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
+          "lastSeenAtEpochMs": 1792803818000,
+          "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "originalVenueId": 1306836772,
           "session": null,
           "sourceId": "steveslist"
@@ -100,9 +110,9 @@
       ],
       "timeBasis": "instant",
       "timezone": "America/Los_Angeles",
-      "updatedAtEpochMs": 1790985835628,
+      "updatedAtEpochMs": 1792803818000,
       "venueId": 1306836772,
-      "venueType": "club"
+      "venueType": "diy"
     }
   ]
 }

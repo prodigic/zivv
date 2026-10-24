@@ -102,17 +102,20 @@ available at this checkpoint.
 
 ## Importer-version integration
 
-Friday's whole-show cancellation parser uses `steveslist-v5`. New review
-receipts and candidate run IDs share the current importer constant. The receipt
-parser also retains strict v4 support without changing existing serialized
-identities: the importer name and run-ID prefix must agree.
+Friday's whole-show cancellation and postponement parser uses
+`steveslist-v6`. New review receipts and candidate run IDs share the current
+importer constant. The receipt parser retains strict v4 and v5 support without
+changing existing serialized identities: the importer name and run-ID prefix
+must agree.
 
-A historical v4 review can recover only its exact already committed/published
-run, with the same corrected input, aliases, configuration, observation and saved
-report evidence. It cannot authorize a fresh v4 load under v5 parser semantics.
-Missing historical runs require new review rather than silent reimport.
-The manual v5 importer and Friday's cancellation behavior are unchanged.
+A historical v4 or v5 review can recover only its exact already
+committed/published run, with the same corrected input, aliases, configuration,
+observation and saved report evidence. It cannot authorize a fresh historical
+version load under v6 parser semantics. Missing historical runs require new
+review rather than silent reimport. Maintained manual commands use the current
+v6 parser semantics; historical v4 and v5 receipt identities remain unchanged.
 
-The ordered-merge ingestion gate exposed the original v5/v4 mismatch. Regression
-coverage includes the current cancellation path, mixed-version rejection, refusal
-of uncommitted legacy receipts and unchanged committed replay history.
+The ordered-merge ingestion gate exposed the original version mismatch.
+Regression coverage includes current cancellation and postponement paths,
+mixed-version rejection, refusal of uncommitted historical receipts and
+unchanged v4/v5 committed replay history.
