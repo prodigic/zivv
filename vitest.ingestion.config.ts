@@ -28,6 +28,8 @@ export default defineConfig({
       "src/test/components/EventPosterLink.test.tsx",
       "src/test/components/ArtistVibeCard.test.tsx",
       "src/test/components/ArtistLinks.test.tsx",
+      "src/test/components/ArtistCardHero.test.tsx",
+      "src/test/components/NavigationActive.test.tsx",
     ],
     reporters: ["default"],
   },

@@ -99,7 +99,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     if (to === "/") {
       return location.pathname === "/";
     }
-    return location.pathname.startsWith(to);
+    return location.pathname === to || location.pathname.startsWith(`${to}/`);
   };
 
   return (

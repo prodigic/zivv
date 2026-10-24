@@ -220,7 +220,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({
     if (to === "/") {
       return location.pathname === "/";
     }
-    return location.pathname.startsWith(to);
+    return location.pathname === to || location.pathname.startsWith(`${to}/`);
   };
 
   return (
