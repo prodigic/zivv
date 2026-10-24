@@ -5,8 +5,11 @@ import { canonicalJson } from "./sqlite-store.js";
 import type { ReconciliationReport } from "../../types/ingestion.js";
 
 /** Bump when parsing or normalization semantics change. */
-export const CURRENT_STEVE_IMPORTER = "steveslist-v5";
-export type SteveImporter = "steveslist-v4" | typeof CURRENT_STEVE_IMPORTER;
+export const CURRENT_STEVE_IMPORTER = "steveslist-v6";
+export type SteveImporter =
+  | "steveslist-v4"
+  | "steveslist-v5"
+  | typeof CURRENT_STEVE_IMPORTER;
 
 export interface SteveImportReview {
   schemaVersion: 1;
@@ -122,6 +125,7 @@ export function parseSteveImportReview(input: unknown): SteveImportReview {
     canonicalJson(Object.keys(value).sort()) !== canonicalJson(keys.sort()) ||
     value.schemaVersion !== 1 ||
     (value.importer !== "steveslist-v4" &&
+      value.importer !== "steveslist-v5" &&
       value.importer !== CURRENT_STEVE_IMPORTER) ||
     typeof value.importRunId !== "string" ||
     !new RegExp(`^${value.importer}-[a-f0-9]{64}$`).test(value.importRunId) ||
