@@ -23,3 +23,7 @@ An earlier unpublished attempt was restored from the verified encrypted pre-impo
 The focused parser, status, receipt, weekly and affected component checks pass: 98 tests. Application/tooling TypeScript, lint, required source formatting and the corrected production build pass. Public file checks and city-specific newsletter raw/copy/preview review are recorded privately. Normal required CI and Pages gates still apply.
 
 A local build or push is not a publication receipt. Exact release/deployment identity, retained artifact hashes and fresh/cached desktop/mobile live observations must pass before the edition is marked published. This operational intake does not activate the experimental recovery pipeline or resume the paused development goal.
+
+## Verified publication
+
+Release `1252098f2e8ee3d1531b3e90915d27eb2c843242` passed normal production CI and Pages run 40055883018 (deployment 7293392489). At `2026-10-24T03:27:43.090Z`, all 56 deployed files matched the retained artifact, and 28 actual live route observations passed across fresh/cached desktop and mobile contexts, including current/future shows and the newsletter. The unchanged 141-member weekly edition was then explicitly acknowledged as published. Any deployment caused by this versioned acknowledgement remains subject to the same final live verification.
