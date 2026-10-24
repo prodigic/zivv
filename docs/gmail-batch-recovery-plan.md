@@ -8,6 +8,11 @@ adds read-only replacement-host inspection with eleven native prepared-runtime
 and CLI cases. Closed capture (#109) is the next required authority step.
 The [closed capture contract](recovery-gmail-capture-contract.md) records its
 effect-specific journal guards, retained-worker compatibility and required drills.
+The current focused authority rehearsal uses a fixed retained test selection
+before source commit, with ordinary journal/catalog positive controls and exact
+per-operation refusal/state checks. Its scope and early-entry-check limitations
+are recorded in that contract; it does not replace multi-batch, expiry/escape,
+drift, hard-death or selected-receipt-load acceptance.
 These stages replace the baseline's blanket acquisition-tree refusal with exact
 authenticated support; recovery remains incomplete until closed capture,
 selected-receipt loading and composed acceptance below are verified.
@@ -97,6 +102,16 @@ fresh canonical baseline, durable retry and a proved catalog/journal delta throu
 load. If #106 acceptance includes loading, that phase is required within #106;
 capture-only must not be presented as its completion. General activation remains
 a separate reviewed cutover in either case.
+
+The current integration seams are `listRetainedSteveEmailSources` in
+`steve-email-intake.ts` (validated receipt/source resolution),
+`loadRetainedSteveEmailSources` in `steve-email-load.ts` (loads **all** ready
+retained sources), and `assertRecoveredImportInvocation` in
+`recovery-import-admission.ts` (rejects source-based invocation in the existing
+run-only scope). The all-ready loader is not a selected-receipt executor.
+Extract/reuse normal deterministic import behavior behind a separately reviewed
+exact-receipt admission; do not reuse a capture result as import permission or
+widen the existing run-only scope to accept arbitrary source bytes.
 
 ## Required acceptance and ownership
 

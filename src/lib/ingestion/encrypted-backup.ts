@@ -1,4 +1,12 @@
 import {
+  assertNoRecoveredGmailCapture,
+  assertRecoveredGmailCaptureFile,
+  assertRecoveredGmailCaptureKey,
+  assertRecoveredGmailCaptureRepair,
+  observeRecoveredGmailCaptureFileCheckpoint,
+  isRecoveryGmailCaptureTestInterruption,
+} from "./recovery-gmail-capture-admission.js";
+import {
   createCipheriv,
   createDecipheriv,
   createHash,
@@ -9,6 +17,7 @@ import {
   closeSync,
   chmodSync,
   existsSync,
+  fstatSync,
   lstatSync,
   readdirSync,
   fsyncSync,
@@ -16,6 +25,7 @@ import {
   mkdirSync,
   openSync,
   readFileSync,
+  readSync,
   renameSync,
   unlinkSync,
   writeFileSync,
@@ -126,16 +136,24 @@ export function decryptLedgerSnapshot(
 
 /** Flush a private/operator artifact before an atomic same-directory replacement. */
 export function writeDurableFile(path: string, bytes: Buffer): void {
+  assertRecoveredGmailCaptureFile(path, bytes);
+  assertRecoveredGmailCaptureFile(dirname(path), undefined, "directory");
   mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
   const temporary = `${path}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`;
+  assertRecoveredGmailCaptureFile(temporary, bytes);
   const fd = openSync(temporary, "wx", 0o600);
   try {
     try {
+      assertRecoveredGmailCaptureFile(temporary, bytes);
       writeFileSync(fd, bytes);
+      assertRecoveredGmailCaptureFile(temporary, bytes, "install");
       fsyncSync(fd);
     } finally {
       closeSync(fd);
     }
+    observeRecoveredGmailCaptureFileCheckpoint(path, "flushed");
+    assertRecoveredGmailCaptureFile(path, bytes);
+    assertRecoveredGmailCaptureFile(temporary, bytes, "install");
     renameSync(temporary, path);
     if (process.platform !== "win32") {
       const directory = openSync(dirname(path), "r");
@@ -145,8 +163,15 @@ export function writeDurableFile(path: string, bytes: Buffer): void {
         closeSync(directory);
       }
     }
+    observeRecoveredGmailCaptureFileCheckpoint(path, "published");
   } catch (error) {
-    if (existsSync(temporary)) unlinkSync(temporary);
+    if (
+      existsSync(temporary) &&
+      !isRecoveryGmailCaptureTestInterruption(error)
+    ) {
+      assertRecoveredGmailCaptureFile(temporary, bytes, "unlink");
+      unlinkSync(temporary);
+    }
     throw error;
   }
 }
@@ -155,6 +180,7 @@ export function writeDurableFile(path: string, bytes: Buffer): void {
 export async function synchronizeEncryptedSnapshot(
   root: string
 ): Promise<void> {
+  assertNoRecoveredGmailCapture();
   const location = projectLedgerLocation(root);
   if (location.backend !== "sqlite") return;
   const key = loadBackupKey(location.directory);
@@ -199,6 +225,24 @@ function protectForWindows(bytes: Buffer, unprotect = false): Buffer {
   return Buffer.from(result.stdout.trim(), "base64");
 }
 
+/** Authenticate existing DPAPI/plaintext bytes without installing or changing them. */
+export function validateRecoveredBackupKeyBytes(
+  bytes: Buffer,
+  expected: Buffer
+): void {
+  if (
+    !Buffer.isBuffer(bytes) ||
+    bytes.length > 16 * 1024 ||
+    !Buffer.isBuffer(expected) ||
+    expected.length !== 32
+  )
+    throw Error("RECOVERY_IMPORT_WORKING_KEY_MISMATCH");
+  const clear =
+    process.platform === "win32" ? protectForWindows(bytes, true) : bytes;
+  if (!clear.equals(expected))
+    throw Error("RECOVERY_IMPORT_WORKING_KEY_MISMATCH");
+}
+
 /** Install a fully flushed key exactly once, even when two operators initialize together. */
 function installKeyOnce(
   path: string,
@@ -210,9 +254,15 @@ function installKeyOnce(
     `${basename(path)}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`
   );
   writeDurableFile(temporary, bytes);
+  let interrupted = false;
   try {
+    assertRecoveredGmailCaptureFile(path, bytes);
+    assertRecoveredGmailCaptureFile(temporary, bytes, "install");
     linkSync(temporary, path);
+    flushRecoveryDirectory(dirname(path));
+    observeRecoveredGmailCaptureFileCheckpoint(path, "linked");
   } catch (error) {
+    interrupted = isRecoveryGmailCaptureTestInterruption(error);
     if (
       !(error instanceof Error) ||
       !("code" in error) ||
@@ -220,7 +270,10 @@ function installKeyOnce(
     )
       throw error;
   } finally {
-    unlinkSync(temporary);
+    if (!interrupted) {
+      assertRecoveredGmailCaptureFile(temporary, bytes, "unlink");
+      unlinkSync(temporary);
+    }
   }
   if (process.platform !== "win32") {
     const directory = openSync(dirname(path), "r");
@@ -232,64 +285,294 @@ function installKeyOnce(
   }
 }
 
+export interface RecoveryInstallationFile {
+  path: string;
+  bytes: Buffer;
+  dev: number;
+  ino: number;
+  nlink: number;
+}
+export interface RecoveryInstallationObservation {
+  target: RecoveryInstallationFile | null;
+  candidate: RecoveryInstallationFile | null;
+}
+function assertRecoveryStagingAncestry(directory: string): void {
+  for (let parent = resolve(directory); ; parent = dirname(parent)) {
+    if (existsSync(join(parent, ".git")))
+      throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    let stat;
+    try {
+      stat = lstatSync(parent);
+    } catch (error) {
+      if (
+        !(error instanceof Error && "code" in error && error.code === "ENOENT")
+      )
+        throw error;
+    }
+    if (stat && (!stat.isDirectory() || stat.isSymbolicLink()))
+      throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    if (dirname(parent) === parent) break;
+  }
+}
+function flushRecoveryDirectory(directory: string): void {
+  if (process.platform === "win32") return;
+  assertRecoveredGmailCaptureFile(directory, undefined, "directory");
+  const fd = openSync(directory, "r");
+  try {
+    fsyncSync(fd);
+  } finally {
+    closeSync(fd);
+  }
+}
+/** Read bounded exact-target installation evidence only. Other target families in
+ * a shared staging directory remain untouched; this report grants no authority. */
+export function inspectRecoveryInstalledFile(
+  path: string,
+  stagingDirectory: string,
+  limit = 16 * 1024 * 1024
+): RecoveryInstallationObservation {
+  if (!Number.isSafeInteger(limit) || limit < 1 || limit > 16 * 1024 * 1024)
+    throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+  const target = resolve(path),
+    directory = resolve(stagingDirectory);
+  assertRecoveryStagingAncestry(dirname(target));
+  assertRecoveryStagingAncestry(directory);
+  for (const root of [dirname(target), directory])
+    for (let parent = root; ; parent = dirname(parent)) {
+      let stat;
+      try {
+        stat = lstatSync(parent);
+      } catch (error) {
+        if (
+          !(
+            error instanceof Error &&
+            "code" in error &&
+            error.code === "ENOENT"
+          )
+        )
+          throw error;
+      }
+      if (stat && (!stat.isDirectory() || stat.isSymbolicLink()))
+        throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+      if (dirname(parent) === parent) break;
+    }
+  const read = (path: string): RecoveryInstallationFile | null => {
+    let before;
+    try {
+      before = lstatSync(path);
+    } catch (error) {
+      if (error instanceof Error && "code" in error && error.code === "ENOENT")
+        return null;
+      throw error;
+    }
+    if (
+      !before.isFile() ||
+      before.isSymbolicLink() ||
+      before.nlink < 1 ||
+      before.nlink > 2 ||
+      before.size > limit
+    )
+      throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    const fd = openSync(path, "r");
+    let bytes: Buffer;
+    try {
+      const opened = fstatSync(fd);
+      if (
+        opened.dev !== before.dev ||
+        opened.ino !== before.ino ||
+        opened.size !== before.size ||
+        opened.nlink !== before.nlink
+      )
+        throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+      const bounded = Buffer.alloc(before.size + 1);
+      let length = 0,
+        count: number;
+      while (
+        length < bounded.length &&
+        (count = readSync(fd, bounded, length, bounded.length - length, null)) >
+          0
+      )
+        length += count;
+      if (length !== before.size)
+        throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+      bytes = Buffer.from(bounded.subarray(0, length));
+      const after = fstatSync(fd);
+      if (after.size !== before.size || after.nlink !== before.nlink)
+        throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    } finally {
+      closeSync(fd);
+    }
+    const after = lstatSync(path);
+    if (
+      bytes.length !== before.size ||
+      after.dev !== before.dev ||
+      after.ino !== before.ino ||
+      after.nlink !== before.nlink ||
+      after.size !== before.size ||
+      after.isSymbolicLink()
+    )
+      throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    return {
+      path,
+      bytes,
+      dev: before.dev,
+      ino: before.ino,
+      nlink: before.nlink,
+    };
+  };
+  let candidate: RecoveryInstallationFile | null = null;
+  if (existsSync(directory)) {
+    const names = readdirSync(directory);
+    if (names.length > 1000) throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    for (const name of names) {
+      const prefix = basename(target) + ".";
+      if (!name.startsWith(prefix)) continue;
+      if (
+        !/^\d+\.[a-f0-9]{16}\.tmp(?:\.\d+\.[a-f0-9]{16}\.tmp)?$/.test(
+          name.slice(prefix.length)
+        ) ||
+        candidate
+      )
+        throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+      candidate = read(join(directory, name));
+      if (!candidate) throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    }
+  }
+  const installed = read(target);
+  if (installed && candidate && !installed.bytes.equals(candidate.bytes))
+    throw Error("RECOVERY_INSTALLATION_FILE_CONFLICT");
+  if (installed?.nlink === 2 || candidate?.nlink === 2) {
+    if (
+      !installed ||
+      !candidate ||
+      installed.nlink !== 2 ||
+      candidate.nlink !== 2 ||
+      installed.dev !== candidate.dev ||
+      installed.ino !== candidate.ino
+    )
+      throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+  }
+  return { target: installed, candidate };
+}
+
 /** Validate and unlink only this installer's private orphan links after a crash. */
 export function readRecoveryInstalledFile(
   path: string,
   stagingDirectory: string,
   validate: (bytes: Buffer) => void
 ): Buffer {
-  const directory = resolve(stagingDirectory),
-    target = resolve(path);
-  for (const parentRoot of [dirname(target), directory]) {
-    for (let parent = parentRoot; ; parent = dirname(parent)) {
-      if (existsSync(parent)) {
-        const stat = lstatSync(parent);
-        if (!stat.isDirectory() || stat.isSymbolicLink())
-          throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
-      }
-      if (dirname(parent) === parent) break;
-    }
+  const target = resolve(path),
+    directory = resolve(stagingDirectory);
+  let observed = inspectRecoveryInstalledFile(target, directory);
+  const value = observed.target ?? observed.candidate;
+  if (!value) throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+  validate(value.bytes);
+  if (observed.target) validate(observed.target.bytes);
+  if (observed.candidate) validate(observed.candidate.bytes);
+  const bytes = Buffer.from(value.bytes);
+  if (observed.target && !observed.candidate) return bytes;
+  // Authentication precedes ACL changes, writable handles and adoption.
+  if (observed.candidate) {
+    secureOperatorDirectory(dirname(target));
+    secureRecoveryStagingDirectory(directory);
   }
-  const before = lstatSync(target);
-  if (
-    !before.isFile() ||
-    before.isSymbolicLink() ||
-    before.size > 16 * 1024 * 1024 ||
-    before.nlink > 64
-  )
-    throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
-  const bytes = readFileSync(target);
-  if (bytes.length !== before.size)
-    throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
-  validate(bytes);
-  if (before.nlink > 1) {
-    const names = readdirSync(directory);
-    if (names.length > 1000) throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
-    for (const name of names) {
-      const prefix = basename(target) + ".";
+  const flush = (file: RecoveryInstallationFile, stage: boolean) => {
+    assertRecoveredGmailCaptureFile(
+      file.path,
+      bytes,
+      stage ? "install" : "write"
+    );
+    const fd = openSync(file.path, "r+");
+    try {
+      const stat = fstatSync(fd),
+        named = lstatSync(file.path);
       if (
-        !name.startsWith(prefix) ||
-        !/^\d+\.[a-f0-9]{16}\.tmp$/.test(name.slice(prefix.length))
+        stat.dev !== file.dev ||
+        stat.ino !== file.ino ||
+        stat.size !== bytes.length ||
+        stat.nlink !== file.nlink ||
+        named.dev !== stat.dev ||
+        named.ino !== stat.ino ||
+        named.isSymbolicLink()
       )
-        continue;
-      const temporary = join(directory, name),
-        stat = lstatSync(temporary);
-      if (stat.isSymbolicLink() || !stat.isFile())
         throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
-      if (stat.ino === before.ino && stat.dev === before.dev) {
-        const current = lstatSync(target);
-        if (current.ino !== before.ino || current.dev !== before.dev)
-          throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
-        unlinkSync(temporary);
-      }
+      const bounded = Buffer.alloc(bytes.length + 1);
+      let length = 0,
+        count: number;
+      while (
+        length < bounded.length &&
+        (count = readSync(fd, bounded, length, bounded.length - length, null)) >
+          0
+      )
+        length += count;
+      if (length !== bytes.length || !bounded.subarray(0, length).equals(bytes))
+        throw Error("RECOVERY_INSTALLATION_FILE_CONFLICT");
+      assertRecoveredGmailCaptureFile(
+        file.path,
+        bytes,
+        stage ? "install" : "write"
+      );
+      const before = fstatSync(fd),
+        current = lstatSync(file.path);
+      if (
+        before.dev !== stat.dev ||
+        before.ino !== stat.ino ||
+        before.size !== bytes.length ||
+        before.nlink !== stat.nlink ||
+        current.dev !== stat.dev ||
+        current.ino !== stat.ino ||
+        current.isSymbolicLink()
+      )
+        throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+      fsyncSync(fd);
+    } finally {
+      closeSync(fd);
     }
+  };
+  if (!observed.target) {
+    const stage = observed.candidate!;
+    flush(stage, true);
+    assertRecoveredGmailCaptureFile(target, bytes);
+    assertRecoveredGmailCaptureFile(stage.path, bytes, "install");
+    try {
+      linkSync(stage.path, target);
+      flushRecoveryDirectory(dirname(target));
+      observeRecoveredGmailCaptureFileCheckpoint(target, "linked");
+    } catch (error) {
+      if (
+        !(error instanceof Error && "code" in error && error.code === "EEXIST")
+      )
+        throw error;
+    }
+    observed = inspectRecoveryInstalledFile(target, directory);
+    if (!observed.target || !observed.target.bytes.equals(bytes))
+      throw Error("RECOVERY_INSTALLATION_FILE_CONFLICT");
+    validate(observed.target.bytes);
   }
-  const after = lstatSync(target);
+  flush(observed.target!, false);
+  flushRecoveryDirectory(dirname(target));
+  if (observed.candidate) {
+    const stage = observed.candidate;
+    const current = inspectRecoveryInstalledFile(target, directory);
+    if (
+      !current.target ||
+      !current.target.bytes.equals(bytes) ||
+      !current.candidate ||
+      current.candidate.dev !== stage.dev ||
+      current.candidate.ino !== stage.ino ||
+      !current.candidate.bytes.equals(bytes)
+    )
+      throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+    assertRecoveredGmailCaptureFile(stage.path, bytes, "unlink");
+    unlinkSync(stage.path);
+    flushRecoveryDirectory(directory);
+  }
+  const complete = inspectRecoveryInstalledFile(target, directory);
   if (
-    after.ino !== before.ino ||
-    after.dev !== before.dev ||
-    after.nlink !== 1 ||
-    !readFileSync(target).equals(bytes)
+    !complete.target ||
+    complete.candidate ||
+    complete.target.nlink !== 1 ||
+    !complete.target.bytes.equals(bytes)
   )
     throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
   return bytes;
@@ -301,13 +584,50 @@ export function installRecoveryIntent(
   bytes: Buffer,
   stagingDirectory: string
 ): Buffer {
-  secureRecoveryStagingDirectory(stagingDirectory);
+  if (!Buffer.isBuffer(bytes) || bytes.length > 16 * 1024 * 1024)
+    throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
   const validate = (current: Buffer) => {
     if (!current.equals(bytes))
       throw Error("RECOVERY_INSTALLATION_FILE_CONFLICT");
   };
-  if (!existsSync(path)) installKeyOnce(path, bytes, stagingDirectory);
+  const observed = inspectRecoveryInstalledFile(path, stagingDirectory);
+  if (observed.target) validate(observed.target.bytes);
+  if (observed.candidate) validate(observed.candidate.bytes);
+  if (!observed.target && !observed.candidate) {
+    secureRecoveryStagingDirectory(stagingDirectory);
+    installKeyOnce(path, bytes, stagingDirectory);
+  }
   return readRecoveryInstalledFile(path, stagingDirectory, validate);
+}
+
+/** Only the closed capture coordinator can request this exact intake repair. */
+export function repairRecoveredGmailCaptureFile(
+  path: string,
+  bytes: Buffer
+): void {
+  assertRecoveredGmailCaptureRepair(path, bytes);
+  const observed = inspectRecoveryInstalledFile(
+    path,
+    dirname(path),
+    8 * 1024 * 1024
+  );
+  if (
+    observed.candidate &&
+    !/^\d+\.[a-f0-9]{16}\.tmp$/.test(
+      observed.candidate.path.slice(resolve(path).length + 1)
+    )
+  )
+    throw Error("UNSAFE_RECOVERY_INSTALLATION_FILE");
+  if (
+    (observed.target && !observed.target.bytes.equals(bytes)) ||
+    (observed.candidate && !observed.candidate.bytes.equals(bytes))
+  )
+    throw Error("RECOVERY_INSTALLATION_FILE_CONFLICT");
+  if (observed.candidate)
+    readRecoveryInstalledFile(path, dirname(path), (value) => {
+      if (!value.equals(bytes))
+        throw Error("RECOVERY_INSTALLATION_FILE_CONFLICT");
+    });
 }
 
 function secureRecoveryStagingDirectory(directory: string): void {
@@ -326,6 +646,7 @@ function secureRecoveryStagingDirectory(directory: string): void {
 
 /** Restrict the permanent operator directory before putting private artifacts in it. */
 export function secureOperatorDirectory(directory: string): void {
+  assertRecoveredGmailCaptureFile(directory, undefined, "directory");
   mkdirSync(directory, { recursive: true, mode: 0o700 });
   if (process.platform !== "win32") {
     chmodSync(directory, 0o700);
@@ -350,11 +671,13 @@ export function secureOperatorDirectory(directory: string): void {
 
 /** Generate once; Windows keeps the working key encrypted under the current user's DPAPI. */
 export function loadBackupKey(directory: string, create = false): Buffer {
+  assertRecoveredGmailCaptureKey(directory);
   const path = join(
     directory,
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
   );
   if (!existsSync(path)) {
+    assertNoRecoveredGmailCapture();
     if (!create)
       throw new Error(
         "Backup key missing. Import the separately saved recovery key; never generate a replacement to decrypt an existing snapshot."
@@ -378,6 +701,7 @@ export function exportRecoveryKey(
   directory: string,
   destination: string
 ): void {
+  assertNoRecoveredGmailCapture();
   let ancestor = resolve(dirname(destination));
   while (true) {
     if (existsSync(join(ancestor, ".git")))
@@ -416,6 +740,7 @@ export function exportRecoveryKey(
 
 /** Install a portable key without ever overwriting an existing operator key. */
 export function importRecoveryKey(directory: string, source: string): void {
+  assertNoRecoveredGmailCapture();
   const destination = join(
     directory,
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
@@ -436,6 +761,9 @@ export function installRecoveredBackupKey(
   suppliedKey: Buffer,
   options?: { stagingDirectory: string }
 ): void {
+  assertRecoveredGmailCaptureKey(directory, suppliedKey);
+  if (!Buffer.isBuffer(suppliedKey) || suppliedKey.length !== 32)
+    throw new Error("Invalid recovery key file.");
   const key = Buffer.from(suppliedKey);
   const destination = join(
     directory,
@@ -446,15 +774,25 @@ export function installRecoveredBackupKey(
       "A backup key already exists; preserve it before recovering another installation."
     );
   if (key.length !== 32) throw new Error("Invalid recovery key file.");
-  secureOperatorDirectory(directory);
   const stagingDirectory = options?.stagingDirectory ?? directory;
-  secureRecoveryStagingDirectory(stagingDirectory);
-  if (!existsSync(destination))
+  const observed = inspectRecoveryInstalledFile(
+    destination,
+    stagingDirectory,
+    16 * 1024
+  );
+  if (observed.target)
+    validateRecoveredBackupKeyBytes(observed.target.bytes, key);
+  if (observed.candidate)
+    validateRecoveredBackupKeyBytes(observed.candidate.bytes, key);
+  if (!observed.target && !observed.candidate) {
+    secureOperatorDirectory(directory);
+    secureRecoveryStagingDirectory(stagingDirectory);
     installKeyOnce(
       destination,
       process.platform === "win32" ? protectForWindows(key) : key,
       stagingDirectory
     );
+  }
   readRecoveryInstalledFile(destination, stagingDirectory, (bytes) => {
     const installed =
       process.platform === "win32" ? protectForWindows(bytes, true) : bytes;

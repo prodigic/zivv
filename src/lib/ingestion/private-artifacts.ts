@@ -2,18 +2,27 @@ import { existsSync, realpathSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
 import { hasRecoveredImportAuthority } from "./recovery-import-admission.js";
+import { hasRecoveredGmailCaptureAuthority } from "./recovery-gmail-capture-admission.js";
 
 /** Restored checkpoints remain offline until a separately reviewed installation cutover. */
 export function assertOperatorNotQuarantined(
   directory: string,
-  operation?: "weekly-import"
+  operation?: "weekly-import" | "steve-email-capture"
 ): void {
-  assertOperatorInstallationWritable(resolve(directory));
+  assertOperatorInstallationWritable(
+    resolve(directory),
+    operation === "steve-email-capture" ? operation : undefined
+  );
   const marker = join(
     dirname(resolvePrivateCandidateDirectory(directory)),
     "recovery-state.json"
   );
   if (existsSync(marker)) {
+    if (
+      operation === "steve-email-capture" &&
+      hasRecoveredGmailCaptureAuthority(resolve(directory))
+    )
+      return;
     if (
       operation === "weekly-import" &&
       hasRecoveredImportAuthority(resolve(directory))

@@ -5,6 +5,14 @@ import { DatabaseSync } from "node:sqlite";
 import { secureOperatorDirectory } from "./encrypted-backup.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
+import {
+  assertRecoveredGmailCaptureJournal,
+  recoveredGmailCaptureLeaseOwner,
+  recoveredGmailCaptureLeaseTtl,
+  observeRecoveredGmailCaptureSourceCommit,
+  observeRecoveredGmailCaptureJournalCommit,
+  type CaptureJournalEffect,
+} from "./recovery-gmail-capture-admission.js";
 import { assertReadOnlySqliteFiles } from "./readonly-sqlite-files.js";
 import {
   WEEKLY_RUN_STAGES,
@@ -408,7 +416,13 @@ export class WeeklyRunJournal {
   private guardedLease: WeeklyRunLease | null = null;
 
   constructor(directory: string, clock: () => number = Date.now) {
-    assertOperatorInstallationWritable(resolve(directory));
+    if (recoveredGmailCaptureLeaseOwner() && clock !== Date.now)
+      throw new Error("RECOVERY_GMAIL_CAPTURE_SCOPE_EXCEEDED");
+    assertOperatorInstallationWritable(resolve(directory), "capture-journal");
+    assertRecoveredGmailCaptureJournal({
+      path: join(resolve(directory), "weekly-runs.sqlite"),
+      effect: "open",
+    });
     this.clock = clock;
     let ancestor = resolve(directory);
     while (!existsSync(ancestor)) ancestor = dirname(ancestor);
@@ -423,7 +437,7 @@ export class WeeklyRunJournal {
         throw new Error("Journal must be outside Git repositories");
       if (dirname(parent) === parent) break;
     }
-    secureOperatorDirectory(actual);
+    if (!recoveredGmailCaptureLeaseOwner()) secureOperatorDirectory(actual);
     this.path = join(actual, "weekly-runs.sqlite");
     for (const path of [this.path, this.path + "-wal", this.path + "-shm"]) {
       let stat;
@@ -443,6 +457,16 @@ export class WeeklyRunJournal {
     }
     this.db = new DatabaseSync(this.path, { timeout: 10000 });
     try {
+      if (recoveredGmailCaptureLeaseOwner()) {
+        this.assertRecoveryDatabase();
+        assertRecoveredGmailCaptureJournal({
+          path: this.path,
+          effect: "open",
+          snapshot: this.recoverySnapshot(),
+        });
+        this.db.exec("PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON;");
+        return;
+      }
       if (process.platform !== "win32") chmodSync(this.path, 0o600);
       this.db.exec(
         "PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON; BEGIN IMMEDIATE;"
@@ -653,7 +677,8 @@ export class WeeklyRunJournal {
     lease: WeeklyRunLease,
     work: () => Promise<T>
   ): Promise<T> {
-    assertOperatorInstallationWritable(dirname(this.path));
+    assertOperatorInstallationWritable(dirname(this.path), "capture-journal");
+    this.captureEffect("guard", lease);
     if (this.guardedLease || this.db.isTransaction)
       throw new Error("Nested guarded journal operation refused");
     this.db.exec("BEGIN IMMEDIATE");
@@ -662,7 +687,10 @@ export class WeeklyRunJournal {
       this.guardedLease = { ...lease };
       const result = await work();
       this.assertLease(lease);
+      this.captureEffect("guard", lease);
       this.db.exec("COMMIT");
+      if (recoveredGmailCaptureLeaseOwner())
+        observeRecoveredGmailCaptureJournalCommit(this.recoverySnapshot());
       return result;
     } catch (error) {
       if (this.db.isTransaction) this.db.exec("ROLLBACK");
@@ -679,14 +707,42 @@ export class WeeklyRunJournal {
     return now;
   }
 
-  private transaction<T>(work: () => T): T {
-    assertOperatorInstallationWritable(dirname(this.path));
+  private captureEffect(
+    effect: CaptureJournalEffect,
+    lease?: WeeklyRunLease,
+    id?: string,
+    bytes?: Buffer
+  ): void {
+    if (!recoveredGmailCaptureLeaseOwner()) return;
+    assertRecoveredGmailCaptureJournal({
+      path: this.path,
+      effect,
+      lease,
+      id,
+      bytes,
+      snapshot: this.recoverySnapshot(),
+    });
+  }
+
+  private transaction<T>(
+    work: () => T,
+    effect: CaptureJournalEffect = "deny",
+    lease?: WeeklyRunLease
+  ): T {
+    this.captureEffect(effect, lease);
+    assertOperatorInstallationWritable(dirname(this.path), "capture-journal");
     this.db.exec("BEGIN IMMEDIATE");
     try {
-      assertOperatorInstallationWritable(dirname(this.path));
+      assertOperatorInstallationWritable(dirname(this.path), "capture-journal");
       const result = work();
-      assertOperatorInstallationWritable(dirname(this.path));
+      assertOperatorInstallationWritable(dirname(this.path), "capture-journal");
+      this.captureEffect(
+        effect === "acquire" ? "read" : effect,
+        effect === "acquire" ? undefined : lease
+      );
       this.db.exec("COMMIT");
+      if (recoveredGmailCaptureLeaseOwner())
+        observeRecoveredGmailCaptureJournalCommit(this.recoverySnapshot());
       return result;
     } catch (error) {
       if (this.db.isTransaction) this.db.exec("ROLLBACK");
@@ -695,7 +751,7 @@ export class WeeklyRunJournal {
   }
 
   private assertLease(lease: WeeklyRunLease): void {
-    assertOperatorInstallationWritable(dirname(this.path));
+    assertOperatorInstallationWritable(dirname(this.path), "capture-journal");
     const row = this.db
       .prepare(
         "SELECT scope,owner,fence,expires_at FROM ownership WHERE scope=?"
@@ -740,6 +796,7 @@ export class WeeklyRunJournal {
       throw new Error("Invalid ownership scope/TTL");
     return this.transaction(() => {
       const now = this.now();
+      const boundedTtl = recoveredGmailCaptureLeaseTtl(ttlMs);
       const old = this.db
         .prepare(
           "SELECT scope,owner,fence,expires_at FROM ownership WHERE scope=?"
@@ -750,22 +807,23 @@ export class WeeklyRunJournal {
         throw new Error("Weekly destination already has an active owner");
       const lease = {
         scope,
-        owner: randomUUID(),
+        owner: recoveredGmailCaptureLeaseOwner() ?? randomUUID(),
         fence: Number(old?.fence ?? 0) + 1,
-        expiresAtEpochMs: now + ttlMs,
+        expiresAtEpochMs: now + boundedTtl,
       };
       if (
         !Number.isSafeInteger(lease.fence) ||
         !Number.isSafeInteger(lease.expiresAtEpochMs)
       )
         throw new Error("Ownership counter overflow");
+      this.captureEffect("acquire", lease);
       this.db
         .prepare(
           "INSERT INTO ownership VALUES(?,?,?,?) ON CONFLICT(scope) DO UPDATE SET owner=excluded.owner,fence=excluded.fence,expires_at=excluded.expires_at"
         )
         .run(scope, lease.owner, lease.fence, lease.expiresAtEpochMs);
       return lease;
-    });
+    }, "read");
   }
 
   renew(lease: WeeklyRunLease, ttlMs = 120000): WeeklyRunLease {
@@ -773,9 +831,11 @@ export class WeeklyRunJournal {
       throw new Error("Invalid ownership TTL");
     const work = () => {
       this.assertLease(lease);
-      const expiresAtEpochMs = this.now() + ttlMs;
+      const now = this.now();
+      const expiresAtEpochMs = now + recoveredGmailCaptureLeaseTtl(ttlMs);
       if (!Number.isSafeInteger(expiresAtEpochMs))
         throw new Error("Ownership expiry overflow");
+      this.captureEffect("renew", { ...lease, expiresAtEpochMs });
       this.db
         .prepare("UPDATE ownership SET expires_at=? WHERE scope=?")
         .run(expiresAtEpochMs, lease.scope);
@@ -788,16 +848,17 @@ export class WeeklyRunJournal {
       this.guardedLease.fence === lease.fence
     )
       return work();
-    return this.transaction(work);
+    return this.transaction(work, "read");
   }
 
   release(lease: WeeklyRunLease): void {
     this.transaction(() => {
       this.assertLease(lease);
+      this.captureEffect("release", lease);
       this.db
         .prepare("UPDATE ownership SET expires_at=0 WHERE scope=?")
         .run(lease.scope);
-    });
+    }, "read");
   }
 
   load(runId: string): WeeklyRunState | null {
@@ -911,7 +972,8 @@ export class WeeklyRunJournal {
     if (this.guardedLease || this.db.isTransaction)
       throw new Error("Nested intake evidence write refused");
     const captured = Buffer.from(bytes);
-    return this.transaction(() => {
+    let inserted = false;
+    const saved = this.transaction(() => {
       this.assertLease(lease);
       const existing = this.readIntakeEvidence(lease.scope, kind, id);
       if (existing) {
@@ -920,6 +982,7 @@ export class WeeklyRunJournal {
         this.assertLease(lease);
         return existing;
       }
+      this.captureEffect(kind, lease, id, captured);
       this.db
         .prepare(
           "INSERT INTO intake_evidence(scope,kind,id,identity,bytes) VALUES(?,?,?,?,?)"
@@ -931,9 +994,13 @@ export class WeeklyRunJournal {
           createHash("sha256").update(captured).digest("hex"),
           captured
         );
+      inserted = true;
       this.assertLease(lease);
       return captured;
-    });
+    }, "read");
+    if (inserted && kind === "source")
+      observeRecoveredGmailCaptureSourceCommit();
+    return saved;
   }
 
   readArtifact(

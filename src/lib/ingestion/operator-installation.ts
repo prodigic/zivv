@@ -1,4 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import {
+  assertNoRecoveredGmailCapture,
+  assertRecoveredGmailCaptureWriter,
+} from "./recovery-gmail-capture-admission.js";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import {
   closeSync,
@@ -30,6 +34,11 @@ const scopes = new AsyncLocalStorage<{
 const hashPattern = /^[a-f0-9]{64}$/;
 const uuidPattern =
   /^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
+
+/** Closed recovery coordinators cannot overlap a retirement invocation. */
+export function assertNoOperatorRetirementScope(): void {
+  if (scopes.getStore()) throw new Error("NESTED_OPERATOR_RETIREMENT");
+}
 
 export interface OperatorRetirementInput {
   readonly checkpointSha256: string;
@@ -101,7 +110,11 @@ function marker(directory: string): ReturnType<typeof lstatSync> | undefined {
 }
 
 /** Refuse every retirement marker, irrespective of its contents or authenticity. */
-export function assertOperatorInstallationWritable(directory: string): void {
+export function assertOperatorInstallationWritable(
+  directory: string,
+  operation?: "steve-email-capture" | "capture-journal"
+): void {
+  assertRecoveredGmailCaptureWriter(directory, operation);
   const physical = physicalDirectory(directory, false),
     stat = marker(physical);
   if (!stat) return;
@@ -161,6 +174,7 @@ export async function withOperatorRetirementScope<T>(
   directory: string,
   work: (permitOwnRetirement: (bytes: Buffer) => void) => Promise<T>
 ): Promise<T> {
+  assertNoRecoveredGmailCapture();
   if (scopes.getStore()?.active) throw new Error("NESTED_OPERATOR_RETIREMENT");
   const physical = physicalDirectory(directory, true);
   for (let path = physical; ; path = dirname(path)) {
