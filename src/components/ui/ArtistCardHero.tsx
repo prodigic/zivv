@@ -18,6 +18,7 @@ export default function ArtistCardHero({
   const show = artist.upcomingEvents.find(
     (event) =>
       isEventUpcoming(event) &&
+      event.headlinerName === artist.name &&
       isEventPoster(event.poster) &&
       !failedImages.includes(event.poster.imageUrl)
   );

@@ -120,3 +120,19 @@ it("renders no fake picture when neither approved photo nor show artwork exists"
   );
   expect(container).toBeEmptyDOMElement();
 });
+
+it("does not use another headliner's image for a supporting artist", () => {
+  const { container } = render(
+    <ArtistCardHero
+      artist={{
+        ...artist,
+        name: "Geographer",
+        upcomingEvents: artist.upcomingEvents.map((event) => ({
+          ...event,
+          headlinerName: "Kishi Bashi",
+        })),
+      }}
+    />
+  );
+  expect(container).toBeEmptyDOMElement();
+});
