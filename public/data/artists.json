@@ -1299,42 +1299,8 @@
     "normalizedName": "suver",
     "slug": "suver",
     "totalEventCount": 7,
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "upcomingEvents": [
-      {
-        "id": 1042412637,
-        "slug": "2026-10-23-vista-francisco-phoenix-theater",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Vista Francisco",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:3887b754cdd593ec",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1375571612,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1375571612,
-        "venueName": "Phoenix Theater",
-        "venueCity": "Petaluma"
-      },
       {
         "id": 1529948764,
         "slug": "2026-10-24-lightweight-champion-the-knockout",
@@ -2514,43 +2480,8 @@
     "normalizedName": "lilies",
     "slug": "the-lilies",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 767580203,
-        "slug": "2026-10-24-mutt-gehringer-garden",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792872000000,
-        "headlinerName": "Mutt",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e1c59d242bbfc53e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1989924577,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1989924577,
-        "venueName": "Gehringer Garden",
-        "venueCity": "Concord"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969660
   },
   {
@@ -4742,6 +4673,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1778241600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiY2NmMDFhZmYtM2VmYy00NTQ1LWI0MTItNWM0OTZjYzdjZjdkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/natural-child/688788?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -8092,6 +8029,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1778241600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiY2NmMDFhZmYtM2VmYy00NTQ1LWI0MTItNWM0OTZjYzdjZjdkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/natural-child/688788?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -8443,42 +8386,8 @@
     "normalizedName": "mutt",
     "slug": "mutt",
     "totalEventCount": 5,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 767580203,
-        "slug": "2026-10-24-mutt-gehringer-garden",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792872000000,
-        "headlinerName": "Mutt",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e1c59d242bbfc53e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1989924577,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1989924577,
-        "venueName": "Gehringer Garden",
-        "venueCity": "Concord"
-      },
       {
         "id": 532616903,
         "slug": "2027-03-26-peaboo-and-the-catz-brodway-hall",
@@ -17682,6 +17591,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMmMxZTI4NTItYzFkOS00NjgxLWFmYzQtYmYwMmQ5MGMxZTJhIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/psyched-fest-with-wine-lips/698688?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -18524,41 +18439,8 @@
     "normalizedName": "ub40",
     "slug": "ub40",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 192446968,
-        "slug": "2026-10-23-ub40-the-mountain-winery",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "UB40",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:ad699101d64e669c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2021730900,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2021730900,
-        "venueName": "Mountain Winery",
-        "venueCity": "Saratoga"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970229
   },
   {
@@ -18910,6 +18792,12 @@
         "priceMin": 22,
         "priceMax": 25,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZGFkYzI3OTQtOThhZi00ZmYwLTkyYjItN2E2Y2RiZmUzNDQ1IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/tanukichan/702971?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -21443,43 +21331,8 @@
     "normalizedName": "bombshell",
     "slug": "bombshell",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 381884337,
-        "slug": "2026-10-24-bitchfit-thrillhouse-records",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792886400000,
-        "headlinerName": "Bitchfit",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:d28a4d79813eddc2",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 735357859,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 735357859,
-        "venueName": "Thrillhouse Records",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969698
   },
   {
@@ -23719,42 +23572,8 @@
     "normalizedName": "step up",
     "slug": "step-up",
     "totalEventCount": 10,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1777556719,
-        "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Shark In The Water",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c331e51828081b0a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 745745800,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 745745800,
-        "venueName": "Noble Cinema Studios",
-        "venueCity": "Vallejo"
-      },
       {
         "id": 2041522765,
         "slug": "2026-11-06-nine-dog-dick-tequila-mockingbird",
@@ -23871,43 +23690,8 @@
     "normalizedName": "bitchfit",
     "slug": "bitchfit",
     "totalEventCount": 6,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 381884337,
-        "slug": "2026-10-24-bitchfit-thrillhouse-records",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792886400000,
-        "headlinerName": "Bitchfit",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:d28a4d79813eddc2",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 735357859,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 735357859,
-        "venueName": "Thrillhouse Records",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970019
   },
   {
@@ -25497,41 +25281,8 @@
     "normalizedName": "russ rankin",
     "slug": "russ-rankin",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1348678666,
-        "slug": "2026-10-24-dj-daniel-sant-gilman-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792886400000,
-        "headlinerName": "dj Daniel Sant",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:4a2448142d775ce8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969706
   },
   {
@@ -28201,42 +27952,8 @@
     "normalizedName": "knights of molino",
     "slug": "knights-of-molino",
     "totalEventCount": 15,
-    "upcomingEventCount": 3,
+    "upcomingEventCount": 2,
     "upcomingEvents": [
-      {
-        "id": 1777556719,
-        "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Shark In The Water",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c331e51828081b0a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 745745800,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 745745800,
-        "venueName": "Noble Cinema Studios",
-        "venueCity": "Vallejo"
-      },
       {
         "id": 2128022671,
         "slug": "2026-11-06-knights-of-molino-on-broadway",
@@ -31525,6 +31242,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1782475200000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYTU1ZjUxNjAtNmVjYi00MzE2LWFmNzktYjM0OTEyMzcyODgyIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/the-tubs/696006?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -32317,43 +32040,8 @@
     "normalizedName": "fricks",
     "slug": "the-fricks",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1506733922,
-        "slug": "2026-10-23-dark-satellite-the-ivy-room",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Dark Satellite",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:5431fcc1606480dd",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969968
   },
   {
@@ -37366,43 +37054,8 @@
     "normalizedName": "everything but the everything",
     "slug": "everything-but-the-everything",
     "totalEventCount": 5,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1506733922,
-        "slug": "2026-10-23-dark-satellite-the-ivy-room",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Dark Satellite",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:5431fcc1606480dd",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969926
   },
   {
@@ -38672,43 +38325,8 @@
     "normalizedName": "shark in the water",
     "slug": "shark-in-the-water",
     "totalEventCount": 6,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1777556719,
-        "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Shark In The Water",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c331e51828081b0a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 745745800,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 745745800,
-        "venueName": "Noble Cinema Studios",
-        "venueCity": "Vallejo"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969939,
     "vibe": {
       "summary": "Opening at DNA Lounge, Shark in the Water won over a skeptical reviewer with unusual metal guitar tones and relentless shark-themed aggression. Costumes and ocean-themed songs became part of an entertaining performance, turning a potentially distracting surf-metal gimmick into a surprisingly effective stage presence.",
@@ -39346,43 +38964,8 @@
     "normalizedName": "pinoles",
     "slug": "pinoles",
     "totalEventCount": 4,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1777556719,
-        "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Shark In The Water",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c331e51828081b0a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 745745800,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 745745800,
-        "venueName": "Noble Cinema Studios",
-        "venueCity": "Vallejo"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970065,
     "vibe": {
       "summary": "Just Wanna delivers nine catchy pop-punk songs with prominent melodic bass, buzzing guitars and singalong choruses. The reviewer enjoys Pinoles’ early Green Day and Ramones influences, while finding one vocal breakdown on “Hospital Flowers” less convincing.",
@@ -41856,43 +41439,8 @@
     "normalizedName": "pine",
     "slug": "the-pine",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 24538713,
-        "slug": "2026-10-23-antioch-arrow-924-gilman-street",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Antioch Arrow",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 22,
-        "priceMax": 22,
-        "createdAtEpochMs": 1786708800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:6555a1824d97b620",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970232
   },
   {
@@ -44381,6 +43929,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1787313600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMzJiYzJiYTEtMmFjNy00YmIyLTlmZmEtNWZjNjAyYTAzZGE2IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/sparta/702137?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -46061,6 +45615,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1782475200000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNjE1NzhjY2UtZWVjOC00ZmJlLWJlYmEtYzVhMTI3ODUyN2Y1IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/we-are-scientists/694279?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -47653,77 +47213,8 @@
     "normalizedName": "greasy gills",
     "slug": "the-greasy-gills",
     "totalEventCount": 3,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1613146351,
-        "slug": "2026-10-24-slacktone-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Slacktone",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:02d7cf6d3617f05c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792198061662,
-            "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      },
-      {
-        "id": 1936084613,
-        "slug": "2026-10-24-balzac-tribute-430pm-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Balzac (tribute - 4:30pm)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1792803818000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:a5e986bbdda9b484",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792803818000,
-            "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970236
   },
   {
@@ -52138,43 +51629,8 @@
     "normalizedName": "joey cash",
     "slug": "joey-cash",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1790216310,
-        "slug": "2026-10-23-joey-cash-crybaby",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Joey Cash",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 23.67,
-        "priceMax": 23.67,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:4d1900a6d8d48dd8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2137851775,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2137851775,
-        "venueName": "Crybaby",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360969804
   },
   {
@@ -55620,43 +55076,8 @@
     "normalizedName": "love bombs",
     "slug": "the-love-bombs",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1777556719,
-        "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Shark In The Water",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c331e51828081b0a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 745745800,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 745745800,
-        "venueName": "Noble Cinema Studios",
-        "venueCity": "Vallejo"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970060
   },
   {
@@ -56023,6 +55444,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1783684800000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNDE1OTM4ZDktMmM3My00OTRmLTk1ZmMtMmJlMjRiNzE2NDdiIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/jake-minch-getting-big-tour/695734?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -62271,42 +61698,8 @@
     "normalizedName": "balzac (tribute)",
     "slug": "balzac-tribute",
     "totalEventCount": 3,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1613146351,
-        "slug": "2026-10-24-slacktone-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Slacktone",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:02d7cf6d3617f05c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792198061662,
-            "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      },
       {
         "id": 900962568,
         "slug": "2026-10-31-the-mummies-the-bottom-of-the-hill",
@@ -62656,77 +62049,8 @@
     "normalizedName": "seismics",
     "slug": "the-seismics",
     "totalEventCount": 3,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1613146351,
-        "slug": "2026-10-24-slacktone-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Slacktone",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:02d7cf6d3617f05c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792198061662,
-            "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      },
-      {
-        "id": 1936084613,
-        "slug": "2026-10-24-balzac-tribute-430pm-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Balzac (tribute - 4:30pm)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1792803818000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:a5e986bbdda9b484",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792803818000,
-            "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970236
   },
   {
@@ -68447,6 +67771,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1778241600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiY2NmMDFhZmYtM2VmYy00NTQ1LWI0MTItNWM0OTZjYzdjZjdkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/natural-child/688788?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -73359,42 +72689,8 @@
     "normalizedName": "dark satellite",
     "slug": "dark-satellite",
     "totalEventCount": 4,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1506733922,
-        "slug": "2026-10-23-dark-satellite-the-ivy-room",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Dark Satellite",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:5431fcc1606480dd",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      },
       {
         "id": 1117494555,
         "slug": "2026-11-20-the-morning-drive-830pm-924-gilman-street",
@@ -73956,43 +73252,8 @@
     "normalizedName": "custody weekend",
     "slug": "custody-weekend",
     "totalEventCount": 5,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1777556719,
-        "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Shark In The Water",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c331e51828081b0a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 745745800,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 745745800,
-        "venueName": "Noble Cinema Studios",
-        "venueCity": "Vallejo"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970013
   },
   {
@@ -80206,43 +79467,8 @@
     "normalizedName": "nuzzle",
     "slug": "nuzzle",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 24538713,
-        "slug": "2026-10-23-antioch-arrow-924-gilman-street",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Antioch Arrow",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 22,
-        "priceMax": 22,
-        "createdAtEpochMs": 1786708800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:6555a1824d97b620",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970232
   },
   {
@@ -83542,43 +82768,8 @@
     "normalizedName": "glowing brain",
     "slug": "glowing-brain",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 556823526,
-        "slug": "2026-10-23-the-well-thee-stork-club",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "The Well",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 18,
-        "priceMax": 20,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:45a8fae58ffc7f2f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 873142532,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 873142532,
-        "venueName": "Stork Club",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970105
   },
   {
@@ -87690,43 +86881,8 @@
     "normalizedName": "ultra sounds",
     "slug": "the-ultra-sounds",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1613146351,
-        "slug": "2026-10-24-slacktone-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Slacktone",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:02d7cf6d3617f05c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792198061662,
-            "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970236
   },
   {
@@ -88187,43 +87343,8 @@
     "normalizedName": "eyes out",
     "slug": "eyes-out",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1777556719,
-        "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Shark In The Water",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c331e51828081b0a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 745745800,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 745745800,
-        "venueName": "Noble Cinema Studios",
-        "venueCity": "Vallejo"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970084
   },
   {
@@ -88503,43 +87624,8 @@
     "normalizedName": "vista francisco",
     "slug": "vista-francisco",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1042412637,
-        "slug": "2026-10-23-vista-francisco-phoenix-theater",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Vista Francisco",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:3887b754cdd593ec",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1375571612,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1375571612,
-        "venueName": "Phoenix Theater",
-        "venueCity": "Petaluma"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970088
   },
   {
@@ -89618,43 +88704,8 @@
     "normalizedName": "disrespectors",
     "slug": "the-disrespectors",
     "totalEventCount": 3,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1506733922,
-        "slug": "2026-10-23-dark-satellite-the-ivy-room",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Dark Satellite",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:5431fcc1606480dd",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1689618485,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1689618485,
-        "venueName": "Ivy Room",
-        "venueCity": "Albany"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970097
   },
   {
@@ -91668,43 +90719,8 @@
     "normalizedName": "cigmund floyd",
     "slug": "cigmund-floyd",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1042412637,
-        "slug": "2026-10-23-vista-francisco-phoenix-theater",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Vista Francisco",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:3887b754cdd593ec",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1375571612,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1375571612,
-        "venueName": "Phoenix Theater",
-        "venueCity": "Petaluma"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970108
   },
   {
@@ -109078,43 +108094,8 @@
     "normalizedName": "kacey musgraves",
     "slug": "kacey-musgraves",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 79421935,
-        "slug": "2026-10-23-kacey-musgraves-the-arena",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Kacey Musgraves",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 54.75,
-        "priceMax": 54.75,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:9b7cf840f3dfe939",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1887679738,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1887679738,
-        "venueName": "Arena",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970228
   },
   {
@@ -109125,79 +108106,8 @@
     "normalizedName": "julia wolf",
     "slug": "julia-wolf",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 100129475,
-        "slug": "2026-10-23-julia-wolf-the-warfield",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Julia Wolf",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://images.discovery-prod.axs.com/2026/04/julia-wolf-tickets_10-23-26_23_69e00a34e340e.jpg",
-          "eventUrl": "https://www.thewarfieldtheatre.com/events/detail/1407735",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:483f2615209960a5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1531618194,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1531618194,
-        "venueName": "Warfield",
-        "venueCity": "San Francisco"
-      },
-      {
-        "id": 410173558,
-        "slug": "2026-10-23-julia-wolf-great-american-music-hall",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792785600000,
-        "headlinerName": "Julia Wolf",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:6e1f9814af86cead",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 463728167,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "legacy-wall-clock",
-        "venueId": 463728167,
-        "venueName": "Great American Music Hall",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970229
   },
   {
@@ -109208,79 +108118,8 @@
     "normalizedName": "bee blackwell",
     "slug": "bee-blackwell",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 100129475,
-        "slug": "2026-10-23-julia-wolf-the-warfield",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Julia Wolf",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://images.discovery-prod.axs.com/2026/04/julia-wolf-tickets_10-23-26_23_69e00a34e340e.jpg",
-          "eventUrl": "https://www.thewarfieldtheatre.com/events/detail/1407735",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:483f2615209960a5",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1531618194,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1531618194,
-        "venueName": "Warfield",
-        "venueCity": "San Francisco"
-      },
-      {
-        "id": 410173558,
-        "slug": "2026-10-23-julia-wolf-great-american-music-hall",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792785600000,
-        "headlinerName": "Julia Wolf",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:6e1f9814af86cead",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 463728167,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "legacy-wall-clock",
-        "venueId": 463728167,
-        "venueName": "Great American Music Hall",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970229
   },
   {
@@ -109291,47 +108130,8 @@
     "normalizedName": "shaboozey",
     "slug": "shaboozey",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2134462464,
-        "slug": "2026-10-23-shaboozey-the-masonic",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Shaboozey",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://s1.ticketm.net/dam/a/d55/e7d9f34f-40ae-46d7-80d6-1cd814456d55_TABLET_LANDSCAPE_LARGE_16_9.jpg",
-          "eventUrl": "https://www.ticketmaster.com/shaboozey-outlaws-never-die-tour-san-francisco-california-10-23-2026/event/1C006495D0D5A69A",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0ff3296e91a94d1e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1120524281,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970229
   },
   {
@@ -109342,47 +108142,8 @@
     "normalizedName": "angel white",
     "slug": "angel-white",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2134462464,
-        "slug": "2026-10-23-shaboozey-the-masonic",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Shaboozey",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://s1.ticketm.net/dam/a/d55/e7d9f34f-40ae-46d7-80d6-1cd814456d55_TABLET_LANDSCAPE_LARGE_16_9.jpg",
-          "eventUrl": "https://www.ticketmaster.com/shaboozey-outlaws-never-die-tour-san-francisco-california-10-23-2026/event/1C006495D0D5A69A",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0ff3296e91a94d1e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1120524281,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1120524281,
-        "venueName": "Masonic Center",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970229
   },
   {
@@ -109393,43 +108154,8 @@
     "normalizedName": "cheekface",
     "slug": "cheekface",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1023513373,
-        "slug": "2026-10-23-cheekface-the-cornerstone",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792814400000,
-        "headlinerName": "Cheekface",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 36,
-        "priceMax": 36,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:9216089bef11a1b3",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1393740940,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1393740940,
-        "venueName": "Cornerstone",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970229
   },
   {
@@ -109452,49 +108178,8 @@
     "normalizedName": "slift",
     "slug": "slift",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 70173636,
-        "slug": "2026-10-23-slift-august-hall",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Slift",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 34.7,
-        "priceMax": 34.7,
-        "createdAtEpochMs": 1778241600000,
-        "poster": {
-          "imageUrl": "https://s1.ticketm.net/dam/a/60a/b7a553ec-579e-4ccb-966f-415f5c0a460a_TABLET_LANDSCAPE_LARGE_16_9.jpg",
-          "eventUrl": "https://www.augusthallsf.com/tm-event/slift/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:bb1cb2113a95f455",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 811075932,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 811075932,
-        "venueName": "August Hall",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970229
   },
   {
@@ -109533,41 +108218,8 @@
     "normalizedName": "crsb",
     "slug": "crsb",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 192446968,
-        "slug": "2026-10-23-ub40-the-mountain-winery",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "UB40",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:ad699101d64e669c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2021730900,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2021730900,
-        "venueName": "Mountain Winery",
-        "venueCity": "Saratoga"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970229,
     "links": [
       {
@@ -109584,43 +108236,8 @@
     "normalizedName": "gary clark jr.",
     "slug": "gary-clark-jr",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2063905108,
-        "slug": "2026-10-23-gary-clark-jr-the-fox-theater",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Gary Clark Jr.",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 66,
-        "priceMax": 66,
-        "createdAtEpochMs": 1780660800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:7a777c6d7d1f2e6c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 631118593,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 631118593,
-        "venueName": "Fox Theater",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970230
   },
   {
@@ -109631,62 +108248,8 @@
     "normalizedName": "julia jacklin",
     "slug": "julia-jacklin",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1343543744,
-        "slug": "2026-10-23-julia-jacklin-the-castro",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Julia Jacklin",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 48,
-        "priceMax": 48,
-        "createdAtEpochMs": 1788566700000,
-        "poster": {
-          "imageUrl": "https://thecastro.com/wp-content/uploads/2026/06/1024-LEAD-PHOTO_General-Use-1.jpg",
-          "eventUrl": "https://thecastro.com/events/julia-jacklin-261023",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:470f6e975711f430",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1383208152,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:933ac21bc6146d71",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1383208152,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1383208152,
-        "venueName": "Castro",
-        "venueCity": "San Francisco"
-      },
       {
         "id": 913367265,
         "slug": "2026-10-24-julia-jacklin-the-castro",
@@ -109806,49 +108369,8 @@
     "normalizedName": "frog",
     "slug": "frog",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1966924710,
-        "slug": "2026-10-23-frog-the-independent",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792814400000,
-        "headlinerName": "Frog",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 34.55,
-        "priceMax": 34.55,
-        "createdAtEpochMs": 1783080000000,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/12/93/17/84_Edp.jpg?v=11",
-          "eventUrl": "https://www.theindependentsf.com/tm-event/frog/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e7141d83fe2b6201",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 515101024,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 515101024,
-        "venueName": "Independent",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970230
   },
   {
@@ -109859,73 +108381,8 @@
     "normalizedName": "marty o' reilly trio",
     "slug": "marty-o-reilly-trio",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1138185371,
-        "slug": "2026-10-23-marty-o-reilly-trio-hopmonk-tavern",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Marty O' Reilly Trio",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:9ca29b2176a8ffde",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 410740820,
-        "venueName": "Hopmonk Tavern (Sebastopol)",
-        "venueCity": "Sebastopol"
-      },
-      {
-        "id": 251658174,
-        "slug": "2026-10-23-marty-o-reilly-trio-hopmonk-tavern",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792789200000,
-        "headlinerName": "Marty O' Reilly Trio",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1783080000000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e1e014f8adee8dd4",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "legacy-wall-clock",
-        "venueId": 410740820,
-        "venueName": "Hopmonk Tavern (Sebastopol)",
-        "venueCity": "Sebastopol"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970230,
     "vibe": {
       "summary": "Stereoscope uses violin, guitar, banjo and upright bass to shape modern folk with touches of light rock. The review hears flowing, ballad-like songs, an eerie opening to “Southern Road” and contrasting upbeat endings, with O’Reilly’s voice closely complemented by strings.",
@@ -109952,41 +108409,8 @@
     "normalizedName": "pat nbyrne",
     "slug": "pat-nbyrne",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 251658174,
-        "slug": "2026-10-23-marty-o-reilly-trio-hopmonk-tavern",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792789200000,
-        "headlinerName": "Marty O' Reilly Trio",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1783080000000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e1e014f8adee8dd4",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "legacy-wall-clock",
-        "venueId": 410740820,
-        "venueName": "Hopmonk Tavern (Sebastopol)",
-        "venueCity": "Sebastopol"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970230
   },
   {
@@ -110057,42 +108481,8 @@
     "normalizedName": "protomartyr",
     "slug": "protomartyr",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 471651318,
-        "slug": "2026-10-23-protomartyr-the-ritz",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792814400000,
-        "headlinerName": "Protomartyr",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 26,
-        "priceMax": 30,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:76f3a1f8909f6cb3",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1253820046,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1253820046,
-        "venueName": "Ritz",
-        "venueCity": "San Jose"
-      },
       {
         "id": 945448418,
         "slug": "2026-10-24-protomartyr-august-hall",
@@ -110144,42 +108534,8 @@
     "normalizedName": "accessory",
     "slug": "accessory",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 471651318,
-        "slug": "2026-10-23-protomartyr-the-ritz",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792814400000,
-        "headlinerName": "Protomartyr",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 26,
-        "priceMax": 30,
-        "createdAtEpochMs": 1783684800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:76f3a1f8909f6cb3",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1253820046,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1253820046,
-        "venueName": "Ritz",
-        "venueCity": "San Jose"
-      },
       {
         "id": 945448418,
         "slug": "2026-10-24-protomartyr-august-hall",
@@ -110231,43 +108587,8 @@
     "normalizedName": "well",
     "slug": "the-well",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 556823526,
-        "slug": "2026-10-23-the-well-thee-stork-club",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "The Well",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 18,
-        "priceMax": 20,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:45a8fae58ffc7f2f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 873142532,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 873142532,
-        "venueName": "Stork Club",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970231
   },
   {
@@ -110278,43 +108599,8 @@
     "normalizedName": "pink fuzz",
     "slug": "pink-fuzz",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 556823526,
-        "slug": "2026-10-23-the-well-thee-stork-club",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "The Well",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 18,
-        "priceMax": 20,
-        "createdAtEpochMs": 1788566700000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:45a8fae58ffc7f2f",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 873142532,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 873142532,
-        "venueName": "Stork Club",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970231
   },
   {
@@ -110580,43 +108866,8 @@
     "normalizedName": "antioch arrow",
     "slug": "antioch-arrow",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 24538713,
-        "slug": "2026-10-23-antioch-arrow-924-gilman-street",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Antioch Arrow",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 22,
-        "priceMax": 22,
-        "createdAtEpochMs": 1786708800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:6555a1824d97b620",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970232
   },
   {
@@ -110627,43 +108878,8 @@
     "normalizedName": "allure",
     "slug": "allure",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 24538713,
-        "slug": "2026-10-23-antioch-arrow-924-gilman-street",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Antioch Arrow",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 22,
-        "priceMax": 22,
-        "createdAtEpochMs": 1786708800000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:6555a1824d97b620",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 888749966,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 888749966,
-        "venueName": "924 Gilman Street",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970232
   },
   {
@@ -110674,49 +108890,8 @@
     "normalizedName": "rezn",
     "slug": "rezn",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2056442554,
-        "slug": "2026-10-23-rezn-brick-and-mortar",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792814400000,
-        "headlinerName": "Rezn",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 27.58,
-        "priceMax": 27.58,
-        "createdAtEpochMs": 1786708800000,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/13/50/31/33_Edp.jpg?v=7",
-          "eventUrl": "https://www.brickandmortarmusic.com/tm-event/rezn/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:cc37daacb29d673c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1719765223,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1719765223,
-        "venueName": "the Brick and Mortar",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970232
   },
   {
@@ -110727,49 +108902,8 @@
     "normalizedName": "lowheaven",
     "slug": "lowheaven",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2056442554,
-        "slug": "2026-10-23-rezn-brick-and-mortar",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792814400000,
-        "headlinerName": "Rezn",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 27.58,
-        "priceMax": 27.58,
-        "createdAtEpochMs": 1786708800000,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/13/50/31/33_Edp.jpg?v=7",
-          "eventUrl": "https://www.brickandmortarmusic.com/tm-event/rezn/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:cc37daacb29d673c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1719765223,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1719765223,
-        "venueName": "the Brick and Mortar",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970232
   },
   {
@@ -110780,49 +108914,8 @@
     "normalizedName": "mountaineer",
     "slug": "mountaineer",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 2056442554,
-        "slug": "2026-10-23-rezn-brick-and-mortar",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792814400000,
-        "headlinerName": "Rezn",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 27.58,
-        "priceMax": 27.58,
-        "createdAtEpochMs": 1786708800000,
-        "poster": {
-          "imageUrl": "https://i.ticketweb.com/i/00/13/50/31/33_Edp.jpg?v=7",
-          "eventUrl": "https://www.brickandmortarmusic.com/tm-event/rezn/",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:cc37daacb29d673c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1719765223,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1719765223,
-        "venueName": "the Brick and Mortar",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970232
   },
   {
@@ -111003,77 +109096,8 @@
     "normalizedName": "celtic thunder",
     "slug": "celtic-thunder",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 516280978,
-        "slug": "2026-10-23-celtic-thunder-henry-j-kaiser-center",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Celtic Thunder",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 61.65,
-        "priceMax": 61.65,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:7325cbde014605d4",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 726597303,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 726597303,
-        "venueName": "Henry J. Kaiser Center",
-        "venueCity": "Oakland"
-      },
-      {
-        "id": 1116523021,
-        "slug": "2026-10-24-celtic-thunder-henry-j-kaiser-center",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1793062800000,
-        "headlinerName": "Celtic Thunder",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 61.65,
-        "priceMax": 73.55,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:010f90c93f32eb3b",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 726597303,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "legacy-wall-clock",
-        "venueId": 726597303,
-        "venueName": "Henry J. Kaiser Center",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970232
   },
   {
@@ -112195,77 +110219,8 @@
     "normalizedName": "slacktone",
     "slug": "slacktone",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1613146351,
-        "slug": "2026-10-24-slacktone-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Slacktone",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:02d7cf6d3617f05c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792198061662,
-            "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      },
-      {
-        "id": 1936084613,
-        "slug": "2026-10-24-balzac-tribute-430pm-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Balzac (tribute - 4:30pm)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1792803818000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:a5e986bbdda9b484",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792803818000,
-            "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970236
   },
   {
@@ -112276,77 +110231,8 @@
     "normalizedName": "soraia",
     "slug": "soraia",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
-    "upcomingEvents": [
-      {
-        "id": 1613146351,
-        "slug": "2026-10-24-slacktone-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Slacktone",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1787313600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:02d7cf6d3617f05c",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792198061662,
-            "lastSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      },
-      {
-        "id": 1936084613,
-        "slug": "2026-10-24-balzac-tribute-430pm-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Balzac (tribute - 4:30pm)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1792803818000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:a5e986bbdda9b484",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792803818000,
-            "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1787360970236
   },
   {
@@ -112596,6 +110482,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1780660800000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiM2IyNmU5NzAtNjViMS00NmUzLTgwNzktZmM3YjU1M2VjNDdhIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/kyle-gordon/692750?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -113344,6 +111236,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMmMxZTI4NTItYzFkOS00NjgxLWFmYzQtYmYwMmQ5MGMxZTJhIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/psyched-fest-with-wine-lips/698688?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -113391,6 +111289,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMmMxZTI4NTItYzFkOS00NjgxLWFmYzQtYmYwMmQ5MGMxZTJhIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/psyched-fest-with-wine-lips/698688?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -113939,6 +111843,12 @@
         "priceMin": 35.06,
         "priceMax": 35.06,
         "createdAtEpochMs": 1780660800000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYzczNzk2NjEtMjg1MC00YTU5LWJjMGYtNjU2N2YwODA4Mzk5IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/violet-grohl/693274?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -115442,6 +113352,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1782475200000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYTU1ZjUxNjAtNmVjYi00MzE2LWFmNzktYjM0OTEyMzcyODgyIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/the-tubs/696006?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -119261,6 +117177,12 @@
         "priceMin": 20,
         "priceMax": 22,
         "createdAtEpochMs": 1778241600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMTk4MjQxZmQtMDJhMS00MjBiLWE5ODEtOTEzMmNkMDM1YjA1IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/mary-in-the-junkyard/691949?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -120077,6 +117999,12 @@
         "priceMin": 25,
         "priceMax": 25,
         "createdAtEpochMs": 1786104000000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMGVlNDM4NDEtM2Y0ZC00Y2UzLTg3NzctM2IzZGFjNGMzYmRjIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/kennedy-ryon/700515?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -120366,6 +118294,12 @@
         "priceMin": 28,
         "priceMax": 28,
         "createdAtEpochMs": 1778241600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMzZiZjQ2N2YtMTA1YS00ZGQxLWI1YmItNzQ4MDc3NTcyMTY3IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/genesis-owusu/692608?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -123882,6 +121816,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1783684800000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNDE1OTM4ZDktMmM3My00OTRmLTk1ZmMtMmJlMjRiNzE2NDdiIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/jake-minch-getting-big-tour/695734?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -129224,6 +127164,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1778241600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiY2NmMDFhZmYtM2VmYy00NTQ1LWI0MTItNWM0OTZjYzdjZjdkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/natural-child/688788?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -129271,6 +127217,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1778241600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiY2NmMDFhZmYtM2VmYy00NTQ1LWI0MTItNWM0OTZjYzdjZjdkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/natural-child/688788?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -130709,6 +128661,12 @@
         "priceMin": 25,
         "priceMax": 28,
         "createdAtEpochMs": 1786708800000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNDI1MmVlMmEtM2M3Ni00MjdiLWE1YTctOGQwNmJhNTMxM2Q4IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/qendresa/701355?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -132392,6 +130350,12 @@
         "priceMin": 25,
         "priceMax": 28,
         "createdAtEpochMs": 1783684800000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMDljNmVjODktOTdiMy00YTlmLWI4OWUtMDVkMjMyOTkxMzA4IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/lrain/697892?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -132854,6 +130818,12 @@
         "priceMin": 30,
         "priceMax": 34,
         "createdAtEpochMs": 1786104000000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiN2M3NzQ4MzgtYmVlOC00NzhiLWJlZjMtZjZmOTBlZDAzN2ExIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/emancipator/700476?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -134717,6 +132687,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1781265600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYTAxNTVlMDUtODVkNy00YjcxLTgxMjktZGE1YjgzNDQyMTM4IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/oliver-hazard/694276?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -135880,6 +133856,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1784894400000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiOGI1OTZhNTEtOTEwNS00ODliLTkyZDItYWU3MzM4MWY4MzM5IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/ruby-haunt/697882?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -138041,6 +136023,12 @@
         "priceMin": 25,
         "priceMax": 25,
         "createdAtEpochMs": 1784289600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYzQzMTgzNTItYmJjOS00MjUwLTgxMjEtMWZjYTg3MzRkNWFhIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/valencia-grace/697858?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -142196,62 +140184,8 @@
     "normalizedName": "jordan patterson",
     "slug": "jordan-patterson",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1343543744,
-        "slug": "2026-10-23-julia-jacklin-the-castro",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Julia Jacklin",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 48,
-        "priceMax": 48,
-        "createdAtEpochMs": 1788566700000,
-        "poster": {
-          "imageUrl": "https://thecastro.com/wp-content/uploads/2026/06/1024-LEAD-PHOTO_General-Use-1.jpg",
-          "eventUrl": "https://thecastro.com/events/julia-jacklin-261023",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:470f6e975711f430",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1788566700000,
-            "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1383208152,
-            "session": null,
-            "sourceId": "steveslist"
-          },
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:933ac21bc6146d71",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": null,
-            "firstSeenRunId": null,
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": null,
-            "lastSeenRunId": null,
-            "originalVenueId": 1383208152,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1383208152,
-        "venueName": "Castro",
-        "venueCity": "San Francisco"
-      },
       {
         "id": 913367265,
         "slug": "2026-10-24-julia-jacklin-the-castro",
@@ -142582,6 +140516,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMmMxZTI4NTItYzFkOS00NjgxLWFmYzQtYmYwMmQ5MGMxZTJhIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/psyched-fest-with-wine-lips/698688?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -143351,6 +141291,12 @@
         "priceMin": 20,
         "priceMax": 22,
         "createdAtEpochMs": 1778241600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMTk4MjQxZmQtMDJhMS00MjBiLWE5ODEtOTEzMmNkMDM1YjA1IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/mary-in-the-junkyard/691949?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -144060,6 +142006,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1787313600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMzJiYzJiYTEtMmFjNy00YmIyLTlmZmEtNWZjNjAyYTAzZGE2IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/sparta/702137?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -144151,6 +142103,12 @@
         "isFree": false,
         "isSoldOut": false,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZTU5MmQ0YTktZDQ3OC00MTFjLWFlZDAtMTZjNmE5MTNkYzAyIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/the-hails/696075?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -144195,6 +142153,12 @@
         "isFree": false,
         "isSoldOut": false,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZTU5MmQ0YTktZDQ3OC00MTFjLWFlZDAtMTZjNmE5MTNkYzAyIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/the-hails/696075?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -144808,6 +142772,12 @@
         "priceMin": 18,
         "priceMax": 22,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMzE5OTM2Y2EtMDhkZC00MTIyLTk4NTgtZjk4YjU2MWZlOTNjIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/cannelle/703640?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -146037,6 +144007,12 @@
         "priceMin": 20,
         "priceMax": 20,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYzdiZWEyNzctMDNhNS00ZTk0LWI2YjgtMTI5ODkxNTQ2MDlkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/graham-hunt-9million-co-headline/702096?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -146084,6 +144060,12 @@
         "priceMin": 20,
         "priceMax": 20,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYzdiZWEyNzctMDNhNS00ZTk0LWI2YjgtMTI5ODkxNTQ2MDlkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/graham-hunt-9million-co-headline/702096?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -146178,6 +144160,12 @@
         "priceMin": 22,
         "priceMax": 25,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZGFkYzI3OTQtOThhZi00ZmYwLTkyYjItN2E2Y2RiZmUzNDQ1IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/tanukichan/702971?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -146247,6 +144235,12 @@
         "priceMin": 22,
         "priceMax": 25,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZGFkYzI3OTQtOThhZi00ZmYwLTkyYjItN2E2Y2RiZmUzNDQ1IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/tanukichan/702971?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -146447,6 +144441,12 @@
         "priceMin": 20,
         "priceMax": 20,
         "createdAtEpochMs": 1788566700000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYTMyODRhYzMtNjBlMS00YTMwLWE1ZmItNmFmOGNhY2YzYTQ5IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/milk-and-bone/703435?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -150671,6 +148671,12 @@
         "priceMin": 25,
         "priceMax": 28,
         "createdAtEpochMs": 1783684800000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMDljNmVjODktOTdiMy00YTlmLWI4OWUtMDVkMjMyOTkxMzA4IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/lrain/697892?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -150959,6 +148965,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1781265600000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYTAxNTVlMDUtODVkNy00YjcxLTgxMjktZGE1YjgzNDQyMTM4IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/oliver-hazard/694276?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -151949,43 +149961,8 @@
     "normalizedName": "cu next tuesday",
     "slug": "cu-next-tuesday",
     "totalEventCount": 2,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 381884337,
-        "slug": "2026-10-24-bitchfit-thrillhouse-records",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792886400000,
-        "headlinerName": "Bitchfit",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 15,
-        "priceMax": 15,
-        "createdAtEpochMs": 1791595464839,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:d28a4d79813eddc2",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1791595464839,
-            "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 735357859,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 735357859,
-        "venueName": "Thrillhouse Records",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1789778766605
   },
   {
@@ -153793,42 +151770,8 @@
     "normalizedName": "k.flay",
     "slug": "kflay",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1417149369,
-        "slug": "2026-10-23-kflay-bottom-of-the-hill",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792812600000,
-        "headlinerName": "K.Flay",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 38,
-        "priceMax": 38,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:544a06ba1af29b19",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1016385760,
-        "venueName": "Bottom of the Hill",
-        "venueCity": "San Francisco"
-      },
       {
         "id": 455535352,
         "slug": "2026-10-24-kflay-bottom-of-the-hill",
@@ -155432,6 +153375,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1789777368000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMzEyNDA3ZjMtYzRjOC00ZWM4LWE5MDItOTllMjBlNmYzYTk2IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/peach-tree-rascals/704398?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -162751,6 +160700,12 @@
         "priceMin": 25,
         "priceMax": 25,
         "createdAtEpochMs": 1786104000000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMGVlNDM4NDEtM2Y0ZC00Y2UzLTg3NzctM2IzZGFjNGMzYmRjIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/kennedy-ryon/700515?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -165317,6 +163272,12 @@
         "priceMin": 22,
         "priceMax": 25,
         "createdAtEpochMs": 1790381132084,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZWFiN2Q5NWItZDJhNy00MmMxLTkzM2UtZGExNWFjYmM2NTVjIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/paloma-morphy/689810?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -166934,43 +164895,8 @@
     "normalizedName": "jade 2008",
     "slug": "jade-2008",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1790216310,
-        "slug": "2026-10-23-joey-cash-crybaby",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Joey Cash",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 23.67,
-        "priceMax": 23.67,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:4d1900a6d8d48dd8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2137851775,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2137851775,
-        "venueName": "Crybaby",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835738
   },
   {
@@ -166981,43 +164907,8 @@
     "normalizedName": "discnogirl",
     "slug": "discnogirl",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1790216310,
-        "slug": "2026-10-23-joey-cash-crybaby",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Joey Cash",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 23.67,
-        "priceMax": 23.67,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:4d1900a6d8d48dd8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2137851775,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2137851775,
-        "venueName": "Crybaby",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835738
   },
   {
@@ -167028,43 +164919,8 @@
     "normalizedName": "leakz",
     "slug": "leakz",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1790216310,
-        "slug": "2026-10-23-joey-cash-crybaby",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792809000000,
-        "headlinerName": "Joey Cash",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 23.67,
-        "priceMax": 23.67,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:4d1900a6d8d48dd8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2137851775,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2137851775,
-        "venueName": "Crybaby",
-        "venueCity": "Oakland"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835738
   },
   {
@@ -167087,41 +164943,8 @@
     "normalizedName": "pat nyrne",
     "slug": "pat-nyrne",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1138185371,
-        "slug": "2026-10-23-marty-o-reilly-trio-hopmonk-tavern",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792810800000,
-        "headlinerName": "Marty O' Reilly Trio",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:9ca29b2176a8ffde",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1637782129,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 410740820,
-        "venueName": "Hopmonk Tavern (Sebastopol)",
-        "venueCity": "Sebastopol"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835740
   },
   {
@@ -167213,41 +165036,8 @@
     "normalizedName": "daniel sant",
     "slug": "dj-daniel-sant",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1348678666,
-        "slug": "2026-10-24-dj-daniel-sant-gilman-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792886400000,
-        "headlinerName": "dj Daniel Sant",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:4a2448142d775ce8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835741
   },
   {
@@ -167258,41 +165048,8 @@
     "normalizedName": "kevin seconds",
     "slug": "kevin-seconds",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1348678666,
-        "slug": "2026-10-24-dj-daniel-sant-gilman-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792886400000,
-        "headlinerName": "dj Daniel Sant",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790985835628,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:4a2448142d775ce8",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 2086074371,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 2086074371,
-        "venueName": "Gilman Brewing Co.",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835741
   },
   {
@@ -167348,47 +165105,8 @@
     "normalizedName": "skip the needle (5pm)",
     "slug": "skip-the-needle-5pm",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 602289354,
-        "slug": "2026-10-24-skip-the-needle-5pm-bandshell",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Skip The Needle (5pm)",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790985835628,
-        "poster": {
-          "imageUrl": "https://sfpl.org/sites/default/files/2026-09/32414.jpg",
-          "eventUrl": "https://sfpl.org/events/2026/10/24/performance-bay-beats-launch-party",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0f938c51bf25fe0d",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1471035891,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1471035891,
-        "venueName": "the Bandshell",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835743,
     "vibe": {
       "summary": "Wake Up Wake Up Wake Up blends raw rock, blues, soul, and funk with socially conscious lyrics. The review highlights earthy electric blues on “Until We Overcome,” the sympathetic R&B of “Call Me,” and the lively dance-floor energy of closing track “Lady DJ.”",
@@ -167425,47 +165143,8 @@
     "normalizedName": "william johnston's extravagant superband",
     "slug": "william-johnstons-extravagant-superband",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 602289354,
-        "slug": "2026-10-24-skip-the-needle-5pm-bandshell",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Skip The Needle (5pm)",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790985835628,
-        "poster": {
-          "imageUrl": "https://sfpl.org/sites/default/files/2026-09/32414.jpg",
-          "eventUrl": "https://sfpl.org/events/2026/10/24/performance-bay-beats-launch-party",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0f938c51bf25fe0d",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1471035891,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1471035891,
-        "venueName": "the Bandshell",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835743
   },
   {
@@ -167476,47 +165155,8 @@
     "normalizedName": "frankie maston",
     "slug": "frankie-maston",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 602289354,
-        "slug": "2026-10-24-skip-the-needle-5pm-bandshell",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Skip The Needle (5pm)",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790985835628,
-        "poster": {
-          "imageUrl": "https://sfpl.org/sites/default/files/2026-09/32414.jpg",
-          "eventUrl": "https://sfpl.org/events/2026/10/24/performance-bay-beats-launch-party",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0f938c51bf25fe0d",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1471035891,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1471035891,
-        "venueName": "the Bandshell",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835743
   },
   {
@@ -167527,47 +165167,8 @@
     "normalizedName": "spencer noble (2pm)",
     "slug": "spencer-noble-2pm",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 602289354,
-        "slug": "2026-10-24-skip-the-needle-5pm-bandshell",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Skip The Needle (5pm)",
-        "isFree": true,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1790985835628,
-        "poster": {
-          "imageUrl": "https://sfpl.org/sites/default/files/2026-09/32414.jpg",
-          "eventUrl": "https://sfpl.org/events/2026/10/24/performance-bay-beats-launch-party",
-          "kind": "event-artwork",
-          "checkedOn": "2026-10-10"
-        },
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:0f938c51bf25fe0d",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790985835628,
-            "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1471035891,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1471035891,
-        "venueName": "the Bandshell",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1790985835743
   },
   {
@@ -170649,6 +168250,12 @@
         "priceMin": 20,
         "priceMax": 24,
         "createdAtEpochMs": 1790985835628,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNzFlYjk0YjEtY2VhYi00NTdlLWFiMjUtOWRlMDIxNTUxMzZiIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/niko-rubio/705835?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -171273,6 +168880,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1784894400000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiOGI1OTZhNTEtOTEwNS00ODliLTkyZDItYWU3MzM4MWY4MzM5IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/ruby-haunt/697882?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -179013,6 +176626,12 @@
         "priceMin": 25,
         "priceMax": 28,
         "createdAtEpochMs": 1783684800000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiMDljNmVjODktOTdiMy00YTlmLWI4OWUtMDVkMjMyOTkxMzA4IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/lrain/697892?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -180718,6 +178337,12 @@
         "priceMin": 22.5,
         "priceMax": 25,
         "createdAtEpochMs": 1791595464839,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYmExMWRhYTAtMTZlMS00NjRhLTkwZmItY2JmZjcxNzIyMTJjIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/deathbyromy/706811?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -180799,6 +178424,12 @@
         "priceMin": 22,
         "priceMax": 25,
         "createdAtEpochMs": 1792198061662,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiY2YzMTUxZWYtZTkyMy00ZTVjLTliY2EtNmFkODJjYWU5NDNjIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/girl-ultra/707528?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -181286,43 +178917,8 @@
     "normalizedName": "repossessor",
     "slug": "repossessor",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1777556719,
-        "slug": "2026-10-24-shark-in-the-water-noble-cinema-studios",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792875600000,
-        "headlinerName": "Shark In The Water",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1789172046956,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:c331e51828081b0a",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1789172046956,
-            "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 745745800,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 745745800,
-        "venueName": "Noble Cinema Studios",
-        "venueCity": "Vallejo"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792198799359
   },
   {
@@ -182009,42 +179605,8 @@
     "normalizedName": "yogurt",
     "slug": "yogurt",
     "totalEventCount": 2,
-    "upcomingEventCount": 2,
+    "upcomingEventCount": 1,
     "upcomingEvents": [
-      {
-        "id": 1417149369,
-        "slug": "2026-10-23-kflay-bottom-of-the-hill",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792812600000,
-        "headlinerName": "K.Flay",
-        "isFree": false,
-        "isSoldOut": true,
-        "priceMin": 38,
-        "priceMax": 38,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:544a06ba1af29b19",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1016385760,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1016385760,
-        "venueName": "Bottom of the Hill",
-        "venueCity": "San Francisco"
-      },
       {
         "id": 455535352,
         "slug": "2026-10-24-kflay-bottom-of-the-hill",
@@ -182096,43 +179658,8 @@
     "normalizedName": "many moons",
     "slug": "many-moons",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 767580203,
-        "slug": "2026-10-24-mutt-gehringer-garden",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792872000000,
-        "headlinerName": "Mutt",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e1c59d242bbfc53e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1989924577,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1989924577,
-        "venueName": "Gehringer Garden",
-        "venueCity": "Concord"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792198809441
   },
   {
@@ -182143,43 +179670,8 @@
     "normalizedName": "exprt pie",
     "slug": "exprt-pie",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 767580203,
-        "slug": "2026-10-24-mutt-gehringer-garden",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792872000000,
-        "headlinerName": "Mutt",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e1c59d242bbfc53e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1989924577,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1989924577,
-        "venueName": "Gehringer Garden",
-        "venueCity": "Concord"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792198809442
   },
   {
@@ -182190,43 +179682,8 @@
     "normalizedName": "hornhaus",
     "slug": "hornhaus",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 767580203,
-        "slug": "2026-10-24-mutt-gehringer-garden",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792872000000,
-        "headlinerName": "Mutt",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e1c59d242bbfc53e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1989924577,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1989924577,
-        "venueName": "Gehringer Garden",
-        "venueCity": "Concord"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792198809442
   },
   {
@@ -182237,43 +179694,8 @@
     "normalizedName": "ef luka",
     "slug": "ef-luka",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 767580203,
-        "slug": "2026-10-24-mutt-gehringer-garden",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792872000000,
-        "headlinerName": "Mutt",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 20,
-        "priceMax": 20,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:e1c59d242bbfc53e",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1989924577,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1989924577,
-        "venueName": "Gehringer Garden",
-        "venueCity": "Concord"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792198809442
   },
   {
@@ -182378,41 +179800,8 @@
     "normalizedName": "hattie craven back porchestra",
     "slug": "hattie-craven-back-porchestra",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1808993285,
-        "slug": "2026-10-24-hattie-craven-back-porchestra-the-alley-at-murphys",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792877400000,
-        "headlinerName": "Hattie Craven Back Porchestra",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:f0b09249f455eb31",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1583259386,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1583259386,
-        "venueName": "the Alley at Murphys",
-        "venueCity": "Sonoma"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792198809446
   },
   {
@@ -182423,41 +179812,8 @@
     "normalizedName": "wild premonitions",
     "slug": "the-wild-premonitions",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1808993285,
-        "slug": "2026-10-24-hattie-craven-back-porchestra-the-alley-at-murphys",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792877400000,
-        "headlinerName": "Hattie Craven Back Porchestra",
-        "isFree": false,
-        "isSoldOut": false,
-        "createdAtEpochMs": 1792198061662,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:f0b09249f455eb31",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792198061662,
-            "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1583259386,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1583259386,
-        "venueName": "the Alley at Murphys",
-        "venueCity": "Sonoma"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792198809446
   },
   {
@@ -182579,6 +179935,12 @@
         "priceMin": 20,
         "priceMax": 25,
         "createdAtEpochMs": 1782475200000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYTU1ZjUxNjAtNmVjYi00MzE2LWFmNzktYjM0OTEyMzcyODgyIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/the-tubs/696006?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -188003,43 +185365,8 @@
     "normalizedName": "waitress",
     "slug": "waitress",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1023513373,
-        "slug": "2026-10-23-cheekface-the-cornerstone",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792814400000,
-        "headlinerName": "Cheekface",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 36,
-        "priceMax": 36,
-        "createdAtEpochMs": 1778241600000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "legacy-batch",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:9216089bef11a1b3",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1790381132084,
-            "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1393740940,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1393740940,
-        "venueName": "Cornerstone",
-        "venueCity": "Berkeley"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792807402695
   },
   {
@@ -188074,43 +185401,8 @@
     "normalizedName": "starchildjr.",
     "slug": "starchildjr",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1180130851,
-        "slug": "2026-10-23-starchildjr-the-boom-boom-room",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792816200000,
-        "headlinerName": "Starchildjr.",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 12,
-        "priceMax": 15,
-        "createdAtEpochMs": 1792803818000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:61702e8baae6b8da",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792803818000,
-            "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1125299906,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1125299906,
-        "venueName": "Boom Boom Room",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792807402699
   },
   {
@@ -188121,43 +185413,8 @@
     "normalizedName": "grooveallegiance funk collective",
     "slug": "grooveallegiance-funk-collective",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1180130851,
-        "slug": "2026-10-23-starchildjr-the-boom-boom-room",
-        "dateEpochMs": 1792756800000,
-        "startTimeEpochMs": 1792816200000,
-        "headlinerName": "Starchildjr.",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 12,
-        "priceMax": 15,
-        "createdAtEpochMs": 1792803818000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:61702e8baae6b8da",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792803818000,
-            "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1125299906,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1125299906,
-        "venueName": "Boom Boom Room",
-        "venueCity": "San Francisco"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792807402699
   },
   {
@@ -188168,43 +185425,8 @@
     "normalizedName": "balzac (tribute - 4:30pm)",
     "slug": "balzac-tribute-430pm",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1936084613,
-        "slug": "2026-10-24-balzac-tribute-430pm-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Balzac (tribute - 4:30pm)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1792803818000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:a5e986bbdda9b484",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792803818000,
-            "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792807402702
   },
   {
@@ -188215,43 +185437,8 @@
     "normalizedName": "ultra sounds (11:30am)",
     "slug": "the-ultra-sounds-1130am",
     "totalEventCount": 1,
-    "upcomingEventCount": 1,
-    "upcomingEvents": [
-      {
-        "id": 1936084613,
-        "slug": "2026-10-24-balzac-tribute-430pm-faction-brewing",
-        "dateEpochMs": 1792843200000,
-        "startTimeEpochMs": 1792861200000,
-        "headlinerName": "Balzac (tribute - 4:30pm)",
-        "isFree": false,
-        "isSoldOut": false,
-        "priceMin": 5,
-        "priceMax": 5,
-        "createdAtEpochMs": 1792803818000,
-        "firstImportedBy": "steveslist",
-        "addedDateProvenance": "observed",
-        "sources": [
-          {
-            "canonicalUrl": null,
-            "contentHash": "fnv1a64:a5e986bbdda9b484",
-            "evidence": null,
-            "externalEventId": null,
-            "firstSeenAtEpochMs": 1792803818000,
-            "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "kind": "steveslist",
-            "lastSeenAtEpochMs": 1792803818000,
-            "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
-            "originalVenueId": 1059439298,
-            "session": null,
-            "sourceId": "steveslist"
-          }
-        ],
-        "timeBasis": "instant",
-        "venueId": 1059439298,
-        "venueName": "Faction Brewing",
-        "venueCity": "Alameda"
-      }
-    ],
+    "upcomingEventCount": 0,
+    "upcomingEvents": [],
     "updatedAtEpochMs": 1792807402703
   },
   {
@@ -188272,6 +185459,12 @@
         "isFree": false,
         "isSoldOut": false,
         "createdAtEpochMs": 1792803818000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNjM1YzMzMTMtMzNkZi00ZmM2LTk2ZWYtZDc0YmQwNWU5ZWFkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/mission-delirium/704451?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -188316,6 +185509,12 @@
         "isFree": false,
         "isSoldOut": false,
         "createdAtEpochMs": 1792803818000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNjM1YzMzMTMtMzNkZi00ZmM2LTk2ZWYtZDc0YmQwNWU5ZWFkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/mission-delirium/704451?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -188360,6 +185559,12 @@
         "isFree": false,
         "isSoldOut": false,
         "createdAtEpochMs": 1792803818000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNjM1YzMzMTMtMzNkZi00ZmM2LTk2ZWYtZDc0YmQwNWU5ZWFkIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/mission-delirium/704451?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -189487,6 +186692,12 @@
         "priceMin": 25,
         "priceMax": 30,
         "createdAtEpochMs": 1782475200000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNjE1NzhjY2UtZWVjOC00ZmJlLWJlYmEtYzVhMTI3ODUyN2Y1IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/we-are-scientists/694279?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "legacy-batch",
         "sources": [
@@ -197138,6 +194349,12 @@
         "priceMin": 17,
         "priceMax": 20,
         "createdAtEpochMs": 1792803818000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNjhhYTRmNjItYTAzOS00N2RlLTljZDctM2NlMjYxZTM5OTBiIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/bess-atwell/707844?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -197373,6 +194590,12 @@
         "priceMin": 22,
         "priceMax": 25,
         "createdAtEpochMs": 1792803818000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNDU1ODE2NTAtNzNkNi00ZjFjLWI5NzQtYWI2OWYzOTE0ZmI0IiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/fenne-lily/708757?afflky=RickshawStop",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -197555,6 +194778,12 @@
         "priceMin": 20,
         "priceMax": 24,
         "createdAtEpochMs": 1792803818000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYWVhNjZlZWQtODI3Ny00ZjlkLTg2ZjctM2U5YjhjYTJkN2NjIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/dj-suzy/708799?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [
@@ -197964,6 +195193,12 @@
         "priceMin": 22,
         "priceMax": 25,
         "createdAtEpochMs": 1792803818000,
+        "poster": {
+          "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZDFhOTI4YWItYmQ5NS00ZGFmLThkMDAtYWE1MGE1MDYxMjgzIiwiZWRpdHMiOnt9fQ==",
+          "eventUrl": "https://wl.eventim.us/event/the-f16s/708497?afflky=POPSCENEPresents",
+          "kind": "event-artwork",
+          "checkedOn": "2026-10-24"
+        },
         "firstImportedBy": "steveslist",
         "addedDateProvenance": "observed",
         "sources": [

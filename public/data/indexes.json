@@ -57593,49 +57593,49 @@
       "slug": "san-francisco",
       "eventCount": 2434,
       "venueCount": 225,
-      "upcomingEventCount": 592
+      "upcomingEventCount": 573
     },
     {
       "name": "Berkeley",
       "slug": "berkeley",
       "eventCount": 446,
       "venueCount": 30,
-      "upcomingEventCount": 99
+      "upcomingEventCount": 95
     },
     {
       "name": "Oakland",
       "slug": "oakland",
       "eventCount": 443,
       "venueCount": 78,
-      "upcomingEventCount": 91
+      "upcomingEventCount": 86
     },
     {
       "name": "Santa Cruz",
       "slug": "santa-cruz",
       "eventCount": 226,
       "venueCount": 23,
-      "upcomingEventCount": 42
+      "upcomingEventCount": 40
     },
     {
       "name": "Albany",
       "slug": "albany",
       "eventCount": 177,
       "venueCount": 1,
-      "upcomingEventCount": 44
+      "upcomingEventCount": 43
     },
     {
       "name": "San Jose",
       "slug": "san-jose",
       "eventCount": 163,
       "venueCount": 35,
-      "upcomingEventCount": 26
+      "upcomingEventCount": 24
     },
     {
       "name": "Napa",
       "slug": "napa",
       "eventCount": 109,
       "venueCount": 12,
-      "upcomingEventCount": 27
+      "upcomingEventCount": 25
     },
     {
       "name": "Saratoga",
@@ -57656,7 +57656,7 @@
       "slug": "petaluma",
       "eventCount": 71,
       "venueCount": 12,
-      "upcomingEventCount": 10
+      "upcomingEventCount": 8
     },
     {
       "name": "Sebastopol",
@@ -57677,7 +57677,7 @@
       "slug": "richmond",
       "eventCount": 46,
       "venueCount": 10,
-      "upcomingEventCount": 7
+      "upcomingEventCount": 6
     },
     {
       "name": "S.f",
@@ -57712,21 +57712,21 @@
       "slug": "orinda",
       "eventCount": 29,
       "venueCount": 3,
-      "upcomingEventCount": 4
+      "upcomingEventCount": 3
     },
     {
       "name": "Menlo Park",
       "slug": "menlo-park",
       "eventCount": 26,
       "venueCount": 3,
-      "upcomingEventCount": 4
+      "upcomingEventCount": 3
     },
     {
       "name": "San Leandro",
       "slug": "san-leandro",
       "eventCount": 23,
       "venueCount": 6,
-      "upcomingEventCount": 3
+      "upcomingEventCount": 2
     },
     {
       "name": "Mountain View",
@@ -57747,7 +57747,7 @@
       "slug": "alameda",
       "eventCount": 18,
       "venueCount": 12,
-      "upcomingEventCount": 4
+      "upcomingEventCount": 2
     },
     {
       "name": "Pleasanton",
@@ -57761,7 +57761,7 @@
       "slug": "vallejo",
       "eventCount": 15,
       "venueCount": 12,
-      "upcomingEventCount": 4
+      "upcomingEventCount": 3
     },
     {
       "name": "El Cerrito",
@@ -57775,7 +57775,7 @@
       "slug": "concord",
       "eventCount": 13,
       "venueCount": 6,
-      "upcomingEventCount": 3
+      "upcomingEventCount": 2
     },
     {
       "name": "Stanford",
@@ -57803,7 +57803,7 @@
       "slug": "sonoma",
       "eventCount": 11,
       "venueCount": 6,
-      "upcomingEventCount": 2
+      "upcomingEventCount": 1
     },
     {
       "name": "Santa",
@@ -57824,7 +57824,7 @@
       "slug": "daly-city",
       "eventCount": 8,
       "venueCount": 2,
-      "upcomingEventCount": 4
+      "upcomingEventCount": 3
     },
     {
       "name": "Felton",
@@ -58282,7 +58282,7 @@
     }
   },
   "searchIndex": {
-    "indexedAt": 1792807625222,
+    "indexedAt": 1792888697449,
     "totalDocuments": 14594,
     "fields": [
       "name",
