@@ -458,12 +458,12 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                 </span>
                 <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 {groupVenues.map((venue) => (
                   <div
                     key={venue.id}
                     onClick={() => handleVenueClick(venue.name)}
-                    className={`venue-card ${venue.upcomingEvents.length === 0 ? "no-upcoming" : ""} bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 hover:shadow-md transition-shadow cursor-pointer`}
+                    className={`venue-card ${venue.upcomingEvents.length === 0 ? "no-upcoming" : ""} bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow cursor-pointer`}
                   >
                     {/* Header */}
                     {(() => {
@@ -538,7 +538,7 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                       );
                     })()}
 
-                    {/* Compact event rows */}
+                    {/* Artwork-led show cards, sized to the available venue width. */}
                     {(() => {
                       const visibleEvents = dateWindow
                         ? venue.upcomingEvents.filter(
@@ -552,28 +552,29 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                       );
                       return (
                         visibleEvents.length > 0 && (
-                          <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
+                          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-3 border-t border-gray-100 pt-4 dark:border-gray-700">
                             {visibleEvents.map((event) => (
                               <div
                                 key={event.id}
-                                className={`grid min-h-11 ${
+                                className={`grid min-h-32 rounded-lg border border-gray-100 bg-gray-50 p-2 dark:border-gray-700 dark:bg-gray-900/40 ${
                                   hasPosters
-                                    ? "grid-cols-[2.25rem_minmax(0,1fr)]"
+                                    ? "grid-cols-[5rem_minmax(0,1fr)]"
                                     : "grid-cols-1"
-                                } items-center gap-1.5`}
+                                } items-stretch gap-3`}
                               >
                                 <EventPosterLink
                                   poster={event.poster}
                                   showName={event.headlinerName || "Show"}
                                   reserve={hasPosters}
+                                  size="large"
                                 />
                                 <Link
                                   key={event.id}
                                   to={`/events/${event.slug}`}
                                   onClick={(e) => e.stopPropagation()}
-                                  className="grid min-w-0 grid-cols-[3.5rem_minmax(0,1fr)_auto_0.875rem] items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                  className="flex min-w-0 flex-col items-start justify-center gap-1.5 rounded py-1 hover:text-blue-600 dark:hover:text-blue-300"
                                 >
-                                  <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
+                                  <span className="text-xs font-medium tabular-nums text-gray-500 dark:text-gray-400">
                                     {new Date(
                                       event.dateEpochMs
                                     ).toLocaleDateString("en-US", {
@@ -581,7 +582,7 @@ const VenuesPage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
                                       day: "numeric",
                                     })}
                                   </span>
-                                  <span className="text-xs text-gray-700 dark:text-gray-200 truncate font-medium">
+                                  <span className="line-clamp-2 text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
                                     {event.headlinerName || "Show"}
                                   </span>
                                   <PriceWidget

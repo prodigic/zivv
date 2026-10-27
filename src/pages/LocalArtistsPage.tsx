@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { DirectoryContent } from "@/components/layout/DirectoryContent.tsx";
 import { isEventUpcoming } from "@/lib/discovery.ts";
 import PriceWidget from "@/components/ui/PriceWidget.js";
+import ArtistCardHero from "@/components/ui/ArtistCardHero.js";
 import ArtistVibeCard from "@/components/ui/ArtistVibeCard.js";
 import ArtistLinks from "@/components/ui/ArtistLinks.js";
 import NewBadge from "@/components/ui/NewBadge.js";
@@ -209,93 +210,84 @@ const LocalArtistsPage: React.FC<{ embedded?: boolean }> = ({
             <div
               key={artist.id}
               onClick={() => handleArtistClick(artist.name)}
-              className="artist-card bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 hover:shadow-md transition-shadow cursor-pointer"
+              className="artist-card bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
             >
-              <div className="flex items-center gap-3 mb-2.5">
-                <div className="h-10 w-10 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 rounded-full flex items-center justify-center shrink-0">
-                  <svg
-                    className="h-5 w-5 text-purple-600 dark:text-purple-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                    {artist.name}
-                  </h3>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {artist.upcomingEvents.length}{" "}
-                    {artist.upcomingEvents.length === 1 ? "show" : "shows"} ·{" "}
-                    {venueCount} {venueCount === 1 ? "venue" : "venues"}
+              <div className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                      {artist.name}
+                    </h3>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {artist.upcomingEvents.length}{" "}
+                      {artist.upcomingEvents.length === 1 ? "show" : "shows"} ·{" "}
+                      {venueCount} {venueCount === 1 ? "venue" : "venues"}
+                    </div>
                   </div>
-                </div>
-                <Link
-                  to={`/artists/${artist.slug}`}
-                  onClick={(e) => e.stopPropagation()}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 shrink-0"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              </div>
-              <ArtistVibeCard vibe={artist.vibe} compact />
-              <ArtistLinks links={artist.links} artistName={artist.name} />
-              <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
-                {artist.upcomingEvents.map((event) => (
                   <Link
-                    key={event.id}
-                    to={`/events/${event.slug}`}
+                    to={`/artists/${artist.slug}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 shrink-0"
                   >
-                    <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
-                      {new Date(event.dateEpochMs).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </span>
-                    <span className="text-xs text-gray-700 dark:text-gray-200 truncate flex-1 min-w-0">
-                      <span className="font-medium">{event.venueName}</span>
-                      {event.headlinerName &&
-                        event.headlinerName !== artist.name && (
-                          <span className="text-gray-400 dark:text-gray-500">
-                            {" "}
-                            w/ {event.headlinerName}
-                          </span>
-                        )}
-                    </span>
-                    <PriceWidget
-                      isFree={event.isFree}
-                      isSoldOut={event.isSoldOut}
-                      priceMin={event.priceMin}
-                      priceMax={event.priceMax}
-                      className="text-xs shrink-0"
-                    />
-                    <NewBadge
-                      createdAtEpochMs={event.createdAtEpochMs}
-                      addedDateProvenance={event.addedDateProvenance}
-                    />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
                   </Link>
-                ))}
+                </div>
+                <ArtistCardHero artist={artist} />
+                <ArtistVibeCard vibe={artist.vibe} compact />
+                <ArtistLinks links={artist.links} artistName={artist.name} />
+                <div className="border-t border-gray-100 dark:border-gray-700 pt-1 space-y-0">
+                  {artist.upcomingEvents.map((event) => (
+                    <Link
+                      key={event.id}
+                      to={`/events/${event.slug}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center gap-1.5 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <span className="text-xs text-gray-400 dark:text-gray-500 w-14 shrink-0 tabular-nums">
+                        {new Date(event.dateEpochMs).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}
+                      </span>
+                      <span className="text-xs text-gray-700 dark:text-gray-200 truncate flex-1 min-w-0">
+                        <span className="font-medium">{event.venueName}</span>
+                        {event.headlinerName &&
+                          event.headlinerName !== artist.name && (
+                            <span className="text-gray-400 dark:text-gray-500">
+                              {" "}
+                              w/ {event.headlinerName}
+                            </span>
+                          )}
+                      </span>
+                      <PriceWidget
+                        isFree={event.isFree}
+                        isSoldOut={event.isSoldOut}
+                        priceMin={event.priceMin}
+                        priceMax={event.priceMax}
+                        className="text-xs shrink-0"
+                      />
+                      <NewBadge
+                        createdAtEpochMs={event.createdAtEpochMs}
+                        addedDateProvenance={event.addedDateProvenance}
+                      />
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           );

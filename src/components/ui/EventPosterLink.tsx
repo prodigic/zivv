@@ -3,23 +3,33 @@ import type { EventPoster } from "@/types/events.js";
 import { isEventPoster } from "@/utils/event-poster.js";
 
 const frameClasses =
-  "relative flex h-11 w-9 shrink-0 items-center justify-center overflow-hidden rounded border border-gray-200 bg-gray-100 text-gray-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-400";
+  "relative flex shrink-0 items-center justify-center overflow-hidden rounded border border-gray-200 bg-gray-100 text-gray-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-400";
 
 /** A show's official artwork, separate from the internal event navigation link. */
 export default function EventPosterLink({
   poster,
   showName,
   reserve = false,
+  size = "compact",
 }: {
   poster?: EventPoster;
   showName: string;
   /** Keep the artwork slot aligned when neighboring rows have artwork. */
   reserve?: boolean;
+  /** Larger artwork for the roomier venue show cards. */
+  size?: "compact" | "large";
 }): React.JSX.Element | null {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const frame = `${frameClasses} ${size === "large" ? "h-28 w-20" : "h-11 w-9"}`;
   if (!isEventPoster(poster)) {
     if (!reserve) return null;
-    return <span aria-hidden="true" className={frameClasses} />;
+    return (
+      <span aria-hidden="true" className={frame}>
+        {size === "large" ? (
+          <span className="px-2 text-center text-xs">No artwork</span>
+        ) : null}
+      </span>
+    );
   }
   const label = poster.kind === "poster" ? "poster" : "artwork";
   return (
@@ -31,7 +41,7 @@ export default function EventPosterLink({
       title={`Official show ${label} ↗`}
       onClick={(event) => event.stopPropagation()}
       className={
-        frameClasses +
+        frame +
         " focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-500"
       }
     >
@@ -39,8 +49,8 @@ export default function EventPosterLink({
         <img
           src={poster.imageUrl}
           alt=""
-          width={36}
-          height={44}
+          width={size === "large" ? 80 : 36}
+          height={size === "large" ? 112 : 44}
           loading="lazy"
           decoding="async"
           referrerPolicy="no-referrer"
@@ -48,7 +58,9 @@ export default function EventPosterLink({
           onError={() => setFailedUrl(poster.imageUrl)}
         />
       ) : (
-        <span className="text-[9px]">Show</span>
+        <span className="px-1 text-center text-[10px]">
+          {size === "large" ? "Artwork unavailable" : "Show"}
+        </span>
       )}
       <span
         aria-hidden="true"

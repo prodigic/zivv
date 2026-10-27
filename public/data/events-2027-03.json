@@ -1286,7 +1286,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1792803818000,
       "venueId": 31041890,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNjhhYTRmNjItYTAzOS00N2RlLTljZDctM2NlMjYxZTM5OTBiIiwiZWRpdHMiOnt9fQ==",
+        "eventUrl": "https://wl.eventim.us/event/bess-atwell/707844?afflky=POPSCENEPresents",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-24"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -2047,7 +2053,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1792803818000,
       "venueId": 31041890,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiNDU1ODE2NTAtNzNkNi00ZjFjLWI5NzQtYWI2OWYzOTE0ZmI0IiwiZWRpdHMiOnt9fQ==",
+        "eventUrl": "https://wl.eventim.us/event/fenne-lily/708757?afflky=RickshawStop",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-24"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -2500,7 +2512,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1792803818000,
       "venueId": 31041890,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYWVhNjZlZWQtODI3Ny00ZjlkLTg2ZjctM2U5YjhjYTJkN2NjIiwiZWRpdHMiOnt9fQ==",
+        "eventUrl": "https://wl.eventim.us/event/dj-suzy/708799?afflky=POPSCENEPresents",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-24"
+      }
     }
   ]
 }

@@ -105,7 +105,7 @@ it("keeps official poster links separate from internal show navigation", () => {
   ).toBeVisible();
 });
 
-it("reserves identical poster and detail columns for every row in a venue with posters", () => {
+it("keeps artwork aligned and show details available for every row in a venue with posters", () => {
   const first = [...useAppStore.getState().venues.values()][0];
   first.upcomingEvents[0].poster = {
     imageUrl: "https://venue.example/flyer.jpg",
@@ -138,12 +138,8 @@ it("reserves identical poster and detail columns for every row in a venue with p
   for (const row of rows ?? []) {
     expect(row).toHaveClass("grid");
     const eventLink = row.querySelector("a[href^='/events/']");
-    expect(eventLink).toHaveClass(
-      "grid",
-      "grid-cols-[3.5rem_minmax(0,1fr)_auto_0.875rem]"
-    );
-    expect(eventLink?.querySelector("span.w-14")).toBeTruthy();
-    expect(eventLink?.querySelector("span.truncate")).toBeTruthy();
+    expect(eventLink).toHaveTextContent(/Oct 2/);
+    expect(eventLink).toHaveTextContent(/Band/);
   }
   expect(rows?.[0].querySelector('[title="$20"]')).toBeTruthy();
   expect(rows?.[1].querySelector('[title="Free"]')).toBeTruthy();
@@ -201,7 +197,7 @@ it("reserves poster slots for posterless rows in mixed-artwork venues only", () 
   );
   expect(posterlessRow?.firstElementChild).toMatchObject({
     tagName: "SPAN",
-    className: expect.stringContaining("h-11 w-9"),
+    className: expect.stringContaining("h-28 w-20"),
   });
   expect(posterlessRow?.firstElementChild).toHaveAttribute(
     "aria-hidden",

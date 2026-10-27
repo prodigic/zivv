@@ -408,7 +408,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790381132084,
       "venueId": 31041890,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiYzQzMTgzNTItYmJjOS00MjUwLTgxMjEtMWZjYTg3MzRkNWFhIiwiZWRpdHMiOnt9fQ==",
+        "eventUrl": "https://wl.eventim.us/event/valencia-grace/697858?afflky=RickshawStop",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-24"
+      }
     },
     {
       "addedDateProvenance": "legacy-batch",
@@ -1335,7 +1341,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1792803818000,
       "venueId": 31041890,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZDFhOTI4YWItYmQ5NS00ZGFmLThkMDAtYWE1MGE1MDYxMjgzIiwiZWRpdHMiOnt9fQ==",
+        "eventUrl": "https://wl.eventim.us/event/the-f16s/708497?afflky=POPSCENEPresents",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-24"
+      }
     },
     {
       "addedDateProvenance": "observed",
@@ -1482,7 +1494,13 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790381132084,
       "venueId": 31041890,
-      "venueType": "club"
+      "venueType": "club",
+      "poster": {
+        "imageUrl": "https://prod-images.seetickets.us/eyJidWNrZXQiOiJwcm9kLXNpaC5zZWV0aWNrZXRzdXNhLnVzIiwia2V5IjoiZWFiN2Q5NWItZDJhNy00MmMxLTkzM2UtZGExNWFjYmM2NTVjIiwiZWRpdHMiOnt9fQ==",
+        "eventUrl": "https://wl.eventim.us/event/paloma-morphy/689810?afflky=POPSCENEPresents",
+        "kind": "event-artwork",
+        "checkedOn": "2026-10-24"
+      }
     }
   ]
 }
