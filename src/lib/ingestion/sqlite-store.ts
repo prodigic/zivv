@@ -8,6 +8,21 @@ import type { IngestionLedger } from "../../types/ingestion.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
 import { assertReadOnlySqliteFiles } from "./readonly-sqlite-files.js";
 
+const storeSchema = `PRAGMA journal_mode=WAL;
+        CREATE TABLE IF NOT EXISTS metadata (id INTEGER PRIMARY KEY CHECK(id=1), generation INTEGER NOT NULL, digest TEXT NOT NULL, payload TEXT NOT NULL) STRICT;
+        CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, position INTEGER NOT NULL, payload TEXT NOT NULL) STRICT;
+        CREATE TABLE IF NOT EXISTS venues (id INTEGER PRIMARY KEY, position INTEGER NOT NULL, payload TEXT NOT NULL) STRICT;
+        CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, position INTEGER NOT NULL, date TEXT NOT NULL, venue_id INTEGER NOT NULL REFERENCES venues(id) DEFERRABLE INITIALLY DEFERRED, headliner_id INTEGER NOT NULL REFERENCES artists(id) DEFERRABLE INITIALLY DEFERRED, payload TEXT NOT NULL) STRICT;
+        CREATE INDEX IF NOT EXISTS event_date ON events(date);
+        CREATE INDEX IF NOT EXISTS event_match ON events(venue_id,headliner_id,date);
+        CREATE TABLE IF NOT EXISTS event_artists (event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE, position INTEGER NOT NULL, artist_id INTEGER NOT NULL REFERENCES artists(id) DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY(event_id,position)) STRICT;
+        CREATE TABLE IF NOT EXISTS sources (event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE, position INTEGER NOT NULL, kind TEXT NOT NULL, source_id TEXT NOT NULL, external_id TEXT, url TEXT, session TEXT, PRIMARY KEY(event_id,position)) STRICT;
+        CREATE INDEX IF NOT EXISTS source_identity ON sources(kind,source_id,external_id,session);
+        CREATE INDEX IF NOT EXISTS source_url ON sources(kind,source_id,url,session);
+        CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, position INTEGER NOT NULL, payload TEXT NOT NULL) STRICT;
+        CREATE TABLE IF NOT EXISTS redirects (position INTEGER PRIMARY KEY, payload TEXT NOT NULL) STRICT;
+        PRAGMA user_version=1;`;
+
 interface StoreSession {
   path: string;
   db: DatabaseSync;
@@ -78,20 +93,7 @@ export function openStore(path: string, create = false): DatabaseSync {
     db.exec("PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL;");
     if (create && schema === 0) {
       assertOperatorInstallationWritable(dirname(resolve(path)));
-      db.exec(`PRAGMA journal_mode=WAL;
-        CREATE TABLE IF NOT EXISTS metadata (id INTEGER PRIMARY KEY CHECK(id=1), generation INTEGER NOT NULL, digest TEXT NOT NULL, payload TEXT NOT NULL) STRICT;
-        CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, position INTEGER NOT NULL, payload TEXT NOT NULL) STRICT;
-        CREATE TABLE IF NOT EXISTS venues (id INTEGER PRIMARY KEY, position INTEGER NOT NULL, payload TEXT NOT NULL) STRICT;
-        CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, position INTEGER NOT NULL, date TEXT NOT NULL, venue_id INTEGER NOT NULL REFERENCES venues(id) DEFERRABLE INITIALLY DEFERRED, headliner_id INTEGER NOT NULL REFERENCES artists(id) DEFERRABLE INITIALLY DEFERRED, payload TEXT NOT NULL) STRICT;
-        CREATE INDEX IF NOT EXISTS event_date ON events(date);
-        CREATE INDEX IF NOT EXISTS event_match ON events(venue_id,headliner_id,date);
-        CREATE TABLE IF NOT EXISTS event_artists (event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE, position INTEGER NOT NULL, artist_id INTEGER NOT NULL REFERENCES artists(id) DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY(event_id,position)) STRICT;
-        CREATE TABLE IF NOT EXISTS sources (event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE, position INTEGER NOT NULL, kind TEXT NOT NULL, source_id TEXT NOT NULL, external_id TEXT, url TEXT, session TEXT, PRIMARY KEY(event_id,position)) STRICT;
-        CREATE INDEX IF NOT EXISTS source_identity ON sources(kind,source_id,external_id,session);
-        CREATE INDEX IF NOT EXISTS source_url ON sources(kind,source_id,url,session);
-        CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, position INTEGER NOT NULL, payload TEXT NOT NULL) STRICT;
-        CREATE TABLE IF NOT EXISTS redirects (position INTEGER PRIMARY KEY, payload TEXT NOT NULL) STRICT;
-        PRAGMA user_version=1;`);
+      db.exec(storeSchema);
     }
     if (Number(db.prepare("PRAGMA user_version").get()?.user_version) !== 1)
       throw new Error("Unsupported shared ledger database schema.");
@@ -124,19 +126,33 @@ async function beginWrite(db: DatabaseSync): Promise<void> {
 }
 
 /** Serialize all import, repair and export operations against the shared database. */
-export async function withStoreTransaction<T>(
+async function storeTransaction<T>(
   path: string,
   work: () => Promise<T>,
-  create = false
+  create: boolean,
+  expected?: { generation: number; canonicalLedger: string }
 ): Promise<T> {
   const directory = dirname(resolve(path));
   assertOperatorInstallationWritable(directory);
   const active = sessions.getStore();
+  if (expected && active)
+    throw new Error("RECOVERY_REQUIRES_OWN_CATALOG_TRANSACTION");
   if (active?.path === resolve(path)) return work();
+  const originalFiles = expected
+    ? assertReadOnlySqliteFiles(resolve(path))
+    : undefined;
   const db = openStore(path, create);
   try {
     await beginWrite(db);
     assertOperatorInstallationWritable(directory);
+    if (expected) {
+      assertReadOnlySqliteFiles(resolve(path), {
+        main: originalFiles!.main,
+        wal: null,
+        shm: null,
+      });
+      assertCanonicalCatalog(db, path, expected);
+    }
     const result = await sessions.run({ path: resolve(path), db }, work);
     assertOperatorInstallationWritable(directory);
     db.exec("COMMIT");
@@ -147,6 +163,188 @@ export async function withStoreTransaction<T>(
   } finally {
     db.close();
   }
+}
+
+/** Ordinary transactions retain their existing borrowing semantics. */
+export function withStoreTransaction<T>(
+  path: string,
+  work: () => Promise<T>,
+  create = false
+): Promise<T> {
+  return storeTransaction(path, work, create);
+}
+export interface CanonicalStoreBaseline {
+  generation: number;
+  ledger: IngestionLedger;
+}
+/** Own a fresh writer transaction and prove the complete admitted catalog before
+ * work. This is a precondition, not a permission or quarantine bypass. Expected
+ * state must be supplied by authenticated admission; no mutable reference is
+ * reread after waiting for SQLite's lock. Enclosing transactions are refused. */
+export async function withCanonicalStoreTransaction<T>(
+  path: string,
+  expected: CanonicalStoreBaseline,
+  work: () => Promise<T>
+): Promise<T> {
+  if (
+    !expected ||
+    typeof expected !== "object" ||
+    ![Object.prototype, null].includes(
+      Object.getPrototypeOf(expected) as object | null
+    ) ||
+    Reflect.ownKeys(expected).length !== 2 ||
+    Reflect.ownKeys(expected).some(
+      (name) =>
+        typeof name !== "string" ||
+        !["generation", "ledger"].includes(name) ||
+        !Object.hasOwn(
+          Object.getOwnPropertyDescriptor(expected, name) ?? {},
+          "value"
+        )
+    )
+  )
+    throw Error("INVALID_CANONICAL_STORE_BASELINE");
+  const generation = expected.generation;
+  if (
+    !Number.isSafeInteger(generation) ||
+    generation < 1 ||
+    !expected.ledger ||
+    typeof expected.ledger !== "object" ||
+    Array.isArray(expected.ledger) ||
+    typeof work !== "function"
+  )
+    throw Error("INVALID_CANONICAL_STORE_BASELINE");
+  const canonicalLedger = canonicalJson(expected.ledger);
+  return storeTransaction(resolve(path), work, false, {
+    generation,
+    canonicalLedger,
+  });
+}
+let canonicalSchema: string | undefined;
+function schemaRows(db: DatabaseSync) {
+  return db
+    .prepare(
+      "SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name"
+    )
+    .all();
+}
+function assertCanonicalCatalog(
+  db: DatabaseSync,
+  path: string,
+  expected: { generation: number; canonicalLedger: string }
+): void {
+  const fail = (): never => {
+    throw Error("CANONICAL_STORE_BASELINE_CHANGED");
+  };
+  if (!db.isTransaction) fail();
+  if (canonicalSchema === undefined) {
+    const reference = new DatabaseSync(":memory:");
+    try {
+      reference.exec(storeSchema);
+      canonicalSchema = canonicalJson(schemaRows(reference));
+    } finally {
+      reference.close();
+    }
+  }
+  if (canonicalJson(schemaRows(db)) !== canonicalSchema) fail();
+  const current = db
+    .prepare("SELECT generation,digest,payload FROM metadata WHERE id=1")
+    .get();
+  if (
+    !current ||
+    typeof current.generation !== "number" ||
+    !Number.isSafeInteger(current.generation) ||
+    current.generation !== expected.generation
+  )
+    fail();
+  const ledger = readFrom(db, path);
+  if (canonicalJson(ledger) !== expected.canonicalLedger) fail();
+  const { events, artists, venues, runs, redirects, ...header } = ledger;
+  if (
+    current!.digest !== ledgerDigest(ledger) ||
+    current!.payload !== canonicalJson(header)
+  )
+    fail();
+  const same = (sql: string, rows: unknown[]) => {
+    if (canonicalJson(db.prepare(sql).all()) !== canonicalJson(rows)) fail();
+  };
+  same(
+    "SELECT id,position,payload FROM artists ORDER BY position,id",
+    artists.map((value, position) => ({
+      id: value.id,
+      position,
+      payload: canonicalJson(value),
+    }))
+  );
+  same(
+    "SELECT id,position,payload FROM venues ORDER BY position,id",
+    venues.map((value, position) => ({
+      id: value.id,
+      position,
+      payload: canonicalJson(value),
+    }))
+  );
+  same(
+    "SELECT id,position,payload FROM runs ORDER BY position,id",
+    runs.map((value, position) => ({
+      id: value.runId,
+      position,
+      payload: canonicalJson(value),
+    }))
+  );
+  same(
+    "SELECT position,payload FROM redirects ORDER BY position",
+    redirects.map((value, position) => ({
+      position,
+      payload: canonicalJson(value),
+    }))
+  );
+  same(
+    "SELECT id,position,date,venue_id,headliner_id,payload FROM events ORDER BY position,id",
+    events.map((value, position) => ({
+      id: value.id,
+      position,
+      date: value.date,
+      venue_id: value.venueId,
+      headliner_id: value.headlinerArtistId,
+      payload: canonicalJson(value),
+    }))
+  );
+  same(
+    "SELECT event_id,position,artist_id FROM event_artists ORDER BY event_id,position",
+    events
+      .flatMap((event) =>
+        event.artistIds.map((id, position) => ({
+          event_id: event.id,
+          position,
+          artist_id: id,
+        }))
+      )
+      .sort((a, b) => a.event_id - b.event_id || a.position - b.position)
+  );
+  same(
+    "SELECT event_id,position,kind,source_id,external_id,url,session FROM sources ORDER BY event_id,position",
+    events
+      .flatMap((event) =>
+        event.sources.map((source, position) => ({
+          event_id: event.id,
+          position,
+          kind: source.kind,
+          source_id: source.sourceId,
+          external_id: source.externalEventId ?? null,
+          url: source.canonicalUrl ?? null,
+          session: source.session ?? null,
+        }))
+      )
+      .sort((a, b) => a.event_id - b.event_id || a.position - b.position)
+  );
+  const integrity = db.prepare("PRAGMA integrity_check").all();
+  if (
+    integrity.length !== 1 ||
+    integrity[0]?.integrity_check !== "ok" ||
+    db.prepare("PRAGMA foreign_key_check").all().length
+  )
+    fail();
 }
 
 function readFrom(db: DatabaseSync, path: string): IngestionLedger {

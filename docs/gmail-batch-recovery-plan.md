@@ -537,3 +537,37 @@ and mutation-time observations remained unchanged across read-only checks; acces
 time is excluded because ordinary reads may update it. Worker/publication types,
 lint and formatting passed. Full process termination, hard-death and actual
 selected-load execution acceptance remain outstanding.
+
+## Owned canonical catalog transaction, October 28
+
+The selected-source writer must prove freshness inside its own SQLite writer
+transaction. `withCanonicalStoreTransaction` now takes a detached authenticated
+catalog/generation expectation, refuses any enclosing store transaction, acquires
+`BEGIN IMMEDIATE`, pins the database identity, and compares the current catalog
+before invoking work. Expected bytes are captured before waiting for the lock;
+they are never reread from a mutable caller object afterward. Linked main and
+sidecar files refuse before opening. Missing catalogs are not created.
+
+The comparison includes metadata generation/header/digest, all canonical payloads
+and positions, normalized event columns, artist links and source rows, exact
+schema objects, integrity and foreign-key checks. A payload digest by itself
+misses generation-only changes and changes to normalized relations or schema.
+Prepared first-load catalogs are initialized by `stageOperatorRecovery` using
+`writeSqliteLedger(..., true)`; their initial generation is one. Later load
+admissions must derive their generation from authenticated prior-load evidence,
+not assume one or silently rebase a signed baseline.
+
+The ordinary transaction entry keeps its existing borrowing behavior. This new
+entry is a precondition on an already authorized operation, not a private scope
+constructor, quarantine bypass or source-load permit. The selected-source
+executor still has to bind it to the installed admission and exact normal runner
+invocation. It is not yet wired into a selected-load writer.
+
+Focused SQL evidence: 13 canonical transaction cases plus eight existing read-only
+catalog cases passed in 1.37 seconds; 14 shared-store cases passed in 19 seconds.
+The cases cover actual lock wait followed by generation-only drift, hidden source/
+artist/event/schema changes with an unchanged payload reader result, immutable
+expectations, no transaction borrowing, rollback and linked/missing catalogs.
+Normal shared-store serialization, portable encrypted recovery and interrupted
+transaction recovery remain passing. Worker/publication types, lint and format
+are checked separately; no full selected-load acceptance is claimed here.
