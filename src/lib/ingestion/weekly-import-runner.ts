@@ -1,3 +1,4 @@
+import { weeklyRunRulesDigest } from "./weekly-run-context.js";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -218,16 +219,13 @@ export async function runWeeklyImport(input: {
     readFileSync(join(runtimeRoot, "package-lock.json"))
   );
   const configurationSha256 = importConfigurationDigest(root);
-  const rulesSha256 = sha256(
-    canonicalJson({
-      runner: "weekly-import-v1",
-      runtimeSha256,
-      packageLockSha256,
-      configurationSha256,
-      node: process.version,
-      icu: process.versions.icu ?? "",
-    })
-  );
+  const rulesSha256 = weeklyRunRulesDigest({
+    runtimeSha256,
+    packageLockSha256,
+    configurationSha256,
+    node: process.version,
+    icu: process.versions.icu ?? "",
+  });
   const journal = new WeeklyRunJournal(location.directory);
   let lease: ReturnType<WeeklyRunJournal["acquire"]> | undefined;
   let state: WeeklyRunState;

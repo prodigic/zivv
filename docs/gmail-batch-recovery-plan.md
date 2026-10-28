@@ -246,3 +246,47 @@ selected source-to-load execution; exact catalog/run/receipt/artifact delta;
 crash, lost-response and replay acceptance; preserved pre-cutoff freeze blocking.
 This checkpoint does not widen the run-only recovery entry or general quarantine
 access, and does not complete #110, #106/#78 or the full Friday delivery plan.
+
+## Selected-load baseline checkpoint, October 28
+
+`proveRecoveryGmailSelectedLoadBaseline` composes the exact ready-receipt proof
+with a complete validated canonical catalog and journal baseline. For the first
+selected load, the current catalog must equal the original checkpoint's full
+ledger and revision digest, including entity content, stable slugs and import
+history. Counts alone are insufficient. The proof binds the complete current
+journal, selection/obligations and observed runtime identity. It is detached
+evidence: it does not open SQLite, establish physical freshness or acquire a
+writer capability.
+
+`weekly-run-context.ts` now supplies the shared pure worker-inventory,
+configuration and rules digests used by the normal source builder, import review
+and weekly runner. Configuration includes the same fixed five policy files and
+explicit absence. Recovery independently derives the worker digest from all
+captured lib/types/utils file commitments, checks the captured lock and Node/ICU/
+executable identity, and derives configuration from authenticated captured files.
+Frozen pre-extraction byte fixtures verify the worker/configuration/rules hash
+algorithms remain compatible. New reviewed code still changes the worker hash as
+usual; this does not bypass retained-runtime identity checks.
+
+The proof constructs the source using the canonical plaintext hash and original
+receipt observation, then calls normal `createWeeklyRunState`. An existing exact
+run is reused only after source/revision validation and verification of its
+original acquisition artifact. No caller run ID or rules hash is accepted.
+All activation/capture/load flags remain false; physical validation remains
+required. The original checkpoint is not replaced by a post-capture baseline.
+
+The current first-load proof explicitly refuses nonempty prior selected-load
+evidence. Later loads still require a full load-family delta composer; this is
+unfinished scope, not a permanent first-load-only design or permission to drop
+prior evidence. The future closed admission must bind archive/preparation and
+physical identities, authenticate complete observed capture/load families, read
+canonical SQLite under serialization, and revalidate baseline/runtime/current
+bytes around every effect. Exact catalog/run/artifact delta and crash/lost-response/
+replay acceptance remain required before #110 or through-load recovery is complete.
+
+Focused coverage includes a normally reconciled nonempty catalog, same-count
+metadata/slug drift, runtime/worker/lock/Node/ICU drift, config drift, refusal of
+unproved prior loads, normal run identity, retained-run acquisition evidence and
+detached outputs. Ordinary runner controls cover normal four-stage loading,
+committed-catalog/journal-gap recovery without duplicates and changed-policy
+refusal. No live ledger, cutoff, merge, deployment or activation operation occurs.
