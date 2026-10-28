@@ -960,6 +960,84 @@ export function proveRecoveryGmailCaptureDelta(
 ): RecoveryGmailCaptureDeltaProof {
   return prove(input).proof;
 }
+/** Detached full-family projection for downstream selected-receipt proofs.
+ * The physical enumerator must still prove that this is the complete observed
+ * family and recheck runtime, paths and current bytes before any effect.
+ * An unfinished journal-first tail remains evidence, never a completed result.
+ */
+export function proveRecoveryGmailCaptureFamily(input: {
+  checkpoint: Checkpoint;
+  recoveryKey: Buffer;
+  completed: readonly RecoveryGmailCaptureCompletedEvidence[];
+  unfinishedAdmissions: readonly Buffer[];
+  current: Inventory;
+  ownProductionOwnership?: Ownership;
+}): {
+  activationAllowed: false;
+  captureAllowed: false;
+  loadAllowed: false;
+  physicalValidationRequired: true;
+  familySha256: string;
+  completedCount: number;
+  unfinished: RecoveryGmailCaptureDeltaProof | null;
+  projectedInventory: Inventory;
+} {
+  const base = rebuild(input.checkpoint, input.recoveryKey, input.completed);
+  if (
+    !Array.isArray(input.unfinishedAdmissions) ||
+    input.unfinishedAdmissions.length > 1
+  )
+    fail();
+  inventory(input.current);
+  let tail: RecoveryGmailCaptureDeltaProof | null = null;
+  if (input.unfinishedAdmissions.length) {
+    tail = proveRecoveryGmailCaptureDelta({
+      checkpoint: input.checkpoint,
+      recoveryKey: input.recoveryKey,
+      admission: input.unfinishedAdmissions[0]!,
+      priorCompleted: input.completed,
+      unfinishedAdmissions: input.unfinishedAdmissions,
+      current: input.current,
+      ...(input.ownProductionOwnership
+        ? { ownProductionOwnership: input.ownProductionOwnership }
+        : {}),
+    });
+  } else {
+    // Without an unfinished owner there is no authority to explain any fresh
+    // file, intake, run, artifact or ownership change beyond completed results.
+    if (input.ownProductionOwnership !== undefined) fail();
+    same(sorted([...input.current.files]), sorted([...base.files]));
+    same(sorted([...input.current.directories]), sorted([...base.directories]));
+    same(journal(input.current.journal), journal(base.journal));
+  }
+  return {
+    activationAllowed: false,
+    captureAllowed: false,
+    loadAllowed: false,
+    physicalValidationRequired: true,
+    familySha256: sha256(
+      canonicalJson({
+        domain: "zivv-recovery-gmail-capture-family/v1",
+        originalInventorySha256: originalDigest(input.checkpoint),
+        completed: commits(input.completed),
+        unfinished: input.unfinishedAdmissions.map((bytes) => sha256(bytes)),
+        currentProjectionSha256: projection(
+          { ...base, ...input.current },
+          input.checkpoint
+        ),
+        currentJournalSha256: journal(input.current.journal).digest,
+      })
+    ),
+    completedCount: input.completed.length,
+    unfinished: tail === null ? null : structuredClone(tail),
+    projectedInventory: structuredClone({
+      files: input.current.files,
+      directories: input.current.directories,
+      journal: input.current.journal,
+    }),
+  };
+}
+
 /** A result can be signed only after all selected canonical evidence is complete. */
 export function createRecoveryGmailCaptureResult(
   input: RecoveryGmailCaptureDeltaInput

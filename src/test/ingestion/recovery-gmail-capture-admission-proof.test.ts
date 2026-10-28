@@ -4,6 +4,7 @@ import {
   createRecoveryGmailCaptureAdmission,
   createRecoveryGmailCaptureResult,
   proveRecoveryGmailCaptureDelta,
+  proveRecoveryGmailCaptureFamily,
   type RecoveryGmailCaptureAdmissionInput,
   type RecoveryGmailCaptureDeltaInput,
 } from "../../lib/ingestion/recovery-gmail-capture-admission-proof.js";
@@ -457,5 +458,171 @@ describe("detached immutable Gmail capture admission and exact progress", () => 
       });
       expect(() => proveRecoveryGmailCaptureDelta(input(changed))).toThrow();
     }
+  });
+});
+
+describe("full capture-family projection for selected-receipt loading", () => {
+  function firstPair() {
+    return {
+      admission,
+      result: createRecoveryGmailCaptureResult(
+        input(fixture.currentAfterFirstCapture)
+      ),
+    };
+  }
+  function family(
+    current: Inventory = fixture.checkpoint,
+    completed: RecoveryGmailCaptureDeltaInput["priorCompleted"] = [],
+    unfinishedAdmissions: Buffer[] = []
+  ) {
+    return {
+      checkpoint: fixture.checkpoint,
+      recoveryKey: fixture.recoveryKey,
+      completed: completed!,
+      unfinishedAdmissions,
+      current,
+    };
+  }
+  it("accepts the exact original family without granting load authority", () => {
+    expect(proveRecoveryGmailCaptureFamily(family())).toMatchObject({
+      completedCount: 0,
+      unfinished: null,
+      captureAllowed: false,
+      loadAllowed: false,
+      activationAllowed: false,
+      physicalValidationRequired: true,
+      projectedInventory: {
+        files: fixture.checkpoint.files,
+        directories: fixture.checkpoint.directories,
+        journal: fixture.checkpoint.journal,
+      },
+    });
+  });
+  it("projects a completed prefix and all original batches into detached output", () => {
+    const proof = proveRecoveryGmailCaptureFamily(
+      family(fixture.currentAfterFirstCapture, [firstPair()])
+    );
+    expect(proof.completedCount).toBe(1);
+    expect(proof.unfinished).toBeNull();
+    expect(proof.projectedInventory.files).toEqual(
+      fixture.currentAfterFirstCapture.files
+    );
+    const batches = (files: Inventory["files"]) =>
+      files.filter((file) =>
+        file.path.startsWith("email-acquisition/batches/")
+      );
+    expect(batches(proof.projectedInventory.files)).toEqual(
+      batches(fixture.checkpoint.files)
+    );
+    const expected = structuredClone(fixture.currentAfterFirstCapture);
+    proof.projectedInventory.files.length = 0;
+    expect(fixture.currentAfterFirstCapture).toEqual(expected);
+  });
+  it("retains an authenticated journal-first unfinished tail without calling it completed", () => {
+    const proof = proveRecoveryGmailCaptureFamily({
+      ...family(fixture.sourceJournalOnly, [], [admission]),
+      ownProductionOwnership: state(fixture.sourceJournalOnly).ownership.find(
+        (r) => r.scope === production
+      )!,
+    });
+    expect(proof.completedCount).toBe(0);
+    expect(proof.unfinished).toMatchObject({ status: "capture-partial" });
+    expect(proof.projectedInventory.journal).toBe(
+      fixture.sourceJournalOnly.journal
+    );
+  });
+  it("rejects an omitted completed pair or unfinished admission instead of adopting a new baseline", () => {
+    expect(() =>
+      proveRecoveryGmailCaptureFamily(family(fixture.currentAfterFirstCapture))
+    ).toThrow();
+    expect(() =>
+      proveRecoveryGmailCaptureFamily(family(fixture.sourceJournalOnly))
+    ).toThrow();
+    expect(() =>
+      proveRecoveryGmailCaptureFamily(
+        family(fixture.currentAfterFirstCapture, [firstPair()], [admission])
+      )
+    ).toThrow();
+  });
+  it("validates every ordered predecessor and refuses corrupt, duplicate or reversed pairs", () => {
+    const first = firstPair();
+    const secondAdmission = createRecoveryGmailCaptureAdmission({
+      ...admissionInput,
+      batchId: fixture.batchIds[1],
+      correctionOfByMessageId: undefined,
+      admittedAtEpochMs: fixture.secondAdmittedAtEpochMs,
+      priorCompleted: [first],
+    });
+    const second = {
+      admission: secondAdmission,
+      result: createRecoveryGmailCaptureResult(
+        input(fixture.currentAfterCapture, secondAdmission, [first])
+      ),
+    };
+    const args = family(fixture.currentAfterCapture, [first, second]);
+    const proof = proveRecoveryGmailCaptureFamily(args);
+    expect(Object.keys(proof.projectedInventory).sort()).toEqual([
+      "directories",
+      "files",
+      "journal",
+    ]);
+    const unfinished = proveRecoveryGmailCaptureFamily({
+      ...family(fixture.currentAfterCapture, [first], [secondAdmission]),
+      ownProductionOwnership: state(fixture.currentAfterCapture).ownership.find(
+        (row) => row.scope === production
+      )!,
+    });
+    expect(unfinished.completedCount).toBe(1);
+    expect(unfinished.unfinished?.status).toBe("capture-complete");
+    expect(unfinished.familySha256).not.toBe(proof.familySha256);
+    expect(proof.completedCount).toBe(2);
+    expect(proof.familySha256).toMatch(/^[a-f0-9]{64}$/);
+    expect(proof.familySha256).toBe(
+      proveRecoveryGmailCaptureFamily(args).familySha256
+    );
+    for (const pairs of [[second, first], [first, first], [second]])
+      expect(() =>
+        proveRecoveryGmailCaptureFamily({ ...args, completed: pairs })
+      ).toThrow();
+    const corrupt = Buffer.from(second.result);
+    corrupt[corrupt.length - 5] ^= 1;
+    expect(() =>
+      proveRecoveryGmailCaptureFamily({
+        ...args,
+        completed: [first, { ...second, result: corrupt }],
+      })
+    ).toThrow();
+  });
+  it("rejects unrelated journal and file changes after a valid completed prefix", () => {
+    const args = family(fixture.currentAfterFirstCapture, [firstPair()]);
+    expect(() =>
+      proveRecoveryGmailCaptureFamily({
+        ...args,
+        current: changedJournal(args.current, (j) => {
+          j.stageArtifacts = [];
+          j.runState = [];
+          j.intakeEvidence = [];
+        }),
+      })
+    ).toThrow();
+    const altered = structuredClone(args.current);
+    altered.files[0]!.sha256 = "f".repeat(64);
+    expect(() =>
+      proveRecoveryGmailCaptureFamily({ ...args, current: altered })
+    ).toThrow();
+    expect(() =>
+      proveRecoveryGmailCaptureFamily({
+        ...args,
+        unfinishedAdmissions: [admission, admission],
+      })
+    ).toThrow();
+    expect(() =>
+      proveRecoveryGmailCaptureFamily({
+        ...args,
+        ownProductionOwnership: state(args.current).ownership.find(
+          (r) => r.scope === production
+        )!,
+      })
+    ).toThrow();
   });
 });

@@ -166,3 +166,37 @@ The original checkout, operator directory and npm tree are deleted before captur
 The composed case passed in **190.57 seconds**. A first run correctly reached both captures but failed a test assumption equating signed intent time with source admission time. The corrected test preserves exact acquisition timestamps, bounds each new first observation by the real recovery/source window, verifies parent-before-child ordering and proves that interrupted/replayed observations never change. The failed isolated fixture was retained; no retained worker was patched in place.
 
 This is positive native composition evidence, not completion of #109/#106/#78. Remaining clock/corruption/crash/refusal/portability coverage and #110's distinct selected-ready-receipt load authority still require their own acceptance. No live retirement, ledger/cutoff mutation, scheduling activation or publication was performed.
+
+## Full capture-family projection checkpoint, October 28
+
+`proveRecoveryGmailCaptureFamily` reuses the capture admission proof's ordered
+completed-prefix reconstruction for downstream selected-receipt loading (#110).
+It authenticates every supplied completed admission/result pair against the
+original checkpoint and all predecessors, then validates either the exact
+completed inventory or one authenticated unfinished tail using the normal delta
+proof. Journal-first partial evidence and capture-complete evidence without a
+signed result remain distinct from completed admission/result pairs.
+
+The returned domain-separated family commitment binds the original inventory,
+ordered pair hashes, unfinished admission hash, current projection and complete
+current journal digest. The returned inventory is detached, contains only
+files/directories/journal, and does not reissue the changed tree as a new
+checkpoint or change the original checkpoint timestamp. Activation, capture and
+load flags remain false. A physical enumerator still must establish the complete
+observed family, match its commitment and independently revalidate runtime,
+physical identities and current bytes; this pure helper cannot establish that no
+family file was omitted from its input.
+
+Focused admission/selection validation passes 28 checks, including six new family
+cases: original-only, detached completed projection, journal-first tail,
+omitted/duplicate/reversed/corrupt family refusal, full two-pair composition and
+unrelated file/journal/ownership rejection. The composition case also accepts a
+completed prefix with a capture-complete but unsigned-result tail and binds its
+family differently. Compilation, publication TypeScript, lint and formatting are
+separate static checks; this checkpoint adds no native executor acceptance claim.
+
+This is a prerequisite for #110, not selected-receipt load completion. Exact
+ready-receipt/RAW/source/correction resolution, full catalog and rules baseline,
+durable closed admission, normal deterministic loading, exact catalog/run delta
+and crash/lost-response/replay acceptance remain required. No writer scope,
+quarantine exception, live operation, freeze or publication is introduced.
