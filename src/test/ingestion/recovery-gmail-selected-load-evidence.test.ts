@@ -80,6 +80,7 @@ function packet(baseline = fixture.baseline) {
   const host = binding(),
     admission = createRecoveryGmailSelectedLoadAdmission({
       baseline,
+      physicalSnapshotSha256: "7".repeat(64),
       binding: host,
       admittedAtEpochMs: Date.now() - 1_000,
       unfinishedAdmissions: [],
@@ -87,6 +88,7 @@ function packet(baseline = fixture.baseline) {
   const evidence = createRecoveryGmailSelectedLoadEvidence({
     baseline,
     binding: host,
+    physicalSnapshotSha256: "7".repeat(64),
     admission,
   });
   const input: RecoveryGmailSelectedLoadEvidenceInput = {
@@ -367,4 +369,25 @@ it("references a completed predecessor and stores only the own tail rows across 
   const corrupt = Buffer.from(first.result);
   corrupt[corrupt.length - 1] ^= 1;
   reject({ ...value.input, completed: [{ ...first, result: corrupt }] });
+});
+
+it("retains the original physical commitment and rejects a separately re-signed substitution", () => {
+  const value = packet();
+  const restored = restoreRecoveryGmailSelectedLoadEvidence(value.input);
+  expect(restored.physicalSnapshotSha256).toBe("7".repeat(64));
+  expect(restored.physicalValidationRequired).toBe(true);
+  for (const replacement of ["8".repeat(64), "", null]) {
+    reject({
+      ...value.input,
+      manifest: forged(value.input, (manifest) => {
+        manifest.physicalSnapshotSha256 = replacement;
+      }),
+    });
+  }
+  reject({
+    ...value.input,
+    manifest: forged(value.input, (manifest) => {
+      delete manifest.physicalSnapshotSha256;
+    }),
+  });
 });

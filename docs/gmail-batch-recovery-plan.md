@@ -426,3 +426,22 @@ the original admitted baseline. Stage repair/adoption, bounded source-to-load
 scope, native crash/lost-response/replay and later-load family composition remain
 required for #110 and through-load recovery. No activation or full-goal completion
 is established by successful inspection.
+
+## Original physical inventory commitment, October 28
+
+The selected-load signed intent now requires the exact original physical
+inventory SHA-256 supplied by the physical adapter. The retained baseline manifest
+binds the same commitment to the embedded signed intent. Changed, absent,
+noncanonical or accessor-supplied commitments refuse admission; an unfinished
+intent cannot be retried against a newly observed physical tree. Re-signing only
+the baseline manifest with a different physical commitment also refuses because
+its embedded intent must authenticate against that same value.
+
+This extends the unreleased version-one development format: earlier development
+intent/evidence bytes without this required field refuse rather than receiving a
+default. The pure codec does not establish that a caller-provided hash is a real
+observation. The closed coordinator must obtain it directly from the verified
+host inventory, install evidence before intent/key/writer effects, and validate
+present physical state plus the exact allowed load delta. Restoring original
+evidence returns its original commitment and still requires physical validation;
+it never claims the current tree equals the original after load effects.

@@ -24,6 +24,7 @@ beforeAll(async () => {
   fixture = await createRecoveryGmailSelectedLoadFixture();
   const root = dirname(fixture.baseline.checkpoint.originalOperatorDirectory);
   context = {
+    physicalSnapshotSha256: "7".repeat(64),
     baseline: fixture.baseline,
     binding: {
       capsuleSha256: "1".repeat(64),
@@ -297,5 +298,52 @@ it("preserves closed host validation and refuses accessors without calling them"
   expect(() =>
     validateRecoveryPreparedHostBinding(altered, context.baseline.recoveryKey)
   ).toThrow();
+  expect(getter).not.toHaveBeenCalled();
+});
+
+it("binds original physical membership and refuses changed or absent retry commitments", () => {
+  expect(auth().physicalSnapshotSha256).toBe(context.physicalSnapshotSha256);
+  reject(admission, { ...context, physicalSnapshotSha256: "8".repeat(64) });
+  expect(() =>
+    createRecoveryGmailSelectedLoadAdmission({
+      ...context,
+      physicalSnapshotSha256: "8".repeat(64),
+      admittedAtEpochMs,
+      unfinishedAdmissions: [admission],
+    })
+  ).toThrow("INVALID_RECOVERY_GMAIL_SELECTED_LOAD_ADMISSION");
+  reject(
+    resign((value) => {
+      value.physicalSnapshotSha256 = "8".repeat(64);
+    })
+  );
+  for (const physicalSnapshotSha256 of ["", "a".repeat(63), "A".repeat(64)]) {
+    expect(() =>
+      createRecoveryGmailSelectedLoadAdmission({
+        ...context,
+        physicalSnapshotSha256,
+        admittedAtEpochMs,
+        unfinishedAdmissions: [],
+      })
+    ).toThrow("INVALID_RECOVERY_GMAIL_SELECTED_LOAD_ADMISSION");
+  }
+  const missing = { ...context };
+  Reflect.deleteProperty(missing, "physicalSnapshotSha256");
+  expect(() =>
+    createRecoveryGmailSelectedLoadAdmission({
+      ...missing,
+      admittedAtEpochMs,
+      unfinishedAdmissions: [],
+    })
+  ).toThrow("INVALID_RECOVERY_GMAIL_SELECTED_LOAD_ADMISSION");
+  const getter = vi.fn(() => context.physicalSnapshotSha256);
+  const accessor = Object.defineProperty(
+    { ...context, admittedAtEpochMs, unfinishedAdmissions: [] },
+    "physicalSnapshotSha256",
+    { enumerable: true, get: getter }
+  );
+  expect(() => createRecoveryGmailSelectedLoadAdmission(accessor)).toThrow(
+    "INVALID_RECOVERY_GMAIL_SELECTED_LOAD_ADMISSION"
+  );
   expect(getter).not.toHaveBeenCalled();
 });
