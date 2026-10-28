@@ -122,6 +122,23 @@ function inventory(
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin";
   function captureAliasTarget(path: string): string | undefined {
     if (path === "operator/" + workingKey) return path;
+    const load =
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(baseline\.json|admission\.json|chunks\/[a-f0-9]{64}\.bin)$/.exec(
+        path
+      );
+    if (load) return path;
+    const loadStage =
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)stages\/(baseline|admission|[a-f0-9]{64})\/(baseline\.json|admission\.json|[a-f0-9]{64}\.bin)(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+        path
+      );
+    if (loadStage) {
+      if (loadStage[2] === "baseline" && loadStage[3] === "baseline.json")
+        return loadStage[1] + "baseline.json";
+      if (loadStage[2] === "admission" && loadStage[3] === "admission.json")
+        return loadStage[1] + "admission.json";
+      if (loadStage[3] === loadStage[2] + ".bin")
+        return loadStage[1] + "chunks/" + loadStage[3];
+    }
     const metadata =
       /^recovery-gmail-capture\/([a-f0-9]{64})\/(admission|result)\.json$/.exec(
         path
@@ -394,6 +411,11 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
         undefined,
         true
       );
+    },
+    /** Closed load installer separately authenticates the fixed namespace. */
+    inventoryGmailLoadInstallation: () => {
+      assertReceipt();
+      return inventory(root, undefined, undefined, true);
     },
     assertRuntime: () => {
       authenticate(input);
