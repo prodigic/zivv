@@ -948,6 +948,11 @@ function prove(input: RecoveryGmailCaptureDeltaInput) {
   return {
     proof,
     own: expected.own,
+    resolutionInventory: {
+      files: expected.complete.files,
+      directories: expected.complete.directories,
+      journal: input.current.journal,
+    },
     productionOwnership: actual.ownership.find(
       (row) => row.scope === production
     )!,
@@ -965,14 +970,16 @@ export function proveRecoveryGmailCaptureDelta(
  * family and recheck runtime, paths and current bytes before any effect.
  * An unfinished journal-first tail remains evidence, never a completed result.
  */
-export function proveRecoveryGmailCaptureFamily(input: {
+export interface RecoveryGmailCaptureFamilyInput {
   checkpoint: Checkpoint;
   recoveryKey: Buffer;
   completed: readonly RecoveryGmailCaptureCompletedEvidence[];
   unfinishedAdmissions: readonly Buffer[];
   current: Inventory;
   ownProductionOwnership?: Ownership;
-}): {
+}
+function projectCaptureFamily(input: RecoveryGmailCaptureFamilyInput): {
+  resolutionInventory: Inventory;
   activationAllowed: false;
   captureAllowed: false;
   loadAllowed: false;
@@ -990,8 +997,9 @@ export function proveRecoveryGmailCaptureFamily(input: {
     fail();
   inventory(input.current);
   let tail: RecoveryGmailCaptureDeltaProof | null = null;
+  let resolutionInventory: Inventory = base;
   if (input.unfinishedAdmissions.length) {
-    tail = proveRecoveryGmailCaptureDelta({
+    const validated = prove({
       checkpoint: input.checkpoint,
       recoveryKey: input.recoveryKey,
       admission: input.unfinishedAdmissions[0]!,
@@ -1002,6 +1010,8 @@ export function proveRecoveryGmailCaptureFamily(input: {
         ? { ownProductionOwnership: input.ownProductionOwnership }
         : {}),
     });
+    tail = validated.proof;
+    resolutionInventory = validated.resolutionInventory;
   } else {
     // Without an unfinished owner there is no authority to explain any fresh
     // file, intake, run, artifact or ownership change beyond completed results.
@@ -1011,6 +1021,7 @@ export function proveRecoveryGmailCaptureFamily(input: {
     same(journal(input.current.journal), journal(base.journal));
   }
   return {
+    resolutionInventory,
     activationAllowed: false,
     captureAllowed: false,
     loadAllowed: false,
@@ -1035,6 +1046,210 @@ export function proveRecoveryGmailCaptureFamily(input: {
       directories: input.current.directories,
       journal: input.current.journal,
     }),
+  };
+}
+
+/** Full observed-family inputs remain subject to independent physical enumeration. */
+export function proveRecoveryGmailCaptureFamily(
+  input: RecoveryGmailCaptureFamilyInput
+) {
+  const { resolutionInventory, ...proof } = projectCaptureFamily(input);
+  void resolutionInventory;
+  return proof;
+}
+
+export interface RecoveryGmailSelectedReceiptSelector {
+  batchId: string;
+  messageId: string;
+  rawSha256: string;
+  receiptId: string;
+}
+
+/** Resolve one ready canonical receipt from the authenticated entire capture
+ * family. Internal completion of journal-first evidence is only a validation
+ * view: selection requires every selected/ancestor canonical file to exist in
+ * the actual observed inventory. No source bytes or writer capability escape.
+ */
+export function proveRecoveryGmailSelectedReceipt(
+  input: RecoveryGmailCaptureFamilyInput & {
+    selector: RecoveryGmailSelectedReceiptSelector;
+  }
+) {
+  try {
+    return selectedReceipt(input);
+  } catch {
+    throw new Error("INVALID_RECOVERY_GMAIL_SELECTED_RECEIPT_PROOF");
+  }
+}
+function selectedReceipt(
+  input: RecoveryGmailCaptureFamilyInput & {
+    selector: RecoveryGmailSelectedReceiptSelector;
+  }
+) {
+  const keys = Reflect.ownKeys(input.selector);
+  if (keys.length !== 4 || keys.some((key) => typeof key !== "string")) fail();
+  const descriptors = Object.getOwnPropertyDescriptors(input.selector);
+  same(
+    Object.keys(descriptors).sort(),
+    ["batchId", "messageId", "rawSha256", "receiptId"].sort()
+  );
+  for (const descriptor of Object.values(descriptors))
+    if (!("value" in descriptor) || typeof descriptor.value !== "string")
+      fail();
+  const selected = { ...input.selector };
+  if (
+    !hashPattern.test(selected.batchId) ||
+    !hashPattern.test(selected.rawSha256) ||
+    !hashPattern.test(selected.receiptId) ||
+    !/^[a-f0-9]{1,128}$/.test(selected.messageId)
+  )
+    fail();
+  const family = projectCaptureFamily(input);
+  // This is a private validation horizon for authenticated later receipts,
+  // not a replacement checkpoint or a new source observation.
+  const resolved = proveRecoveryGmailBatchInventory({
+    checkpoint: {
+      ...input.checkpoint,
+      ...family.resolutionInventory,
+      createdAtEpochMs: Date.now(),
+    },
+    recoveryKey: input.recoveryKey,
+  });
+  const batch = resolved.batches.find(
+    (item) => item.batch.batchId === selected.batchId
+  );
+  const message = batch?.messages.find(
+    (item) => item.messageId === selected.messageId
+  );
+  const snapshot = batch?.batch.snapshots.find(
+    (item) => item.rawMessage.id === selected.messageId
+  );
+  if (
+    !batch ||
+    !message ||
+    message.status !== "captured" ||
+    !snapshot ||
+    message.receiptId !== selected.receiptId ||
+    message.disposition !== "ready" ||
+    sha256(Buffer.from(snapshot.rawMessage.raw, "base64url")) !==
+      selected.rawSha256
+  )
+    fail();
+  const view = new Map(
+    family.resolutionInventory.files.map((file) => [name(file), file])
+  );
+  const actual = new Map(input.current.files.map((file) => [name(file), file]));
+  const receipts = new Map(
+    resolved.receipts.map((receipt) => [receipt.receiptId, receipt])
+  );
+  const presence = new Map<string, boolean>();
+  function present(path: string): boolean {
+    const cached = presence.get(path);
+    if (cached !== undefined) return cached;
+    const file = view.get("operator/" + path);
+    const matches =
+      !!file &&
+      !!actual.get("operator/" + path) &&
+      canonicalJson(actual.get("operator/" + path)) === canonicalJson(file);
+    presence.set(path, matches);
+    return matches;
+  }
+  function canonicalFiles(
+    id: string,
+    lineage = new Set<string>(),
+    requireReady = true
+  ): string[] {
+    if (lineage.has(id) || lineage.size >= 100) fail();
+    lineage.add(id);
+    const receipt = receipts.get(id);
+    if (!receipt || (requireReady && receipt.disposition !== "ready")) fail();
+    const prefix = "email-intake/" + receipt.accountSha256 + "/bodies/" + id;
+    const receiptFile = view.get("operator/" + prefix + "/receipt.json");
+    if (!receiptFile || !receiptFile.bytes) fail();
+    const original = JSON.parse(
+      decode(receiptFile.bytes).toString("utf8")
+    ) as SteveEmailReceipt;
+    const primary =
+      "email-intake/" +
+      receipt.accountSha256 +
+      "/messages/" +
+      sha256(original.messageId);
+    const paths = [
+      prefix + "/source.txt",
+      prefix + "/receipt.json",
+      primary + "/message.eml",
+      primary + "/capture.json",
+    ];
+    if (view.has("operator/" + prefix + "/correction-approval.json"))
+      paths.push(prefix + "/correction-approval.json");
+    if (receipt.correctionOf)
+      paths.push(...canonicalFiles(receipt.correctionOf, lineage));
+    return paths;
+  }
+  function messagePaths(account: string, id: string): string[] {
+    const prefix = "email-intake/" + account + "/messages/" + sha256(id);
+    return [prefix + "/message.eml", prefix + "/capture.json"];
+  }
+  const paths = [
+    ...new Set([
+      ...canonicalFiles(selected.receiptId),
+      ...messagePaths(batch.batch.accountSha256, selected.messageId),
+    ]),
+  ].sort();
+  if (!paths.every(present)) fail();
+  const receipt = receipts.get(selected.receiptId)!;
+  const source = {
+    editionId: receipt.editionId,
+    deliveryId: receipt.deliveryId,
+    sourceSha256: receipt.sourceSha256,
+    importObservedAtEpochMs: receipt.firstObservedAtEpochMs,
+  };
+  const obligations = resolved.batches.flatMap((item) =>
+    item.messages.map((member) => {
+      let status: "capture-pending" | "review-required" | "ready" =
+        "capture-pending";
+      if (
+        member.status === "captured" &&
+        [
+          ...canonicalFiles(member.receiptId, new Set<string>(), false),
+          ...messagePaths(item.batch.accountSha256, member.messageId),
+        ].every(present)
+      )
+        status = member.disposition;
+      return {
+        batchId: item.batch.batchId,
+        messageId: member.messageId,
+        status,
+        receiptId: member.status === "captured" ? member.receiptId : null,
+      };
+    })
+  );
+  const canonicalEvidence = paths.map((path) => ({
+    path,
+    sha256: view.get("operator/" + path)!.sha256,
+  }));
+  return {
+    activationAllowed: false as const,
+    captureAllowed: false as const,
+    loadAllowed: false as const,
+    physicalValidationRequired: true as const,
+    familySha256: family.familySha256,
+    selector: selected,
+    source,
+    receipt: structuredClone(receipt),
+    canonicalEvidence,
+    obligations,
+    selectionSha256: sha256(
+      canonicalJson({
+        domain: "zivv-recovery-gmail-selected-receipt/v1",
+        familySha256: family.familySha256,
+        selector: selected,
+        source,
+        receipt,
+        canonicalEvidence,
+        obligations,
+      })
+    ),
   };
 }
 

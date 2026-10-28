@@ -103,8 +103,10 @@ function message(
 
 function fetcherFor(
   item: ReturnType<typeof message>,
-  account: string
+  account: string,
+  duplicate?: ReturnType<typeof message>
 ): typeof fetch {
+  const messages = duplicate ? [item, duplicate] : [item];
   return async (request) => {
     const url = new URL(
       typeof request === "string"
@@ -119,11 +121,13 @@ function fetcherFor(
     if (url.pathname === `${root}/profile`)
       return Response.json({ emailAddress: account });
     if (url.pathname === `${root}/messages`)
-      return Response.json({ messages: [{ id: item.id }] });
-    if (url.pathname !== `${root}/messages/${item.id}`)
-      throw new Error("Unexpected synthetic Gmail message");
+      return Response.json({ messages: messages.map(({ id }) => ({ id })) });
+    const found = messages.find(
+      (value) => url.pathname === `${root}/messages/${value.id}`
+    );
+    if (!found) throw new Error("Unexpected synthetic Gmail message");
     return Response.json(
-      url.searchParams.get("format") === "FULL" ? item.full : item.raw
+      url.searchParams.get("format") === "FULL" ? found.full : found.raw
     );
   };
 }
@@ -188,6 +192,7 @@ export interface RecoveryGmailCaptureAdmissionFixture {
   recoveryKey: Buffer;
   batchIds: [string, string];
   completedBatchId: string;
+  approvedCheckpoint?: Checkpoint;
   correctionOfByMessageId: Record<string, string>;
   admittedAtEpochMs: number;
   secondAdmittedAtEpochMs: number;
@@ -200,7 +205,13 @@ export interface RecoveryGmailCaptureAdmissionFixture {
 }
 
 /** Build two real signed Gmail batches and their deterministic journal-first capture states in a private temp directory. */
-export async function createRecoveryGmailCaptureAdmissionFixture(): Promise<RecoveryGmailCaptureAdmissionFixture> {
+export async function createRecoveryGmailCaptureAdmissionFixture(
+  options: {
+    reviewFirstCorrection?: boolean;
+    duplicateOriginal?: boolean;
+    approveReviewBeforeCheckpoint?: boolean;
+  } = {}
+): Promise<RecoveryGmailCaptureAdmissionFixture> {
   const root = mkdtempSync(join(tmpdir(), "zivv-capture-admission-"));
   const operator = join(root, "operator");
   mkdirSync(operator);
@@ -242,7 +253,13 @@ export async function createRecoveryGmailCaptureAdmissionFixture(): Promise<Reco
           startEpochMs: item.receivedAtEpochMs - 60_000,
           endEpochMs: item.receivedAtEpochMs + 60_000,
           getAccessToken: async () => "synthetic_fixture_token",
-          fetcher: fetcherFor(email, item.account),
+          fetcher: fetcherFor(
+            email,
+            item.account,
+            options.duplicateOriginal && item === editionBodies[0]
+              ? message(item.edition, "a2", item.receivedAtEpochMs, item.body)
+              : undefined
+          ),
         });
         if (interruptAcquisition)
           throw new Error("Expected pending-batch interruption");
@@ -309,7 +326,7 @@ export async function createRecoveryGmailCaptureAdmissionFixture(): Promise<Reco
         expectedAccountId: editionBodies[1]!.account,
         expectedEditionId: editionBodies[0]!.edition,
         batchId: batchIds[0],
-        correctionOfByMessageId,
+        ...(options.reviewFirstCorrection ? {} : { correctionOfByMessageId }),
       });
       throw new Error("Expected source journal-only interruption");
     } catch (error) {
@@ -328,9 +345,23 @@ export async function createRecoveryGmailCaptureAdmissionFixture(): Promise<Reco
       expectedAccountId: editionBodies[0]!.account,
       expectedEditionId: editionBodies[0]!.edition,
       batchId: batchIds[0],
-      correctionOfByMessageId,
+      ...(options.reviewFirstCorrection ? {} : { correctionOfByMessageId }),
     });
     const currentAfterFirstCapture = inventory(operator, createdAtEpochMs);
+    let approvedCheckpoint: Checkpoint | undefined;
+    if (options.approveReviewBeforeCheckpoint) {
+      if (!options.reviewFirstCorrection)
+        throw new Error("Approval scenario requires a review receipt");
+      now += 1_000;
+      await replaySteveGmailBatch({
+        operatorDirectory: operator,
+        expectedAccountId: editionBodies[0]!.account,
+        expectedEditionId: editionBodies[0]!.edition,
+        batchId: batchIds[0],
+        correctionOfByMessageId,
+      });
+      approvedCheckpoint = inventory(operator, now);
+    }
     const secondAdmittedAtEpochMs = now + 1_000;
     now = secondAdmittedAtEpochMs + 1_000;
     await replaySteveGmailBatch({
@@ -345,6 +376,7 @@ export async function createRecoveryGmailCaptureAdmissionFixture(): Promise<Reco
       recoveryKey,
       batchIds,
       completedBatchId,
+      ...(approvedCheckpoint ? { approvedCheckpoint } : {}),
       correctionOfByMessageId,
       admittedAtEpochMs,
       secondAdmittedAtEpochMs,
