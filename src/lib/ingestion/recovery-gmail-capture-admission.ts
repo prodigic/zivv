@@ -1498,7 +1498,7 @@ function open(
         file.bytes &&
         Buffer.from(file.bytes, "base64")
           .toString("utf8")
-          .includes("recoveryGmailSelectedLoadInstallationVersion = 1")
+          .includes("recoveryGmailSelectedLoadInstallationVersion = 2")
     )
   )
     fail("RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME");

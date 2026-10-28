@@ -193,6 +193,7 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
     composedBatches?: boolean;
     invalidPendingMime?: boolean;
     withoutSelectedLoadInspector?: boolean;
+    withoutSelectedLoadFraming?: boolean;
     seedAuthorityControls?: boolean;
   } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
@@ -234,6 +235,11 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
           root,
           "dist/lib/ingestion/recovery-gmail-selected-load-inspector.js"
         )
+      );
+    }
+    if (options.withoutSelectedLoadFraming) {
+      rmSync(
+        join(root, "dist/lib/ingestion/recovery-gmail-selected-load-framing.js")
       );
     }
     write(
@@ -523,13 +529,18 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
     };
     // A missing-feature archive is intentionally left unprepared: current host
     // runtime identity must not be used to prepare a different archived worker.
-    if (!options.withoutSelectedLoadInspector)
+    if (
+      !options.withoutSelectedLoadInspector &&
+      !options.withoutSelectedLoadFraming
+    )
       await prepareOperatorRecoveryRuntime(input);
     return {
       input,
       batchIds,
       base,
-      prepared: !options.withoutSelectedLoadInspector,
+      prepared:
+        !options.withoutSelectedLoadInspector &&
+        !options.withoutSelectedLoadFraming,
       sourceReceipts,
       ...(composition ? { composition } : {}),
       cleanup: (preserve) => cleanupFixture(base, preserve),

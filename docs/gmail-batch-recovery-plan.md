@@ -494,3 +494,46 @@ pattern; runtime inventory correctly refused its linked manifest. The exact norm
 64-hex run-ID pattern was corrected, and the original failed `k7xwCc` fixture and
 worker remain unchanged. No complete hard-death or selected-load execution claim
 is made by these checks.
+
+## Retained selected-load installation launcher, October 28
+
+The launcher owns a strict bounded `ZGLF` version-one binary frame before its first
+asynchronous boundary. Only archive, retirement evidence, the recovery key,
+destination, npm identity and exact receipt selector are accepted. Unknown
+controls, accessors, extra frames, malformed lengths/UTF-8 and noncanonical JSON
+metadata refuse. Capture's separate `ZGCF` frame cannot dispatch this operation.
+Keys are passed on stdin and owned copies are wiped; source bytes and credentials
+are not embedded in process arguments or child diagnostics.
+
+Archived installer capability two and framing capability one are required before
+preparation or launch. Capability two adds a genuinely read-only canonical
+completion verifier. It rejects incomplete or staged installation without
+adopting, flushing or changing permissions. The launcher returns an already
+verified complete receipt immediately; otherwise only a coherent, authenticated
+incomplete installation may invoke the exact retained entry through the existing
+bootstrap module boundary. The child independently authenticates the operation.
+
+The parent bounds stdin, combined output and elapsed time, strips executable
+injection environment options, and settles only after actual exit plus fully
+drained output and finished input. It does not depend solely on Node's `close`
+event. Child JSON remains untrusted: a fresh read-only physical/evidence check
+must match it exactly before success. Errors expose bounded codes, not private
+source text. Unconfirmed process termination is a failure requiring inspection,
+never success or an instruction to restart blindly.
+
+This is still installation of load evidence, not selected-source import. The
+actual bounded writer, transaction-owned canonical read, exact catalog/run delta,
+signed load result and later-load family composition remain required, together
+with complete authority, timeout, hard-death and platform acceptance. No command,
+schedule or live installation is activated by adding this API.
+
+Focused launcher evidence: 27 capture/selected-load framing cases passed in
+0.887 seconds; the real retained launcher installation/control file passed three
+cases in 331.43 seconds. Linked-intent read-only observation and genuine missing
+framing refusal passed in 124.72 seconds. The post-canonical-intent interruption
+case passed in 87.88 seconds, with independent read-only completion on retry.
+These are 33 unique focused cases, not 33 native invocations. Inode/link/permission
+and mutation-time observations remained unchanged across read-only checks; access
+time is excluded because ordinary reads may update it. Worker/publication types,
+lint and formatting passed. Full process termination, hard-death and actual
+selected-load execution acceptance remain outstanding.
