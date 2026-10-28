@@ -24,10 +24,12 @@ import {
   createRecoveryGmailCaptureAdmission,
   createRecoveryGmailCaptureResult,
   proveRecoveryGmailCaptureDelta,
+  proveRecoveryGmailCaptureFamily,
   type RecoveryGmailCaptureAdmission,
   type RecoveryGmailCaptureBinding,
   type RecoveryGmailCaptureCompletedEvidence,
   type RecoveryGmailCaptureDeltaProof,
+  type RecoveryGmailCaptureFamilyInput,
 } from "./recovery-gmail-capture-admission-proof.js";
 import { proveRecoveryGmailBatchInventory } from "./recovery-gmail-batch-proof.js";
 import {
@@ -61,7 +63,10 @@ import {
   assertOperatorInstallationWritable,
   assertNoOperatorRetirementScope,
 } from "./operator-installation.js";
-import { verifyOperatorRetirementEvidence } from "./operator-recovery.js";
+import {
+  verifyOperatorRetirementEvidence,
+  type OperatorRecoveryCheckpoint,
+} from "./operator-recovery.js";
 
 export interface RecoveryGmailCaptureInput extends RecoveryRuntimeInput {
   batchId: string;
@@ -1464,8 +1469,26 @@ function normalized(
     )
   );
 }
-function open(input: RecoveryGmailCaptureInput) {
+function open(
+  input: RecoveryGmailCaptureInput,
+  purpose: "capture" | "selected-load-inspection" = "capture"
+) {
   const archived = verifyOperatorRetirementEvidence(input).checkpoint;
+  if (purpose === "selected-load-inspection") {
+    const inspector = archived.files.find(
+      (file) =>
+        file.area === "checkout" &&
+        file.path ===
+          "dist/lib/ingestion/recovery-gmail-selected-load-inspector.js"
+    );
+    if (
+      !inspector?.bytes ||
+      !Buffer.from(inspector.bytes, "base64")
+        .toString("utf8")
+        .includes("recoveryGmailSelectedLoadInspectorVersion = 1")
+    )
+      fail("RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME");
+  }
   const executor = archived.files.find(
     (file) =>
       file.area === "checkout" &&
@@ -1536,6 +1559,16 @@ function open(input: RecoveryGmailCaptureInput) {
     checkpoint,
     recoveryKey: input.recoveryKey,
   });
+  if (purpose === "selected-load-inspection") {
+    const retained = all.at(-1);
+    const batchId = retained?.batchId ?? batches.batches[0]?.batch.batchId;
+    if (!batchId) fail();
+    input = {
+      ...input,
+      batchId,
+      correctionOfByMessageId: retained?.record.correctionOfByMessageId ?? {},
+    };
+  }
   const selectedBatch = batches.batches.find(
     ({ batch }) => batch.batchId === input.batchId
   )?.batch;
@@ -1850,7 +1883,7 @@ function open(input: RecoveryGmailCaptureInput) {
         }).toString("base64")
       );
   }
-  if (!selected)
+  if (!selected && purpose === "capture")
     createRecoveryGmailCaptureAdmission({
       checkpoint,
       recoveryKey: input.recoveryKey,
@@ -1880,6 +1913,113 @@ function open(input: RecoveryGmailCaptureInput) {
     stages,
     needsRepair: stages.size > 0,
   };
+}
+
+/** Detached read-only host evidence for selected loading. This returns no key,
+ * open handle, guard callback or write scope. Catalog bytes are still pinned to
+ * the verified prepared tree; later load effects need their own physical delta. */
+export interface RecoveryGmailSelectedLoadHostEvidence {
+  activationAllowed: false;
+  captureAllowed: false;
+  loadAllowed: false;
+  physicalValidationRequired: true;
+  checkpoint: OperatorRecoveryCheckpoint;
+  binding: RecoveryGmailCaptureBinding;
+  current: RecoveryGmailCaptureFamilyInput["current"];
+  completed: RecoveryGmailCaptureCompletedEvidence[];
+  unfinishedAdmissions: Buffer[];
+  ownProductionOwnership?: Ownership;
+  captureRepairRequired: boolean;
+  physicalSnapshotSha256: string;
+  currentRuntime: Pick<
+    OperatorRecoveryCheckpoint["runtime"],
+    "node" | "icu" | "executableSha256" | "workerSha256" | "lockfileSha256"
+  >;
+}
+export function readRecoveryGmailCaptureHostForSelectedLoad(
+  input: RecoveryRuntimeInput
+): RecoveryGmailSelectedLoadHostEvidence {
+  if (
+    !input ||
+    typeof input !== "object" ||
+    ![Object.prototype, null].includes(
+      Object.getPrototypeOf(input) as object | null
+    )
+  )
+    fail();
+  const fields = [
+    "archive",
+    "retirementReceipt",
+    "recoveryKey",
+    "destination",
+    "npmCli",
+  ];
+  const names = Reflect.ownKeys(input);
+  if (
+    names.length !== fields.length ||
+    names.some(
+      (name) =>
+        typeof name !== "string" ||
+        !fields.includes(name) ||
+        !Object.hasOwn(
+          Object.getOwnPropertyDescriptor(input, name) ?? {},
+          "value"
+        )
+    )
+  )
+    fail();
+  const copied = copyInput({ ...input, batchId: "0".repeat(64) });
+  try {
+    const host = open(copied, "selected-load-inspection");
+    const current = host.delta();
+    const unfinishedAdmissions = host.unfinished
+      ? [Buffer.from(host.unfinished.admission)]
+      : [];
+    const ownership = validateWeeklyJournalRecoverySnapshot(
+      Buffer.from(current.journal, "base64")
+    ).ownership.find((row) => row.scope === production)!;
+    const proof = proveRecoveryGmailCaptureFamily({
+      checkpoint: host.checkpoint,
+      recoveryKey: copied.recoveryKey,
+      completed: host.completed,
+      unfinishedAdmissions,
+      current,
+      ...(unfinishedAdmissions.length
+        ? { ownProductionOwnership: ownership }
+        : {}),
+    });
+    const physical = host.opened.inventoryGmailCapture();
+    // Delta rechecks exact runtime/key/family and immutable prepared files again.
+    same(host.delta(), current);
+    return {
+      activationAllowed: false as const,
+      captureAllowed: false as const,
+      loadAllowed: false as const,
+      physicalValidationRequired: true as const,
+      checkpoint: structuredClone(host.checkpoint),
+      binding: structuredClone(host.binding),
+      current: proof.projectedInventory,
+      completed: host.completed.map((pair) => ({
+        admission: Buffer.from(pair.admission),
+        result: Buffer.from(pair.result),
+      })),
+      unfinishedAdmissions,
+      ...(unfinishedAdmissions.length
+        ? { ownProductionOwnership: { ...ownership } }
+        : {}),
+      captureRepairRequired: host.needsRepair,
+      physicalSnapshotSha256: sha256(canonicalJson(physical)),
+      currentRuntime: {
+        node: process.version,
+        icu: process.versions.icu ?? "",
+        executableSha256: host.checkpoint.runtime.executableSha256,
+        workerSha256: host.checkpoint.runtime.workerSha256,
+        lockfileSha256: host.checkpoint.runtime.lockfileSha256,
+      },
+    };
+  } finally {
+    copied.recoveryKey.fill(0);
+  }
 }
 
 /** Independently authenticate physical/runtime/family evidence. Performs no cleanup or writes. */
