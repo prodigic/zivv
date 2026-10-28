@@ -105,6 +105,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "authority-nested-executor-after-admission",
   "lease-expires-before-source",
   "pause-before-key-guard",
+  "pause-before-key-guard-duplicate",
 ] as const;
 export type CaptureInterruption =
   (typeof RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS)[number];
@@ -189,7 +190,10 @@ interface CapturePauseHandshake {
 
 /** The fixed test transport controls timing only. Every resumed effect still
  * passes the same existing production guards, with the original deadline. */
-function pauseBeforeKeyGuard(deadline: number): CapturePauseHandshake {
+function pauseBeforeKeyGuard(
+  deadline: number,
+  holdAcceptedGo = false
+): CapturePauseHandshake {
   if (
     typeof process.send !== "function" ||
     !process.connected ||
@@ -208,7 +212,7 @@ function pauseBeforeKeyGuard(deadline: number): CapturePauseHandshake {
   });
   const refuse = (code: string) => {
     failure ??= new Error(code);
-    if (!resumed) gate.reject?.(failure);
+    if (!resumed || holdAcceptedGo) gate.reject?.(failure);
   };
   const timer = setTimeout(
     () => refuse("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_TIMEOUT"),
@@ -225,8 +229,13 @@ function pauseBeforeKeyGuard(deadline: number): CapturePauseHandshake {
       return;
     }
     resumed = true;
-    clearTimeout(timer);
-    gate.resolve?.();
+    // The fixed duplicate test holds continuation until the real second IPC
+    // message is delivered. It cannot release effects; the original deadline
+    // remains active and the ordinary message handler must reject the duplicate.
+    if (!holdAcceptedGo) {
+      clearTimeout(timer);
+      gate.resolve?.();
+    }
   };
   const disconnected = () => {
     if (!closed) refuse("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_DISCONNECTED");
@@ -1973,8 +1982,11 @@ async function execute(
     )
   )
     fail("RECOVERY_GMAIL_CAPTURE_RETAINED_EXECUTOR_REQUIRED");
+  const pauseAtKeyGuard =
+    interruption === "pause-before-key-guard" ||
+    interruption === "pause-before-key-guard-duplicate";
   if (
-    interruption === "pause-before-key-guard" &&
+    pauseAtKeyGuard &&
     (typeof process.send !== "function" ||
       !process.connected ||
       !process.channel)
@@ -2242,9 +2254,12 @@ async function execute(
         }
       }
       scope.phase = "key";
-      if (interruption === "pause-before-key-guard") {
+      if (pauseAtKeyGuard) {
         scope.assertCurrent();
-        handshake = pauseBeforeKeyGuard(scope.deadline);
+        handshake = pauseBeforeKeyGuard(
+          scope.deadline,
+          interruption === "pause-before-key-guard-duplicate"
+        );
         await handshake.waitForGo;
       }
       for (const item of initial.all)

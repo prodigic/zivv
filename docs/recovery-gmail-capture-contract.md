@@ -33,6 +33,34 @@ A fresh normal retry must complete using a new fence and real admission time.
 
 The separate `startRecoveryGmailCaptureDriftProbeForTest` launcher adds a fixed
 IPC pause/resume seam without changing production launch or binary framing.
+Its protocol-probe companion exposes only fixed unexpected-command,
+disconnect-before-GO, delivered-duplicate and racing-duplicate selections through
+the same closed session.
+It returns no process, message sender or arbitrary transport control. Invalid
+selections must refuse before launching a child. Tests observe the actual child
+diagnostic and join termination before inspecting retained state. Withholding
+GO tests the existing real timeout rather than changing either deadline.
+After READY, an unresumed child's disconnect has a bounded two-second diagnostic
+drain period; the existing pause and overall deadlines remain active. A safe
+child failure received before close takes precedence over a generic disconnect
+classification. Explicit cancellation still joins termination and settlement.
+On Windows, a parent-initiated IPC disconnect can deliver native `exit` without
+the later Node `close` event. The launcher may settle from that actual exit only
+after both captured output streams have ended, stdin has finished (or a recorded
+input/stop failure accounts for its destruction), and IPC is disconnected.
+This path is labelled `exit-drained`, preserves the actual exit status and
+diagnostic, and uses the same report authentication as ordinary close. PID
+absence or a destroyed output stream alone is insufficient completion evidence.
+The delivered-duplicate fixture uses a fixed refusal-only test pause: the first
+GO is accepted but does not release the continuation. The ordinary message
+handler must receive and reject the actual second GO before any key effect; the
+original timeout remains active. No arbitrary callback, command or release of
+that held continuation is exposed. This does not alter normal GO handling.
+An invalid command received before GO must leave only the admission delta.
+The separate racing driver has no such delivery barrier: a queued duplicate may
+arrive after legitimate progress or after completion. Authenticate the actual
+partial/complete family, then prove normal retry and replay; never claim that an
+undelivered command could have prevented earlier authorized work.
 It exposes only `paused`, `result`, `resume()` and joined `stop()` controls;
 no callback, process handle, message sender, path or data mutation is accepted.
 The child requires IPC before admission effects. After admission it enters the
