@@ -290,3 +290,42 @@ unproved prior loads, normal run identity, retained-run acquisition evidence and
 detached outputs. Ordinary runner controls cover normal four-stage loading,
 committed-catalog/journal-gap recovery without duplicates and changed-policy
 refusal. No live ledger, cutoff, merge, deployment or activation operation occurs.
+
+## Signed selected-load intent checkpoint, October 28
+
+`createRecoveryGmailSelectedLoadAdmission` and
+`authenticateRecoveryGmailSelectedLoadAdmission` define the closed first-load
+intent envelope. It binds the prepared host/capsule/retirement/checkpoint/key,
+complete baseline/family/selection/catalog/journal/runtime commitments, exact
+selector and normal source/run/revision/state, and original admission time.
+The only target is `stopAfter: load`. Activation/capture/load flags stay false:
+signed intent is evidence, not an executable capability.
+
+The domain is `zivv-recovery-gmail-selected-load-admission/v1` followed by NUL.
+Records are bounded at 64 KiB, strict canonical UTF-8 JSON plus one newline,
+with a domain-separated HMAC-SHA256. Authentication recomputes the full original
+fresh baseline and requires the exact record schema and fields. Wrong domains,
+keys, hosts, sources, runs, refreshed-but-different catalog baselines and even
+valid-HMAC payload substitutions refuse. One supplied unfinished intent blocks
+any different selection/baseline/host/time, and a matching retry returns a
+detached copy of its exact saved bytes rather than resigning it. Physical family
+enumeration is still required to establish that no unfinished intent was omitted.
+
+`recovery-host-binding.ts` shares capture's host-identity rules without changing
+canonical capture payload fields or signature domains. During canonical-byte
+validation, a targeted red test found that the old capture decoder stripped a
+UTF-8 BOM before comparing JSON text. Capture now compares original bytes with
+the canonical encoding, as selected-load admission does. Both BOM-prefixed intent
+and result records refuse; valid canonical records retain their existing format.
+Do not rewrite or resign a noncanonical retained record as an automatic repair.
+
+This checkpoint signs/authenticates buffers only. It does not install or flush an
+intent/baseline file, install a key, open a writable journal, create an ALS scope
+or load a catalog. The retained closed executor must persist exact intent and
+necessary original-baseline evidence before key/writer effects, independently
+revalidate physical/runtime/family identity, establish only its bounded private
+scope and verify every effect. After load effects, a separate exact load-delta
+proof must explain current changes against the original admitted baseline;
+changed current evidence must never be adopted as a new baseline for retry.
+Signed result and later-load family composition remain required, as do native
+selected-load crash/lost-response/replay and all remaining delivery acceptance.

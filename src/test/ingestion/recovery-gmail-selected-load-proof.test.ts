@@ -1,13 +1,5 @@
-import { prepareSteveBatch } from "../../lib/ingestion/imports.js";
 import { afterAll, beforeAll, expect, it, vi } from "vitest";
-import {
-  bootstrapLedger,
-  reconcileCandidates,
-} from "../../lib/ingestion/ledger.js";
-import {
-  canonicalJson,
-  ledgerDigest,
-} from "../../lib/ingestion/sqlite-store.js";
+import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 import { selectSteveEmailPlaintext } from "../../lib/ingestion/steve-email-intake.js";
 import { proveRecoveryGmailBatchInventory } from "../../lib/ingestion/recovery-gmail-batch-proof.js";
@@ -24,88 +16,17 @@ import {
 import { createWeeklyRunState } from "../../lib/ingestion/weekly-run-state.js";
 import { validateWeeklyJournalRecoverySnapshot } from "../../lib/ingestion/weekly-run-journal.js";
 import {
-  createRecoveryGmailCaptureAdmissionFixture,
-  type RecoveryGmailCaptureAdmissionFixture,
-} from "./fixtures/recovery-gmail-capture-admission-fixture.js";
+  createRecoveryGmailSelectedLoadFixture,
+  selectedLoadWorkerFixtureBytes,
+} from "./fixtures/recovery-gmail-selected-load-fixture.js";
 
 vi.setConfig({ testTimeout: 90_000, hookTimeout: 180_000 });
-let fixture: RecoveryGmailCaptureAdmissionFixture;
+let fixture: Awaited<ReturnType<typeof createRecoveryGmailSelectedLoadFixture>>;
 let baseline: RecoveryGmailSelectedLoadBaselineInput;
-const workerBytes = Buffer.from("export const fixture = true;\n");
+const workerBytes = selectedLoadWorkerFixtureBytes;
 beforeAll(async () => {
-  fixture = await createRecoveryGmailCaptureAdmissionFixture();
-  const empty = bootstrapLedger({ events: [], artists: [], venues: [] }, 1_000);
-  const ledger = reconcileCandidates(
-    empty,
-    prepareSteveBatch(
-      empty,
-      "oct 16 2026 Baseline Fixture Band at Test Room, Oakland a/a $20 8pm\n",
-      Date.parse("2026-10-09T20:00:00Z")
-    )
-  ).ledger;
-  const file = (path: string, bytes: Buffer) => ({
-    area: "checkout" as const,
-    path,
-    bytes: bytes.toString("base64"),
-    sha256: sha256(bytes),
-  });
-  const extras = [
-    file("dist/lib/ingestion/weekly-import-runner.js", workerBytes),
-    file("package-lock.json", Buffer.from('{"lockfileVersion":3}\n')),
-  ];
-  const checkpoint = {
-    ...fixture.checkpoint,
-    files: [...fixture.checkpoint.files, ...extras],
-    directories: [
-      ...fixture.checkpoint.directories,
-      ...[
-        "dist",
-        "dist/lib",
-        "dist/lib/ingestion",
-        "dist/types",
-        "dist/utils",
-      ].map((path) => ({ area: "checkout" as const, path })),
-    ],
-    ledger,
-    ledgerRevision: ledgerDigest(ledger),
-    runtime: {
-      node: process.version,
-      icu: process.versions.icu ?? "",
-      executableSha256: "e".repeat(64),
-      workerSha256: compiledWorkerInventoryDigest([
-        {
-          path: "lib/ingestion/weekly-import-runner.js",
-          size: workerBytes.length,
-          sha256: sha256(workerBytes),
-        },
-      ]),
-      lockfileSha256: extras[1]!.sha256,
-    },
-  };
-  const selected = proveRecoveryGmailBatchInventory({
-    checkpoint,
-    recoveryKey: fixture.recoveryKey,
-  }).batches.find((item) => item.batch.batchId === fixture.completedBatchId)!;
-  const snapshot = selected.batch.snapshots[0]!;
-  const receipt = selected.messages[0]!;
-  if (receipt.status !== "captured")
-    throw new Error("Expected normal captured receipt");
-  baseline = {
-    checkpoint,
-    recoveryKey: fixture.recoveryKey,
-    completed: [],
-    unfinishedAdmissions: [],
-    current: checkpoint,
-    currentLedger: structuredClone(ledger),
-    currentRuntime: { ...checkpoint.runtime },
-    priorLoads: [],
-    selector: {
-      batchId: selected.batch.batchId,
-      messageId: snapshot.rawMessage.id,
-      rawSha256: sha256(Buffer.from(snapshot.rawMessage.raw, "base64url")),
-      receiptId: receipt.receiptId,
-    },
-  };
+  fixture = await createRecoveryGmailSelectedLoadFixture();
+  baseline = fixture.baseline;
 });
 afterAll(() => fixture?.cleanup());
 function reject(input: RecoveryGmailSelectedLoadBaselineInput) {

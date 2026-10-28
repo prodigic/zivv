@@ -626,3 +626,28 @@ describe("full capture-family projection for selected-receipt loading", () => {
     ).toThrow();
   });
 });
+
+it("rejects a BOM-prefixed signed capture record instead of normalizing its byte identity", () => {
+  const prefixed = Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), admission]);
+  expect(() =>
+    authenticateRecoveryGmailCaptureAdmission(
+      input(fixture.checkpoint, prefixed)
+    )
+  ).toThrow("INVALID_RECOVERY_GMAIL_CAPTURE_ADMISSION_PROOF");
+  const first = {
+    admission,
+    result: Buffer.concat([
+      Buffer.from([0xef, 0xbb, 0xbf]),
+      createRecoveryGmailCaptureResult(input(fixture.currentAfterFirstCapture)),
+    ]),
+  };
+  expect(() =>
+    createRecoveryGmailCaptureAdmission({
+      ...admissionInput,
+      batchId: fixture.batchIds[1],
+      correctionOfByMessageId: undefined,
+      admittedAtEpochMs: fixture.secondAdmittedAtEpochMs,
+      priorCompleted: [first],
+    })
+  ).toThrow("INVALID_RECOVERY_GMAIL_CAPTURE_ADMISSION_PROOF");
+});

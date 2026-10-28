@@ -1,5 +1,9 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { posix, win32 } from "node:path";
+import { posix } from "node:path";
+import {
+  validateRecoveryPreparedHostBinding,
+  type RecoveryPreparedHostBinding,
+} from "./recovery-host-binding.js";
 import { proveRecoveryGmailBatchInventory } from "./recovery-gmail-batch-proof.js";
 import { proveRecoveryGmailCaptureSelection } from "./recovery-gmail-capture-selection.js";
 import {
@@ -33,18 +37,7 @@ const hashPattern = /^[a-f0-9]{64}$/;
 
 /** Detached commitments only. The retained coordinator must authenticate physical
  * runtime/receipt/tree identities separately, before every effect. */
-export interface RecoveryGmailCaptureBinding {
-  capsuleSha256: string;
-  retirementSha256: string;
-  checkpointSha256: string;
-  preparedReceiptSha256: string;
-  preparedTreeSha256: string;
-  preparedImmutableTreeSha256: string;
-  physicalRoot: string;
-  physicalOperatorDirectory: string;
-  physicalNpmPath: string;
-  keyId: string;
-}
+export type RecoveryGmailCaptureBinding = RecoveryPreparedHostBinding;
 export interface RecoveryGmailCaptureCompletedEvidence {
   admission: Buffer;
   result: Buffer;
@@ -163,7 +156,7 @@ function authenticated<T>(
   const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   const value = object(JSON.parse(text) as unknown);
   if (
-    canonicalJson(value) + "\n" !== text ||
+    !bytes.equals(Buffer.from(canonicalJson(value) + "\n")) ||
     typeof value.signature !== "string" ||
     !hashPattern.test(value.signature)
   )
@@ -191,57 +184,11 @@ function binding(
   value: RecoveryGmailCaptureBinding,
   recoveryKey: Buffer
 ): void {
-  const record = object(value);
-  same(
-    Object.keys(record).sort(),
-    [
-      "capsuleSha256",
-      "retirementSha256",
-      "checkpointSha256",
-      "preparedReceiptSha256",
-      "preparedTreeSha256",
-      "preparedImmutableTreeSha256",
-      "physicalRoot",
-      "physicalOperatorDirectory",
-      "physicalNpmPath",
-      "keyId",
-    ].sort()
-  );
-  for (const name of [
-    "capsuleSha256",
-    "retirementSha256",
-    "checkpointSha256",
-    "preparedReceiptSha256",
-    "preparedTreeSha256",
-    "preparedImmutableTreeSha256",
-    "keyId",
-  ] as const)
-    if (!hashPattern.test(value[name])) fail();
-  if (value.keyId !== sha256(recoveryKey)) fail();
-  for (const name of [
-    "physicalRoot",
-    "physicalOperatorDirectory",
-    "physicalNpmPath",
-  ] as const) {
-    const text = value[name],
-      flavor = /^[A-Za-z]:\\/.test(text) ? win32 : posix;
-    if (
-      typeof text !== "string" ||
-      text.length > 4096 ||
-      [...text].some((character) => character.charCodeAt(0) < 32) ||
-      text.startsWith("\\\\") ||
-      text.startsWith("//") ||
-      !flavor.isAbsolute(text) ||
-      flavor.resolve(text) !== text
-    )
-      fail();
-  }
-  const flavor = /^[A-Za-z]:\\/.test(value.physicalRoot) ? win32 : posix;
-  if (
-    value.physicalOperatorDirectory !==
-    flavor.join(value.physicalRoot, "operator")
-  )
+  try {
+    validateRecoveryPreparedHostBinding(value, recoveryKey);
+  } catch {
     fail();
+  }
 }
 function decode(value: string, limit = 8 * 1024 * 1024): Buffer {
   if (typeof value !== "string" || value.length > Math.ceil(limit / 3) * 4)

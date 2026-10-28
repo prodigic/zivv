@@ -30,6 +30,7 @@
     "src/test/ingestion/recovery-gmail-capture-admission-proof.test.ts",
     "src/test/ingestion/recovery-gmail-selected-receipt-proof.test.ts",
     "src/test/ingestion/recovery-gmail-selected-load-proof.test.ts",
+    "src/test/ingestion/recovery-gmail-selected-load-admission-proof.test.ts",
     "src/test/ingestion/recovery-gmail-inspector.test.ts",
     "src/test/ingestion/recovery-gmail-capsule.test.ts",
     "src/test/ingestion/recovery-gmail-batch-proof.test.ts",
