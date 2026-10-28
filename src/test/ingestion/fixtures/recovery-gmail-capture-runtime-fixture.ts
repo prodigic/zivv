@@ -85,7 +85,8 @@ function nextFriday(now: number): { editionId: string; titleDate: string } {
 function fixtureMessage(
   id: string,
   receivedAtEpochMs: number,
-  bodyText: string
+  bodyText: string,
+  mimeType = "text/plain"
 ) {
   const date = new Date(receivedAtEpochMs).toUTCString();
   const headers = [
@@ -97,7 +98,7 @@ function fixtureMessage(
     "Authentication-Results: mx.google.com; dkim=pass header.i=@sp.eocampaign1.com; spf=pass smtp.mailfrom=bounce@sp.eocampaign1.com",
     "DKIM-Signature: v=1; a=rsa-sha256; d=sp.eocampaign1.com; s=fixture; h=from:sender:subject:date; bh=c3ludGhldGlj; b=c3ludGhldGlj",
     "MIME-Version: 1.0",
-    "Content-Type: text/plain; charset=UTF-8",
+    `Content-Type: ${mimeType}; charset=UTF-8`,
     "Content-Transfer-Encoding: 7bit",
   ];
   const body = Buffer.from(bodyText.replace(/\r?\n/g, "\r\n"));
@@ -112,7 +113,7 @@ function fixtureMessage(
       id,
       internalDate: String(receivedAtEpochMs),
       payload: {
-        mimeType: "text/plain",
+        mimeType,
         filename: "",
         headers: headers.map((header) => {
           const separator = header.indexOf(":");
@@ -189,9 +190,15 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
   options: {
     reviewSecondMessage?: boolean;
     composedBatches?: boolean;
+    invalidPendingMime?: boolean;
     seedAuthorityControls?: boolean;
   } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
+  if (
+    options.invalidPendingMime &&
+    (options.composedBatches || options.reviewSecondMessage)
+  )
+    throw new Error("Invalid MIME fixture requires the ordinary pending batch");
   if (options.composedBatches && options.reviewSecondMessage)
     throw new Error(
       "Composed pending batches cannot pre-review the second message"
@@ -264,7 +271,12 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
       `THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest ${title}\nSynthetic ${label} capture fixture\n`;
     const messages = [
       fixtureMessage("a1", firstReceived, body("completed")),
-      fixtureMessage("b1", secondReceived, body("pending")),
+      fixtureMessage(
+        "b1",
+        secondReceived,
+        body("pending"),
+        options.invalidPendingMime ? "application/octet-stream" : "text/plain"
+      ),
     ];
     const nextEdition = nextFriday(
       Date.parse(editionId + "T12:00:00Z") + 7 * 86_400_000
@@ -324,7 +336,17 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
           fetcher: fakeGmail(selected),
         });
       } catch (error) {
-        if (!(error instanceof Error) || !error.message.includes(interruption))
+        if (
+          options.invalidPendingMime &&
+          error instanceof Error &&
+          error.message === "AMBIGUOUS_STEVE_TEXT"
+        ) {
+          // Normal acquisition saved the signed RAW/FULL batch before ordinary
+          // intake refused the second message. No signed batch is rewritten.
+        } else if (
+          !(error instanceof Error) ||
+          !error.message.includes(interruption)
+        )
           throw error;
       } finally {
         hook.mockRestore();
@@ -340,7 +362,11 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
       // without mocking replay or rewriting authenticated retained snapshots.
       await captureWindow(ownMessages, nextEdition.editionId, ["c1"]);
     } else {
-      await captureWindow(messages, editionId, ["b1"]);
+      await captureWindow(
+        messages,
+        editionId,
+        options.invalidPendingMime ? [] : ["b1"]
+      );
     }
 
     if (options.reviewSecondMessage) {

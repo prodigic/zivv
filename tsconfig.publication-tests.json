@@ -11,6 +11,7 @@
     "src/test/ingestion/recovery-gmail-capture-protocol-racing.test.ts",
     "src/test/ingestion/recovery-gmail-capture-probe-lifecycle.test.ts",
     "src/test/ingestion/recovery-gmail-capture-multibatch-runtime.test.ts",
+    "src/test/ingestion/recovery-gmail-capture-invalid-mime-runtime.test.ts",
     "src/test/ingestion/recovery-gmail-capture-drift-control.test.ts",
     "src/test/ingestion/recovery-gmail-capture-data-drift.test.ts",
     "src/test/ingestion/recovery-gmail-capture-escaped-task.test.ts",
