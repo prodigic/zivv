@@ -1,7 +1,10 @@
-import { spawnSync } from "node:child_process";
+import {
+  resumeOperatorRecoveryGmailSelectedLoadEvidence,
+  resumeOperatorRecoveryGmailSelectedLoadEvidenceForTest,
+} from "../../lib/ingestion/recovery-gmail-selected-load-launcher.js";
+import type { RecoveryGmailSelectedLoadInstallationInterruption } from "../../lib/ingestion/recovery-gmail-selected-load-installation.js";
 import { existsSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 import { expect, it, vi } from "vitest";
 import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
@@ -47,62 +50,38 @@ it("durably installs only selected-run evidence through retained manifest/chunk/
       const opened = openPreparedRuntimeForAdmission(fixture.input);
       const baseline = opened.inventoryGmailLoadInstallation();
       const journal = readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
-      const native = (interruption?: string) => {
-        const module = pathToFileURL(
-          join(
-            root,
-            "checkout/dist/lib/ingestion/recovery-gmail-selected-load-installation.js"
-          )
-        ).href;
-        const script = `try { const m=await import(${JSON.stringify(module)}); let text=''; for await(const c of process.stdin) text+=c; const wire=JSON.parse(text); const input={...wire, archive:Buffer.from(wire.archive,'base64'),retirementReceipt:Buffer.from(wire.retirementReceipt,'base64'),recoveryKey:Buffer.from(wire.recoveryKey,'base64')}; const result=m.${interruption ? "installRecoveryGmailSelectedLoadEvidenceForTest" : "installRecoveryGmailSelectedLoadEvidence"}(input${interruption ? "," + JSON.stringify(interruption) : ""}); console.log(JSON.stringify(result)); } catch(e) { console.error(JSON.stringify({code:e.message,frames:(e.stack??'').split('\\n').slice(1,6).map(x=>x.replaceAll(process.cwd(),'<worker>'))})); process.exitCode=1; }`;
-        const child = spawnSync(
-          process.execPath,
-          [
-            "--import",
-            pathToFileURL(join(root, "bootstrap/module-boundary.mjs")).href,
-            "--input-type=module",
-            "--eval",
-            script,
-          ],
-          {
-            cwd: join(root, "checkout"),
-            env: { ...process.env, ZIVV_LEDGER_HOME: operator },
-            input: JSON.stringify({
-              ...fixture.input,
-              selector,
-              archive: fixture.input.archive.toString("base64"),
-              retirementReceipt:
-                fixture.input.retirementReceipt.toString("base64"),
-              recoveryKey: fixture.input.recoveryKey.toString("base64"),
-            }),
-            encoding: "utf8",
-            windowsHide: true,
-            timeout: 180_000,
-            maxBuffer: 128 * 1024,
-          }
-        );
-        if (
-          child.status !== 0 &&
-          !child.stderr.includes(
-            "RECOVERY_GMAIL_SELECTED_LOAD_INSTALLATION_INTERRUPTED"
-          )
-        )
-          console.error(
-            "SELECTED_LOAD_INSTALL diagnostic",
-            child.status,
-            child.error?.message,
-            child.stderr
-          );
-        return child;
+      const native = async (
+        point?: RecoveryGmailSelectedLoadInstallationInterruption
+      ) => {
+        try {
+          const input = { ...fixture.input, selector };
+          const result = point
+            ? await resumeOperatorRecoveryGmailSelectedLoadEvidenceForTest(
+                input,
+                point
+              )
+            : await resumeOperatorRecoveryGmailSelectedLoadEvidence(input);
+          return {
+            status: 0,
+            stdout: JSON.stringify(result) + "\n",
+            stderr: "",
+          };
+        } catch (error) {
+          const cause =
+            error instanceof Error && error.cause instanceof Error
+              ? error.cause.message
+              : "UNEXPECTED";
+          return { status: 1, stdout: "", stderr: cause };
+        }
       };
       for (const point of [
         "manifest-stage-flushed",
         "manifest-installed",
         "chunks-installed",
         "intent-linked",
-      ]) {
+      ] as const) {
         console.error("SELECTED_LOAD_INSTALL", point, Date.now());
-        const interrupted = native(point);
+        const interrupted = await native(point);
         expect(interrupted.status).toBe(1);
         expect(interrupted.stderr).toContain(
           "RECOVERY_GMAIL_SELECTED_LOAD_INSTALLATION_INTERRUPTED"
@@ -120,7 +99,7 @@ it("durably installs only selected-run evidence through retained manifest/chunk/
             )
         ).toEqual(baseline);
       }
-      const complete = native();
+      const complete = await native();
       expect(complete.status).toBe(0);
       const report = JSON.parse(complete.stdout.trim()) as {
         runId: string;
@@ -135,7 +114,7 @@ it("durably installs only selected-run evidence through retained manifest/chunk/
         physicalValidationRequired: true,
       });
       expect(report.chunks).toBeGreaterThan(0);
-      expect(native().stdout).toBe(complete.stdout);
+      expect((await native()).stdout).toBe(complete.stdout);
       const directory = join(root, "recovery-gmail-load", report.runId);
       const manifest = JSON.parse(
         readFileSync(join(directory, "baseline.json"), "utf8")
@@ -153,7 +132,7 @@ it("durably installs only selected-run evidence through retained manifest/chunk/
       );
       const before = opened.inventoryGmailLoadInstallation();
       writeFileSync(join(directory, "unknown.json"), "{}\n");
-      expect(native().status).toBe(1);
+      expect((await native()).status).toBe(1);
       expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
         journal
       );

@@ -31,16 +31,21 @@ import { proveRecoveryGmailSelectedLoadBaseline } from "./recovery-gmail-selecte
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
 
-export const recoveryGmailSelectedLoadInstallationVersion = 1;
+export const recoveryGmailSelectedLoadInstallationVersion = 2;
 export interface RecoveryGmailSelectedLoadInstallationInput extends RecoveryRuntimeInput {
   selector: RecoveryGmailSelectedReceiptSelector;
 }
-type Interruption =
-  | "manifest-installed"
-  | "chunks-installed"
-  | "intent-installed"
-  | "manifest-stage-flushed"
-  | "intent-linked";
+export const RECOVERY_GMAIL_SELECTED_LOAD_INSTALLATION_INTERRUPTION_POINTS = [
+  "manifest-installed",
+  "chunks-installed",
+  "intent-installed",
+  "manifest-stage-flushed",
+  "intent-linked",
+] as const;
+export type RecoveryGmailSelectedLoadInstallationInterruption =
+  (typeof RECOVERY_GMAIL_SELECTED_LOAD_INSTALLATION_INTERRUPTION_POINTS)[number];
+type Interruption = RecoveryGmailSelectedLoadInstallationInterruption;
+
 interface Scope {
   active: boolean;
   deadline: number;
@@ -215,7 +220,8 @@ function copy(input: RecoveryGmailSelectedLoadInstallationInput) {
 }
 function execute(
   input: RecoveryGmailSelectedLoadInstallationInput,
-  interruption?: Interruption
+  interruption?: Interruption,
+  inspectOnly = false
 ) {
   assertNoSelectedLoadInstallation();
   assertNoRecoveredGmailCapture();
@@ -335,18 +341,8 @@ function execute(
       },
     };
     scope.assertCurrent();
-    const result = scopes.run(scope, () => {
-      for (const [target, value] of files) {
-        scope!.assertCurrent();
-        secureOperatorDirectory(dirname(target));
-        installRecoveryIntent(target, value.bytes, value.stage);
-        scope!.assertCurrent();
-        if (target === manifestPath) stop(scope!, "manifest-installed");
-        if (target !== manifestPath && target !== intentPath)
-          stop(scope!, "chunks-installed");
-        if (target === intentPath) stop(scope!, "intent-installed");
-      }
-      return restoreRecoveryGmailSelectedLoadEvidence({
+    const restore = () =>
+      restoreRecoveryGmailSelectedLoadEvidence({
         checkpoint: host.checkpoint,
         recoveryKey: runtime.recoveryKey,
         binding: host.binding,
@@ -356,7 +352,30 @@ function execute(
         chunks: evidence.chunks,
         observedAdmission: admission,
       });
-    });
+    const result = inspectOnly
+      ? (() => {
+          for (const [target, value] of files) {
+            const observed = inspectRecoveryInstalledFile(target, value.stage);
+            if (!observed.target || observed.candidate)
+              throw Error("RECOVERY_GMAIL_SELECTED_LOAD_NOT_INSTALLED");
+            if (!observed.target.bytes.equals(value.bytes)) fail();
+          }
+          scope!.assertCurrent();
+          return restore();
+        })()
+      : scopes.run(scope, () => {
+          for (const [target, value] of files) {
+            scope!.assertCurrent();
+            secureOperatorDirectory(dirname(target));
+            installRecoveryIntent(target, value.bytes, value.stage);
+            scope!.assertCurrent();
+            if (target === manifestPath) stop(scope!, "manifest-installed");
+            if (target !== manifestPath && target !== intentPath)
+              stop(scope!, "chunks-installed");
+            if (target === intentPath) stop(scope!, "intent-installed");
+          }
+          return restore();
+        });
     return {
       status: "load-evidence-installed" as const,
       activationAllowed: false as const,
@@ -386,14 +405,17 @@ export function installRecoveryGmailSelectedLoadEvidenceForTest(
   interruption: Interruption
 ) {
   if (
-    ![
-      "manifest-installed",
-      "chunks-installed",
-      "intent-installed",
-      "manifest-stage-flushed",
-      "intent-linked",
-    ].includes(interruption)
+    !RECOVERY_GMAIL_SELECTED_LOAD_INSTALLATION_INTERRUPTION_POINTS.includes(
+      interruption
+    )
   )
     fail();
   return execute(input, interruption);
+}
+
+/** Read-only canonical completion check. Never adopts, flushes or creates files. */
+export function inspectInstalledRecoveryGmailSelectedLoadEvidence(
+  input: RecoveryGmailSelectedLoadInstallationInput
+) {
+  return execute(input, undefined, true);
 }
