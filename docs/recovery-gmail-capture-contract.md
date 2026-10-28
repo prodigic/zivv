@@ -364,3 +364,13 @@ This proves the no-plaintext MIME case through the native retained executor. It
 does not prove every malformed MIME variant, Monday source rejection, process
 hard-death, stale-lease takeover, lost-response recovery, or selected-receipt
 loading (#110). Those remain separate requirements of the complete plan.
+
+## Canonical record byte identity checkpoint, October 28
+
+Capture admission/result authentication now compares the original signed Buffer
+with its exact canonical JSON/newline encoding. A targeted red test demonstrated
+that UTF-8 decoding previously stripped a leading BOM and accepted that altered
+byte representation. BOM-prefixed admission and completed-result records now
+refuse without rewriting them. Canonical payload schemas, fields and signature
+domains remain unchanged. The host-binding validator is shared with detached
+selected-load intent proof; this creates no new capture or load capability.
