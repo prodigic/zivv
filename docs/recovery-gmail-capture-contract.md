@@ -341,3 +341,26 @@ the recovery invocation records and repairs the explicit approval.
 23. Authority negatives: direct/forged/expired/escaped/nested scope, wrong capsule/key/preparation/runtime/npm/physical mappings, old worker lacking capability, substituted snapshot/account/edition/RAW/FULL/message/source/receipt/parent, changed admission/result and stage links. Attempt normal import, every journal run/artifact/restore/other-scope mutator, direct catalog transaction/write and arbitrary file path inside capture; each must fail before its effect. Inject drift between outer verification and inner SQL/file check, and retain failed fixtures/process diagnostics.
 
 24. No current capability grants #110 loading or activation. Source-to-load still needs its own selected-ready-receipt admission, fresh canonical context and exact catalog/run delta. This packet intentionally does not solve runtime migration for Base114, automatic partial-file recovery, OAuth provisioning, schedules or live cutover; those boundaries must remain visible in acceptance claims.
+
+## Invalid MIME retained-worker checkpoint, October 28
+
+The focused `recovery-gmail-capture-invalid-mime-runtime.test.ts` acquires a
+signed two-message batch through ordinary synthetic Gmail acquisition. Its first
+message is captured normally; the second has consistent RAW/FULL
+`application/octet-stream` content and ordinary intake refuses it with
+`AMBIGUOUS_STEVE_TEXT`. No authenticated batch is edited after acquisition.
+
+After retirement, deletion of the original checkout/operator/npm roots and
+preparation with relocated npm, the real retained worker refuses that same
+message twice. The pure selection retains its null plaintext hash; the invalid
+message remains a capture obligation. Both attempts preserve the original
+source/run/artifact rows and all original non-journal files, retain identical
+admission bytes, produce no completion result, and remain `capture-partial`.
+The test enumerates the entire new physical delta: admission directories/file,
+working-key installation and ordinary SQLite sidecars only. Lease bookkeeping
+may change journal bytes; it does not authorize source, catalog or run changes.
+
+This proves the no-plaintext MIME case through the native retained executor. It
+does not prove every malformed MIME variant, Monday source rejection, process
+hard-death, stale-lease takeover, lost-response recovery, or selected-receipt
+loading (#110). Those remain separate requirements of the complete plan.
