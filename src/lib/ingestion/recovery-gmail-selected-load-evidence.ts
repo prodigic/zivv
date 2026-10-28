@@ -34,6 +34,7 @@ interface Manifest {
   checkpointSha256: string;
   admissionSha256: string;
   admission: string;
+  physicalSnapshotSha256: string;
   baselineSha256: string;
   selector: RecoveryGmailSelectedReceiptSelector;
   captureFamily: {
@@ -178,6 +179,7 @@ export function createRecoveryGmailSelectedLoadEvidence(
       checkpointSha256: sha256(canonicalJson(input.baseline.checkpoint)),
       admissionSha256: sha256(input.admission),
       admission: input.admission.toString("base64"),
+      physicalSnapshotSha256: intent.physicalSnapshotSha256,
       baselineSha256: intent.baselineSha256,
       selector: { ...intent.selector },
       captureFamily: captureFamily(input.baseline),
@@ -221,6 +223,8 @@ export interface RecoveryGmailRestoredLoadEvidence {
   loadAllowed: false;
   physicalValidationRequired: true;
   evidenceSha256: string;
+  /** Original admission commitment only; present physical validation is separate. */
+  physicalSnapshotSha256: string;
   baselineSha256: string;
   admission: Buffer;
   originalBaseline: Pick<
@@ -333,12 +337,14 @@ export function restoreRecoveryGmailSelectedLoadEvidence(
     const expected = createRecoveryGmailSelectedLoadEvidence({
       baseline,
       binding: input.binding,
+      physicalSnapshotSha256: manifest.physicalSnapshotSha256,
       admission,
     });
     if (!expected.manifest.equals(input.manifest)) fail();
     const intent = authenticateRecoveryGmailSelectedLoadAdmission({
       baseline,
       binding: input.binding,
+      physicalSnapshotSha256: manifest.physicalSnapshotSha256,
       admission,
     });
     if (intent.baselineSha256 !== manifest.baselineSha256) fail();
@@ -348,6 +354,7 @@ export function restoreRecoveryGmailSelectedLoadEvidence(
       loadAllowed: false as const,
       physicalValidationRequired: true as const,
       evidenceSha256: sha256(input.manifest),
+      physicalSnapshotSha256: intent.physicalSnapshotSha256,
       baselineSha256: intent.baselineSha256,
       admission: Buffer.from(admission),
       originalBaseline: structuredClone(originalBaseline),

@@ -23,6 +23,7 @@ export interface RecoveryGmailSelectedLoadAdmission {
   loadAllowed: false;
   binding: RecoveryPreparedHostBinding;
   admittedAtEpochMs: number;
+  physicalSnapshotSha256: string;
   baselineSha256: string;
   familySha256: string;
   selectionSha256: string;
@@ -37,6 +38,8 @@ export interface RecoveryGmailSelectedLoadAdmission {
 }
 export interface RecoveryGmailSelectedLoadAdmissionContext {
   baseline: RecoveryGmailSelectedLoadBaselineInput;
+  /** Exact original host inventory observed by the closed physical adapter. */
+  physicalSnapshotSha256: string;
   binding: RecoveryPreparedHostBinding;
 }
 function fail(): never {
@@ -50,6 +53,17 @@ function body(
   admittedAtEpochMs: number
 ): RecoveryGmailSelectedLoadAdmission {
   key(input.baseline.recoveryKey);
+  const descriptor = Object.getOwnPropertyDescriptor(
+    input,
+    "physicalSnapshotSha256"
+  );
+  if (
+    !descriptor ||
+    !Object.hasOwn(descriptor, "value") ||
+    typeof descriptor.value !== "string" ||
+    !/^[a-f0-9]{64}$/.test(descriptor.value)
+  )
+    fail();
   const binding = validateRecoveryPreparedHostBinding(
     input.binding,
     input.baseline.recoveryKey
@@ -71,6 +85,7 @@ function body(
     loadAllowed: false,
     binding,
     admittedAtEpochMs,
+    physicalSnapshotSha256: descriptor.value,
     baselineSha256: baseline.baselineSha256,
     familySha256: baseline.selection.familySha256,
     selectionSha256: baseline.selection.selectionSha256,
