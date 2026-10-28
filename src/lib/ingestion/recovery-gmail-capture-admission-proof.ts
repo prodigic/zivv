@@ -1139,6 +1139,31 @@ export interface RecoveryGmailSelectedReceiptSelector {
   receiptId: string;
 }
 
+/** Copy bounded selector metadata only; this grants no receipt or load authority. */
+export function copyRecoveryGmailSelectedReceiptSelector(
+  value: RecoveryGmailSelectedReceiptSelector
+): RecoveryGmailSelectedReceiptSelector {
+  const keys = Reflect.ownKeys(value);
+  if (keys.length !== 4 || keys.some((key) => typeof key !== "string")) fail();
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  same(
+    Object.keys(descriptors).sort(),
+    ["batchId", "messageId", "rawSha256", "receiptId"].sort()
+  );
+  for (const descriptor of Object.values(descriptors))
+    if (!("value" in descriptor) || typeof descriptor.value !== "string")
+      fail();
+  const selected = { ...value };
+  if (
+    !hashPattern.test(selected.batchId) ||
+    !hashPattern.test(selected.rawSha256) ||
+    !hashPattern.test(selected.receiptId) ||
+    !/^[a-f0-9]{1,128}$/.test(selected.messageId)
+  )
+    fail();
+  return selected;
+}
+
 /** Resolve one ready canonical receipt from the authenticated entire capture
  * family. Internal completion of journal-first evidence is only a validation
  * view: selection requires every selected/ancestor canonical file to exist in
@@ -1160,24 +1185,7 @@ function selectedReceipt(
     selector: RecoveryGmailSelectedReceiptSelector;
   }
 ) {
-  const keys = Reflect.ownKeys(input.selector);
-  if (keys.length !== 4 || keys.some((key) => typeof key !== "string")) fail();
-  const descriptors = Object.getOwnPropertyDescriptors(input.selector);
-  same(
-    Object.keys(descriptors).sort(),
-    ["batchId", "messageId", "rawSha256", "receiptId"].sort()
-  );
-  for (const descriptor of Object.values(descriptors))
-    if (!("value" in descriptor) || typeof descriptor.value !== "string")
-      fail();
-  const selected = { ...input.selector };
-  if (
-    !hashPattern.test(selected.batchId) ||
-    !hashPattern.test(selected.rawSha256) ||
-    !hashPattern.test(selected.receiptId) ||
-    !/^[a-f0-9]{1,128}$/.test(selected.messageId)
-  )
-    fail();
+  const selected = copyRecoveryGmailSelectedReceiptSelector(input.selector);
   const family = projectCaptureFamily(input);
   // This is a private validation horizon for authenticated later receipts,
   // not a replacement checkpoint or a new source observation.

@@ -374,3 +374,55 @@ scope. Interrupted stages/orphans, corruption, exclusive serialization, exact
 load delta/signed result, native deleted-host crash/lost-response/replay and later
 load-family composition remain required. This is not a second ledger or a success
 receipt, and does not complete #110 or the full Friday delivery plan.
+
+## Physical selected-load inspection checkpoint, October 28
+
+`inspectRecoveryGmailSelectedLoadAdmission` observes an actual prepared host before
+load installation. It reuses the complete capture host verifier through a fixed
+private read-only mode, deriving the active capture from the authenticated family
+rather than trusting the caller to choose which family to observe. A ready
+receipt from the original batch can therefore be selected beside a genuinely
+interrupted different capture without dropping either obligation.
+
+The low-level host snapshot returns detached data only: no recovery key, open
+handle, validation callback or scope constructor. It authenticates original
+retirement/preparation/runtime/npm, complete ordered capture intent/result family,
+canonical intake and logical journal, working-key evidence and unchanged prepared
+files. The catalog is certified by exact unchanged prepared-file-tree identity,
+not a stale workspace ledger or a new writable SQLite observation. Staging had
+already verified the restored catalog digest. This first-load observer rejects
+even metadata-only SQLite generation drift with an unchanged logical digest.
+A transaction-owned fresh canonical read is still required by the future writer.
+
+The public report is explicitly pre-load-only. It includes opaque commitments,
+normal source/run identity, counts, capture-repair status and message-hashed
+obligations; no RAW body, key, physical path, live handle or clear Gmail message
+ID is returned. It requires a matching archived inspection entry and refuses an
+unsupported capsule before destination preparation or any installer/key effects.
+The existing run-only recovery mode and default capture selection rules remain
+unchanged. All activation/capture/load flags remain false and physical
+revalidation is still required before future effects.
+
+The native fixture verifies deleted original roots and relocated npm, original
+ready selection beside actual source-committed interruption in another batch,
+unchanged physical/logical state, preserved observation and quarantine, and the
+subsequent completed capture family. A deliberate SQLite generation-only change
+then refuses without further state changes. A separate genuine missing-entry
+capsule refuses before creating a destination. It is left unprepared because the
+current host correctly refuses to prepare a different archived worker inventory;
+no retained worker or signed receipt is patched to simulate compatibility.
+
+Read-only journal observation can involve SQLite sidecar bookkeeping. Native
+before/after measurements pin a real read observer so that opening/closing the
+measurement itself does not masquerade as an inspector mutation. This is not a
+new journal writer or a claim that a read report grants ownership.
+
+This observer does not install artifacts or support post-load physical changes.
+The next closed coordinator must bind exact current physical/stage membership,
+recognize only its fixed per-run evidence namespace, install row chunks/manifest
+before the exact intent and before key/writer effects, and revalidate around each
+effect. Present load changes still need an exact delta/signed-result proof against
+the original admitted baseline. Stage repair/adoption, bounded source-to-load
+scope, native crash/lost-response/replay and later-load family composition remain
+required for #110 and through-load recovery. No activation or full-goal completion
+is established by successful inspection.

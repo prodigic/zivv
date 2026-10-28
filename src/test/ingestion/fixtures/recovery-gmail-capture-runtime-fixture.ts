@@ -38,6 +38,7 @@ export interface RecoveryGmailCaptureRuntimeFixture {
   input: RecoveryRuntimeInput;
   batchIds: string[];
   base: string;
+  prepared: boolean;
   sourceReceipts: ReturnType<typeof listRetainedSteveEmailSources>;
   composition?: {
     originalBatchId: string;
@@ -191,6 +192,7 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
     reviewSecondMessage?: boolean;
     composedBatches?: boolean;
     invalidPendingMime?: boolean;
+    withoutSelectedLoadInspector?: boolean;
     seedAuthorityControls?: boolean;
   } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
@@ -224,6 +226,16 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
       "dist/utils",
     ])
       cpSync(resolve(path), join(root, path), { recursive: true });
+    if (options.withoutSelectedLoadInspector) {
+      // Omit the feature BEFORE capture/retirement. Never patch a prepared or
+      // retained worker to manufacture an older compatible capsule.
+      rmSync(
+        join(
+          root,
+          "dist/lib/ingestion/recovery-gmail-selected-load-inspector.js"
+        )
+      );
+    }
     write(
       join(root, "data/ingestion/store.json"),
       '{"schemaVersion":1,"backend":"sqlite","namespace":"zivv"}'
@@ -509,11 +521,15 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
       destination: join(base, "prepared runtime"),
       npmCli: join(replacement, "bin/npm-cli.js"),
     };
-    await prepareOperatorRecoveryRuntime(input);
+    // A missing-feature archive is intentionally left unprepared: current host
+    // runtime identity must not be used to prepare a different archived worker.
+    if (!options.withoutSelectedLoadInspector)
+      await prepareOperatorRecoveryRuntime(input);
     return {
       input,
       batchIds,
       base,
+      prepared: !options.withoutSelectedLoadInspector,
       sourceReceipts,
       ...(composition ? { composition } : {}),
       cleanup: (preserve) => cleanupFixture(base, preserve),
