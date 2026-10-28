@@ -445,3 +445,52 @@ host inventory, install evidence before intent/key/writer effects, and validate
 present physical state plus the exact allowed load delta. Restoring original
 evidence returns its original commitment and still requires physical validation;
 it never claims the current tree equals the original after load effects.
+
+## Closed selected-load evidence installation, October 28
+
+`installRecoveryGmailSelectedLoadEvidence` composes the observed original physical
+host, selected receipt baseline, signed intent and retained baseline manifest
+inside one synchronous coordinator. The caller supplies only the ordinary
+recovery inputs and exact receipt selector. It cannot supply a run, source,
+clock, filesystem target, callback, catalog or executor.
+
+The only new namespace is `recovery-gmail-load/<normal-run-id>/`: `baseline.json`,
+`chunks/<chunk-id>.bin`, `admission.json` and their exact private installer stage
+directories. Normal run IDs are the full 64-character source-identity hash.
+The baseline manifest is installed first, then all row chunks, and the exact
+intent last. A flushed orphan baseline supplies its original signed admission
+time on retry; the fresh physical/logical host must still authenticate against
+that original intent before any adoption or ACL change. Regenerating the packet
+must reproduce the complete saved manifest, so unknown fields, sibling runs,
+files or chunk bytes cannot be adopted as an arbitrary exemption.
+
+The fixed-purpose host adapter enumerates the full runtime, while the closed
+coordinator accounts for every load-namespace member against exact regenerated
+bytes, paths and directory membership before effects. The rest of the host must
+match the original admitted physical inventory and logical capture family.
+Runtime enumeration recognizes only complete, matching two-link installer alias
+pairs for the exact normal-run layout; ordinary capture and generic inspection
+still refuse the load namespace. The raw detached adapter observation grants no
+namespace validation or write authority by itself.
+
+A private revocable context allows only those exact evidence files and installer
+aliases. Every file/ACL/adoption boundary revalidates the host and namespace.
+Catalog, source capture, journal, backup-key, retirement and other recovery scopes
+are excluded. Successful installation still reports `loadAllowed: false` and
+requires fresh physical validation. It does not execute the selected load or
+prove post-load catalog/run deltas. The production launcher, final bounded loader,
+transaction-owned canonical read, complete crash/hard-death/authority acceptance,
+signed load result and later-load family composition remain required.
+
+Focused evidence for this checkpoint: the retained native installer fixture passed
+in 235.48 seconds, covering flushed-manifest retry, manifest and chunk publication,
+linked-intent recovery, stable replay and unknown-file refusal. A separate original
+ready/no-working-key control and input refusal passed in 83.59 seconds. Existing
+physical capture/inspection compatibility cases passed in 113.03 seconds, and 63
+pure family/selection/baseline/intent/evidence cases passed in 36.34 seconds (69
+unique focused cases overall). Worker and publication types, lint and formatting
+passed. The first native attempt exposed the mistaken candidate-directory run-ID
+pattern; runtime inventory correctly refused its linked manifest. The exact normal
+64-hex run-ID pattern was corrected, and the original failed `k7xwCc` fixture and
+worker remain unchanged. No complete hard-death or selected-load execution claim
+is made by these checks.

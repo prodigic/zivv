@@ -33,6 +33,7 @@
     "src/test/ingestion/recovery-gmail-selected-load-admission-proof.test.ts",
     "src/test/ingestion/recovery-gmail-selected-load-evidence.test.ts",
     "src/test/ingestion/recovery-gmail-selected-load-inspector.test.ts",
+    "src/test/ingestion/recovery-gmail-selected-load-installation.test.ts",
     "src/test/ingestion/recovery-gmail-inspector.test.ts",
     "src/test/ingestion/recovery-gmail-capsule.test.ts",
     "src/test/ingestion/recovery-gmail-batch-proof.test.ts",
