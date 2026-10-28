@@ -200,3 +200,49 @@ ready-receipt/RAW/source/correction resolution, full catalog and rules baseline,
 durable closed admission, normal deterministic loading, exact catalog/run delta
 and crash/lost-response/replay acceptance remain required. No writer scope,
 quarantine exception, live operation, freeze or publication is introduced.
+
+## Exact selected-receipt proof checkpoint, October 28
+
+`proveRecoveryGmailSelectedReceipt` accepts the full capture-family input and one
+closed `{batchId, messageId, rawSha256, receiptId}` selector. It revalidates all
+completed predecessors and any unfinished tail, then derives batch membership,
+canonical receipt identity, exact source hash, edition, delivery and original
+first observation from authenticated retained evidence. It never accepts caller
+source bytes, account/edition replacements, run IDs or a load permission.
+
+The internal full-family resolver can reconstruct the canonical validation view
+of a journal-first tail. That view stays private: the selected receipt, its
+primary delivery, selected duplicate delivery, correction ancestors and any
+approval must all have their exact canonical files in the actual observed
+inventory. A missing canonical file remains capture-pending even when its source
+journal row has committed. A different original ready receipt can still be
+selected; unfinished unrelated obligations are retained rather than making all
+selection fail. The original checkpoint remains the trust anchor. A private
+current-time validation horizon admits already-authenticated later observations
+without changing any receipt timestamp or returning a replacement checkpoint.
+
+Duplicate deliveries bind their own RAW and capture manifest while retaining the
+first canonical body receipt and observation. Gmail RAW SHA256 and plaintext
+source SHA256 remain separate. Effective readiness and correction lineage reuse
+the strict batch inventory resolver, including exact canonical approval bytes.
+The selected output commits the entire family, canonical selected/ancestor
+files, derived source descriptor and all batch-message obligations. Its ready
+status describes capture readiness, not successful loading or freeze eligibility.
+All activation/capture/load flags remain false and physical validation remains
+required. No RAW or plaintext body is returned.
+
+Focused proofs cover original and later batch selection, duplicate delivery,
+explicit correction ancestry, ordinary review/approval without changing first
+observation, partial canonical evidence, unapproved correction, omitted family,
+wrong selector identities, RAW/plaintext substitution, source/clock drift,
+accessor/symbol controls and detached outputs. These are detached proofs over
+ordinary synthetic acquisition/intake evidence; they do not claim deleted-host
+selected-load execution or catalog mutation acceptance.
+
+Still required for #110: physical complete-family enumeration and exact current
+identity/byte checks; fresh full catalog/journal/runtime/rules/configuration
+baseline; normal deterministic run identity; durable closed signed admission;
+selected source-to-load execution; exact catalog/run/receipt/artifact delta;
+crash, lost-response and replay acceptance; preserved pre-cutoff freeze blocking.
+This checkpoint does not widen the run-only recovery entry or general quarantine
+access, and does not complete #110, #106/#78 or the full Friday delivery plan.
