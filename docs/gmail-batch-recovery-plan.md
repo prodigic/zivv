@@ -148,3 +148,21 @@ from this packet.
 5. Composed deleted-host, lost-response, cutoff and quarantine refusal drills for #106/#78/#38.
 
 These are required work items, not completion claims. Every step retains the manual Friday path, and no implementation step authorizes a live cutover or schedule activation.
+
+## October 28 native composition checkpoint
+
+The IPC lifecycle/order checkpoint is [PR #140](https://github.com/prodigic/zivv/pull/140). Its stacked composition follow-up adds the actual deleted-host rehearsal in `src/test/ingestion/recovery-gmail-capture-multibatch-runtime.test.ts`:
+
+| Evidence          | State at retirement                                          | Recovery                                                                                                 |
+| ----------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| ORIGINAL batch a1 | Captured, ready source for edition A                         | Exact receipt, source, signed batch and first observation preserved                                      |
+| PRIOR batch b1    | Signed pending correction for edition A, same account        | Interrupt after journal source commit; repair using a1 as parent without replacing the saved observation |
+| OWN batch c1/d1   | Signed pending two-message batch for edition B, same account | Capture c1 ready, then d1 with c1 as the prospective correction parent                                   |
+
+All three batches are created through separate normal `captureSteveGmailWindow` calls with synthetic Gmail RAW/FULL responses. The next edition is deliberate: ordinary acquisition must replay pending work for the same edition first. This fixture neither mocks that replay nor rewrites/resigns retained batch evidence to manufacture two pending batches. Shared MIME preparation derives expected receipt IDs from the actual authenticated snapshots; those computed identities are not represented as already admitted receipts.
+
+The original checkout, operator directory and npm tree are deleted before capture recovery. The retained worker repairs PRIOR, then captures OWN through the public closed entry. OWN's signed admission binds the exact completed PRIOR admission/result hashes. Both pairs remain byte-identical after replay. Original catalog/configuration/runtime/batch/intake inventory and existing run/artifact rows remain exact; only the permitted capture family and journal bookkeeping change. General quarantine access and activation remain denied.
+
+The composed case passed in **190.57 seconds**. A first run correctly reached both captures but failed a test assumption equating signed intent time with source admission time. The corrected test preserves exact acquisition timestamps, bounds each new first observation by the real recovery/source window, verifies parent-before-child ordering and proves that interrupted/replayed observations never change. The failed isolated fixture was retained; no retained worker was patched in place.
+
+This is positive native composition evidence, not completion of #109/#106/#78. Remaining clock/corruption/crash/refusal/portability coverage and #110's distinct selected-ready-receipt load authority still require their own acceptance. No live retirement, ledger/cutoff mutation, scheduling activation or publication was performed.

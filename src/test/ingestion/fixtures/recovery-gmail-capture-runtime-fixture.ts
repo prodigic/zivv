@@ -18,7 +18,10 @@ import { bootstrapLedger } from "../../../lib/ingestion/ledger.js";
 import { retireAndCaptureOperatorRecovery } from "../../../lib/ingestion/operator-recovery.js";
 import { prepareOperatorRecoveryRuntime } from "../../../lib/ingestion/recovery-runtime.js";
 import { writeSqliteLedger } from "../../../lib/ingestion/sqlite-store.js";
-import { listRetainedSteveEmailSources } from "../../../lib/ingestion/steve-email-intake.js";
+import {
+  listRetainedSteveEmailSources,
+  prepareSteveEmailCapture,
+} from "../../../lib/ingestion/steve-email-intake.js";
 import {
   captureSteveGmailWindow,
   readAuthenticatedSteveGmailBatches,
@@ -36,6 +39,12 @@ export interface RecoveryGmailCaptureRuntimeFixture {
   batchIds: string[];
   base: string;
   sourceReceipts: ReturnType<typeof listRetainedSteveEmailSources>;
+  composition?: {
+    originalBatchId: string;
+    priorBatchId: string;
+    ownBatchId: string;
+    receiptIds: Record<"a1" | "b1" | "c1" | "d1", string>;
+  };
   cleanup(preserve: boolean): void;
 }
 
@@ -179,9 +188,14 @@ function assertOwnedDirectory(base: string, target: string): string {
 export async function createRecoveryGmailCaptureRuntimeFixture(
   options: {
     reviewSecondMessage?: boolean;
+    composedBatches?: boolean;
     seedAuthorityControls?: boolean;
   } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
+  if (options.composedBatches && options.reviewSecondMessage)
+    throw new Error(
+      "Composed pending batches cannot pre-review the second message"
+    );
   const base = mkdtempSync(
     join(tmpdir(), "zivv-recovery-gmail-capture-runtime-")
   );
@@ -246,52 +260,88 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
     const { editionId, titleDate } = nextFriday(now);
     const firstReceived = now - 60_000;
     const secondReceived = now - 30_000;
-    const body = (label: string) =>
-      `THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest ${titleDate}\nSynthetic ${label} capture fixture\n`;
+    const body = (label: string, title = titleDate) =>
+      `THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest ${title}\nSynthetic ${label} capture fixture\n`;
     const messages = [
       fixtureMessage("a1", firstReceived, body("completed")),
       fixtureMessage("b1", secondReceived, body("pending")),
     ];
-
-    const originalSave = WeeklyRunJournal.prototype.saveIntakeEvidence;
-    let interrupted = false;
-    const hook = vi
-      .spyOn(WeeklyRunJournal.prototype, "saveIntakeEvidence")
-      .mockImplementation(function (
-        this: WeeklyRunJournal,
-        kind,
-        id,
-        bytes,
-        lease
-      ) {
-        if (
-          kind === "source" &&
-          (JSON.parse(bytes.toString("utf8")) as { messageId?: string })
-            .messageId === "b1"
+    const nextEdition = nextFriday(
+      Date.parse(editionId + "T12:00:00Z") + 7 * 86_400_000
+    );
+    const ownMessages = options.composedBatches
+      ? [
+          fixtureMessage(
+            "c1",
+            now - 20_000,
+            body("own parent", nextEdition.titleDate)
+          ),
+          fixtureMessage(
+            "d1",
+            now - 10_000,
+            body("own correction", nextEdition.titleDate)
+          ),
+        ]
+      : [];
+    async function captureWindow(
+      selected: ReturnType<typeof fixtureMessage>[],
+      expectedEditionId: string,
+      pendingIds: string[]
+    ): Promise<void> {
+      const originalSave = WeeklyRunJournal.prototype.saveIntakeEvidence;
+      let interrupted = false;
+      const hook = vi
+        .spyOn(WeeklyRunJournal.prototype, "saveIntakeEvidence")
+        .mockImplementation(function (
+          this: WeeklyRunJournal,
+          kind,
+          id,
+          bytes,
+          lease
         ) {
-          interrupted = true;
-          throw new Error(interruption);
-        }
-        return originalSave.call(this, kind, id, bytes, lease);
-      });
-    try {
-      await captureSteveGmailWindow({
-        operatorDirectory: operator,
-        expectedAccountId: account,
-        expectedEditionId: editionId,
-        startEpochMs: firstReceived - 1_000,
-        endEpochMs: now,
-        getAccessToken: async () => "synthetic_fixture_token",
-        fetcher: fakeGmail(messages),
-      });
-    } catch (error) {
-      if (!(error instanceof Error) || !error.message.includes(interruption))
-        throw error;
-    } finally {
-      hook.mockRestore();
+          if (
+            kind === "source" &&
+            pendingIds.includes(
+              (JSON.parse(bytes.toString("utf8")) as { messageId: string })
+                .messageId
+            )
+          ) {
+            interrupted = true;
+            throw new Error(interruption);
+          }
+          return originalSave.call(this, kind, id, bytes, lease);
+        });
+      try {
+        await captureSteveGmailWindow({
+          operatorDirectory: operator,
+          expectedAccountId: account,
+          expectedEditionId,
+          startEpochMs:
+            Math.min(...selected.map((m) => Number(m.full.internalDate))) -
+            1_000,
+          endEpochMs: now,
+          getAccessToken: async () => "synthetic_fixture_token",
+          fetcher: fakeGmail(selected),
+        });
+      } catch (error) {
+        if (!(error instanceof Error) || !error.message.includes(interruption))
+          throw error;
+      } finally {
+        hook.mockRestore();
+      }
+      if (interrupted !== pendingIds.length > 0)
+        throw new Error("Unexpected pending Gmail source interruption");
     }
-    if (!interrupted)
-      throw new Error("Expected pending Gmail source interruption");
+    if (options.composedBatches) {
+      await captureWindow([messages[0]!], editionId, []);
+      await captureWindow([messages[1]!], editionId, ["b1"]);
+      // Normal acquisition replays pending work for the SAME edition first.
+      // A subsequent edition permits a second genuinely pending signed batch,
+      // without mocking replay or rewriting authenticated retained snapshots.
+      await captureWindow(ownMessages, nextEdition.editionId, ["c1"]);
+    } else {
+      await captureWindow(messages, editionId, ["b1"]);
+    }
 
     if (options.reviewSecondMessage) {
       // Replay the authenticated saved batch through ordinary intake without a
@@ -331,6 +381,60 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
     const batchIds = readdirSync(batchDirectory)
       .filter((name) => /^[a-f0-9]{64}\.json$/.test(name))
       .map((name) => name.slice(0, -5));
+
+    let composition: RecoveryGmailCaptureRuntimeFixture["composition"];
+    if (options.composedBatches) {
+      const batches = readAuthenticatedSteveGmailBatches({
+        operatorDirectory: operator,
+      });
+      const batchFor = (messageId: string) => {
+        const matches = batches.filter((b) =>
+          b.snapshots.some((m) => m.rawMessage.id === messageId)
+        );
+        if (matches.length !== 1)
+          throw new Error("Missing unique composition batch");
+        return matches[0]!.batchId;
+      };
+      const expected: Partial<Record<"a1" | "b1" | "c1" | "d1", string>> = {};
+      for (const batch of batches)
+        for (const snapshot of batch.snapshots) {
+          const prepared = await prepareSteveEmailCapture({
+            accountId: account,
+            expectedEditionId: batch.expectedEditionId,
+            observedAtEpochMs: Date.now(),
+            rawMessage: snapshot.rawMessage,
+            fullMessage: snapshot.fullMessage,
+          });
+          const id = snapshot.rawMessage.id;
+          if (!["a1", "b1", "c1", "d1"].includes(id))
+            throw new Error("Unexpected composition message");
+          expected[id as "a1" | "b1" | "c1" | "d1"] = prepared.receiptId;
+        }
+      if (
+        !expected.a1 ||
+        !expected.b1 ||
+        !expected.c1 ||
+        !expected.d1 ||
+        batches.length !== 3
+      )
+        throw new Error("Incomplete three-batch composition");
+      composition = {
+        originalBatchId: batchFor("a1"),
+        priorBatchId: batchFor("b1"),
+        ownBatchId: batchFor("c1"),
+        receiptIds: {
+          a1: expected.a1,
+          b1: expected.b1,
+          c1: expected.c1,
+          d1: expected.d1,
+        },
+      };
+      if (
+        batchFor("d1") !== composition.ownBatchId ||
+        sourceReceipts[0]!.receipt.receiptId !== expected.a1
+      )
+        throw new Error("Unexpected original/prospective receipt identity");
+    }
 
     if (options.seedAuthorityControls) {
       // Ordinary production journal APIs establish the valid running control
@@ -385,6 +489,7 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
       batchIds,
       base,
       sourceReceipts,
+      ...(composition ? { composition } : {}),
       cleanup: (preserve) => cleanupFixture(base, preserve),
     };
   } catch (error) {
