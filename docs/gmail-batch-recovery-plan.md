@@ -329,3 +329,48 @@ proof must explain current changes against the original admitted baseline;
 changed current evidence must never be adopted as a new baseline for retry.
 Signed result and later-load family composition remain required, as do native
 selected-load crash/lost-response/replay and all remaining delivery acceptance.
+
+## Original selected-load baseline evidence checkpoint, October 28
+
+`recovery-gmail-selected-load-evidence.ts` defines private baseline evidence bytes
+for crash recovery. The manifest is canonical UTF-8 JSON/newline, HMAC-bound to a
+separate `zivv-recovery-gmail-selected-load-baseline-evidence/v1` NUL domain. It
+binds the exact original checkpoint, signed intent, complete ordered capture
+family references and unfinished-tail snapshot. It does not copy the ledger,
+original RAW messages, unchanged run/artifact history or completed capture
+admission/result bodies. Those remain in their authenticated original evidence.
+
+`compactRecoveryGmailCaptureInventory` and its restore companion reuse the normal
+capture-family proof and canonical evidence derivation. Completed prefixes are
+rebuilt from their original signed pairs. Only the unfinished tail's additional
+source/approval rows, present canonical file commitments, directories and exact
+production ownership are retained. Missing journal-first canonical files remain
+missing; the reconstruction never promotes the private completion view into
+physical file presence. Producer-side replayability is checked before encoding.
+
+Each tail source/approval row is a separate digest-addressed chunk, at most 8 MiB.
+There are at most 200 chunks and 256 MiB aggregate row bytes; the manifest remains
+bounded at 16 MiB. These limits follow existing capture/journal bounds and fit the
+existing 16 MiB per-file immutable installer without widening it. No chunk path
+is accepted from a caller: the codec returns opaque fixed hash IDs and bytes.
+Missing/extra/duplicate/altered chunks or capture predecessors refuse. Original,
+completed-prior and unfinished-own evidence compose without duplicating prior
+rows. All referenced prior evidence must remain retained.
+
+Restoration checks the observed intent bytes (or explicit absence for validating
+an orphan artifact), exact checkpoint and capture family, chunks, reconstruction,
+and the original signed baseline. It returns detached original-baseline data and
+no recovery key. Null intent observation is not adoption or load permission.
+This restores the ORIGINAL baseline, not a claim about the current physical
+catalog/journal after a load. All activation/capture/load flags stay false and
+physical validation remains required. Current effects must still be explained by
+the later load-delta proof against this original baseline before any retry.
+
+The codec performs no filesystem installation, key installation, SQL, execution
+scope or load. Next, the closed retained coordinator must authenticate and install
+all row chunks and the manifest before publishing the exact intent, then validate
+complete physical family/runtime/SQLite identity and establish only its bounded
+scope. Interrupted stages/orphans, corruption, exclusive serialization, exact
+load delta/signed result, native deleted-host crash/lost-response/replay and later
+load-family composition remain required. This is not a second ledger or a success
+receipt, and does not complete #110 or the full Friday delivery plan.

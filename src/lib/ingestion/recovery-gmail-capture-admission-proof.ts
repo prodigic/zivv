@@ -1005,6 +1005,133 @@ export function proveRecoveryGmailCaptureFamily(
   return proof;
 }
 
+export interface RecoveryGmailCaptureSnapshotDelta {
+  intakeEvidence: Evidence[];
+  files: FileCommitment[];
+  directories: Checkpoint["directories"];
+  productionOwnership: Ownership;
+}
+/** Compact only the unfinished tail. Completed captures are reconstructed from
+ * their original authenticated pairs; original mail/catalog/run artifacts are
+ * not duplicated. This is detached evidence, never a physical snapshot permit. */
+export function compactRecoveryGmailCaptureInventory(
+  input: RecoveryGmailCaptureFamilyInput
+) {
+  const proof = projectCaptureFamily(input);
+  const base = rebuild(input.checkpoint, input.recoveryKey, input.completed);
+  const before = journal(base.journal),
+    actual = journal(input.current.journal);
+  const rows = new Set(before.intakeEvidence.map(rowKey));
+  const files = new Set(base.files.map(name)),
+    directories = new Set(base.directories.map(name));
+  const delta: RecoveryGmailCaptureSnapshotDelta = {
+    intakeEvidence: actual.intakeEvidence.filter(
+      (row) => !rows.has(rowKey(row))
+    ),
+    files: input.current.files
+      .filter((file) => !files.has(name(file)))
+      .map(({ area, path, sha256 }) => ({ area, path, sha256 })),
+    directories: input.current.directories.filter(
+      (directory) => !directories.has(name(directory))
+    ),
+    productionOwnership: actual.ownership.find(
+      (row) => row.scope === production
+    )!,
+  };
+  return {
+    familySha256: proof.familySha256,
+    activationAllowed: false as const,
+    captureAllowed: false as const,
+    loadAllowed: false as const,
+    physicalValidationRequired: true as const,
+    delta: structuredClone(delta),
+  };
+}
+/** Reconstruct the exact observed membership, not the virtual complete tail.
+ * Every reconstructed byte is derived from the original archive, signed capture
+ * pairs and validated selected source rows; unlisted canonical files stay absent. */
+export function restoreRecoveryGmailCaptureInventory(
+  input: Omit<
+    RecoveryGmailCaptureFamilyInput,
+    "current" | "ownProductionOwnership"
+  > & { delta: RecoveryGmailCaptureSnapshotDelta }
+) {
+  const base = rebuild(input.checkpoint, input.recoveryKey, input.completed);
+  if (
+    !Array.isArray(input.unfinishedAdmissions) ||
+    input.unfinishedAdmissions.length > 1 ||
+    !Array.isArray(input.delta.intakeEvidence) ||
+    input.delta.intakeEvidence.length > 200 ||
+    !Array.isArray(input.delta.files) ||
+    input.delta.files.length > 50_000 ||
+    !Array.isArray(input.delta.directories) ||
+    input.delta.directories.length > 50_000
+  )
+    fail();
+  const state = journal(base.journal);
+  const rowIds = new Set(state.intakeEvidence.map(rowKey));
+  for (const row of input.delta.intakeEvidence) {
+    if (rowIds.has(rowKey(row))) fail();
+    rowIds.add(rowKey(row));
+  }
+  if (input.delta.intakeEvidence.length)
+    state.intakeEvidence = [
+      ...state.intakeEvidence,
+      ...input.delta.intakeEvidence,
+    ].sort((a, b) => (rowKey(a) < rowKey(b) ? -1 : 1));
+  state.ownership = ownership(state.ownership, input.delta.productionOwnership);
+  const journalValue = journalBytes(state);
+  journal(journalValue);
+  let candidates = base;
+  if (input.unfinishedAdmissions.length) {
+    const selected = input.unfinishedAdmissions[0]!;
+    unfinished(input.unfinishedAdmissions, selected);
+    const admission = checkAdmission(
+      selected,
+      input.checkpoint,
+      base,
+      input.recoveryKey,
+      input.completed
+    );
+    candidates = expectedDelta(
+      base,
+      admission,
+      input.delta.intakeEvidence,
+      input.recoveryKey
+    ).complete;
+  } else if (input.delta.intakeEvidence.length) fail();
+  const available = new Map(candidates.files.map((file) => [name(file), file]));
+  const fileNames = new Set(base.files.map(name));
+  const files = [...base.files];
+  for (const file of input.delta.files) {
+    same(file, { area: file.area, path: file.path, sha256: file.sha256 });
+    const id = name(file),
+      derived = available.get(id);
+    if (fileNames.has(id) || !derived || derived.sha256 !== file.sha256) fail();
+    fileNames.add(id);
+    files.push(derived);
+  }
+  const directoryNames = new Set(base.directories.map(name));
+  const directories = [...base.directories];
+  for (const directory of input.delta.directories) {
+    same(directory, { area: directory.area, path: directory.path });
+    if (directoryNames.has(name(directory))) fail();
+    directoryNames.add(name(directory));
+    directories.push(directory);
+  }
+  const current = { files, directories, journal: journalValue };
+  return proveRecoveryGmailCaptureFamily({
+    checkpoint: input.checkpoint,
+    recoveryKey: input.recoveryKey,
+    completed: input.completed,
+    unfinishedAdmissions: input.unfinishedAdmissions,
+    current,
+    ...(input.unfinishedAdmissions.length
+      ? { ownProductionOwnership: input.delta.productionOwnership }
+      : {}),
+  });
+}
+
 export interface RecoveryGmailSelectedReceiptSelector {
   batchId: string;
   messageId: string;

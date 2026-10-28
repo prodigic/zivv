@@ -92,5 +92,5 @@ export async function createRecoveryGmailSelectedLoadFixture() {
     },
   };
 
-  return { baseline, cleanup: () => fixture.cleanup() };
+  return { baseline, capture: fixture, cleanup: () => fixture.cleanup() };
 }
