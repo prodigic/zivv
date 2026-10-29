@@ -1,3 +1,6 @@
+import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-runtime.js";
+import { proveSelectedLoadPhysicalDelta } from "../../lib/ingestion/recovery-gmail-selected-physical-delta.js";
+import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 import { spawn } from "node:child_process";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -151,6 +154,47 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
     )!;
     const directory = join(root, "recovery-gmail-load", installed.runId);
     expect(existsSync(join(directory, "load-result.json"))).toBe(false);
+    const keyPath = join(
+      root,
+      "operator",
+      process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
+    );
+    const snapshotPath = join(
+      root,
+      "checkout/data/ingestion/backups/ledger.snapshot.enc"
+    );
+    const reportPath = join(
+      root,
+      "checkout/data/ingestion/reports",
+      sha256(ledger.runs[0]!.runId) + ".json"
+    );
+    const changedFiles = {
+      ...(existsSync(keyPath) ? { key: readFileSync(keyPath) } : {}),
+      ...(existsSync(snapshotPath)
+        ? { snapshot: readFileSync(snapshotPath) }
+        : {}),
+      ...(existsSync(reportPath) ? { report: readFileSync(reportPath) } : {}),
+    };
+    const observedEntries = openPreparedRuntimeForAdmission(
+      fixture.input
+    ).inventoryGmailSelectedLoadExecution();
+    expect(
+      proveSelectedLoadPhysicalDelta({
+        baseline,
+        executionBaseline: readFileSync(
+          join(directory, "execution-baseline.json")
+        ),
+        admissionSha256: installed.admissionSha256,
+        evidenceSha256: installed.evidenceSha256,
+        physicalSnapshotSha256: installed.physicalSnapshotSha256,
+        raw: Buffer.from(raw.bytes, "base64"),
+        observedGeneration: generation,
+        observedLedger: ledger,
+        observedEntries,
+        changedFiles,
+      })
+    ).toMatchObject({ status: "committed", loadAllowed: false });
+
     expect(
       proveSelectedLoadJournalDelta({
         baseline,
