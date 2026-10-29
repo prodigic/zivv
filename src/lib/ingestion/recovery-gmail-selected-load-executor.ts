@@ -1,3 +1,4 @@
+import { signSelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { selectedLoadTemporaryTarget } from "./recovery-gmail-selected-load-paths.js";
 import { createRecoveryGmailSelectedLoadEvidence } from "./recovery-gmail-selected-load-evidence.js";
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -746,18 +747,16 @@ export async function executeRecoveredGmailSelectedLoad(
         ownerHash.slice(20, 32),
       ].join("-");
     const files = new Map<string, Buffer>();
-    const execution = signed(
+    const execution = signSelectedLoadExecutionBaseline(
       {
-        kind: "zivv-selected-load-execution-baseline",
-        version: 1,
         admissionSha256: installed.admissionSha256,
         evidenceSha256: installed.evidenceSha256,
         physicalSnapshotSha256: installed.physicalSnapshotSha256,
         generation: 1,
+        startedAtEpochMs: startedAt,
         entries,
       },
-      input.recoveryKey,
-      "zivv-selected-load-execution-baseline/v1"
+      input.recoveryKey
     );
     files.set(join(directory, "execution-baseline.json"), execution);
     files.set(
