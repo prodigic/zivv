@@ -75,6 +75,7 @@ export type SelectedLoadJournalOperation =
   | { kind: "artifact"; runId: string; stage: string; bytes: Buffer }
   | { kind: "check" };
 interface Scope {
+  pauseForLinkedChunkTest?: boolean;
   resume?: {
     observedJournal: WeeklyJournalRecoverySnapshot;
     previousOwner: WeeklyRunLease;
@@ -678,6 +679,15 @@ export function observeSelectedGmailLoadFile(
   const scope = current();
   if (!scope) return false;
   scope.assertCurrent();
+  if (
+    scope.pauseForLinkedChunkTest &&
+    point === "linked" &&
+    resolve(path) === join(scope.directory, "resume-snapshot-000.bin")
+  ) {
+    process.stdout.write("SELECTED_LOAD_TEST_CHUNK_LINKED\n");
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+    throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+  }
   if (point === "published") {
     const target = resolve(path),
       expected = scope.files.get(target);
@@ -1100,8 +1110,9 @@ export async function executeRecoveredGmailSelectedLoad(
 
 /** Resume exactly one inspected committed first-attempt gap. Scope remains
  * private and quarantined; interruption of this retry requires later proof. */
-export async function resumeRecoveredGmailSelectedLoad(
-  supplied: RecoveryGmailSelectedLoadInstallationInput
+async function resumeSelectedLoad(
+  supplied: RecoveryGmailSelectedLoadInstallationInput,
+  pauseForLinkedChunkTest: boolean
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoRecoveredGmailCapture();
@@ -1273,8 +1284,25 @@ export async function resumeRecoveredGmailSelectedLoad(
     const originalEntries = new Map(
       evidence.observedEntries.map((entry) => [entry.path, entry])
     );
+    const stagedTransients = new Map<string, Buffer>();
+    for (const stagedPath of evidence.stagedSnapshotPaths) {
+      const absolute = join(runtime.destination, stagedPath);
+      const target = selectedLoadTemporaryTarget(absolute, {
+        operator,
+        directory,
+        keyName,
+        report: reportPath,
+        snapshot: snapshotPath,
+      });
+      if (target) {
+        const bytes = files.get(target);
+        if (!bytes) fail();
+        stagedTransients.set(absolute, Buffer.from(bytes));
+      }
+    }
     scope = {
       active: true,
+      pauseForLinkedChunkTest,
       deadline,
       startedAt: started.startedAtEpochMs,
       root,
@@ -1297,7 +1325,7 @@ export async function resumeRecoveredGmailSelectedLoad(
       ),
       files,
       directories: dirs,
-      transients: new Map(),
+      transients: stagedTransients,
       readonlyFiles,
       previousFiles: new Map(),
       keyStage: join(directory, "key-stage"),
@@ -1484,4 +1512,17 @@ export async function resumeRecoveredGmailSelectedLoad(
     input.recoveryKey.fill(0);
     wire.fill(0);
   }
+}
+
+/** Normal retry; no test interruption is selected. */
+export function resumeRecoveredGmailSelectedLoad(
+  input: RecoveryGmailSelectedLoadInstallationInput
+) {
+  return resumeSelectedLoad(input, false);
+}
+/** Fixed test-only pause after the first chunk link. It grants no new authority. */
+export function resumeRecoveredGmailSelectedLoadForTest(
+  input: RecoveryGmailSelectedLoadInstallationInput
+) {
+  return resumeSelectedLoad(input, true);
 }
