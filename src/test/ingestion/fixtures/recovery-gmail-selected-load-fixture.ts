@@ -15,10 +15,12 @@ export const selectedLoadWorkerFixtureBytes = Buffer.from(
 );
 /** Detached synthetic worker inventory plus ordinary Gmail/intake/catalog evidence.
  * This helper never claims to prepare or execute a genuine retained load worker. */
-export async function createRecoveryGmailSelectedLoadFixture() {
+export async function createRecoveryGmailSelectedLoadFixture(
+  options: { firstBody?: string } = {}
+) {
   const workerBytes = selectedLoadWorkerFixtureBytes;
 
-  const fixture = await createRecoveryGmailCaptureAdmissionFixture();
+  const fixture = await createRecoveryGmailCaptureAdmissionFixture(options);
   const empty = bootstrapLedger({ events: [], artists: [], venues: [] }, 1_000);
   const ledger = reconcileCandidates(
     empty,

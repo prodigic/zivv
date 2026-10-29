@@ -207,6 +207,7 @@ export interface RecoveryGmailCaptureAdmissionFixture {
 /** Build two real signed Gmail batches and their deterministic journal-first capture states in a private temp directory. */
 export async function createRecoveryGmailCaptureAdmissionFixture(
   options: {
+    firstBody?: string;
     reviewFirstCorrection?: boolean;
     duplicateOriginal?: boolean;
     approveReviewBeforeCheckpoint?: boolean;
@@ -227,7 +228,9 @@ export async function createRecoveryGmailCaptureAdmissionFixture(
         item.edition,
         item.id,
         item.receivedAtEpochMs,
-        item.body
+        item === editionBodies[0] && options.firstBody
+          ? options.firstBody
+          : item.body
       );
       const interruptAcquisition =
         item === editionBodies[0]
