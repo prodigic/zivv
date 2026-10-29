@@ -1,8 +1,9 @@
+import { inspectSelectedLoadInterruption } from "../../lib/ingestion/recovery-gmail-selected-load-interruption-inspection.js";
 import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-runtime.js";
 import { proveSelectedLoadPhysicalDelta } from "../../lib/ingestion/recovery-gmail-selected-physical-delta.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 import { spawn } from "node:child_process";
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, writeFileSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { expect, it, vi } from "vitest";
@@ -214,6 +215,22 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
       runId: installed.runId,
       loadAllowed: false,
     });
+    const inspected = inspectSelectedLoadInterruption(input);
+    expect(inspected).toMatchObject({
+      status: "committed",
+      runId: installed.runId,
+      loadAllowed: false,
+      activationAllowed: false,
+    });
+    expect(inspected.journalSha256).toBe(sha256(journal));
+    const unexpected = join(root, "unexpected-recovery-fixture-file");
+    writeFileSync(unexpected, "unexpected", { flag: "wx" });
+    try {
+      expect(() => inspectSelectedLoadInterruption(input)).toThrow();
+    } finally {
+      unlinkSync(unexpected);
+    }
+
     preserve = false;
   } finally {
     if (preserve)
