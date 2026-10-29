@@ -1,3 +1,5 @@
+import { readSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-interruption-inspection.js";
+import { verifySelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { signSelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { selectedLoadTemporaryTarget } from "./recovery-gmail-selected-load-paths.js";
 import { createRecoveryGmailSelectedLoadEvidence } from "./recovery-gmail-selected-load-evidence.js";
@@ -69,6 +71,11 @@ export type SelectedLoadJournalOperation =
   | { kind: "artifact"; runId: string; stage: string; bytes: Buffer }
   | { kind: "check" };
 interface Scope {
+  resume?: {
+    observedJournal: WeeklyJournalRecoverySnapshot;
+    previousOwner: WeeklyRunLease;
+    gateComplete: boolean;
+  };
   finish?: (state: WeeklyRunState, snapshot: Buffer) => Promise<void>;
   active: boolean;
   deadline: number;
@@ -363,6 +370,7 @@ function allowedJournal(scope: Scope, bytes: Buffer) {
   if (!owner) fail();
   if (
     canonicalJson(owner) !== canonicalJson(prior) &&
+    canonicalJson(owner) !== canonicalJson(scope.resume?.previousOwner) &&
     (owner.owner !== scope.owner ||
       owner.fence !== scope.fence ||
       owner.expiresAtEpochMs > scope.deadline)
@@ -421,6 +429,64 @@ export function selectedGmailLoadLeaseTtl(value: number): number {
   if (ttl < 1000) fail();
   return ttl;
 }
+function assertResumeJournalUnchanged(scope: Scope, bytes: Buffer): void {
+  if (!scope.resume || scope.resume.gateComplete) return;
+  const observed = validateWeeklyJournalRecoverySnapshot(bytes),
+    previous = scope.resume.observedJournal;
+  const {
+    digest: _digest,
+    ownership: observedOwners,
+    ...observedBody
+  } = observed;
+  const {
+    digest: _priorDigest,
+    ownership: previousOwners,
+    ...previousBody
+  } = previous;
+  same(observedBody, previousBody);
+  same(
+    observedOwners.filter((row) => row.scope !== production),
+    previousOwners.filter((row) => row.scope !== production)
+  );
+  const actual = observedOwners.find((row) => row.scope === production);
+  if (!actual) fail();
+  if (
+    canonicalJson(actual) !== canonicalJson(scope.resume.previousOwner) &&
+    (actual.owner !== scope.owner ||
+      actual.fence !== scope.fence ||
+      actual.expiresAtEpochMs > scope.deadline)
+  )
+    fail();
+}
+/** The normal runner invokes this only within the actual fenced journal guard. */
+export async function verifySelectedLoadResumeBarrier(): Promise<void> {
+  const scope = current();
+  if (!scope?.resume || scope.resume.gateComplete || scope.phase !== "run")
+    fail();
+  const observed = readGuardedWeeklyCatalogLease(
+    join(scope.operator, "weekly-runs.sqlite")
+  );
+  if (
+    !observed ||
+    observed.lease.owner !== scope.owner ||
+    observed.lease.fence !== scope.fence ||
+    observed.lease.scope !== production
+  )
+    fail();
+  assertResumeJournalUnchanged(scope, observed.snapshot);
+  await withCanonicalStoreTransaction(
+    join(scope.operator, "ledger.sqlite"),
+    { generation: scope.generation, ledger: scope.ledger },
+    async () => {
+      scope.assertCurrent();
+    }
+  );
+  scope.resume.gateComplete = true;
+}
+export function hasPendingSelectedLoadResume(): boolean {
+  const scope = current();
+  return !!scope?.resume && !scope.resume.gateComplete;
+}
 export function selectedGmailLoadJournal(input: {
   path: string;
   effect: CaptureJournalEffect;
@@ -438,7 +504,10 @@ export function selectedGmailLoadJournal(input: {
   )
     fail();
   scope.assertCurrent();
-  if (input.snapshot) allowedJournal(scope, input.snapshot);
+  if (input.snapshot) {
+    assertResumeJournalUnchanged(scope, input.snapshot);
+    allowedJournal(scope, input.snapshot);
+  }
   if (
     input.lease &&
     (input.lease.scope !== production ||
@@ -503,7 +572,9 @@ export function selectedGmailLoadFile(
               join(
                 scope.directory,
                 scope.phase === "evidence"
-                  ? "execution-baseline.json-stage"
+                  ? scope.resume
+                    ? "resume-intent.json-stage"
+                    : "execution-baseline.json-stage"
                   : "load-result.json-stage"
               ),
             ];
@@ -540,7 +611,8 @@ export function selectedGmailLoadFile(
     validateRecoveredBackupKeyBytes(bytes, scope.key);
     if (!scope.files.has(target)) scope.files.set(target, Buffer.from(bytes));
   }
-  const executionFile = join(scope.directory, "execution-baseline.json"),
+  const resumeIntentFile = join(scope.directory, "resume-intent.json"),
+    executionFile = join(scope.directory, "execution-baseline.json"),
     resultFile = join(scope.directory, "load-result.json"),
     reportFile = join(
       scope.root,
@@ -548,6 +620,8 @@ export function selectedGmailLoadFile(
       sha256(scope.plan.result.report.runId) + ".json"
     );
   if (
+    (target === resumeIntentFile &&
+      (!scope.resume || scope.phase !== "evidence")) ||
     (target === executionFile && scope.phase !== "evidence") ||
     (target === resultFile && scope.phase !== "result") ||
     (target === reportFile && scope.phase !== "run") ||
@@ -992,6 +1066,354 @@ export async function executeRecoveredGmailSelectedLoad(
         generation: scope!.generation,
         resultSha256: sha256(result),
         admissionSha256: installed.admissionSha256,
+        accepted: plan.result.report.acceptedEventIds.length,
+      };
+    });
+  } finally {
+    if (scope) {
+      scope.active = false;
+      scope.key.fill(0);
+    }
+    input.recoveryKey.fill(0);
+    wire.fill(0);
+  }
+}
+
+/** Resume exactly one inspected committed first-attempt gap. Scope remains
+ * private and quarantined; interruption of this retry requires later proof. */
+export async function resumeRecoveredGmailSelectedLoad(
+  supplied: RecoveryGmailSelectedLoadInstallationInput
+) {
+  assertNoSelectedGmailLoadExecution();
+  assertNoRecoveredGmailCapture();
+  const wire = encodeRecoveryGmailSelectedLoadFrame(supplied),
+    input = decodeRecoveryGmailSelectedLoadFrame(wire);
+  const { selector: _selector, ...runtime } = input;
+  let scope: Scope | undefined;
+  try {
+    const evidence = readSelectedLoadInterruptionEvidence(input);
+    if (evidence.report.status !== "committed")
+      throw Error("RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED");
+    if (evidence.report.lease.status === "active")
+      throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
+    const original = {
+      ...evidence.originalBaseline,
+      recoveryKey: input.recoveryKey,
+    };
+    const proof = proveRecoveryGmailSelectedLoadBaseline(original);
+    const started = verifySelectedLoadExecutionBaseline(
+      evidence.executionBaseline,
+      input.recoveryKey
+    );
+    const plan = createSelectedGmailLoadEffectPlan(
+      original.checkpoint,
+      proof,
+      evidence.raw
+    );
+    const savedJournal = validateWeeklyJournalRecoverySnapshot(
+      evidence.observedJournal
+    );
+    const previousOwner = savedJournal.ownership.find(
+      (row) => row.scope === production
+    );
+    const row = savedJournal.runState.find(
+      (item) => item.id === proof.runState.runId
+    );
+    if (
+      !previousOwner ||
+      !row ||
+      previousOwner.expiresAtEpochMs > Date.now() ||
+      parseWeeklyRunState(JSON.parse(row.payload)).stages.find(
+        (item) => item.stage === "load"
+      )?.status !== "running"
+    )
+      fail();
+    const root = join(resolve(runtime.destination), "checkout"),
+      operator = join(resolve(runtime.destination), "operator"),
+      directory = join(
+        resolve(runtime.destination),
+        "recovery-gmail-load",
+        proof.runState.runId
+      );
+    const location = projectLedgerLocation(root);
+    if (
+      location.backend !== "sqlite" ||
+      resolve(location.path) !== join(operator, "ledger.sqlite")
+    )
+      fail();
+    const opened = openPreparedRuntimeForAdmission(runtime),
+      now = Date.now(),
+      ownerHash = sha256("selected-load/" + evidence.admissionSha256),
+      owner = [
+        ownerHash.slice(0, 8),
+        ownerHash.slice(8, 12),
+        ownerHash.slice(12, 16),
+        ownerHash.slice(16, 20),
+        ownerHash.slice(20, 32),
+      ].join("-");
+    const fence = previousOwner.fence + 1,
+      deadline = now + 180000;
+    if (!Number.isSafeInteger(fence) || !Number.isSafeInteger(deadline)) fail();
+    const intent = signed(
+      {
+        kind: "zivv-selected-load-resume-intent",
+        version: 1,
+        admissionSha256: evidence.admissionSha256,
+        executionBaselineSha256: sha256(evidence.executionBaseline),
+        journalSha256: sha256(evidence.observedJournal),
+        inventorySha256: evidence.report.inventorySha256,
+        ledgerRevision: ledgerDigest(evidence.observedCatalog.ledger),
+        generation: evidence.observedCatalog.generation,
+        previousOwner,
+        fence,
+        owner,
+        startedAtEpochMs: now,
+        deadlineEpochMs: deadline,
+      },
+      input.recoveryKey,
+      "zivv-selected-load-resume-intent/v1"
+    );
+    const files = new Map<string, Buffer>(),
+      readonlyFiles = new Map<string, Buffer>();
+    const identities = ["ledger.sqlite", "weekly-runs.sqlite"].map((name) => {
+      const path = join(operator, name),
+        stat = lstatSync(path);
+      if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1) fail();
+      return { path, dev: stat.dev, ino: stat.ino };
+    });
+    for (const entry of evidence.observedEntries)
+      if (
+        entry.kind === "file" &&
+        entry.path.startsWith("recovery-gmail-load/")
+      ) {
+        const path = join(runtime.destination, entry.path),
+          bytes = readFileSync(path);
+        if (bytes.length !== entry.size || sha256(bytes) !== entry.sha256)
+          fail();
+        readonlyFiles.set(path, bytes);
+      }
+    const keyPath = join(operator, keyName),
+      snapshotPath = join(root, "data/ingestion/backups/ledger.snapshot.enc"),
+      reportPath = join(
+        root,
+        "data/ingestion/reports",
+        sha256(plan.result.report.runId) + ".json"
+      ),
+      intentPath = join(directory, "resume-intent.json");
+    if (evidence.changedFiles.key)
+      files.set(keyPath, evidence.changedFiles.key);
+    if (evidence.changedFiles.snapshot)
+      files.set(snapshotPath, evidence.changedFiles.snapshot);
+    if (evidence.changedFiles.report)
+      files.set(reportPath, evidence.changedFiles.report);
+    files.set(intentPath, intent);
+    const dirs = new Set([
+      operator,
+      directory,
+      dirname(directory),
+      join(directory, "key-stage"),
+      join(directory, "resume-intent.json-stage"),
+      join(directory, "load-result.json-stage"),
+      join(root, "data/ingestion/backups"),
+      join(root, "data/ingestion/reports"),
+    ]);
+    const originalEntries = new Map(
+      evidence.observedEntries.map((entry) => [entry.path, entry])
+    );
+    scope = {
+      active: true,
+      deadline,
+      startedAt: started.startedAtEpochMs,
+      root,
+      operator,
+      directory,
+      key: Buffer.from(input.recoveryKey),
+      phase: "evidence",
+      source: proof.source,
+      run: proof.runState,
+      initialRun: proof.initialState,
+      raw: Buffer.from(evidence.raw),
+      plan,
+      original: structuredClone(original.checkpoint.ledger),
+      ledger: structuredClone(evidence.observedCatalog.ledger),
+      generation: evidence.observedCatalog.generation,
+      owner,
+      fence,
+      journal: validateWeeklyJournalRecoverySnapshot(
+        Buffer.from(original.current.journal, "base64")
+      ),
+      files,
+      directories: dirs,
+      transients: new Map(),
+      readonlyFiles,
+      previousFiles: new Map(),
+      keyStage: join(directory, "key-stage"),
+      originalEntries,
+      resume: {
+        observedJournal: savedJournal,
+        previousOwner,
+        gateComplete: false,
+      },
+      assertCurrent: () => {
+        for (const identity of identities) {
+          const stat = lstatSync(identity.path);
+          if (
+            !stat.isFile() ||
+            stat.isSymbolicLink() ||
+            stat.nlink !== 1 ||
+            stat.dev !== identity.dev ||
+            stat.ino !== identity.ino
+          )
+            fail();
+        }
+        const actual = opened.inventoryGmailSelectedLoadExecution();
+        for (const entry of actual) {
+          const absolute = join(runtime.destination, entry.path),
+            before = originalEntries.get(entry.path),
+            expected = scope!.files.get(absolute);
+          if (
+            before &&
+            canonicalJson(before) === canonicalJson(entry) &&
+            (!expected ||
+              (entry.kind === "file" &&
+                entry.size === expected.length &&
+                entry.sha256 === sha256(expected)))
+          )
+            continue;
+          if (entry.kind === "directory" && dirs.has(absolute) && !before)
+            continue;
+          if (entry.kind === "file") {
+            const previous = scope!.previousFiles.get(absolute);
+            if (
+              previous &&
+              entry.size === previous.length &&
+              entry.sha256 === sha256(previous)
+            )
+              continue;
+            if (
+              expected &&
+              entry.size === expected.length &&
+              entry.sha256 === sha256(expected)
+            )
+              continue;
+            const temporary = scope!.transients.get(absolute);
+            if (
+              temporary &&
+              (entry.size === 0 ||
+                (entry.size === temporary.length &&
+                  entry.sha256 === sha256(temporary)))
+            )
+              continue;
+          }
+          fail();
+        }
+        for (const entry of evidence.observedEntries)
+          if (!actual.some((item) => item.path === entry.path)) fail();
+      },
+    };
+    scope.assertCurrent();
+    return await scopes.run(scope, async () => {
+      installRecoveryIntent(
+        intentPath,
+        intent,
+        join(directory, "resume-intent.json-stage")
+      );
+      scope!.phase = "run";
+      let result: Buffer | undefined, expectedReleased: Buffer | undefined;
+      scope!.finish = async (state, snapshot) => {
+        await withCanonicalStoreTransaction(
+          location.path,
+          { generation: scope!.generation, ledger: scope!.ledger },
+          async () => {}
+        );
+        allowedJournal(scope!, snapshot);
+        if (
+          state.stages.find((item) => item.stage === "load")?.status !==
+          "succeeded"
+        )
+          fail();
+        scope!.assertCurrent();
+        same(
+          decryptLedgerSnapshot(readFileSync(snapshotPath), input.recoveryKey),
+          scope!.ledger
+        );
+        const released = validateWeeklyJournalRecoverySnapshot(snapshot);
+        released.ownership.find(
+          (item) => item.scope === production
+        )!.expiresAtEpochMs = 0;
+        const { digest: _digest, ...body } = released;
+        expectedReleased = Buffer.from(
+          canonicalJson({ ...body, digest: sha256(canonicalJson(body)) }) + "\n"
+        );
+        result = signed(
+          {
+            kind: "zivv-selected-load-result",
+            version: 1,
+            admissionSha256: evidence.admissionSha256,
+            executionBaselineSha256: sha256(evidence.executionBaseline),
+            runId: state.runId,
+            ledgerRevision: ledgerDigest(scope!.ledger),
+            generation: scope!.generation,
+            journalSha256: sha256(expectedReleased),
+            guardedJournalSha256: sha256(snapshot),
+            runStateSha256: sha256(canonicalJson(state)),
+            reportSha256: plan.receipt.reportSha256,
+          },
+          input.recoveryKey,
+          "zivv-selected-load-result/v1"
+        );
+        scope!.phase = "result";
+        try {
+          scope!.files.set(join(directory, "load-result.json"), result);
+          installRecoveryIntent(
+            join(directory, "load-result.json"),
+            result,
+            join(directory, "load-result.json-stage")
+          );
+          scope!.assertCurrent();
+          if (
+            scope!.previousFiles.size ||
+            [...scope!.transients.keys()].some((path) => existsSync(path))
+          )
+            fail();
+        } finally {
+          scope!.phase = "run";
+        }
+      };
+      const state = await runWeeklyImport({
+        root,
+        source: {
+          editionId: proof.source.editionId,
+          deliveryId: proof.source.deliveryId,
+          raw: Buffer.from(evidence.raw),
+          importObservedAtEpochMs: proof.source.importObservedAtEpochMs,
+        },
+        stopAfter: "load",
+      });
+      if (
+        !result ||
+        !expectedReleased ||
+        scope!.finish !== undefined ||
+        !scope!.resume?.gateComplete
+      )
+        fail();
+      same(
+        readWeeklyJournalRecoverySnapshotReadOnly(
+          join(operator, "weekly-runs.sqlite")
+        ).toString("base64"),
+        expectedReleased.toString("base64")
+      );
+      scope!.assertCurrent();
+      return {
+        status: "selected-load-resumed" as const,
+        activationAllowed: false as const,
+        captureAllowed: false as const,
+        loadAllowed: false as const,
+        runId: state.runId,
+        ledgerRevision: ledgerDigest(scope!.ledger),
+        generation: scope!.generation,
+        resultSha256: sha256(result),
+        admissionSha256: evidence.admissionSha256,
         accepted: plan.result.report.acceptedEventIds.length,
       };
     });

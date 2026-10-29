@@ -1,3 +1,6 @@
+import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
+import type { RecoveryGmailSelectedLoadBaselineInput } from "./recovery-gmail-selected-load-proof.js";
+import type { IngestionLedger } from "../../types/ingestion.js";
 import { observeSelectedLoadLease } from "./recovery-gmail-selected-lease-observation.js";
 import { createSelectedGmailLoadEffectPlan } from "./recovery-gmail-selected-load-effects.js";
 import { lstatSync, readFileSync } from "node:fs";
@@ -23,11 +26,33 @@ import { proveSelectedLoadJournalDelta } from "./recovery-gmail-selected-journal
 import { proveSelectedLoadPhysicalDelta } from "./recovery-gmail-selected-physical-delta.js";
 import { sha256 } from "./steve-preflight.js";
 
+export interface SelectedLoadInterruptionEvidence {
+  report: {
+    status: "before-run" | "unchanged" | "committed";
+    runId: string;
+    journalSha256: string;
+    inventorySha256: string;
+    lease: ReturnType<typeof observeSelectedLoadLease>;
+    physicalValidationRequired: true;
+    loadAllowed: false;
+    activationAllowed: false;
+  };
+  originalBaseline: Omit<RecoveryGmailSelectedLoadBaselineInput, "recoveryKey">;
+  admissionSha256: string;
+  evidenceSha256: string;
+  physicalSnapshotSha256: string;
+  executionBaseline: Buffer;
+  raw: Buffer;
+  observedEntries: RecoveryRuntimeEntry[];
+  observedCatalog: { ledger: IngestionLedger; generation: number };
+  observedJournal: Buffer;
+  changedFiles: { key?: Buffer; snapshot?: Buffer; report?: Buffer };
+}
 /** Strict, read-only observation of a first-attempt commit gap. No handles,
  * key, mutation authority or resumability claim are returned. */
-export function inspectSelectedLoadInterruption(
+export function readSelectedLoadInterruptionEvidence(
   supplied: RecoveryGmailSelectedLoadFrameInput
-) {
+): SelectedLoadInterruptionEvidence {
   const wire = encodeRecoveryGmailSelectedLoadFrame(supplied),
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
   const fail = (): never => {
@@ -256,17 +281,41 @@ export function inspectSelectedLoadInterruption(
     if (!owner) return fail();
     const lease = observeSelectedLoadLease(owner.expiresAtEpochMs);
     return {
-      status: j.status,
-      runId: j.runId ?? runId,
-      journalSha256: j.journalSha256,
-      inventorySha256: physical.inventorySha256,
-      lease,
-      physicalValidationRequired: true as const,
-      loadAllowed: false as const,
-      activationAllowed: false as const,
+      report: {
+        status: j.status,
+        runId: j.runId ?? runId,
+        journalSha256: j.journalSha256,
+        inventorySha256: physical.inventorySha256,
+        lease,
+        physicalValidationRequired: true as const,
+        loadAllowed: false as const,
+        activationAllowed: false as const,
+      },
+      originalBaseline: {
+        checkpoint,
+        completed,
+        unfinishedAdmissions,
+        ...restored.originalBaseline,
+      },
+      admissionSha256: sha256(admission),
+      evidenceSha256: restored.evidenceSha256,
+      physicalSnapshotSha256: restored.physicalSnapshotSha256,
+      executionBaseline,
+      raw,
+      observedEntries: entries,
+      observedCatalog: catalog,
+      observedJournal: journal,
+      changedFiles,
     };
   } finally {
     input.recoveryKey.fill(0);
     wire.fill(0);
   }
+}
+
+/** Public summary of the same detached observation; no private evidence is returned. */
+export function inspectSelectedLoadInterruption(
+  supplied: RecoveryGmailSelectedLoadFrameInput
+) {
+  return readSelectedLoadInterruptionEvidence(supplied).report;
 }
