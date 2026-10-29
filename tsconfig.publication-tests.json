@@ -69,6 +69,7 @@
     "src/test/ingestion/sqlite-ledger-readonly.test.ts",
     "src/test/ingestion/sqlite-canonical-transaction.test.ts",
     "src/test/ingestion/recovery-gmail-selected-load-executor.test.ts",
+    "src/test/ingestion/recovery-gmail-selected-load-commit-gap.test.ts",
     "src/test/ingestion/recovery-gmail-selected-journal-delta.test.ts",
     "src/test/ingestion/recovery-gmail-selected-result-proof.test.ts",
     "src/test/ingestion/recovery-gmail-selected-catalog-delta.test.ts",
