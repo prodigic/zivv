@@ -35,6 +35,13 @@ it("allows only actual installer, snapshot and report temporary families", () =>
       context
     )
   ).toBe(key);
+  const chunk = "resume-snapshot-000.bin";
+  expect(
+    selectedLoadTemporaryTarget(
+      join(directory, chunk + "-stage", chunk + two),
+      context
+    )
+  ).toBe(join(directory, chunk));
   expect(selectedLoadTemporaryTarget(snapshot + one, context)).toBe(snapshot);
   expect(
     selectedLoadTemporaryTarget(
@@ -43,6 +50,16 @@ it("allows only actual installer, snapshot and report temporary families", () =>
     )
   ).toBe(report);
   for (const wrong of [
+    join(
+      directory,
+      "resume-snapshot-000.bin-stage",
+      "resume-snapshot-001.bin" + one
+    ),
+    join(
+      directory,
+      "resume-snapshot-9999.bin-stage",
+      "resume-snapshot-9999.bin" + one
+    ),
     baseline + one,
     join(directory, "execution-baseline.json-stage", "execution-baseline.json"),
     join(operator, context.keyName + one),

@@ -1,8 +1,21 @@
+import { restoreResumeSnapshot } from "./recovery-gmail-selected-resume-snapshot-evidence.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import type { RecoveryGmailSelectedLoadBaselineInput } from "./recovery-gmail-selected-load-proof.js";
 import type { IngestionLedger } from "../../types/ingestion.js";
 import { observeSelectedLoadLease } from "./recovery-gmail-selected-lease-observation.js";
-import { createSelectedGmailLoadEffectPlan } from "./recovery-gmail-selected-load-effects.js";
+import {
+  createSelectedGmailLoadEffectPlan,
+  assertSelectedGmailLoadArtifact,
+  selectedGmailLoadEvidence,
+} from "./recovery-gmail-selected-load-effects.js";
+import { verifySelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-intent.js";
+import { reconstructSelectedLoadResumeJournal } from "./recovery-gmail-selected-resume-journal.js";
+import { reconstructSelectedLoadResumeInventory } from "./recovery-gmail-selected-resume-inventory.js";
+import { verifySelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
+import { verifySelectedLoadResult } from "./recovery-gmail-selected-result-proof.js";
+import { decryptLedgerSnapshot } from "./encrypted-backup.js";
+import { ledgerDigest } from "./sqlite-store.js";
+import { parseWeeklyRunState } from "./weekly-run-state.js";
 import { lstatSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
@@ -28,7 +41,7 @@ import { sha256 } from "./steve-preflight.js";
 
 export interface SelectedLoadInterruptionEvidence {
   report: {
-    status: "before-run" | "unchanged" | "committed";
+    status: "before-run" | "unchanged" | "committed" | "completed";
     runId: string;
     journalSha256: string;
     inventorySha256: string;
@@ -42,6 +55,7 @@ export interface SelectedLoadInterruptionEvidence {
   evidenceSha256: string;
   physicalSnapshotSha256: string;
   executionBaseline: Buffer;
+  completedResultSha256?: string;
   raw: Buffer;
   observedEntries: RecoveryRuntimeEntry[];
   observedCatalog: { ledger: IngestionLedger; generation: number };
@@ -228,10 +242,7 @@ export function readSelectedLoadInterruptionEvidence(
       observedGeneration: catalog.generation,
       observedLedger: catalog.ledger,
     };
-    const j = proveSelectedLoadJournalDelta({
-      ...common,
-      observedJournal: journal,
-    });
+
     const key =
       "operator/" +
       (process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin");
@@ -254,11 +265,131 @@ export function readSelectedLoadInterruptionEvidence(
         ? { report: read(report, 64 * 1024 * 1024) }
         : {}),
     };
+    const resultPath = load + "/load-result.json";
+    const intentPath = load + "/resume-intent.json";
+    const hasResult = entriesByPath.has(resultPath);
+    let priorJournal = journal;
+    let priorEntries = entries;
+    let completedResultSha256: string | undefined;
+    let priorSnapshot: Buffer | undefined;
+    if (hasResult) {
+      const intent = verifySelectedLoadResumeIntent(
+        read(intentPath, 65536),
+        input.recoveryKey
+      );
+      if (
+        intent.admissionSha256 !== common.admissionSha256 ||
+        intent.executionBaselineSha256 !== sha256(executionBaseline) ||
+        intent.ledgerRevision !== ledgerDigest(catalog.ledger) ||
+        intent.generation !== catalog.generation
+      )
+        return fail();
+      priorJournal = reconstructSelectedLoadResumeJournal({
+        completedJournal: journal,
+        intent,
+        runId,
+      });
+      const execution = verifySelectedLoadExecutionBaseline(
+        executionBaseline,
+        input.recoveryKey
+      );
+      if (intent.snapshotEvidence)
+        priorSnapshot = restoreResumeSnapshot(
+          intent.snapshotEvidence,
+          intent.snapshotEvidence.chunks.map(({ index }) =>
+            read(
+              load +
+                "/resume-snapshot-" +
+                String(index).padStart(3, "0") +
+                ".bin",
+              4 * 1024 * 1024
+            )
+          )
+        );
+      priorEntries = reconstructSelectedLoadResumeInventory({
+        completedEntries: entries,
+        originalEntries: execution.entries,
+        preResumeSnapshot: priorSnapshot,
+        intent,
+        runId,
+        reportPath: report,
+      });
+      const finalJournal = validateWeeklyJournalRecoverySnapshot(journal);
+      const selected = finalJournal.runState.find((row) => row.id === runId);
+      if (!selected) return fail();
+      const state = parseWeeklyRunState(JSON.parse(selected.payload));
+      const loadState = state.stages.find((stage) => stage.stage === "load");
+      if (
+        !loadState ||
+        canonicalJson(loadState.evidence) !==
+          canonicalJson(
+            selectedGmailLoadEvidence(
+              plan,
+              proof.source,
+              "load",
+              catalog.ledger
+            )
+          )
+      )
+        return fail();
+      const artifact = finalJournal.stageArtifacts.find(
+        (row) =>
+          row.runId === runId && row.stage === "load" && row.attempt === 1
+      );
+      if (!artifact) return fail();
+      assertSelectedGmailLoadArtifact(
+        plan,
+        "load",
+        Buffer.from(artifact.bytes, "base64"),
+        raw,
+        catalog.ledger
+      );
+      if (
+        !changedFiles.report ||
+        !changedFiles.report.equals(
+          Buffer.from(JSON.stringify(plan.result.report, null, 2) + "\n")
+        )
+      )
+        return fail();
+      if (
+        !changedFiles.snapshot ||
+        canonicalJson(
+          decryptLedgerSnapshot(changedFiles.snapshot, input.recoveryKey)
+        ) !== canonicalJson(catalog.ledger)
+      )
+        return fail();
+      completedResultSha256 = verifySelectedLoadResult(
+        read(resultPath, 65536),
+        input.recoveryKey,
+        {
+          admissionSha256: common.admissionSha256,
+          executionBaselineSha256: sha256(executionBaseline),
+          runId,
+          ledgerRevision: ledgerDigest(catalog.ledger),
+          generation: catalog.generation,
+          journalSha256: sha256(journal),
+          runStateSha256: sha256(canonicalJson(state)),
+          reportSha256: plan.receipt.reportSha256,
+        }
+      ).resultSha256;
+    }
+    const j = proveSelectedLoadJournalDelta({
+      ...common,
+      observedJournal: priorJournal,
+    });
     const physical = proveSelectedLoadPhysicalDelta({
       ...common,
-      observedEntries: entries,
-      changedFiles,
+      observedEntries: priorEntries,
+      changedFiles: {
+        ...changedFiles,
+        ...(hasResult ? { snapshot: priorSnapshot } : {}),
+      },
     });
+    if (
+      hasResult &&
+      (j.status !== "committed" || physical.status !== "committed")
+    )
+      return fail();
     const inventory = opened.inventoryGmailSelectedLoadExecution();
     if (
       canonicalJson(entries) !== canonicalJson(inventory) ||
@@ -282,10 +413,12 @@ export function readSelectedLoadInterruptionEvidence(
     const lease = observeSelectedLoadLease(owner.expiresAtEpochMs);
     return {
       report: {
-        status: j.status,
+        status: hasResult ? ("completed" as const) : j.status,
         runId: j.runId ?? runId,
-        journalSha256: j.journalSha256,
-        inventorySha256: physical.inventorySha256,
+        journalSha256: hasResult ? sha256(journal) : j.journalSha256,
+        inventorySha256: hasResult
+          ? sha256(canonicalJson(entries))
+          : physical.inventorySha256,
         lease,
         physicalValidationRequired: true as const,
         loadAllowed: false as const,
@@ -301,6 +434,7 @@ export function readSelectedLoadInterruptionEvidence(
       evidenceSha256: restored.evidenceSha256,
       physicalSnapshotSha256: restored.physicalSnapshotSha256,
       executionBaseline,
+      ...(completedResultSha256 ? { completedResultSha256 } : {}),
       raw,
       observedEntries: entries,
       observedCatalog: catalog,

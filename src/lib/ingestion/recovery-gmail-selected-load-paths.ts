@@ -33,6 +33,12 @@ export function selectedLoadTemporaryTarget(
         ? join(context.operator, name)
         : join(context.directory, name);
   }
+  const chunk =
+    /^(.*[\\/])(resume-snapshot-[0-9]{3}\.bin)-stage[\\/]\2((?:\.\d+\.[a-f0-9]{16}\.tmp){1,2})$/.exec(
+      absolute
+    );
+  if (chunk && resolve(chunk[1]!) === resolve(context.directory))
+    return join(context.directory, chunk[2]!);
   const snapshot = resolve(context.snapshot),
     report = resolve(context.report);
   if (
