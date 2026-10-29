@@ -1,3 +1,7 @@
+import {
+  describeResumeSnapshot,
+  resumeSnapshotChunkSize,
+} from "./recovery-gmail-selected-resume-snapshot-evidence.js";
 import { readSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-interruption-inspection.js";
 import { verifySelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { signSelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
@@ -578,7 +582,17 @@ export function selectedGmailLoadFile(
                   : "load-result.json-stage"
               ),
             ];
-    if (!scope.directories.has(absolute) || !permitted.includes(absolute))
+    const isSnapshotStage =
+      scope.phase === "evidence" &&
+      !!scope.resume &&
+      /^resume-snapshot-[0-9]{3}\.bin-stage$/.test(
+        absolute.slice(scope.directory.length + 1)
+      ) &&
+      dirname(absolute) === scope.directory;
+    if (
+      !scope.directories.has(absolute) ||
+      (!permitted.includes(absolute) && !isSnapshotStage)
+    )
       fail();
     return true;
   }
@@ -620,6 +634,11 @@ export function selectedGmailLoadFile(
       sha256(scope.plan.result.report.runId) + ".json"
     );
   if (
+    (/^resume-snapshot-[0-9]{3}\.bin$/.test(
+      target.slice(scope.directory.length + 1)
+    ) &&
+      dirname(target) === scope.directory &&
+      (!scope.resume || scope.phase !== "evidence")) ||
     (target === resumeIntentFile &&
       (!scope.resume || scope.phase !== "evidence")) ||
     (target === executionFile && scope.phase !== "evidence") ||
@@ -1092,7 +1111,7 @@ export async function resumeRecoveredGmailSelectedLoad(
   let scope: Scope | undefined;
   try {
     const evidence = readSelectedLoadInterruptionEvidence(input);
-    if (evidence.report.status !== "committed")
+    if (!["committed", "completed"].includes(evidence.report.status))
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED");
     if (evidence.report.lease.status === "active")
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
@@ -1110,6 +1129,21 @@ export async function resumeRecoveredGmailSelectedLoad(
       proof,
       evidence.raw
     );
+    if (evidence.report.status === "completed") {
+      if (!evidence.completedResultSha256) fail();
+      return {
+        status: "selected-load-resumed" as const,
+        activationAllowed: false as const,
+        captureAllowed: false as const,
+        loadAllowed: false as const,
+        runId: proof.runState.runId,
+        ledgerRevision: ledgerDigest(evidence.observedCatalog.ledger),
+        generation: evidence.observedCatalog.generation,
+        resultSha256: evidence.completedResultSha256,
+        admissionSha256: evidence.admissionSha256,
+        accepted: plan.result.report.acceptedEventIds.length,
+      };
+    }
     const savedJournal = validateWeeklyJournalRecoverySnapshot(
       evidence.observedJournal
     );
@@ -1154,10 +1188,14 @@ export async function resumeRecoveredGmailSelectedLoad(
     const fence = previousOwner.fence + 1,
       deadline = now + 180000;
     if (!Number.isSafeInteger(fence) || !Number.isSafeInteger(deadline)) fail();
+    const snapshotEvidence = evidence.changedFiles.snapshot
+      ? describeResumeSnapshot(evidence.changedFiles.snapshot)
+      : null;
     const intent = signed(
       {
         kind: "zivv-selected-load-resume-intent",
-        version: 1,
+        version: 2,
+        snapshotEvidence,
         admissionSha256: evidence.admissionSha256,
         executionBaselineSha256: sha256(evidence.executionBaseline),
         journalSha256: sha256(evidence.observedJournal),
@@ -1207,6 +1245,19 @@ export async function resumeRecoveredGmailSelectedLoad(
     if (evidence.changedFiles.report)
       files.set(reportPath, evidence.changedFiles.report);
     files.set(intentPath, intent);
+    const snapshotChunks =
+      snapshotEvidence?.chunks.map(({ index }) => {
+        const name = `resume-snapshot-${String(index).padStart(3, "0")}.bin`;
+        const path = join(directory, name);
+        const bytes = Buffer.from(
+          evidence.changedFiles.snapshot!.subarray(
+            index * resumeSnapshotChunkSize,
+            (index + 1) * resumeSnapshotChunkSize
+          )
+        );
+        files.set(path, bytes);
+        return { name, path, bytes };
+      }) ?? [];
     const dirs = new Set([
       operator,
       directory,
@@ -1217,6 +1268,8 @@ export async function resumeRecoveredGmailSelectedLoad(
       join(root, "data/ingestion/backups"),
       join(root, "data/ingestion/reports"),
     ]);
+    for (const chunk of snapshotChunks)
+      dirs.add(join(directory, chunk.name + "-stage"));
     const originalEntries = new Map(
       evidence.observedEntries.map((entry) => [entry.path, entry])
     );
@@ -1313,6 +1366,12 @@ export async function resumeRecoveredGmailSelectedLoad(
     };
     scope.assertCurrent();
     return await scopes.run(scope, async () => {
+      for (const chunk of snapshotChunks)
+        installRecoveryIntent(
+          chunk.path,
+          chunk.bytes,
+          join(directory, chunk.name + "-stage")
+        );
       installRecoveryIntent(
         intentPath,
         intent,

@@ -2,6 +2,7 @@ import { expect, it, vi } from "vitest";
 import { createRecoveryGmailSelectedLoadFixture } from "./fixtures/recovery-gmail-selected-load-fixture.js";
 import { proveRecoveryGmailSelectedLoadBaseline } from "../../lib/ingestion/recovery-gmail-selected-load-proof.js";
 import { signSelectedLoadExecutionBaseline } from "../../lib/ingestion/recovery-gmail-execution-baseline.js";
+import { reconstructSelectedLoadResumeJournal } from "../../lib/ingestion/recovery-gmail-selected-resume-journal.js";
 import { proveSelectedLoadJournalDelta } from "../../lib/ingestion/recovery-gmail-selected-journal-delta.js";
 import {
   createSelectedGmailLoadEffectPlan,
@@ -182,6 +183,102 @@ it("proves the committed first-attempt journal and rejects unrelated or missing 
       runId: state.runId,
       loadAllowed: false,
     });
+    const resumed = structuredClone(next);
+    const resumedOwner = resumed.ownership.find(
+      (item) => item.scope === "prodigic/zivv/production"
+    )!;
+    resumedOwner.fence++;
+    resumedOwner.expiresAtEpochMs = 0;
+    const resumedState = transitionWeeklyRun(
+      state,
+      state.revision,
+      "load",
+      {
+        status: "succeeded",
+        evidence: selectedGmailLoadEvidence(
+          plan,
+          proof.source,
+          "load",
+          committed
+        ),
+      },
+      now
+    );
+    const resumedRow = resumed.runState.find(
+      (item) => item.id === state.runId
+    )!;
+    resumedRow.revision = resumedState.revision;
+    resumedRow.payload = canonicalJson(resumedState);
+    resumed.stageArtifacts.push(
+      artifact("load", 1, Buffer.from("load artifact"))
+    );
+    resumed.stageArtifacts.sort((a, b) =>
+      (
+        a.runId +
+        "\0" +
+        a.stage +
+        "\0" +
+        String(a.attempt).padStart(16, "0")
+      ).localeCompare(
+        b.runId + "\0" + b.stage + "\0" + String(b.attempt).padStart(16, "0")
+      )
+    );
+    const intent = {
+      kind: "zivv-selected-load-resume-intent" as const,
+      version: 2 as const,
+      snapshotEvidence: null,
+      ...binding,
+      executionBaselineSha256: sha256(executionBaseline),
+      journalSha256: sha256(encode(next)),
+      inventorySha256: "d".repeat(64),
+      ledgerRevision: "e".repeat(64),
+      generation: 2,
+      previousOwner: { ...owner },
+      fence: resumedOwner.fence,
+      owner: resumedOwner.owner,
+      startedAtEpochMs: now + 10000,
+      deadlineEpochMs: now + 190000,
+    };
+    const reconstructed = reconstructSelectedLoadResumeJournal({
+      completedJournal: encode(resumed),
+      intent,
+      runId: state.runId,
+    });
+    expect(reconstructed.equals(encode(next))).toBe(true);
+    const priorWithArtifact = structuredClone(next);
+    priorWithArtifact.stageArtifacts = structuredClone(resumed.stageArtifacts);
+    const reconstructedWithArtifact = reconstructSelectedLoadResumeJournal({
+      completedJournal: encode(resumed),
+      intent: { ...intent, journalSha256: sha256(encode(priorWithArtifact)) },
+      runId: state.runId,
+    });
+    expect(reconstructedWithArtifact.equals(encode(priorWithArtifact))).toBe(
+      true
+    );
+    expect(
+      proveSelectedLoadJournalDelta({
+        ...evidence,
+        observedJournal: reconstructed,
+      })
+    ).toMatchObject({ status: "committed" });
+    expect(() =>
+      reconstructSelectedLoadResumeJournal({
+        completedJournal: encode(resumed),
+        intent: { ...intent, journalSha256: "f".repeat(64) },
+        runId: state.runId,
+      })
+    ).toThrow();
+    const stillHeld = structuredClone(resumed);
+    stillHeld.ownership.find(
+      (item) => item.scope === "prodigic/zivv/production"
+    )!.expiresAtEpochMs = now + 20000;
+    expect(() =>
+      reconstructSelectedLoadResumeJournal({
+        completedJournal: encode(stillHeld),
+        intent,
+        runId: state.runId,
+      })
+    ).toThrow();
     const missing = structuredClone(next);
     missing.stageArtifacts = missing.stageArtifacts.filter(
       (row) => !(row.runId === state.runId && row.stage === "reconcile")

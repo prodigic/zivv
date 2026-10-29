@@ -3,6 +3,10 @@ import {
   canonicalJson,
   ledgerDigest,
 } from "../../lib/ingestion/sqlite-store.js";
+import { reconstructSelectedLoadResumeInventory } from "../../lib/ingestion/recovery-gmail-selected-resume-inventory.js";
+import { verifySelectedLoadExecutionBaseline } from "../../lib/ingestion/recovery-gmail-execution-baseline.js";
+import { reconstructSelectedLoadResumeJournal } from "../../lib/ingestion/recovery-gmail-selected-resume-journal.js";
+import { verifySelectedLoadResumeIntent } from "../../lib/ingestion/recovery-gmail-selected-resume-intent.js";
 import { verifySelectedLoadResult } from "../../lib/ingestion/recovery-gmail-selected-result-proof.js";
 import { inspectSelectedLoadInterruption } from "../../lib/ingestion/recovery-gmail-selected-load-interruption-inspection.js";
 import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-runtime.js";
@@ -221,6 +225,10 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
       runId: installed.runId,
       loadAllowed: false,
     });
+    writeFileSync(
+      join(fixture.base, "pre-resume-inventory.json"),
+      JSON.stringify(observedEntries)
+    );
     const inspected = inspectSelectedLoadInterruption(input);
     expect(inspected).toMatchObject({
       status: "committed",
@@ -327,9 +335,14 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
     expect(existsSync(join(directory, "resume-intent.json"))).toBe(true);
     expect(existsSync(join(directory, "load-result.json"))).toBe(true);
     const intentBytes = readFileSync(join(directory, "resume-intent.json"));
+    const verifiedIntent = verifySelectedLoadResumeIntent(
+      intentBytes,
+      fixture.input.recoveryKey
+    );
     const { signature, ...intent } = JSON.parse(
       intentBytes.toString("utf8")
     ) as Record<string, unknown>;
+    expect(verifiedIntent).toEqual(intent);
     expect(signature).toBe(
       createHmac("sha256", fixture.input.recoveryKey)
         .update("zivv-selected-load-resume-intent/v1\0")
@@ -349,6 +362,41 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
     expect(Number(intent.startedAtEpochMs)).toBeGreaterThanOrEqual(
       oldOwner.expiresAtEpochMs
     );
+    const completedEntries = openPreparedRuntimeForAdmission(
+      fixture.input
+    ).inventoryGmailSelectedLoadExecution();
+    const executionEvidence = verifySelectedLoadExecutionBaseline(
+      readFileSync(join(directory, "execution-baseline.json")),
+      fixture.input.recoveryKey
+    );
+    const reconstructedEntries = reconstructSelectedLoadResumeInventory({
+      completedEntries,
+      originalEntries: executionEvidence.entries,
+      preResumeSnapshot: changedFiles.snapshot,
+      intent: verifiedIntent,
+      runId: installed.runId,
+      reportPath:
+        "checkout/data/ingestion/reports/" +
+        sha256(ledger.runs[0]!.runId) +
+        ".json",
+    });
+    expect(reconstructedEntries).toEqual(observedEntries);
+    expect(
+      proveSelectedLoadPhysicalDelta({
+        baseline,
+        executionBaseline: readFileSync(
+          join(directory, "execution-baseline.json")
+        ),
+        admissionSha256: installed.admissionSha256,
+        evidenceSha256: installed.evidenceSha256,
+        physicalSnapshotSha256: installed.physicalSnapshotSha256,
+        raw: Buffer.from(raw.bytes, "base64"),
+        observedGeneration: generation,
+        observedLedger: ledger,
+        observedEntries: reconstructedEntries,
+        changedFiles,
+      })
+    ).toMatchObject({ status: "committed", loadAllowed: false });
     const resultBytes = readFileSync(join(directory, "load-result.json"));
     const resultValue = JSON.parse(resultBytes.toString("utf8")) as {
       reportSha256: string;
@@ -356,6 +404,13 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
     const finalJournalBytes = readWeeklyJournalRecoverySnapshotReadOnly(
       join(root, "operator/weekly-runs.sqlite")
     );
+    expect(
+      reconstructSelectedLoadResumeJournal({
+        completedJournal: finalJournalBytes,
+        intent: verifiedIntent,
+        runId: installed.runId,
+      }).equals(journal)
+    ).toBe(true);
     expect(
       verifySelectedLoadResult(resultBytes, fixture.input.recoveryKey, {
         admissionSha256: installed.admissionSha256,
@@ -371,7 +426,44 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
       })
     ).toMatchObject({ status: "authenticated", loadAllowed: false });
     const retry = await resume();
-    expect(retry.code).toBe(1);
+    expect(retry.code).toBe(0);
+    expect(JSON.parse(retry.stdout)).toEqual(resumedReport);
+    expect(
+      readWeeklyJournalRecoverySnapshotReadOnly(
+        join(root, "operator/weekly-runs.sqlite")
+      )
+    ).toEqual(finalJournalBytes);
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(completedEntries);
+    expect(
+      readCanonicalSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
+    ).toEqual(finalCatalog);
+    if (!verifiedIntent.snapshotEvidence)
+      throw Error("Expected retained pre-resume snapshot");
+    const chunkPath = join(directory, "resume-snapshot-000.bin");
+    const originalChunk = readFileSync(chunkPath);
+    const alteredChunk = Buffer.from(originalChunk);
+    alteredChunk[0] = alteredChunk[0]! ^ 1;
+    writeFileSync(chunkPath, alteredChunk);
+    try {
+      expect((await resume()).code).toBe(1);
+    } finally {
+      writeFileSync(chunkPath, originalChunk);
+    }
+    expect(
+      readCanonicalSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
+    ).toEqual(finalCatalog);
+    const tampered = Buffer.from(resultBytes);
+    tampered[tampered.length - 2] = tampered[tampered.length - 2]! ^ 1;
+    writeFileSync(join(directory, "load-result.json"), tampered);
+    try {
+      expect((await resume()).code).toBe(1);
+    } finally {
+      writeFileSync(join(directory, "load-result.json"), resultBytes);
+    }
     expect(
       readCanonicalSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
     ).toEqual(finalCatalog);

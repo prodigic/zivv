@@ -107,13 +107,15 @@ function inventory(
   root: string,
   omit?: (entry: RecoveryRuntimeEntry) => boolean,
   buildNamespace?: string,
-  gmailCapture = false
+  gmailCapture = false,
+  allowResumeSnapshotEvidence = false
 ): RecoveryRuntimeEntry[] {
   noLinks(root);
   const entries: RecoveryRuntimeEntry[] = [],
     aliases = new Set<string>(),
     modules = join(root, "checkout/node_modules");
   let total = 0,
+    evidenceTotal = 0,
     visited = 0;
   const linked = new Map<
     string,
@@ -141,12 +143,12 @@ function inventory(
         return loadStage[1] + "chunks/" + loadStage[3];
     }
     const selectedMetadata =
-      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json)$/.exec(
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin)$/.exec(
         path
       );
     if (selectedMetadata) return path;
     const selectedStage =
-      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json)-stage\/(execution-baseline\.json|load-result\.json|resume-intent\.json)(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin)-stage\/(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin)(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
         path
       );
     if (selectedStage && selectedStage[2] === selectedStage[3])
@@ -218,7 +220,12 @@ function inventory(
           !stat.isFile() ||
           (stat.nlink !== 1 &&
             !(gmailCapture && stat.nlink === 2 && captureAliasTarget(path))) ||
-          (total += stat.size) > maxBytes
+          (allowResumeSnapshotEvidence &&
+          /^recovery-gmail-load\/[a-f0-9]{64}\/resume-snapshot-[0-9]{3}\.bin(?:-stage\/resume-snapshot-[0-9]{3}\.bin(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2})?$/.test(
+            path
+          )
+            ? (evidenceTotal += stat.size) > maxBytes + 4 * 1024 * 1024
+            : (total += stat.size) > maxBytes)
         )
           fail();
         if (omit?.({ path, kind: "file", size: stat.size, sha256: "" }))
@@ -465,6 +472,7 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
             entry.path
           ),
         undefined,
+        true,
         true
       );
       // Authenticate the same worker/package bytes from this fresh inventory,
