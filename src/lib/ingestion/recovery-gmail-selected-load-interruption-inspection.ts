@@ -1,3 +1,4 @@
+import { observeSelectedLoadPendingIntent } from "./recovery-gmail-selected-pending-intent.js";
 import { observeSelectedLoadStagedSnapshot } from "./recovery-gmail-selected-staged-snapshot.js";
 import { observeSelectedLoadCompletedJournal } from "./recovery-gmail-selected-completed-journal.js";
 import { restoreResumeSnapshot } from "./recovery-gmail-selected-resume-snapshot-evidence.js";
@@ -43,7 +44,12 @@ import { sha256 } from "./steve-preflight.js";
 
 export interface SelectedLoadInterruptionEvidence {
   report: {
-    status: "before-run" | "unchanged" | "committed" | "completed";
+    status:
+      | "before-run"
+      | "unchanged"
+      | "committed"
+      | "completed"
+      | "pending-intent";
     runId: string;
     journalSha256: string;
     inventorySha256: string;
@@ -58,6 +64,7 @@ export interface SelectedLoadInterruptionEvidence {
   physicalSnapshotSha256: string;
   executionBaseline: Buffer;
   completedResultSha256?: string;
+  pendingIntentSha256?: string;
   raw: Buffer;
   observedEntries: RecoveryRuntimeEntry[];
   stagedSnapshotPaths: string[];
@@ -285,6 +292,9 @@ export function readSelectedLoadInterruptionEvidence(
       | undefined;
     let completedResultSha256: string | undefined;
     let priorSnapshot: Buffer | undefined;
+    let pendingIntentSha256: string | undefined;
+    let stagedChunkCount = 0;
+    let stagedChunkPartial = false;
     if (hasResult) {
       const intent = verifySelectedLoadResumeIntent(
         read(intentPath, 65536),
@@ -410,7 +420,53 @@ export function readSelectedLoadInterruptionEvidence(
       });
       priorEntries = staged.entries;
       stagedSnapshotPaths = staged.stagedPaths;
+      stagedChunkCount = staged.completeChunks;
+      stagedChunkPartial = staged.partial;
       incompleteSnapshotCandidate = staged.incompleteCandidate;
+    }
+    const intentStage = intentPath + "-stage";
+    const hasIntentEvidence =
+      !hasResult &&
+      entries.some(
+        (entry) =>
+          entry.path === intentPath ||
+          entry.path === intentStage ||
+          entry.path.startsWith(intentStage + "/")
+      );
+    if (hasIntentEvidence) {
+      if (stagedChunkPartial) return fail();
+      const prior = priorEntries.filter(
+        (entry) =>
+          entry.path !== intentPath &&
+          entry.path !== intentStage &&
+          !entry.path.startsWith(intentStage + "/")
+      );
+      const currentJournal = validateWeeklyJournalRecoverySnapshot(journal);
+      const owner = currentJournal.ownership.find(
+        (item) => item.scope === "prodigic/zivv/production"
+      );
+      if (!owner) return fail();
+      const pending = observeSelectedLoadPendingIntent({
+        destination: root,
+        loadPath: load,
+        entries,
+        priorEntries: prior,
+        journal,
+        previousOwner: owner,
+        admissionSha256: common.admissionSha256,
+        executionBaselineSha256: sha256(executionBaseline),
+        ledgerRevision: ledgerDigest(catalog.ledger),
+        generation: catalog.generation,
+        snapshot: changedFiles.snapshot,
+        key: input.recoveryKey,
+      });
+      if (
+        stagedChunkCount !==
+        (pending.intent.snapshotEvidence?.chunks.length ?? 0)
+      )
+        return fail();
+      priorEntries = prior;
+      pendingIntentSha256 = pending.intentSha256;
     }
     const j = proveSelectedLoadJournalDelta({
       ...common,
@@ -452,7 +508,11 @@ export function readSelectedLoadInterruptionEvidence(
     const lease = observeSelectedLoadLease(owner.expiresAtEpochMs);
     return {
       report: {
-        status: hasResult ? ("completed" as const) : j.status,
+        status: hasResult
+          ? ("completed" as const)
+          : pendingIntentSha256
+            ? ("pending-intent" as const)
+            : j.status,
         runId: j.runId ?? runId,
         journalSha256: hasResult ? sha256(journal) : j.journalSha256,
         inventorySha256: hasResult
@@ -474,6 +534,7 @@ export function readSelectedLoadInterruptionEvidence(
       physicalSnapshotSha256: restored.physicalSnapshotSha256,
       executionBaseline,
       ...(completedResultSha256 ? { completedResultSha256 } : {}),
+      ...(pendingIntentSha256 ? { pendingIntentSha256 } : {}),
       raw,
       observedEntries: priorEntries,
       stagedSnapshotPaths,
