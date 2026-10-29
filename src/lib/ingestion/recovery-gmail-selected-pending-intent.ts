@@ -1,3 +1,4 @@
+import { reconstructSelectedLoadAcquiredIntentJournal } from "./recovery-gmail-selected-acquired-intent-journal.js";
 import { basename, join } from "node:path";
 import { inspectRecoveryInstalledFile } from "./encrypted-backup.js";
 import { verifySelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-intent.js";
@@ -75,15 +76,32 @@ export function observeSelectedLoadPendingIntent(input: {
       return fail();
   }
   const intent = verifySelectedLoadResumeIntent(file.bytes, input.key);
+  let priorJournal = input.journal;
+  let priorOwner = input.previousOwner;
+  if (sha256(input.journal) !== intent.journalSha256) {
+    // Acquisition cannot precede a fully installed intent. Prove that the
+    // owner is the only journal change before exposing the previous snapshot.
+    if (!observed.target || observed.candidate) return fail();
+    const acquired = reconstructSelectedLoadAcquiredIntentJournal({
+      observedJournal: input.journal,
+      intent,
+    });
+    if (
+      canonicalJson(acquired.observedOwner) !==
+      canonicalJson(input.previousOwner)
+    )
+      return fail();
+    priorJournal = acquired.previousJournal;
+    priorOwner = intent.previousOwner;
+  }
   if (
     intent.admissionSha256 !== input.admissionSha256 ||
     intent.executionBaselineSha256 !== input.executionBaselineSha256 ||
     intent.ledgerRevision !== input.ledgerRevision ||
     intent.generation !== input.generation ||
-    intent.journalSha256 !== sha256(input.journal) ||
+    intent.journalSha256 !== sha256(priorJournal) ||
     intent.inventorySha256 !== sha256(canonicalJson(input.priorEntries)) ||
-    canonicalJson(intent.previousOwner) !==
-      canonicalJson(input.previousOwner) ||
+    canonicalJson(intent.previousOwner) !== canonicalJson(priorOwner) ||
     canonicalJson(intent.snapshotEvidence) !==
       canonicalJson(
         input.snapshot ? describeResumeSnapshot(input.snapshot) : null
@@ -94,6 +112,7 @@ export function observeSelectedLoadPendingIntent(input: {
     intent,
     intentSha256: sha256(file.bytes),
     intentBytes: Buffer.from(file.bytes),
+    priorJournal: Buffer.from(priorJournal),
     settled: !!observed.target && !observed.candidate,
     intentPaths: [...allowed].sort(),
     targetPresent: !!observed.target,

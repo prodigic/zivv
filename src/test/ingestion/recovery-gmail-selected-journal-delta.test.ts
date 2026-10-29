@@ -1,3 +1,4 @@
+import { reconstructSelectedLoadAcquiredIntentJournal } from "../../lib/ingestion/recovery-gmail-selected-acquired-intent-journal.js";
 import { observeSelectedLoadCompletedJournal } from "../../lib/ingestion/recovery-gmail-selected-completed-journal.js";
 import { expect, it, vi } from "vitest";
 import { createRecoveryGmailSelectedLoadFixture } from "./fixtures/recovery-gmail-selected-load-fixture.js";
@@ -240,6 +241,63 @@ it("proves the committed first-attempt journal and rejects unrelated or missing 
       startedAtEpochMs: now + 10000,
       deadlineEpochMs: now + 190000,
     };
+    const acquiredOnly = structuredClone(next);
+    Object.assign(
+      acquiredOnly.ownership.find(
+        (item) => item.scope === "prodigic/zivv/production"
+      )!,
+      {
+        owner: intent.owner,
+        fence: intent.fence,
+        expiresAtEpochMs: intent.startedAtEpochMs + 1000,
+      }
+    );
+    const acquiredProof = reconstructSelectedLoadAcquiredIntentJournal({
+      observedJournal: encode(acquiredOnly),
+      intent,
+    });
+    expect(acquiredProof.previousJournal.equals(encode(next))).toBe(true);
+    expect(acquiredProof.loadAllowed).toBe(false);
+    for (const bad of [
+      {
+        ...acquiredOnly.ownership.find(
+          (item) => item.scope === "prodigic/zivv/production"
+        )!,
+        fence: intent.fence + 1,
+      },
+      {
+        ...acquiredOnly.ownership.find(
+          (item) => item.scope === "prodigic/zivv/production"
+        )!,
+        expiresAtEpochMs: intent.deadlineEpochMs + 1,
+      },
+      {
+        ...acquiredOnly.ownership.find(
+          (item) => item.scope === "prodigic/zivv/production"
+        )!,
+        owner: "00000000-0000-0000-0000-000000000000",
+      },
+    ]) {
+      const changed = structuredClone(acquiredOnly);
+      Object.assign(
+        changed.ownership.find((item) => item.scope === bad.scope)!,
+        bad
+      );
+      expect(() =>
+        reconstructSelectedLoadAcquiredIntentJournal({
+          observedJournal: encode(changed),
+          intent,
+        })
+      ).toThrow();
+    }
+    const changedBody = structuredClone(acquiredOnly);
+    changedBody.stageArtifacts.pop();
+    expect(() =>
+      reconstructSelectedLoadAcquiredIntentJournal({
+        observedJournal: encode(changedBody),
+        intent,
+      })
+    ).toThrow();
     const reconstructed = reconstructSelectedLoadResumeJournal({
       completedJournal: encode(resumed),
       intent,

@@ -17,6 +17,167 @@ import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 import { verifySelectedLoadIntentChain } from "../../lib/ingestion/recovery-gmail-selected-intent-chain.js";
 
+it("validates v2 successor bindings for either predecessor fence", () => {
+  const key = Buffer.alloc(32, 9),
+    id = "d".repeat(64),
+    hash = sha256("selected-load/" + id),
+    owner = [
+      hash.slice(0, 8),
+      hash.slice(8, 12),
+      hash.slice(12, 16),
+      hash.slice(16, 20),
+      hash.slice(20, 32),
+    ].join("-");
+  const sign = (body: object, domain: string) =>
+    Buffer.from(
+      canonicalJson({
+        ...body,
+        signature: createHmac("sha256", key)
+          .update(domain + "\0")
+          .update(canonicalJson(body))
+          .digest("hex"),
+      }) + "\n"
+    );
+  const initial = sign(
+    {
+      kind: "zivv-selected-load-resume-intent",
+      version: 2,
+      snapshotEvidence: null,
+      admissionSha256: id,
+      executionBaselineSha256: id,
+      journalSha256: id,
+      inventorySha256: id,
+      ledgerRevision: id,
+      generation: 2,
+      previousOwner: {
+        scope: "prodigic/zivv/production",
+        owner,
+        fence: 1,
+        expiresAtEpochMs: 1000,
+      },
+      fence: 2,
+      owner,
+      startedAtEpochMs: 1000,
+      deadlineEpochMs: 181000,
+    },
+    "zivv-selected-load-resume-intent/v1"
+  );
+  const initialSha256 = sha256(initial);
+  const make = (
+    previousOwner: object,
+    fence: number,
+    startedAtEpochMs: number,
+    sequence = 1,
+    parentSha256 = initialSha256,
+    journalSha256 = id
+  ) =>
+    sign(
+      {
+        kind: "zivv-selected-load-intent-successor",
+        version: 2,
+        initialSha256,
+        parentSha256,
+        sequence,
+        journalSha256,
+        previousOwner,
+        fence,
+        owner,
+        startedAtEpochMs,
+        deadlineEpochMs: startedAtEpochMs + 180000,
+      },
+      "zivv-selected-load-intent-successor/v2"
+    );
+  const unacquired = make(
+    {
+      scope: "prodigic/zivv/production",
+      owner,
+      fence: 1,
+      expiresAtEpochMs: 1000,
+    },
+    2,
+    181000
+  );
+  const acquired = make(
+    {
+      scope: "prodigic/zivv/production",
+      owner,
+      fence: 2,
+      expiresAtEpochMs: 181000,
+    },
+    3,
+    181000
+  );
+  expect(
+    verifySelectedLoadIntentChain(initial, [unacquired], key)
+  ).toMatchObject({
+    successorProtocol: "v2-journal-bound",
+    successorCount: 1,
+    loadAllowed: false,
+  });
+  expect(verifySelectedLoadIntentChain(initial, [acquired], key)).toMatchObject(
+    {
+      successorProtocol: "v2-journal-bound",
+      successorCount: 1,
+      loadAllowed: false,
+    }
+  );
+  const later = make(
+    {
+      scope: "prodigic/zivv/production",
+      owner,
+      fence: 2,
+      expiresAtEpochMs: 271000,
+    },
+    3,
+    361000,
+    2,
+    sha256(unacquired),
+    "e".repeat(64)
+  );
+  expect(
+    verifySelectedLoadIntentChain(initial, [unacquired, later], key)
+  ).toMatchObject({
+    successorProtocol: "v2-journal-bound",
+    successorCount: 2,
+    lastSha256: sha256(later),
+  });
+  const valid = JSON.parse(unacquired.toString("utf8"));
+  for (const body of [
+    { ...valid, journalSha256: "invalid" },
+    { ...valid, owner: "00000000-0000-0000-0000-000000000000" },
+    { ...valid, fence: 4 },
+    { ...valid, startedAtEpochMs: 180999, deadlineEpochMs: 360999 },
+    { ...valid, unexpected: true },
+  ]) {
+    const { signature: _signature, ...unsigned } = body;
+    expect(() =>
+      verifySelectedLoadIntentChain(
+        initial,
+        [sign(unsigned, "zivv-selected-load-intent-successor/v2")],
+        key
+      )
+    ).toThrow();
+  }
+  const wrongSignature = { ...valid, signature: "f".repeat(64) };
+  expect(() =>
+    verifySelectedLoadIntentChain(
+      initial,
+      [Buffer.from(canonicalJson(wrongSignature) + "\n")],
+      key
+    )
+  ).toThrow();
+  expect(() =>
+    verifySelectedLoadIntentChain(
+      initial,
+      [Buffer.from(JSON.stringify(valid, null, 2) + "\n")],
+      key
+    )
+  ).toThrow();
+  expect(() =>
+    verifySelectedLoadIntentChain(initial, [unacquired], Buffer.alloc(32, 8))
+  ).toThrow();
+});
+
 it("authenticates ordered, non-overlapping signed intent successors without authority", () => {
   const key = Buffer.alloc(32, 4),
     id = "a".repeat(64),
@@ -83,6 +244,7 @@ it("authenticates ordered, non-overlapping signed intent successors without auth
   expect(
     verifySelectedLoadIntentChain(initial, [first, second], key)
   ).toMatchObject({
+    successorProtocol: "v1-observation",
     successorCount: 2,
     lastSha256: sha256(second),
     effectiveDeadlineEpochMs: 541000,
