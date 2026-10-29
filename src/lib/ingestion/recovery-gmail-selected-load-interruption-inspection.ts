@@ -1,3 +1,4 @@
+import { observeSelectedLoadLease } from "./recovery-gmail-selected-lease-observation.js";
 import { createSelectedGmailLoadEffectPlan } from "./recovery-gmail-selected-load-effects.js";
 import { lstatSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -249,11 +250,17 @@ export function inspectSelectedLoadInterruption(
       )
     )
       return fail();
+    const owner = validateWeeklyJournalRecoverySnapshot(journal).ownership.find(
+      (row) => row.scope === "prodigic/zivv/production"
+    );
+    if (!owner) return fail();
+    const lease = observeSelectedLoadLease(owner.expiresAtEpochMs);
     return {
       status: j.status,
       runId: j.runId ?? runId,
       journalSha256: j.journalSha256,
       inventorySha256: physical.inventorySha256,
+      lease,
       physicalValidationRequired: true as const,
       loadAllowed: false as const,
       activationAllowed: false as const,
