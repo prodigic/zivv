@@ -17,6 +17,7 @@ export function selectedLoadTemporaryTarget(
   for (const name of [
     "execution-baseline.json",
     "load-result.json",
+    "resume-intent.json",
     context.keyName,
   ]) {
     const stage =

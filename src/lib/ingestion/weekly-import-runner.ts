@@ -1,6 +1,8 @@
 import {
   hasSelectedGmailLoadExecution,
   completeSelectedGmailLoad,
+  hasPendingSelectedLoadResume,
+  verifySelectedLoadResumeBarrier,
 } from "./recovery-gmail-selected-load-executor.js";
 import { weeklyRunRulesDigest } from "./weekly-run-context.js";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
@@ -239,6 +241,8 @@ export async function runWeeklyImport(input: {
       input.leaseTtlMs ?? 120000
     );
     let owned = lease;
+    if (hasPendingSelectedLoadResume())
+      await journal.guardOperation(owned, verifySelectedLoadResumeBarrier);
     const ttl = input.leaseTtlMs ?? 120000;
     let renewalAt = Date.now() + Math.floor(ttl / 3);
     if (source) {

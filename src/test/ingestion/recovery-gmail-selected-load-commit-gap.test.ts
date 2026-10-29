@@ -1,3 +1,9 @@
+import { createHmac } from "node:crypto";
+import {
+  canonicalJson,
+  ledgerDigest,
+} from "../../lib/ingestion/sqlite-store.js";
+import { verifySelectedLoadResult } from "../../lib/ingestion/recovery-gmail-selected-result-proof.js";
 import { inspectSelectedLoadInterruption } from "../../lib/ingestion/recovery-gmail-selected-load-interruption-inspection.js";
 import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-runtime.js";
 import { proveSelectedLoadPhysicalDelta } from "../../lib/ingestion/recovery-gmail-selected-physical-delta.js";
@@ -234,6 +240,141 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
     } finally {
       unlinkSync(unexpected);
     }
+
+    const resumedScript = `try{const m=await import(${JSON.stringify(module)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const result=await m.resumeRecoveredGmailSelectedLoad(f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)));console.log(JSON.stringify(result));}catch(e){const code=e instanceof Error&&/^[A-Z0-9_]{1,80}$/.test(e.message)?e.message:"NATIVE_RESUME_ERROR";console.error(code);process.exitCode=1;}`;
+    const resume = async () => {
+      const child = spawn(
+        process.execPath,
+        [
+          "--import",
+          pathToFileURL(join(root, "bootstrap/module-boundary.mjs")).href,
+          "--input-type=module",
+          "--eval",
+          resumedScript,
+        ],
+        {
+          cwd: join(root, "checkout"),
+          env: { ...process.env, ZIVV_LEDGER_HOME: join(root, "operator") },
+          stdio: ["pipe", "pipe", "pipe"],
+          windowsHide: true,
+        }
+      );
+      let stdout = "",
+        stderr = "";
+      child.stdout.on("data", (bytes: Buffer) => {
+        stdout += bytes.toString("utf8").slice(0, 65536);
+      });
+      child.stderr.on("data", (bytes: Buffer) => {
+        stderr += bytes.toString("utf8").slice(0, 4096);
+      });
+      child.stdin.on("error", () => {});
+      child.stdin.end(encodeRecoveryGmailSelectedLoadFrame(input));
+      const code = await new Promise<number | null>((resolve, reject) => {
+        child.once("error", reject);
+        child.once("close", resolve);
+      });
+      return { code, stdout, stderr };
+    };
+    const activeAttempt = await resume();
+    expect(activeAttempt.code).toBe(1);
+    expect(activeAttempt.stderr).toContain(
+      "RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE"
+    );
+    expect(existsSync(join(directory, "resume-intent.json"))).toBe(false);
+    while (Date.now() <= inspected.lease.expiresAtEpochMs)
+      await new Promise((resolve) =>
+        setTimeout(
+          resolve,
+          Math.min(
+            1000,
+            Math.max(1, inspected.lease.expiresAtEpochMs - Date.now() + 1)
+          )
+        )
+      );
+    const resumed = await resume();
+    if (resumed.code !== 0)
+      console.error(
+        "SELECTED_LOAD_RESUME_DIAGNOSTIC",
+        resumed.stderr.slice(0, 1500)
+      );
+    expect(resumed.code).toBe(0);
+    const resumedReport = JSON.parse(resumed.stdout) as {
+      status: string;
+      generation: number;
+      runId: string;
+    };
+    expect(resumedReport).toMatchObject({
+      status: "selected-load-resumed",
+      generation: 2,
+      runId: installed.runId,
+    });
+    const finalCatalog = readCanonicalSqliteLedgerReadOnly(
+      join(root, "operator/ledger.sqlite")
+    );
+    expect(finalCatalog.generation).toBe(2);
+    expect(finalCatalog.ledger).toEqual(ledger);
+    const finalJournal = validateWeeklyJournalRecoverySnapshot(
+      readWeeklyJournalRecoverySnapshotReadOnly(
+        join(root, "operator/weekly-runs.sqlite")
+      )
+    );
+    const finalState = JSON.parse(
+      finalJournal.runState.find((item) => item.id === installed.runId)!.payload
+    ) as { stages: { stage: string; status: string }[] };
+    expect(
+      finalState.stages.find((stage) => stage.stage === "load")?.status
+    ).toBe("succeeded");
+    expect(existsSync(join(directory, "resume-intent.json"))).toBe(true);
+    expect(existsSync(join(directory, "load-result.json"))).toBe(true);
+    const intentBytes = readFileSync(join(directory, "resume-intent.json"));
+    const { signature, ...intent } = JSON.parse(
+      intentBytes.toString("utf8")
+    ) as Record<string, unknown>;
+    expect(signature).toBe(
+      createHmac("sha256", fixture.input.recoveryKey)
+        .update("zivv-selected-load-resume-intent/v1\0")
+        .update(canonicalJson(intent))
+        .digest("hex")
+    );
+    const oldOwner = state.ownership.find(
+      (item) => item.scope === "prodigic/zivv/production"
+    )!;
+    const newOwner = finalJournal.ownership.find(
+      (item) => item.scope === "prodigic/zivv/production"
+    )!;
+    expect(intent.previousOwner).toEqual(oldOwner);
+    expect(intent.fence).toBe(oldOwner.fence + 1);
+    expect(newOwner.fence).toBe(oldOwner.fence + 1);
+    expect(newOwner.expiresAtEpochMs).toBe(0);
+    expect(Number(intent.startedAtEpochMs)).toBeGreaterThanOrEqual(
+      oldOwner.expiresAtEpochMs
+    );
+    const resultBytes = readFileSync(join(directory, "load-result.json"));
+    const resultValue = JSON.parse(resultBytes.toString("utf8")) as {
+      reportSha256: string;
+    };
+    const finalJournalBytes = readWeeklyJournalRecoverySnapshotReadOnly(
+      join(root, "operator/weekly-runs.sqlite")
+    );
+    expect(
+      verifySelectedLoadResult(resultBytes, fixture.input.recoveryKey, {
+        admissionSha256: installed.admissionSha256,
+        executionBaselineSha256: sha256(
+          readFileSync(join(directory, "execution-baseline.json"))
+        ),
+        runId: installed.runId,
+        ledgerRevision: ledgerDigest(ledger),
+        generation: 2,
+        journalSha256: sha256(finalJournalBytes),
+        runStateSha256: sha256(canonicalJson(finalState)),
+        reportSha256: resultValue.reportSha256,
+      })
+    ).toMatchObject({ status: "authenticated", loadAllowed: false });
+    const retry = await resume();
+    expect(retry.code).toBe(1);
+    expect(
+      readCanonicalSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
+    ).toEqual(finalCatalog);
 
     preserve = false;
   } finally {
