@@ -20,6 +20,7 @@ import {
   writeFileSync,
   unlinkSync,
   readdirSync,
+  lstatSync,
 } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -257,7 +258,7 @@ it("replays a durable result after a retry worker dies before lease release", as
     }
 
     const resumedScript = `try{const m=await import(${JSON.stringify(module)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const result=await m.resumeRecoveredGmailSelectedLoad(f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)));console.log(JSON.stringify(result));}catch(e){const code=e instanceof Error&&/^[A-Z0-9_]{1,80}$/.test(e.message)?e.message:"NATIVE_RESUME_ERROR";console.error(code);process.exitCode=1;}`;
-    const resume = async (killAtResult = false) => {
+    const resume = async (killAtResult = false, killAtChunk = false) => {
       const child = spawn(
         process.execPath,
         [
@@ -265,7 +266,12 @@ it("replays a durable result after a retry worker dies before lease release", as
           pathToFileURL(join(root, "bootstrap/module-boundary.mjs")).href,
           "--input-type=module",
           "--eval",
-          resumedScript,
+          killAtChunk
+            ? resumedScript.replace(
+                "m.resumeRecoveredGmailSelectedLoad(",
+                "m.resumeRecoveredGmailSelectedLoadForTest("
+              )
+            : resumedScript,
         ],
         {
           cwd: join(root, "checkout"),
@@ -275,16 +281,22 @@ it("replays a durable result after a retry worker dies before lease release", as
         }
       );
       let stdout = "",
-        stderr = "";
+        stderr = "",
+        killed = false;
       child.stdout.on("data", (bytes: Buffer) => {
         stdout += bytes.toString("utf8").slice(0, 65536);
+        if (
+          killAtChunk &&
+          stdout.includes("SELECTED_LOAD_TEST_CHUNK_LINKED") &&
+          !killed
+        )
+          killed = child.kill();
       });
       child.stderr.on("data", (bytes: Buffer) => {
         stderr += bytes.toString("utf8").slice(0, 4096);
       });
       child.stdin.on("error", () => {});
       child.stdin.end(encodeRecoveryGmailSelectedLoadFrame(input));
-      let killed = false;
       const watcher = killAtResult
         ? setInterval(() => {
             const target = join(directory, "load-result.json"),
@@ -321,6 +333,21 @@ it("replays a durable result after a retry worker dies before lease release", as
           )
         )
       );
+    if (!changedFiles.snapshot)
+      throw Error("Expected prior encrypted snapshot");
+    const chunkDeath = await resume(false, true);
+    expect(chunkDeath.killed).toBe(true);
+    expect(chunkDeath.stdout).toContain("SELECTED_LOAD_TEST_CHUNK_LINKED");
+    const stagedName = "resume-snapshot-000.bin";
+    const stagedDirectory = join(directory, stagedName + "-stage");
+    expect(lstatSync(join(directory, stagedName)).nlink).toBe(2);
+    expect(readdirSync(stagedDirectory)).toHaveLength(1);
+    expect(existsSync(join(directory, "resume-intent.json"))).toBe(false);
+    const stagedInspection = inspectSelectedLoadInterruption(input);
+    expect(stagedInspection).toMatchObject({
+      status: "committed",
+      loadAllowed: false,
+    });
     const killedResume = await resume(true);
     expect(killedResume.killed).toBe(true);
     const deadJournalBytes = readWeeklyJournalRecoverySnapshotReadOnly(

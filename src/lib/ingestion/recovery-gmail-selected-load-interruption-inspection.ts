@@ -1,3 +1,4 @@
+import { observeSelectedLoadStagedSnapshot } from "./recovery-gmail-selected-staged-snapshot.js";
 import { observeSelectedLoadCompletedJournal } from "./recovery-gmail-selected-completed-journal.js";
 import { restoreResumeSnapshot } from "./recovery-gmail-selected-resume-snapshot-evidence.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
@@ -59,6 +60,7 @@ export interface SelectedLoadInterruptionEvidence {
   completedResultSha256?: string;
   raw: Buffer;
   observedEntries: RecoveryRuntimeEntry[];
+  stagedSnapshotPaths: string[];
   observedCatalog: { ledger: IngestionLedger; generation: number };
   observedJournal: Buffer;
   changedFiles: { key?: Buffer; snapshot?: Buffer; report?: Buffer };
@@ -271,6 +273,7 @@ export function readSelectedLoadInterruptionEvidence(
     const hasResult = entriesByPath.has(resultPath);
     let priorJournal = journal;
     let priorEntries = entries;
+    let stagedSnapshotPaths: string[] = [];
     let completedResultSha256: string | undefined;
     let priorSnapshot: Buffer | undefined;
     if (hasResult) {
@@ -385,6 +388,20 @@ export function readSelectedLoadInterruptionEvidence(
         return fail();
       completedResultSha256 = resultProof.resultSha256;
     }
+    if (
+      !hasResult &&
+      entries.some((entry) => entry.path.startsWith(load + "/resume-snapshot-"))
+    ) {
+      if (!changedFiles.snapshot) return fail();
+      const staged = observeSelectedLoadStagedSnapshot({
+        destination: root,
+        loadPath: load,
+        snapshot: changedFiles.snapshot,
+        entries,
+      });
+      priorEntries = staged.entries;
+      stagedSnapshotPaths = staged.stagedPaths;
+    }
     const j = proveSelectedLoadJournalDelta({
       ...common,
       observedJournal: priorJournal,
@@ -448,7 +465,8 @@ export function readSelectedLoadInterruptionEvidence(
       executionBaseline,
       ...(completedResultSha256 ? { completedResultSha256 } : {}),
       raw,
-      observedEntries: entries,
+      observedEntries: priorEntries,
+      stagedSnapshotPaths,
       observedCatalog: catalog,
       observedJournal: journal,
       changedFiles,
