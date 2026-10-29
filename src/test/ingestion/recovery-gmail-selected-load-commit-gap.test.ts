@@ -223,6 +223,10 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
       activationAllowed: false,
     });
     expect(inspected.journalSha256).toBe(sha256(journal));
+    expect(inspected.lease).toMatchObject({
+      status: "active",
+      loadAllowed: false,
+    });
     const unexpected = join(root, "unexpected-recovery-fixture-file");
     writeFileSync(unexpected, "unexpected", { flag: "wx" });
     try {

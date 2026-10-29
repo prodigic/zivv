@@ -1,3 +1,8 @@
+import { bootstrapLedger } from "../../lib/ingestion/ledger.js";
+import {
+  writeSqliteLedger,
+  withCanonicalStoreTransaction,
+} from "../../lib/ingestion/sqlite-store.js";
 import { afterEach, describe, expect, it } from "vitest";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -46,6 +51,38 @@ afterEach(() => {
   }
 });
 describe("durable journal artifacts and guarded operations", () => {
+  it("holds both journal and canonical catalog writer locks while checking recovery state", async () => {
+    const f = fixture(),
+      path = join(f.directory, "ledger.sqlite"),
+      ledger = bootstrapLedger({ events: [], artists: [], venues: [] }, 1000);
+    await writeSqliteLedger(path, ledger, true);
+    const lease = f.journal.acquire("production", 10000);
+    await f.journal.guardOperation(lease, async () =>
+      withCanonicalStoreTransaction(
+        path,
+        { generation: 1, ledger },
+        async () => {
+          const competingCatalog = new DatabaseSync(path, { timeout: 0 }),
+            competingJournal = new DatabaseSync(
+              join(f.directory, "weekly-runs.sqlite"),
+              { timeout: 0 }
+            );
+          try {
+            expect(() => competingCatalog.exec("BEGIN IMMEDIATE")).toThrow(
+              /locked|busy/i
+            );
+            expect(() => competingJournal.exec("BEGIN IMMEDIATE")).toThrow(
+              /locked|busy/i
+            );
+          } finally {
+            competingCatalog.close();
+            competingJournal.close();
+          }
+        }
+      )
+    );
+  });
+
   it("exposes only a live guarded lease, detached from SQL and revoked for escaped tasks", async () => {
     let now = 1000;
     const f = fixture(() => now),
