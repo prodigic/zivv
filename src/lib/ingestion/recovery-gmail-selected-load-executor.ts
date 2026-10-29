@@ -1,3 +1,4 @@
+import { selectedLoadTemporaryTarget } from "./recovery-gmail-selected-load-paths.js";
 import { createRecoveryGmailSelectedLoadEvidence } from "./recovery-gmail-selected-load-evidence.js";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { createHmac } from "node:crypto";
@@ -509,18 +510,27 @@ export function selectedGmailLoadFile(
       fail();
     return true;
   }
-  let target = absolute.replace(
-    /(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$|\.[a-f0-9-]{36}\.tmp$/g,
-    ""
+  const report = join(
+    scope.root,
+    "data/ingestion/reports",
+    sha256(scope.plan.result.report.runId) + ".json"
   );
-  if (dirname(target) === scope.keyStage && target.endsWith(keyName))
-    target = join(scope.operator, keyName);
-  for (const name of ["execution-baseline.json", "load-result.json"])
-    if (
-      dirname(target) === join(scope.directory, name + "-stage") &&
-      target.endsWith(name)
-    )
-      target = join(scope.directory, name);
+  const target =
+    scope.files.has(absolute) ||
+    absolute === join(scope.operator, keyName) ||
+    absolute === join(scope.root, "data/ingestion/backups/ledger.snapshot.enc")
+      ? absolute
+      : selectedLoadTemporaryTarget(absolute, {
+          operator: scope.operator,
+          directory: scope.directory,
+          keyName,
+          report,
+          snapshot: join(
+            scope.root,
+            "data/ingestion/backups/ledger.snapshot.enc"
+          ),
+        });
+  if (!target) fail();
   if (
     scope.phase === "key" &&
     target === join(scope.operator, keyName) &&
