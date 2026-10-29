@@ -26,7 +26,6 @@ it("authenticates staged and linked intents against the exact pre-retry state wi
     stage = target + "-stage",
     candidate = stage + "/resume-intent.json.123.0123456789abcdef.tmp",
     key = Buffer.alloc(32, 7),
-    journal = Buffer.from("private fixture journal"),
     snapshot = Buffer.from("encrypted fixture"),
     priorEntries: RecoveryRuntimeEntry[] = [
       { path: "fixture", kind: "directory" },
@@ -45,6 +44,21 @@ it("authenticates staged and linked intents against the exact pre-retry state wi
       fence: 1,
       expiresAtEpochMs: 1000,
     };
+  const encodeJournal = (lease: typeof previousOwner) => {
+    const value = {
+      format: "zivv-weekly-journal-recovery",
+      version: 1,
+      journalSchemaVersion: 3,
+      ownership: [lease],
+      runState: [],
+      stageArtifacts: [],
+      intakeEvidence: [],
+    };
+    return Buffer.from(
+      canonicalJson({ ...value, digest: sha256(canonicalJson(value)) }) + "\n"
+    );
+  };
+  const journal = encodeJournal(previousOwner);
   const body = {
     kind: "zivv-selected-load-resume-intent",
     version: 2,
@@ -138,6 +152,39 @@ it("authenticates staged and linked intents against the exact pre-retry state wi
       })
     ).toThrow();
     expect(lstatSync(join(root, target)).nlink).toBe(2);
+    unlinkSync(join(root, candidate));
+    const acquiredOwner = {
+      ...previousOwner,
+      fence: 2,
+      expiresAtEpochMs: 2000,
+    };
+    const acquiredJournal = encodeJournal(acquiredOwner);
+    const settled = [{ path: stage, kind: "directory" as const }, file(target)];
+    const acquired = observeSelectedLoadPendingIntent({
+      ...base,
+      entries: settled,
+      journal: acquiredJournal,
+      previousOwner: acquiredOwner,
+    });
+    expect(acquired.priorJournal.equals(journal)).toBe(true);
+    expect(acquired.loadAllowed).toBe(false);
+    expect(() =>
+      observeSelectedLoadPendingIntent({
+        ...base,
+        entries: settled,
+        journal: encodeJournal({ ...acquiredOwner, fence: 3 }),
+        previousOwner: { ...acquiredOwner, fence: 3 },
+      })
+    ).toThrow();
+    linkSync(join(root, target), join(root, candidate));
+    expect(() =>
+      observeSelectedLoadPendingIntent({
+        ...base,
+        entries: linked,
+        journal: acquiredJournal,
+        previousOwner: acquiredOwner,
+      })
+    ).toThrow();
     unlinkSync(join(root, target));
     writeFileSync(join(root, candidate), bytes.subarray(0, 32));
     expect(() =>

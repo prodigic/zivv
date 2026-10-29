@@ -478,6 +478,7 @@ export function readSelectedLoadInterruptionEvidence(
         initialSettled: pending.settled,
       });
       pendingSuccessorCount = successors.successorCount;
+      priorJournal = pending.priorJournal;
       priorEntries = prior;
       pendingIntentSha256 = pending.intentSha256;
     }
@@ -527,7 +528,8 @@ export function readSelectedLoadInterruptionEvidence(
             ? ("pending-intent" as const)
             : j.status,
         runId: j.runId ?? runId,
-        journalSha256: hasResult ? sha256(journal) : j.journalSha256,
+        journalSha256:
+          hasResult || pendingIntentSha256 ? sha256(journal) : j.journalSha256,
         inventorySha256: hasResult
           ? sha256(canonicalJson(entries))
           : physical.inventorySha256,
