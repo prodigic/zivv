@@ -1,3 +1,4 @@
+import { DatabaseSync } from "node:sqlite";
 import {
   describeResumeSnapshot,
   resumeSnapshotChunkSize,
@@ -9,7 +10,18 @@ import { selectedLoadTemporaryTarget } from "./recovery-gmail-selected-load-path
 import { createRecoveryGmailSelectedLoadEvidence } from "./recovery-gmail-selected-load-evidence.js";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { createHmac } from "node:crypto";
-import { existsSync, readFileSync, lstatSync, readdirSync } from "node:fs";
+import {
+  existsSync,
+  readFileSync,
+  lstatSync,
+  readdirSync,
+  openSync,
+  closeSync,
+  fstatSync,
+  readSync,
+  writeSync,
+  fsyncSync,
+} from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import type { IngestionLedger } from "../../types/ingestion.js";
 import {
@@ -58,6 +70,7 @@ import {
   readGuardedWeeklyCatalogLease,
   validateWeeklyJournalRecoverySnapshot,
   readWeeklyJournalRecoverySnapshotReadOnly,
+  readWeeklyJournalRecoverySnapshotInTransaction,
   type WeeklyRunLease,
   type WeeklyJournalRecoverySnapshot,
 } from "./weekly-run-journal.js";
@@ -75,7 +88,14 @@ export type SelectedLoadJournalOperation =
   | { kind: "artifact"; runId: string; stage: string; bytes: Buffer }
   | { kind: "check" };
 interface Scope {
-  pauseForLinkedChunkTest?: boolean;
+  chunkPauseTest?: "linked" | "partial";
+  evidenceGuard?: boolean;
+  incompleteSnapshot?: {
+    path: string;
+    bytes: Buffer;
+    dev: number;
+    ino: number;
+  };
   resume?: {
     observedJournal: WeeklyJournalRecoverySnapshot;
     previousOwner: WeeklyRunLease;
@@ -150,7 +170,12 @@ export function selectedGmailLoadWriter(
   if (!scope) return false;
   if (
     resolve(directory) !== scope.operator ||
-    !["key", "run", "result"].includes(scope.phase) ||
+    !(
+      ["key", "run", "result"].includes(scope.phase) ||
+      (scope.phase === "evidence" &&
+        scope.evidenceGuard &&
+        operation === undefined)
+    ) ||
     (operation !== undefined && operation !== "capture-journal") ||
     (operation === "capture-journal" && scope.phase !== "run")
   )
@@ -197,7 +222,10 @@ export function selectedGmailLoadStoreBaseline(path: string) {
   if (!scope) return undefined;
   if (
     resolve(path) !== join(scope.operator, "ledger.sqlite") ||
-    scope.phase !== "run"
+    !(
+      scope.phase === "run" ||
+      (scope.phase === "evidence" && scope.evidenceGuard)
+    )
   )
     fail();
   scope.assertCurrent();
@@ -216,7 +244,12 @@ export function selectedGmailLoadStoreOpen(
     !operation ||
     operation === "write" ||
     resolve(path) !== join(scope.operator, "ledger.sqlite") ||
-    scope.phase !== "run"
+    !(
+      scope.phase === "run" ||
+      (scope.phase === "evidence" &&
+        scope.evidenceGuard &&
+        operation === "transaction")
+    )
   )
     fail();
   scope.assertCurrent();
@@ -597,6 +630,15 @@ export function selectedGmailLoadFile(
       fail();
     return true;
   }
+  if (
+    scope.phase === "evidence" &&
+    scope.evidenceGuard &&
+    effect === "install" &&
+    scope.incompleteSnapshot &&
+    absolute === scope.incompleteSnapshot.path &&
+    bytes?.equals(scope.incompleteSnapshot.bytes)
+  )
+    return true;
   const report = join(
     scope.root,
     "data/ingestion/reports",
@@ -672,6 +714,42 @@ export function selectedGmailLoadFile(
     scope.transients.set(absolute, Buffer.from(expected));
   return true;
 }
+/** Fixed test probe: write a prefix and pause the test worker only. */
+export function selectedGmailLoadPartialWriteProbe(
+  path: string,
+  bytes: Buffer,
+  fd: number
+): boolean {
+  const scope = current();
+  if (!scope || scope.chunkPauseTest !== "partial") return false;
+  const absolute = resolve(path);
+  const target = selectedLoadTemporaryTarget(absolute, {
+    operator: scope.operator,
+    directory: scope.directory,
+    keyName,
+    report: join(
+      scope.root,
+      "data/ingestion/reports",
+      sha256(scope.plan.result.report.runId) + ".json"
+    ),
+    snapshot: join(scope.root, "data/ingestion/backups/ledger.snapshot.enc"),
+  });
+  if (target !== join(scope.directory, "resume-snapshot-000.bin")) return false;
+  if (
+    scope.phase !== "evidence" ||
+    !scope.evidenceGuard ||
+    !scope.files.get(target)?.equals(bytes) ||
+    bytes.length < 2
+  )
+    fail();
+  scope.assertCurrent();
+  const count = Math.min(32, bytes.length - 1);
+  if (writeSync(fd, bytes, 0, count) !== count) fail();
+  fsyncSync(fd);
+  process.stdout.write("SELECTED_LOAD_TEST_CHUNK_PARTIAL\n");
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+  throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+}
 export function observeSelectedGmailLoadFile(
   path: string,
   point: "flushed" | "linked" | "published"
@@ -680,7 +758,7 @@ export function observeSelectedGmailLoadFile(
   if (!scope) return false;
   scope.assertCurrent();
   if (
-    scope.pauseForLinkedChunkTest &&
+    scope.chunkPauseTest === "linked" &&
     point === "linked" &&
     resolve(path) === join(scope.directory, "resume-snapshot-000.bin")
   ) {
@@ -1112,7 +1190,7 @@ export async function executeRecoveredGmailSelectedLoad(
  * private and quarantined; interruption of this retry requires later proof. */
 async function resumeSelectedLoad(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
-  pauseForLinkedChunkTest: boolean
+  chunkPauseTest: "linked" | "partial" | undefined
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoRecoveredGmailCapture();
@@ -1302,7 +1380,19 @@ async function resumeSelectedLoad(
     }
     scope = {
       active: true,
-      pauseForLinkedChunkTest,
+      chunkPauseTest,
+      ...(evidence.incompleteSnapshotCandidate
+        ? {
+            incompleteSnapshot: {
+              ...evidence.incompleteSnapshotCandidate,
+              path: join(
+                runtime.destination,
+                evidence.incompleteSnapshotCandidate.path
+              ),
+              bytes: Buffer.from(evidence.incompleteSnapshotCandidate.bytes),
+            },
+          }
+        : {}),
       deadline,
       startedAt: started.startedAtEpochMs,
       root,
@@ -1364,6 +1454,24 @@ async function resumeSelectedLoad(
           if (entry.kind === "directory" && dirs.has(absolute) && !before)
             continue;
           if (entry.kind === "file") {
+            const incomplete = scope!.incompleteSnapshot;
+            if (
+              incomplete &&
+              absolute === incomplete.path &&
+              entry.size === incomplete.bytes.length &&
+              entry.sha256 === sha256(incomplete.bytes)
+            ) {
+              const stat = lstatSync(absolute);
+              if (
+                !stat.isFile() ||
+                stat.isSymbolicLink() ||
+                stat.nlink !== 1 ||
+                stat.dev !== incomplete.dev ||
+                stat.ino !== incomplete.ino
+              )
+                fail();
+              continue;
+            }
             const previous = scope!.previousFiles.get(absolute);
             if (
               previous &&
@@ -1394,17 +1502,138 @@ async function resumeSelectedLoad(
     };
     scope.assertCurrent();
     return await scopes.run(scope, async () => {
-      for (const chunk of snapshotChunks)
-        installRecoveryIntent(
-          chunk.path,
-          chunk.bytes,
-          join(directory, chunk.name + "-stage")
-        );
-      installRecoveryIntent(
-        intentPath,
-        intent,
-        join(directory, "resume-intent.json-stage")
+      // Serialize every evidence installer through the actual journal writer
+      // lock, then pin the catalog under its own writer transaction.
+      const journalGuard = new DatabaseSync(
+        join(operator, "weekly-runs.sqlite"),
+        { timeout: 10000 }
       );
+      try {
+        journalGuard.exec("BEGIN IMMEDIATE");
+        const guardedJournal =
+          readWeeklyJournalRecoverySnapshotInTransaction(journalGuard);
+        if (
+          !guardedJournal.equals(evidence.observedJournal) ||
+          previousOwner.expiresAtEpochMs > Date.now()
+        )
+          fail();
+        scope!.evidenceGuard = true;
+        try {
+          await withCanonicalStoreTransaction(
+            location.path,
+            { generation: scope!.generation, ledger: scope!.ledger },
+            async () => {
+              scope!.assertCurrent();
+              const incomplete = scope!.incompleteSnapshot;
+              if (incomplete) {
+                selectedGmailLoadFile(
+                  incomplete.path,
+                  incomplete.bytes,
+                  "install"
+                );
+                const full = scope!.transients.get(incomplete.path);
+                if (
+                  !full ||
+                  full.length <= incomplete.bytes.length ||
+                  !full
+                    .subarray(0, incomplete.bytes.length)
+                    .equals(incomplete.bytes)
+                )
+                  fail();
+                const fd = openSync(incomplete.path, "r+");
+                try {
+                  const opened = fstatSync(fd),
+                    named = lstatSync(incomplete.path);
+                  if (
+                    !opened.isFile() ||
+                    named.isSymbolicLink() ||
+                    opened.nlink !== 1 ||
+                    named.nlink !== 1 ||
+                    opened.dev !== incomplete.dev ||
+                    opened.ino !== incomplete.ino ||
+                    named.dev !== opened.dev ||
+                    named.ino !== opened.ino ||
+                    opened.size !== incomplete.bytes.length ||
+                    named.size !== opened.size
+                  )
+                    fail();
+                  const observed = Buffer.alloc(incomplete.bytes.length);
+                  let readOffset = 0;
+                  while (readOffset < observed.length) {
+                    const count = readSync(
+                      fd,
+                      observed,
+                      readOffset,
+                      observed.length - readOffset,
+                      readOffset
+                    );
+                    if (count <= 0) fail();
+                    readOffset += count;
+                  }
+                  if (!observed.equals(incomplete.bytes)) fail();
+                  let offset = observed.length;
+                  while (offset < full.length) {
+                    const written = writeSync(
+                      fd,
+                      full,
+                      offset,
+                      full.length - offset,
+                      offset
+                    );
+                    if (written <= 0) fail();
+                    offset += written;
+                  }
+                  fsyncSync(fd);
+                  const after = fstatSync(fd),
+                    currentName = lstatSync(incomplete.path);
+                  if (
+                    after.dev !== opened.dev ||
+                    after.ino !== opened.ino ||
+                    after.nlink !== 1 ||
+                    after.size !== full.length ||
+                    currentName.isSymbolicLink() ||
+                    currentName.dev !== opened.dev ||
+                    currentName.ino !== opened.ino ||
+                    currentName.nlink !== 1 ||
+                    currentName.size !== full.length
+                  )
+                    fail();
+                } finally {
+                  closeSync(fd);
+                }
+                scope!.incompleteSnapshot = undefined;
+                scope!.assertCurrent();
+              }
+              for (const chunk of snapshotChunks)
+                installRecoveryIntent(
+                  chunk.path,
+                  chunk.bytes,
+                  join(directory, chunk.name + "-stage")
+                );
+              installRecoveryIntent(
+                intentPath,
+                intent,
+                join(directory, "resume-intent.json-stage")
+              );
+              scope!.assertCurrent();
+            }
+          );
+        } finally {
+          scope!.evidenceGuard = false;
+        }
+        if (
+          !readWeeklyJournalRecoverySnapshotInTransaction(journalGuard).equals(
+            evidence.observedJournal
+          )
+        )
+          fail();
+        journalGuard.exec("COMMIT");
+      } catch (error) {
+        if (journalGuard.isTransaction) journalGuard.exec("ROLLBACK");
+        throw error;
+      } finally {
+        journalGuard.close();
+      }
       scope!.phase = "run";
       let result: Buffer | undefined, expectedReleased: Buffer | undefined;
       scope!.finish = async (state, snapshot) => {
@@ -1518,11 +1747,13 @@ async function resumeSelectedLoad(
 export function resumeRecoveredGmailSelectedLoad(
   input: RecoveryGmailSelectedLoadInstallationInput
 ) {
-  return resumeSelectedLoad(input, false);
+  return resumeSelectedLoad(input, undefined);
 }
-/** Fixed test-only pause after the first chunk link. It grants no new authority. */
+/** Fixed test-only pause during the first chunk write or link; grants no new authority. */
 export function resumeRecoveredGmailSelectedLoadForTest(
-  input: RecoveryGmailSelectedLoadInstallationInput
+  input: RecoveryGmailSelectedLoadInstallationInput,
+  point: "linked" | "partial" = "linked"
 ) {
-  return resumeSelectedLoad(input, true);
+  if (point !== "linked" && point !== "partial") fail();
+  return resumeSelectedLoad(input, point);
 }

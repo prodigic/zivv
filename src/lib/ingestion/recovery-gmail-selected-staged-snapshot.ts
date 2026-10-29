@@ -1,3 +1,4 @@
+import { sha256 } from "./steve-preflight.js";
 import { basename, join } from "node:path";
 import { inspectRecoveryInstalledFile } from "./encrypted-backup.js";
 import {
@@ -30,7 +31,10 @@ export function observeSelectedLoadStagedSnapshot(input: {
   const excluded = new Set<string>();
   let missing = false,
     partial = false,
-    present = 0;
+    present = 0,
+    incompleteCandidate:
+      | { path: string; bytes: Buffer; dev: number; ino: number }
+      | undefined;
   for (const item of manifest.chunks) {
     const name = `resume-snapshot-${String(item.index).padStart(3, "0")}.bin`;
     const target = input.loadPath + "/" + name,
@@ -56,19 +60,31 @@ export function observeSelectedLoadStagedSnapshot(input: {
       item.index * resumeSnapshotChunkSize,
       item.index * resumeSnapshotChunkSize + item.size
     );
+    const candidate = observation.candidate;
+    const incomplete =
+      !!candidate &&
+      !observation.target &&
+      candidate.nlink === 1 &&
+      candidate.bytes.length < expected.length &&
+      expected.subarray(0, candidate.bytes.length).equals(candidate.bytes);
     if (
       (observation.target && !observation.target.bytes.equals(expected)) ||
-      (observation.candidate && !observation.candidate.bytes.equals(expected))
+      (candidate && !candidate.bytes.equals(expected) && !incomplete)
     )
       return fail();
-    const matches = (path: string, present: boolean) => {
+    const matches = (
+      path: string,
+      present: boolean,
+      expectedSize = item.size,
+      expectedHash = item.sha256
+    ) => {
       const entry = byPath.get(path);
       if (present !== !!entry) return false;
       return (
         !present ||
         (entry?.kind === "file" &&
-          entry.size === item.size &&
-          entry.sha256 === item.sha256)
+          entry.size === expectedSize &&
+          entry.sha256 === expectedHash)
       );
     };
     const candidatePath = observation.candidate
@@ -76,7 +92,13 @@ export function observeSelectedLoadStagedSnapshot(input: {
       : undefined;
     if (
       !matches(target, !!observation.target) ||
-      (candidatePath && !matches(candidatePath, true))
+      (candidatePath &&
+        !matches(
+          candidatePath,
+          true,
+          candidate!.bytes.length,
+          sha256(candidate!.bytes)
+        ))
     )
       return fail();
     const allowed = new Set([
@@ -86,6 +108,13 @@ export function observeSelectedLoadStagedSnapshot(input: {
         ? [stage + "/" + basename(observation.candidate.path)]
         : []),
     ]);
+    if (incomplete && candidatePath && candidate)
+      incompleteCandidate = {
+        path: candidatePath,
+        bytes: Buffer.from(candidate.bytes),
+        dev: candidate.dev,
+        ino: candidate.ino,
+      };
     for (const entry of members)
       if (!allowed.has(entry.path)) return fail();
       else excluded.add(entry.path);
@@ -98,6 +127,7 @@ export function observeSelectedLoadStagedSnapshot(input: {
     stagedPaths: [...excluded].sort(),
     completeChunks: present,
     partial,
+    ...(incompleteCandidate ? { incompleteCandidate } : {}),
     loadAllowed: false as const,
   };
 }

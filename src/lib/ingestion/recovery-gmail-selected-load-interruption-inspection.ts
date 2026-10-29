@@ -61,6 +61,12 @@ export interface SelectedLoadInterruptionEvidence {
   raw: Buffer;
   observedEntries: RecoveryRuntimeEntry[];
   stagedSnapshotPaths: string[];
+  incompleteSnapshotCandidate?: {
+    path: string;
+    bytes: Buffer;
+    dev: number;
+    ino: number;
+  };
   observedCatalog: { ledger: IngestionLedger; generation: number };
   observedJournal: Buffer;
   changedFiles: { key?: Buffer; snapshot?: Buffer; report?: Buffer };
@@ -274,6 +280,9 @@ export function readSelectedLoadInterruptionEvidence(
     let priorJournal = journal;
     let priorEntries = entries;
     let stagedSnapshotPaths: string[] = [];
+    let incompleteSnapshotCandidate:
+      | { path: string; bytes: Buffer; dev: number; ino: number }
+      | undefined;
     let completedResultSha256: string | undefined;
     let priorSnapshot: Buffer | undefined;
     if (hasResult) {
@@ -401,6 +410,7 @@ export function readSelectedLoadInterruptionEvidence(
       });
       priorEntries = staged.entries;
       stagedSnapshotPaths = staged.stagedPaths;
+      incompleteSnapshotCandidate = staged.incompleteCandidate;
     }
     const j = proveSelectedLoadJournalDelta({
       ...common,
@@ -467,6 +477,7 @@ export function readSelectedLoadInterruptionEvidence(
       raw,
       observedEntries: priorEntries,
       stagedSnapshotPaths,
+      ...(incompleteSnapshotCandidate ? { incompleteSnapshotCandidate } : {}),
       observedCatalog: catalog,
       observedJournal: journal,
       changedFiles,

@@ -132,3 +132,57 @@ it("refuses a later chunk without the installed prefix", () => {
     rmSync(base, { recursive: true, force: true });
   }
 });
+
+it("identifies only an exact unlinked prefix and never removes it", () => {
+  const base = mkdtempSync(join(tmpdir(), "zivv-partial-chunk-"));
+  const loadPath = "recovery-gmail-load/" + "c".repeat(64),
+    name = "resume-snapshot-000.bin",
+    stage = loadPath + "/" + name + "-stage",
+    candidate = stage + "/" + name + ".123.0123456789abcdef.tmp",
+    snapshot = Buffer.from("encrypted fixture"),
+    partial = snapshot.subarray(0, 5);
+  try {
+    mkdirSync(join(base, stage), { recursive: true });
+    writeFileSync(join(base, candidate), partial);
+    const entries: RecoveryRuntimeEntry[] = [
+      { path: stage, kind: "directory" },
+      {
+        path: candidate,
+        kind: "file",
+        size: partial.length,
+        sha256: sha256(partial),
+      },
+    ];
+    expect(
+      observeSelectedLoadStagedSnapshot({
+        destination: base,
+        loadPath,
+        snapshot,
+        entries,
+      })
+    ).toMatchObject({
+      incompleteCandidate: { path: candidate },
+      loadAllowed: false,
+    });
+    expect(readFileSync(join(base, candidate)).equals(partial)).toBe(true);
+    const corrupt = Buffer.from("wrong");
+    writeFileSync(join(base, candidate), corrupt);
+    entries[1] = {
+      path: candidate,
+      kind: "file",
+      size: corrupt.length,
+      sha256: sha256(corrupt),
+    };
+    expect(() =>
+      observeSelectedLoadStagedSnapshot({
+        destination: base,
+        loadPath,
+        snapshot,
+        entries,
+      })
+    ).toThrow();
+    expect(readFileSync(join(base, candidate)).equals(corrupt)).toBe(true);
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+});

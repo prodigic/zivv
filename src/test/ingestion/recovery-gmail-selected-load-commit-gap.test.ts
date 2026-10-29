@@ -13,7 +13,7 @@ import { inspectSelectedLoadInterruption } from "../../lib/ingestion/recovery-gm
 import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-runtime.js";
 import { proveSelectedLoadPhysicalDelta } from "../../lib/ingestion/recovery-gmail-selected-physical-delta.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import {
   readFileSync,
   existsSync,
@@ -267,10 +267,15 @@ it("replays a durable result after a retry worker dies before lease release", as
           "--input-type=module",
           "--eval",
           killAtChunk
-            ? resumedScript.replace(
-                "m.resumeRecoveredGmailSelectedLoad(",
-                "m.resumeRecoveredGmailSelectedLoadForTest("
-              )
+            ? resumedScript
+                .replace(
+                  "m.resumeRecoveredGmailSelectedLoad(",
+                  "m.resumeRecoveredGmailSelectedLoadForTest("
+                )
+                .replace(
+                  "f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)))",
+                  "f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)), 'partial')"
+                )
             : resumedScript,
         ],
         {
@@ -283,14 +288,26 @@ it("replays a durable result after a retry worker dies before lease release", as
       let stdout = "",
         stderr = "",
         killed = false;
+      const contention: (number | null)[] = [];
       child.stdout.on("data", (bytes: Buffer) => {
         stdout += bytes.toString("utf8").slice(0, 65536);
         if (
           killAtChunk &&
-          stdout.includes("SELECTED_LOAD_TEST_CHUNK_LINKED") &&
+          stdout.includes("SELECTED_LOAD_TEST_CHUNK_PARTIAL") &&
           !killed
-        )
+        ) {
+          const probe =
+            "const {DatabaseSync}=require('node:sqlite');const db=new DatabaseSync(process.argv[1],{timeout:0});try{db.exec('BEGIN IMMEDIATE');db.exec('ROLLBACK');process.exitCode=0}catch(e){process.exitCode=/locked|busy/i.test(String(e.message))?17:18}finally{db.close()}";
+          for (const file of ["weekly-runs.sqlite", "ledger.sqlite"]) {
+            const result = spawnSync(
+              process.execPath,
+              ["--no-warnings", "-e", probe, join(root, "operator", file)],
+              { encoding: "utf8", windowsHide: true, timeout: 10000 }
+            );
+            contention.push(result.status);
+          }
           killed = child.kill();
+        }
       });
       child.stderr.on("data", (bytes: Buffer) => {
         stderr += bytes.toString("utf8").slice(0, 4096);
@@ -315,7 +332,7 @@ it("replays a durable result after a retry worker dies before lease release", as
         child.once("close", resolve);
       });
       if (watcher) clearInterval(watcher);
-      return { code, stdout, stderr, killed };
+      return { code, stdout, stderr, killed, contention };
     };
     const activeAttempt = await resume();
     expect(activeAttempt.code).toBe(1);
@@ -337,11 +354,22 @@ it("replays a durable result after a retry worker dies before lease release", as
       throw Error("Expected prior encrypted snapshot");
     const chunkDeath = await resume(false, true);
     expect(chunkDeath.killed).toBe(true);
-    expect(chunkDeath.stdout).toContain("SELECTED_LOAD_TEST_CHUNK_LINKED");
+    expect(chunkDeath.contention).toEqual([17, 17]);
+    expect(chunkDeath.stdout).toContain("SELECTED_LOAD_TEST_CHUNK_PARTIAL");
     const stagedName = "resume-snapshot-000.bin";
     const stagedDirectory = join(directory, stagedName + "-stage");
-    expect(lstatSync(join(directory, stagedName)).nlink).toBe(2);
-    expect(readdirSync(stagedDirectory)).toHaveLength(1);
+    expect(existsSync(join(directory, stagedName))).toBe(false);
+    const stagedNames = readdirSync(stagedDirectory);
+    expect(stagedNames).toHaveLength(1);
+    const partialPath = join(stagedDirectory, stagedNames[0]!);
+    const partialBytes = readFileSync(partialPath);
+    expect(lstatSync(partialPath).nlink).toBe(1);
+    expect(partialBytes.length).toBe(32);
+    expect(
+      changedFiles.snapshot
+        .subarray(0, partialBytes.length)
+        .equals(partialBytes)
+    ).toBe(true);
     expect(existsSync(join(directory, "resume-intent.json"))).toBe(false);
     const stagedInspection = inspectSelectedLoadInterruption(input);
     expect(stagedInspection).toMatchObject({
@@ -349,6 +377,11 @@ it("replays a durable result after a retry worker dies before lease release", as
       loadAllowed: false,
     });
     const killedResume = await resume(true);
+    if (!killedResume.killed)
+      console.error(
+        "SELECTED_LOAD_RESULT_BOUNDARY_DIAGNOSTIC",
+        killedResume.stderr.slice(0, 1500)
+      );
     expect(killedResume.killed).toBe(true);
     const deadJournalBytes = readWeeklyJournalRecoverySnapshotReadOnly(
       join(root, "operator/weekly-runs.sqlite")
