@@ -1,3 +1,4 @@
+import { observeSelectedLoadCompletedJournal } from "../../lib/ingestion/recovery-gmail-selected-completed-journal.js";
 import { expect, it, vi } from "vitest";
 import { createRecoveryGmailSelectedLoadFixture } from "./fixtures/recovery-gmail-selected-load-fixture.js";
 import { proveRecoveryGmailSelectedLoadBaseline } from "../../lib/ingestion/recovery-gmail-selected-load-proof.js";
@@ -268,10 +269,30 @@ it("proves the committed first-attempt journal and rejects unrelated or missing 
         runId: state.runId,
       })
     ).toThrow();
+    const expired = structuredClone(resumed);
+    expired.ownership.find(
+      (item) => item.scope === "prodigic/zivv/production"
+    )!.expiresAtEpochMs = now - 1;
+    const observedExpired = observeSelectedLoadCompletedJournal(
+      encode(expired),
+      intent
+    );
+    expect(observedExpired.lease.status).toBe("expired");
+    expect(observedExpired.releasedJournal.equals(encode(resumed))).toBe(true);
+    expect(observedExpired.guardedJournalSha256).toBe(sha256(encode(expired)));
+    const released = observeSelectedLoadCompletedJournal(
+      encode(resumed),
+      intent
+    );
+    expect(released.lease.status).toBe("released");
+    expect(released.guardedJournalSha256).toBeNull();
     const stillHeld = structuredClone(resumed);
     stillHeld.ownership.find(
       (item) => item.scope === "prodigic/zivv/production"
     )!.expiresAtEpochMs = now + 20000;
+    expect(() =>
+      observeSelectedLoadCompletedJournal(encode(stillHeld), intent)
+    ).toThrow("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
     expect(() =>
       reconstructSelectedLoadResumeJournal({
         completedJournal: encode(stillHeld),
