@@ -88,7 +88,7 @@ export type SelectedLoadJournalOperation =
   | { kind: "artifact"; runId: string; stage: string; bytes: Buffer }
   | { kind: "check" };
 interface Scope {
-  chunkPauseTest?: "linked" | "partial" | "intent-linked";
+  chunkPauseTest?: "linked" | "partial" | "intent-linked" | "lease-acquired";
   evidenceGuard?: boolean;
   incompleteSnapshot?: {
     path: string;
@@ -511,6 +511,11 @@ export async function verifySelectedLoadResumeBarrier(): Promise<void> {
     observed.lease.scope !== production
   )
     fail();
+  if (scope.chunkPauseTest === "lease-acquired") {
+    process.stdout.write("SELECTED_LOAD_TEST_LEASE_ACQUIRED\n");
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+    throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+  }
   assertResumeJournalUnchanged(scope, observed.snapshot);
   await withCanonicalStoreTransaction(
     join(scope.operator, "ledger.sqlite"),
@@ -1199,7 +1204,12 @@ export async function executeRecoveredGmailSelectedLoad(
  * private and quarantined; interruption of this retry requires later proof. */
 async function resumeSelectedLoad(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
-  chunkPauseTest: "linked" | "partial" | "intent-linked" | undefined
+  chunkPauseTest:
+    | "linked"
+    | "partial"
+    | "intent-linked"
+    | "lease-acquired"
+    | undefined
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoRecoveredGmailCapture();
@@ -1761,9 +1771,14 @@ export function resumeRecoveredGmailSelectedLoad(
 /** Fixed test-only pause during the first chunk write or link; grants no new authority. */
 export function resumeRecoveredGmailSelectedLoadForTest(
   input: RecoveryGmailSelectedLoadInstallationInput,
-  point: "linked" | "partial" | "intent-linked" = "linked"
+  point: "linked" | "partial" | "intent-linked" | "lease-acquired" = "linked"
 ) {
-  if (point !== "linked" && point !== "partial" && point !== "intent-linked")
+  if (
+    point !== "linked" &&
+    point !== "partial" &&
+    point !== "intent-linked" &&
+    point !== "lease-acquired"
+  )
     fail();
   return resumeSelectedLoad(input, point);
 }
