@@ -1,3 +1,4 @@
+import { observeSelectedLoadCompletedJournal } from "./recovery-gmail-selected-completed-journal.js";
 import { restoreResumeSnapshot } from "./recovery-gmail-selected-resume-snapshot-evidence.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import type { RecoveryGmailSelectedLoadBaselineInput } from "./recovery-gmail-selected-load-proof.js";
@@ -284,8 +285,12 @@ export function readSelectedLoadInterruptionEvidence(
         intent.generation !== catalog.generation
       )
         return fail();
+      const completedJournal = observeSelectedLoadCompletedJournal(
+        journal,
+        intent
+      );
       priorJournal = reconstructSelectedLoadResumeJournal({
-        completedJournal: journal,
+        completedJournal: completedJournal.releasedJournal,
         intent,
         runId,
       });
@@ -358,7 +363,7 @@ export function readSelectedLoadInterruptionEvidence(
         ) !== canonicalJson(catalog.ledger)
       )
         return fail();
-      completedResultSha256 = verifySelectedLoadResult(
+      const resultProof = verifySelectedLoadResult(
         read(resultPath, 65536),
         input.recoveryKey,
         {
@@ -367,11 +372,18 @@ export function readSelectedLoadInterruptionEvidence(
           runId,
           ledgerRevision: ledgerDigest(catalog.ledger),
           generation: catalog.generation,
-          journalSha256: sha256(journal),
+          journalSha256: sha256(completedJournal.releasedJournal),
           runStateSha256: sha256(canonicalJson(state)),
           reportSha256: plan.receipt.reportSha256,
         }
-      ).resultSha256;
+      );
+      if (
+        completedJournal.guardedJournalSha256 &&
+        completedJournal.guardedJournalSha256 !==
+          resultProof.guardedJournalSha256
+      )
+        return fail();
+      completedResultSha256 = resultProof.resultSha256;
     }
     const j = proveSelectedLoadJournalDelta({
       ...common,

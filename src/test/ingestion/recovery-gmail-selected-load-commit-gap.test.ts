@@ -1,3 +1,4 @@
+import { observeSelectedLoadCompletedJournal } from "../../lib/ingestion/recovery-gmail-selected-completed-journal.js";
 import { createHmac } from "node:crypto";
 import {
   canonicalJson,
@@ -13,7 +14,13 @@ import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-ru
 import { proveSelectedLoadPhysicalDelta } from "../../lib/ingestion/recovery-gmail-selected-physical-delta.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 import { spawn } from "node:child_process";
-import { readFileSync, existsSync, writeFileSync, unlinkSync } from "node:fs";
+import {
+  readFileSync,
+  existsSync,
+  writeFileSync,
+  unlinkSync,
+  readdirSync,
+} from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { expect, it, vi } from "vitest";
@@ -30,8 +37,8 @@ import {
   validateWeeklyJournalRecoverySnapshot,
 } from "../../lib/ingestion/weekly-run-journal.js";
 import { proveSelectedLoadJournalDelta } from "../../lib/ingestion/recovery-gmail-selected-journal-delta.js";
-vi.setConfig({ testTimeout: 600000 });
-it("proves a real retained worker stopped after its catalog commit", async () => {
+vi.setConfig({ testTimeout: 900000 });
+it("replays a durable result after a retry worker dies before lease release", async () => {
   const fixture = await createRecoveryGmailCaptureRuntimeFixture({
     loadableSource: true,
     seedAuthorityControls: true,
@@ -250,7 +257,7 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
     }
 
     const resumedScript = `try{const m=await import(${JSON.stringify(module)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const result=await m.resumeRecoveredGmailSelectedLoad(f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)));console.log(JSON.stringify(result));}catch(e){const code=e instanceof Error&&/^[A-Z0-9_]{1,80}$/.test(e.message)?e.message:"NATIVE_RESUME_ERROR";console.error(code);process.exitCode=1;}`;
-    const resume = async () => {
+    const resume = async (killAtResult = false) => {
       const child = spawn(
         process.execPath,
         [
@@ -277,11 +284,26 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
       });
       child.stdin.on("error", () => {});
       child.stdin.end(encodeRecoveryGmailSelectedLoadFrame(input));
+      let killed = false;
+      const watcher = killAtResult
+        ? setInterval(() => {
+            const target = join(directory, "load-result.json"),
+              stage = join(directory, "load-result.json-stage");
+            if (
+              !killed &&
+              existsSync(target) &&
+              existsSync(stage) &&
+              readdirSync(stage).length === 0
+            )
+              killed = child.kill();
+          }, 1)
+        : undefined;
       const code = await new Promise<number | null>((resolve, reject) => {
         child.once("error", reject);
         child.once("close", resolve);
       });
-      return { code, stdout, stderr };
+      if (watcher) clearInterval(watcher);
+      return { code, stdout, stderr, killed };
     };
     const activeAttempt = await resume();
     expect(activeAttempt.code).toBe(1);
@@ -296,6 +318,27 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
           Math.min(
             1000,
             Math.max(1, inspected.lease.expiresAtEpochMs - Date.now() + 1)
+          )
+        )
+      );
+    const killedResume = await resume(true);
+    expect(killedResume.killed).toBe(true);
+    const deadJournalBytes = readWeeklyJournalRecoverySnapshotReadOnly(
+      join(root, "operator/weekly-runs.sqlite")
+    );
+    const deadJournal = validateWeeklyJournalRecoverySnapshot(deadJournalBytes);
+    const deadOwner = deadJournal.ownership.find(
+      (item) => item.scope === "prodigic/zivv/production"
+    )!;
+    expect(deadOwner.expiresAtEpochMs).toBeGreaterThan(Date.now());
+    expect((await resume()).code).toBe(1);
+    while (Date.now() <= deadOwner.expiresAtEpochMs)
+      await new Promise((resolve) =>
+        setTimeout(
+          resolve,
+          Math.min(
+            1000,
+            Math.max(1, deadOwner.expiresAtEpochMs - Date.now() + 1)
           )
         )
       );
@@ -358,7 +401,7 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
     expect(intent.previousOwner).toEqual(oldOwner);
     expect(intent.fence).toBe(oldOwner.fence + 1);
     expect(newOwner.fence).toBe(oldOwner.fence + 1);
-    expect(newOwner.expiresAtEpochMs).toBe(0);
+    expect(newOwner.expiresAtEpochMs).toBe(deadOwner.expiresAtEpochMs);
     expect(Number(intent.startedAtEpochMs)).toBeGreaterThanOrEqual(
       oldOwner.expiresAtEpochMs
     );
@@ -404,9 +447,14 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
     const finalJournalBytes = readWeeklyJournalRecoverySnapshotReadOnly(
       join(root, "operator/weekly-runs.sqlite")
     );
+    const completedObservation = observeSelectedLoadCompletedJournal(
+      finalJournalBytes,
+      verifiedIntent
+    );
+    expect(completedObservation.lease.status).toBe("expired");
     expect(
       reconstructSelectedLoadResumeJournal({
-        completedJournal: finalJournalBytes,
+        completedJournal: completedObservation.releasedJournal,
         intent: verifiedIntent,
         runId: installed.runId,
       }).equals(journal)
@@ -420,11 +468,15 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
         runId: installed.runId,
         ledgerRevision: ledgerDigest(ledger),
         generation: 2,
-        journalSha256: sha256(finalJournalBytes),
+        journalSha256: sha256(completedObservation.releasedJournal),
         runStateSha256: sha256(canonicalJson(finalState)),
         reportSha256: resultValue.reportSha256,
       })
-    ).toMatchObject({ status: "authenticated", loadAllowed: false });
+    ).toMatchObject({
+      status: "authenticated",
+      loadAllowed: false,
+      guardedJournalSha256: sha256(finalJournalBytes),
+    });
     const retry = await resume();
     expect(retry.code).toBe(0);
     expect(JSON.parse(retry.stdout)).toEqual(resumedReport);
