@@ -429,6 +429,48 @@ export function readSqliteLedger(path: string): IngestionLedger {
   }
 }
 
+/** Detached canonical observation. No write token or later transaction authority is
+ * returned; callers must recheck under the writer lock before any mutation. */
+export function readCanonicalSqliteLedgerReadOnly(path: string): {
+  ledger: IngestionLedger;
+  generation: number;
+} {
+  const absolute = resolve(path);
+  assertNoActiveStoreTransaction(absolute);
+  const identity = assertReadOnlySqliteFiles(absolute);
+  const db = new DatabaseSync(absolute, { readOnly: true });
+  try {
+    db.exec("PRAGMA foreign_keys=ON; BEGIN;");
+    if (
+      db.prepare("PRAGMA user_version").get()?.user_version !== 1 ||
+      db.prepare("PRAGMA journal_mode").get()?.journal_mode !== "wal"
+    )
+      throw Error("Unsupported read-only shared ledger schema.");
+    const meta = db.prepare("SELECT generation FROM metadata WHERE id=1").get();
+    if (
+      !meta ||
+      typeof meta.generation !== "number" ||
+      !Number.isSafeInteger(meta.generation) ||
+      meta.generation < 1
+    )
+      throw Error("CANONICAL_STORE_BASELINE_CHANGED");
+    const ledger = readFrom(db, absolute);
+    assertCanonicalCatalog(db, absolute, {
+      generation: meta.generation,
+      canonicalLedger: canonicalJson(ledger),
+    });
+    revisions.delete(ledger);
+    db.exec("ROLLBACK;");
+    assertReadOnlySqliteFiles(absolute, identity);
+    return { ledger, generation: meta.generation };
+  } catch (error) {
+    if (db.isTransaction) db.exec("ROLLBACK;");
+    throw error;
+  } finally {
+    db.close();
+  }
+}
+
 /** Observe a retired catalog without opening a writable connection or borrowing a transaction. */
 export function readSqliteLedgerReadOnly(path: string): IngestionLedger {
   const absolute = resolve(path);

@@ -7,6 +7,7 @@ import { bootstrapLedger } from "../../lib/ingestion/ledger.js";
 import {
   canonicalJson,
   readSqliteLedger,
+  readCanonicalSqliteLedgerReadOnly,
   writeSqliteLedger,
   withStoreTransaction,
   withCanonicalStoreTransaction,
@@ -254,3 +255,46 @@ it.each(["main", "-wal"])(
     expect(work).not.toHaveBeenCalled();
   }
 );
+
+it("observes a canonical catalog and generation without write authority", async () => {
+  const { path, ledger } = await fixture();
+  expect(readCanonicalSqliteLedgerReadOnly(path)).toEqual({
+    ledger,
+    generation: 1,
+  });
+});
+it.each([
+  "UPDATE sources SET url='https://fixture.invalid/changed'",
+  "UPDATE event_artists SET position=position+1",
+  "UPDATE events SET date='2027-12-01'",
+  "CREATE TABLE unexpected(value TEXT)",
+])(
+  "refuses hidden drift in the read-only canonical observation: %s",
+  async (sql) => {
+    const { path, ledger } = await fixture(),
+      db = new DatabaseSync(path);
+    db.exec(sql);
+    db.close();
+    expect(readSqliteLedger(path)).toEqual(ledger);
+    expect(() => readCanonicalSqliteLedgerReadOnly(path)).toThrow(
+      "CANONICAL_STORE_BASELINE_CHANGED"
+    );
+  }
+);
+
+it("reports generation drift and rejects a missing or linked canonical catalog", async () => {
+  const { root, path, ledger } = await fixture(),
+    db = new DatabaseSync(path);
+  db.exec("UPDATE metadata SET generation=2");
+  db.close();
+  expect(readCanonicalSqliteLedgerReadOnly(path)).toEqual({
+    ledger,
+    generation: 2,
+  });
+  expect(() =>
+    readCanonicalSqliteLedgerReadOnly(join(root, "missing.sqlite"))
+  ).toThrow();
+  const linked = join(root, "linked-observation.sqlite");
+  linkSync(path, linked);
+  expect(() => readCanonicalSqliteLedgerReadOnly(linked)).toThrow(/linked/i);
+});

@@ -1,5 +1,4 @@
 import { spawn } from "node:child_process";
-import { DatabaseSync } from "node:sqlite";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -8,7 +7,10 @@ import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gm
 import { readRecoveryGmailHostForLoadInstallation } from "../../lib/ingestion/recovery-gmail-capture-admission.js";
 import { resumeOperatorRecoveryGmailSelectedLoadEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-launcher.js";
 import { encodeRecoveryGmailSelectedLoadFrame } from "../../lib/ingestion/recovery-gmail-selected-load-framing.js";
-import { readSqliteLedgerReadOnly } from "../../lib/ingestion/sqlite-store.js";
+import {
+  readSqliteLedgerReadOnly,
+  readCanonicalSqliteLedgerReadOnly,
+} from "../../lib/ingestion/sqlite-store.js";
 import {
   readWeeklyJournalRecoverySnapshotReadOnly,
   validateWeeklyJournalRecoverySnapshot,
@@ -126,7 +128,7 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
         diagnostic.slice(0, 1500)
       );
     expect(killedAfterCommit).toBe(true);
-    const ledger = readSqliteLedgerReadOnly(
+    const { ledger, generation } = readCanonicalSqliteLedgerReadOnly(
         join(root, "operator/ledger.sqlite")
       ),
       journal = readWeeklyJournalRecoverySnapshotReadOnly(
@@ -134,13 +136,6 @@ it("proves a real retained worker stopped after its catalog commit", async () =>
       ),
       state = validateWeeklyJournalRecoverySnapshot(journal),
       entry = state.runState.find((row) => row.id === installed.runId)!;
-    const db = new DatabaseSync(join(root, "operator/ledger.sqlite"), {
-      readOnly: true,
-    });
-    const generation = Number(
-      db.prepare("SELECT generation FROM metadata WHERE id=1").get()?.generation
-    );
-    db.close();
     expect(generation).toBe(2);
     const parsed = JSON.parse(entry.payload) as {
       stages: { stage: string; status: string }[];
