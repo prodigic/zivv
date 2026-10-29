@@ -1,3 +1,4 @@
+import { reconstructSelectedLoadIntentBaseline } from "./recovery-gmail-selected-intent-baseline.js";
 import { observeSelectedLoadIntentSuccessors } from "./recovery-gmail-selected-intent-successors.js";
 import { observeSelectedLoadPendingIntent } from "./recovery-gmail-selected-pending-intent.js";
 import { observeSelectedLoadStagedSnapshot } from "./recovery-gmail-selected-staged-snapshot.js";
@@ -17,7 +18,10 @@ import { reconstructSelectedLoadResumeJournal } from "./recovery-gmail-selected-
 import { reconstructSelectedLoadResumeInventory } from "./recovery-gmail-selected-resume-inventory.js";
 import { verifySelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { verifySelectedLoadResult } from "./recovery-gmail-selected-result-proof.js";
-import { decryptLedgerSnapshot } from "./encrypted-backup.js";
+import {
+  decryptLedgerSnapshot,
+  inspectRecoveryInstalledFile,
+} from "./encrypted-backup.js";
 import { ledgerDigest } from "./sqlite-store.js";
 import { parseWeeklyRunState } from "./weekly-run-state.js";
 import { lstatSync, readFileSync } from "node:fs";
@@ -69,6 +73,9 @@ export interface SelectedLoadInterruptionEvidence {
   pendingIntentSha256?: string;
   raw: Buffer;
   observedEntries: RecoveryRuntimeEntry[];
+  physicalEntries: RecoveryRuntimeEntry[];
+  pendingIntent?: ReturnType<typeof observeSelectedLoadPendingIntent>;
+  pendingSuccessors?: ReturnType<typeof observeSelectedLoadIntentSuccessors>;
   stagedSnapshotPaths: string[];
   incompleteSnapshotCandidate?: {
     path: string;
@@ -296,6 +303,12 @@ export function readSelectedLoadInterruptionEvidence(
     let priorSnapshot: Buffer | undefined;
     let pendingIntentSha256: string | undefined;
     let pendingSuccessorCount: number | undefined;
+    let pendingIntent:
+      | ReturnType<typeof observeSelectedLoadPendingIntent>
+      | undefined;
+    let pendingSuccessors:
+      | ReturnType<typeof observeSelectedLoadIntentSuccessors>
+      | undefined;
     let stagedChunkCount = 0;
     let stagedChunkPartial = false;
     if (hasResult) {
@@ -445,18 +458,42 @@ export function readSelectedLoadInterruptionEvidence(
           !entry.path.startsWith(intentStage + "/") &&
           !entry.path.startsWith(load + "/resume-successor-")
       );
-      const currentJournal = validateWeeklyJournalRecoverySnapshot(journal);
-      const owner = currentJournal.ownership.find(
-        (item) => item.scope === "prodigic/zivv/production"
+      // Authenticate the initial installed bytes before using its hashes. The
+      // pending observer below independently closes and rechecks this family.
+      const installed = inspectRecoveryInstalledFile(
+        join(root, intentPath),
+        join(root, intentStage),
+        65536
       );
-      if (!owner) return fail();
+      const initialBytes =
+        installed.target?.bytes ?? installed.candidate?.bytes;
+      if (!initialBytes) return fail();
+      const initial = verifySelectedLoadResumeIntent(
+        initialBytes,
+        input.recoveryKey
+      );
+      const settled = !!installed.target && !installed.candidate;
+      const successors = observeSelectedLoadIntentSuccessors({
+        destination: root,
+        loadPath: load,
+        entries,
+        initial: initialBytes,
+        key: input.recoveryKey,
+        initialSettled: settled,
+      });
+      const baselineJournal = reconstructSelectedLoadIntentBaseline({
+        observedJournal: journal,
+        initial,
+        latest: successors.latestV2Successor,
+      });
+      if (baselineJournal.acquired && !successors.lastSettled) return fail();
       const pending = observeSelectedLoadPendingIntent({
         destination: root,
         loadPath: load,
         entries,
         priorEntries: prior,
-        journal,
-        previousOwner: owner,
+        journal: baselineJournal.baselineJournal,
+        previousOwner: initial.previousOwner,
         admissionSha256: common.admissionSha256,
         executionBaselineSha256: sha256(executionBaseline),
         ledgerRevision: ledgerDigest(catalog.ledger),
@@ -465,19 +502,14 @@ export function readSelectedLoadInterruptionEvidence(
         key: input.recoveryKey,
       });
       if (
+        !pending.intentBytes.equals(initialBytes) ||
         stagedChunkCount !==
-        (pending.intent.snapshotEvidence?.chunks.length ?? 0)
+          (pending.intent.snapshotEvidence?.chunks.length ?? 0)
       )
         return fail();
-      const successors = observeSelectedLoadIntentSuccessors({
-        destination: root,
-        loadPath: load,
-        entries,
-        initial: pending.intentBytes,
-        key: input.recoveryKey,
-        initialSettled: pending.settled,
-      });
       pendingSuccessorCount = successors.successorCount;
+      pendingIntent = pending;
+      pendingSuccessors = successors;
       priorJournal = pending.priorJournal;
       priorEntries = prior;
       pendingIntentSha256 = pending.intentSha256;
@@ -555,6 +587,9 @@ export function readSelectedLoadInterruptionEvidence(
       ...(pendingIntentSha256 ? { pendingIntentSha256 } : {}),
       raw,
       observedEntries: priorEntries,
+      physicalEntries: entries,
+      ...(pendingIntent ? { pendingIntent } : {}),
+      ...(pendingSuccessors ? { pendingSuccessors } : {}),
       stagedSnapshotPaths,
       ...(incompleteSnapshotCandidate ? { incompleteSnapshotCandidate } : {}),
       observedCatalog: catalog,

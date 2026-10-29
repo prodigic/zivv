@@ -140,7 +140,31 @@ it("validates v2 successor bindings for either predecessor fence", () => {
     successorProtocol: "v2-journal-bound",
     successorCount: 2,
     lastSha256: sha256(later),
+    latestV2Successor: {
+      successorSha256: sha256(later),
+      sequence: 2,
+      journalSha256: "e".repeat(64),
+      previousOwner: {
+        scope: "prodigic/zivv/production",
+        owner,
+        fence: 2,
+        expiresAtEpochMs: 271000,
+      },
+      fence: 3,
+      owner,
+      startedAtEpochMs: 361000,
+      deadlineEpochMs: 541000,
+    },
   });
+  const latest = verifySelectedLoadIntentChain(
+    initial,
+    [unacquired, later],
+    key
+  ).latestV2Successor!;
+  expect(Object.isFrozen(latest)).toBe(true);
+  expect(Object.isFrozen(latest.previousOwner)).toBe(true);
+  expect(Reflect.set(latest.previousOwner, "fence", 99)).toBe(false);
+  expect(latest.previousOwner.fence).toBe(2);
   const valid = JSON.parse(unacquired.toString("utf8"));
   for (const body of [
     { ...valid, journalSha256: "invalid" },
@@ -251,6 +275,9 @@ it("authenticates ordered, non-overlapping signed intent successors without auth
     loadAllowed: false,
     activationAllowed: false,
   });
+  expect(
+    verifySelectedLoadIntentChain(initial, [first, second], key)
+  ).not.toHaveProperty("latestV2Successor");
   for (const bad of [
     { ...one, startedAtEpochMs: 180999, deadlineEpochMs: 360999 },
     { ...one, parentSha256: "b".repeat(64) },

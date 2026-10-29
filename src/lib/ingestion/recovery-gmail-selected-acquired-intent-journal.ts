@@ -9,7 +9,15 @@ import type { SelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-
  * journal and physical state, and observe expiry under the real locks. */
 export function reconstructSelectedLoadAcquiredIntentJournal(input: {
   observedJournal: Buffer;
-  intent: SelectedLoadResumeIntent;
+  intent: Pick<
+    SelectedLoadResumeIntent,
+    | "owner"
+    | "fence"
+    | "startedAtEpochMs"
+    | "deadlineEpochMs"
+    | "previousOwner"
+    | "journalSha256"
+  >;
 }) {
   const fail = (): never => {
     throw Error("INVALID_SELECTED_LOAD_ACQUIRED_INTENT_JOURNAL");
