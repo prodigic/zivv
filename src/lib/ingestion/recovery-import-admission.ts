@@ -1,3 +1,8 @@
+import {
+  assertNoSelectedGmailLoadExecution,
+  selectedGmailLoadInvocation,
+  selectedGmailLoadCurrent,
+} from "./recovery-gmail-selected-load-executor.js";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { spawn } from "node:child_process";
 import { createHmac, timingSafeEqual } from "node:crypto";
@@ -1305,6 +1310,7 @@ export function observeRecoveryFrozenResultRecapture(
 
 /** Only the coordinator below can establish this scope; ordinary staging stays blocked. */
 export function assertNoRecoveredImportScope(): void {
+  assertNoSelectedGmailLoadExecution();
   if (scopes.getStore()) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
 }
 export function hasRecoveredImportAuthority(directory: string): boolean {
@@ -1327,6 +1333,7 @@ export function assertRecoveredImportInvocation(input: {
   controlledPublishing?: string;
   manualPublisherJoined?: string;
 }): void {
+  if (selectedGmailLoadInvocation(input)) return;
   assertNoRecoveredGmailCapture();
   const scope = scopes.getStore();
   if (!scope?.active) return;
@@ -1612,11 +1619,13 @@ export function recoveredPublicationRepository(defaultRoot: string): {
 }
 /** Recheck local admission during a worker's existing context checks. */
 export function assertRecoveredImportCurrent(): void {
+  if (selectedGmailLoadCurrent()) return;
   const scope = scopes.getStore();
   if (scope?.active) scope.assertCurrent();
 }
 /** Observe unchanged canonical authority immediately around the import effect. */
 export function assertRecoveredImportRemote(): void {
+  if (selectedGmailLoadCurrent()) return;
   const scope = scopes.getStore();
   if (scope?.active) {
     scope.assertCurrent();
@@ -1625,6 +1634,7 @@ export function assertRecoveredImportRemote(): void {
 }
 /** Revalidate the dispatch admission immediately before publication effects. */
 export function assertRecoveredPublicationEffect(): void {
+  assertNoSelectedGmailLoadExecution();
   const scope = scopes.getStore();
   if (!scope?.active) return;
   if (!dispatchMode(scope.mode)) fail("RECOVERY_IMPORT_SCOPE_EXCEEDED");
@@ -1633,6 +1643,7 @@ export function assertRecoveredPublicationEffect(): void {
 }
 /** A captured accepted dispatch is GET-only; it never authorizes a fresh attempt. */
 export function assertRecoveredFreshDispatchAllowed(): void {
+  assertNoSelectedGmailLoadExecution();
   const scope = scopes.getStore();
   if (!scope?.active) return;
   if (scope.mode === "reconcile") fail("RECOVERY_DISPATCH_GET_ONLY");

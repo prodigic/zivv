@@ -195,6 +195,7 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
     withoutSelectedLoadInspector?: boolean;
     withoutSelectedLoadFraming?: boolean;
     seedAuthorityControls?: boolean;
+    loadableSource?: boolean;
   } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
   if (
@@ -285,8 +286,12 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
     const { editionId, titleDate } = nextFriday(now);
     const firstReceived = now - 60_000;
     const secondReceived = now - 30_000;
+    const showDate = new Date(
+      Date.parse(editionId + "T12:00:00Z") + 7 * 86_400_000
+    );
+    const showLine = `${showDate.toLocaleString("en-US", { month: "short", timeZone: "UTC" }).toLowerCase()} ${showDate.getUTCDate()} ${showDate.getUTCFullYear()} Fixture Band at Test Room, Oakland a/a $20 8pm`;
     const body = (label: string, title = titleDate) =>
-      `THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest ${title}\nSynthetic ${label} capture fixture\n`;
+      `THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest ${title}\n${options.loadableSource ? showLine.replace("Fixture Band", label === "completed" ? "Fixture Band" : label === "pending" ? "Another Fixture Band" : label === "own parent" ? "Third Fixture Band" : "Fourth Fixture Band") : `Synthetic ${label} capture fixture`}\n`;
     const messages = [
       fixtureMessage("a1", firstReceived, body("completed")),
       fixtureMessage(

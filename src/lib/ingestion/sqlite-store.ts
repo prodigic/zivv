@@ -1,3 +1,11 @@
+import {
+  selectedGmailLoadStoreBaseline,
+  selectedGmailLoadStoreOpen,
+  selectedGmailLoadCatalogRead,
+  selectedGmailLoadCatalogWrite,
+  selectedGmailLoadCatalogCommit,
+  selectedGmailLoadCatalogBeforeCommit,
+} from "./recovery-gmail-selected-load-executor.js";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { assertNoRecoveredGmailCapture } from "./recovery-gmail-capture-admission.js";
 import { createHash } from "node:crypto";
@@ -26,6 +34,7 @@ const storeSchema = `PRAGMA journal_mode=WAL;
 interface StoreSession {
   path: string;
   db: DatabaseSync;
+  canonical: boolean;
 }
 const sessions = new AsyncLocalStorage<StoreSession>();
 const revisions = new WeakMap<
@@ -65,7 +74,12 @@ export function ledgerDigest(ledger: IngestionLedger): string {
 }
 
 /** Open the local WAL store; an absent ledger never becomes an empty catalog. */
-export function openStore(path: string, create = false): DatabaseSync {
+function openStoreInternal(
+  path: string,
+  create = false,
+  operation?: "read" | "transaction" | "write"
+): DatabaseSync {
+  selectedGmailLoadStoreOpen(path, operation);
   assertNoRecoveredGmailCapture();
   if (create) assertOperatorInstallationWritable(dirname(resolve(path)));
   if (!create && !existsSync(path))
@@ -106,6 +120,11 @@ export function openStore(path: string, create = false): DatabaseSync {
   }
 }
 
+/** Raw handles cannot borrow selected-load authority. */
+export function openStore(path: string, create = false): DatabaseSync {
+  return openStoreInternal(path, create);
+}
+
 /** Wait without blocking other async writers in this process. SQLite releases locks on crashes. */
 async function beginWrite(db: DatabaseSync): Promise<void> {
   const deadline = Date.now() + 30_000;
@@ -133,6 +152,16 @@ async function storeTransaction<T>(
   expected?: { generation: number; canonicalLedger: string }
 ): Promise<T> {
   const directory = dirname(resolve(path));
+  const selected = selectedGmailLoadStoreBaseline(path);
+  if (selected) {
+    const required = {
+      generation: selected.generation,
+      canonicalLedger: canonicalJson(selected.ledger),
+    };
+    if (expected && canonicalJson(expected) !== canonicalJson(required))
+      throw Error("RECOVERY_GMAIL_SELECTED_LOAD_SCOPE_EXCEEDED");
+    expected = required;
+  }
   assertOperatorInstallationWritable(directory);
   const active = sessions.getStore();
   if (expected && active)
@@ -141,7 +170,7 @@ async function storeTransaction<T>(
   const originalFiles = expected
     ? assertReadOnlySqliteFiles(resolve(path))
     : undefined;
-  const db = openStore(path, create);
+  const db = openStoreInternal(path, create, "transaction");
   try {
     await beginWrite(db);
     assertOperatorInstallationWritable(directory);
@@ -153,12 +182,18 @@ async function storeTransaction<T>(
       });
       assertCanonicalCatalog(db, path, expected);
     }
-    const result = await sessions.run({ path: resolve(path), db }, work);
+    const result = await sessions.run(
+      { path: resolve(path), db, canonical: Boolean(expected) },
+      work
+    );
     assertOperatorInstallationWritable(directory);
+    selectedGmailLoadCatalogBeforeCommit(path);
     db.exec("COMMIT");
+    selectedGmailLoadCatalogCommit(path, true);
     return result;
   } catch (error) {
     if (db.isTransaction) db.exec("ROLLBACK");
+    selectedGmailLoadCatalogCommit(path, false);
     throw error;
   } finally {
     db.close();
@@ -375,6 +410,7 @@ function readFrom(db: DatabaseSync, path: string): IngestionLedger {
     path: resolve(path),
     generation: Number(meta.generation),
   });
+  selectedGmailLoadCatalogRead(path, ledger, Number(meta.generation));
   return ledger;
 }
 
@@ -382,7 +418,7 @@ function readFrom(db: DatabaseSync, path: string): IngestionLedger {
 export function readSqliteLedger(path: string): IngestionLedger {
   const active = sessions.getStore();
   if (active?.path === resolve(path)) return readFrom(active.db, path);
-  const db = openStore(path);
+  const db = openStoreInternal(path, false, "read");
   try {
     db.exec("BEGIN");
     const ledger = readFrom(db, path);
@@ -433,6 +469,12 @@ function writeTo(
   ledger: IngestionLedger,
   initialize: boolean
 ): void {
+  selectedGmailLoadCatalogWrite(
+    path,
+    ledger,
+    initialize,
+    sessions.getStore()?.canonical === true
+  );
   const current = db
     .prepare("SELECT generation,digest FROM metadata WHERE id=1")
     .get();
@@ -549,7 +591,7 @@ export async function writeSqliteLedger(
     writeTo(active.db, path, ledger, initialize);
     return;
   }
-  const db = openStore(path, initialize);
+  const db = openStoreInternal(path, initialize, "write");
   try {
     await beginWrite(db);
     assertOperatorInstallationWritable(directory);

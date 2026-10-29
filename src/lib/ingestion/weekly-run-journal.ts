@@ -1,3 +1,11 @@
+import { AsyncLocalStorage } from "node:async_hooks";
+import {
+  hasSelectedGmailLoadExecution,
+  selectedGmailLoadLeaseOwner,
+  selectedGmailLoadLeaseTtl,
+  selectedGmailLoadJournal,
+  type SelectedLoadJournalOperation,
+} from "./recovery-gmail-selected-load-executor.js";
 import { randomUUID, createHash } from "node:crypto";
 import { chmodSync, existsSync, lstatSync, realpathSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
@@ -22,11 +30,30 @@ import {
   type WeeklyRunStage,
 } from "./weekly-run-state.js";
 
+function restrictedJournalOwner() {
+  return selectedGmailLoadLeaseOwner() ?? recoveredGmailCaptureLeaseOwner();
+}
+
 export interface WeeklyRunLease {
   scope: string;
   owner: string;
   fence: number;
   expiresAtEpochMs: number;
+}
+
+interface GuardedCatalogLeaseContext {
+  active: boolean;
+  path: string;
+  read: () => { lease: WeeklyRunLease; snapshot: Buffer };
+}
+const guardedCatalogLeases =
+  new AsyncLocalStorage<GuardedCatalogLeaseContext>();
+/** Detached observation only; established exclusively by the journal's SQL guard. */
+export function readGuardedWeeklyCatalogLease(path: string) {
+  const context = guardedCatalogLeases.getStore();
+  if (!context?.active || context.path !== resolve(path)) return undefined;
+  const value = context.read();
+  return { lease: { ...value.lease }, snapshot: Buffer.from(value.snapshot) };
 }
 
 export type WeeklyIntakeEvidenceKind = "source" | "correction";
@@ -416,7 +443,7 @@ export class WeeklyRunJournal {
   private guardedLease: WeeklyRunLease | null = null;
 
   constructor(directory: string, clock: () => number = Date.now) {
-    if (recoveredGmailCaptureLeaseOwner() && clock !== Date.now)
+    if (restrictedJournalOwner() && clock !== Date.now)
       throw new Error("RECOVERY_GMAIL_CAPTURE_SCOPE_EXCEEDED");
     assertOperatorInstallationWritable(resolve(directory), "capture-journal");
     assertRecoveredGmailCaptureJournal({
@@ -437,7 +464,7 @@ export class WeeklyRunJournal {
         throw new Error("Journal must be outside Git repositories");
       if (dirname(parent) === parent) break;
     }
-    if (!recoveredGmailCaptureLeaseOwner()) secureOperatorDirectory(actual);
+    if (!restrictedJournalOwner()) secureOperatorDirectory(actual);
     this.path = join(actual, "weekly-runs.sqlite");
     for (const path of [this.path, this.path + "-wal", this.path + "-shm"]) {
       let stat;
@@ -457,8 +484,22 @@ export class WeeklyRunJournal {
     }
     this.db = new DatabaseSync(this.path, { timeout: 10000 });
     try {
-      if (recoveredGmailCaptureLeaseOwner()) {
+      if (restrictedJournalOwner()) {
         this.assertRecoveryDatabase();
+        selectedGmailLoadJournal({
+          path: this.path,
+          effect: "open",
+          snapshot: this.recoverySnapshot(),
+        });
+        if (
+          selectedGmailLoadLeaseOwner() &&
+          this.db
+            .prepare(
+              "SELECT 1 AS found FROM sqlite_master WHERE type IN ('trigger','view') OR (type='index' AND sql IS NOT NULL) LIMIT 1"
+            )
+            .get()
+        )
+          throw Error("RECOVERY_GMAIL_SELECTED_LOAD_SCOPE_EXCEEDED");
         assertRecoveredGmailCaptureJournal({
           path: this.path,
           effect: "open",
@@ -669,7 +710,9 @@ export class WeeklyRunJournal {
       this.assertLease(lease);
       return;
     }
-    this.transaction(() => this.assertLease(lease));
+    this.transaction(() => this.assertLease(lease), "deny", lease, {
+      kind: "check",
+    });
   }
 
   /** Prevent another process taking ownership while a guarded catalog commit finishes. */
@@ -685,11 +728,26 @@ export class WeeklyRunJournal {
     try {
       this.assertLease(lease);
       this.guardedLease = { ...lease };
-      const result = await work();
+      const context: GuardedCatalogLeaseContext = {
+        active: true,
+        path: resolve(this.path),
+        read: () => {
+          if (!context.active || !this.db.isTransaction || !this.guardedLease)
+            throw new Error("No guarded weekly catalog lease");
+          this.assertLease(lease);
+          return { lease: { ...lease }, snapshot: this.recoverySnapshot() };
+        },
+      };
+      let result: T;
+      try {
+        result = await guardedCatalogLeases.run(context, work);
+      } finally {
+        context.active = false;
+      }
       this.assertLease(lease);
       this.captureEffect("guard", lease);
       this.db.exec("COMMIT");
-      if (recoveredGmailCaptureLeaseOwner())
+      if (restrictedJournalOwner())
         observeRecoveredGmailCaptureJournalCommit(this.recoverySnapshot());
       return result;
     } catch (error) {
@@ -711,8 +769,20 @@ export class WeeklyRunJournal {
     effect: CaptureJournalEffect,
     lease?: WeeklyRunLease,
     id?: string,
-    bytes?: Buffer
+    bytes?: Buffer,
+    operation?: SelectedLoadJournalOperation
   ): void {
+    if (
+      hasSelectedGmailLoadExecution() &&
+      selectedGmailLoadJournal({
+        path: this.path,
+        effect,
+        lease,
+        snapshot: this.recoverySnapshot(),
+        operation,
+      })
+    )
+      return;
     if (!recoveredGmailCaptureLeaseOwner()) return;
     assertRecoveredGmailCaptureJournal({
       path: this.path,
@@ -727,9 +797,10 @@ export class WeeklyRunJournal {
   private transaction<T>(
     work: () => T,
     effect: CaptureJournalEffect = "deny",
-    lease?: WeeklyRunLease
+    lease?: WeeklyRunLease,
+    operation?: SelectedLoadJournalOperation
   ): T {
-    this.captureEffect(effect, lease);
+    this.captureEffect(effect, lease, undefined, undefined, operation);
     assertOperatorInstallationWritable(dirname(this.path), "capture-journal");
     this.db.exec("BEGIN IMMEDIATE");
     try {
@@ -738,10 +809,13 @@ export class WeeklyRunJournal {
       assertOperatorInstallationWritable(dirname(this.path), "capture-journal");
       this.captureEffect(
         effect === "acquire" ? "read" : effect,
-        effect === "acquire" ? undefined : lease
+        effect === "acquire" ? undefined : lease,
+        undefined,
+        undefined,
+        operation
       );
       this.db.exec("COMMIT");
-      if (recoveredGmailCaptureLeaseOwner())
+      if (restrictedJournalOwner())
         observeRecoveredGmailCaptureJournalCommit(this.recoverySnapshot());
       return result;
     } catch (error) {
@@ -796,7 +870,9 @@ export class WeeklyRunJournal {
       throw new Error("Invalid ownership scope/TTL");
     return this.transaction(() => {
       const now = this.now();
-      const boundedTtl = recoveredGmailCaptureLeaseTtl(ttlMs);
+      const boundedTtl = selectedGmailLoadLeaseTtl(
+        recoveredGmailCaptureLeaseTtl(ttlMs)
+      );
       const old = this.db
         .prepare(
           "SELECT scope,owner,fence,expires_at FROM ownership WHERE scope=?"
@@ -807,7 +883,7 @@ export class WeeklyRunJournal {
         throw new Error("Weekly destination already has an active owner");
       const lease = {
         scope,
-        owner: recoveredGmailCaptureLeaseOwner() ?? randomUUID(),
+        owner: restrictedJournalOwner() ?? randomUUID(),
         fence: Number(old?.fence ?? 0) + 1,
         expiresAtEpochMs: now + boundedTtl,
       };
@@ -832,7 +908,8 @@ export class WeeklyRunJournal {
     const work = () => {
       this.assertLease(lease);
       const now = this.now();
-      const expiresAtEpochMs = now + recoveredGmailCaptureLeaseTtl(ttlMs);
+      const expiresAtEpochMs =
+        now + selectedGmailLoadLeaseTtl(recoveredGmailCaptureLeaseTtl(ttlMs));
       if (!Number.isSafeInteger(expiresAtEpochMs))
         throw new Error("Ownership expiry overflow");
       this.captureEffect("renew", { ...lease, expiresAtEpochMs });
@@ -1055,23 +1132,28 @@ export class WeeklyRunJournal {
     lease: WeeklyRunLease
   ): void {
     const captured = Buffer.from(bytes);
-    this.transaction(() => {
-      this.assertLease(lease);
-      const row = this.db
-        .prepare("SELECT scope FROM run_state WHERE id=?")
-        .get(runId);
-      const state = this.load(runId);
-      const item = state?.stages.find((value) => value.stage === stage);
-      if (
-        !row ||
-        row.scope !== lease.scope ||
-        !item ||
-        item.status !== "running"
-      )
-        throw new Error("Artifact requires owned running stage");
-      this.insertArtifact(runId, stage, item.attempt, captured);
-      this.assertLease(lease);
-    });
+    this.transaction(
+      () => {
+        this.assertLease(lease);
+        const row = this.db
+          .prepare("SELECT scope FROM run_state WHERE id=?")
+          .get(runId);
+        const state = this.load(runId);
+        const item = state?.stages.find((value) => value.stage === stage);
+        if (
+          !row ||
+          row.scope !== lease.scope ||
+          !item ||
+          item.status !== "running"
+        )
+          throw new Error("Artifact requires owned running stage");
+        this.insertArtifact(runId, stage, item.attempt, captured);
+        this.assertLease(lease);
+      },
+      "deny",
+      lease,
+      { kind: "artifact", runId, stage, bytes: captured }
+    );
   }
 
   create(
@@ -1089,28 +1171,33 @@ export class WeeklyRunJournal {
       throw new Error("Raw source disagrees with run identity");
     if (validated.revision !== 0)
       throw new Error("New run must begin at revision zero");
-    return this.transaction(() => {
-      this.assertLease(lease);
-      const row = this.db
-        .prepare("SELECT scope FROM run_state WHERE id=?")
-        .get(validated.runId);
-      if (row && row.scope !== lease.scope)
-        throw new Error("Run belongs to another destination");
-      const existing = this.load(validated.runId);
-      if (existing) {
-        if (
-          raw &&
-          !this.readArtifact(existing.runId, "acquire", 0)?.equals(raw)
-        )
-          throw new Error("Existing persisted source disagrees");
-        return existing;
-      }
-      this.db
-        .prepare("INSERT INTO run_state VALUES(?,?,?,?)")
-        .run(validated.runId, lease.scope, 0, canonicalJson(validated));
-      if (raw) this.insertArtifact(validated.runId, "acquire", 0, raw);
-      return validated;
-    });
+    return this.transaction(
+      () => {
+        this.assertLease(lease);
+        const row = this.db
+          .prepare("SELECT scope FROM run_state WHERE id=?")
+          .get(validated.runId);
+        if (row && row.scope !== lease.scope)
+          throw new Error("Run belongs to another destination");
+        const existing = this.load(validated.runId);
+        if (existing) {
+          if (
+            raw &&
+            !this.readArtifact(existing.runId, "acquire", 0)?.equals(raw)
+          )
+            throw new Error("Existing persisted source disagrees");
+          return existing;
+        }
+        this.db
+          .prepare("INSERT INTO run_state VALUES(?,?,?,?)")
+          .run(validated.runId, lease.scope, 0, canonicalJson(validated));
+        if (raw) this.insertArtifact(validated.runId, "acquire", 0, raw);
+        return validated;
+      },
+      "deny",
+      lease,
+      { kind: "create", state: validated, ...(raw ? { raw } : {}) }
+    );
   }
 
   /** Atomic expected-revision write, accepting exactly one valid state transition. */
@@ -1120,58 +1207,63 @@ export class WeeklyRunJournal {
     lease: WeeklyRunLease
   ): WeeklyRunState {
     const validated = parseWeeklyRunState(state);
-    return this.transaction(() => {
-      this.assertLease(lease);
-      const row = this.db
-        .prepare("SELECT scope FROM run_state WHERE id=?")
-        .get(validated.runId);
-      if (!row || row.scope !== lease.scope)
-        throw new Error("Missing run or wrong destination");
-      const previous = this.load(validated.runId);
-      if (
-        !previous ||
-        previous.revision !== expectedRevision ||
-        validated.revision !== expectedRevision + 1
-      )
-        throw new Error("Stale journal revision");
-      const changed = validated.stages.filter(
-        (item, index) =>
-          canonicalJson(item) !== canonicalJson(previous.stages[index])
-      );
-      if (changed.length !== 1)
-        throw new Error("Journal write must contain one transition");
-      const item = changed[0];
-      let transition: Parameters<typeof transitionWeeklyRun>[3];
-      if (item.status === "running") transition = { status: "running" };
-      else if (item.status === "succeeded" && item.evidence)
-        transition = { status: "succeeded", evidence: item.evidence };
-      else if (
-        (item.status === "blocked" || item.status === "failed") &&
-        item.errorCode
-      )
-        transition = { status: item.status, errorCode: item.errorCode };
-      else throw new Error("Invalid journal transition");
-      const derived = transitionWeeklyRun(
-        previous,
-        expectedRevision,
-        item.stage,
-        transition,
-        this.now()
-      );
-      if (canonicalJson(derived) !== canonicalJson(validated))
-        throw new Error("Journal history changed");
-      this.assertLease(lease);
-      this.db
-        .prepare(
-          "UPDATE run_state SET revision=?,payload=? WHERE id=? AND revision=?"
+    return this.transaction(
+      () => {
+        this.assertLease(lease);
+        const row = this.db
+          .prepare("SELECT scope FROM run_state WHERE id=?")
+          .get(validated.runId);
+        if (!row || row.scope !== lease.scope)
+          throw new Error("Missing run or wrong destination");
+        const previous = this.load(validated.runId);
+        if (
+          !previous ||
+          previous.revision !== expectedRevision ||
+          validated.revision !== expectedRevision + 1
         )
-        .run(
-          validated.revision,
-          canonicalJson(validated),
-          validated.runId,
-          expectedRevision
+          throw new Error("Stale journal revision");
+        const changed = validated.stages.filter(
+          (item, index) =>
+            canonicalJson(item) !== canonicalJson(previous.stages[index])
         );
-      return validated;
-    });
+        if (changed.length !== 1)
+          throw new Error("Journal write must contain one transition");
+        const item = changed[0];
+        let transition: Parameters<typeof transitionWeeklyRun>[3];
+        if (item.status === "running") transition = { status: "running" };
+        else if (item.status === "succeeded" && item.evidence)
+          transition = { status: "succeeded", evidence: item.evidence };
+        else if (
+          (item.status === "blocked" || item.status === "failed") &&
+          item.errorCode
+        )
+          transition = { status: item.status, errorCode: item.errorCode };
+        else throw new Error("Invalid journal transition");
+        const derived = transitionWeeklyRun(
+          previous,
+          expectedRevision,
+          item.stage,
+          transition,
+          this.now()
+        );
+        if (canonicalJson(derived) !== canonicalJson(validated))
+          throw new Error("Journal history changed");
+        this.assertLease(lease);
+        this.db
+          .prepare(
+            "UPDATE run_state SET revision=?,payload=? WHERE id=? AND revision=?"
+          )
+          .run(
+            validated.revision,
+            canonicalJson(validated),
+            validated.runId,
+            expectedRevision
+          );
+        return validated;
+      },
+      "deny",
+      lease,
+      { kind: "save", state: validated }
+    );
   }
 }

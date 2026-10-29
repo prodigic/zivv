@@ -1,3 +1,7 @@
+import {
+  hasSelectedGmailLoadExecution,
+  completeSelectedGmailLoad,
+} from "./recovery-gmail-selected-load-executor.js";
 import { weeklyRunRulesDigest } from "./weekly-run-context.js";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -817,6 +821,13 @@ export async function runWeeklyImport(input: {
         });
         await notify("acknowledge", "completed");
       }
+    }
+    if (hasSelectedGmailLoadExecution()) {
+      if (!lease)
+        throw new Error("RECOVERY_GMAIL_SELECTED_LOAD_SCOPE_EXCEEDED");
+      await journal.guardOperation(lease, () =>
+        completeSelectedGmailLoad(state)
+      );
     }
     return state;
   } finally {

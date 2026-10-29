@@ -5,7 +5,10 @@ import { join, resolve, relative } from "node:path";
 import { createHash } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
 import { spawnSync } from "node:child_process";
-import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
+import {
+  WeeklyRunJournal,
+  readGuardedWeeklyCatalogLease,
+} from "../../lib/ingestion/weekly-run-journal.js";
 import {
   createWeeklyRunState,
   transitionWeeklyRun,
@@ -43,6 +46,38 @@ afterEach(() => {
   }
 });
 describe("durable journal artifacts and guarded operations", () => {
+  it("exposes only a live guarded lease, detached from SQL and revoked for escaped tasks", async () => {
+    let now = 1000;
+    const f = fixture(() => now),
+      path = join(f.directory, "weekly-runs.sqlite");
+    const lease = f.journal.acquire("prodigic/zivv/production", 1000);
+    expect(readGuardedWeeklyCatalogLease(path)).toBeUndefined();
+    let escaped: Promise<unknown> | undefined;
+    let release!: () => void;
+    const wait = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await f.journal.guardOperation(lease, async () => {
+      const observed = readGuardedWeeklyCatalogLease(path)!;
+      expect(observed.lease).toEqual(lease);
+      expect(
+        readGuardedWeeklyCatalogLease(join(f.directory, "other.sqlite"))
+      ).toBeUndefined();
+      observed.lease.owner = "forged";
+      observed.snapshot.fill(0);
+      expect(readGuardedWeeklyCatalogLease(path)!.lease).toEqual(lease);
+      escaped = wait.then(() => readGuardedWeeklyCatalogLease(path));
+      now = 2000;
+      expect(() => readGuardedWeeklyCatalogLease(path)).toThrow(
+        "Expired or fenced"
+      );
+      now = 1000;
+    });
+    expect(readGuardedWeeklyCatalogLease(path)).toBeUndefined();
+    release();
+    await expect(escaped).resolves.toBeUndefined();
+  });
+
   it("renews the same fenced owner inside a guarded catalog operation", async () => {
     let now = 1000;
     const f = fixture(() => now),

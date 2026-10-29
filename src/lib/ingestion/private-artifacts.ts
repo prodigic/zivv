@@ -1,3 +1,4 @@
+import { selectedGmailLoadAuthority } from "./recovery-gmail-selected-load-executor.js";
 import { existsSync, realpathSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
@@ -25,7 +26,8 @@ export function assertOperatorNotQuarantined(
       return;
     if (
       operation === "weekly-import" &&
-      hasRecoveredImportAuthority(resolve(directory))
+      (selectedGmailLoadAuthority(resolve(directory)) ||
+        hasRecoveredImportAuthority(resolve(directory)))
     )
       return;
     // No marker value grants activation: this staging format has no activation operation.
