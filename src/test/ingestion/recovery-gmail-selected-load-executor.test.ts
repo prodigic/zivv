@@ -1,3 +1,4 @@
+import { proveSelectedLoadJournalDelta } from "../../lib/ingestion/recovery-gmail-selected-journal-delta.js";
 import { verifySelectedLoadResult } from "../../lib/ingestion/recovery-gmail-selected-result-proof.js";
 import { createHmac } from "node:crypto";
 import { readRecoveryGmailHostForLoadInstallation } from "../../lib/ingestion/recovery-gmail-capture-admission.js";
@@ -44,12 +45,25 @@ it("loads the exact ready source through the normal runner in a genuine retained
     };
     const installed =
       await resumeOperatorRecoveryGmailSelectedLoadEvidence(input);
+    const host = readRecoveryGmailHostForLoadInstallation(fixture.input);
     const before = validateWeeklyJournalRecoverySnapshot(
-      Buffer.from(
-        readRecoveryGmailHostForLoadInstallation(fixture.input).current.journal,
-        "base64"
-      )
+      Buffer.from(host.current.journal, "base64")
     );
+    const baseline = {
+      checkpoint: host.checkpoint,
+      recoveryKey: fixture.input.recoveryKey,
+      completed: host.completed,
+      unfinishedAdmissions: host.unfinishedAdmissions,
+      current: host.current,
+      currentLedger: host.checkpoint.ledger,
+      currentRuntime: host.currentRuntime,
+      priorLoads: [],
+      selector: input.selector,
+      ...(host.ownProductionOwnership
+        ? { ownProductionOwnership: host.ownProductionOwnership }
+        : {}),
+    };
+
     const entry = pathToFileURL(
       join(
         root,
@@ -150,6 +164,34 @@ it("loads the exact ready source through the normal runner in a genuine retained
       state.stages.slice(4).every((item) => item.status === "pending")
     ).toBe(true);
     const directory = join(root, "recovery-gmail-load", report.runId);
+    const rawArtifact = after.stageArtifacts.find(
+      (row) =>
+        row.runId === report.runId &&
+        row.stage === "acquire" &&
+        row.attempt === 0
+    )!;
+    expect(
+      proveSelectedLoadJournalDelta({
+        baseline,
+        executionBaseline: readFileSync(
+          join(directory, "execution-baseline.json")
+        ),
+        admissionSha256: installed.admissionSha256,
+        evidenceSha256: installed.evidenceSha256,
+        physicalSnapshotSha256: installed.physicalSnapshotSha256,
+        raw: Buffer.from(rawArtifact.bytes, "base64"),
+        observedGeneration: 2,
+        observedLedger: ledger,
+        observedJournal: readWeeklyJournalRecoverySnapshotReadOnly(
+          join(root, "operator/weekly-runs.sqlite")
+        ),
+      })
+    ).toMatchObject({
+      status: "committed",
+      runId: report.runId,
+      loadAllowed: false,
+    });
+
     expect(sha256(readFileSync(join(directory, "load-result.json")))).toBe(
       report.resultSha256
     );

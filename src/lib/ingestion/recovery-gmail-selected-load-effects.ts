@@ -1,3 +1,4 @@
+import type { StageEvidence } from "./weekly-run-state.js";
 import type { IngestionLedger } from "../../types/ingestion.js";
 import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
 import { reconcileCandidates, validateLedger } from "./ledger.js";
@@ -155,7 +156,7 @@ export function selectedGmailLoadEvidence(
   source: Proof["source"],
   stage: string,
   ledger: IngestionLedger
-) {
+): StageEvidence {
   if (stage === "acquire")
     return {
       rawSha256: source.rawSha256,
