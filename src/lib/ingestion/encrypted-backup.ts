@@ -1,3 +1,4 @@
+import { selectedGmailLoadPartialWriteProbe } from "./recovery-gmail-selected-load-executor.js";
 import {
   assertNoRecoveredGmailCapture,
   assertRecoveredGmailCaptureFile,
@@ -145,7 +146,8 @@ export function writeDurableFile(path: string, bytes: Buffer): void {
   try {
     try {
       assertRecoveredGmailCaptureFile(temporary, bytes);
-      writeFileSync(fd, bytes);
+      if (!selectedGmailLoadPartialWriteProbe(temporary, bytes, fd))
+        writeFileSync(fd, bytes);
       assertRecoveredGmailCaptureFile(temporary, bytes, "install");
       fsyncSync(fd);
     } finally {

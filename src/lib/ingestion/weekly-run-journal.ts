@@ -251,6 +251,16 @@ function recoverySnapshot(db: DatabaseSync): Buffer {
   return bytes;
 }
 
+/** Read validated logical evidence from an existing transaction. This is a
+ * detached observation and grants no journal mutation authority. */
+export function readWeeklyJournalRecoverySnapshotInTransaction(
+  db: DatabaseSync
+): Buffer {
+  if (!db.isTransaction) throw new Error("Journal transaction required");
+  assertRecoveryDatabase(db);
+  return recoverySnapshot(db);
+}
+
 /** Read a validated schema-3 journal snapshot without constructing a writer or migrating storage. */
 export function readWeeklyJournalRecoverySnapshotReadOnly(
   path: string
