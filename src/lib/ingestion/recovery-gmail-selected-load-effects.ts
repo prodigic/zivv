@@ -22,7 +22,7 @@ function fail(): never {
 }
 /** Deterministic normal-import expectations only; no permission, handle or writer. */
 export function createSelectedGmailLoadEffectPlan(
-  checkpoint: OperatorRecoveryCheckpoint,
+  checkpoint: Pick<OperatorRecoveryCheckpoint, "files" | "ledger">,
   proof: Proof,
   raw: Buffer
 ) {
