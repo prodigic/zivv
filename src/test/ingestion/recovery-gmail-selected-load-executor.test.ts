@@ -1,3 +1,4 @@
+import { verifySelectedLoadResult } from "../../lib/ingestion/recovery-gmail-selected-result-proof.js";
 import { createHmac } from "node:crypto";
 import { readRecoveryGmailHostForLoadInstallation } from "../../lib/ingestion/recovery-gmail-capture-admission.js";
 import { spawnSync } from "node:child_process";
@@ -175,6 +176,29 @@ it("loads the exact ready source through the normal runner in a genuine retained
       )
     );
     expect(signedResult.runStateSha256).toBe(sha256(canonicalJson(state)));
+    expect(
+      verifySelectedLoadResult(resultBytes, fixture.input.recoveryKey, {
+        admissionSha256: installed.admissionSha256,
+        executionBaselineSha256: sha256(
+          readFileSync(join(directory, "execution-baseline.json"))
+        ),
+        runId: report.runId,
+        ledgerRevision: report.ledgerRevision,
+        generation: 2,
+        journalSha256: sha256(
+          readWeeklyJournalRecoverySnapshotReadOnly(
+            join(root, "operator/weekly-runs.sqlite")
+          )
+        ),
+        runStateSha256: sha256(canonicalJson(state)),
+        reportSha256: signedResult.reportSha256 as string,
+      })
+    ).toMatchObject({
+      status: "authenticated",
+      resultSha256: report.resultSha256,
+      loadAllowed: false,
+    });
+
     expect(
       decryptLedgerSnapshot(
         readFileSync(
