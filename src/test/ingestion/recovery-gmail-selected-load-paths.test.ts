@@ -42,6 +42,23 @@ it("allows only actual installer, snapshot and report temporary families", () =>
       context
     )
   ).toBe(join(directory, chunk));
+  const successor = "resume-successor-00001.json";
+  expect(
+    selectedLoadTemporaryTarget(
+      join(directory, successor + "-stage", successor + two),
+      context
+    )
+  ).toBe(join(directory, successor));
+  expect(
+    selectedLoadTemporaryTarget(
+      join(
+        directory,
+        "resume-successor-10000.json-stage",
+        "resume-successor-10000.json" + one
+      ),
+      context
+    )
+  ).toBe(join(directory, "resume-successor-10000.json"));
   expect(selectedLoadTemporaryTarget(snapshot + one, context)).toBe(snapshot);
   expect(
     selectedLoadTemporaryTarget(
@@ -66,6 +83,32 @@ it("allows only actual installer, snapshot and report temporary families", () =>
     snapshot + two,
     report + ".------------------------------------.tmp",
     join(directory, "key-stage", "wrong" + one),
+    join(
+      directory,
+      "resume-successor-00000.json-stage",
+      "resume-successor-00000.json" + one
+    ),
+    join(
+      directory,
+      "resume-successor-10001.json-stage",
+      "resume-successor-10001.json" + one
+    ),
+    join(
+      directory,
+      "resume-successor-00001.json-stage",
+      "resume-successor-00002.json" + one
+    ),
+    join(
+      directory,
+      "foreign-successor-00001.json-stage",
+      "foreign-successor-00001.json" + one
+    ),
+    join(
+      directory,
+      "nested",
+      "resume-successor-00001.json-stage",
+      "resume-successor-00001.json" + one
+    ),
   ])
     expect(selectedLoadTemporaryTarget(wrong, context)).toBeUndefined();
 });

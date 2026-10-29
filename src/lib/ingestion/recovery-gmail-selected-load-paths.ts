@@ -39,6 +39,23 @@ export function selectedLoadTemporaryTarget(
     );
   if (chunk && resolve(chunk[1]!) === resolve(context.directory))
     return join(context.directory, chunk[2]!);
+  const directory = resolve(context.directory);
+  const successor =
+    /^(resume-successor-([0-9]{5})\.json)-stage[\\/]\1((?:\.\d+\.[a-f0-9]{16}\.tmp){1,2})$/.exec(
+      absolute.slice(directory.length + 1)
+    );
+  if (
+    successor &&
+    Number(successor[2]) >= 1 &&
+    Number(successor[2]) <= 10000 &&
+    absolute ===
+      resolve(
+        context.directory,
+        successor[1] + "-stage",
+        successor[1] + successor[3]
+      )
+  )
+    return join(context.directory, successor[1]!);
   const snapshot = resolve(context.snapshot),
     report = resolve(context.report);
   if (

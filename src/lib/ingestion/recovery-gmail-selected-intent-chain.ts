@@ -2,6 +2,18 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
 import { verifySelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-intent.js";
+import type { WeeklyRunLease } from "./weekly-run-journal.js";
+
+export interface SelectedLoadIntentV2SuccessorEvidence {
+  readonly successorSha256: string;
+  readonly sequence: number;
+  readonly journalSha256: string;
+  readonly previousOwner: Readonly<WeeklyRunLease>;
+  readonly fence: number;
+  readonly owner: string;
+  readonly startedAtEpochMs: number;
+  readonly deadlineEpochMs: number;
+}
 
 /** Authenticate the full ordered chain supplied by a caller. Directory closure,
  * original state, current time and writer locks are independent obligations;
@@ -23,7 +35,8 @@ export function verifySelectedLoadIntentChain(
     effectiveStart = initialIntent.startedAtEpochMs,
     priorOwner: Record<string, unknown> = { ...initialIntent.previousOwner },
     priorFence = initialIntent.fence,
-    priorStart = initialIntent.startedAtEpochMs;
+    priorStart = initialIntent.startedAtEpochMs,
+    latestV2Successor: SelectedLoadIntentV2SuccessorEvidence | undefined;
   for (let index = 0; index < successors.length; index++) {
     const bytes = successors[index];
     if (!Buffer.isBuffer(bytes) || bytes.length > 65536) return fail();
@@ -134,6 +147,23 @@ export function verifySelectedLoadIntentChain(
     effectiveStart = Number(value.startedAtEpochMs);
     previousDeadline = Number(value.deadlineEpochMs);
     if (version === 2) {
+      latestV2Successor = Object.freeze({
+        successorSha256: parentSha256,
+        sequence: Number(value.sequence),
+        journalSha256: value.journalSha256 as string,
+        previousOwner: Object.freeze({
+          scope: "prodigic/zivv/production",
+          owner: initialIntent.owner,
+          fence: Number((value.previousOwner as Record<string, unknown>).fence),
+          expiresAtEpochMs: Number(
+            (value.previousOwner as Record<string, unknown>).expiresAtEpochMs
+          ),
+        }),
+        fence: Number(value.fence),
+        owner: value.owner as string,
+        startedAtEpochMs: effectiveStart,
+        deadlineEpochMs: previousDeadline,
+      });
       priorOwner = value.previousOwner as Record<string, unknown>;
       priorFence = Number(value.fence);
       priorStart = Number(value.startedAtEpochMs);
@@ -147,6 +177,7 @@ export function verifySelectedLoadIntentChain(
     successorCount: successors.length,
     effectiveStartEpochMs: effectiveStart,
     effectiveDeadlineEpochMs: previousDeadline,
+    ...(latestV2Successor ? { latestV2Successor } : {}),
     loadAllowed: false as const,
     activationAllowed: false as const,
   };
