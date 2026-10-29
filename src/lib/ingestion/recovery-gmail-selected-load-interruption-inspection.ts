@@ -1,3 +1,4 @@
+import { observeSelectedLoadIntentSuccessors } from "./recovery-gmail-selected-intent-successors.js";
 import { observeSelectedLoadPendingIntent } from "./recovery-gmail-selected-pending-intent.js";
 import { observeSelectedLoadStagedSnapshot } from "./recovery-gmail-selected-staged-snapshot.js";
 import { observeSelectedLoadCompletedJournal } from "./recovery-gmail-selected-completed-journal.js";
@@ -54,6 +55,7 @@ export interface SelectedLoadInterruptionEvidence {
     journalSha256: string;
     inventorySha256: string;
     lease: ReturnType<typeof observeSelectedLoadLease>;
+    pendingSuccessorCount?: number;
     physicalValidationRequired: true;
     loadAllowed: false;
     activationAllowed: false;
@@ -293,6 +295,7 @@ export function readSelectedLoadInterruptionEvidence(
     let completedResultSha256: string | undefined;
     let priorSnapshot: Buffer | undefined;
     let pendingIntentSha256: string | undefined;
+    let pendingSuccessorCount: number | undefined;
     let stagedChunkCount = 0;
     let stagedChunkPartial = false;
     if (hasResult) {
@@ -439,7 +442,8 @@ export function readSelectedLoadInterruptionEvidence(
         (entry) =>
           entry.path !== intentPath &&
           entry.path !== intentStage &&
-          !entry.path.startsWith(intentStage + "/")
+          !entry.path.startsWith(intentStage + "/") &&
+          !entry.path.startsWith(load + "/resume-successor-")
       );
       const currentJournal = validateWeeklyJournalRecoverySnapshot(journal);
       const owner = currentJournal.ownership.find(
@@ -465,6 +469,15 @@ export function readSelectedLoadInterruptionEvidence(
         (pending.intent.snapshotEvidence?.chunks.length ?? 0)
       )
         return fail();
+      const successors = observeSelectedLoadIntentSuccessors({
+        destination: root,
+        loadPath: load,
+        entries,
+        initial: pending.intentBytes,
+        key: input.recoveryKey,
+        initialSettled: pending.settled,
+      });
+      pendingSuccessorCount = successors.successorCount;
       priorEntries = prior;
       pendingIntentSha256 = pending.intentSha256;
     }
@@ -519,6 +532,9 @@ export function readSelectedLoadInterruptionEvidence(
           ? sha256(canonicalJson(entries))
           : physical.inventorySha256,
         lease,
+        ...(pendingSuccessorCount !== undefined
+          ? { pendingSuccessorCount }
+          : {}),
         physicalValidationRequired: true as const,
         loadAllowed: false as const,
         activationAllowed: false as const,
