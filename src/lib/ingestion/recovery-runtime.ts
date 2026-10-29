@@ -143,12 +143,12 @@ function inventory(
         return loadStage[1] + "chunks/" + loadStage[3];
     }
     const selectedMetadata =
-      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin)$/.exec(
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin|resume-successor-[0-9]{5}\.json)$/.exec(
         path
       );
     if (selectedMetadata) return path;
     const selectedStage =
-      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin)-stage\/(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin)(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin|resume-successor-[0-9]{5}\.json)-stage\/(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin|resume-successor-[0-9]{5}\.json)(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
         path
       );
     if (selectedStage && selectedStage[2] === selectedStage[3])

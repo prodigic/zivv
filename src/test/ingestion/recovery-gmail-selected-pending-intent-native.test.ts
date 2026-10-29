@@ -1,3 +1,4 @@
+import { readRecoveryInstalledFile } from "../../lib/ingestion/encrypted-backup.js";
 import { observeSelectedLoadCompletedJournal } from "../../lib/ingestion/recovery-gmail-selected-completed-journal.js";
 import { createHmac } from "node:crypto";
 import {
@@ -21,6 +22,8 @@ import {
   unlinkSync,
   readdirSync,
   lstatSync,
+  mkdirSync,
+  linkSync,
 } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -393,6 +396,67 @@ it("observes an authenticated intent left linked by a killed retry worker", asyn
       ).inventoryGmailSelectedLoadExecution()
     ).toEqual(beforeFiles);
     expect(lstatSync(intentPath).nlink).toBe(2);
+    // Synthetic successor is deliberately created only inside this private test.
+    // This exercises detached observation, not a production signer or retry.
+    const settledIntent = readRecoveryInstalledFile(
+      intentPath,
+      intentPath + "-stage",
+      (bytes) => {
+        verifySelectedLoadResumeIntent(bytes, fixture.input.recoveryKey);
+      }
+    );
+    const parent = verifySelectedLoadResumeIntent(
+      settledIntent,
+      fixture.input.recoveryKey
+    );
+    const successor = {
+      kind: "zivv-selected-load-intent-successor",
+      version: 1,
+      initialSha256: sha256(settledIntent),
+      parentSha256: sha256(settledIntent),
+      sequence: 1,
+      startedAtEpochMs: parent.deadlineEpochMs,
+      deadlineEpochMs: parent.deadlineEpochMs + 180000,
+    };
+    const signature = createHmac("sha256", fixture.input.recoveryKey)
+      .update("zivv-selected-load-intent-successor/v1\0")
+      .update(canonicalJson(successor))
+      .digest("hex");
+    const successorPath = join(directory, "resume-successor-00001.json");
+    mkdirSync(successorPath + "-stage");
+    const successorStage = join(
+      successorPath + "-stage",
+      "resume-successor-00001.json.123.0123456789abcdef.tmp"
+    );
+    writeFileSync(
+      successorStage,
+      canonicalJson({ ...successor, signature }) + "\n"
+    );
+    linkSync(successorStage, successorPath);
+    expect(lstatSync(successorPath).nlink).toBe(2);
+    expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+      status: "pending-intent",
+      pendingSuccessorCount: 1,
+      loadAllowed: false,
+    });
+    const successorFiles = openPreparedRuntimeForAdmission(
+      fixture.input
+    ).inventoryGmailSelectedLoadExecution();
+    expect((await resume()).code).toBe(1);
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(successorFiles);
+    expect(lstatSync(successorPath).nlink).toBe(2);
+    expect(
+      readWeeklyJournalRecoverySnapshotReadOnly(
+        join(root, "operator/weekly-runs.sqlite")
+      )
+    ).toEqual(beforeJournal);
+    expect(
+      readCanonicalSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
+    ).toEqual(beforeCatalog);
     preserve = false;
   } finally {
     if (preserve)

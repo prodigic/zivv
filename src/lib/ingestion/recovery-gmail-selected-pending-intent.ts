@@ -93,6 +93,8 @@ export function observeSelectedLoadPendingIntent(input: {
   return {
     intent,
     intentSha256: sha256(file.bytes),
+    intentBytes: Buffer.from(file.bytes),
+    settled: !!observed.target && !observed.candidate,
     intentPaths: [...allowed].sort(),
     targetPresent: !!observed.target,
     loadAllowed: false as const,
