@@ -1,3 +1,4 @@
+import { compiledWorkerInventoryDigest } from "./weekly-run-context.js";
 import { spawn } from "node:child_process";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import {
@@ -139,6 +140,22 @@ function inventory(
       if (loadStage[3] === loadStage[2] + ".bin")
         return loadStage[1] + "chunks/" + loadStage[3];
     }
+    const selectedMetadata =
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json)$/.exec(
+        path
+      );
+    if (selectedMetadata) return path;
+    const selectedStage =
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json)-stage\/(execution-baseline\.json|load-result\.json)(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+        path
+      );
+    if (selectedStage && selectedStage[2] === selectedStage[3])
+      return selectedStage[1] + selectedStage[2];
+    const selectedKey =
+      /^recovery-gmail-load\/[a-f0-9]{64}\/key-stage\/(backup-key\.(?:dpapi|bin))(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+        path
+      );
+    if (selectedKey?.[1] === workingKey) return "operator/" + workingKey;
     const metadata =
       /^recovery-gmail-capture\/([a-f0-9]{64})\/(admission|result)\.json$/.exec(
         path
@@ -372,6 +389,11 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
     treeSha256: savedPayload.treeSha256,
     entryCount: savedPayload.entryCount,
   };
+  const admittedInput = {
+    archive: sha256(input.archive),
+    retirement: sha256(input.retirementReceipt),
+    key: sha256(input.recoveryKey),
+  };
   const assertReceipt = () =>
     same(
       bytes.toString("base64"),
@@ -416,6 +438,70 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
     inventoryGmailLoadInstallation: () => {
       assertReceipt();
       return inventory(root, undefined, undefined, true);
+    },
+    /** Only the closed selected-load coordinator validates the omitted SQL state. */
+    inventoryGmailSelectedLoadExecution: () => {
+      assertReceipt();
+      same(admittedInput, {
+        archive: sha256(input.archive),
+        retirement: sha256(input.retirementReceipt),
+        key: sha256(input.recoveryKey),
+      });
+      if (
+        process.version !== checkpoint.runtime.node ||
+        (process.versions.icu ?? "") !== checkpoint.runtime.icu ||
+        sha256(regular(process.execPath)) !==
+          checkpoint.runtime.executableSha256
+      )
+        fail("RECOVERY_RUNTIME_MISMATCH");
+      verifyNpmExecutionTool(
+        checkpoint.runtime.bootstrapNpm!,
+        resolve(input.npmCli)
+      );
+      const entries = inventory(
+        root,
+        (entry) =>
+          /^operator\/(?:ledger|weekly-runs)\.sqlite(?:-wal|-shm)?$/.test(
+            entry.path
+          ),
+        undefined,
+        true
+      );
+      // Authenticate the same worker/package bytes from this fresh inventory,
+      // rather than reading and hashing the entire worker a second time.
+      const worker = entries.flatMap((entry) =>
+        entry.kind === "file" &&
+        /^checkout\/dist\/(?:lib|types|utils)\//.test(entry.path)
+          ? [
+              {
+                path: entry.path.slice("checkout/dist/".length),
+                size: entry.size,
+                sha256: entry.sha256,
+              },
+            ]
+          : []
+      );
+      const fileEntries = entries.filter(
+        (entry): entry is Extract<RecoveryRuntimeEntry, { kind: "file" }> =>
+          entry.kind === "file"
+      );
+      if (
+        compiledWorkerInventoryDigest(worker) !==
+          checkpoint.runtime.workerSha256 ||
+        fileEntries.find(
+          (entry) =>
+            entry.path === "checkout/package-lock.json" && entry.kind === "file"
+        )?.sha256 !== checkpoint.runtime.lockfileSha256 ||
+        fileEntries.find(
+          (entry) =>
+            entry.path === "checkout/package.json" && entry.kind === "file"
+        )?.sha256 !==
+          checkpoint.files.find(
+            (file) => file.area === "checkout" && file.path === "package.json"
+          )?.sha256
+      )
+        fail("RECOVERY_RUNTIME_MISMATCH");
+      return entries;
     },
     assertRuntime: () => {
       authenticate(input);

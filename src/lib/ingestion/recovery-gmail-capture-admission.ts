@@ -1,4 +1,10 @@
 import {
+  observeSelectedGmailLoadFile,
+  selectedGmailLoadWriter,
+  selectedGmailLoadFile,
+  selectedGmailLoadKey,
+} from "./recovery-gmail-selected-load-executor.js";
+import {
   assertNoSelectedLoadInstallation,
   guardSelectedLoadInstallationFile,
   observeSelectedLoadInstallationFile,
@@ -420,6 +426,7 @@ export function observeRecoveredGmailCaptureFileCheckpoint(
   path: string,
   point: "flushed" | "linked" | "published"
 ): void {
+  if (observeSelectedGmailLoadFile(path, point)) return;
   if (observeSelectedLoadInstallationFile(path, point)) return;
   const scope = current();
   if (!scope?.interruption) return;
@@ -491,6 +498,7 @@ export function assertRecoveredGmailCaptureWriter(
   directory: string,
   operation?: "steve-email-capture" | "capture-journal"
 ): void {
+  if (selectedGmailLoadWriter(directory, operation)) return;
   const scope = current();
   if (!scope) return;
   if (
@@ -720,6 +728,7 @@ export function assertRecoveredGmailCaptureFile(
   bytes?: Buffer,
   effect: "write" | "directory" | "unlink" | "install" = "write"
 ): void {
+  if (selectedGmailLoadFile(path, bytes, effect)) return;
   if (guardSelectedLoadInstallationFile(path, bytes, effect)) return;
   const scope = current();
   if (!scope) return;
@@ -867,6 +876,7 @@ export function assertRecoveredGmailCaptureKey(
   directory: string,
   suppliedKey?: Buffer
 ): void {
+  if (selectedGmailLoadKey(directory, suppliedKey)) return;
   const scope = current();
   if (!scope) return;
   if (

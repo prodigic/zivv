@@ -68,6 +68,7 @@
     "src/test/ingestion/weekly-journal-readonly.test.ts",
     "src/test/ingestion/sqlite-ledger-readonly.test.ts",
     "src/test/ingestion/sqlite-canonical-transaction.test.ts",
+    "src/test/ingestion/recovery-gmail-selected-load-executor.test.ts",
     "src/test/ingestion/operator-recovery.test.ts",
     "src/test/ingestion/recovery-runtime.test.ts",
     "src/test/ingestion/recovery-import-remote.test.ts",
