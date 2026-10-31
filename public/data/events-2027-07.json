@@ -2,7 +2,7 @@
   "chunkId": "2027-07",
   "dateRange": {
     "startEpochMs": 1815480000000,
-    "endEpochMs": 1815480000000
+    "endEpochMs": 1815825600000
   },
   "events": [
     {
@@ -27,7 +27,7 @@
       "priceMin": 46.5,
       "provenanceConflicts": [],
       "slug": "2027-07-13-lizzy-mcalpine-the-warriors-stadium",
-      "sourceLineNumber": 1029,
+      "sourceLineNumber": 1002,
       "sources": [
         {
           "canonicalUrl": null,
@@ -37,8 +37,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1792803818000,
-          "lastSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
+          "lastSeenAtEpochMs": 1793414101457,
+          "lastSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "originalVenueId": 793025194,
           "session": null,
           "sourceId": "steveslist"
@@ -51,6 +51,51 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1790985835628,
       "venueId": 793025194,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        629134925,
+        1199915988,
+        403192754
+      ],
+      "createdAtEpochMs": 1793414101457,
+      "date": "2027-07-17",
+      "dateEpochMs": 1815825600000,
+      "firstImportRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1793414101457,
+      "headlinerArtistId": 629134925,
+      "id": 1230836100,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-07-17-hum-the-warfield",
+      "sourceLineNumber": 1003,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:64a9aea5993d1541",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1793414101457,
+          "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1793414101457,
+          "lastSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
+          "originalVenueId": 1531618194,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1793414101457,
+      "venueId": 1531618194,
       "venueType": "major"
     }
   ]
