@@ -1,0 +1,55 @@
+{
+  "chunkId": "2027-09",
+  "dateRange": {
+    "startEpochMs": 1820404800000,
+    "endEpochMs": 1820404800000
+  },
+  "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        709729755
+      ],
+      "createdAtEpochMs": 1794017623435,
+      "date": "2027-09-08",
+      "dateEpochMs": 1820404800000,
+      "firstImportRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1794017623435,
+      "headlinerArtistId": 709729755,
+      "id": 1392655677,
+      "isFree": false,
+      "priceMax": 25,
+      "priceMin": 20,
+      "provenanceConflicts": [],
+      "slug": "2027-09-08-sampa-the-great-great-american-music-hall",
+      "sourceLineNumber": 1001,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:e559f563d82f3297",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1794017623435,
+          "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1794017623435,
+          "lastSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
+          "originalVenueId": 463728167,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1820458800000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1794017623435,
+      "venueId": 463728167,
+      "venueType": "major"
+    }
+  ]
+}
