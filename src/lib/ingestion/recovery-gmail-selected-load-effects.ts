@@ -75,6 +75,8 @@ export function createSelectedGmailLoadEffectPlan(
       { requireCompleteNormalization: true }
     )
   );
+  if (result.report.replay)
+    throw Error("RECOVERY_GMAIL_SELECTED_LOAD_CATALOG_ALREADY_COMMITTED");
   if (result.report.review.length || result.report.conflicts.length) fail();
   const context = {
     schemaVersion: 1,
@@ -113,41 +115,37 @@ export function assertSelectedGmailLoadCatalog(
 ) {
   validateLedger(actual);
   const expected = structuredClone(plan.result.ledger);
-  if (!plan.result.report.replay) {
-    const run = actual.runs.find(
-        (run) => run.runId === plan.receipt.importRunId
-      ),
-      target = expected.runs.find(
-        (run) => run.runId === plan.receipt.importRunId
-      );
-    if (
-      !run ||
-      !target ||
-      run.status !== "committed" ||
-      run.committedAtEpochMs === null ||
-      run.committedAtEpochMs < startedAt ||
-      run.committedAtEpochMs > Date.now() ||
-      run.publishedAtEpochMs !== null
-    )
-      fail();
-    target.status = "committed";
-    target.committedAtEpochMs = run.committedAtEpochMs;
-    for (const table of ["artists", "venues"] as const) {
-      const prior = new Set(original[table].map((item) => item.id));
-      for (const item of expected[table])
-        if (!prior.has(item.id)) {
-          const observed = actual[table].find((value) => value.id === item.id);
-          if (
-            !observed ||
-            observed.createdAtEpochMs < startedAt ||
-            observed.updatedAtEpochMs < observed.createdAtEpochMs ||
-            observed.updatedAtEpochMs > run.committedAtEpochMs
-          )
-            fail();
-          item.createdAtEpochMs = observed.createdAtEpochMs;
-          item.updatedAtEpochMs = observed.updatedAtEpochMs;
-        }
-    }
+  const run = actual.runs.find((run) => run.runId === plan.receipt.importRunId),
+    target = expected.runs.find(
+      (run) => run.runId === plan.receipt.importRunId
+    );
+  if (
+    !run ||
+    !target ||
+    run.status !== "committed" ||
+    run.committedAtEpochMs === null ||
+    run.committedAtEpochMs < startedAt ||
+    run.committedAtEpochMs > Date.now() ||
+    run.publishedAtEpochMs !== null
+  )
+    fail();
+  target.status = "committed";
+  target.committedAtEpochMs = run.committedAtEpochMs;
+  for (const table of ["artists", "venues"] as const) {
+    const prior = new Set(original[table].map((item) => item.id));
+    for (const item of expected[table])
+      if (!prior.has(item.id)) {
+        const observed = actual[table].find((value) => value.id === item.id);
+        if (
+          !observed ||
+          observed.createdAtEpochMs < startedAt ||
+          observed.updatedAtEpochMs < observed.createdAtEpochMs ||
+          observed.updatedAtEpochMs > run.committedAtEpochMs
+        )
+          fail();
+        item.createdAtEpochMs = observed.createdAtEpochMs;
+        item.updatedAtEpochMs = observed.updatedAtEpochMs;
+      }
   }
   if (canonicalJson(expected) !== canonicalJson(actual)) fail();
 }

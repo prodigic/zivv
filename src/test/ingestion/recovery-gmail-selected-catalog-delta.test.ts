@@ -77,6 +77,13 @@ it("classifies only the original catalog and the exact selected source result", 
       importRunId: run.runId,
       loadAllowed: false,
     });
+    expect(() =>
+      createSelectedGmailLoadEffectPlan(
+        { ...input.checkpoint, ledger: committed },
+        proof,
+        raw
+      )
+    ).toThrow("RECOVERY_GMAIL_SELECTED_LOAD_CATALOG_ALREADY_COMMITTED");
     const backdated = structuredClone(committed);
     backdated.runs.find(
       (item) => item.runId === run.runId

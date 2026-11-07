@@ -1,3 +1,7 @@
+import {
+  executeRecoveredGmailSelectedLoad,
+  resumeRecoveredGmailSelectedLoad,
+} from "../../lib/ingestion/recovery-gmail-selected-load-executor.js";
 import { proveSelectedLoadJournalDelta } from "../../lib/ingestion/recovery-gmail-selected-journal-delta.js";
 import { verifySelectedLoadResult } from "../../lib/ingestion/recovery-gmail-selected-result-proof.js";
 import { createHmac } from "node:crypto";
@@ -45,6 +49,27 @@ it("loads the exact ready source through the normal runner in a genuine retained
     };
     const installed =
       await resumeOperatorRecoveryGmailSelectedLoadEvidence(input);
+    vi.stubEnv("ZIVV_LEDGER_HOME", join(root, "operator"));
+    try {
+      await expect(executeRecoveredGmailSelectedLoad(input)).rejects.toThrow(
+        "RECOVERY_GMAIL_SELECTED_LOAD_RETAINED_EXECUTOR_REQUIRED"
+      );
+      await expect(resumeRecoveredGmailSelectedLoad(input)).rejects.toThrow(
+        "RECOVERY_GMAIL_SELECTED_LOAD_RETAINED_EXECUTOR_REQUIRED"
+      );
+    } finally {
+      vi.unstubAllEnvs();
+    }
+    expect(
+      existsSync(
+        join(
+          root,
+          "recovery-gmail-load",
+          installed.runId,
+          "execution-baseline.json"
+        )
+      )
+    ).toBe(false);
     const host = readRecoveryGmailHostForLoadInstallation(fixture.input);
     const before = validateWeeklyJournalRecoverySnapshot(
       Buffer.from(host.current.journal, "base64")

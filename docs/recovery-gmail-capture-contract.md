@@ -377,7 +377,11 @@ selected-load intent proof; this creates no new capture or load capability.
 
 ### Selected-source first-load prototype
 
-The selected-load executor is a private, bounded first-load path for an authenticated ready receipt. It derives the normal preflight, reviewed reconciliation, catalog delta and stage evidence before allowing the normal runner to load that source. The catalog write and final result are checked under the real fenced journal lease; the signed result binds the catalog and the expected journal after release. The recovery installation remains quarantined.
+The selected-load executor is a private, bounded first-load path for an authenticated ready receipt. It derives the normal preflight, reviewed reconciliation, catalog delta and stage evidence before allowing the normal runner to load that source. The catalog write and final result are checked under the real fenced journal lease; the signed result binds the catalog and the expected journal after release. The recovery installation remains quarantined. First load and resume require the retained
+executor module, checkout working directory, and bootstrap import. Both refuse
+Node environment overrides that can inject modules. The first-load plan rejects
+an already-committed catalog run before writing execution evidence or installing
+the backup key.
 
 This is not yet a complete #110 recovery flow. An existing execution baseline is refused until crash reconciliation, lost-response replay and later-load family composition can prove the original-to-current delta. It grants no scheduler activation, publication, cutoff, or live-operator authority. Failure fixtures and immutable worker artifacts must be preserved for diagnosis.
 

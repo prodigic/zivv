@@ -51,10 +51,7 @@ export function proveSelectedLoadCatalogDelta(input: {
       ledgerRevision: ledgerDigest(original),
       loadAllowed: false as const,
     };
-  if (
-    input.observedGeneration !== execution.generation + 1 ||
-    plan.result.report.replay
-  )
+  if (input.observedGeneration !== execution.generation + 1)
     throw Error("INVALID_SELECTED_LOAD_CATALOG_DELTA");
   assertSelectedGmailLoadCatalog(
     plan,

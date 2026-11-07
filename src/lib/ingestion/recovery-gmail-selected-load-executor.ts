@@ -23,6 +23,7 @@ import {
   fsyncSync,
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import type { IngestionLedger } from "../../types/ingestion.js";
 import {
   canonicalJson,
@@ -799,6 +800,27 @@ function signed(value: unknown, key: Buffer, domain: string) {
       .digest("hex");
   return Buffer.from(canonicalJson({ ...(value as object), signature }) + "\n");
 }
+function assertRetainedSelectedLoadExecutor(destination: string): void {
+  const root = resolve(destination);
+  const checkout = join(root, "checkout");
+  const bootstrap = pathToFileURL(
+    join(root, "bootstrap/module-boundary.mjs")
+  ).href;
+  if (
+    fileURLToPath(import.meta.url) !==
+      join(
+        checkout,
+        "dist/lib/ingestion/recovery-gmail-selected-load-executor.js"
+      ) ||
+    process.cwd() !== checkout ||
+    process.env.NODE_OPTIONS ||
+    process.env.NODE_PATH ||
+    process.execArgv[0] !== "--import" ||
+    process.execArgv[1] !== bootstrap
+  )
+    throw Error("RECOVERY_GMAIL_SELECTED_LOAD_RETAINED_EXECUTOR_REQUIRED");
+}
+
 /** First admitted source load only. No caller callback, run or catalog override.
  * Interrupted SQL effects require the separate original-baseline replay composer. */
 export async function executeRecoveredGmailSelectedLoad(
@@ -811,6 +833,7 @@ export async function executeRecoveredGmailSelectedLoad(
     { selector, ...runtime } = input;
   let scope: Scope | undefined;
   try {
+    assertRetainedSelectedLoadExecutor(runtime.destination);
     const verifiedRuntime = openPreparedRuntimeForAdmission(runtime);
     const loadRoot = join(resolve(runtime.destination), "recovery-gmail-load");
     if (
@@ -1218,6 +1241,7 @@ async function resumeSelectedLoad(
   const { selector: _selector, ...runtime } = input;
   let scope: Scope | undefined;
   try {
+    assertRetainedSelectedLoadExecutor(runtime.destination);
     const evidence = readSelectedLoadInterruptionEvidence(input);
     if (!["committed", "completed"].includes(evidence.report.status))
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED");
