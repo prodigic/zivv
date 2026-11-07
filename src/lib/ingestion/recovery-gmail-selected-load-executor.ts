@@ -806,6 +806,7 @@ function assertRetainedSelectedLoadExecutor(destination: string): void {
   const bootstrap = pathToFileURL(
     join(root, "bootstrap/module-boundary.mjs")
   ).href;
+  const launch = ["--import", bootstrap, "--input-type=module", "--eval"];
   if (
     fileURLToPath(import.meta.url) !==
       join(
@@ -815,8 +816,8 @@ function assertRetainedSelectedLoadExecutor(destination: string): void {
     process.cwd() !== checkout ||
     process.env.NODE_OPTIONS ||
     process.env.NODE_PATH ||
-    process.execArgv[0] !== "--import" ||
-    process.execArgv[1] !== bootstrap
+    process.execArgv.length !== launch.length + 1 ||
+    launch.some((argument, index) => process.execArgv[index] !== argument)
   )
     throw Error("RECOVERY_GMAIL_SELECTED_LOAD_RETAINED_EXECUTOR_REQUIRED");
 }

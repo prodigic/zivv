@@ -60,16 +60,6 @@ it("loads the exact ready source through the normal runner in a genuine retained
     } finally {
       vi.unstubAllEnvs();
     }
-    expect(
-      existsSync(
-        join(
-          root,
-          "recovery-gmail-load",
-          installed.runId,
-          "execution-baseline.json"
-        )
-      )
-    ).toBe(false);
     const host = readRecoveryGmailHostForLoadInstallation(fixture.input);
     const before = validateWeeklyJournalRecoverySnapshot(
       Buffer.from(host.current.journal, "base64")
@@ -102,12 +92,13 @@ it("loads the exact ready source through the normal runner in a genuine retained
       )
     ).href;
     const script = `try {const m=await import(${JSON.stringify(entry)}),f=await import(${JSON.stringify(frame)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const input=f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks));console.log(JSON.stringify(await m.executeRecoveredGmailSelectedLoad(input)));input.recoveryKey.fill(0);}catch(e){console.error(JSON.stringify({code:e instanceof Error&&/^[A-Z0-9_]{1,80}$/.test(e.message)?e.message:'SELECTED_LOAD_NATIVE_ERROR',frames:(e.stack??'').split('\\n').slice(1,7).flatMap(line=>{const m=/([A-Za-z0-9-]+\\.js):(\\d+):(\\d+)/.exec(line);return m?[m[1]+':'+m[2]+':'+m[3]]:[]})}));process.exitCode=1;}`;
-    const run = () =>
+    const run = (additionalNodeArguments: string[] = []) =>
       spawnSync(
         process.execPath,
         [
           "--import",
           pathToFileURL(join(root, "bootstrap/module-boundary.mjs")).href,
+          ...additionalNodeArguments,
           "--input-type=module",
           "--eval",
           script,
@@ -122,6 +113,21 @@ it("loads the exact ready source through the normal runner in a genuine retained
           maxBuffer: 128 * 1024,
         }
       );
+    const withPreload = run(["--require", "node:path"]);
+    expect(withPreload.status).toBe(1);
+    expect(JSON.parse(withPreload.stderr.trim())).toMatchObject({
+      code: "RECOVERY_GMAIL_SELECTED_LOAD_RETAINED_EXECUTOR_REQUIRED",
+    });
+    expect(
+      existsSync(
+        join(
+          root,
+          "recovery-gmail-load",
+          installed.runId,
+          "execution-baseline.json"
+        )
+      )
+    ).toBe(false);
     console.error("SELECTED_SOURCE_LOAD execute", Date.now());
     const child = run();
     if (child.status !== 0)
