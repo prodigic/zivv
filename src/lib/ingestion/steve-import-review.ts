@@ -1,3 +1,7 @@
+import {
+  IMPORT_CONFIGURATION_FILES,
+  importConfigurationInventoryDigest,
+} from "./weekly-run-context.js";
 import { createHash } from "node:crypto";
 import { lstatSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -63,34 +67,25 @@ export function parseImportObservation(value: unknown): number {
 
 /** Exact import policy inputs, including absent historical/migration evidence. */
 export function importConfigurationDigest(root: string): string {
-  const files = [
-    "venue-aliases.json",
-    "line-corrections.json",
-    "venue-location-corrections.json",
-    "ingestion/historical-batches.json",
-    "ingestion/migration.json",
-  ];
-  return importDigest(
-    canonicalJson(
-      files.map((path) => {
-        const file = join(root, "data", path);
-        let stat;
-        try {
-          stat = lstatSync(file);
-        } catch (error) {
-          if (
-            error instanceof Error &&
-            "code" in error &&
-            error.code === "ENOENT"
-          )
-            return { path, sha256: null };
-          throw error;
-        }
-        if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1)
-          throw new SteveImportReviewError("IMPORT_CONFIGURATION_CHANGED");
-        return { path, sha256: importDigest(readFileSync(file)) };
-      })
-    )
+  return importConfigurationInventoryDigest(
+    IMPORT_CONFIGURATION_FILES.map((path) => {
+      const file = join(root, "data", path);
+      let stat;
+      try {
+        stat = lstatSync(file);
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          "code" in error &&
+          error.code === "ENOENT"
+        )
+          return { path, sha256: null };
+        throw error;
+      }
+      if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1)
+        throw new SteveImportReviewError("IMPORT_CONFIGURATION_CHANGED");
+      return { path, sha256: importDigest(readFileSync(file)) };
+    })
   );
 }
 /** Replay changes transport state, not the reviewed reconciliation decision. */

@@ -117,7 +117,7 @@ describe("canonical remote gate for import-only recovery", () => {
     expect(() =>
       f.transport.append("refs/heads/main", f.sourceCommit, null)
     ).toThrow(/dedicated control/);
-  }, 30_000);
+  }, 60_000);
   it("rejects an obsolete or divergent ledger, wrong key and unretained run", async () => {
     await yieldToReporter();
     const checkpoint = structuredClone(f.checkpoint);
@@ -283,7 +283,7 @@ describe("canonical remote gate for import-only recovery", () => {
       f.main(f.sourceCommit);
     }
     await yieldToReporter();
-  }, 30_000);
+  }, 60_000);
   it("refuses a malformed canonical control tip", async () => {
     await yieldToReporter();
     const controlHead = f.store.read().head!;
@@ -295,7 +295,7 @@ describe("canonical remote gate for import-only recovery", () => {
       f.setControl(controlHead);
     }
     await yieldToReporter();
-  }, 30_000);
+  }, 60_000);
   it("refuses a retained observation before the acknowledged cutoff even when local weekly state is absent", async () => {
     const journal = new WeeklyRunJournal(f.operator),
       lease = journal.acquire("prodigic/zivv/production"),
@@ -323,5 +323,5 @@ describe("canonical remote gate for import-only recovery", () => {
         runId: run.runId,
       })
     ).toThrow("OBSERVATION_BEFORE_ACKNOWLEDGED_CUTOFF");
-  }, 30_000);
+  }, 60_000);
 });

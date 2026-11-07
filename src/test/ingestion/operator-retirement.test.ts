@@ -20,7 +20,7 @@ import {
   withStoreTransaction,
   writeSqliteLedger,
 } from "../../lib/ingestion/sqlite-store.js";
-import { loadBackupKey } from "../../lib/ingestion/encrypted-backup.js";
+import * as encryptedBackup from "../../lib/ingestion/encrypted-backup.js";
 import {
   captureOperatorRecoveryCheckpoint,
   decryptOperatorRecovery,
@@ -36,21 +36,15 @@ import { runWeeklyImport } from "../../lib/ingestion/weekly-import-runner.js";
 import { captureSteveEmail } from "../../lib/ingestion/steve-email-intake.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 
-const faults = vi.hoisted(() => ({ path: "", after: false }));
-vi.mock("../../lib/ingestion/encrypted-backup.js", async (original) => {
-  const actual =
-    await original<typeof import("../../lib/ingestion/encrypted-backup.js")>();
-  return {
-    ...actual,
-    writeDurableFile: (path: string, bytes: Buffer) => {
-      if (path === faults.path && !faults.after)
-        throw new Error("INJECTED_RETIREMENT_WRITE_FAILURE");
-      actual.writeDurableFile(path, bytes);
-      if (path === faults.path && faults.after)
-        throw new Error("INJECTED_RETIREMENT_WRITE_FAILURE");
-    },
-  };
-});
+function failRetirementMarkerWrite(marker: string, afterWrite = false) {
+  const writeDurableFile = encryptedBackup.writeDurableFile;
+  return vi
+    .spyOn(encryptedBackup, "writeDurableFile")
+    .mockImplementation((path, bytes) => {
+      if (path !== marker || afterWrite) writeDurableFile(path, bytes);
+      if (path === marker) throw new Error("INJECTED_RETIREMENT_WRITE_FAILURE");
+    });
+}
 
 vi.setConfig({ testTimeout: 30_000, hookTimeout: 30_000 });
 describe("cooperative operator retirement with a final encrypted checkpoint", () => {
@@ -93,7 +87,7 @@ describe("cooperative operator retirement with a final encrypted checkpoint", ()
       bootstrapLedger({ events: [], artists: [], venues: [] }, 1000),
       true
     );
-    key = loadBackupKey(operator, true);
+    key = encryptedBackup.loadBackupKey(operator, true);
     const journal = new WeeklyRunJournal(operator),
       lease = journal.acquire(scope);
     journal.release(lease);
@@ -104,8 +98,7 @@ describe("cooperative operator retirement with a final encrypted checkpoint", ()
     );
   });
   afterEach(() => {
-    faults.path = "";
-    faults.after = false;
+    vi.restoreAllMocks();
     vi.unstubAllEnvs();
     const within = relative(resolve(tmpdir()), resolve(base));
     if (!within.startsWith("zivv-retire-test-") || within.startsWith(".."))
@@ -354,7 +347,9 @@ describe("cooperative operator retirement with a final encrypted checkpoint", ()
   );
 
   it("a failed marker write leaves a valid backup but no retirement proof", async () => {
-    faults.path = join(operator, "operator-retired.json");
+    const fault = failRetirementMarkerWrite(
+      join(operator, "operator-retired.json")
+    );
     await expect(
       retireAndCaptureOperatorRecovery({ root, out })
     ).rejects.toThrow("INJECTED_RETIREMENT_WRITE_FAILURE");
@@ -363,7 +358,7 @@ describe("cooperative operator retirement with a final encrypted checkpoint", ()
     ).toBe(operator);
     expect(existsSync(join(operator, "operator-retired.json"))).toBe(false);
     expect(existsSync(out + ".retirement.json")).toBe(false);
-    faults.path = "";
+    fault.mockRestore();
     await expect(
       retireAndCaptureOperatorRecovery({ root, out })
     ).rejects.toThrow("RECOVERY_DESTINATION_EXISTS");
@@ -373,15 +368,17 @@ describe("cooperative operator retirement with a final encrypted checkpoint", ()
   });
 
   it("a lost response after fencing is repaired from exact existing evidence", async () => {
-    faults.path = join(operator, "operator-retired.json");
-    faults.after = true;
+    const fault = failRetirementMarkerWrite(
+      join(operator, "operator-retired.json"),
+      true
+    );
     await expect(
       retireAndCaptureOperatorRecovery({ root, out })
     ).rejects.toThrow("INJECTED_RETIREMENT_WRITE_FAILURE");
     expect(existsSync(join(operator, "operator-retired.json"))).toBe(true);
     const archive = readFileSync(out),
       rows = journalRows();
-    faults.path = "";
+    fault.mockRestore();
     await retireAndCaptureOperatorRecovery({ root, out });
     expect(readFileSync(out)).toEqual(archive);
     expect(journalRows()).toEqual(rows);

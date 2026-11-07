@@ -20,6 +20,31 @@ const goMessage = "ZIVV_GMAIL_CAPTURE_GO_V1";
 const outputLimit = 64 * 1024;
 const childTimeoutMs = 150_000;
 const pauseTimeoutMs = 20_000;
+const lifecycleTraceLimit = 64;
+type LifecycleTraceEvent =
+  | "spawn"
+  | "ready"
+  | "action"
+  | "disconnect"
+  | "exit"
+  | "close"
+  | "exit-drained"
+  | "stdout-ended"
+  | "stderr-ended"
+  | "stdin-finished"
+  | "stdin-closed"
+  | "overalltimer"
+  | "pausetimer"
+  | "disconnect-grace"
+  | "requestStop"
+  | "kill-result-true"
+  | "kill-result-false"
+  | "kill-result-threw"
+  | "result-succeeded"
+  | "result-rejected"
+  | "stop-enter"
+  | "stop-childclosed"
+  | "stop-result-settled";
 
 export interface RecoveryGmailCaptureDriftProbeSession {
   paused: Promise<void>;
@@ -27,6 +52,15 @@ export interface RecoveryGmailCaptureDriftProbeSession {
   resume(): void;
   stop(): Promise<void>;
 }
+
+const protocolProbeModes = [
+  "unexpected-before-go",
+  "disconnect-before-go",
+  "duplicate-go",
+  "duplicate-go-racing",
+] as const;
+export type RecoveryGmailCaptureProtocolProbeMode =
+  (typeof protocolProbeModes)[number];
 
 interface Deferred<T> {
   promise: Promise<T>;
@@ -82,8 +116,25 @@ function completedReport(
  * Start one fixed retained-worker pause for test-owned drift mutation.
  * The only accepted IPC command is the literal GO token after the READY token.
  */
-export async function startRecoveryGmailCaptureDriftProbeForTest(
+export function startRecoveryGmailCaptureDriftProbeForTest(
   supplied: RecoveryGmailCaptureInput
+): Promise<RecoveryGmailCaptureDriftProbeSession> {
+  return startProbe(supplied);
+}
+
+/** Exercise one fixed child-side handshake refusal without exposing IPC. */
+export function startRecoveryGmailCaptureProtocolProbeForTest(
+  supplied: RecoveryGmailCaptureInput,
+  mode: RecoveryGmailCaptureProtocolProbeMode
+): Promise<RecoveryGmailCaptureDriftProbeSession> {
+  if (!protocolProbeModes.includes(mode))
+    throw new Error("RECOVERY_GMAIL_CAPTURE_PROTOCOL_MODE_INVALID");
+  return startProbe(supplied, mode);
+}
+
+async function startProbe(
+  supplied: RecoveryGmailCaptureInput,
+  protocolMode?: RecoveryGmailCaptureProtocolProbeMode
 ): Promise<RecoveryGmailCaptureDriftProbeSession> {
   const wire = encodeRecoveryGmailCaptureFrame(supplied);
   const input = decodeRecoveryGmailCaptureFrame(Buffer.from(wire));
@@ -113,7 +164,7 @@ export async function startRecoveryGmailCaptureDriftProbeForTest(
         chunks.push(chunk);
       }
       const input = decode(Buffer.concat(chunks, size));
-      console.log(JSON.stringify(await execute(input, 'pause-before-key-guard')));
+      console.log(JSON.stringify(await execute(input, ${JSON.stringify(protocolMode === "duplicate-go" ? "pause-before-key-guard-duplicate" : "pause-before-key-guard")})));
     } catch(error) {
       const captureFrames = error instanceof Error
         ? (error.stack ?? '').split('\\n').slice(1).flatMap(line => {
@@ -168,6 +219,25 @@ export async function startRecoveryGmailCaptureDriftProbeForTest(
       detached: process.platform !== "win32",
     }
   );
+  let traceCount = 0;
+  const trace = (event: LifecycleTraceEvent) => {
+    if (traceCount >= lifecycleTraceLimit) return;
+    traceCount += 1;
+    try {
+      console.error(
+        "ZIVV_GMAIL_CAPTURE_PROBE_TRACE",
+        JSON.stringify({
+          timestamp: Date.now(),
+          mode: protocolMode ?? "drift",
+          pid: child.pid ?? null,
+          event,
+        })
+      );
+    } catch {
+      // Diagnostics never participate in admission, authority, or cleanup.
+    }
+  };
+  trace("spawn");
   const childInput = child.stdin;
   const childOutput = child.stdout;
   const childDiagnostic = child.stderr;
@@ -177,37 +247,59 @@ export async function startRecoveryGmailCaptureDriftProbeForTest(
   let outputBytes = 0;
   let ready = false;
   let resumed = false;
-  let closed = false;
+  let protocolActionIssued = false;
+  let finalized = false;
+  let ipcDisconnected = !child.connected;
+  let inputFailure = false;
+  let exited:
+    | { code: number | null; signal: NodeJS.Signals | null }
+    | undefined;
   let stopError: Error | undefined;
+  let protocolSendFailure: Error | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let pauseTimer: ReturnType<typeof setTimeout> | undefined;
+  let disconnectTimer: ReturnType<typeof setTimeout> | undefined;
   let stopPromise: Promise<void> | undefined;
-  let closeResolve!: () => void;
-  const childClosed = new Promise<void>((resolveClose) => {
-    closeResolve = resolveClose;
+  let terminateResolve!: () => void;
+  const childTerminated = new Promise<void>((resolveTerminate) => {
+    terminateResolve = resolveTerminate;
   });
 
   const clearTimers = () => {
     if (timer) clearTimeout(timer);
     if (pauseTimer) clearTimeout(pauseTimer);
+    if (disconnectTimer) clearTimeout(disconnectTimer);
     timer = undefined;
     pauseTimer = undefined;
+    disconnectTimer = undefined;
   };
 
   const killChild = () => {
-    if (closed) return;
+    if (finalized) return;
     try {
-      if (process.platform !== "win32" && child.pid)
+      if (process.platform !== "win32" && child.pid) {
         process.kill(-child.pid, "SIGKILL");
-      else child.kill("SIGKILL");
+        trace("kill-result-true");
+      } else {
+        trace(child.kill("SIGKILL") ? "kill-result-true" : "kill-result-false");
+      }
     } catch {
-      child.kill("SIGKILL");
+      trace("kill-result-threw");
+      try {
+        trace(child.kill("SIGKILL") ? "kill-result-true" : "kill-result-false");
+      } catch {
+        trace("kill-result-threw");
+      }
     }
     childInput?.destroy();
   };
 
   const requestStop = (error: Error) => {
+    if (finalized) return;
+    trace("requestStop");
     stopError ??= error;
+    if (disconnectTimer) clearTimeout(disconnectTimer);
+    disconnectTimer = undefined;
     killChild();
   };
 
@@ -216,61 +308,135 @@ export async function startRecoveryGmailCaptureDriftProbeForTest(
       requestStop(failure(handshakeError));
       return;
     }
+    trace("ready");
     ready = true;
     paused.resolve(undefined);
-    pauseTimer = setTimeout(
-      () => requestStop(failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_TIMEOUT")),
-      pauseTimeoutMs
-    );
+    pauseTimer = setTimeout(() => {
+      trace("pausetimer");
+      requestStop(failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_TIMEOUT"));
+    }, pauseTimeoutMs);
   };
 
   const onDisconnect = () => {
-    if (!resumed && !closed)
+    trace("disconnect");
+    ipcDisconnected = true;
+    tryFinishExitDrained();
+    if (resumed || protocolActionIssued || finalized) return;
+    if (!ready) {
       requestStop(failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_DISCONNECTED"));
+      return;
+    }
+    if (!disconnectTimer) {
+      trace("disconnect-grace");
+      disconnectTimer = setTimeout(() => {
+        if (!finalized)
+          requestStop(failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_DISCONNECTED"));
+      }, 2000);
+    }
   };
 
-  child.on("message", onMessage);
-  child.on("disconnect", onDisconnect);
-  childOutput?.on("data", (chunk: Buffer) => {
+  const onOutputData = (chunk: Buffer) => {
+    if (finalized) return;
     outputBytes += chunk.length;
     if (outputBytes > outputLimit) {
       requestStop(failure("RECOVERY_GMAIL_CAPTURE_OUTPUT_LIMIT"));
       return;
     }
     output += chunk.toString("utf8");
-  });
-  childDiagnostic?.on("data", (chunk: Buffer) => {
+  };
+  const onDiagnosticData = (chunk: Buffer) => {
+    if (finalized) return;
     outputBytes += chunk.length;
     if (outputBytes > outputLimit) {
       requestStop(failure("RECOVERY_GMAIL_CAPTURE_OUTPUT_LIMIT"));
       return;
     }
     diagnostic += chunk.toString("utf8");
-  });
-  childInput?.on("error", () =>
-    requestStop(failure("RECOVERY_GMAIL_CAPTURE_INPUT_FAILED"))
-  );
-  child.on("error", () =>
-    requestStop(failure("RECOVERY_GMAIL_CAPTURE_CHILD_FAILED"))
-  );
-  child.on("close", (code, signal) => {
-    closed = true;
-    clearTimers();
+  };
+  const onOutputEnd = () => {
+    trace("stdout-ended");
+    tryFinishExitDrained();
+  };
+  const onDiagnosticEnd = () => {
+    trace("stderr-ended");
+    tryFinishExitDrained();
+  };
+  const onInputFinish = () => {
+    trace("stdin-finished");
+    tryFinishExitDrained();
+  };
+  const onInputClose = () => {
+    trace("stdin-closed");
+    tryFinishExitDrained();
+  };
+  const onInputError = () => {
+    inputFailure = true;
+    requestStop(failure("RECOVERY_GMAIL_CAPTURE_INPUT_FAILED"));
+  };
+  const onOutputError = () =>
+    requestStop(failure("RECOVERY_GMAIL_CAPTURE_OUTPUT_FAILED"));
+  const onChildError = () =>
+    requestStop(failure("RECOVERY_GMAIL_CAPTURE_CHILD_FAILED"));
+  const onExit = (code: number | null, signal: NodeJS.Signals | null) => {
+    trace("exit");
+    exited = { code, signal };
+    tryFinishExitDrained();
+  };
+  const detachListeners = () => {
     child.off("message", onMessage);
     child.off("disconnect", onDisconnect);
-    closeResolve();
+    child.off("error", onChildError);
+    child.off("exit", onExit);
+    child.off("close", onClose);
+    childOutput?.off("data", onOutputData);
+    childOutput?.off("end", onOutputEnd);
+    childOutput?.off("error", onOutputError);
+    childOutput?.off("close", onOutputClose);
+    childDiagnostic?.off("data", onDiagnosticData);
+    childDiagnostic?.off("end", onDiagnosticEnd);
+    childDiagnostic?.off("error", onOutputError);
+    childDiagnostic?.off("close", onDiagnosticClose);
+    childInput?.off("error", onInputError);
+    childInput?.off("finish", onInputFinish);
+    childInput?.off("close", onInputClose);
+  };
+  const finish = (
+    code: number | null,
+    signal: NodeJS.Signals | null,
+    provenance: "close" | "exit-drained"
+  ) => {
+    if (finalized) return;
+    finalized = true;
+    trace(provenance);
+    clearTimers();
+    detachListeners();
+    terminateResolve();
     if (stopError) {
       if (!ready) paused.reject(stopError);
+      trace("result-rejected");
       result.reject(stopError);
       return;
     }
-    if (!ready || !resumed || code !== 0 || signal !== null) {
+    if (
+      !ready ||
+      (!resumed && !protocolActionIssued) ||
+      code !== 0 ||
+      signal !== null
+    ) {
+      const hasChildFailure = /\{"captureError":"[A-Z0-9_]{1,80}"/u.test(
+        diagnostic
+      );
       const error = !ready
         ? failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_NOT_READY")
-        : !resumed
-          ? failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_NOT_RESUMED")
-          : captureFailure(diagnostic);
+        : hasChildFailure
+          ? captureFailure(diagnostic)
+          : protocolSendFailure
+            ? protocolSendFailure
+            : !resumed && !protocolActionIssued
+              ? failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_NOT_RESUMED")
+              : captureFailure(diagnostic);
       if (!ready) paused.reject(error);
+      trace("result-rejected");
       result.reject(error);
       return;
     }
@@ -287,16 +453,55 @@ export async function startRecoveryGmailCaptureDriftProbeForTest(
         canonicalJson(reported) !== canonicalJson(completed)
       )
         throw new Error(executionError);
+      trace("result-succeeded");
       result.resolve(completedReport(completed));
     })().catch((error: unknown) => {
+      trace("result-rejected");
       result.reject(error instanceof Error ? error : new Error(executionError));
     });
-  });
+  };
+  const tryFinishExitDrained = () => {
+    if (finalized || !exited) return;
+    const inputDrained =
+      childInput?.writableFinished === true ||
+      ((stopError !== undefined || inputFailure) &&
+        childInput?.destroyed === true);
+    if (
+      childOutput?.readableEnded === true &&
+      childDiagnostic?.readableEnded === true &&
+      inputDrained &&
+      (ipcDisconnected || !child.connected)
+    ) {
+      finish(exited.code, exited.signal, "exit-drained");
+    }
+  };
+  const onOutputClose = () => tryFinishExitDrained();
+  const onDiagnosticClose = () => tryFinishExitDrained();
+  const onClose = (code: number | null, signal: NodeJS.Signals | null) => {
+    finish(code, signal, "close");
+  };
 
-  timer = setTimeout(
-    () => requestStop(failure(executionError)),
-    childTimeoutMs
-  );
+  child.on("message", onMessage);
+  child.on("disconnect", onDisconnect);
+  child.on("error", onChildError);
+  child.on("exit", onExit);
+  child.on("close", onClose);
+  childOutput?.on("data", onOutputData);
+  childOutput?.on("end", onOutputEnd);
+  childOutput?.on("error", onOutputError);
+  childOutput?.on("close", onOutputClose);
+  childDiagnostic?.on("data", onDiagnosticData);
+  childDiagnostic?.on("end", onDiagnosticEnd);
+  childDiagnostic?.on("error", onOutputError);
+  childDiagnostic?.on("close", onDiagnosticClose);
+  childInput?.on("error", onInputError);
+  childInput?.on("finish", onInputFinish);
+  childInput?.on("close", onInputClose);
+
+  timer = setTimeout(() => {
+    trace("overalltimer");
+    requestStop(failure(executionError));
+  }, childTimeoutMs);
   if (!childInput || !childOutput || !childDiagnostic) {
     requestStop(failure("RECOVERY_GMAIL_CAPTURE_CHILD_PIPE_UNAVAILABLE"));
   } else {
@@ -304,11 +509,46 @@ export async function startRecoveryGmailCaptureDriftProbeForTest(
   }
 
   const resume = () => {
-    if (!ready || resumed || closed || stopError)
+    if (!ready || resumed || protocolActionIssued || finalized || stopError)
       throw new Error(handshakeError);
-    resumed = true;
+    trace("action");
     if (pauseTimer) clearTimeout(pauseTimer);
     pauseTimer = undefined;
+    if (protocolMode) {
+      protocolActionIssued = true;
+      if (protocolMode === "disconnect-before-go") {
+        try {
+          child.disconnect();
+        } catch {
+          requestStop(failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_SEND_FAILED"));
+        }
+        return;
+      }
+      const message =
+        protocolMode === "unexpected-before-go"
+          ? "ZIVV_GMAIL_CAPTURE_INVALID_V1"
+          : goMessage;
+      const duplicate =
+        protocolMode === "duplicate-go" ||
+        protocolMode === "duplicate-go-racing";
+      if (duplicate) resumed = true;
+      const send = () => {
+        try {
+          child.send(message, (error) => {
+            if (error)
+              protocolSendFailure ??= failure(
+                "RECOVERY_GMAIL_CAPTURE_HANDSHAKE_SEND_FAILED"
+              );
+          });
+        } catch {
+          requestStop(failure("RECOVERY_GMAIL_CAPTURE_HANDSHAKE_SEND_FAILED"));
+        }
+      };
+      send();
+      if (duplicate) send();
+      return;
+    }
+    resumed = true;
     try {
       child.send(goMessage, (error) => {
         if (error)
@@ -320,13 +560,16 @@ export async function startRecoveryGmailCaptureDriftProbeForTest(
   };
 
   const stop = (): Promise<void> => {
-    const settled = childClosed.then(async () => {
+    trace("stop-enter");
+    const settled = childTerminated.then(async () => {
+      trace("stop-childclosed");
       await Promise.all([
         paused.promise.catch(() => undefined),
         result.promise.catch(() => undefined),
       ]);
+      trace("stop-result-settled");
     });
-    if (closed) return settled;
+    if (finalized) return settled;
     if (!stopPromise) {
       requestStop(failure("RECOVERY_GMAIL_CAPTURE_PROBE_STOPPED"));
       stopPromise = settled;

@@ -1,3 +1,4 @@
+import { selectedGmailLoadFile } from "./recovery-gmail-selected-load-executor.js";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, mkdirSync, lstatSync } from "node:fs";
 import { join } from "node:path";
@@ -202,6 +203,7 @@ async function commitResult(
     run.status = "committed";
     run.committedAtEpochMs = Date.now();
     const directory = join(root, "data/ingestion/reports");
+    selectedGmailLoadFile(directory, undefined, "directory");
     mkdirSync(directory, { recursive: true });
     // Reports use a hash filename; external run IDs never become filesystem paths.
     const name = createHash("sha256").update(result.report.runId).digest("hex");
