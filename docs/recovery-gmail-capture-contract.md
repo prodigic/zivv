@@ -341,3 +341,62 @@ the recovery invocation records and repairs the explicit approval.
 23. Authority negatives: direct/forged/expired/escaped/nested scope, wrong capsule/key/preparation/runtime/npm/physical mappings, old worker lacking capability, substituted snapshot/account/edition/RAW/FULL/message/source/receipt/parent, changed admission/result and stage links. Attempt normal import, every journal run/artifact/restore/other-scope mutator, direct catalog transaction/write and arbitrary file path inside capture; each must fail before its effect. Inject drift between outer verification and inner SQL/file check, and retain failed fixtures/process diagnostics.
 
 24. No current capability grants #110 loading or activation. Source-to-load still needs its own selected-ready-receipt admission, fresh canonical context and exact catalog/run delta. This packet intentionally does not solve runtime migration for Base114, automatic partial-file recovery, OAuth provisioning, schedules or live cutover; those boundaries must remain visible in acceptance claims.
+
+## Invalid MIME retained-worker checkpoint, October 28
+
+The focused `recovery-gmail-capture-invalid-mime-runtime.test.ts` acquires a
+signed two-message batch through ordinary synthetic Gmail acquisition. Its first
+message is captured normally; the second has consistent RAW/FULL
+`application/octet-stream` content and ordinary intake refuses it with
+`AMBIGUOUS_STEVE_TEXT`. No authenticated batch is edited after acquisition.
+
+After retirement, deletion of the original checkout/operator/npm roots and
+preparation with relocated npm, the real retained worker refuses that same
+message twice. The pure selection retains its null plaintext hash; the invalid
+message remains a capture obligation. Both attempts preserve the original
+source/run/artifact rows and all original non-journal files, retain identical
+admission bytes, produce no completion result, and remain `capture-partial`.
+The test enumerates the entire new physical delta: admission directories/file,
+working-key installation and ordinary SQLite sidecars only. Lease bookkeeping
+may change journal bytes; it does not authorize source, catalog or run changes.
+
+This proves the no-plaintext MIME case through the native retained executor. It
+does not prove every malformed MIME variant, Monday source rejection, process
+hard-death, stale-lease takeover, lost-response recovery, or selected-receipt
+loading (#110). Those remain separate requirements of the complete plan.
+
+## Canonical record byte identity checkpoint, October 28
+
+Capture admission/result authentication now compares the original signed Buffer
+with its exact canonical JSON/newline encoding. A targeted red test demonstrated
+that UTF-8 decoding previously stripped a leading BOM and accepted that altered
+byte representation. BOM-prefixed admission and completed-result records now
+refuse without rewriting them. Canonical payload schemas, fields and signature
+domains remain unchanged. The host-binding validator is shared with detached
+selected-load intent proof; this creates no new capture or load capability.
+
+### Selected-source first-load prototype
+
+The selected-load executor is a private, bounded first-load path for an authenticated ready receipt. It derives the normal preflight, reviewed reconciliation, catalog delta and stage evidence before allowing the normal runner to load that source. The catalog write and final result are checked under the real fenced journal lease; the signed result binds the catalog and the expected journal after release. The recovery installation remains quarantined.
+
+This is not yet a complete #110 recovery flow. An existing execution baseline is refused until crash reconciliation, lost-response replay and later-load family composition can prove the original-to-current delta. It grants no scheduler activation, publication, cutoff, or live-operator authority. Failure fixtures and immutable worker artifacts must be preserved for diagnosis.
+
+New execution baselines authenticate the original start time, initial generation, admission and evidence digests, and ordered physical inventory. The strict canonical/HMAC codec is detached evidence; it does not by itself authorize a retry or prove a catalog delta. Earlier baselines without that time cannot be used as timestamp evidence.
+
+The detached catalog-delta proof derives the normal source plan from the selected baseline and classifies only an unchanged generation-one catalog or its exact generation-two commit. It returns no load permission. Before any retry, a physical adapter still must authenticate the original archive and admission, inventory, SQLite identity and normalized rows, complete journal and artifacts, and the full load family.
+
+The detached selected-load result verifier authenticates canonical receipt bytes and compares the admission, execution baseline, catalog, released journal, run state, and report identities supplied by the caller. The guarded-journal digest remains signed evidence requiring its own history proof. A valid signature alone does not prove physical state or authorize replay.
+
+The detached first-attempt journal proof compares original and observed intake evidence, unrelated runs and artifacts, ownership fence, selected run stages and exact artifact bytes against the normal selected-source plan. It recognizes a synthetic committed-catalog/load-running gap and a completed retained-worker journal; it refuses unproved retries and grants no load permission. Physical file and canonical SQL validation, process-kill acceptance, and replay composition remain required.
+
+A retained-worker interruption test now observes a private fixture catalog commit, stops that exact child, and checks the observed generation-two catalog and load-running journal against the saved baseline and selected journal proof. It does not yet resume that fixture or prove physical inventory and replay.
+
+The detached read-only canonical SQLite observation verifies schema, normalized rows, integrity, generation, and regular unlinked file identities in a single read transaction. The real commit-gap fixture now uses it after the child exits. This observation is not a writer lock or permission; any future recovery mutation must recheck under its own transaction.
+
+The detached first-attempt physical-delta comparison anchors the signed original inventory and permits only the selected execution baseline, fixed report, working key, encrypted snapshot, and fixed staging directories to differ. It validates changed file bytes and rejects unknown files or missing original entries. It passed against a real killed-worker commit-gap fixture; residual temporary files and completed-result files are presently refused. The caller must still authenticate actual enumeration and SQLite identities and hold the proper writer guard before mutation.
+
+The first-attempt interruption inspector restores the authenticated original capture baseline from retained evidence, including preparation’s ownership-expiry normalization, and composes canonical SQLite, selected journal, and fixed physical-tree comparisons from actual files. It reobserves the tree, catalog, and journal and returns no writer authority. A genuine killed-worker commit-gap fixture passed and an unexpected file was refused. Concurrent mutation, staged aliases, multiple load families, writer-locked resumption and replay still require separate proof.
+
+Interruption inspection reports whether the observed production lease is active, expired, or released at the actual observation time; it grants no takeover authority. A read-only SQLite BEGIN IMMEDIATE does not exclude a writer. The existing journal guard nested around an owned canonical catalog transaction was tested to exclude competing writers on both databases. A resume coordinator must reacquire and recheck under those real locks after lease expiry.
+
+A closed first-attempt commit-gap resume now refuses an active lease, records a signed resume intent, obtains the next fence after expiry, and rechecks the unchanged inspected journal plus canonical catalog while holding both journal and catalog writer guards. It invokes the normal runner to recover the existing committed import and signs its result. A genuine killed-worker fixture passed active-lease refusal, natural expiry, guarded resume, fence increment, receipt authentication, unchanged catalog generation, and duplicate refusal. A crash during this resume, a lost response, staged aliases, and later-load composition remain fail-closed and require additional recovery proof. This does not activate scheduling or grant live-operator authority.

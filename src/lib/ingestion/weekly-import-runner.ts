@@ -1,3 +1,10 @@
+import {
+  hasSelectedGmailLoadExecution,
+  completeSelectedGmailLoad,
+  hasPendingSelectedLoadResume,
+  verifySelectedLoadResumeBarrier,
+} from "./recovery-gmail-selected-load-executor.js";
+import { weeklyRunRulesDigest } from "./weekly-run-context.js";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -218,16 +225,13 @@ export async function runWeeklyImport(input: {
     readFileSync(join(runtimeRoot, "package-lock.json"))
   );
   const configurationSha256 = importConfigurationDigest(root);
-  const rulesSha256 = sha256(
-    canonicalJson({
-      runner: "weekly-import-v1",
-      runtimeSha256,
-      packageLockSha256,
-      configurationSha256,
-      node: process.version,
-      icu: process.versions.icu ?? "",
-    })
-  );
+  const rulesSha256 = weeklyRunRulesDigest({
+    runtimeSha256,
+    packageLockSha256,
+    configurationSha256,
+    node: process.version,
+    icu: process.versions.icu ?? "",
+  });
   const journal = new WeeklyRunJournal(location.directory);
   let lease: ReturnType<WeeklyRunJournal["acquire"]> | undefined;
   let state: WeeklyRunState;
@@ -237,6 +241,8 @@ export async function runWeeklyImport(input: {
       input.leaseTtlMs ?? 120000
     );
     let owned = lease;
+    if (hasPendingSelectedLoadResume())
+      await journal.guardOperation(owned, verifySelectedLoadResumeBarrier);
     const ttl = input.leaseTtlMs ?? 120000;
     let renewalAt = Date.now() + Math.floor(ttl / 3);
     if (source) {
@@ -819,6 +825,13 @@ export async function runWeeklyImport(input: {
         });
         await notify("acknowledge", "completed");
       }
+    }
+    if (hasSelectedGmailLoadExecution()) {
+      if (!lease)
+        throw new Error("RECOVERY_GMAIL_SELECTED_LOAD_SCOPE_EXCEEDED");
+      await journal.guardOperation(lease, () =>
+        completeSelectedGmailLoad(state)
+      );
     }
     return state;
   } finally {

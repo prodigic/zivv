@@ -1,3 +1,4 @@
+import { compiledWorkerInventoryDigest } from "./weekly-run-context.js";
 import { spawn } from "node:child_process";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import {
@@ -106,13 +107,15 @@ function inventory(
   root: string,
   omit?: (entry: RecoveryRuntimeEntry) => boolean,
   buildNamespace?: string,
-  gmailCapture = false
+  gmailCapture = false,
+  allowResumeSnapshotEvidence = false
 ): RecoveryRuntimeEntry[] {
   noLinks(root);
   const entries: RecoveryRuntimeEntry[] = [],
     aliases = new Set<string>(),
     modules = join(root, "checkout/node_modules");
   let total = 0,
+    evidenceTotal = 0,
     visited = 0;
   const linked = new Map<
     string,
@@ -122,6 +125,39 @@ function inventory(
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin";
   function captureAliasTarget(path: string): string | undefined {
     if (path === "operator/" + workingKey) return path;
+    const load =
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(baseline\.json|admission\.json|chunks\/[a-f0-9]{64}\.bin)$/.exec(
+        path
+      );
+    if (load) return path;
+    const loadStage =
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)stages\/(baseline|admission|[a-f0-9]{64})\/(baseline\.json|admission\.json|[a-f0-9]{64}\.bin)(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+        path
+      );
+    if (loadStage) {
+      if (loadStage[2] === "baseline" && loadStage[3] === "baseline.json")
+        return loadStage[1] + "baseline.json";
+      if (loadStage[2] === "admission" && loadStage[3] === "admission.json")
+        return loadStage[1] + "admission.json";
+      if (loadStage[3] === loadStage[2] + ".bin")
+        return loadStage[1] + "chunks/" + loadStage[3];
+    }
+    const selectedMetadata =
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin|resume-successor-[0-9]{5}\.json)$/.exec(
+        path
+      );
+    if (selectedMetadata) return path;
+    const selectedStage =
+      /^(recovery-gmail-load\/[a-f0-9]{64}\/)(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin|resume-successor-[0-9]{5}\.json)-stage\/(execution-baseline\.json|load-result\.json|resume-intent\.json|resume-snapshot-[0-9]{3}\.bin|resume-successor-[0-9]{5}\.json)(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+        path
+      );
+    if (selectedStage && selectedStage[2] === selectedStage[3])
+      return selectedStage[1] + selectedStage[2];
+    const selectedKey =
+      /^recovery-gmail-load\/[a-f0-9]{64}\/key-stage\/(backup-key\.(?:dpapi|bin))(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+        path
+      );
+    if (selectedKey?.[1] === workingKey) return "operator/" + workingKey;
     const metadata =
       /^recovery-gmail-capture\/([a-f0-9]{64})\/(admission|result)\.json$/.exec(
         path
@@ -184,7 +220,12 @@ function inventory(
           !stat.isFile() ||
           (stat.nlink !== 1 &&
             !(gmailCapture && stat.nlink === 2 && captureAliasTarget(path))) ||
-          (total += stat.size) > maxBytes
+          (allowResumeSnapshotEvidence &&
+          /^recovery-gmail-load\/[a-f0-9]{64}\/resume-snapshot-[0-9]{3}\.bin(?:-stage\/resume-snapshot-[0-9]{3}\.bin(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2})?$/.test(
+            path
+          )
+            ? (evidenceTotal += stat.size) > maxBytes + 4 * 1024 * 1024
+            : (total += stat.size) > maxBytes)
         )
           fail();
         if (omit?.({ path, kind: "file", size: stat.size, sha256: "" }))
@@ -355,6 +396,11 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
     treeSha256: savedPayload.treeSha256,
     entryCount: savedPayload.entryCount,
   };
+  const admittedInput = {
+    archive: sha256(input.archive),
+    retirement: sha256(input.retirementReceipt),
+    key: sha256(input.recoveryKey),
+  };
   const assertReceipt = () =>
     same(
       bytes.toString("base64"),
@@ -394,6 +440,76 @@ export function openPreparedRuntimeForAdmission(input: RecoveryRuntimeInput) {
         undefined,
         true
       );
+    },
+    /** Closed load installer separately authenticates the fixed namespace. */
+    inventoryGmailLoadInstallation: () => {
+      assertReceipt();
+      return inventory(root, undefined, undefined, true);
+    },
+    /** Only the closed selected-load coordinator validates the omitted SQL state. */
+    inventoryGmailSelectedLoadExecution: () => {
+      assertReceipt();
+      same(admittedInput, {
+        archive: sha256(input.archive),
+        retirement: sha256(input.retirementReceipt),
+        key: sha256(input.recoveryKey),
+      });
+      if (
+        process.version !== checkpoint.runtime.node ||
+        (process.versions.icu ?? "") !== checkpoint.runtime.icu ||
+        sha256(regular(process.execPath)) !==
+          checkpoint.runtime.executableSha256
+      )
+        fail("RECOVERY_RUNTIME_MISMATCH");
+      verifyNpmExecutionTool(
+        checkpoint.runtime.bootstrapNpm!,
+        resolve(input.npmCli)
+      );
+      const entries = inventory(
+        root,
+        (entry) =>
+          /^operator\/(?:ledger|weekly-runs)\.sqlite(?:-wal|-shm)?$/.test(
+            entry.path
+          ),
+        undefined,
+        true,
+        true
+      );
+      // Authenticate the same worker/package bytes from this fresh inventory,
+      // rather than reading and hashing the entire worker a second time.
+      const worker = entries.flatMap((entry) =>
+        entry.kind === "file" &&
+        /^checkout\/dist\/(?:lib|types|utils)\//.test(entry.path)
+          ? [
+              {
+                path: entry.path.slice("checkout/dist/".length),
+                size: entry.size,
+                sha256: entry.sha256,
+              },
+            ]
+          : []
+      );
+      const fileEntries = entries.filter(
+        (entry): entry is Extract<RecoveryRuntimeEntry, { kind: "file" }> =>
+          entry.kind === "file"
+      );
+      if (
+        compiledWorkerInventoryDigest(worker) !==
+          checkpoint.runtime.workerSha256 ||
+        fileEntries.find(
+          (entry) =>
+            entry.path === "checkout/package-lock.json" && entry.kind === "file"
+        )?.sha256 !== checkpoint.runtime.lockfileSha256 ||
+        fileEntries.find(
+          (entry) =>
+            entry.path === "checkout/package.json" && entry.kind === "file"
+        )?.sha256 !==
+          checkpoint.files.find(
+            (file) => file.area === "checkout" && file.path === "package.json"
+          )?.sha256
+      )
+        fail("RECOVERY_RUNTIME_MISMATCH");
+      return entries;
     },
     assertRuntime: () => {
       authenticate(input);

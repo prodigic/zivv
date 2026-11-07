@@ -1,3 +1,15 @@
+import {
+  observeSelectedGmailLoadFile,
+  selectedGmailLoadWriter,
+  selectedGmailLoadFile,
+  selectedGmailLoadKey,
+} from "./recovery-gmail-selected-load-executor.js";
+import {
+  assertNoSelectedLoadInstallation,
+  guardSelectedLoadInstallationFile,
+  observeSelectedLoadInstallationFile,
+  isSelectedLoadInstallationInterruption,
+} from "./recovery-gmail-selected-load-installation.js";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { createHash, randomUUID } from "node:crypto";
 import {
@@ -24,10 +36,12 @@ import {
   createRecoveryGmailCaptureAdmission,
   createRecoveryGmailCaptureResult,
   proveRecoveryGmailCaptureDelta,
+  proveRecoveryGmailCaptureFamily,
   type RecoveryGmailCaptureAdmission,
   type RecoveryGmailCaptureBinding,
   type RecoveryGmailCaptureCompletedEvidence,
   type RecoveryGmailCaptureDeltaProof,
+  type RecoveryGmailCaptureFamilyInput,
 } from "./recovery-gmail-capture-admission-proof.js";
 import { proveRecoveryGmailBatchInventory } from "./recovery-gmail-batch-proof.js";
 import {
@@ -61,7 +75,10 @@ import {
   assertOperatorInstallationWritable,
   assertNoOperatorRetirementScope,
 } from "./operator-installation.js";
-import { verifyOperatorRetirementEvidence } from "./operator-recovery.js";
+import {
+  verifyOperatorRetirementEvidence,
+  type OperatorRecoveryCheckpoint,
+} from "./operator-recovery.js";
 
 export interface RecoveryGmailCaptureInput extends RecoveryRuntimeInput {
   batchId: string;
@@ -399,6 +416,7 @@ class CaptureTestInterruption extends Error {
 export function isRecoveryGmailCaptureTestInterruption(
   error: unknown
 ): boolean {
+  if (isSelectedLoadInstallationInterruption(error)) return true;
   return (
     error instanceof CaptureTestInterruption &&
     genuineInterruptions.get(error) === scopes.getStore()
@@ -408,6 +426,8 @@ export function observeRecoveredGmailCaptureFileCheckpoint(
   path: string,
   point: "flushed" | "linked" | "published"
 ): void {
+  if (observeSelectedGmailLoadFile(path, point)) return;
+  if (observeSelectedLoadInstallationFile(path, point)) return;
   const scope = current();
   if (!scope?.interruption) return;
   const absolute = resolve(path);
@@ -461,6 +481,7 @@ function same(a: unknown, b: unknown): void {
   if (canonicalJson(a) !== canonicalJson(b)) fail();
 }
 function current(): Scope | undefined {
+  assertNoSelectedLoadInstallation();
   const scope = scopes.getStore();
   if (!scope) return undefined;
   if (!scope.active || Date.now() >= scope.deadline)
@@ -469,6 +490,7 @@ function current(): Scope | undefined {
 }
 /** Presence includes escaped/expired descendants, which must still fail closed. */
 export function assertNoRecoveredGmailCapture(): void {
+  assertNoSelectedLoadInstallation();
   if (scopes.getStore()) fail();
 }
 /** The operation is deliberately effect specific; it never grants import authority. */
@@ -476,6 +498,7 @@ export function assertRecoveredGmailCaptureWriter(
   directory: string,
   operation?: "steve-email-capture" | "capture-journal"
 ): void {
+  if (selectedGmailLoadWriter(directory, operation)) return;
   const scope = current();
   if (!scope) return;
   if (
@@ -705,6 +728,8 @@ export function assertRecoveredGmailCaptureFile(
   bytes?: Buffer,
   effect: "write" | "directory" | "unlink" | "install" = "write"
 ): void {
+  if (selectedGmailLoadFile(path, bytes, effect)) return;
+  if (guardSelectedLoadInstallationFile(path, bytes, effect)) return;
   const scope = current();
   if (!scope) return;
   const absolute = resolve(path);
@@ -851,6 +876,7 @@ export function assertRecoveredGmailCaptureKey(
   directory: string,
   suppliedKey?: Buffer
 ): void {
+  if (selectedGmailLoadKey(directory, suppliedKey)) return;
   const scope = current();
   if (!scope) return;
   if (
@@ -1464,8 +1490,51 @@ function normalized(
     )
   );
 }
-function open(input: RecoveryGmailCaptureInput) {
+function open(
+  input: RecoveryGmailCaptureInput,
+  purpose:
+    | "capture"
+    | "selected-load-inspection"
+    | "selected-load-installation" = "capture"
+) {
   const archived = verifyOperatorRetirementEvidence(input).checkpoint;
+  if (
+    purpose === "selected-load-installation" &&
+    !archived.files.some(
+      (file) =>
+        file.area === "checkout" &&
+        file.path ===
+          "dist/lib/ingestion/recovery-gmail-selected-load-installation.js" &&
+        file.bytes &&
+        Buffer.from(file.bytes, "base64")
+          .toString("utf8")
+          .includes("recoveryGmailSelectedLoadInstallationVersion = 2")
+    )
+  )
+    fail("RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME");
+  const loadEntries = (entries: RecoveryRuntimeEntry[]) =>
+    purpose === "selected-load-installation"
+      ? entries.filter(
+          (entry) =>
+            entry.path !== "recovery-gmail-load" &&
+            !entry.path.startsWith("recovery-gmail-load/")
+        )
+      : entries;
+  if (purpose !== "capture") {
+    const inspector = archived.files.find(
+      (file) =>
+        file.area === "checkout" &&
+        file.path ===
+          "dist/lib/ingestion/recovery-gmail-selected-load-inspector.js"
+    );
+    if (
+      !inspector?.bytes ||
+      !Buffer.from(inspector.bytes, "base64")
+        .toString("utf8")
+        .includes("recoveryGmailSelectedLoadInspectorVersion = 1")
+    )
+      fail("RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME");
+  }
   const executor = archived.files.find(
     (file) =>
       file.area === "checkout" &&
@@ -1536,6 +1605,16 @@ function open(input: RecoveryGmailCaptureInput) {
     checkpoint,
     recoveryKey: input.recoveryKey,
   });
+  if (purpose !== "capture") {
+    const retained = all.at(-1);
+    const batchId = retained?.batchId ?? batches.batches[0]?.batch.batchId;
+    if (!batchId) fail();
+    input = {
+      ...input,
+      batchId,
+      correctionOfByMessageId: retained?.record.correctionOfByMessageId ?? {},
+    };
+  }
   const selectedBatch = batches.batches.find(
     ({ batch }) => batch.batchId === input.batchId
   )?.batch;
@@ -1584,18 +1663,20 @@ function open(input: RecoveryGmailCaptureInput) {
     fail();
   const journalPath = join(operator, "weekly-runs.sqlite");
   let identity = assertReadOnlySqliteFiles(journalPath);
-  const entries = opened.inventoryGmailCapture();
+  const entries = loadEntries(opened.inventoryGmailCapture());
   const installedIntent = all.some((item) => item.admissionInstalled);
   if (!installedIntent) {
     // No canonical intent means SQLite has never been opened for capture. Bind
     // its physical files too; the active-capture inventory deliberately omits them.
-    const untouched = opened
-      .inventory()
-      .filter(
-        (entry) =>
-          entry.path !== "recovery-gmail-capture" &&
-          !entry.path.startsWith("recovery-gmail-capture/")
-      );
+    const untouched = loadEntries(
+      purpose === "selected-load-installation"
+        ? opened.inventoryGmailLoadInstallation()
+        : opened.inventory()
+    ).filter(
+      (entry) =>
+        entry.path !== "recovery-gmail-capture" &&
+        !entry.path.startsWith("recovery-gmail-capture/")
+    );
     if (
       untouched.length !== opened.report.entryCount ||
       sha256(canonicalJson(untouched)) !== opened.report.treeSha256
@@ -1688,7 +1769,7 @@ function open(input: RecoveryGmailCaptureInput) {
       wal: null,
       shm: null,
     });
-    const actual = opened.inventoryGmailCapture();
+    const actual = loadEntries(opened.inventoryGmailCapture());
     const observedFamily = family(root);
     let journal = snapshot;
     if (
@@ -1850,7 +1931,7 @@ function open(input: RecoveryGmailCaptureInput) {
         }).toString("base64")
       );
   }
-  if (!selected)
+  if (!selected && purpose === "capture")
     createRecoveryGmailCaptureAdmission({
       checkpoint,
       recoveryKey: input.recoveryKey,
@@ -1880,6 +1961,138 @@ function open(input: RecoveryGmailCaptureInput) {
     stages,
     needsRepair: stages.size > 0,
   };
+}
+
+/** Detached read-only host evidence for selected loading. This returns no key,
+ * open handle, guard callback or write scope. Catalog bytes are still pinned to
+ * the verified prepared tree; later load effects need their own physical delta. */
+export interface RecoveryGmailSelectedLoadHostEvidence {
+  activationAllowed: false;
+  captureAllowed: false;
+  loadAllowed: false;
+  physicalValidationRequired: true;
+  checkpoint: OperatorRecoveryCheckpoint;
+  binding: RecoveryGmailCaptureBinding;
+  current: RecoveryGmailCaptureFamilyInput["current"];
+  completed: RecoveryGmailCaptureCompletedEvidence[];
+  unfinishedAdmissions: Buffer[];
+  ownProductionOwnership?: Ownership;
+  captureRepairRequired: boolean;
+  physicalSnapshotSha256: string;
+  currentRuntime: Pick<
+    OperatorRecoveryCheckpoint["runtime"],
+    "node" | "icu" | "executableSha256" | "workerSha256" | "lockfileSha256"
+  >;
+}
+function readSelectedLoadHost(
+  input: RecoveryRuntimeInput,
+  installation: boolean
+): RecoveryGmailSelectedLoadHostEvidence {
+  if (
+    !input ||
+    typeof input !== "object" ||
+    ![Object.prototype, null].includes(
+      Object.getPrototypeOf(input) as object | null
+    )
+  )
+    fail();
+  const fields = [
+    "archive",
+    "retirementReceipt",
+    "recoveryKey",
+    "destination",
+    "npmCli",
+  ];
+  const names = Reflect.ownKeys(input);
+  if (
+    names.length !== fields.length ||
+    names.some(
+      (name) =>
+        typeof name !== "string" ||
+        !fields.includes(name) ||
+        !Object.hasOwn(
+          Object.getOwnPropertyDescriptor(input, name) ?? {},
+          "value"
+        )
+    )
+  )
+    fail();
+  const copied = copyInput({ ...input, batchId: "0".repeat(64) });
+  try {
+    const host = open(
+      copied,
+      installation ? "selected-load-installation" : "selected-load-inspection"
+    );
+    const current = host.delta();
+    const unfinishedAdmissions = host.unfinished
+      ? [Buffer.from(host.unfinished.admission)]
+      : [];
+    const ownership = validateWeeklyJournalRecoverySnapshot(
+      Buffer.from(current.journal, "base64")
+    ).ownership.find((row) => row.scope === production)!;
+    const proof = proveRecoveryGmailCaptureFamily({
+      checkpoint: host.checkpoint,
+      recoveryKey: copied.recoveryKey,
+      completed: host.completed,
+      unfinishedAdmissions,
+      current,
+      ...(unfinishedAdmissions.length
+        ? { ownProductionOwnership: ownership }
+        : {}),
+    });
+    const physical = host.opened
+      .inventoryGmailCapture()
+      .filter(
+        (entry) =>
+          !installation ||
+          (entry.path !== "recovery-gmail-load" &&
+            !entry.path.startsWith("recovery-gmail-load/"))
+      );
+    // Delta rechecks exact runtime/key/family and immutable prepared files again.
+    same(host.delta(), current);
+    return {
+      activationAllowed: false as const,
+      captureAllowed: false as const,
+      loadAllowed: false as const,
+      physicalValidationRequired: true as const,
+      checkpoint: structuredClone(host.checkpoint),
+      binding: structuredClone(host.binding),
+      current: proof.projectedInventory,
+      completed: host.completed.map((pair) => ({
+        admission: Buffer.from(pair.admission),
+        result: Buffer.from(pair.result),
+      })),
+      unfinishedAdmissions,
+      ...(unfinishedAdmissions.length
+        ? { ownProductionOwnership: { ...ownership } }
+        : {}),
+      captureRepairRequired: host.needsRepair,
+      physicalSnapshotSha256: sha256(canonicalJson(physical)),
+      currentRuntime: {
+        node: process.version,
+        icu: process.versions.icu ?? "",
+        executableSha256: host.checkpoint.runtime.executableSha256,
+        workerSha256: host.checkpoint.runtime.workerSha256,
+        lockfileSha256: host.checkpoint.runtime.lockfileSha256,
+      },
+    };
+  } finally {
+    copied.recoveryKey.fill(0);
+  }
+}
+
+/** Detached pre-install host evidence. No file namespace exclusions. */
+export function readRecoveryGmailCaptureHostForSelectedLoad(
+  input: RecoveryRuntimeInput
+) {
+  return readSelectedLoadHost(input, false);
+}
+/** Closed installer revalidates every fixed namespace member before any effect.
+ * This detached observation alone grants no authority and is not an inspection receipt. */
+export function readRecoveryGmailHostForLoadInstallation(
+  input: RecoveryRuntimeInput
+) {
+  return readSelectedLoadHost(input, true);
 }
 
 /** Independently authenticate physical/runtime/family evidence. Performs no cleanup or writes. */

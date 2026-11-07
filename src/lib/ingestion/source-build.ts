@@ -1,3 +1,4 @@
+import { compiledWorkerInventoryDigest } from "./weekly-run-context.js";
 import { createHash } from "node:crypto";
 import { execFileSync, spawn } from "node:child_process";
 import {
@@ -531,17 +532,12 @@ export function compiledEtlDigest(
     if (!files.has("lib/ingestion/weekly-import-runner.js"))
       throw new Error("Compiled worker is missing");
   } else files = applicationTree(dist, false);
-  return hash(
-    canonicalJson(
-      [...files]
-        .map(([path, bytes]) => ({
-          path,
-          size: bytes.length,
-          sha256: hash(bytes),
-        }))
-        .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
-    )
-  );
+  const inventory = [...files]
+    .map(([path, bytes]) => ({ path, size: bytes.length, sha256: hash(bytes) }))
+    .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
+  return scope === "worker"
+    ? compiledWorkerInventoryDigest(inventory)
+    : hash(canonicalJson(inventory));
 }
 /** Install the captured lockfile and compile only the private reviewed source. */
 export async function buildCapturedApplication(input: {

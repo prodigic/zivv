@@ -1,5 +1,9 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { posix, win32 } from "node:path";
+import { posix } from "node:path";
+import {
+  validateRecoveryPreparedHostBinding,
+  type RecoveryPreparedHostBinding,
+} from "./recovery-host-binding.js";
 import { proveRecoveryGmailBatchInventory } from "./recovery-gmail-batch-proof.js";
 import { proveRecoveryGmailCaptureSelection } from "./recovery-gmail-capture-selection.js";
 import {
@@ -33,18 +37,7 @@ const hashPattern = /^[a-f0-9]{64}$/;
 
 /** Detached commitments only. The retained coordinator must authenticate physical
  * runtime/receipt/tree identities separately, before every effect. */
-export interface RecoveryGmailCaptureBinding {
-  capsuleSha256: string;
-  retirementSha256: string;
-  checkpointSha256: string;
-  preparedReceiptSha256: string;
-  preparedTreeSha256: string;
-  preparedImmutableTreeSha256: string;
-  physicalRoot: string;
-  physicalOperatorDirectory: string;
-  physicalNpmPath: string;
-  keyId: string;
-}
+export type RecoveryGmailCaptureBinding = RecoveryPreparedHostBinding;
 export interface RecoveryGmailCaptureCompletedEvidence {
   admission: Buffer;
   result: Buffer;
@@ -163,7 +156,7 @@ function authenticated<T>(
   const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   const value = object(JSON.parse(text) as unknown);
   if (
-    canonicalJson(value) + "\n" !== text ||
+    !bytes.equals(Buffer.from(canonicalJson(value) + "\n")) ||
     typeof value.signature !== "string" ||
     !hashPattern.test(value.signature)
   )
@@ -191,57 +184,11 @@ function binding(
   value: RecoveryGmailCaptureBinding,
   recoveryKey: Buffer
 ): void {
-  const record = object(value);
-  same(
-    Object.keys(record).sort(),
-    [
-      "capsuleSha256",
-      "retirementSha256",
-      "checkpointSha256",
-      "preparedReceiptSha256",
-      "preparedTreeSha256",
-      "preparedImmutableTreeSha256",
-      "physicalRoot",
-      "physicalOperatorDirectory",
-      "physicalNpmPath",
-      "keyId",
-    ].sort()
-  );
-  for (const name of [
-    "capsuleSha256",
-    "retirementSha256",
-    "checkpointSha256",
-    "preparedReceiptSha256",
-    "preparedTreeSha256",
-    "preparedImmutableTreeSha256",
-    "keyId",
-  ] as const)
-    if (!hashPattern.test(value[name])) fail();
-  if (value.keyId !== sha256(recoveryKey)) fail();
-  for (const name of [
-    "physicalRoot",
-    "physicalOperatorDirectory",
-    "physicalNpmPath",
-  ] as const) {
-    const text = value[name],
-      flavor = /^[A-Za-z]:\\/.test(text) ? win32 : posix;
-    if (
-      typeof text !== "string" ||
-      text.length > 4096 ||
-      [...text].some((character) => character.charCodeAt(0) < 32) ||
-      text.startsWith("\\\\") ||
-      text.startsWith("//") ||
-      !flavor.isAbsolute(text) ||
-      flavor.resolve(text) !== text
-    )
-      fail();
-  }
-  const flavor = /^[A-Za-z]:\\/.test(value.physicalRoot) ? win32 : posix;
-  if (
-    value.physicalOperatorDirectory !==
-    flavor.join(value.physicalRoot, "operator")
-  )
+  try {
+    validateRecoveryPreparedHostBinding(value, recoveryKey);
+  } catch {
     fail();
+  }
 }
 function decode(value: string, limit = 8 * 1024 * 1024): Buffer {
   if (typeof value !== "string" || value.length > Math.ceil(limit / 3) * 4)
@@ -948,6 +895,11 @@ function prove(input: RecoveryGmailCaptureDeltaInput) {
   return {
     proof,
     own: expected.own,
+    resolutionInventory: {
+      files: expected.complete.files,
+      directories: expected.complete.directories,
+      journal: input.current.journal,
+    },
     productionOwnership: actual.ownership.find(
       (row) => row.scope === production
     )!,
@@ -960,6 +912,429 @@ export function proveRecoveryGmailCaptureDelta(
 ): RecoveryGmailCaptureDeltaProof {
   return prove(input).proof;
 }
+/** Detached full-family projection for downstream selected-receipt proofs.
+ * The physical enumerator must still prove that this is the complete observed
+ * family and recheck runtime, paths and current bytes before any effect.
+ * An unfinished journal-first tail remains evidence, never a completed result.
+ */
+export interface RecoveryGmailCaptureFamilyInput {
+  checkpoint: Checkpoint;
+  recoveryKey: Buffer;
+  completed: readonly RecoveryGmailCaptureCompletedEvidence[];
+  unfinishedAdmissions: readonly Buffer[];
+  current: Inventory;
+  ownProductionOwnership?: Ownership;
+}
+function projectCaptureFamily(input: RecoveryGmailCaptureFamilyInput): {
+  resolutionInventory: Inventory;
+  activationAllowed: false;
+  captureAllowed: false;
+  loadAllowed: false;
+  physicalValidationRequired: true;
+  familySha256: string;
+  completedCount: number;
+  unfinished: RecoveryGmailCaptureDeltaProof | null;
+  projectedInventory: Inventory;
+} {
+  const base = rebuild(input.checkpoint, input.recoveryKey, input.completed);
+  if (
+    !Array.isArray(input.unfinishedAdmissions) ||
+    input.unfinishedAdmissions.length > 1
+  )
+    fail();
+  inventory(input.current);
+  let tail: RecoveryGmailCaptureDeltaProof | null = null;
+  let resolutionInventory: Inventory = base;
+  if (input.unfinishedAdmissions.length) {
+    const validated = prove({
+      checkpoint: input.checkpoint,
+      recoveryKey: input.recoveryKey,
+      admission: input.unfinishedAdmissions[0]!,
+      priorCompleted: input.completed,
+      unfinishedAdmissions: input.unfinishedAdmissions,
+      current: input.current,
+      ...(input.ownProductionOwnership
+        ? { ownProductionOwnership: input.ownProductionOwnership }
+        : {}),
+    });
+    tail = validated.proof;
+    resolutionInventory = validated.resolutionInventory;
+  } else {
+    // Without an unfinished owner there is no authority to explain any fresh
+    // file, intake, run, artifact or ownership change beyond completed results.
+    if (input.ownProductionOwnership !== undefined) fail();
+    same(sorted([...input.current.files]), sorted([...base.files]));
+    same(sorted([...input.current.directories]), sorted([...base.directories]));
+    same(journal(input.current.journal), journal(base.journal));
+  }
+  return {
+    resolutionInventory,
+    activationAllowed: false,
+    captureAllowed: false,
+    loadAllowed: false,
+    physicalValidationRequired: true,
+    familySha256: sha256(
+      canonicalJson({
+        domain: "zivv-recovery-gmail-capture-family/v1",
+        originalInventorySha256: originalDigest(input.checkpoint),
+        completed: commits(input.completed),
+        unfinished: input.unfinishedAdmissions.map((bytes) => sha256(bytes)),
+        currentProjectionSha256: projection(
+          { ...base, ...input.current },
+          input.checkpoint
+        ),
+        currentJournalSha256: journal(input.current.journal).digest,
+      })
+    ),
+    completedCount: input.completed.length,
+    unfinished: tail === null ? null : structuredClone(tail),
+    projectedInventory: structuredClone({
+      files: input.current.files,
+      directories: input.current.directories,
+      journal: input.current.journal,
+    }),
+  };
+}
+
+/** Full observed-family inputs remain subject to independent physical enumeration. */
+export function proveRecoveryGmailCaptureFamily(
+  input: RecoveryGmailCaptureFamilyInput
+) {
+  const { resolutionInventory, ...proof } = projectCaptureFamily(input);
+  void resolutionInventory;
+  return proof;
+}
+
+export interface RecoveryGmailCaptureSnapshotDelta {
+  intakeEvidence: Evidence[];
+  files: FileCommitment[];
+  directories: Checkpoint["directories"];
+  productionOwnership: Ownership;
+}
+/** Compact only the unfinished tail. Completed captures are reconstructed from
+ * their original authenticated pairs; original mail/catalog/run artifacts are
+ * not duplicated. This is detached evidence, never a physical snapshot permit. */
+export function compactRecoveryGmailCaptureInventory(
+  input: RecoveryGmailCaptureFamilyInput
+) {
+  const proof = projectCaptureFamily(input);
+  const base = rebuild(input.checkpoint, input.recoveryKey, input.completed);
+  const before = journal(base.journal),
+    actual = journal(input.current.journal);
+  const rows = new Set(before.intakeEvidence.map(rowKey));
+  const files = new Set(base.files.map(name)),
+    directories = new Set(base.directories.map(name));
+  const delta: RecoveryGmailCaptureSnapshotDelta = {
+    intakeEvidence: actual.intakeEvidence.filter(
+      (row) => !rows.has(rowKey(row))
+    ),
+    files: input.current.files
+      .filter((file) => !files.has(name(file)))
+      .map(({ area, path, sha256 }) => ({ area, path, sha256 })),
+    directories: input.current.directories.filter(
+      (directory) => !directories.has(name(directory))
+    ),
+    productionOwnership: actual.ownership.find(
+      (row) => row.scope === production
+    )!,
+  };
+  return {
+    familySha256: proof.familySha256,
+    activationAllowed: false as const,
+    captureAllowed: false as const,
+    loadAllowed: false as const,
+    physicalValidationRequired: true as const,
+    delta: structuredClone(delta),
+  };
+}
+/** Reconstruct the exact observed membership, not the virtual complete tail.
+ * Every reconstructed byte is derived from the original archive, signed capture
+ * pairs and validated selected source rows; unlisted canonical files stay absent. */
+export function restoreRecoveryGmailCaptureInventory(
+  input: Omit<
+    RecoveryGmailCaptureFamilyInput,
+    "current" | "ownProductionOwnership"
+  > & { delta: RecoveryGmailCaptureSnapshotDelta }
+) {
+  const base = rebuild(input.checkpoint, input.recoveryKey, input.completed);
+  if (
+    !Array.isArray(input.unfinishedAdmissions) ||
+    input.unfinishedAdmissions.length > 1 ||
+    !Array.isArray(input.delta.intakeEvidence) ||
+    input.delta.intakeEvidence.length > 200 ||
+    !Array.isArray(input.delta.files) ||
+    input.delta.files.length > 50_000 ||
+    !Array.isArray(input.delta.directories) ||
+    input.delta.directories.length > 50_000
+  )
+    fail();
+  const state = journal(base.journal);
+  const rowIds = new Set(state.intakeEvidence.map(rowKey));
+  for (const row of input.delta.intakeEvidence) {
+    if (rowIds.has(rowKey(row))) fail();
+    rowIds.add(rowKey(row));
+  }
+  if (input.delta.intakeEvidence.length)
+    state.intakeEvidence = [
+      ...state.intakeEvidence,
+      ...input.delta.intakeEvidence,
+    ].sort((a, b) => (rowKey(a) < rowKey(b) ? -1 : 1));
+  state.ownership = ownership(state.ownership, input.delta.productionOwnership);
+  const journalValue = journalBytes(state);
+  journal(journalValue);
+  let candidates = base;
+  if (input.unfinishedAdmissions.length) {
+    const selected = input.unfinishedAdmissions[0]!;
+    unfinished(input.unfinishedAdmissions, selected);
+    const admission = checkAdmission(
+      selected,
+      input.checkpoint,
+      base,
+      input.recoveryKey,
+      input.completed
+    );
+    candidates = expectedDelta(
+      base,
+      admission,
+      input.delta.intakeEvidence,
+      input.recoveryKey
+    ).complete;
+  } else if (input.delta.intakeEvidence.length) fail();
+  const available = new Map(candidates.files.map((file) => [name(file), file]));
+  const fileNames = new Set(base.files.map(name));
+  const files = [...base.files];
+  for (const file of input.delta.files) {
+    same(file, { area: file.area, path: file.path, sha256: file.sha256 });
+    const id = name(file),
+      derived = available.get(id);
+    if (fileNames.has(id) || !derived || derived.sha256 !== file.sha256) fail();
+    fileNames.add(id);
+    files.push(derived);
+  }
+  const directoryNames = new Set(base.directories.map(name));
+  const directories = [...base.directories];
+  for (const directory of input.delta.directories) {
+    same(directory, { area: directory.area, path: directory.path });
+    if (directoryNames.has(name(directory))) fail();
+    directoryNames.add(name(directory));
+    directories.push(directory);
+  }
+  const current = { files, directories, journal: journalValue };
+  return proveRecoveryGmailCaptureFamily({
+    checkpoint: input.checkpoint,
+    recoveryKey: input.recoveryKey,
+    completed: input.completed,
+    unfinishedAdmissions: input.unfinishedAdmissions,
+    current,
+    ...(input.unfinishedAdmissions.length
+      ? { ownProductionOwnership: input.delta.productionOwnership }
+      : {}),
+  });
+}
+
+export interface RecoveryGmailSelectedReceiptSelector {
+  batchId: string;
+  messageId: string;
+  rawSha256: string;
+  receiptId: string;
+}
+
+/** Copy bounded selector metadata only; this grants no receipt or load authority. */
+export function copyRecoveryGmailSelectedReceiptSelector(
+  value: RecoveryGmailSelectedReceiptSelector
+): RecoveryGmailSelectedReceiptSelector {
+  const keys = Reflect.ownKeys(value);
+  if (keys.length !== 4 || keys.some((key) => typeof key !== "string")) fail();
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  same(
+    Object.keys(descriptors).sort(),
+    ["batchId", "messageId", "rawSha256", "receiptId"].sort()
+  );
+  for (const descriptor of Object.values(descriptors))
+    if (!("value" in descriptor) || typeof descriptor.value !== "string")
+      fail();
+  const selected = { ...value };
+  if (
+    !hashPattern.test(selected.batchId) ||
+    !hashPattern.test(selected.rawSha256) ||
+    !hashPattern.test(selected.receiptId) ||
+    !/^[a-f0-9]{1,128}$/.test(selected.messageId)
+  )
+    fail();
+  return selected;
+}
+
+/** Resolve one ready canonical receipt from the authenticated entire capture
+ * family. Internal completion of journal-first evidence is only a validation
+ * view: selection requires every selected/ancestor canonical file to exist in
+ * the actual observed inventory. No source bytes or writer capability escape.
+ */
+export function proveRecoveryGmailSelectedReceipt(
+  input: RecoveryGmailCaptureFamilyInput & {
+    selector: RecoveryGmailSelectedReceiptSelector;
+  }
+) {
+  try {
+    return selectedReceipt(input);
+  } catch {
+    throw new Error("INVALID_RECOVERY_GMAIL_SELECTED_RECEIPT_PROOF");
+  }
+}
+function selectedReceipt(
+  input: RecoveryGmailCaptureFamilyInput & {
+    selector: RecoveryGmailSelectedReceiptSelector;
+  }
+) {
+  const selected = copyRecoveryGmailSelectedReceiptSelector(input.selector);
+  const family = projectCaptureFamily(input);
+  // This is a private validation horizon for authenticated later receipts,
+  // not a replacement checkpoint or a new source observation.
+  const resolved = proveRecoveryGmailBatchInventory({
+    checkpoint: {
+      ...input.checkpoint,
+      ...family.resolutionInventory,
+      createdAtEpochMs: Date.now(),
+    },
+    recoveryKey: input.recoveryKey,
+  });
+  const batch = resolved.batches.find(
+    (item) => item.batch.batchId === selected.batchId
+  );
+  const message = batch?.messages.find(
+    (item) => item.messageId === selected.messageId
+  );
+  const snapshot = batch?.batch.snapshots.find(
+    (item) => item.rawMessage.id === selected.messageId
+  );
+  if (
+    !batch ||
+    !message ||
+    message.status !== "captured" ||
+    !snapshot ||
+    message.receiptId !== selected.receiptId ||
+    message.disposition !== "ready" ||
+    sha256(Buffer.from(snapshot.rawMessage.raw, "base64url")) !==
+      selected.rawSha256
+  )
+    fail();
+  const view = new Map(
+    family.resolutionInventory.files.map((file) => [name(file), file])
+  );
+  const actual = new Map(input.current.files.map((file) => [name(file), file]));
+  const receipts = new Map(
+    resolved.receipts.map((receipt) => [receipt.receiptId, receipt])
+  );
+  const presence = new Map<string, boolean>();
+  function present(path: string): boolean {
+    const cached = presence.get(path);
+    if (cached !== undefined) return cached;
+    const file = view.get("operator/" + path);
+    const matches =
+      !!file &&
+      !!actual.get("operator/" + path) &&
+      canonicalJson(actual.get("operator/" + path)) === canonicalJson(file);
+    presence.set(path, matches);
+    return matches;
+  }
+  function canonicalFiles(
+    id: string,
+    lineage = new Set<string>(),
+    requireReady = true
+  ): string[] {
+    if (lineage.has(id) || lineage.size >= 100) fail();
+    lineage.add(id);
+    const receipt = receipts.get(id);
+    if (!receipt || (requireReady && receipt.disposition !== "ready")) fail();
+    const prefix = "email-intake/" + receipt.accountSha256 + "/bodies/" + id;
+    const receiptFile = view.get("operator/" + prefix + "/receipt.json");
+    if (!receiptFile || !receiptFile.bytes) fail();
+    const original = JSON.parse(
+      decode(receiptFile.bytes).toString("utf8")
+    ) as SteveEmailReceipt;
+    const primary =
+      "email-intake/" +
+      receipt.accountSha256 +
+      "/messages/" +
+      sha256(original.messageId);
+    const paths = [
+      prefix + "/source.txt",
+      prefix + "/receipt.json",
+      primary + "/message.eml",
+      primary + "/capture.json",
+    ];
+    if (view.has("operator/" + prefix + "/correction-approval.json"))
+      paths.push(prefix + "/correction-approval.json");
+    if (receipt.correctionOf)
+      paths.push(...canonicalFiles(receipt.correctionOf, lineage));
+    return paths;
+  }
+  function messagePaths(account: string, id: string): string[] {
+    const prefix = "email-intake/" + account + "/messages/" + sha256(id);
+    return [prefix + "/message.eml", prefix + "/capture.json"];
+  }
+  const paths = [
+    ...new Set([
+      ...canonicalFiles(selected.receiptId),
+      ...messagePaths(batch.batch.accountSha256, selected.messageId),
+    ]),
+  ].sort();
+  if (!paths.every(present)) fail();
+  const receipt = receipts.get(selected.receiptId)!;
+  const source = {
+    editionId: receipt.editionId,
+    deliveryId: receipt.deliveryId,
+    sourceSha256: receipt.sourceSha256,
+    importObservedAtEpochMs: receipt.firstObservedAtEpochMs,
+  };
+  const obligations = resolved.batches.flatMap((item) =>
+    item.messages.map((member) => {
+      let status: "capture-pending" | "review-required" | "ready" =
+        "capture-pending";
+      if (
+        member.status === "captured" &&
+        [
+          ...canonicalFiles(member.receiptId, new Set<string>(), false),
+          ...messagePaths(item.batch.accountSha256, member.messageId),
+        ].every(present)
+      )
+        status = member.disposition;
+      return {
+        batchId: item.batch.batchId,
+        messageId: member.messageId,
+        status,
+        receiptId: member.status === "captured" ? member.receiptId : null,
+      };
+    })
+  );
+  const canonicalEvidence = paths.map((path) => ({
+    path,
+    sha256: view.get("operator/" + path)!.sha256,
+  }));
+  return {
+    activationAllowed: false as const,
+    captureAllowed: false as const,
+    loadAllowed: false as const,
+    physicalValidationRequired: true as const,
+    familySha256: family.familySha256,
+    selector: selected,
+    source,
+    receipt: structuredClone(receipt),
+    canonicalEvidence,
+    obligations,
+    selectionSha256: sha256(
+      canonicalJson({
+        domain: "zivv-recovery-gmail-selected-receipt/v1",
+        familySha256: family.familySha256,
+        selector: selected,
+        source,
+        receipt,
+        canonicalEvidence,
+        obligations,
+      })
+    ),
+  };
+}
+
 /** A result can be signed only after all selected canonical evidence is complete. */
 export function createRecoveryGmailCaptureResult(
   input: RecoveryGmailCaptureDeltaInput
