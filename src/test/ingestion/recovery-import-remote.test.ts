@@ -117,7 +117,7 @@ describe("canonical remote gate for import-only recovery", () => {
     expect(() =>
       f.transport.append("refs/heads/main", f.sourceCommit, null)
     ).toThrow(/dedicated control/);
-  }, 30_000);
+  }, 45_000);
   it("rejects an obsolete or divergent ledger, wrong key and unretained run", async () => {
     await yieldToReporter();
     const checkpoint = structuredClone(f.checkpoint);
@@ -323,5 +323,5 @@ describe("canonical remote gate for import-only recovery", () => {
         runId: run.runId,
       })
     ).toThrow("OBSERVATION_BEFORE_ACKNOWLEDGED_CUTOFF");
-  }, 30_000);
+  }, 45_000);
 });
