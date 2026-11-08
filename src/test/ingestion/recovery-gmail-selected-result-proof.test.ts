@@ -38,6 +38,33 @@ it("authenticates exact completion evidence without granting replay authority", 
     status: "authenticated",
     loadAllowed: false,
   });
+  const successorSha256 = "b".repeat(64);
+  const successorBody = { ...body, version: 2, successorSha256 };
+  const successorSignature = createHmac("sha256", key)
+    .update("zivv-selected-load-result/v2\0")
+    .update(canonicalJson(successorBody))
+    .digest("hex");
+  const successorBytes = Buffer.from(
+    canonicalJson({ ...successorBody, signature: successorSignature }) + "\n"
+  );
+  expect(
+    verifySelectedLoadResult(successorBytes, key, {
+      ...expected,
+      successorSha256,
+    })
+  ).toMatchObject({ status: "authenticated", loadAllowed: false });
+  expect(() =>
+    verifySelectedLoadResult(successorBytes, key, expected)
+  ).toThrow();
+  expect(() =>
+    verifySelectedLoadResult(successorBytes, key, {
+      ...expected,
+      successorSha256: "c".repeat(64),
+    })
+  ).toThrow();
+  expect(() =>
+    verifySelectedLoadResult(bytes, key, { ...expected, successorSha256 })
+  ).toThrow();
   expect(() =>
     verifySelectedLoadResult(bytes, Buffer.alloc(32, 8), expected)
   ).toThrow();
