@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   unit-tests:
-    name: Unit Tests
+    name: Unit & Component Tests (incl. Storybook)
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +38,7 @@ jobs:
       - name: Run ETL build
         run: npm run build:etl
 
-      - name: Run unit tests with coverage
+      - name: Run unit/component and storybook tests with coverage
         run: npm run test:coverage
 
       - name: Upload coverage reports
@@ -195,7 +195,7 @@ jobs:
         run: npm run preview &
 
   ingestion-tests:
-    name: Ingestion Tests
+    name: Ingestion Tests (Node / SQLite / Git fixtures)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -255,7 +255,7 @@ jobs:
     steps:
       - name: Check test results
         run: |
-          echo "Unit Tests: ${{ needs.unit-tests.result }}"
+          echo "Unit & Component Tests (incl. Storybook): ${{ needs.unit-tests.result }}"
           echo "E2E Tests: ${{ needs.e2e-tests.result }}"
           echo "Lint/Format: ${{ needs.lint-and-format.result }}"
           echo "Build Test: ${{ needs.build-test.result }}"

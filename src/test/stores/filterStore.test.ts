@@ -6,10 +6,15 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useFilterStore } from "@/stores/filterStore";
 import type { EventFilters } from "@/types/events";
 
-// Mock zustand devtools middleware
-vi.mock("zustand/middleware", () => ({
-  devtools: vi.fn((fn) => fn),
-}));
+// Keep every real middleware (persist, subscribeWithSelector, …) and only
+// stub devtools to avoid noisy developer-tools logging in tests
+vi.mock("zustand/middleware", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("zustand/middleware")>();
+  return {
+    ...actual,
+    devtools: vi.fn((fn: unknown) => fn),
+  };
+});
 
 describe("FilterStore", () => {
   let store: ReturnType<typeof useFilterStore>;

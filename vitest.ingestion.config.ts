@@ -5,6 +5,7 @@ export default defineConfig({
   cacheDir: ".cache/vitest-ingestion",
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
+    name: "ingestion",
     // Message-channel transport stays responsive during long SQLite/Git suites.
     pool: "threads",
     // Native Git/SQLite fixtures are synchronous; limit competing worker IO so
