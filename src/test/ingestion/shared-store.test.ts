@@ -5,10 +5,11 @@ import {
   readFileSync,
   rmSync,
   writeFileSync,
+  existsSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { spawn, spawnSync } from "node:child_process";
 import {
   bootstrapLedger,
@@ -38,6 +39,7 @@ import type {
   Venue,
   VenueId,
 } from "../../types/events.js";
+import { captureChildExit } from "./fixtures/child-exit-fixture.js";
 
 const directories: string[] = [];
 const previousHome = process.env.ZIVV_LEDGER_HOME;
@@ -215,35 +217,46 @@ describe("operator command recovery", () => {
     const f = fixture();
     const home = join(dirname(f.home), "new-operator");
     function initialize() {
-      const script = `import { loadBackupKey } from './dist/lib/ingestion/encrypted-backup.js'; import { createHash } from 'node:crypto'; console.log(createHash('sha256').update(loadBackupKey(process.env.ZIVV_TEST_KEY_HOME,true)).digest('hex'));`;
       const child = spawn(
         process.execPath,
-        ["--input-type=module", "-e", script],
+        [
+          "--input-type=module",
+          "-e",
+          `import { loadBackupKey } from './dist/lib/ingestion/encrypted-backup.js'; import { createHash } from 'node:crypto'; console.log(createHash('sha256').update(loadBackupKey(process.env.ZIVV_TEST_KEY_HOME,true)).digest('hex'));`,
+        ],
         {
           env: { ...process.env, ZIVV_TEST_KEY_HOME: home },
           windowsHide: true,
           stdio: ["ignore", "pipe", "pipe"],
         }
       );
-      return new Promise<string>((done, reject) => {
-        let output = "";
-        let errors = "";
-        child.stdout.on("data", (bytes) => {
-          output += String(bytes);
-        });
-        child.stderr.on("data", (bytes) => {
-          errors += String(bytes);
-        });
-        child.once("error", reject);
-        child.once("exit", (code) => {
-          if (code === 0) done(output.trim());
-          else reject(new Error(errors));
-        });
+      // Issue #179: the child "exit" event can fire before buffered pipe
+      // output drains, which previously surfaced an empty digest for a
+      // successful child. Await the settled exit instead of bare exit.
+      return captureChildExit(child).then((settled) => {
+        if (settled.code !== 0 || settled.signal !== null)
+          throw new Error(
+            settled.stderr.trim() || `Child exited ${settled.code}`
+          );
+        return settled.stdout.trim();
       });
     }
     const [first, second] = await Promise.all([initialize(), initialize()]);
-    expect(first).toBe(second);
     expect(first).toMatch(/^[a-f0-9]{64}$/u);
+    expect(second).toBe(first);
+    // Independently verify from the parent that both children used the same
+    // valid installed operator key rather than trusting the reported digests.
+    const installed = loadBackupKey(home);
+    expect(installed.length).toBe(32);
+    expect(createHash("sha256").update(installed).digest("hex")).toBe(first);
+    expect(
+      existsSync(
+        join(
+          home,
+          process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin"
+        )
+      )
+    ).toBe(true);
   }, 15_000);
 });
 
