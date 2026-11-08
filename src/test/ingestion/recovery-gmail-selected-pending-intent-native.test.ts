@@ -41,8 +41,8 @@ import {
   validateWeeklyJournalRecoverySnapshot,
 } from "../../lib/ingestion/weekly-run-journal.js";
 import { proveSelectedLoadJournalDelta } from "../../lib/ingestion/recovery-gmail-selected-journal-delta.js";
-vi.setConfig({ testTimeout: 900000 });
-it.each(["intent-linked", "lease-acquired"] as const)(
+vi.setConfig({ testTimeout: 1200000 });
+it.each(["intent-linked", "lease-acquired", "lease-acquired-twice"] as const)(
   "observes retry worker death at %s",
   async (point) => {
     const fixture = await createRecoveryGmailCaptureRuntimeFixture({
@@ -282,7 +282,7 @@ it.each(["intent-linked", "lease-acquired"] as const)(
                   )
                   .replace(
                     "f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)))",
-                    `f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)), '${point}')`
+                    `f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)), '${point === "lease-acquired-twice" ? "lease-acquired" : point}')`
                   )
               : resumedScript,
           ],
@@ -366,7 +366,7 @@ it.each(["intent-linked", "lease-acquired"] as const)(
         throw Error("Expected prior encrypted snapshot");
       const intentDeath = await resume(false, true);
       expect(intentDeath.killed).toBe(true);
-      if (point === "lease-acquired") {
+      if (point === "lease-acquired" || point === "lease-acquired-twice") {
         expect(intentDeath.contention).toEqual([17, 0]);
         expect(intentDeath.stdout).toContain(
           "SELECTED_LOAD_TEST_LEASE_ACQUIRED"
@@ -430,6 +430,39 @@ it.each(["intent-linked", "lease-acquired"] as const)(
               )
             )
           );
+        if (point === "lease-acquired-twice") {
+          const successorDeath = await resume(false, true);
+          expect(successorDeath.killed).toBe(true);
+          expect(successorDeath.contention).toEqual([17, 0]);
+          const firstSuccessorPath = join(
+            directory,
+            "resume-successor-00001.json"
+          );
+          const firstSuccessorBytes = readFileSync(firstSuccessorPath);
+          const firstSuccessor = JSON.parse(
+            firstSuccessorBytes.toString("utf8")
+          ) as { deadlineEpochMs: number };
+          expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+            status: "pending-intent",
+            loadAllowed: false,
+            activationAllowed: false,
+          });
+          const activeSuccessor = await resume();
+          expect(activeSuccessor.code).toBe(1);
+          expect(activeSuccessor.stderr).toContain(
+            "RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE"
+          );
+          while (Date.now() <= firstSuccessor.deadlineEpochMs)
+            await new Promise((resolve) =>
+              setTimeout(
+                resolve,
+                Math.min(
+                  1000,
+                  Math.max(1, firstSuccessor.deadlineEpochMs - Date.now() + 1)
+                )
+              )
+            );
+        }
         const completed = await resume();
         if (completed.code !== 0)
           console.error(
@@ -437,7 +470,12 @@ it.each(["intent-linked", "lease-acquired"] as const)(
             completed.stderr.slice(0, 1500)
           );
         expect(completed.code).toBe(0);
-        const successorPath = join(directory, "resume-successor-00001.json");
+        const successorPath = join(
+          directory,
+          point === "lease-acquired-twice"
+            ? "resume-successor-00002.json"
+            : "resume-successor-00001.json"
+        );
         const successorBytes = readFileSync(successorPath);
         const result = JSON.parse(
           readFileSync(join(directory, "load-result.json"), "utf8")
