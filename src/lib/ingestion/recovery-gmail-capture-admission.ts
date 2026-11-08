@@ -20,6 +20,7 @@ import {
   openSync,
   closeSync,
   readSync,
+  writeSync,
   fstatSync,
   readlinkSync,
 } from "node:fs";
@@ -97,6 +98,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "admission-saved",
   "key-installed",
   "source-committed",
+  "source-committed-hard-death",
   "capture-files-written",
   "result-saved",
   "admission-stage-flushed",
@@ -898,6 +900,16 @@ export function observeRecoveredGmailCaptureSourceCommit(): void {
   const scope = current();
   if (!scope) return;
   scope.assertCurrent();
+  if (scope.interruption === "source-committed-hard-death") {
+    writeSync(
+      2,
+      JSON.stringify({
+        captureError: "RECOVERY_GMAIL_SOURCE_COMMIT_HARD_DEATH",
+      }) + "\n"
+    );
+    process.kill(process.pid, "SIGKILL");
+    throw Error("RECOVERY_GMAIL_CAPTURE_HARD_DEATH_FAILED");
+  }
   if (scope.interruption === "source-committed")
     fail("RECOVERY_GMAIL_CAPTURE_TEST_INTERRUPTION");
 }
