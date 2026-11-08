@@ -63,19 +63,32 @@ export default defineConfig({
         // Storybook story definitions are test sources, not app code
         "src/stories/**",
       ],
-      // Thresholds must be top-level keys here. Vitest 3.2.x interprets any
-      // other key (including a nested `global` object) as a file glob that
-      // matches nothing, silently skipping threshold enforcement otherwise.
+      // Thresholds: In Vitest 3.2.4, threshold numbers belong nested under
+      // `thresholds` (e.g. thresholds.lines). The historical shape here —
+      // `thresholds.global: { … }` — degenerated into a file glob named
+      // "global" that matched nothing, so thresholds were never enforced;
+      // the same "unknown key" rule explains why any other stray object is
+      // silently ignored.
       //
-      // Realistic floors for the unit + storybook scope (reported 35.32%
-      // lines / 83.5% branches / 62.65% functions after collecting the full
-      // legacy suites). These are floors to ratchet upward; page/component
-      // depth is additionally exercised by the ingestion suite, and coverage
-      // wiring for that program is tracked in #39.
-      branches: 80,
-      functions: 60,
-      lines: 35,
-      statements: 35,
+      // IMPORTANT: even nested, the storybookTest plugin (@storybook/
+      // addon-vitest 9.x) drops test.coverage.thresholds when it is
+      // registered, regardless of project filtering (verified empirically),
+      // so the floors below are NOT enforced by the combined command yet —
+      // they are recorded for the day the plugin stops dropping them.
+      // Enforcement is guaranteed for the unit-only scope by
+      // vitest.coverage command `test:coverage:unit` (see
+      // coverage.enforce.config.ts and scripts/check-coverage-thresholds.mjs).
+      //
+      // Floors backed by the combined unit+storybook measurement
+      // (35.32% lines / 83.5% branches / 62.65% functions) and the
+      // unit-only measurement (24.26% lines / 84.19% branches / 59.5%
+      // functions) is the enforced subset.
+      thresholds: {
+        branches: 80,
+        functions: 60,
+        lines: 35,
+        statements: 35,
+      },
       include: ["src/**/*.{ts,tsx}"],
     },
     reporters: ["verbose", "html"],

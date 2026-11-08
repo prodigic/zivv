@@ -24,7 +24,9 @@ vi.mock("./utils/errorHandling.ts", () => ({
 }));
 
 describe("App", () => {
-  it("imports without errors", async () => {
+  // The app import chain is heavy (router + stores + services + pages); under
+  // coverage instrumentation it can exceed the 5s default, so allow more.
+  it("imports without errors", { timeout: 20_000 }, async () => {
     // Simple import test - if App imports successfully, basic structure is good
     const { default: App } = await import("./App");
     expect(App).toBeDefined();

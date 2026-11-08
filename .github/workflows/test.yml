@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   unit-tests:
-    name: Unit & Component Tests (incl. Storybook)
+    name: Unit & Component Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -38,13 +38,16 @@ jobs:
       - name: Run ETL build
         run: npm run build:etl
 
-      - name: Run unit/component and storybook tests with coverage
-        run: npm run test:coverage
+      - name: Run unit/component tests with enforced coverage
+        run: npm run test:coverage:unit
+
+      - name: Run storybook story tests
+        run: npm run test:stories
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v5
         with:
-          files: ./coverage/coverage.json
+          files: ./coverage/coverage-final.json
           fail_ci_if_error: false
 
       - name: Upload unit test results
