@@ -29,7 +29,7 @@ const accountId = "synthetic-account@fixture.invalid";
 const editionId = "2026-10-16";
 const observedAt = Date.parse("2026-10-16T17:05:00Z");
 const editionText =
-  "THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest October 16, 2026\noct 23 fri Fixture Band at Test Room, Oakland a/a $20 8pm\nPlease feel free to forward The List on to your friends.\n";
+  "THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest October 16, 2026\noct 23 fri Fixture Band at Test Room, Oakland a/a $20 8pm\n---\nPlease feel free to forward The List on to your friends.\n";
 const authentication =
   "mx.google.com; dkim=pass header.i=@sp.eocampaign1.com; spf=pass smtp.mailfrom=bounce@sp.eocampaign1.com";
 const directories: string[] = [];
@@ -127,7 +127,10 @@ afterEach(() => {
 
 describe("local load of retained Steve email receipts", () => {
   it("loads clean ready receipts with stable source identity, run ID, and first-added provenance on replay", async () => {
-    const { root, operatorDirectory } = fixture();
+    const { base, root, operatorDirectory } = fixture();
+    const archiveDirectory = join(base, "archive");
+    mkdirSync(archiveDirectory);
+    writeFileSync(join(archiveDirectory, "2025-07-11.txt"), "preserved\n");
     vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
     await initializeLedger(operatorDirectory);
     const captured = await capture(operatorDirectory, "a1");
@@ -137,6 +140,7 @@ describe("local load of retained Steve email receipts", () => {
       operatorDirectory,
       accountId,
       expectedEditionId: editionId,
+      archiveDirectory,
       onProgress: (event: { runId: string; stage: string; phase: string }) => {
         progress.push(`${event.runId}:${event.stage}:${event.phase}`);
       },
@@ -147,6 +151,11 @@ describe("local load of retained Steve email receipts", () => {
       join(root, "data/ingestion/ledger.json")
     );
     const second = await loadRetainedSteveEmailSources(input);
+    expect(first.archive.status).toBe("created");
+    expect(second.archive.status).toBe("already-matched");
+    expect(readFileSync(join(archiveDirectory, "2025-07-11.txt"), "utf8")).toBe(
+      "preserved\n"
+    );
     const secondLedger = await loadLedger(
       join(root, "data/ingestion/ledger.json")
     );

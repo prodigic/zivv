@@ -145,3 +145,35 @@ private. Portable batch recovery is still unsupported under #106; the existing
 recovery inventory refuses the new acquisition tree before archive output or
 retirement. Credentials, supervisor installation, schedule activation and full
 Friday rehearsals remain separate work.
+
+# Text archive
+
+Set `ZIVV_STEVE_ARCHIVE_DIR` to the existing archive directory on the local
+operator machine (for example `D:\archive\steveslist`). The directory is
+deliberately not created or assumed on CI. The capture command and retained
+load result report an independent `archive` object with status, path, message
+and receipt IDs when known, and a reason when attention is required. The
+capture command exits with status 2 when archiving needs attention, even if
+capture or loading succeeded. A caller of the retained-load API must check both
+its load entries and the archive status; loading and archiving are independent.
+The operator store's `steve-archive-audit` directory retains a separate intent
+and result record for each attempt. An intent without a result indicates an
+interruption requiring inspection. Audit write failures are reported separately;
+the result indicates whether an archive action occurred before the failure.
+
+The archive uses the confirmed retained raw message, takes the calendar date
+literally from its Date header, prefers its plain body, and removes the dashed
+forwarding footer. An absent footer, unreadable message, unconfigured path,
+ambiguous source, or different existing file is reported for review. For an
+approved correction, the confirmed receipt lineage selects the newest message;
+the original message's Date determines the single filename even when the
+correction was sent on a later day. Replacement is allowed only when the
+existing bytes match a known earlier message in that lineage. An identical
+file is a successful retry. A per-date exclusive lock coordinates archive
+writers; an interrupted process can leave a `.archive.lock` or `.archive.tmp`
+file that must be inspected before manual removal. Do not run unrelated editors
+against an archive file while the update is in progress.
+
+HTML-only messages can be rendered by the archive extractor, but the current
+authenticated Gmail intake requires matching plain text from the raw and Gmail
+representations; HTML fallback does not bypass that intake rule.
