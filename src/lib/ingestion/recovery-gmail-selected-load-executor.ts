@@ -24,7 +24,7 @@ import {
   writeSync,
   fsyncSync,
 } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import type { IngestionLedger } from "../../types/ingestion.js";
 import {
@@ -97,7 +97,8 @@ interface Scope {
     | "partial"
     | "intent-linked"
     | "lease-acquired"
-    | "successor-linked";
+    | "successor-linked"
+    | "successor-flushed";
   evidenceGuard?: boolean;
   successor?: { path: string };
   incompleteSnapshot?: {
@@ -803,6 +804,17 @@ export function observeSelectedGmailLoadFile(
     throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
   }
   if (
+    scope.chunkPauseTest === "successor-flushed" &&
+    point === "flushed" &&
+    !!scope.successor &&
+    dirname(resolve(path)) === scope.successor.path + "-stage" &&
+    basename(path).startsWith(basename(scope.successor.path) + ".")
+  ) {
+    process.stdout.write("SELECTED_LOAD_TEST_SUCCESSOR_FLUSHED\n");
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+    throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+  }
+  if (
     scope.chunkPauseTest === "successor-linked" &&
     point === "linked" &&
     !!scope.successor &&
@@ -1265,6 +1277,7 @@ async function resumeSelectedLoadAttempt(
     | "intent-linked"
     | "lease-acquired"
     | "successor-linked"
+    | "successor-flushed"
     | undefined
 ) {
   assertNoSelectedGmailLoadExecution();
@@ -2005,6 +2018,7 @@ async function resumeSelectedLoad(
     | "intent-linked"
     | "lease-acquired"
     | "successor-linked"
+    | "successor-flushed"
     | undefined
 ) {
   const first = await resumeSelectedLoadAttempt(supplied, chunkPauseTest);
@@ -2028,14 +2042,16 @@ export function resumeRecoveredGmailSelectedLoadForTest(
     | "partial"
     | "intent-linked"
     | "lease-acquired"
-    | "successor-linked" = "linked"
+    | "successor-linked"
+    | "successor-flushed" = "linked"
 ) {
   if (
     point !== "linked" &&
     point !== "partial" &&
     point !== "intent-linked" &&
     point !== "lease-acquired" &&
-    point !== "successor-linked"
+    point !== "successor-linked" &&
+    point !== "successor-flushed"
   )
     fail();
   return resumeSelectedLoad(input, point);

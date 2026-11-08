@@ -47,6 +47,7 @@ const interruptionPoints = [
   "lease-acquired",
   "lease-acquired-twice",
   "successor-linked",
+  "successor-staged",
 ] as const;
 it.each(interruptionPoints)(
   "observes retry worker death at %s",
@@ -292,7 +293,7 @@ it.each(interruptionPoints)(
                   )
                   .replace(
                     "f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)))",
-                    `f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)), '${successorPause ? "successor-linked" : point === "lease-acquired-twice" || point === "successor-linked" ? "lease-acquired" : point}')`
+                    `f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)), '${successorPause ? (point === "successor-staged" ? "successor-flushed" : "successor-linked") : point === "lease-acquired-twice" || point === "successor-linked" || point === "successor-staged" ? "lease-acquired" : point}')`
                   )
               : resumedScript,
           ],
@@ -313,7 +314,9 @@ it.each(interruptionPoints)(
             killAtChunk &&
             stdout.includes(
               successorPause
-                ? "SELECTED_LOAD_TEST_SUCCESSOR_LINKED"
+                ? point === "successor-staged"
+                  ? "SELECTED_LOAD_TEST_SUCCESSOR_FLUSHED"
+                  : "SELECTED_LOAD_TEST_SUCCESSOR_LINKED"
                 : point === "intent-linked"
                   ? "SELECTED_LOAD_TEST_INTENT_LINKED"
                   : "SELECTED_LOAD_TEST_LEASE_ACQUIRED"
@@ -381,7 +384,8 @@ it.each(interruptionPoints)(
       if (
         point === "lease-acquired" ||
         point === "lease-acquired-twice" ||
-        point === "successor-linked"
+        point === "successor-linked" ||
+        point === "successor-staged"
       ) {
         expect(intentDeath.contention).toEqual([17, 0]);
         expect(intentDeath.stdout).toContain(
@@ -446,7 +450,7 @@ it.each(interruptionPoints)(
               )
             )
           );
-        if (point === "successor-linked") {
+        if (point === "successor-linked" || point === "successor-staged") {
           const successorDeath = await resume(false, true, true);
           if (!successorDeath.killed)
             console.error(
@@ -457,8 +461,12 @@ it.each(interruptionPoints)(
           expect(successorDeath.killed).toBe(true);
           expect(successorDeath.contention).toEqual([17, 17]);
           const successorPath = join(directory, "resume-successor-00001.json");
-          expect(lstatSync(successorPath).nlink).toBe(2);
-          expect(readdirSync(successorPath + "-stage")).toHaveLength(1);
+          const candidateOnly = point === "successor-staged";
+          const stageNames = readdirSync(successorPath + "-stage");
+          expect(stageNames).toHaveLength(1);
+          const candidatePath = join(successorPath + "-stage", stageNames[0]!);
+          expect(existsSync(successorPath)).toBe(!candidateOnly);
+          expect(lstatSync(candidatePath).nlink).toBe(candidateOnly ? 1 : 2);
           expect(inspectSelectedLoadInterruption(input)).toMatchObject({
             status: "pending-intent",
             pendingSuccessorCount: 1,
@@ -494,9 +502,9 @@ it.each(interruptionPoints)(
               fixture.input
             ).inventoryGmailSelectedLoadExecution()
           ).toEqual(beforeFiles);
-          expect(lstatSync(successorPath).nlink).toBe(2);
+          expect(lstatSync(candidatePath).nlink).toBe(candidateOnly ? 1 : 2);
           const firstSuccessor = JSON.parse(
-            readFileSync(successorPath, "utf8")
+            readFileSync(candidateOnly ? candidatePath : successorPath, "utf8")
           ) as { deadlineEpochMs: number };
           while (Date.now() <= firstSuccessor.deadlineEpochMs)
             await new Promise((resolve) =>
