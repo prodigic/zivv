@@ -383,7 +383,7 @@ refuse extra Node options and environment overrides that can inject modules. The
 an already-committed catalog run before writing execution evidence or installing
 the backup key.
 
-This is not yet a complete #110 recovery flow. An existing execution baseline is refused until crash reconciliation, lost-response replay and later-load family composition can prove the original-to-current delta. It grants no scheduler activation, publication, cutoff, or live-operator authority. Failure fixtures and immutable worker artifacts must be preserved for diagnosis.
+This is not yet a complete #110 recovery flow. Supported selected-load interruptions are reconciled against their authenticated execution baseline and guarded physical state; broader crash reconciliation, lost-response cases and later-load family composition still need to prove the full original-to-current delta. It grants no scheduler activation, publication, cutoff, or live-operator authority. Failure fixtures and immutable worker artifacts must be preserved for diagnosis.
 
 New execution baselines authenticate the original start time, initial generation, admission and evidence digests, and ordered physical inventory. The strict canonical/HMAC codec is detached evidence; it does not by itself authorize a retry or prove a catalog delta. Earlier baselines without that time cannot be used as timestamp evidence.
 
@@ -397,14 +397,18 @@ effective attempt, then the initial baseline, and excludes only the authenticate
 settled successor namespace from the prior inventory. A version 1 result cannot
 stand in for a successor-bound result. Active or chronologically invalid leases,
 unsettled successor installations, mismatched successor hashes and incomplete
-physical evidence refuse. This is observation only: no successor writer, retry
-authority or anti-rollback witness follows from a signed chain. A private native
-fixture exercises this composition with a synthetic signed successor; it is not
-a proof that a real successor was installed or executed.
+physical evidence refuse. A guarded pending-intent retry can install a version 2
+successor only after the previous signed deadline and observed lease expire. It
+revalidates the predecessor chain and physical evidence under journal and catalog
+writer guards before installation, then binds the result to that successor. A
+private native tests exercise one and two interrupted leases, active-lease
+refusal, expired retries and replay of the completed result. A signed chain alone
+supplies no anti-rollback witness; other interruption points and partial
+successor installs still require independent acceptance.
 
 The detached first-attempt journal proof compares original and observed intake evidence, unrelated runs and artifacts, ownership fence, selected run stages and exact artifact bytes against the normal selected-source plan. It recognizes a synthetic committed-catalog/load-running gap and a completed retained-worker journal; it refuses unproved retries and grants no load permission. Physical file and canonical SQL validation, process-kill acceptance, and replay composition remain required.
 
-A retained-worker interruption test now observes a private fixture catalog commit, stops that exact child, and checks the observed generation-two catalog and load-running journal against the saved baseline and selected journal proof. It does not yet resume that fixture or prove physical inventory and replay.
+A retained-worker interruption test observes a private fixture catalog commit, stops that exact child, and checks the generation-two catalog and load-running journal against the saved baseline and selected journal proof. Native interruption and replay tests also exercise supported resume paths and compare retained physical inventory; they do not establish all interruption points or later-load family composition.
 
 The detached read-only canonical SQLite observation verifies schema, normalized rows, integrity, generation, and regular unlinked file identities in a single read transaction. The real commit-gap fixture now uses it after the child exits. This observation is not a writer lock or permission; any future recovery mutation must recheck under its own transaction.
 
