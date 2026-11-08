@@ -323,15 +323,35 @@ export function readSelectedLoadInterruptionEvidence(
         intent.generation !== catalog.generation
       )
         return fail();
+      const completedSuccessors = observeSelectedLoadIntentSuccessors({
+        destination: root,
+        loadPath: load,
+        entries,
+        initial: read(intentPath, 65536),
+        key: input.recoveryKey,
+        initialSettled: true,
+      });
+      if (
+        !completedSuccessors.lastSettled ||
+        (completedSuccessors.successorCount &&
+          !completedSuccessors.latestV2Successor)
+      )
+        return fail();
+      const effective = completedSuccessors.latestV2Successor ?? intent;
       const completedJournal = observeSelectedLoadCompletedJournal(
         journal,
-        intent
+        effective
       );
-      priorJournal = reconstructSelectedLoadResumeJournal({
+      const preEffectiveJournal = reconstructSelectedLoadResumeJournal({
         completedJournal: completedJournal.releasedJournal,
-        intent,
+        intent: effective,
         runId,
       });
+      priorJournal = reconstructSelectedLoadIntentBaseline({
+        observedJournal: preEffectiveJournal,
+        initial: intent,
+        latest: completedSuccessors.latestV2Successor,
+      }).baselineJournal;
       const execution = verifySelectedLoadExecutionBaseline(
         executionBaseline,
         input.recoveryKey
@@ -350,7 +370,9 @@ export function readSelectedLoadInterruptionEvidence(
           )
         );
       priorEntries = reconstructSelectedLoadResumeInventory({
-        completedEntries: entries,
+        completedEntries: entries.filter(
+          (entry) => !completedSuccessors.successorPaths.includes(entry.path)
+        ),
         originalEntries: execution.entries,
         preResumeSnapshot: priorSnapshot,
         intent,
@@ -413,6 +435,12 @@ export function readSelectedLoadInterruptionEvidence(
           journalSha256: sha256(completedJournal.releasedJournal),
           runStateSha256: sha256(canonicalJson(state)),
           reportSha256: plan.receipt.reportSha256,
+          ...(completedSuccessors.latestV2Successor
+            ? {
+                successorSha256:
+                  completedSuccessors.latestV2Successor.successorSha256,
+              }
+            : {}),
         }
       );
       if (

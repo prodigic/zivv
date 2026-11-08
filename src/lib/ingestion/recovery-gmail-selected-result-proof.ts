@@ -10,6 +10,7 @@ interface SelectedLoadResultExpectation {
   journalSha256: string;
   runStateSha256: string;
   reportSha256: string;
+  successorSha256?: string;
 }
 /** Authentication only. Callers must independently prove the original admission,
  * current physical files, SQL catalog and complete journal before relying on it. */
@@ -55,10 +56,11 @@ export function verifySelectedLoadResult(
     "runStateSha256",
     "reportSha256",
   ];
+  if (value.version === 2) fields.push("successorSha256");
   if (
     canonicalJson(Object.keys(value).sort()) !== canonicalJson(fields.sort()) ||
     value.kind !== "zivv-selected-load-result" ||
-    value.version !== 1 ||
+    (value.version !== 1 && value.version !== 2) ||
     typeof value.signature !== "string" ||
     !/^[a-f0-9]{64}$/.test(value.signature) ||
     !Number.isSafeInteger(value.generation) ||
@@ -75,7 +77,7 @@ export function verifySelectedLoadResult(
       return fail();
   const { signature, ...body } = value;
   const actual = createHmac("sha256", key)
-    .update("zivv-selected-load-result/v1\0")
+    .update(`zivv-selected-load-result/v${value.version}\0`)
     .update(canonicalJson(body))
     .digest();
   if (!timingSafeEqual(Buffer.from(signature as string, "hex"), actual))
@@ -96,6 +98,7 @@ export function verifySelectedLoadResult(
         "journalSha256",
         "runStateSha256",
         "reportSha256",
+        ...(value.version === 2 ? ["successorSha256"] : []),
       ].sort()
     )
   )

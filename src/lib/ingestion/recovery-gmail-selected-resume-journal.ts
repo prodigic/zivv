@@ -9,7 +9,10 @@ import type { SelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-
  * validate the result, catalog, files, and reconstructed first-attempt journal. */
 export function reconstructSelectedLoadResumeJournal(input: {
   completedJournal: Buffer;
-  intent: SelectedLoadResumeIntent;
+  intent: Pick<
+    SelectedLoadResumeIntent,
+    "owner" | "fence" | "previousOwner" | "journalSha256"
+  >;
   runId: string;
 }): Buffer {
   const fail = (): never => {

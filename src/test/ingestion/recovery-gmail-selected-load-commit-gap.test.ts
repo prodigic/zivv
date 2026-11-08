@@ -1,5 +1,7 @@
 import { observeSelectedLoadCompletedJournal } from "../../lib/ingestion/recovery-gmail-selected-completed-journal.js";
 import { createHmac } from "node:crypto";
+import { DatabaseSync } from "node:sqlite";
+import { prepareSelectedLoadIntentSuccessor } from "../../lib/ingestion/recovery-gmail-selected-successor-preparation.js";
 import {
   canonicalJson,
   ledgerDigest,
@@ -21,6 +23,7 @@ import {
   unlinkSync,
   readdirSync,
   lstatSync,
+  mkdirSync,
 } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -576,6 +579,91 @@ it("replays a durable result after a retry worker dies before lease release", as
     } finally {
       writeFileSync(join(directory, "load-result.json"), resultBytes);
     }
+    expect(
+      readCanonicalSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
+    ).toEqual(finalCatalog);
+
+    // Synthetic signed successor: exercise the completed inspector without
+    // claiming that a successor installation or retry writer exists.
+    const successor = prepareSelectedLoadIntentSuccessor({
+      initial: intentBytes,
+      successors: [],
+      observedJournal: journal,
+      key: fixture.input.recoveryKey,
+      nowEpochMs: Math.max(Date.now(), verifiedIntent.deadlineEpochMs),
+    });
+    const successorPath = join(directory, "resume-successor-00001.json");
+    mkdirSync(successorPath + "-stage");
+    writeFileSync(successorPath, successor.bytes, { flag: "wx" });
+    const journalDb = new DatabaseSync(
+      join(root, "operator/weekly-runs.sqlite")
+    );
+    try {
+      const updated = journalDb
+        .prepare(
+          "UPDATE ownership SET expires_at = 0 WHERE scope = ? AND owner = ? AND fence = ?"
+        )
+        .run(
+          "prodigic/zivv/production",
+          verifiedIntent.owner,
+          verifiedIntent.fence
+        );
+      expect(Number(updated.changes)).toBe(1);
+    } finally {
+      journalDb.close();
+    }
+    const successorJournal = readWeeklyJournalRecoverySnapshotReadOnly(
+      join(root, "operator/weekly-runs.sqlite")
+    );
+    const { signature: _oldSignature, ...originalResult } = JSON.parse(
+      resultBytes.toString("utf8")
+    ) as Record<string, unknown>;
+    const successorResultBody = {
+      ...originalResult,
+      version: 2,
+      journalSha256: sha256(successorJournal),
+      guardedJournalSha256: sha256(successorJournal),
+      successorSha256: successor.successorSha256,
+    };
+    const successorResult = Buffer.from(
+      canonicalJson({
+        ...successorResultBody,
+        signature: createHmac("sha256", fixture.input.recoveryKey)
+          .update("zivv-selected-load-result/v2\0")
+          .update(canonicalJson(successorResultBody))
+          .digest("hex"),
+      }) + "\n"
+    );
+    const resultPath = join(directory, "load-result.json");
+    writeFileSync(resultPath, successorResult);
+    expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+      status: "completed",
+      loadAllowed: false,
+      activationAllowed: false,
+    });
+    const beforeInspection = readWeeklyJournalRecoverySnapshotReadOnly(
+      join(root, "operator/weekly-runs.sqlite")
+    );
+    writeFileSync(resultPath, resultBytes);
+    try {
+      expect(() => inspectSelectedLoadInterruption(input)).toThrow();
+    } finally {
+      writeFileSync(resultPath, successorResult);
+    }
+    const alteredSuccessor = Buffer.from(successor.bytes);
+    alteredSuccessor[alteredSuccessor.length - 2] =
+      alteredSuccessor[alteredSuccessor.length - 2]! ^ 1;
+    writeFileSync(successorPath, alteredSuccessor);
+    try {
+      expect(() => inspectSelectedLoadInterruption(input)).toThrow();
+    } finally {
+      writeFileSync(successorPath, successor.bytes);
+    }
+    expect(
+      readWeeklyJournalRecoverySnapshotReadOnly(
+        join(root, "operator/weekly-runs.sqlite")
+      )
+    ).toEqual(beforeInspection);
     expect(
       readCanonicalSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
     ).toEqual(finalCatalog);
