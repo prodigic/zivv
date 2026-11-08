@@ -100,6 +100,7 @@ export const RECOVERY_GMAIL_CAPTURE_INTERRUPTION_POINTS = [
   "source-committed",
   "source-committed-hard-death",
   "capture-files-written",
+  "capture-files-written-hard-death",
   "result-saved",
   "result-saved-hard-death",
   "admission-stage-flushed",
@@ -2349,6 +2350,19 @@ async function execute(
     );
   };
   const stop = (point: CaptureInterruption) => {
+    if (
+      interruption === "capture-files-written-hard-death" &&
+      point === "capture-files-written"
+    ) {
+      writeSync(
+        2,
+        JSON.stringify({
+          captureError: "RECOVERY_GMAIL_FILES_WRITTEN_HARD_DEATH",
+        }) + "\n"
+      );
+      process.kill(process.pid, "SIGKILL");
+      throw Error("RECOVERY_GMAIL_CAPTURE_HARD_DEATH_FAILED");
+    }
     if (
       interruption === "result-saved-hard-death" &&
       point === "result-saved"
