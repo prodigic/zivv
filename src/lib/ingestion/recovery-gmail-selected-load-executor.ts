@@ -1,4 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
+import { prepareSelectedLoadIntentSuccessor } from "./recovery-gmail-selected-successor-preparation.js";
 import {
   describeResumeSnapshot,
   resumeSnapshotChunkSize,
@@ -91,6 +92,7 @@ export type SelectedLoadJournalOperation =
 interface Scope {
   chunkPauseTest?: "linked" | "partial" | "intent-linked" | "lease-acquired";
   evidenceGuard?: boolean;
+  successor?: { path: string };
   incompleteSnapshot?: {
     path: string;
     bytes: Buffer;
@@ -622,6 +624,12 @@ export function selectedGmailLoadFile(
                   : "load-result.json-stage"
               ),
             ];
+    const isSuccessorStage =
+      scope.phase === "evidence" &&
+      !!scope.evidenceGuard &&
+      !!scope.resume &&
+      !!scope.successor &&
+      absolute === scope.successor.path + "-stage";
     const isSnapshotStage =
       scope.phase === "evidence" &&
       !!scope.resume &&
@@ -631,7 +639,7 @@ export function selectedGmailLoadFile(
       dirname(absolute) === scope.directory;
     if (
       !scope.directories.has(absolute) ||
-      (!permitted.includes(absolute) && !isSnapshotStage)
+      (!permitted.includes(absolute) && !isSnapshotStage && !isSuccessorStage)
     )
       fail();
     return true;
@@ -674,6 +682,12 @@ export function selectedGmailLoadFile(
     validateRecoveredBackupKeyBytes(bytes, scope.key);
     if (!scope.files.has(target)) scope.files.set(target, Buffer.from(bytes));
   }
+  if (
+    scope.successor &&
+    target === scope.successor.path &&
+    (scope.phase !== "evidence" || !scope.evidenceGuard)
+  )
+    fail();
   const resumeIntentFile = join(scope.directory, "resume-intent.json"),
     executionFile = join(scope.directory, "execution-baseline.json"),
     resultFile = join(scope.directory, "load-result.json"),
@@ -1244,7 +1258,11 @@ async function resumeSelectedLoad(
   try {
     assertRetainedSelectedLoadExecutor(runtime.destination);
     const evidence = readSelectedLoadInterruptionEvidence(input);
-    if (!["committed", "completed"].includes(evidence.report.status))
+    if (
+      !["committed", "completed", "pending-intent"].includes(
+        evidence.report.status
+      )
+    )
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED");
     if (evidence.report.lease.status === "active")
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
@@ -1277,6 +1295,20 @@ async function resumeSelectedLoad(
         accepted: plan.result.report.acceptedEventIds.length,
       };
     }
+    const pending = evidence.report.status === "pending-intent";
+    if (
+      pending &&
+      (!evidence.pendingIntent?.settled ||
+        !evidence.pendingSuccessors?.lastSettled ||
+        (evidence.pendingSuccessors.successorCount > 0 &&
+          !evidence.pendingSuccessors.latestV2Successor))
+    )
+      throw Error("RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED");
+    if (
+      pending &&
+      Date.now() < evidence.pendingSuccessors!.effectiveDeadlineEpochMs
+    )
+      throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
     const savedJournal = validateWeeklyJournalRecoverySnapshot(
       evidence.observedJournal
     );
@@ -1324,7 +1356,7 @@ async function resumeSelectedLoad(
     const snapshotEvidence = evidence.changedFiles.snapshot
       ? describeResumeSnapshot(evidence.changedFiles.snapshot)
       : null;
-    const intent = signed(
+    const initialIntent = signed(
       {
         kind: "zivv-selected-load-resume-intent",
         version: 2,
@@ -1344,6 +1376,39 @@ async function resumeSelectedLoad(
       input.recoveryKey,
       "zivv-selected-load-resume-intent/v1"
     );
+    const readSuccessorInputs = () =>
+      pending
+        ? Array.from(
+            { length: evidence.pendingSuccessors!.successorCount },
+            (_, index) =>
+              readFileSync(
+                join(
+                  directory,
+                  `resume-successor-${String(index + 1).padStart(5, "0")}.json`
+                )
+              )
+          )
+        : [];
+    const successorInputs = readSuccessorInputs();
+    const successor = pending
+      ? prepareSelectedLoadIntentSuccessor({
+          initial: evidence.pendingIntent!.intentBytes,
+          successors: successorInputs,
+          observedJournal: evidence.observedJournal,
+          key: input.recoveryKey,
+          nowEpochMs: now,
+        })
+      : undefined;
+    const successorPath = successor
+      ? join(
+          directory,
+          `resume-successor-${String(successor.sequence).padStart(5, "0")}.json`
+        )
+      : undefined;
+    const intent = initialIntent;
+    const baselineEntries = pending
+      ? evidence.physicalEntries
+      : evidence.observedEntries;
     const files = new Map<string, Buffer>(),
       readonlyFiles = new Map<string, Buffer>();
     const identities = ["ledger.sqlite", "weekly-runs.sqlite"].map((name) => {
@@ -1352,7 +1417,7 @@ async function resumeSelectedLoad(
       if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1) fail();
       return { path, dev: stat.dev, ino: stat.ino };
     });
-    for (const entry of evidence.observedEntries)
+    for (const entry of baselineEntries)
       if (
         entry.kind === "file" &&
         entry.path.startsWith("recovery-gmail-load/")
@@ -1377,9 +1442,10 @@ async function resumeSelectedLoad(
       files.set(snapshotPath, evidence.changedFiles.snapshot);
     if (evidence.changedFiles.report)
       files.set(reportPath, evidence.changedFiles.report);
-    files.set(intentPath, intent);
+    if (successor && successorPath) files.set(successorPath, successor.bytes);
+    else files.set(intentPath, intent);
     const snapshotChunks =
-      snapshotEvidence?.chunks.map(({ index }) => {
+      (pending ? undefined : snapshotEvidence)?.chunks.map(({ index }) => {
         const name = `resume-snapshot-${String(index).padStart(3, "0")}.bin`;
         const path = join(directory, name);
         const bytes = Buffer.from(
@@ -1403,8 +1469,9 @@ async function resumeSelectedLoad(
     ]);
     for (const chunk of snapshotChunks)
       dirs.add(join(directory, chunk.name + "-stage"));
+    if (successorPath) dirs.add(successorPath + "-stage");
     const originalEntries = new Map(
-      evidence.observedEntries.map((entry) => [entry.path, entry])
+      baselineEntries.map((entry) => [entry.path, entry])
     );
     const stagedTransients = new Map<string, Buffer>();
     for (const stagedPath of evidence.stagedSnapshotPaths) {
@@ -1425,6 +1492,9 @@ async function resumeSelectedLoad(
     scope = {
       active: true,
       chunkPauseTest,
+      ...(successor && successorPath
+        ? { successor: { path: successorPath } }
+        : {}),
       ...(evidence.incompleteSnapshotCandidate
         ? {
             incompleteSnapshot: {
@@ -1540,7 +1610,7 @@ async function resumeSelectedLoad(
           }
           fail();
         }
-        for (const entry of evidence.observedEntries)
+        for (const entry of baselineEntries)
           if (!actual.some((item) => item.path === entry.path)) fail();
       },
     };
@@ -1654,11 +1724,27 @@ async function resumeSelectedLoad(
                   chunk.bytes,
                   join(directory, chunk.name + "-stage")
                 );
-              installRecoveryIntent(
-                intentPath,
-                intent,
-                join(directory, "resume-intent.json-stage")
-              );
+              if (successor && successorPath) {
+                const guardedSuccessor = prepareSelectedLoadIntentSuccessor({
+                  initial: evidence.pendingIntent!.intentBytes,
+                  successors: readSuccessorInputs(),
+                  observedJournal: guardedJournal,
+                  key: input.recoveryKey,
+                  nowEpochMs: now,
+                });
+                if (!guardedSuccessor.bytes.equals(successor.bytes)) fail();
+                installRecoveryIntent(
+                  successorPath,
+                  successor.bytes,
+                  successorPath + "-stage"
+                );
+              } else {
+                installRecoveryIntent(
+                  intentPath,
+                  intent,
+                  join(directory, "resume-intent.json-stage")
+                );
+              }
               scope!.assertCurrent();
             }
           );
@@ -1708,7 +1794,10 @@ async function resumeSelectedLoad(
         result = signed(
           {
             kind: "zivv-selected-load-result",
-            version: 1,
+            version: successor ? 2 : 1,
+            ...(successor
+              ? { successorSha256: successor.successorSha256 }
+              : {}),
             admissionSha256: evidence.admissionSha256,
             executionBaselineSha256: sha256(evidence.executionBaseline),
             runId: state.runId,
@@ -1720,7 +1809,9 @@ async function resumeSelectedLoad(
             reportSha256: plan.receipt.reportSha256,
           },
           input.recoveryKey,
-          "zivv-selected-load-result/v1"
+          successor
+            ? "zivv-selected-load-result/v2"
+            : "zivv-selected-load-result/v1"
         );
         scope!.phase = "result";
         try {

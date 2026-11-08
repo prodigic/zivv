@@ -403,7 +403,7 @@ it.each(["intent-linked", "lease-acquired"] as const)(
         const retry = await resume();
         expect(retry.code).toBe(1);
         expect(retry.stderr).toContain(
-          "RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED"
+          "RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE"
         );
         expect(
           readWeeklyJournalRecoverySnapshotReadOnly(
@@ -420,6 +420,67 @@ it.each(["intent-linked", "lease-acquired"] as const)(
             fixture.input
           ).inventoryGmailSelectedLoadExecution()
         ).toEqual(files);
+        while (Date.now() <= intent.deadlineEpochMs)
+          await new Promise((resolve) =>
+            setTimeout(
+              resolve,
+              Math.min(
+                1000,
+                Math.max(1, intent.deadlineEpochMs - Date.now() + 1)
+              )
+            )
+          );
+        const completed = await resume();
+        if (completed.code !== 0)
+          console.error(
+            "SELECTED_LOAD_SUCCESSOR_DIAGNOSTIC",
+            completed.stderr.slice(0, 1500)
+          );
+        expect(completed.code).toBe(0);
+        const successorPath = join(directory, "resume-successor-00001.json");
+        const successorBytes = readFileSync(successorPath);
+        const result = JSON.parse(
+          readFileSync(join(directory, "load-result.json"), "utf8")
+        ) as {
+          version: number;
+          successorSha256: string;
+        };
+        expect(result).toMatchObject({
+          version: 2,
+          successorSha256: sha256(successorBytes),
+        });
+        expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+          status: "completed",
+          loadAllowed: false,
+          activationAllowed: false,
+        });
+        const completedJournal = readWeeklyJournalRecoverySnapshotReadOnly(
+          join(root, "operator/weekly-runs.sqlite")
+        );
+        const completedCatalog = readCanonicalSqliteLedgerReadOnly(
+          join(root, "operator/ledger.sqlite")
+        );
+        const completedFiles = openPreparedRuntimeForAdmission(
+          fixture.input
+        ).inventoryGmailSelectedLoadExecution();
+        const replay = await resume();
+        expect(replay.code).toBe(0);
+        expect(JSON.parse(replay.stdout)).toEqual(JSON.parse(completed.stdout));
+        expect(
+          readWeeklyJournalRecoverySnapshotReadOnly(
+            join(root, "operator/weekly-runs.sqlite")
+          )
+        ).toEqual(completedJournal);
+        expect(
+          readCanonicalSqliteLedgerReadOnly(
+            join(root, "operator/ledger.sqlite")
+          )
+        ).toEqual(completedCatalog);
+        expect(
+          openPreparedRuntimeForAdmission(
+            fixture.input
+          ).inventoryGmailSelectedLoadExecution()
+        ).toEqual(completedFiles);
         preserve = false;
         return;
       }
