@@ -90,7 +90,12 @@ export type SelectedLoadJournalOperation =
   | { kind: "artifact"; runId: string; stage: string; bytes: Buffer }
   | { kind: "check" };
 interface Scope {
-  chunkPauseTest?: "linked" | "partial" | "intent-linked" | "lease-acquired";
+  chunkPauseTest?:
+    | "linked"
+    | "partial"
+    | "intent-linked"
+    | "lease-acquired"
+    | "successor-linked";
   evidenceGuard?: boolean;
   successor?: { path: string };
   incompleteSnapshot?: {
@@ -795,6 +800,16 @@ export function observeSelectedGmailLoadFile(
     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
     throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
   }
+  if (
+    scope.chunkPauseTest === "successor-linked" &&
+    point === "linked" &&
+    !!scope.successor &&
+    resolve(path) === scope.successor.path
+  ) {
+    process.stdout.write("SELECTED_LOAD_TEST_SUCCESSOR_LINKED\n");
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+    throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+  }
   if (point === "published") {
     const target = resolve(path),
       expected = scope.files.get(target);
@@ -1247,6 +1262,7 @@ async function resumeSelectedLoad(
     | "partial"
     | "intent-linked"
     | "lease-acquired"
+    | "successor-linked"
     | undefined
 ) {
   assertNoSelectedGmailLoadExecution();
@@ -1887,13 +1903,19 @@ export function resumeRecoveredGmailSelectedLoad(
 /** Fixed test-only pause during the first chunk write or link; grants no new authority. */
 export function resumeRecoveredGmailSelectedLoadForTest(
   input: RecoveryGmailSelectedLoadInstallationInput,
-  point: "linked" | "partial" | "intent-linked" | "lease-acquired" = "linked"
+  point:
+    | "linked"
+    | "partial"
+    | "intent-linked"
+    | "lease-acquired"
+    | "successor-linked" = "linked"
 ) {
   if (
     point !== "linked" &&
     point !== "partial" &&
     point !== "intent-linked" &&
-    point !== "lease-acquired"
+    point !== "lease-acquired" &&
+    point !== "successor-linked"
   )
     fail();
   return resumeSelectedLoad(input, point);

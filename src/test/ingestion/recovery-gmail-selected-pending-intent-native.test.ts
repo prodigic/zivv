@@ -42,7 +42,13 @@ import {
 } from "../../lib/ingestion/weekly-run-journal.js";
 import { proveSelectedLoadJournalDelta } from "../../lib/ingestion/recovery-gmail-selected-journal-delta.js";
 vi.setConfig({ testTimeout: 1200000 });
-it.each(["intent-linked", "lease-acquired", "lease-acquired-twice"] as const)(
+const interruptionPoints = [
+  "intent-linked",
+  "lease-acquired",
+  "lease-acquired-twice",
+  "successor-linked",
+] as const;
+it.each(interruptionPoints)(
   "observes retry worker death at %s",
   async (point) => {
     const fixture = await createRecoveryGmailCaptureRuntimeFixture({
@@ -266,7 +272,11 @@ it.each(["intent-linked", "lease-acquired", "lease-acquired-twice"] as const)(
       }
 
       const resumedScript = `try{const m=await import(${JSON.stringify(module)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const result=await m.resumeRecoveredGmailSelectedLoad(f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)));console.log(JSON.stringify(result));}catch(e){const code=e instanceof Error&&/^[A-Z0-9_]{1,80}$/.test(e.message)?e.message:"NATIVE_RESUME_ERROR";console.error(code);process.exitCode=1;}`;
-      const resume = async (killAtResult = false, killAtChunk = false) => {
+      const resume = async (
+        killAtResult = false,
+        killAtChunk = false,
+        successorPause = false
+      ) => {
         const child = spawn(
           process.execPath,
           [
@@ -282,7 +292,7 @@ it.each(["intent-linked", "lease-acquired", "lease-acquired-twice"] as const)(
                   )
                   .replace(
                     "f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)))",
-                    `f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)), '${point === "lease-acquired-twice" ? "lease-acquired" : point}')`
+                    `f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)), '${successorPause ? "successor-linked" : point === "lease-acquired-twice" || point === "successor-linked" ? "lease-acquired" : point}')`
                   )
               : resumedScript,
           ],
@@ -302,9 +312,11 @@ it.each(["intent-linked", "lease-acquired", "lease-acquired-twice"] as const)(
           if (
             killAtChunk &&
             stdout.includes(
-              point === "intent-linked"
-                ? "SELECTED_LOAD_TEST_INTENT_LINKED"
-                : "SELECTED_LOAD_TEST_LEASE_ACQUIRED"
+              successorPause
+                ? "SELECTED_LOAD_TEST_SUCCESSOR_LINKED"
+                : point === "intent-linked"
+                  ? "SELECTED_LOAD_TEST_INTENT_LINKED"
+                  : "SELECTED_LOAD_TEST_LEASE_ACQUIRED"
             ) &&
             !killed
           ) {
@@ -366,7 +378,11 @@ it.each(["intent-linked", "lease-acquired", "lease-acquired-twice"] as const)(
         throw Error("Expected prior encrypted snapshot");
       const intentDeath = await resume(false, true);
       expect(intentDeath.killed).toBe(true);
-      if (point === "lease-acquired" || point === "lease-acquired-twice") {
+      if (
+        point === "lease-acquired" ||
+        point === "lease-acquired-twice" ||
+        point === "successor-linked"
+      ) {
         expect(intentDeath.contention).toEqual([17, 0]);
         expect(intentDeath.stdout).toContain(
           "SELECTED_LOAD_TEST_LEASE_ACQUIRED"
@@ -430,6 +446,58 @@ it.each(["intent-linked", "lease-acquired", "lease-acquired-twice"] as const)(
               )
             )
           );
+        if (point === "successor-linked") {
+          const successorDeath = await resume(false, true, true);
+          if (!successorDeath.killed)
+            console.error(
+              "SUCCESSOR_LINK_PAUSE_DIAGNOSTIC",
+              successorDeath.code,
+              successorDeath.stderr.slice(0, 1500)
+            );
+          expect(successorDeath.killed).toBe(true);
+          expect(successorDeath.contention).toEqual([17, 17]);
+          const successorPath = join(directory, "resume-successor-00001.json");
+          expect(lstatSync(successorPath).nlink).toBe(2);
+          expect(readdirSync(successorPath + "-stage")).toHaveLength(1);
+          expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+            status: "pending-intent",
+            pendingSuccessorCount: 1,
+            loadAllowed: false,
+            activationAllowed: false,
+          });
+          const beforeJournal = readWeeklyJournalRecoverySnapshotReadOnly(
+            join(root, "operator/weekly-runs.sqlite")
+          );
+          const beforeCatalog = readCanonicalSqliteLedgerReadOnly(
+            join(root, "operator/ledger.sqlite")
+          );
+          const beforeFiles = openPreparedRuntimeForAdmission(
+            fixture.input
+          ).inventoryGmailSelectedLoadExecution();
+          const refused = await resume();
+          expect(refused.code).toBe(1);
+          expect(refused.stderr).toContain(
+            "RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED"
+          );
+          expect(
+            readWeeklyJournalRecoverySnapshotReadOnly(
+              join(root, "operator/weekly-runs.sqlite")
+            )
+          ).toEqual(beforeJournal);
+          expect(
+            readCanonicalSqliteLedgerReadOnly(
+              join(root, "operator/ledger.sqlite")
+            )
+          ).toEqual(beforeCatalog);
+          expect(
+            openPreparedRuntimeForAdmission(
+              fixture.input
+            ).inventoryGmailSelectedLoadExecution()
+          ).toEqual(beforeFiles);
+          expect(lstatSync(successorPath).nlink).toBe(2);
+          preserve = false;
+          return;
+        }
         if (point === "lease-acquired-twice") {
           const successorDeath = await resume(false, true);
           expect(successorDeath.killed).toBe(true);
