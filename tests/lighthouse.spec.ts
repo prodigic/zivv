@@ -1,9 +1,20 @@
 import { test, expect } from "@playwright/test";
+import { isolateThirdPartyArtwork } from "./helpers/controlled-artwork";
 
 test.describe("Lighthouse Performance Audits", () => {
-  test.beforeEach(async ({ page }) => {
-    // Ensure clean state for audits
+  test.beforeEach(async ({ page, baseURL }) => {
+    // Issue #104: audits must not wait on third-party artwork host
+    // availability; keep app-owned requests real while answering external
+    // image requests with controlled responses (same rule as #98 smoke).
+    if (!baseURL) {
+      throw new Error("Lighthouse audits require a configured app base URL");
+    }
+    isolateThirdPartyArtwork(page, new URL(baseURL).origin);
+
+    // Ensure clean state for audits: app shell first (network idle only
+    // proves network quiet, not that React finished mounting), then idle.
     await page.goto("/");
+    await page.locator("main").waitFor({ state: "attached", timeout: 15000 });
     await page.waitForLoadState("networkidle");
   });
 

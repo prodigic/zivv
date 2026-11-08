@@ -1,12 +1,168 @@
 import { test, expect } from "@playwright/test";
+import {
+  isolateThirdPartyArtwork,
+  thirdPartyArtworkIsolation,
+} from "./helpers/controlled-artwork";
 
 test.describe("Performance Testing", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, baseURL }) => {
+    // Issue #104: the gate must measure app readiness, not third-party
+    // artwork host availability. Cross-origin image requests get controlled
+    // responses; app-owned JS/CSS/data requests stay on the real network.
+    if (!baseURL) {
+      throw new Error("Performance tests require a configured app base URL");
+    }
+    isolateThirdPartyArtwork(page, new URL(baseURL).origin);
+
     // Set up performance monitoring
     await page.addInitScript(() => {
       // Mark performance measurement start
       window.performance.mark("test-start");
     });
+  });
+
+  test("third-party artwork stalls cannot hold the performance gate (#104)", async ({
+    page,
+    browser,
+  }) => {
+    /**
+     * Controlled reproduction of the retained PR99 CI job evidence: a
+     * hosted-runner could not reach third-party artwork hosts, so one
+     * pending cross-origin image request kept networkidle unsatisfied
+     * until the full 30s test timeout. This test pins both halves of the
+     * mechanism so future changes cannot silently re-enable either.
+     */
+
+    // Phase 1 - without the suite isolation (fresh context so the parked
+    // probe cannot leak into this test's page), a stalled external artwork
+    // request injected at document start reproduces the pre-fix hazard:
+    // networkidle stays unreachable while the request never resolves.
+    const stalledContext = await browser.newContext();
+    try {
+      const stalledPage = await stalledContext.newPage();
+      // Park the request for good: the handler must never resolve, or
+      // Playwright treats the route as handled and continues the request.
+      await stalledPage.route(
+        "**/stall-blackhole.zivv-probe.invalid/**",
+        async () => {
+          await new Promise(() => {});
+        }
+      );
+      const probeSeenPromise = stalledPage.waitForRequest(
+        "**/stall-blackhole.zivv-probe.invalid/**",
+        { timeout: 10000 }
+      );
+      await stalledPage.addInitScript(() => {
+        const inject = () => {
+          const probe = document.createElement("img");
+          probe.src = "https://stall-blackhole.zivv-probe.invalid/probe.jpg";
+          (document.body || document.documentElement).appendChild(probe);
+        };
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", inject);
+        } else {
+          inject();
+        }
+      });
+      await stalledPage.goto("about:blank", { waitUntil: "commit" });
+      await probeSeenPromise;
+
+      let hazardReproduced: string;
+      try {
+        await stalledPage.waitForLoadState("networkidle", { timeout: 2500 });
+        hazardReproduced = "networkidle settled despite the stalled host";
+      } catch {
+        hazardReproduced = "no network idle while the host is stalled";
+      }
+      expect(hazardReproduced).toBe(
+        "no network idle while the host is stalled"
+      );
+    } finally {
+      await stalledContext.close();
+    }
+
+    // Phase 2 - with the suite isolation installed, the homepage carries the
+    // same stalled-host probe image from document start and must still reach
+    // network idle promptly: app readiness is independent of external host
+    // availability, and below the suite's existing homepage budgets.
+    const probeSeenPromise = page.waitForRequest(
+      "**/stall-blackhole.zivv-probe.invalid/**",
+      { timeout: 10000 }
+    );
+    await page.addInitScript(() => {
+      const inject = () => {
+        const probe = document.createElement("img");
+        probe.src = "https://stall-blackhole.zivv-probe.invalid/probe.jpg";
+        (document.body || document.documentElement).appendChild(probe);
+      };
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", inject);
+      } else {
+        inject();
+      }
+    });
+    const idleStart = Date.now();
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    const appReadyMs = Date.now() - idleStart;
+    // Generous ceiling that still separates controlled readiness from the
+    // 30s pre-fix wait; this tests the waiting strategy, not app budgets.
+    expect(appReadyMs).toBeLessThan(10000);
+    await probeSeenPromise;
+
+    // The recorded probe response is the controlled one, not live traffic.
+    const isolation = thirdPartyArtworkIsolation(page);
+    const probeRecord = isolation
+      .controlledExternalImages()
+      .find((record) => record.url.includes("stall-blackhole.zivv-probe"));
+    expect(probeRecord).toBeTruthy();
+    expect(probeRecord && probeRecord.status).toBe(200);
+
+    // Every cross-origin image the homepage rendered also stayed
+    // controlled; no artwork request bypassed the isolation onto the
+    // real network.
+    for (const record of isolation.records()) {
+      if (record.origin === "cross" && record.resourceType === "image") {
+        expect(record.outcome, record.url).toBe("fulfilled-controlled");
+      }
+    }
+
+    // App-owned requests stay real: the app data and assets observed in
+    // this load all completed successfully on the actual network.
+    const appOwned = isolation.appOwnedRequests();
+    expect(appOwned.length).toBeGreaterThan(0);
+    for (const record of appOwned) {
+      if (
+        record.url.includes("/zivv/data/") ||
+        record.url.includes("/zivv/assets/")
+      ) {
+        expect(record.outcome, record.url).toBe("completed");
+        expect(record.status, record.url).toBe(200);
+        expect(record.durationMs, record.url).not.toBeNull();
+      }
+    }
+    console.log(
+      "Controlled reproduction (#104):",
+      JSON.stringify(
+        {
+          appReadyMs,
+          controlledExternalImages: isolation.controlledExternalImages().length,
+          appOwnedRequests: appOwned.length,
+          slowestAppOwnedRequests: appOwned
+            .filter((record) => record.durationMs !== null)
+            .sort(
+              (a, b) => (b.durationMs ?? 0) - (a.durationMs ?? 0)
+            )
+            .slice(0, 5)
+            .map((record) => ({
+              url: record.url.replace(/^https?:\/\/[^/]+/, ""),
+              durationMs: record.durationMs,
+            })),
+        },
+        null,
+        2
+      )
+    );
   });
 
   test("should load homepage within acceptable time limits", async ({
