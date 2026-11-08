@@ -124,7 +124,7 @@ describe("Steve text archive", () => {
       readFileSync(join(input.archiveDirectory, "2025-07-11.txt"), "utf8")
     ).toBe("old");
   });
-  it("selects a linked correction when both arrive together or after the original", async () => {
+  it("uses the selected correction date together and retains the original path when corrected later", async () => {
     for (const firstOriginal of [false, true]) {
       const input = setup();
       add(
@@ -149,12 +149,22 @@ describe("Steve text archive", () => {
       expect((await archiveRetainedSteveEmails(input)).status).toBe(
         firstOriginal ? "correction-replaced" : "created"
       );
+      const selectedDate = firstOriginal ? "2026-10-17" : "2026-10-18";
       expect(
-        readFileSync(join(input.archiveDirectory, "2026-10-17.txt"), "utf8")
+        readFileSync(
+          join(input.archiveDirectory, `${selectedDate}.txt`),
+          "utf8"
+        )
       ).toBe("Corrected\n");
       expect((await archiveRetainedSteveEmails(input)).status).toBe(
         "already-matched"
       );
+      const otherDate = firstOriginal ? "2026-10-18" : "2026-10-17";
+      writeFileSync(join(input.archiveDirectory, `${otherDate}.txt`), "other");
+      expect(await archiveRetainedSteveEmails(input)).toMatchObject({
+        status: "needs-attention",
+        reason: "ARCHIVE_AMBIGUOUS_FILES",
+      });
     }
   });
 

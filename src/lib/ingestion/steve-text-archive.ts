@@ -186,10 +186,16 @@ async function updateArchive(input: {
         return archiveEmailBody(raw);
       })
     );
-    target = join(directory, `${bodies[0].date}.txt`);
-    const desired = bodies.at(-1)!.body;
+    const latest = bodies.at(-1)!;
+    const desired = latest.body;
     lock = join(directory, `.${bodies[0].date}.archive.lock`);
     lockFd = openSync(lock, "wx", 0o600);
+    const candidatePaths = [
+      ...new Set(bodies.map(({ date }) => join(directory, `${date}.txt`))),
+    ];
+    const existingPaths = candidatePaths.filter((path) => existsSync(path));
+    if (existingPaths.length > 1) archiveError("ARCHIVE_AMBIGUOUS_FILES");
+    target = existingPaths[0] ?? join(directory, `${latest.date}.txt`);
     if (!existsSync(target)) {
       writeFileSync(target, desired, { flag: "wx" });
       if (!readRegular(target).equals(desired))

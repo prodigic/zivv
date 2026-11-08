@@ -165,9 +165,11 @@ The archive uses the confirmed retained raw message, takes the calendar date
 literally from its Date header, prefers its plain body, and removes the dashed
 forwarding footer. An absent footer, unreadable message, unconfigured path,
 ambiguous source, or different existing file is reported for review. For an
-approved correction, the confirmed receipt lineage selects the newest message;
-the original message's Date determines the single filename even when the
-correction was sent on a later day. Replacement is allowed only when the
+approved correction, the confirmed receipt lineage selects the newest message.
+When original and correction arrive together, the selected correction's Date
+determines the filename. If an earlier message was already archived, its file
+is replaced in place even when the correction has a later Date; multiple
+existing candidate files require review. Replacement is allowed only when the
 existing bytes match a known earlier message in that lineage. An identical
 file is a successful retry. A per-date exclusive lock coordinates archive
 writers; an interrupted process can leave a `.archive.lock` or `.archive.tmp`
