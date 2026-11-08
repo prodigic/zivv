@@ -57,7 +57,7 @@ export function sha256(value: string | Uint8Array): string {
 const DATE_BOUNDARY =
   /^(?:(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(?:\d{1,2}(?:\s|$)|\S+\s+(?:sun|mon|tue|wed|thu|fri|sat|\d{4})\b)|[A-Za-z]{2,9}\s+\d{1,2}\s+(?:sun|mon|tue|wed|thu|fri|sat|\d{4})\b|\d{1,2}[/-]\d)/i;
 const VENUE_CONTINUATION =
-  /^(?:a\/a\b|all ages\b|\d+\+|\$|\d{1,2}(?::\d{2})?\s*[ap]m\b|free\b|sold out\b|cancelled\b|doors\b)/i;
+  /^(?:a\/a\b|all ages\b|\d+\+|\$|\d{1,2}(?::\d{2})?\s*[ap]m\b|noon\b|free\b|sold out\b|cancelled\b|doors\b)/i;
 
 function hasRealDate(row: string, issueTime: number): boolean {
   const match = row.match(

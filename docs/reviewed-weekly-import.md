@@ -108,6 +108,13 @@ importer constant. The receipt parser retains strict v4 and v5 support without
 changing existing serialized identities: the importer name and run-ID prefix
 must agree.
 
+The maintained noon window parser uses `steveslist-v7`. `noon` is read as
+12 p.m. in single times, door/show pairs (`11am/noon`, `noon/2pm`) and ranges
+(`noon til 2pm`, `noon-6pm`); a range end never replaces the start time that
+precedes it. Receipts under v4, v5 and v6 replay their exact committed runs
+unchanged; v4, v5 and v6 review receipts can recover only their already
+committed or published run.
+
 A historical v4 or v5 review can recover only its exact already
 committed/published run, with the same corrected input, aliases, configuration,
 observation and saved report evidence. It cannot authorize a fresh historical

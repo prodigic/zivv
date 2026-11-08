@@ -105,20 +105,22 @@ export class DateParser {
   }
 
   /**
-   * Parse time string like "7pm/8pm" or "7:30pm" to 24-hour format
+   * Parse time strings like "7pm/8pm" (door/show pair), "6pm til 9pm" (open
+   * range), or "noon" (12 p.m.) into 24-hour format. The last member of a
+   * door/show pair is the show start; a "til"- or dash-joined range end is the
+   * closing boundary of the event window and never replaces the start time.
    */
   static parseTime(
     timeString: string
   ): { startTime: string; doorTime?: string } | null {
     if (!timeString) return null;
 
-    // Handle formats like "7pm/8pm" (door/show times)
-    const timeParts = timeString.split("/");
-    const startTimeStr = timeParts[timeParts.length - 1]; // Use show time as primary
-    const doorTimeStr = timeParts.length > 1 ? timeParts[0] : undefined;
-
     const parseHour = (time: string): string | null => {
-      const match = time.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+      const text = time.trim();
+      // "noon" is an explicit 12 p.m. clock token, whatever case the
+      // publisher uses; it carries no digits for the numeric path below.
+      if (/^noon$/i.test(text)) return "12:00";
+      const match = text.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
       if (!match) return null;
 
       let hour = parseInt(match[1], 10);
@@ -134,6 +136,18 @@ export class DateParser {
 
       return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
     };
+
+    // Handle formats like "7pm/8pm" (door/show times)
+    const timeParts = timeString.split("/");
+    const showPart = timeParts[timeParts.length - 1]; // Use show time as primary
+    const doorPart = timeParts.length > 1 ? timeParts[0] : undefined;
+
+    // A range end ("6pm til 9pm", "noon-6pm", "9pm until 2am") closes the
+    // event window; strip it so it cannot become the start time.
+    const rangeEnd =
+      /\s*(?:\b(?:til|until)\b|[-\u2013\u2014])\s*(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon)\s*$/i;
+    const startTimeStr = showPart.replace(rangeEnd, "");
+    const doorTimeStr = doorPart?.replace(rangeEnd, "");
 
     const startTime = parseHour(startTimeStr);
     const doorTime = doorTimeStr ? parseHour(doorTimeStr) : null;
@@ -319,10 +333,38 @@ export class VenueLineParser {
 
   private static extractTime(text: string): string {
     // Require a clock marker; ages and ticket prices are not show times.
-    const timeMatch = text.match(
-      /\b(\d{1,2}(?::\d{2})?\s*(?:am|pm)?\s*\/\s*\d{1,2}(?::\d{2})?\s*(?:am|pm)|\d{1,2}(?::\d{2})?\s*(?:am|pm))\b/i
-    );
-    return timeMatch?.[1] || "";
+    // "noon" (12 p.m.) is an explicit clock token, so rows such as
+    // "a/a free noon" keep their real start time.
+    const single = text.match(/\b(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon)\b/i);
+    if (!single || single.index === undefined) return "";
+
+    let expression = single[0];
+    // A door/show pair may also begin with a bare hour ("5/6pm"); ordinary
+    // prices like "$30/8pm" must not become times, so only a sane 1..23
+    // hour joins the expression.
+    const bareDoor = text.slice(0, single.index).match(/(\d{1,2})\/$/);
+    if (bareDoor && Number(bareDoor[1]) >= 1 && Number(bareDoor[1]) <= 23) {
+      expression = `${bareDoor[1]}/${expression}`;
+    }
+    // Consumed text extends from the bare door through the single token.
+    let end = single.index + single[0].length + (bareDoor?.[0].length ?? 0);
+    // Bind the show time of a door/show pair ("11am/noon", "noon/2pm").
+    const pair = text
+      .slice(end)
+      .match(/^\s*\/\s*(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon)\b/i);
+    if (pair?.[0]) {
+      expression += pair[0];
+      end += pair[0].length;
+    }
+    // Bind the range end ("til 11pm", "noon-6pm"); it is a closing boundary.
+    const range = text
+      .slice(end)
+      .match(
+        /^\s*(?:\b(?:til|until)\b\s*|[-\u2013\u2014]\s*)(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon)\b/i
+      );
+    if (range?.[0]) expression += range[0];
+
+    return expression;
   }
 
   private static determineVenueType(symbols: string, venue: string): VenueType {

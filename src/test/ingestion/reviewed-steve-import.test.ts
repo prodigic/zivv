@@ -215,7 +215,9 @@ describe("reviewed Steve import", () => {
     const cancelled = content.trimEnd() + " (cancelled)\n";
     const { receipt } = await reviewSteveImport(root, cancelled, observedAt);
     expect(receipt.importer).toBe(CURRENT_STEVE_IMPORTER);
-    expect(receipt.importRunId).toMatch(/^steveslist-v6-/);
+    expect(receipt.importRunId).toMatch(
+      new RegExp(`^${CURRENT_STEVE_IMPORTER}-`)
+    );
     const loaded = await loadReviewedSteveImport(
       root,
       cancelled,
