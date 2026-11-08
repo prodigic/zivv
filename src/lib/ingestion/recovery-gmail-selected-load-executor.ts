@@ -98,7 +98,8 @@ interface Scope {
     | "intent-linked"
     | "lease-acquired"
     | "successor-linked"
-    | "successor-flushed";
+    | "successor-flushed"
+    | "catalog-before-commit";
   evidenceGuard?: boolean;
   successor?: { path: string };
   incompleteSnapshot?: {
@@ -314,6 +315,11 @@ export function selectedGmailLoadCatalogBeforeCommit(path: string): void {
   if (!scope || !scope.pending) return;
   if (resolve(path) !== join(scope.operator, "ledger.sqlite")) fail();
   assertGuardedCatalogLease(scope);
+  if (scope.chunkPauseTest === "catalog-before-commit") {
+    process.stdout.write("SELECTED_LOAD_TEST_CATALOG_BEFORE_COMMIT\n");
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+    throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+  }
 }
 /** Called only at the normal runner's fenced completion barrier. No writer handle escapes. */
 export async function completeSelectedGmailLoad(
@@ -867,8 +873,9 @@ function assertRetainedSelectedLoadExecutor(destination: string): void {
 
 /** First admitted source load only. No caller callback, run or catalog override.
  * Interrupted SQL effects require the separate original-baseline replay composer. */
-export async function executeRecoveredGmailSelectedLoad(
-  supplied: RecoveryGmailSelectedLoadInstallationInput
+async function executeSelectedLoadFirst(
+  supplied: RecoveryGmailSelectedLoadInstallationInput,
+  testPause?: "catalog-before-commit"
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoRecoveredGmailCapture();
@@ -1044,6 +1051,7 @@ export async function executeRecoveredGmailSelectedLoad(
     );
     scope = {
       active: true,
+      chunkPauseTest: testPause,
       deadline: startedAt + 180_000,
       startedAt,
       root,
@@ -1265,6 +1273,21 @@ export async function executeRecoveredGmailSelectedLoad(
     input.recoveryKey.fill(0);
     wire.fill(0);
   }
+}
+
+/** First admitted source load; production never selects a test pause. */
+export function executeRecoveredGmailSelectedLoad(
+  input: RecoveryGmailSelectedLoadInstallationInput
+) {
+  return executeSelectedLoadFirst(input);
+}
+/** Fixed test-only precommit pause in the retained worker. */
+export function executeRecoveredGmailSelectedLoadForTest(
+  input: RecoveryGmailSelectedLoadInstallationInput,
+  point: "catalog-before-commit"
+) {
+  if (point !== "catalog-before-commit") fail();
+  return executeSelectedLoadFirst(input, point);
 }
 
 /** Resume exactly one inspected committed first-attempt gap. Scope remains
