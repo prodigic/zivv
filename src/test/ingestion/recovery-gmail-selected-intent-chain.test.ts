@@ -352,6 +352,13 @@ it("authenticates ordered, non-overlapping signed intent successors without auth
     ).toMatchObject({
       successorCount: 2,
       lastSettled: false,
+      unsettled: {
+        target: secondPath,
+        stage: secondStage,
+        candidate,
+        targetWasPresent: false,
+        bytes: second,
+      },
       loadAllowed: false,
     });
     expect(() =>
@@ -385,7 +392,17 @@ it("authenticates ordered, non-overlapping signed intent successors without auth
         key,
         initialSettled: true,
       })
-    ).toMatchObject({ successorCount: 2, lastSettled: false });
+    ).toMatchObject({
+      successorCount: 2,
+      lastSettled: false,
+      unsettled: {
+        target: secondPath,
+        stage: secondStage,
+        candidate,
+        targetWasPresent: true,
+        bytes: second,
+      },
+    });
     expect(() =>
       observeSelectedLoadIntentSuccessors({
         destination: root,

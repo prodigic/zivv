@@ -1,3 +1,4 @@
+import { assertSelectedLoadSettlementTransition } from "./recovery-gmail-selected-settlement-transition.js";
 import { DatabaseSync } from "node:sqlite";
 import { prepareSelectedLoadIntentSuccessor } from "./recovery-gmail-selected-successor-preparation.js";
 import {
@@ -58,6 +59,7 @@ import {
 } from "./recovery-gmail-selected-load-effects.js";
 import {
   installRecoveryIntent,
+  inspectRecoveryInstalledFile,
   installRecoveredBackupKey,
   validateRecoveredBackupKeyBytes,
   decryptLedgerSnapshot,
@@ -1255,7 +1257,7 @@ export async function executeRecoveredGmailSelectedLoad(
 
 /** Resume exactly one inspected committed first-attempt gap. Scope remains
  * private and quarantined; interruption of this retry requires later proof. */
-async function resumeSelectedLoad(
+async function resumeSelectedLoadAttempt(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
   chunkPauseTest:
     | "linked"
@@ -1315,7 +1317,8 @@ async function resumeSelectedLoad(
     if (
       pending &&
       (!evidence.pendingIntent?.settled ||
-        !evidence.pendingSuccessors?.lastSettled ||
+        (!evidence.pendingSuccessors?.lastSettled &&
+          !evidence.pendingSuccessors?.unsettled) ||
         (evidence.pendingSuccessors.successorCount > 0 &&
           !evidence.pendingSuccessors.latestV2Successor))
     )
@@ -1325,6 +1328,17 @@ async function resumeSelectedLoad(
       Date.now() < evidence.pendingSuccessors!.effectiveDeadlineEpochMs
     )
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
+    const settlingEvidence =
+      pending && !evidence.pendingSuccessors!.lastSettled
+        ? evidence.pendingSuccessors!.unsettled
+        : undefined;
+    if (
+      settlingEvidence &&
+      (!evidence.pendingSuccessors!.latestV2Successor ||
+        sha256(evidence.observedJournal) !==
+          evidence.pendingSuccessors!.latestV2Successor.journalSha256)
+    )
+      fail();
     const savedJournal = validateWeeklyJournalRecoverySnapshot(
       evidence.observedJournal
     );
@@ -1405,22 +1419,42 @@ async function resumeSelectedLoad(
               )
           )
         : [];
-    const successorInputs = readSuccessorInputs();
-    const successor = pending
-      ? prepareSelectedLoadIntentSuccessor({
-          initial: evidence.pendingIntent!.intentBytes,
-          successors: successorInputs,
-          observedJournal: evidence.observedJournal,
-          key: input.recoveryKey,
-          nowEpochMs: now,
-        })
-      : undefined;
+    const successorInputs = settlingEvidence ? [] : readSuccessorInputs();
+    const successor =
+      pending && !settlingEvidence
+        ? prepareSelectedLoadIntentSuccessor({
+            initial: evidence.pendingIntent!.intentBytes,
+            successors: successorInputs,
+            observedJournal: evidence.observedJournal,
+            key: input.recoveryKey,
+            nowEpochMs: now,
+          })
+        : undefined;
     const successorPath = successor
       ? join(
           directory,
           `resume-successor-${String(successor.sequence).padStart(5, "0")}.json`
         )
       : undefined;
+    const settling = settlingEvidence
+      ? {
+          target: join(runtime.destination, settlingEvidence.target),
+          stage: join(runtime.destination, settlingEvidence.stage),
+          candidate: join(runtime.destination, settlingEvidence.candidate),
+          bytes: Buffer.from(settlingEvidence.bytes),
+          dev: settlingEvidence.dev,
+          ino: settlingEvidence.ino,
+          targetWasPresent: settlingEvidence.targetWasPresent,
+          started: false,
+        }
+      : undefined;
+    if (
+      settling &&
+      (dirname(settling.target) !== directory ||
+        settling.stage !== settling.target + "-stage" ||
+        dirname(settling.candidate) !== settling.stage)
+    )
+      fail();
     const intent = initialIntent;
     const baselineEntries = pending
       ? evidence.physicalEntries
@@ -1442,7 +1476,11 @@ async function resumeSelectedLoad(
           bytes = readFileSync(path);
         if (bytes.length !== entry.size || sha256(bytes) !== entry.sha256)
           fail();
-        readonlyFiles.set(path, bytes);
+        if (
+          !settling ||
+          (path !== settling.target && path !== settling.candidate)
+        )
+          readonlyFiles.set(path, bytes);
       }
     const keyPath = join(operator, keyName),
       snapshotPath = join(root, "data/ingestion/backups/ledger.snapshot.enc"),
@@ -1458,7 +1496,9 @@ async function resumeSelectedLoad(
       files.set(snapshotPath, evidence.changedFiles.snapshot);
     if (evidence.changedFiles.report)
       files.set(reportPath, evidence.changedFiles.report);
-    if (successor && successorPath) files.set(successorPath, successor.bytes);
+    if (settling) files.set(settling.target, settling.bytes);
+    else if (successor && successorPath)
+      files.set(successorPath, successor.bytes);
     else files.set(intentPath, intent);
     const snapshotChunks =
       (pending ? undefined : snapshotEvidence)?.chunks.map(({ index }) => {
@@ -1486,6 +1526,7 @@ async function resumeSelectedLoad(
     for (const chunk of snapshotChunks)
       dirs.add(join(directory, chunk.name + "-stage"));
     if (successorPath) dirs.add(successorPath + "-stage");
+    if (settling) dirs.add(settling.stage);
     const originalEntries = new Map(
       baselineEntries.map((entry) => [entry.path, entry])
     );
@@ -1505,9 +1546,11 @@ async function resumeSelectedLoad(
         stagedTransients.set(absolute, Buffer.from(bytes));
       }
     }
+    if (settling) stagedTransients.set(settling.candidate, settling.bytes);
     scope = {
       active: true,
       chunkPauseTest,
+      ...(settling ? { successor: { path: settling.target } } : {}),
       ...(successor && successorPath
         ? { successor: { path: successorPath } }
         : {}),
@@ -1556,6 +1599,22 @@ async function resumeSelectedLoad(
         gateComplete: false,
       },
       assertCurrent: () => {
+        if (settling) {
+          const candidate = existsSync(settling.candidate)
+            ? lstatSync(settling.candidate)
+            : undefined;
+          const target = existsSync(settling.target)
+            ? lstatSync(settling.target)
+            : undefined;
+          assertSelectedLoadSettlementTransition({
+            candidate,
+            target,
+            dev: settling.dev,
+            ino: settling.ino,
+            targetWasPresent: settling.targetWasPresent,
+            started: settling.started,
+          });
+        }
         for (const identity of identities) {
           const stat = lstatSync(identity.path);
           if (
@@ -1627,11 +1686,27 @@ async function resumeSelectedLoad(
           fail();
         }
         for (const entry of baselineEntries)
-          if (!actual.some((item) => item.path === entry.path)) fail();
+          if (!actual.some((item) => item.path === entry.path)) {
+            if (
+              !settling ||
+              join(runtime.destination, entry.path) !== settling.candidate
+            )
+              fail();
+            const target = lstatSync(settling.target);
+            if (
+              !target.isFile() ||
+              target.isSymbolicLink() ||
+              target.dev !== settling.dev ||
+              target.ino !== settling.ino ||
+              target.nlink !== 1 ||
+              !readFileSync(settling.target).equals(settling.bytes)
+            )
+              fail();
+          }
       },
     };
     scope.assertCurrent();
-    return await scopes.run(scope, async () => {
+    const outcome = await scopes.run(scope, async () => {
       // Serialize every evidence installer through the actual journal writer
       // lock, then pin the catalog under its own writer transaction.
       const journalGuard = new DatabaseSync(
@@ -1740,7 +1815,32 @@ async function resumeSelectedLoad(
                   chunk.bytes,
                   join(directory, chunk.name + "-stage")
                 );
-              if (successor && successorPath) {
+              if (settling) {
+                const current = inspectRecoveryInstalledFile(
+                  settling.target,
+                  settling.stage,
+                  65536
+                );
+                if (
+                  !current.candidate ||
+                  !!current.target !== settling.targetWasPresent ||
+                  current.candidate.path !== settling.candidate ||
+                  current.candidate.dev !== settling.dev ||
+                  current.candidate.ino !== settling.ino ||
+                  !current.candidate.bytes.equals(settling.bytes) ||
+                  (current.target &&
+                    (!current.target.bytes.equals(settling.bytes) ||
+                      current.target.dev !== settling.dev ||
+                      current.target.ino !== settling.ino))
+                )
+                  fail();
+                settling.started = true;
+                installRecoveryIntent(
+                  settling.target,
+                  settling.bytes,
+                  settling.stage
+                );
+              } else if (successor && successorPath) {
                 const guardedSuccessor = prepareSelectedLoadIntentSuccessor({
                   initial: evidence.pendingIntent!.intentBytes,
                   successors: readSuccessorInputs(),
@@ -1780,6 +1880,7 @@ async function resumeSelectedLoad(
       } finally {
         journalGuard.close();
       }
+      if (settling) return { settled: true as const };
       scope!.phase = "run";
       let result: Buffer | undefined, expectedReleased: Buffer | undefined;
       scope!.finish = async (state, snapshot) => {
@@ -1884,6 +1985,7 @@ async function resumeSelectedLoad(
         accepted: plan.result.report.acceptedEventIds.length,
       };
     });
+    return outcome;
   } finally {
     if (scope) {
       scope.active = false;
@@ -1892,6 +1994,24 @@ async function resumeSelectedLoad(
     input.recoveryKey.fill(0);
     wire.fill(0);
   }
+}
+
+/** Reinspect exactly once after the guarded evidence-only settlement scope closes. */
+async function resumeSelectedLoad(
+  supplied: RecoveryGmailSelectedLoadInstallationInput,
+  chunkPauseTest:
+    | "linked"
+    | "partial"
+    | "intent-linked"
+    | "lease-acquired"
+    | "successor-linked"
+    | undefined
+) {
+  const first = await resumeSelectedLoadAttempt(supplied, chunkPauseTest);
+  if (!("settled" in first)) return first;
+  const second = await resumeSelectedLoadAttempt(supplied, undefined);
+  if ("settled" in second) fail();
+  return second;
 }
 
 /** Normal retry; no test interruption is selected. */

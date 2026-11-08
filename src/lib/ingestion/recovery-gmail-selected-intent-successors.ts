@@ -44,6 +44,17 @@ export function observeSelectedLoadIntentSuccessors(input: {
   const seen = new Set<string>(),
     values: Buffer[] = [];
   let incomplete = false;
+  let unsettled:
+    | {
+        target: string;
+        stage: string;
+        candidate: string;
+        bytes: Buffer;
+        dev: number;
+        ino: number;
+        targetWasPresent: boolean;
+      }
+    | undefined;
   for (let index = 1; index <= 10000; index++) {
     const name = `resume-successor-${String(index).padStart(5, "0")}.json`,
       target = input.loadPath + "/" + name,
@@ -88,11 +99,24 @@ export function observeSelectedLoadIntentSuccessors(input: {
     for (const entry of members) seen.add(entry.path);
     values.push(file.bytes);
     incomplete = !observed.target || !!observed.candidate;
+    if (incomplete) {
+      if (!observed.candidate || !candidate) return fail();
+      unsettled = {
+        target,
+        stage,
+        candidate,
+        bytes: Buffer.from(file.bytes),
+        dev: observed.candidate.dev,
+        ino: observed.candidate.ino,
+        targetWasPresent: !!observed.target,
+      };
+    }
   }
   if (seen.size !== relevant.length) return fail();
   return {
     ...verifySelectedLoadIntentChain(input.initial, values, input.key),
     successorPaths: [...seen].sort(),
     lastSettled: values.length === 0 ? input.initialSettled : !incomplete,
+    ...(unsettled ? { unsettled } : {}),
   };
 }
