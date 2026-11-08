@@ -399,8 +399,9 @@ stand in for a successor-bound result. Active or chronologically invalid leases,
 mismatched successor hashes and incomplete physical evidence refuse. A complete
 authenticated unsettled version 2 tail can be settled under both writer guards
 only when its pinned inode transition and exact pre-acquisition journal match;
-a fresh full inspection precedes retry. A native linked-alias crash and replay
-passed; candidate-only and adversarial native coverage remain outstanding.
+a fresh full inspection precedes retry. Native linked-alias and candidate-only
+crash, settlement and replay tests passed; adversarial native races and death
+during settlement remain outstanding.
 A guarded pending-intent retry can install a version 2
 successor only after the previous signed deadline and observed lease expire. It
 revalidates the predecessor chain and physical evidence under journal and catalog
