@@ -453,3 +453,75 @@ at Another Venue, Oakland All Ages $15`;
     });
   });
 });
+
+describe("VenueLineParser Steve's List noon and range times", () => {
+  // Real Steve's List row shapes (synthetic names, verbatim time forms).
+  it.each([
+    ["a/a free noon (Porchfest)", "12:00", undefined],
+    ["a/a $8 noon til 1:15pm", "12:00", undefined],
+    ["a/a $25 11am/noon", "12:00", "11:00"],
+    ["a/a free noon/2pm til 5pm", "14:00", "12:00"],
+    ["21+ $34/$37 noon/1pm (acoustic)", "13:00", "12:00"],
+    ["21+ 11:30am/noon-11pm (Leestock)", "12:00", "11:30"],
+    ["21+ free noon/12:30pm til 5pm", "12:30", "12:00"],
+    ["a/a $5 noon-6pm (punk parade)", "12:00", undefined],
+    ["a/a $5 noon til 6pm (punk parade)", "12:00", undefined],
+    ["a/a $5 9pm til 2am", "21:00", undefined],
+    ["21+ $30 7pm/8pm til 11pm #", "20:00", "19:00"],
+    ["21+ free 5:30pm til 8pm", "17:30", undefined],
+    ["a/a $15 6pm til 9pm", "18:00", undefined],
+    ["a/a $15 5pm/6pm til 9pm", "18:00", "17:00"],
+    ["a/a $10/$15/$20 5pm/5:30pm til 9pm", "17:30", "17:00"],
+    ["a/a 3pm-6pm", "15:00", undefined],
+    ["21+ $5/8pm", "20:00", undefined],
+    ["21+ $10/noon (acoustic)", "12:00", undefined],
+  ])(
+    "keeps the show start ahead of the door time and any range end: %s",
+    (timeText, startTime, doorTime) => {
+      const time = VenueLineParser.parse(
+        `at the Test Venue, S.F. ${timeText}`
+      )?.time;
+
+      expect(time?.startTime).toBe(startTime);
+      expect(time?.doorTime).toBe(doorTime);
+    }
+  );
+
+  it("ignores a noon-like word inside a venue or address token", () => {
+    const noClockMarker = VenueLineParser.parse(
+      "at the Highnoon Bar, S.F. a/a $10"
+    );
+
+    expect(noClockMarker?.time.startTime).toBeUndefined();
+  });
+
+  it("does not read a street-name Noon or a spaced venue name as the show start", () => {
+    const address = VenueLineParser.parse(
+      "at the Jax Bar, 1234 Noon Way, S.F. a/a 8pm til 11pm"
+    );
+
+    expect(address?.time.startTime).toBe("20:00");
+    expect(address?.time.doorTime).toBeUndefined();
+
+    // The venue name itself is never scanned for a clock token; only a
+    // standalone noon in the trailing detail can become a start time.
+    const spacedVenueName = VenueLineParser.parse(
+      "at High Noon Saloon, S.F. a/a $10 8pm"
+    );
+
+    expect(spacedVenueName?.time.startTime).toBe("20:00");
+    expect(spacedVenueName?.venue).toBe("High Noon Saloon");
+  });
+
+  it("does not read a set-time noon annotation as the show start", () => {
+    const content = `nov 7 sat Bad Camper, Tiger Shade, TK Noon at Up the Creek, Walnut Creek a/a $15 6pm til 9pm`;
+
+    const result = EventParser.parseEventsFile(content);
+    const venueInfo = VenueLineParser.parse(result.rawEvents[0].venueLine);
+
+    expect(result.rawEvents).toHaveLength(1);
+    expect(result.rawEvents[0].artistLine).toContain("TK Noon");
+    expect(venueInfo?.time.startTime).toBe("18:00");
+    expect(venueInfo?.time.doorTime).toBeUndefined();
+  });
+});
