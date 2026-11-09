@@ -4,6 +4,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "node:url";
+import {
+  coverageExclude,
+  coverageInclude,
+  unitTestInclude,
+} from "./vitest.shared-unit-scope.ts";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 const dirname =
   typeof __dirname !== "undefined"
@@ -34,35 +39,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html", "json"],
       reportsDirectory: "./coverage",
-      exclude: [
-        "node_modules/**",
-        "dist/**",
-        "tests/**",
-        "**/*.config.*",
-        "**/*.d.ts",
-        "src/test/**",
-        "coverage/**",
-        "public/**",
-        "scripts/**",
-        // Ingestion/ETL pipeline code is exercised by the dedicated native
-        // ingestion project (vitest.ingestion.config.ts, `test:ingestion`)
-        // running its own filesystem/SQLite/Git fixtures; it is not part of
-        // the unit/storybook coverage scope.
-        "src/lib/etl/**",
-        "src/lib/ingestion/**",
-        // Dev-server tooling runs only via `npm run dev` scripts
-        "src/devserver/**",
-        // Static catalog/demo data consumed as imports
-        "src/data/**",
-        "src/examples/**",
-        // Web worker sources execute inside worker threads; their main-thread
-        // fallback logic is covered via WorkerService/WorkerService tests
-        "src/workers/**",
-        // Type declaration modules contain no executable assertions
-        "src/types/**",
-        // Storybook story definitions are test sources, not app code
-        "src/stories/**",
-      ],
+      exclude: coverageExclude,
       // Thresholds: In Vitest 3.2.4, threshold numbers belong nested under
       // `thresholds` (e.g. thresholds.lines). The historical shape here —
       // `thresholds.global: { … }` — degenerated into a file glob named
@@ -76,20 +53,20 @@ export default defineConfig({
       // so the floors below are NOT enforced by the combined command yet —
       // they are recorded for the day the plugin stops dropping them.
       // Enforcement is guaranteed for the unit-only scope by
-      // vitest.coverage command `test:coverage:unit` (see
-      // coverage.enforce.config.ts and scripts/check-coverage-thresholds.mjs).
+      // `test:coverage:unit` (see coverage.enforce.config.ts and
+      // scripts/check-coverage-thresholds.mjs).
       //
-      // Floors backed by the combined unit+storybook measurement
-      // (35.32% lines / 83.5% branches / 62.65% functions) and the
-      // unit-only measurement (24.26% lines / 84.19% branches / 59.5%
-      // functions) is the enforced subset.
+      // RATCHET FLOORS, NOT TARGET: held near the latest measured combined
+      // run (see PR #193 for the exact numbers); the historical ~75%
+      // figures are the target and require the ingestion program wired
+      // into coverage (coordinates with #39) before they can be enforced.
       thresholds: {
         branches: 80,
         functions: 60,
         lines: 35,
         statements: 35,
       },
-      include: ["src/**/*.{ts,tsx}"],
+      include: coverageInclude,
     },
     reporters: ["verbose", "html"],
     outputFile: {
@@ -100,16 +77,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: "unit",
-          // Legacy JSDOM unit/component suites that were never collected by
-          // the default command. They run outside the ingestion harness and
-          // without any browser setup.
-          include: [
-            "src/App.test.tsx",
-            "src/test/*.test.{ts,tsx}",
-            "src/test/stores/**/*.test.{ts,tsx}",
-            "src/test/components/CityPagination.test.tsx",
-            "src/test/components/DatePagination.test.tsx",
-          ],
+          include: unitTestInclude,
         },
       },
       {
