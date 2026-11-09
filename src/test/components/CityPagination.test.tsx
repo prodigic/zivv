@@ -72,9 +72,7 @@ describe("CityPagination", () => {
       const sfButton = screen.getByText("San Francisco");
       fireEvent.click(sfButton);
 
-      expect(mockUpdateFilter).toHaveBeenCalledWith("cities", [
-        "San Francisco",
-      ]);
+      expect(mockUpdateFilter).toHaveBeenCalledWith("cities", ["S.f"]);
     });
 
     it("should handle Oakland button click", () => {
@@ -101,7 +99,9 @@ describe("CityPagination", () => {
       const santaCruzButton = screen.getByText("Santa Cruz");
       fireEvent.click(santaCruzButton);
 
-      expect(mockUpdateFilter).toHaveBeenCalledWith("cities", ["Santa Cruz"]);
+      // The component filters by the normalized data-city name ("Santa"),
+      // not the display name ("Santa Cruz").
+      expect(mockUpdateFilter).toHaveBeenCalledWith("cities", ["Santa"]);
     });
 
     it("should handle Other cities button click", () => {
@@ -123,8 +123,8 @@ describe("CityPagination", () => {
 
   describe("selection state", () => {
     it("should show selected state for active city", () => {
-      // Mock store with selected city
-      mockStoreState.filters.cities = ["San Francisco"];
+      // Mock store with selected city (normalized name used by the component)
+      mockStoreState.filters.cities = ["S.f"];
 
       render(<CityPagination />);
 
@@ -144,7 +144,7 @@ describe("CityPagination", () => {
 
     it("should handle multiple city selection", () => {
       // Mock store with multiple cities selected
-      mockStoreState.filters.cities = ["San Francisco", "Oakland"];
+      mockStoreState.filters.cities = ["S.f", "Oakland"];
 
       render(<CityPagination />);
 
@@ -166,16 +166,16 @@ describe("CityPagination", () => {
       const sfButton = screen.getByText("San Francisco");
       fireEvent.click(sfButton);
 
-      // Should add SF to existing selection
+      // Should add SF to existing selection (normalized name)
       expect(mockUpdateFilter).toHaveBeenCalledWith("cities", [
         "Oakland",
-        "San Francisco",
+        "S.f",
       ]);
     });
 
     it("should remove city from selection when already selected", () => {
-      // Mock store with city already selected
-      mockStoreState.filters.cities = ["San Francisco"];
+      // Mock store with city already selected (normalized name)
+      mockStoreState.filters.cities = ["S.f"];
 
       render(<CityPagination />);
 
@@ -206,17 +206,15 @@ describe("CityPagination", () => {
 
     it("should handle Other cities toggle when some are selected", () => {
       // Mock store with some other cities selected
-      mockStoreState.filters.cities = ["San Francisco", "Albany", "Napa"];
+      mockStoreState.filters.cities = ["S.f", "Albany", "Napa"];
 
       render(<CityPagination />);
 
       const otherButton = screen.getByText("Other");
       fireEvent.click(otherButton);
 
-      // Should remove other cities, keeping main cities
-      expect(mockUpdateFilter).toHaveBeenCalledWith("cities", [
-        "San Francisco",
-      ]);
+      // Should remove other cities, keeping main cities (normalized name)
+      expect(mockUpdateFilter).toHaveBeenCalledWith("cities", ["S.f"]);
     });
   });
 

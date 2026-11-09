@@ -1,14 +1,20 @@
 import { describe, it, expect, vi } from "vitest";
 import { globalErrorHandler } from "./utils/errorHandling";
 
-// Mock the router components to avoid complex RouterProvider testing
-vi.mock("react-router-dom", () => ({
-  RouterProvider: ({
-    fallbackElement,
-  }: {
-    fallbackElement: React.ReactElement;
-  }) => fallbackElement,
-}));
+// Partially mock react-router-dom: stub RouterProvider to avoid having to
+// render the router, while keeping every real export (createBrowserRouter,
+// Navigate, …) available for the router module itself.
+vi.mock("react-router-dom", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-router-dom")>();
+  return {
+    ...actual,
+    RouterProvider: ({
+      fallbackElement,
+    }: {
+      fallbackElement: React.ReactElement;
+    }) => fallbackElement,
+  };
+});
 
 // Mock error handling
 vi.mock("./utils/errorHandling.ts", () => ({
@@ -18,7 +24,9 @@ vi.mock("./utils/errorHandling.ts", () => ({
 }));
 
 describe("App", () => {
-  it("imports without errors", async () => {
+  // The app import chain is heavy (router + stores + services + pages); under
+  // coverage instrumentation it can exceed the 5s default, so allow more.
+  it("imports without errors", { timeout: 20_000 }, async () => {
     // Simple import test - if App imports successfully, basic structure is good
     const { default: App } = await import("./App");
     expect(App).toBeDefined();

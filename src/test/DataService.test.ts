@@ -255,19 +255,23 @@ describe("DataService", () => {
       await expect(dataService.loadManifest()).rejects.toThrow();
     });
 
-    it("should return cached manifest on subsequent calls", async () => {
+    it("should return the same manifest on subsequent calls (network revalidation)", async () => {
+      // loadManifest always revalidates the dataset version against the
+      // network before serving from cache, so every call performs a fetch.
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockManifest),
+      });
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve(mockManifest),
       });
 
-      // First call
       const result1 = await dataService.loadManifest();
-      // Second call (should use cached version)
       const result2 = await dataService.loadManifest();
 
       expect(result1).toEqual(result2);
-      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
     });
   });
 

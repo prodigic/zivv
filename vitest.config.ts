@@ -4,6 +4,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "node:url";
+import {
+  coverageExclude,
+  coverageInclude,
+  unitTestInclude,
+} from "./vitest.shared-unit-scope.ts";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 const dirname =
   typeof __dirname !== "undefined"
@@ -34,32 +39,47 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html", "json"],
       reportsDirectory: "./coverage",
-      exclude: [
-        "node_modules/**",
-        "dist/**",
-        "tests/**",
-        "**/*.config.*",
-        "**/*.d.ts",
-        "src/test/**",
-        "coverage/**",
-        "public/**",
-        "scripts/**",
-      ],
+      exclude: coverageExclude,
+      // Thresholds: In Vitest 3.2.4, threshold numbers belong nested under
+      // `thresholds` (e.g. thresholds.lines). The historical shape here —
+      // `thresholds.global: { … }` — degenerated into a file glob named
+      // "global" that matched nothing, so thresholds were never enforced;
+      // the same "unknown key" rule explains why any other stray object is
+      // silently ignored.
+      //
+      // IMPORTANT: even nested, the storybookTest plugin (@storybook/
+      // addon-vitest 9.x) drops test.coverage.thresholds when it is
+      // registered, regardless of project filtering (verified empirically),
+      // so the floors below are NOT enforced by the combined command yet —
+      // they are recorded for the day the plugin stops dropping them.
+      // Enforcement is guaranteed for the unit-only scope by
+      // `test:coverage:unit` (see coverage.enforce.config.ts and
+      // scripts/check-coverage-thresholds.mjs).
+      //
+      // RATCHET FLOORS, NOT TARGET: held near the latest measured combined
+      // run (see PR #193 for the exact numbers); the historical ~75%
+      // figures are the target and require the ingestion program wired
+      // into coverage (coordinates with #39) before they can be enforced.
       thresholds: {
-        global: {
-          branches: 70,
-          functions: 70,
-          lines: 75,
-          statements: 75,
-        },
+        branches: 80,
+        functions: 60,
+        lines: 35,
+        statements: 35,
       },
-      include: ["src/**/*.{ts,tsx}"],
+      include: coverageInclude,
     },
     reporters: ["verbose", "html"],
     outputFile: {
       html: "./test-results/unit-tests.html",
     },
     projects: [
+      {
+        extends: true,
+        test: {
+          name: "unit",
+          include: unitTestInclude,
+        },
+      },
       {
         extends: true,
         plugins: [

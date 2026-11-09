@@ -132,10 +132,17 @@ describe("Phase 4: Application Shell & Routing", () => {
     });
 
     it("should have expected routes", () => {
-      // Test that expected route paths exist
-      const routePaths = router.routes
-        .filter((route: any) => route.path)
-        .map((route: any) => route.path);
+      // Collect route paths recursively (pages are children of the app shell)
+      const routePaths: string[] = [];
+      const collectPaths = (
+        routes: Array<{ path?: string; children?: unknown[] }>
+      ): void => {
+        for (const route of routes) {
+          if (route.path) routePaths.push(route.path);
+          if (route.children) collectPaths(route.children);
+        }
+      };
+      collectPaths(router.routes as never);
 
       expect(routePaths).toContain("/");
       expect(routePaths.some((path: string) => path.includes("calendar"))).toBe(
@@ -188,16 +195,17 @@ describe("Phase 4: Application Shell & Routing", () => {
     });
 
     it("should import layout components", async () => {
+      // Layout components use named exports, not default exports
       const Header = await import("../components/layout/Header.tsx");
-      expect(Header.default).toBeDefined();
+      expect(Header.Header).toBeDefined();
 
       const SideNavigation =
         await import("../components/layout/SideNavigation.tsx");
-      expect(SideNavigation.default).toBeDefined();
+      expect(SideNavigation.SideNavigation).toBeDefined();
 
       const BottomNavigation =
         await import("../components/layout/BottomNavigation.tsx");
-      expect(BottomNavigation.default).toBeDefined();
+      expect(BottomNavigation.BottomNavigation).toBeDefined();
     });
   });
 });

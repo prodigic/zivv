@@ -1,8 +1,13 @@
 /**
- * Test suite for DatePagination component
+ * Test suite for the DatePagination date-range slider.
+ *
+ * The control models a "today + N days" range with labelled checkpoints
+ * (Today, Tomorrow, 1 wk, 1 mon, 3 mon, All), dual draggable handles and a
+ * track that snaps clicks to the nearest checkpoint. Selecting the full
+ * range clears the dateRange filter instead of storing it.
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { DatePagination } from "@/components/ui/DatePagination";
 
@@ -12,7 +17,9 @@ const mockClearFilter = vi.fn();
 
 const mockStoreState = {
   filters: {
-    dates: [], // DatePagination uses filters.dates array
+    dateRange: undefined as
+      | { startDate?: string; endDate?: string }
+      | undefined,
   },
   updateFilter: mockUpdateFilter,
   clearFilter: mockClearFilter,
@@ -22,228 +29,195 @@ vi.mock("@/stores/filterStore", () => ({
   useFilterStore: () => mockStoreState,
 }));
 
-// Mock date-fns functions
-vi.mock("date-fns", () => ({
-  format: vi.fn((date, formatStr) => {
-    if (typeof date === "string") {
-      return date;
-    }
-    if (formatStr === "EEE") return "Mon";
-    if (formatStr === "MMM d") return "Jan 1";
-    return "2024-01-01";
-  }),
-  parseISO: vi.fn((dateStr) => new Date(dateStr)),
-}));
+// jsdom has no layout, so give the track a deterministic geometry:
+// width 100 starting at x=0 (one checkpoint every 100/5 = 20% of the track).
+function mockTrackGeometry(width = 100): void {
+  vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue({
+    left: 0,
+    width,
+  } as DOMRect);
+}
 
 describe("DatePagination", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset mock store state
-    mockStoreState.filters.dates = [];
-    // Mock current date to make tests predictable
+    mockStoreState.filters.dateRange = undefined;
+    // Freeze "today" at 2024-01-15 for deterministic ISO dates
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2024-01-15T12:00:00Z"));
+    vi.setSystemTime(new Date(2024, 0, 15, 12, 0, 0));
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.useRealTimers();
   });
 
   describe("rendering", () => {
-    it("should render date pagination component", () => {
+    it("should render all checkpoint labels", () => {
       render(<DatePagination />);
 
-      // Check for actual button text from component
-      expect(screen.getByText("Month")).toBeInTheDocument();
-      expect(screen.getByText("Week")).toBeInTheDocument();
-      expect(screen.getByText("Today")).toBeInTheDocument();
-      expect(screen.getByText("Tomorrow")).toBeInTheDocument();
+      for (const label of [
+        "Today",
+        "Tomorrow",
+        "1 wk",
+        "1 mon",
+        "3 mon",
+        "All",
+      ]) {
+        // "Today" and "All" appear both in the header and as checkpoint labels
+        expect(screen.getAllByText(label).length).toBeGreaterThan(0);
+      }
+    });
+
+    it("should render the full range by default", () => {
+      render(<DatePagination />);
+
+      // Default header shows "Today → All" (each label appears twice:
+      // once in the header and once as a checkpoint label)
+      expect(screen.getAllByText("Today").length).toBe(2);
+      expect(screen.getAllByText("All").length).toBe(2);
+      // No clear affordance when no range is stored
+      expect(
+        screen.queryByLabelText("Clear date range")
+      ).not.toBeInTheDocument();
     });
 
     it("should render with custom className", () => {
       const { container } = render(<DatePagination className="custom-class" />);
 
       const component = container.firstChild as Element;
-      expect(component.classList.contains("date-pagination")).toBe(true);
+      expect(component.classList.contains("select-none")).toBe(true);
       expect(component.classList.contains("custom-class")).toBe(true);
     });
 
-    it("should render all expected date buttons", () => {
-      render(<DatePagination />);
+    it("should render both dual handles on the track", () => {
+      const { container } = render(<DatePagination />);
 
-      // Should have Month, Week, and 7 day buttons (Today, Tomorrow, + 5 weekdays)
-      const buttons = screen.getAllByRole("button");
-      expect(buttons.length).toBe(9); // Month + Week + 7 days
-    });
-
-    it("should have calendar icon", () => {
-      render(<DatePagination />);
-
-      const icon = screen.getByLabelText("Date Filter");
-      expect(icon).toBeInTheDocument();
+      // The draggable handles are the only cursor-grab elements
+      const handles = container.querySelectorAll(".cursor-grab");
+      expect(handles.length).toBe(2);
     });
   });
 
-  describe("interaction", () => {
-    it("should handle Today button click", () => {
+  describe("active range", () => {
+    it("should show the active range with a clear affordance", () => {
+      mockStoreState.filters.dateRange = {
+        startDate: "2024-01-15",
+        endDate: "2024-01-25",
+      };
+
       render(<DatePagination />);
 
-      const todayButton = screen.getByText("Today");
-      fireEvent.click(todayButton);
-
-      // Should call updateFilter with dates array containing today's date
-      expect(mockUpdateFilter).toHaveBeenCalledWith("dates", ["2024-01-15"]);
+      // Start equal to today renders as the "Today" label
+      expect(screen.getAllByText("Today").length).toBeGreaterThan(0);
+      expect(screen.getByText("01/25")).toBeInTheDocument();
+      expect(screen.getByLabelText("Clear date range")).toBeInTheDocument();
     });
 
-    it("should handle Tomorrow button click", () => {
+    it("should clear the stored range when the clear affordance is used", () => {
+      mockStoreState.filters.dateRange = {
+        startDate: "2024-01-15",
+        endDate: "2024-01-25",
+      };
+
       render(<DatePagination />);
 
-      const tomorrowButton = screen.getByText("Tomorrow");
-      fireEvent.click(tomorrowButton);
+      fireEvent.click(screen.getByLabelText("Clear date range"));
 
-      // Should call updateFilter with dates array containing tomorrow's date
-      expect(mockUpdateFilter).toHaveBeenCalledWith("dates", ["2024-01-16"]);
+      expect(mockClearFilter).toHaveBeenCalledWith("dateRange");
     });
 
-    it("should handle Month button click", () => {
+    it("should treat a stored start-only range as the full range", () => {
+      // Full range is represented by no stored endDate; a start date equal to
+      // today with no end date must still render the full "Today → All" state
+      mockStoreState.filters.dateRange = { startDate: "2024-01-15" };
+
       render(<DatePagination />);
 
-      const monthButton = screen.getByText("Month");
-      fireEvent.click(monthButton);
-
-      // Should call updateFilter with dates array containing all days of the month
-      expect(mockUpdateFilter).toHaveBeenCalledWith("dates", expect.any(Array));
-    });
-
-    it("should handle Week button click", () => {
-      render(<DatePagination />);
-
-      const weekButton = screen.getByText("Week");
-      fireEvent.click(weekButton);
-
-      // Should call updateFilter with dates array containing 7 days
-      expect(mockUpdateFilter).toHaveBeenCalledWith("dates", expect.any(Array));
-    });
-
-    it("should handle weekday button clicks", () => {
-      render(<DatePagination />);
-
-      // Find a weekday button (MON, TUE, etc.) that should be rendered for future days
-      const buttons = screen.getAllByRole("button");
-      const weekdayButton = buttons.find(
-        (btn) =>
-          btn.textContent &&
-          /^(MON|TUE|WED|THU|FRI|SAT|SUN)$/.test(btn.textContent)
-      );
-
-      if (weekdayButton) {
-        fireEvent.click(weekdayButton);
-        expect(mockUpdateFilter).toHaveBeenCalledWith(
-          "dates",
-          expect.any(Array)
-        );
-      }
+      expect(screen.getAllByText("Today").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("All").length).toBeGreaterThan(0);
     });
   });
 
-  describe("selection state", () => {
-    it("should show selected state for active dates", () => {
-      // Set mock store with selected date
-      mockStoreState.filters.dates = ["2024-01-15"]; // Today is selected
+  describe("track interaction", () => {
+    it("should clear the filter when the track is used at its far end", () => {
+      mockTrackGeometry();
 
-      render(<DatePagination />);
+      const { container } = render(<DatePagination />);
+      const track = container.querySelector(".cursor-pointer") as HTMLElement;
 
-      const todayButton = screen.getByText("Today");
-      const buttonElement = todayButton.closest("button");
-      expect(buttonElement).toHaveClass("bg-red-50");
+      // Click at the far right (x=100 → "All" checkpoint). The end handle is
+      // already at the final checkpoint, but the start handle is further from
+      // the click, so the start expands instead — resolving the full range,
+      // which clears the stored filter.
+      fireEvent.click(track, { clientX: 100 });
+
+      expect(mockClearFilter).toHaveBeenCalledWith("dateRange");
     });
 
-    it("should handle toggle behavior for date selection", () => {
-      render(<DatePagination />);
+    it("should snap a track click to the nearest checkpoint and update the range", () => {
+      mockTrackGeometry();
 
-      // First click should add date
-      const todayButton = screen.getByText("Today");
-      fireEvent.click(todayButton);
+      const { container } = render(<DatePagination />);
+      const track = container.querySelector(".cursor-pointer") as HTMLElement;
 
-      expect(mockUpdateFilter).toHaveBeenCalledWith("dates", ["2024-01-15"]);
+      // x=40 resolves to the "1 wk" checkpoint (today + 7 days) while the end
+      // handle stays at the "All" checkpoint (today + 365 days)
+      fireEvent.click(track, { clientX: 40 });
+
+      expect(mockUpdateFilter).toHaveBeenCalledWith("dateRange", {
+        startDate: "2024-01-22",
+        endDate: "2025-01-14",
+      });
+    });
+
+    it("should update the range start when the start handle is dragged", () => {
+      mockTrackGeometry();
+
+      const { container } = render(<DatePagination />);
+
+      const [startHandle] = container.querySelectorAll(".cursor-grab");
+
+      // Press the start handle, drag to x=40 ("1 wk") and release
+      fireEvent.mouseDown(startHandle as HTMLElement);
+      fireEvent.mouseMove(window, { clientX: 40 });
+      fireEvent.mouseUp(window);
+
+      expect(mockUpdateFilter).toHaveBeenCalledWith("dateRange", {
+        startDate: "2024-01-22",
+        endDate: "2025-01-14",
+      });
+      expect(mockClearFilter).not.toHaveBeenCalled();
     });
   });
 
   describe("date calculations", () => {
-    it("should generate correct date strings", () => {
+    it("should render condensed MM/DD labels for the stored range", () => {
+      mockStoreState.filters.dateRange = {
+        startDate: "2024-02-01",
+        endDate: "2024-02-14",
+      };
+
       render(<DatePagination />);
 
-      // Click Today - should use YYYY-MM-DD format
-      fireEvent.click(screen.getByText("Today"));
-
-      expect(mockUpdateFilter).toHaveBeenCalledWith("dates", ["2024-01-15"]);
-    });
-
-    it("should generate consecutive days", () => {
-      render(<DatePagination />);
-
-      // Component should render 7 consecutive days starting from today
-      expect(screen.getByText("Today")).toBeInTheDocument();
-      expect(screen.getByText("Tomorrow")).toBeInTheDocument();
-
-      // Should also have weekday abbreviations for days 2-6
-      const buttons = screen.getAllByRole("button");
-      expect(buttons.length).toBe(9); // Month + Week + 7 days
-    });
-  });
-
-  describe("accessibility", () => {
-    it("should have proper button roles", () => {
-      render(<DatePagination />);
-
-      const buttons = screen.getAllByRole("button");
-      expect(buttons.length).toBeGreaterThan(0);
-
-      buttons.forEach((button) => {
-        expect(button).toBeInTheDocument();
-        expect(button.tagName).toBe("BUTTON");
-      });
-    });
-
-    it("should have readable button text and titles", () => {
-      render(<DatePagination />);
-
-      // Essential buttons should have clear text
-      expect(screen.getByText("Today")).toBeInTheDocument();
-      expect(screen.getByText("Tomorrow")).toBeInTheDocument();
-      expect(screen.getByText("Month")).toBeInTheDocument();
-      expect(screen.getByText("Week")).toBeInTheDocument();
-
-      // Day buttons should have title attributes
-      const todayButton = screen.getByText("Today").closest("button");
-      expect(todayButton).toHaveAttribute("title", "Today");
-    });
-  });
-
-  describe("responsive design", () => {
-    it("should handle mobile and desktop text display", () => {
-      render(<DatePagination />);
-
-      // Component should render both mobile and desktop text variants
-      // Today button should have both "Today" and "Tod" text (hidden/shown via CSS)
-      const todayButton = screen.getByText("Today").closest("button");
-      expect(todayButton).toContainHTML("Today");
-      expect(todayButton).toContainHTML("Tod");
+      expect(screen.getByText("02/01")).toBeInTheDocument();
+      expect(screen.getByText("02/14")).toBeInTheDocument();
     });
   });
 
   describe("data integrity", () => {
-    it("should preserve other filters when updating dates", () => {
-      render(<DatePagination />);
+    it("should only touch the dateRange filter", () => {
+      mockTrackGeometry();
 
-      // The component should only update the dates filter, not replace all filters
-      fireEvent.click(screen.getByText("Today"));
+      const { container } = render(<DatePagination />);
+      const track = container.querySelector(".cursor-pointer") as HTMLElement;
+      fireEvent.click(track, { clientX: 40 });
 
-      expect(mockUpdateFilter).toHaveBeenCalledWith("dates", expect.any(Array));
-      expect(mockUpdateFilter).not.toHaveBeenCalledWith(
-        "cities",
-        expect.anything()
-      );
+      expect(mockUpdateFilter).toHaveBeenCalled();
+      for (const call of mockUpdateFilter.mock.calls) {
+        expect(call[0]).toBe("dateRange");
+      }
+      expect(mockClearFilter).not.toHaveBeenCalled();
     });
   });
 });
