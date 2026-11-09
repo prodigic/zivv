@@ -120,7 +120,9 @@ describe("reviewed Steve import", () => {
     expect(reviewId).toBe(hash(canonicalJson(identity)));
   });
 
-  const historicalRunId = (importer: "steveslist-v4" | "steveslist-v5") =>
+  const historicalRunId = (
+    importer: "steveslist-v4" | "steveslist-v5" | "steveslist-v6"
+  ) =>
     `${importer}-${hash(
       JSON.stringify({
         importer,
@@ -130,7 +132,7 @@ describe("reviewed Steve import", () => {
       })
     )}`;
 
-  it.each(["steveslist-v4", "steveslist-v5"] as const)(
+  it.each(["steveslist-v4", "steveslist-v5", "steveslist-v6"] as const)(
     "retains historical %s receipt hashes but refuses an uncommitted historical review",
     async (importer) => {
       const { receipt, report } = await reviewSteveImport(
@@ -158,7 +160,7 @@ describe("reviewed Steve import", () => {
     }
   );
 
-  it.each(["steveslist-v4", "steveslist-v5"] as const)(
+  it.each(["steveslist-v4", "steveslist-v5", "steveslist-v6"] as const)(
     "recovers an exact committed %s run without creating current-version work or changing first-added history",
     async (importer) => {
       const { receipt } = await reviewSteveImport(root, content, observedAt);

@@ -338,16 +338,44 @@ export class VenueLineParser {
     const single = text.match(/\b(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon)\b/i);
     if (!single || single.index === undefined) return "";
 
-    let expression = single[0];
-    // A door/show pair may also begin with a bare hour ("5/6pm"); ordinary
-    // prices like "$30/8pm" must not become times, so only a sane 1..23
-    // hour joins the expression.
-    const bareDoor = text.slice(0, single.index).match(/(\d{1,2})\/$/);
+    let start = single.index;
+    if (/^noon$/i.test(single[0])) {
+      // A noon that starts neither a door/show pair nor a range is a bare
+      // window start: it must not preempt a later real clock time, so a
+      // street-name word ("Noon Way, ...") keeps the hours after it.
+      const after = text.slice(single.index + 4);
+      const boundNoon =
+        /^\s*\/\s*(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon)\b/.test(after) ||
+        /^\s*(?:\b(?:til|until)\b\s*|[-\u2013\u2014]\s*)(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon)\b/.test(
+          after
+        );
+      const doorNoon = text
+        .slice(0, single.index)
+        .match(/(?:^|\s)(\d{1,2})\/$/);
+      if (
+        !boundNoon &&
+        !(doorNoon && +doorNoon[1] >= 1 && +doorNoon[1] <= 23)
+      ) {
+        const later = /\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b/.exec(after);
+        if (later?.index !== undefined) start = single.index + 4 + later.index;
+      }
+    }
+
+    const anchor = /\b(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon)\b/.exec(
+      text.slice(start)
+    );
+    if (!anchor || anchor.index !== 0) return "";
+    start = start + anchor.index;
+    let expression = anchor[0];
+    // A door/show pair may also begin with a bare hour ("5/6pm"); prices
+    // like "$30/8pm" or "$5/8pm" must not become times, so a sane 1..23
+    // hour joins only from the line start or after whitespace.
+    const bareDoor = text.slice(0, start).match(/(?:^|\s)(\d{1,2})\/$/);
     if (bareDoor && Number(bareDoor[1]) >= 1 && Number(bareDoor[1]) <= 23) {
       expression = `${bareDoor[1]}/${expression}`;
     }
-    // Consumed text extends from the bare door through the single token.
-    let end = single.index + single[0].length + (bareDoor?.[0].length ?? 0);
+    // Consumed text extends from the bare door through the anchor token.
+    let end = start + anchor[0].length + (bareDoor?.[0].length ?? 0);
     // Bind the show time of a door/show pair ("11am/noon", "noon/2pm").
     const pair = text
       .slice(end)

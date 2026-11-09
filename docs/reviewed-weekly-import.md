@@ -102,9 +102,9 @@ available at this checkpoint.
 
 ## Importer-version integration
 
-Friday's whole-show cancellation and postponement parser uses
-`steveslist-v6`. New review receipts and candidate run IDs share the current
-importer constant. The receipt parser retains strict v4 and v5 support without
+Through the November 6 2026 edition the whole-show cancellation and
+postponement parser used `steveslist-v6`; that version is now historical.
+The receipt parser retains strict v4, v5 and v6 receipt support without
 changing existing serialized identities: the importer name and run-ID prefix
 must agree.
 
@@ -113,7 +113,10 @@ The maintained noon window parser uses `steveslist-v7`. `noon` is read as
 (`noon til 2pm`, `noon-6pm`); a range end never replaces the start time that
 precedes it. Receipts under v4, v5 and v6 replay their exact committed runs
 unchanged; v4, v5 and v6 review receipts can recover only their already
-committed or published run.
+committed or published run. Weekly recovery lineage artifacts recorded under
+an older importer fail `UNSUPPORTED_IMPORT_LINEAGE` and require a fresh
+capture after the version lands, so do not cut over during an active Friday
+intake merge window.
 
 A historical v4 or v5 review can recover only its exact already
 committed/published run, with the same corrected input, aliases, configuration,

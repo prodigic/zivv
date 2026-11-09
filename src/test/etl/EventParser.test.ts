@@ -473,6 +473,8 @@ describe("VenueLineParser Steve's List noon and range times", () => {
     ["a/a $15 5pm/6pm til 9pm", "18:00", "17:00"],
     ["a/a $10/$15/$20 5pm/5:30pm til 9pm", "17:30", "17:00"],
     ["a/a 3pm-6pm", "15:00", undefined],
+    ["21+ $5/8pm", "20:00", undefined],
+    ["21+ $10/noon (acoustic)", "12:00", undefined],
   ])(
     "keeps the show start ahead of the door time and any range end: %s",
     (timeText, startTime, doorTime) => {
@@ -491,6 +493,24 @@ describe("VenueLineParser Steve's List noon and range times", () => {
     );
 
     expect(noClockMarker?.time.startTime).toBeUndefined();
+  });
+
+  it("does not read a street-name Noon or a spaced venue name as the show start", () => {
+    const address = VenueLineParser.parse(
+      "at the Jax Bar, 1234 Noon Way, S.F. a/a 8pm til 11pm"
+    );
+
+    expect(address?.time.startTime).toBe("20:00");
+    expect(address?.time.doorTime).toBeUndefined();
+
+    // The venue name itself is never scanned for a clock token; only a
+    // standalone noon in the trailing detail can become a start time.
+    const spacedVenueName = VenueLineParser.parse(
+      "at High Noon Saloon, S.F. a/a $10 8pm"
+    );
+
+    expect(spacedVenueName?.time.startTime).toBe("20:00");
+    expect(spacedVenueName?.venue).toBe("High Noon Saloon");
   });
 
   it("does not read a set-time noon annotation as the show start", () => {
