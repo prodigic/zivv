@@ -10,10 +10,10 @@ The audit covers **237 San Francisco venue records**, including 46 with upcoming
 
 | Subscription outcome | Distinct lists |
 | --- | ---: |
-| Confirmed by email or provider | 9 |
+| Confirmed by email or provider | 10 |
 | Accepted by signup site | 8 |
 | Submitted and awaiting evidence | 21 |
-| Human verification required | 7 |
+| Human verification required | 6 |
 | Possible human verification | 3 |
 
 Use **Zivv Electron** when a signup asks for a name. Use **Zivv** and **Electron** in separate first and last name fields.
@@ -28,7 +28,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | --- | ---: | ---: | --- | --- | --- |
 | 1015 | 132433457 | 0 | [Official site or signup](<https://1015.com/>) | Signup found, submission unverified | Never Miss a Show email signup found. Browser did not expose the field. Shared list or outcome with 1015 Folsom. |
 | 1015 Folsom | 1237996847 | 0 | [Official site or signup](<https://1015.com/>) | Signup found, submission unverified | Never Miss a Show email signup found. Browser did not expose the field. Shared list or outcome with 1015. |
-| 111 Minna Gallery | 93526083 | 1 | [Official site or signup](<https://111minnagallery.com/shop/>) | Human verification required | Venue-branded confirmation arrived. Mailchimp requires human verification. |
+| 111 Minna Gallery | 93526083 | 1 | [Official site or signup](<https://111minnagallery.com/shop/>) | Confirmed | Signed welcome email verified the subscription. |
 | 20 Spot | 1299863522 | 0 | [Official site or signup](<https://www.20spot.com/>) | No email list found | No signup found on the official pages checked. |
 | 22nd & Bartlett | 445731900 | 0 | [Official site or signup](<https://www.sfporchfest.org/>) | Organizer list unverified | Temporary Porchfest sites share an organizer. The official link did not expose an email form. Shared list or outcome with Athen's, Mid Bartlett, Anthony & Marissa's, Buddy's, David's, Michelle's, Willow's. |
 | 240 Front Street | 1740241181 | 0 | [Official site or signup](<https://noisepopfest.com/about>) | Confirmed | Noise Pop organizer list. Welcome email received. |
