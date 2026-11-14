@@ -11,7 +11,7 @@ Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and
 | Confirmed by email or provider | 8 |
 | Accepted by signup site | 6 |
 | Submitted and awaiting evidence | 20 |
-| Human verification required | 4 |
+| Human verification required | 5 |
 | Possible human verification | 3 |
 
 “No email list found” records what was visible on the pages checked. “Possible email list” means a site mentions newsletters or exposes a candidate form that still needs verification.
@@ -187,7 +187,7 @@ Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and
 | Ricksaw Stop | 1826340425 | 0 | [Official site or signup](<https://rickshawstop.com/>) | Signup found, submission unverified | Footer signup listed. Browser did not expose the email field. Shared list or outcome with Rickshaw Stop, the Richshaw Stop, the Rickshas Stop, the Rickshw Stop. |
 | Rickshaw Stop | 31041890 | 42 | [Official site or signup](<https://rickshawstop.com/>) | Signup found, submission unverified | Footer signup listed. Browser did not expose the email field. Shared list or outcome with Ricksaw Stop, the Richshaw Stop, the Rickshas Stop, the Rickshw Stop. |
 | Rite Spot | 2113527323 | 0 | [Official site or signup](<https://www.ritespotcafe.net/>) | No email list found | No signup found on the official pages checked. |
-| Roar Shack | 1562892083 | 0 | [Official site or signup](<https://www.thelivingearthshow.com/>) | Signup found, submission unverified | Newsletter is operated by The Living Earth Show, the venue's operator. |
+| Roar Shack | 1562892083 | 0 | [Official site or signup](<https://www.thelivingearthshow.com/>) | Human verification required | The Living Earth Show operates the venue. Its form reported CAPTCHA validation failure. |
 | Robin Williams Meadow | 1512685125 | 0 | [Official site or signup](<https://sfrecpark.org/879/Golden-Gate-Park---Robin-Williams-Meadow>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
 | Rooftop Park | 1871078609 | 0 | [Official site or signup](<https://www.tjpa.org/salesforce-transit-center/faq>) | Signup found, submission unverified | Operator references a park event newsletter. Shared list or outcome with Salesforce Park. |
 | S.F. Mass | 318791909 | 0 | [Official site or signup](<https://www.sfmass.com/>) | No email list found | No signup found on the official pages checked. |
