@@ -4,17 +4,19 @@
 
 The audit covers **237 San Francisco venue records**, including 46 with upcoming shows in the November 13 Zivv catalog. The totals below count each shared mailing list once.
 
-**Last inbox check:** November 14, 2026 at 12:48 a.m. Pacific. No new confirmations.
+**Last inbox check:** November 14, 2026 at 1:52 a.m. Pacific. The Mab confirmed. Sunset Mercantile requires a CAPTCHA.
 
 **Inbox monitoring:** 9 a.m. and 9 p.m. Pacific in the dedicated SF venue mailing-list confirmations chat. The monitor updates this summary after each successful check and updates venue rows when their status changes. Confirmation links and message identifiers stay in Gmail.
 
 | Subscription outcome | Distinct lists |
 | --- | ---: |
-| Confirmed by email or provider | 8 |
+| Confirmed by email or provider | 9 |
 | Accepted by signup site | 8 |
-| Submitted and awaiting evidence | 20 |
-| Human verification required | 5 |
+| Submitted and awaiting evidence | 21 |
+| Human verification required | 7 |
 | Possible human verification | 3 |
+
+Use **Zivv Electron** when a signup asks for a name. Use **Zivv** and **Electron** in separate first and last name fields.
 
 ## Venue results
 
@@ -30,11 +32,11 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | 20 Spot | 1299863522 | 0 | [Official site or signup](<https://www.20spot.com/>) | No email list found | No signup found on the official pages checked. |
 | 22nd & Bartlett | 445731900 | 0 | [Official site or signup](<https://www.sfporchfest.org/>) | Organizer list unverified | Temporary Porchfest sites share an organizer. The official link did not expose an email form. Shared list or outcome with Athen's, Mid Bartlett, Anthony & Marissa's, Buddy's, David's, Michelle's, Willow's. |
 | 240 Front Street | 1740241181 | 0 | [Official site or signup](<https://noisepopfest.com/about>) | Confirmed | Noise Pop organizer list. Welcome email received. |
-| 37th Avenue at Ortega | 1668151404 | 1 | [Official site or signup](<https://sunsetmercantilesf.com/subscribe-to-our-newsletter/>) | Requires name | Secondhand Saturdays organizer form requires first name. |
+| 37th Avenue at Ortega | 1668151404 | 1 | [Official site or signup](<https://sunsetmercantilesf.com/subscribe-to-our-newsletter/>) | Human verification required | Sunset Mercantile sent a confirmation email. Mailchimp requires human verification. |
 | 3rd and Army | 2116023822 | 1 | [Official site or signup](<https://ceqanet.lci.ca.gov/263644/3>) | Public site, no venue email list found | Public skate spot. No venue-operated list found. Shared list or outcome with 3rd and Army Skatepark. |
 | 3rd and Army Skatepark | 140737526 | 1 | [Official site or signup](<https://ceqanet.lci.ca.gov/263644/3>) | Public site, no venue email list found | Public skate spot. No venue-operated list found. Shared list or outcome with 3rd and Army. |
-| 4 Star Theater | 89816907 | 3 | [Official site or signup](<https://cinemasfbay.org/newsletter/>) | Requires name | Standalone CinemaSF form requires first and last name. Operator lists the 4 Star, Balboa and Vogue. Shared list or outcome with 4-Star Theater. |
-| 4-Star Theater | 392702093 | 0 | [Official site or signup](<https://cinemasfbay.org/newsletter/>) | Requires name | Standalone CinemaSF form requires first and last name. Operator lists the 4 Star, Balboa and Vogue. Shared list or outcome with 4 Star Theater. |
+| 4 Star Theater | 89816907 | 3 | [Official site or signup](<https://cinemasfbay.org/newsletter/>) | Submitted, awaiting evidence | Submitted the shared CinemaSF list for the 4 Star, Balboa and Vogue. Shared list or outcome with 4-Star Theater. |
+| 4-Star Theater | 392702093 | 0 | [Official site or signup](<https://cinemasfbay.org/newsletter/>) | Submitted, awaiting evidence | Submitted the shared CinemaSF list for the 4 Star, Balboa and Vogue. Shared list or outcome with 4 Star Theater. |
 | 518 Valencia Gallery | 289243276 | 0 | [Official site or signup](<https://518valencia.org/>) | Official site inaccessible | The official page did not return usable content. |
 | a house - San Francisco | 903681336 | 0 | — | Private or unclear location | No public venue mailing-list identity could be verified. Shared list or outcome with Somewhere. |
 | above DNA Lounge | 1009706718 | 0 | [Official site or signup](<https://www.dnalounge.com/>) | Signup found, submission unverified | Official announcement list found. Browser did not expose a usable email field. Shared list or outcome with DNA Lounge, the DNA Louge. |
@@ -139,11 +141,11 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Li-Po Lounge | 598804186 | 0 | [Official site or signup](<https://www.sf.gov/sites/default/files/2024-08/item_3b._lbr-2018-19-046_li_po_lounge.pdf>) | No public signup verified | City legacy business record identifies the venue. Current email list unverified. |
 | Lost Church | 698121015 | 0 | [Official site or signup](<https://thelostchurch.org/sign-up/>) | Signup found, submission unverified | SF mailing-list option found. Form still needs manual review. |
 | Love & Luxe | 978018774 | 0 | [Official site or signup](<https://loveandluxesf.com/>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
-| Mabuhauy Gardens | 755396653 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Requires name | Shared operator form requires a name. Shared list or outcome with Mabuhay Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway, On Broadway. |
-| Mabuhay Gardens | 1419356603 | 1 | [Official site or signup](<https://themab.org/newsletter/>) | Requires name | Shared operator form requires a name. Shared list or outcome with Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway, On Broadway. |
-| Mabuhay Gardens (21+) and On Broadway (a/a) | 398286726 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Requires name | Shared operator form requires a name. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway, On Broadway. |
-| Mabuhay Gardens and on Broadway | 1094129374 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Requires name | Shared operator form requires a name. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway, On Broadway. |
-| Mabuhay Gardens Upstairs | 1704872225 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Requires name | Shared operator form requires a name. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, the Mabuhay Gardens/on Broadway, On Broadway. |
+| Mabuhauy Gardens | 755396653 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Confirmed | The Mab confirmed the shared newsletter subscription. Shared list or outcome with Mabuhay Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway, On Broadway. |
+| Mabuhay Gardens | 1419356603 | 1 | [Official site or signup](<https://themab.org/newsletter/>) | Confirmed | The Mab confirmed the shared newsletter subscription. Shared list or outcome with Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway, On Broadway. |
+| Mabuhay Gardens (21+) and On Broadway (a/a) | 398286726 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Confirmed | The Mab confirmed the shared newsletter subscription. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway, On Broadway. |
+| Mabuhay Gardens and on Broadway | 1094129374 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Confirmed | The Mab confirmed the shared newsletter subscription. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway, On Broadway. |
+| Mabuhay Gardens Upstairs | 1704872225 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Confirmed | The Mab confirmed the shared newsletter subscription. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, the Mabuhay Gardens/on Broadway, On Broadway. |
 | Madrone Art Bar | 1966034770 | 0 | [Official site or signup](<https://madroneartbar.com/calendar/>) | Signup found, submission unverified | Constant Contact mailing-list control timed out. |
 | Make Out Room | 398859205 | 4 | [Official site or signup](<https://www.makeoutroom.com/contact.html>) | No email list found | No signup found on the official pages checked. |
 | Makeout Room | 337931090 | 0 | [Official site or signup](<https://www.makeoutroom.com/contact.html>) | No email list found | No signup found on the official pages checked. |
@@ -162,7 +164,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Monarch | 1439874346 | 0 | [Official site or signup](<https://www.monarchsf.com/contact-us>) | No email list found | No signup found on the official pages checked. |
 | Moscone Center | 822625010 | 0 | [Official site or signup](<https://www.moscone.com/directions-and-parking-moscone-center>) | No email list found | No signup found on the official pages checked. |
 | Mothbelly Gallery | 386406925 | 0 | [Official site or signup](<https://www.mothbelly.org/newsletter-signup>) | Confirmed | Confirmation page reported successful subscription. |
-| Museum of Modern Art | 1270795673 | 0 | [Official site or signup](<https://sfmoma.prospect2.com/f/4>) | Requires name | Newsletter form requires first and last name. |
+| Museum of Modern Art | 1270795673 | 0 | [Official site or signup](<https://sfmoma.prospect2.com/f/4>) | Human verification required | The SFMOMA signup form rejected automated CAPTCHA verification. |
 | Music City | 1386365370 | 0 | [Official site or signup](<https://musiccitysf.com/about-us/contact-us/>) | Signup found, submission unverified | Page gave a generic contact acknowledgement. Newsletter membership is unverified. Shared list or outcome with Music City Starfactory. |
 | Music City Starfactory | 1051500561 | 0 | [Official site or signup](<https://musiccitysf.com/about-us/contact-us/>) | Signup found, submission unverified | Page gave a generic contact acknowledgement. Newsletter membership is unverified. Shared list or outcome with Music City. |
 | Neck of the Woods | 1557090037 | 10 | [Official site or signup](<https://www.neckofthewoodssf.com/>) | Signup found, submission unverified | Official Join the List link found. Linked form did not expose a usable email field. |
@@ -171,7 +173,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | O'Reilly's | 1856455989 | 1 | [Official site or signup](<https://oreillyssf.com/>) | No email list found | No public opt-in found on the official venue site. Shared list or outcome with O'Reilly's Pub. |
 | O'Reilly's Pub | 117533728 | 0 | [Official site or signup](<https://oreillyssf.com/>) | No email list found | No public opt-in found on the official venue site. Shared list or outcome with O'Reilly's. |
 | Ocean Ale House | 1400383054 | 0 | [Official site or signup](<https://oceanalehouse.com/>) | No email list found | No signup found on the official pages checked. |
-| On Broadway | 1510199156 | 5 | [Official site or signup](<https://themab.org/newsletter/>) | Requires name | Shared operator form requires a name. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway. |
+| On Broadway | 1510199156 | 5 | [Official site or signup](<https://themab.org/newsletter/>) | Confirmed | The Mab confirmed the shared newsletter subscription. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, the Mabuhay Gardens/on Broadway. |
 | Outside Lands | 1344278433 | 0 | [Official site or signup](<https://sfoutsidelands.com/>) | Signup found, submission unverified | Get Updates form found. Additional fields need review. |
 | Palace of Fine Arts | 390079947 | 4 | [Official site or signup](<https://www.palaceoffinearts.org/subscribe>) | Submitted, awaiting evidence | Newsletter form submitted. |
 | Parkside | 485759302 | 0 | [Official site or signup](<https://www.theeparkside.com/>) | No email list found | No signup found on the official pages checked. |
@@ -232,7 +234,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | the Indpendent | 498805266 | 0 | [Official site or signup](<https://www.theindependentsf.com/newsletter/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with Independent, the Independnet. |
 | the Knockouut | 1301386092 | 0 | [Official site or signup](<https://theknockoutsf.com/>) | No email list found | No signup found on the official pages checked. |
 | the Lab | 1652761549 | 0 | [Official site or signup](<https://www.thelab.org/info>) | Submitted, awaiting evidence | Officially linked list form submitted. |
-| the Mabuhay Gardens/on Broadway | 1113680004 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Requires name | Shared operator form requires a name. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, On Broadway. |
+| the Mabuhay Gardens/on Broadway | 1113680004 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Confirmed | The Mab confirmed the shared newsletter subscription. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, On Broadway. |
 | the Natural | 1217182281 | 0 | [Official site or signup](<https://www.thenaturalsf.com/>) | No email list found | No signup found on the official pages checked. |
 | the Natural Batting Cage | 623175657 | 2 | [Official site or signup](<https://www.thenaturalsf.com/>) | No email list found | No signup found on the official pages checked. |
 | the New Farm | 564335400 | 0 | [Official site or signup](<https://www.thenewfarmsf.org/>) | No email list found | No signup found on the official pages checked. |
