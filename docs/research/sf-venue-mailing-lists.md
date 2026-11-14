@@ -9,7 +9,7 @@ Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and
 | Subscription outcome | Distinct lists |
 | --- | ---: |
 | Confirmed by email or provider | 8 |
-| Accepted by signup site | 6 |
+| Accepted by signup site | 8 |
 | Submitted and awaiting evidence | 20 |
 | Human verification required | 5 |
 | Possible human verification | 3 |
@@ -66,7 +66,7 @@ Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and
 | Castro Street Fair | 467396903 | 0 | [Official site or signup](<https://castrostreetfair.org/fair/faq/>) | Official site inaccessible | The official page did not return usable content. |
 | Castro Theater | 881479351 | 3 | [Official site or signup](<https://thecastro.com/faq/>) | Accepted by site | Official Another Planet form accepted the opt-in. One signup for all aliases. Shared list or outcome with Castro, the Castro Theataer, the the Castro Theater. |
 | Chapel | 680116887 | 39 | [Official site or signup](<https://thechapelsf.com/>) | Submitted, awaiting evidence | Mailing-list form submitted. Shared venue list. Shared list or outcome with the Chapel Outdoor State. |
-| Civic Auditorium | 1648637995 | 16 | [Official site or signup](<https://billgrahamcivic.com/faq/>) | Signup found, submission unverified | Venue confirms a list. Embedded signup did not expose the expected submit control. Shared list or outcome with ht Civic Auditorium, the Civic Audtorium. |
+| Civic Auditorium | 1648637995 | 16 | [Official site or signup](<https://billgrahamcivic.com/faq/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with ht Civic Auditorium, the Civic Audtorium. |
 | Civic Center and Market Street Parade | 674532354 | 0 | [Official site or signup](<https://sfpride.org/>) | Related operator only | Organizer newsletter mentioned. Public signup unverified. |
 | Civic Center Plaza | 374946520 | 0 | [Official site or signup](<https://sfrecpark.org/866/Civic-Center-Plaza-Joseph-Alioto-Piazza>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
 | Clarion Alley Mission Stage | 1303522840 | 0 | [Official site or signup](<https://clarionalleymuralproject.org/events/annual-block-party/>) | Official site inaccessible | The official page did not return usable content. |
@@ -112,9 +112,9 @@ Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and
 | Hila Gelato | 327602376 | 0 | [Official site or signup](<https://www.hilagelato.com/>) | Accepted by site | Venue form returned a thank-you. |
 | Honey Hive | 1488360326 | 0 | — | No public signup verified | No official public signup page was identified. |
 | Hotel Utah Saloon | 1558756676 | 4 | [Official site or signup](<https://hotelutah.com/>) | Submitted, awaiting evidence | Utah newsletter form submitted. |
-| ht Civic Auditorium | 1211018360 | 0 | [Official site or signup](<https://billgrahamcivic.com/faq/>) | Signup found, submission unverified | Venue confirms a list. Embedded signup did not expose the expected submit control. Shared list or outcome with Civic Auditorium, the Civic Audtorium. |
+| ht Civic Auditorium | 1211018360 | 0 | [Official site or signup](<https://billgrahamcivic.com/faq/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with Civic Auditorium, the Civic Audtorium. |
 | I Hate Records | 360529898 | 0 | [Official site or signup](<https://ihaterecords.com/>) | Human verification may be required | Submission exposed hCaptcha. Signup unverified. |
-| Independent | 515101024 | 43 | [Official site or signup](<https://www.theindependentsf.com/newsletter/>) | Signup found, submission unverified | Official form found. Browser did not expose the expected submit control. Shared list or outcome with the Independnet, the Indpendent. |
+| Independent | 515101024 | 43 | [Official site or signup](<https://www.theindependentsf.com/newsletter/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with the Independnet, the Indpendent. |
 | Irelands 32 | 1699183410 | 0 | [Official site or signup](<https://linktr.ee/irelands32sf>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
 | Jack Adams Hall | 1935435606 | 0 | [Official site or signup](<https://asi.sfsu.edu/>) | No email list found | No signup found on the official pages checked. |
 | Jack Kerouac Alley | 1533734128 | 0 | [Official site or signup](<https://sfbos.archive.sf.gov/ftp/uploadedfiles/bdsupvrs/resolutions06/r0445-06.pdf>) | No email list found | No signup found on the official pages checked. |
@@ -214,7 +214,7 @@ Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and
 | the Brick and Mortar | 1719765223 | 5 | [Official site or signup](<https://www.brickandmortarmusic.com/>) | Accepted by site | Newsletter form returned a thank-you. |
 | the Castro Theataer | 1730654249 | 0 | [Official site or signup](<https://thecastro.com/faq/>) | Accepted by site | Official Another Planet form accepted the opt-in. One signup for all aliases. Shared list or outcome with Castro, Castro Theater, the the Castro Theater. |
 | the Chapel Outdoor State | 506133276 | 0 | [Official site or signup](<https://thechapelsf.com/>) | Submitted, awaiting evidence | Mailing-list form submitted. Shared venue list. Shared list or outcome with Chapel. |
-| the Civic Audtorium | 1805757855 | 0 | [Official site or signup](<https://billgrahamcivic.com/faq/>) | Signup found, submission unverified | Venue confirms a list. Embedded signup did not expose the expected submit control. Shared list or outcome with Civic Auditorium, ht Civic Auditorium. |
+| the Civic Audtorium | 1805757855 | 0 | [Official site or signup](<https://billgrahamcivic.com/faq/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with Civic Auditorium, ht Civic Auditorium. |
 | the Curran Theater | 1791753994 | 0 | [Official site or signup](<https://us.atgtickets.com/newsletter/san-francisco-newsletter/>) | Signup found, submission unverified | One SF theater operator list. Form field did not load. Shared list or outcome with Golden Gate Theater, the Orpheum Theater. |
 | the DNA Louge | 447883166 | 0 | [Official site or signup](<https://www.dnalounge.com/>) | Signup found, submission unverified | Official announcement list found. Browser did not expose a usable email field. Shared list or outcome with DNA Lounge, above DNA Lounge. |
 | the Faight | 1611053286 | 0 | [Official site or signup](<https://www.thefaight.com/about>) | No email list found | No signup found on the official pages checked. |
@@ -222,8 +222,8 @@ Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and
 | the Fold | 1141595758 | 0 | [Official site or signup](<https://luma.com/thefoldopenmic>) | No email list found | No signup found on the official pages checked. |
 | the Giant's Ball Park | 217949417 | 0 | [Official site or signup](<https://www.mlb.com/giants/ballpark/neighborhood>) | Signup found, submission unverified | Ballpark event advisories and related newsletter identified. Shared list or outcome with Giants Ballpark. |
 | the Hibernia | 1164291462 | 0 | [Official site or signup](<https://thehiberniasf.com/>) | No email list found | No signup found on the official pages checked. |
-| the Independnet | 1292097351 | 0 | [Official site or signup](<https://www.theindependentsf.com/newsletter/>) | Signup found, submission unverified | Official form found. Browser did not expose the expected submit control. Shared list or outcome with Independent, the Indpendent. |
-| the Indpendent | 498805266 | 0 | [Official site or signup](<https://www.theindependentsf.com/newsletter/>) | Signup found, submission unverified | Official form found. Browser did not expose the expected submit control. Shared list or outcome with Independent, the Independnet. |
+| the Independnet | 1292097351 | 0 | [Official site or signup](<https://www.theindependentsf.com/newsletter/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with Independent, the Indpendent. |
+| the Indpendent | 498805266 | 0 | [Official site or signup](<https://www.theindependentsf.com/newsletter/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with Independent, the Independnet. |
 | the Knockouut | 1301386092 | 0 | [Official site or signup](<https://theknockoutsf.com/>) | No email list found | No signup found on the official pages checked. |
 | the Lab | 1652761549 | 0 | [Official site or signup](<https://www.thelab.org/info>) | Submitted, awaiting evidence | Officially linked list form submitted. |
 | the Mabuhay Gardens/on Broadway | 1113680004 | 0 | [Official site or signup](<https://themab.org/newsletter/>) | Requires name | Shared operator form requires a name. Shared list or outcome with Mabuhay Gardens, Mabuhauy Gardens, Mabuhay Gardens (21+) and On Broadway (a/a), Mabuhay Gardens and on Broadway, Mabuhay Gardens Upstairs, On Broadway. |
