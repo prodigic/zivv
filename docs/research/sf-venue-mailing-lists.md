@@ -4,7 +4,7 @@
 
 The audit covers **237 San Francisco venue records**, including 46 with upcoming shows in the November 13 Zivv catalog. The totals below count each shared mailing list once.
 
-**Last inbox check:** November 14, 2026 at 2:09 a.m. Pacific. SFMOMA sent a welcome email after confirmation.
+**Last inbox check:** November 14, 2026 at 2:13 a.m. Pacific. No additional confirmation or welcome emails after the browser handoff.
 
 **Inbox monitoring:** 9 a.m. and 9 p.m. Pacific in the dedicated SF venue mailing-list confirmations chat. The monitor updates this summary after each successful check and updates venue rows when their status changes. Confirmation links and message identifiers stay in Gmail.
 
@@ -13,8 +13,7 @@ The audit covers **237 San Francisco venue records**, including 46 with upcoming
 | Confirmed by email or provider | 12 |
 | Accepted by signup site | 11 |
 | Submitted and awaiting evidence | 21 |
-| Human verification required | 1 |
-| Possible human verification | 3 |
+| Browser handoff, outcome unverified | 4 |
 
 Use **Zivv Electron** when a signup asks for a name. Use **Zivv** and **Electron** in separate first and last name fields.
 
@@ -121,7 +120,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Honey Hive | 1488360326 | 0 | — | No public signup verified | No official public signup page was identified. |
 | Hotel Utah Saloon | 1558756676 | 4 | [Official site or signup](<https://hotelutah.com/>) | Submitted, awaiting evidence | Utah newsletter form submitted. |
 | ht Civic Auditorium | 1211018360 | 0 | [Official site or signup](<https://billgrahamcivic.com/faq/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with Civic Auditorium, the Civic Audtorium. |
-| I Hate Records | 360529898 | 0 | [Official site or signup](<https://ihaterecords.com/>) | Human verification may be required | Submission exposed hCaptcha. Signup unverified. |
+| I Hate Records | 360529898 | 0 | [Official site or signup](<https://ihaterecords.com/>) | Browser handoff, unverified | The operator completed the CAPTCHA handoff. A site success message or welcome email is still unverified. |
 | Independent | 515101024 | 43 | [Official site or signup](<https://www.theindependentsf.com/newsletter/>) | Accepted by site | The official Another Planet form thanked us for joining the venue newsletter. Shared list or outcome with the Independnet, the Indpendent. |
 | Irelands 32 | 1699183410 | 0 | [Official site or signup](<https://linktr.ee/irelands32sf>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
 | Jack Adams Hall | 1935435606 | 0 | [Official site or signup](<https://asi.sfsu.edu/>) | No email list found | No signup found on the official pages checked. |
@@ -158,7 +157,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Mezzanine | 798787109 | 0 | — | No public signup verified | No official public signup page was identified. |
 | Michelle's | 988969630 | 0 | [Official site or signup](<https://www.sfporchfest.org/>) | Organizer list unverified | Temporary Porchfest sites share an organizer. The official link did not expose an email form. Shared list or outcome with 22nd & Bartlett, Athen's, Mid Bartlett, Anthony & Marissa's, Buddy's, David's, Willow's. |
 | Mid Bartlett | 1621831563 | 0 | [Official site or signup](<https://www.sfporchfest.org/>) | Organizer list unverified | Temporary Porchfest sites share an organizer. The official link did not expose an email form. Shared list or outcome with 22nd & Bartlett, Athen's, Anthony & Marissa's, Buddy's, David's, Michelle's, Willow's. |
-| Midway | 343961277 | 0 | [Official site or signup](<https://shop.themidwaysf.com/>) | Human verification may be required | Official venue updates form exposed hCaptcha. Signup unverified. |
+| Midway | 343961277 | 0 | [Official site or signup](<https://shop.themidwaysf.com/>) | Browser handoff, unverified | The operator completed the CAPTCHA handoff. A site success message or welcome email is still unverified. |
 | Milk Bar | 2078810884 | 0 | [Official site or signup](<https://oreillyssf.com/>) | Historic venue | Address now hosts O’Reilly’s. No separate Milk Bar opt-in found. |
 | Miner Auditorium (SF Jazz Center) | 826017948 | 0 | [Official site or signup](<https://pages.wordfly.com/sfjazz/pages/Subscribe/>) | Submitted, awaiting evidence | One SFJAZZ operator list form submitted. Shared list or outcome with SF Jazz, SF Jazz Center. |
 | Monarch | 1439874346 | 0 | [Official site or signup](<https://www.monarchsf.com/contact-us>) | No email list found | No signup found on the official pages checked. |
@@ -184,7 +183,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Plough and Stars | 1282095081 | 0 | [Official site or signup](<https://theploughandstars.com/>) | No email list found | No signup found on the official pages checked. |
 | Presidio Theater | 1899550573 | 0 | [Official site or signup](<https://www.presidiotheatre.org/>) | Confirmed | Authenticated confirmation email and provider acknowledgement. |
 | Pretty Gritty | 968700038 | 0 | — | No public signup verified | No official public signup page was identified. |
-| Psyched Radio | 1159871074 | 0 | [Official site or signup](<https://www.psychedradiosf.com/>) | Human verification required | Venue-branded confirmation arrived. Mailchimp requires human verification. |
+| Psyched Radio | 1159871074 | 0 | [Official site or signup](<https://www.psychedradiosf.com/>) | Browser handoff, unverified | The operator completed the CAPTCHA handoff. A site success message or welcome email is still unverified. |
 | Public Works | 755151683 | 0 | [Official site or signup](<https://publicsf.com/connect/>) | Submitted, awaiting evidence | Weekly newsletter form submitted. |
 | Question Mark Bar | 32234871 | 0 | [Official site or signup](<https://questionmarkbarsf.com/contact-2/>) | Official site inaccessible | The official page did not return usable content. |
 | Questionmark Taern | 222096883 | 0 | [Official site or signup](<https://www.questionmarksf.com/contact>) | No email list found | No signup found on the official pages checked. |
@@ -249,7 +248,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | the Saloon | 1806612737 | 0 | [Official site or signup](<https://thesaloonsf.com/>) | No email list found | No signup found on the official pages checked. |
 | the Swedish American Hall | 927889318 | 0 | [Official site or signup](<https://www.swedishamericanhall.com/>) | No email list found | No signup found on the official pages checked. |
 | the the Castro Theater | 905826547 | 0 | [Official site or signup](<https://thecastro.com/faq/>) | Accepted by site | Official Another Planet form accepted the opt-in. One signup for all aliases. Shared list or outcome with Castro, Castro Theater, the Castro Theataer. |
-| Thrillhouse Records | 735357859 | 2 | [Official site or signup](<https://thrillhouserecords.com/>) | Human verification may be required | Submission exposed hCaptcha. Signup unverified. |
+| Thrillhouse Records | 735357859 | 2 | [Official site or signup](<https://thrillhouserecords.com/>) | Browser handoff, unverified | The operator completed the CAPTCHA handoff. A site success message or welcome email is still unverified. |
 | Tupelo | 1327234872 | 0 | [Official site or signup](<https://www.tupelosf.com/>) | Submitted, awaiting evidence | Newsletter form submitted once. |
 | Undergarden | 204594355 | 0 | [Official site or signup](<https://www.undergarden.org/>) | No email list found | No public newsletter found on official home. |
 | Union Square | 2124529002 | 0 | [Official site or signup](<https://sfrecpark.org/DocumentCenter/View/13932/Union-Square-Features-List>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
