@@ -1,10 +1,53 @@
 {
   "chunkId": "2027-07",
   "dateRange": {
-    "startEpochMs": 1815480000000,
+    "startEpochMs": 1815048000000,
     "endEpochMs": 1815825600000
   },
   "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        773992940
+      ],
+      "createdAtEpochMs": 1794618360551,
+      "date": "2027-07-08",
+      "dateEpochMs": 1815048000000,
+      "firstImportRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1794618360551,
+      "headlinerArtistId": 773992940,
+      "id": 1483138590,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-07-08-g-eazy-alameda-county-fair",
+      "sourceLineNumber": 939,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:618cbabc30ae3e5c",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1794618360551,
+          "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1794618360551,
+          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "originalVenueId": 1749114421,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1794618360551,
+      "venueId": 1749114421,
+      "venueType": "club"
+    },
     {
       "addedDateProvenance": "observed",
       "ageRestriction": "all-ages",
@@ -27,7 +70,7 @@
       "priceMin": 46.5,
       "provenanceConflicts": [],
       "slug": "2027-07-13-lizzy-mcalpine-the-warriors-stadium",
-      "sourceLineNumber": 997,
+      "sourceLineNumber": 940,
       "sources": [
         {
           "canonicalUrl": null,
@@ -37,8 +80,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794017623435,
-          "lastSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
+          "lastSeenAtEpochMs": 1794618360551,
+          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "originalVenueId": 793025194,
           "session": null,
           "sourceId": "steveslist"
@@ -73,7 +116,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-07-17-hum-the-warfield",
-      "sourceLineNumber": 998,
+      "sourceLineNumber": 941,
       "sources": [
         {
           "canonicalUrl": null,
@@ -83,8 +126,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794017623435,
-          "lastSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
+          "lastSeenAtEpochMs": 1794618360551,
+          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "originalVenueId": 1531618194,
           "session": null,
           "sourceId": "steveslist"
