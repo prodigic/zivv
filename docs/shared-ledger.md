@@ -88,6 +88,19 @@ restore the operator's private catalog. Encrypted backups live outside `public/`
 
 ## Preserve the recovery key
 
+After each verified publication, capture and verify the encrypted operator
+recovery capsule described in [operator recovery](operator-recovery.md). Email
+the verified backup ZIP and the existing portable recovery key in separate
+messages to `zivvbayarea+backups@gmail.com`. Include the published weekly state,
+revision and recovery instructions, verify both attachments in Sent, and retain
+receipts so retries do not send duplicates. Never generate a replacement key.
+If a complete capsule cannot be captured, send the verified encrypted ledger
+snapshot and weekly state with instructions, report that the journal and source
+evidence are missing, and keep the full backup failure open for follow-up.
+
+Emailing the key and encrypted backup to the same mailbox allows anyone with
+access to that mailbox to decrypt the catalog; protect the mailbox accordingly.
+
 On Windows, the working key is protected for the current user with DPAPI. Its
 directory permits access only to that user. Other platforms use a private key
 file with restrictive filesystem permissions. The portable recovery export is
