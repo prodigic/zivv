@@ -4,16 +4,16 @@
 
 The audit covers **237 San Francisco venue records**, including 46 with upcoming shows in the November 13 Zivv catalog. The totals below count each shared mailing list once.
 
-**Last inbox check:** November 14, 2026 at 2:04 a.m. Pacific. Welcome emails verified 111 Minna Gallery and Sunset Mercantile.
+**Last inbox check:** November 14, 2026 at 2:09 a.m. Pacific. SFMOMA sent a welcome email after confirmation.
 
 **Inbox monitoring:** 9 a.m. and 9 p.m. Pacific in the dedicated SF venue mailing-list confirmations chat. The monitor updates this summary after each successful check and updates venue rows when their status changes. Confirmation links and message identifiers stay in Gmail.
 
 | Subscription outcome | Distinct lists |
 | --- | ---: |
-| Confirmed by email or provider | 11 |
-| Accepted by signup site | 8 |
+| Confirmed by email or provider | 12 |
+| Accepted by signup site | 11 |
 | Submitted and awaiting evidence | 21 |
-| Human verification required | 5 |
+| Human verification required | 1 |
 | Possible human verification | 3 |
 
 Use **Zivv Electron** when a signup asks for a name. Use **Zivv** and **Electron** in separate first and last name fields.
@@ -47,7 +47,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Amoeba Music | 2013304995 | 1 | [Official site or signup](<https://www.amoeba.com/>) | Signup found, submission unverified | Store operator has an email signup dialog. No form submission verified. |
 | Anthony & Marissa's | 1732604937 | 0 | [Official site or signup](<https://www.sfporchfest.org/>) | Organizer list unverified | Temporary Porchfest sites share an organizer. The official link did not expose an email form. Shared list or outcome with 22nd & Bartlett, Athen's, Mid Bartlett, Buddy's, David's, Michelle's, Willow's. |
 | Apotheoun | 768722830 | 0 | [Official site or signup](<https://apotheoun.com/>) | No email list found | No public newsletter found on official home. |
-| Arcana | 626006669 | 0 | [Official site or signup](<https://www.arcanasf.com/>) | Human verification required | Form reported CAPTCHA validation failure. |
+| Arcana | 626006669 | 0 | [Official site or signup](<https://www.arcanasf.com/>) | Accepted by site | Newsletter signup form thanked the subscriber. |
 | Athen's | 713594331 | 0 | [Official site or signup](<https://www.sfporchfest.org/>) | Organizer list unverified | Temporary Porchfest sites share an organizer. The official link did not expose an email form. Shared list or outcome with 22nd & Bartlett, Mid Bartlett, Anthony & Marissa's, Buddy's, David's, Michelle's, Willow's. |
 | Audio SF | 915438229 | 0 | [Official site or signup](<https://www.audiosf.com/contact/>) | Signup found, submission unverified | Newsletter field and contact form both present. Exact signup needs review. |
 | August Hall | 811075932 | 31 | [Official site or signup](<https://www.augusthallsf.com/>) | Submitted, awaiting evidence | Mailing-list form submitted. Shared list or outcome with Autust Hall. |
@@ -90,7 +90,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Eagle Tavern | 321425008 | 1 | [Official site or signup](<https://sf-eagle.com/events/>) | No email list found | Official events page offers calendar subscriptions. No email opt-in found. |
 | Edinburgh Castle | 1220592213 | 0 | — | No public signup verified | No official public signup page was identified. |
 | El Rincon | 645156289 | 0 | — | No public signup verified | No official public signup page was identified. |
-| El Rio | 1925979067 | 1 | [Official site or signup](<https://www.elriosf.com/>) | Human verification required | Form reported CAPTCHA validation failure. |
+| El Rio | 1925979067 | 1 | [Official site or signup](<https://www.elriosf.com/>) | Accepted by site | Newsletter signup form displayed a thank-you. |
 | Ellis Street between Powell and Stockton | 1781054735 | 0 | — | No public signup verified | No official public signup page was identified. |
 | Embarcadero Plaza | 1291359065 | 0 | [Official site or signup](<https://sfrecpark.org/Facilities/Facility/Details/Embarcadero-Plaza-347>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
 | Everyday Skateshop | 192152317 | 0 | [Official site or signup](<https://everydaysfc.com/>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
@@ -164,7 +164,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Monarch | 1439874346 | 0 | [Official site or signup](<https://www.monarchsf.com/contact-us>) | No email list found | No signup found on the official pages checked. |
 | Moscone Center | 822625010 | 0 | [Official site or signup](<https://www.moscone.com/directions-and-parking-moscone-center>) | No email list found | No signup found on the official pages checked. |
 | Mothbelly Gallery | 386406925 | 0 | [Official site or signup](<https://www.mothbelly.org/newsletter-signup>) | Confirmed | Confirmation page reported successful subscription. |
-| Museum of Modern Art | 1270795673 | 0 | [Official site or signup](<https://sfmoma.prospect2.com/f/4>) | Human verification required | The SFMOMA signup form rejected automated CAPTCHA verification. |
+| Museum of Modern Art | 1270795673 | 0 | [Official site or signup](<https://sfmoma.prospect2.com/f/4>) | Confirmed | Followed the authenticated SFMOMA confirmation and verified the provider success page. |
 | Music City | 1386365370 | 0 | [Official site or signup](<https://musiccitysf.com/about-us/contact-us/>) | Signup found, submission unverified | Page gave a generic contact acknowledgement. Newsletter membership is unverified. Shared list or outcome with Music City Starfactory. |
 | Music City Starfactory | 1051500561 | 0 | [Official site or signup](<https://musiccitysf.com/about-us/contact-us/>) | Signup found, submission unverified | Page gave a generic contact acknowledgement. Newsletter membership is unverified. Shared list or outcome with Music City. |
 | Neck of the Woods | 1557090037 | 10 | [Official site or signup](<https://www.neckofthewoodssf.com/>) | Signup found, submission unverified | Official Join the List link found. Linked form did not expose a usable email field. |
@@ -195,7 +195,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Ricksaw Stop | 1826340425 | 0 | [Official site or signup](<https://rickshawstop.com/>) | Signup found, submission unverified | Footer signup listed. Browser did not expose the email field. Shared list or outcome with Rickshaw Stop, the Richshaw Stop, the Rickshas Stop, the Rickshw Stop. |
 | Rickshaw Stop | 31041890 | 42 | [Official site or signup](<https://rickshawstop.com/>) | Signup found, submission unverified | Footer signup listed. Browser did not expose the email field. Shared list or outcome with Ricksaw Stop, the Richshaw Stop, the Rickshas Stop, the Rickshw Stop. |
 | Rite Spot | 2113527323 | 0 | [Official site or signup](<https://www.ritespotcafe.net/>) | No email list found | No signup found on the official pages checked. |
-| Roar Shack | 1562892083 | 0 | [Official site or signup](<https://www.thelivingearthshow.com/>) | Human verification required | The Living Earth Show operates the venue. Its form reported CAPTCHA validation failure. |
+| Roar Shack | 1562892083 | 0 | [Official site or signup](<https://www.thelivingearthshow.com/>) | Accepted by site | Venue operator The Living Earth Show thanked the subscriber. |
 | Robin Williams Meadow | 1512685125 | 0 | [Official site or signup](<https://sfrecpark.org/879/Golden-Gate-Park---Robin-Williams-Meadow>) | Possible email list | An email or newsletter signal appeared on an official page. Verify the form and list owner before submitting. |
 | Rooftop Park | 1871078609 | 0 | [Official site or signup](<https://www.tjpa.org/salesforce-transit-center/faq>) | Signup found, submission unverified | Operator references a park event newsletter. Shared list or outcome with Salesforce Park. |
 | S.F. Mass | 318791909 | 0 | [Official site or signup](<https://www.sfmass.com/>) | No email list found | No signup found on the official pages checked. |
