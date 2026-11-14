@@ -1,10 +1,12 @@
 # San Francisco venue mailing lists
 
-Last checked November 13, 2026.
+## Summary
 
-This tracker covers the 237 records labeled San Francisco in the November 13 Zivv catalog, including 46 records with upcoming shows. The research pass checked venue websites and officially linked organizer or signup pages. Catalog aliases stay visible in the table. A shared list was submitted once.
+The audit covers **237 San Francisco venue records**, including 46 with upcoming shows in the November 13 Zivv catalog. The totals below count each shared mailing list once.
 
-Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and message identifiers are kept in Gmail. The inbox follow-up checks messages addressed to that alias and updates the table when the provider confirms the signup.
+**Last inbox check:** November 14, 2026 at 12:48 a.m. Pacific. No new confirmations.
+
+**Inbox monitoring:** 9 a.m. and 9 p.m. Pacific in the dedicated SF venue mailing-list confirmations chat. The monitor updates this summary after each successful check and updates venue rows when their status changes. Confirmation links and message identifiers stay in Gmail.
 
 | Subscription outcome | Distinct lists |
 | --- | ---: |
@@ -13,6 +15,10 @@ Signups use the designated Zivv Gmail mailing-list alias. Confirmation links and
 | Submitted and awaiting evidence | 20 |
 | Human verification required | 5 |
 | Possible human verification | 3 |
+
+## Venue results
+
+The audit checked venue websites and signup pages linked by the venues or their organizers. The table retains catalog aliases so each venue record can be looked up.
 
 “No email list found” records what was visible on the pages checked. “Possible email list” means a site mentions newsletters or exposes a candidate form that still needs verification.
 
