@@ -137,7 +137,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | Plough and Stars | 1282095081 | 3 | [Official site or signup](<https://theploughandstars.com/>) | No email list found | No signup found on the official pages checked. |
 | Presidio Theater | 1899550573 | 1 | [Official site or signup](<https://www.presidiotheatre.org/>) | Confirmed | Authenticated confirmation email and provider acknowledgement. |
 | Pretty Gritty | 968700038 | 1 | — | No public signup verified | No official public signup page was identified. |
-| Psyched Radio | 1159871074 | 2 | [Official site or signup](<https://www.psychedradiosf.com/>) | Browser handoff, unverified | The operator completed the CAPTCHA handoff. A site success message or welcome email is still unverified. |
+| Psyched Radio | 1159871074 | 2 | [Official site or signup](<https://www.psychedradiosf.com/>) | Browser handoff, unverified | A matching confirmation request arrived November 14, but DMARC failed. Operator review is needed before confirming. |
 | Question Mark Bar | 32234871 | 1 | [Official site or signup](<https://questionmarkbarsf.com/contact-2/>) | Official site inaccessible | The official page did not return usable content. |
 | Regency Ballroom | 2133080253 | 91 | [Official site or signup](<https://www.theregencyballroom.com/newsletter>) | Signup found, submission unverified | Shared operator email signup identified. Required fields need review. Shared list or outcome with Social Hall. |
 | Rickhouse | 91824912 | 1 | [Official site or signup](<https://www.rickhousebar.com/>) | No email list found | No signup found on the official pages checked. |
