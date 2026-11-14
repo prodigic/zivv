@@ -4,16 +4,16 @@
 
 The audit covers **237 San Francisco venue records**, including 46 with upcoming shows in the November 13 Zivv catalog. The totals below count each shared mailing list once.
 
-**Last inbox check:** November 14, 2026 at 1:52 a.m. Pacific. The Mab confirmed. Sunset Mercantile requires a CAPTCHA.
+**Last inbox check:** November 14, 2026 at 2:04 a.m. Pacific. Welcome emails verified 111 Minna Gallery and Sunset Mercantile.
 
 **Inbox monitoring:** 9 a.m. and 9 p.m. Pacific in the dedicated SF venue mailing-list confirmations chat. The monitor updates this summary after each successful check and updates venue rows when their status changes. Confirmation links and message identifiers stay in Gmail.
 
 | Subscription outcome | Distinct lists |
 | --- | ---: |
-| Confirmed by email or provider | 10 |
+| Confirmed by email or provider | 11 |
 | Accepted by signup site | 8 |
 | Submitted and awaiting evidence | 21 |
-| Human verification required | 6 |
+| Human verification required | 5 |
 | Possible human verification | 3 |
 
 Use **Zivv Electron** when a signup asks for a name. Use **Zivv** and **Electron** in separate first and last name fields.
@@ -32,7 +32,7 @@ The audit checked venue websites and signup pages linked by the venues or their 
 | 20 Spot | 1299863522 | 0 | [Official site or signup](<https://www.20spot.com/>) | No email list found | No signup found on the official pages checked. |
 | 22nd & Bartlett | 445731900 | 0 | [Official site or signup](<https://www.sfporchfest.org/>) | Organizer list unverified | Temporary Porchfest sites share an organizer. The official link did not expose an email form. Shared list or outcome with Athen's, Mid Bartlett, Anthony & Marissa's, Buddy's, David's, Michelle's, Willow's. |
 | 240 Front Street | 1740241181 | 0 | [Official site or signup](<https://noisepopfest.com/about>) | Confirmed | Noise Pop organizer list. Welcome email received. |
-| 37th Avenue at Ortega | 1668151404 | 1 | [Official site or signup](<https://sunsetmercantilesf.com/subscribe-to-our-newsletter/>) | Human verification required | Sunset Mercantile sent a confirmation email. Mailchimp requires human verification. |
+| 37th Avenue at Ortega | 1668151404 | 1 | [Official site or signup](<https://sunsetmercantilesf.com/subscribe-to-our-newsletter/>) | Confirmed | Signed welcome email verified the organizer subscription. |
 | 3rd and Army | 2116023822 | 1 | [Official site or signup](<https://ceqanet.lci.ca.gov/263644/3>) | Public site, no venue email list found | Public skate spot. No venue-operated list found. Shared list or outcome with 3rd and Army Skatepark. |
 | 3rd and Army Skatepark | 140737526 | 1 | [Official site or signup](<https://ceqanet.lci.ca.gov/263644/3>) | Public site, no venue email list found | Public skate spot. No venue-operated list found. Shared list or outcome with 3rd and Army. |
 | 4 Star Theater | 89816907 | 3 | [Official site or signup](<https://cinemasfbay.org/newsletter/>) | Submitted, awaiting evidence | Submitted the shared CinemaSF list for the 4 Star, Balboa and Vogue. Shared list or outcome with 4-Star Theater. |
