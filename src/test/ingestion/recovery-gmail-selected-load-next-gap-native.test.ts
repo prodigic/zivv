@@ -12,6 +12,8 @@ import {
   readFileSync,
   readdirSync,
   renameSync,
+  unlinkSync,
+  writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -68,9 +70,28 @@ it.each([
     status: "unchanged",
     generation: 2,
   },
+  {
+    label: "backup-flushed-fresh",
+    retryPoint: null,
+    point: "backup-flushed",
+    marker: "SELECTED_LOAD_TEST_BACKUP_FLUSHED",
+    status: "committed",
+    generation: 3,
+  },
+  {
+    label: "backup-flushed-rollback",
+    retryPoint: "backup-flushed",
+    point: "catalog-before-commit",
+    marker: "SELECTED_LOAD_TEST_CATALOG_BEFORE_COMMIT",
+    status: "unchanged",
+    generation: 2,
+  },
 ] as const)(
   "inspects B after worker death at $label",
   async ({ point, marker, status, generation, retryPoint }) => {
+    const committedRetry =
+      retryPoint === "rollback-catalog-committed" ||
+      retryPoint === "backup-flushed";
     const fixture = await createRecoveryGmailCaptureRuntimeFixture({
       loadableSource: true,
       seedAuthorityControls: true,
@@ -236,6 +257,37 @@ it.each([
       expect(exit.code === null || exit.code !== 0).toBe(true);
       const catalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
       expect(catalog.generation).toBe(generation);
+      const backupPath = join(
+        root,
+        "checkout/data/ingestion/backups/ledger.snapshot.enc"
+      );
+      function readFlushedBackup(committed: typeof catalog) {
+        const directory = join(root, "checkout/data/ingestion/backups");
+        const entries = readdirSync(directory).filter((name) =>
+          /^ledger\.snapshot\.enc\.[1-9][0-9]*\.[a-f0-9]{16}\.tmp$/.test(name)
+        );
+        expect(entries).toHaveLength(1);
+        const name = entries[0]!;
+        const path = join(directory, name);
+        expect(lstatSync(path).nlink).toBe(1);
+        const bytes = readFileSync(path);
+        expect(decryptLedgerSnapshot(bytes, fixture.input.recoveryKey)).toEqual(
+          committed.ledger
+        );
+        expect(
+          decryptLedgerSnapshot(
+            readFileSync(backupPath),
+            fixture.input.recoveryKey
+          )
+        ).toEqual(catalogA.ledger);
+        return {
+          path,
+          bytes,
+          portable: "checkout/data/ingestion/backups/" + name,
+        };
+      }
+      let flushed =
+        point === "backup-flushed" ? readFlushedBackup(catalog) : undefined;
       const journal = readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
       const state = validateWeeklyJournalRecoverySnapshot(journal);
       const row = state.runState.find((item) => item.id === b.runId);
@@ -376,7 +428,9 @@ it.each([
             ? "SELECTED_LOAD_TEST_INTENT_LINKED"
             : retryPoint === "lease-acquired"
               ? "SELECTED_LOAD_TEST_LEASE_ACQUIRED"
-              : "SELECTED_LOAD_TEST_ROLLBACK_CATALOG_COMMITTED";
+              : retryPoint === "backup-flushed"
+                ? "SELECTED_LOAD_TEST_BACKUP_FLUSHED"
+                : "SELECTED_LOAD_TEST_ROLLBACK_CATALOG_COMMITTED";
         const retryChild = spawn(
           process.execPath,
           args(
@@ -441,10 +495,7 @@ it.each([
           b.runId,
           "resume-intent.json"
         );
-        if (
-          retryPoint === "lease-acquired" ||
-          retryPoint === "rollback-catalog-committed"
-        ) {
+        if (retryPoint === "lease-acquired" || committedRetry) {
           const retryJournal =
             readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
           const {
@@ -509,7 +560,9 @@ it.each([
             fixture.input
           ).inventoryGmailSelectedLoadExecution();
           const retryCatalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
-          if (retryPoint === "rollback-catalog-committed") {
+          if (retryPoint === "backup-flushed")
+            flushed = readFlushedBackup(retryCatalog);
+          if (committedRetry) {
             interruptedRetryCatalog = retryCatalog;
             expect(retryCatalog.generation).toBe(3);
             const added = retryCatalog.ledger.runs.filter(
@@ -548,11 +601,13 @@ it.each([
             expect(
               retryInventory.filter(
                 (entry) =>
+                  entry.path !== flushed?.portable &&
                   ![report, backup, ...intentPaths].includes(entry.path)
               )
             ).toEqual(
               inventory.filter(
                 (entry) =>
+                  entry.path !== flushed?.portable &&
                   ![report, backup, ...intentPaths].includes(entry.path)
               )
             );
@@ -564,7 +619,9 @@ it.each([
               inventorySha256: sha256(
                 canonicalJson(
                   retryInventory.filter(
-                    (entry) => !intentPaths.includes(entry.path)
+                    (entry) =>
+                      entry.path !== flushed?.portable &&
+                      !intentPaths.includes(entry.path)
                   )
                 )
               ),
@@ -687,6 +744,57 @@ it.each([
           ).toEqual(linkedInventory);
         }
       }
+      if (flushed) {
+        const conflict = join(
+          root,
+          "checkout/data/ingestion/backups/ledger.snapshot.enc.987654321.0123456789abcdef.tmp"
+        );
+        const originalBackup = readFileSync(backupPath);
+        writeFileSync(conflict, flushed.bytes, { flag: "wx" });
+        try {
+          const before = openPreparedRuntimeForAdmission(
+            fixture.input
+          ).inventoryGmailSelectedLoadExecution();
+          const beforeRetryJournal =
+            readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+          const rejected = resume();
+          expect(rejected.status).toBe(1);
+          expect(rejected.stderr).toContain(
+            "INVALID_NEXT_SELECTED_LOAD_INTERRUPTION_INSPECTION"
+          );
+          expect(
+            openPreparedRuntimeForAdmission(
+              fixture.input
+            ).inventoryGmailSelectedLoadExecution()
+          ).toEqual(before);
+          expect(
+            readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
+          ).toEqual(beforeRetryJournal);
+          expect(readFileSync(flushed.path)).toEqual(flushed.bytes);
+          expect(readFileSync(conflict)).toEqual(flushed.bytes);
+          expect(readFileSync(backupPath)).toEqual(originalBackup);
+        } finally {
+          unlinkSync(conflict);
+        }
+        const retained = join(fixture.base, "retained-flushed-backup.enc");
+        renameSync(flushed.path, retained);
+        try {
+          // The encrypted payload still authenticates, but the file could not
+          // have been emitted by the canonical writer.
+          const modified = Buffer.concat([flushed.bytes, Buffer.from("\n")]);
+          writeFileSync(flushed.path, modified, { flag: "wx" });
+          const rejected = resume();
+          expect(rejected.status).toBe(1);
+          expect(rejected.stderr).toContain(
+            "INVALID_NEXT_SELECTED_LOAD_INTERRUPTION_INSPECTION"
+          );
+          expect(readFileSync(flushed.path)).toEqual(modified);
+          expect(readFileSync(backupPath)).toEqual(originalBackup);
+        } finally {
+          if (existsSync(flushed.path)) unlinkSync(flushed.path);
+          renameSync(retained, flushed.path);
+        }
+      }
       const completed = resume();
       if (completed.status !== 0)
         console.error(
@@ -694,6 +802,10 @@ it.each([
           completed.stderr.slice(0, 1500)
         );
       expect(completed.status).toBe(0);
+      if (flushed) {
+        expect(existsSync(flushed.path)).toBe(false);
+        expect(readFileSync(backupPath)).toEqual(flushed.bytes);
+      }
       if (retryPoint) {
         const intentPath = join(
           root,
@@ -747,10 +859,7 @@ it.each([
       ).toMatchObject({
         fence:
           previousOwner!.fence +
-          (retryPoint === "lease-acquired" ||
-          retryPoint === "rollback-catalog-committed"
-            ? 2
-            : 1),
+          (retryPoint === "lease-acquired" || committedRetry ? 2 : 1),
         expiresAtEpochMs: 0,
       });
       const resultPath = join(
@@ -769,10 +878,7 @@ it.each([
         runId: b.runId,
         generation: 3,
       });
-      if (
-        retryPoint === "lease-acquired" ||
-        retryPoint === "rollback-catalog-committed"
-      ) {
+      if (retryPoint === "lease-acquired" || committedRetry) {
         const successor = join(
           root,
           "recovery-gmail-load",
@@ -803,9 +909,7 @@ it.each([
           initialSha256: sha256(initialBytes),
           parentSha256: sha256(initialBytes),
         });
-        expect(successorBody.version).toBe(
-          retryPoint === "rollback-catalog-committed" ? 2 : 1
-        );
+        expect(successorBody.version).toBe(committedRetry ? 2 : 1);
         expect(successorBody.intent.committedRollback).toEqual(
           interruptedCommitEvidence
         );
