@@ -473,7 +473,14 @@ it.each([
             )
           ).toEqual(inventory);
           expect(retryInventory).toHaveLength(inventory.length + 2);
-          const retryJournalBytes = readFileSync(journalPath);
+          // Opening the guarded writer can checkpoint already committed WAL
+          // pages. Compare catalog contents across that open, then pin the
+          // main-file bytes for the detached inspection and active refusal.
+          expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+            catalog
+          );
+          const retryCatalogSha256 = sha256(readFileSync(catalogPath));
+          const retryJournalSha256 = sha256(readFileSync(journalPath));
           const inspectRetry = () =>
             run(
               `g.inspectNextSelectedLoadInterruption(input,selector,${bytesExpression})`
@@ -510,8 +517,8 @@ it.each([
             );
           }
           assertDetachedRetry("expired");
-          expect(readFileSync(catalogPath)).toEqual(catalogBytes);
-          expect(readFileSync(journalPath)).toEqual(retryJournalBytes);
+          expect(sha256(readFileSync(catalogPath))).toBe(retryCatalogSha256);
+          expect(sha256(readFileSync(journalPath))).toBe(retryJournalSha256);
           expect(readFileSync(intentPath)).toEqual(intentBytes);
           expect(
             openPreparedRuntimeForAdmission(
