@@ -2,10 +2,12 @@ import {
   nextSelectedLoadResumeGap,
   observeNextSelectedLoadResumeIntent,
   type NextSelectedLoadResumeGap,
+  type NextSelectedLoadResumeIntent,
 } from "./recovery-gmail-selected-load-next-resume-intent.js";
 import {
   readNextSelectedLoadResumeSuccessors,
   rewindNextSelectedLoadAcquiredRetries,
+  type NextSelectedLoadCommittedRollback,
 } from "./recovery-gmail-selected-load-next-successors.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import { join } from "node:path";
@@ -30,6 +32,7 @@ import { sha256 } from "./steve-preflight.js";
 import {
   readWeeklyJournalRecoverySnapshotReadOnly,
   validateWeeklyJournalRecoverySnapshot,
+  type WeeklyRunLease,
 } from "./weekly-run-journal.js";
 import { parseWeeklyRunState } from "./weekly-run-state.js";
 
@@ -77,6 +80,83 @@ export function nextSelectedLoadGapInventory(input: {
   );
 }
 
+/** Bind the original encrypted A snapshot to both independently proved B baselines. */
+export function proveNextSelectedLoadRollbackBackup(
+  family: ReturnType<typeof readNextSelectedLoadFamily>,
+  initial: NextSelectedLoadResumeIntent
+): Buffer {
+  const snapshot = family.effective.snapshot;
+  if (!snapshot) return fail();
+  const hash = sha256(snapshot);
+  if (
+    initial.generation !== 2 ||
+    initial.backupSha256 !== hash ||
+    initial.backupSize !== snapshot.length ||
+    [family.execution.entries, family.effective.entries].some((entries) => {
+      const entry = entries.find(
+        (item) => item.path === selectedLoadBackupPath
+      );
+      return (
+        entry?.kind !== "file" ||
+        entry.sha256 !== hash ||
+        entry.size !== snapshot.length
+      );
+    })
+  )
+    return fail();
+  return snapshot;
+}
+
+/** Prove that the committed delta belongs to the exact acquired retry, and that
+ * only its canonical report was added to the pre-artifact file inventory. */
+export function proveNextSelectedLoadCommittedRollback(input: {
+  family: ReturnType<typeof readNextSelectedLoadFamily>;
+  original: NextSelectedLoadResumeIntent;
+  catalog: ReturnType<typeof readCanonicalSqliteLedgerReadOnly>;
+  reportPath: string;
+  report: Buffer;
+  parent: Pick<
+    NextSelectedLoadResumeIntent,
+    "startedAtEpochMs" | "deadlineEpochMs" | "owner" | "fence"
+  >;
+  previousOwner: WeeklyRunLease;
+}): NextSelectedLoadCommittedRollback {
+  const { family, original, catalog, parent, previousOwner } = input;
+  const backup = proveNextSelectedLoadRollbackBackup(family, original);
+  const committed = catalog.ledger.runs.find(
+    (run) => run.runId === family.effective.plan.receipt.importRunId
+  )?.committedAtEpochMs;
+  if (
+    catalog.generation !== family.execution.generation + 1 ||
+    original.ledgerRevision !== ledgerDigest(family.effective.catalog.ledger) ||
+    previousOwner.owner !== parent.owner ||
+    previousOwner.fence !== parent.fence ||
+    typeof committed !== "number" ||
+    committed < parent.startedAtEpochMs ||
+    committed >= (previousOwner.expiresAtEpochMs || parent.deadlineEpochMs)
+  )
+    return fail();
+  assertSelectedGmailLoadCatalog(
+    family.effective.plan,
+    family.effective.catalog.ledger,
+    catalog.ledger,
+    parent.startedAtEpochMs
+  );
+  const inventory = nextSelectedLoadGapInventory({
+    entries: family.execution.entries,
+    loadPath: family.loadPath,
+    executionBytes: family.executionBytes,
+    backupSha256: original.backupSha256,
+    backupSize: backup.length,
+    reportPath: input.reportPath,
+    report: input.report,
+  });
+  return {
+    ledgerRevision: ledgerDigest(catalog.ledger),
+    inventorySha256: sha256(canonicalJson(inventory)),
+  };
+}
+
 /** Prove an interrupted second load before its load artifact or result exists.
  * This is detached evidence. A future resume must revalidate under both locks. */
 export function readNextSelectedLoadInterruptionEvidence(
@@ -91,6 +171,11 @@ export function readNextSelectedLoadInterruptionEvidence(
       return fail();
     wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
+    const family = readNextSelectedLoadFamily(
+      input,
+      next,
+      Buffer.from(signedAdmission)
+    );
     const {
       opened,
       root,
@@ -103,7 +188,7 @@ export function readNextSelectedLoadInterruptionEvidence(
       record,
       effective,
       admissionSha256,
-    } = readNextSelectedLoadFamily(input, next, Buffer.from(signedAdmission));
+    } = family;
     const catalogPath = join(root, "operator/ledger.sqlite");
     const journalPath = join(root, "operator/weekly-runs.sqlite");
     const catalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
@@ -142,6 +227,7 @@ export function readNextSelectedLoadInterruptionEvidence(
     );
 
     const rolledBack = catalog.generation === execution.generation;
+    const crossedCommit = !rolledBack && saved?.intent.generation === 2;
     if (rolledBack) {
       if (
         canonicalJson(catalog.ledger) !==
@@ -150,14 +236,24 @@ export function readNextSelectedLoadInterruptionEvidence(
         return fail();
     } else {
       if (catalog.generation !== execution.generation + 1) return fail();
-      assertSelectedGmailLoadCatalog(
-        plan,
-        effective.catalog.ledger,
-        catalog.ledger,
-        execution.startedAtEpochMs
-      );
+      if (!crossedCommit)
+        assertSelectedGmailLoadCatalog(
+          plan,
+          effective.catalog.ledger,
+          catalog.ledger,
+          execution.startedAtEpochMs
+        );
     }
     const status = rolledBack ? "unchanged" : "committed";
+    const transitionIndex = successors.findIndex(
+      (record) => record.intent.committedRollback
+    );
+    if (transitionIndex >= 0 && !crossedCommit) return fail();
+    const originalCatalog = crossedCommit ? effective.catalog : catalog;
+    const originalStatus =
+      originalCatalog.generation === execution.generation
+        ? "unchanged"
+        : "committed";
     const delta = proveSelectedLoadRunDelta({
       priorJournal: effective.journal,
       observedJournal: originalJournal,
@@ -167,8 +263,8 @@ export function readNextSelectedLoadInterruptionEvidence(
       source: proof.source,
       runId,
       raw,
-      observedLedger: catalog.ledger,
-      catalogDisposition: status,
+      observedLedger: originalCatalog.ledger,
+      catalogDisposition: originalStatus,
     });
     const retained = validateWeeklyJournalRecoverySnapshot(originalJournal);
     const owner = validateWeeklyJournalRecoverySnapshot(journal).ownership.find(
@@ -179,7 +275,7 @@ export function readNextSelectedLoadInterruptionEvidence(
       (item) => item.scope === "prodigic/zivv/production"
     );
     if (
-      delta.status !== status ||
+      delta.status !== originalStatus ||
       !row ||
       !owner ||
       !originalOwner ||
@@ -249,19 +345,65 @@ export function readNextSelectedLoadInterruptionEvidence(
       reportPath,
       report: storedReport,
     });
+    let originalInventory = inventory;
+    let committedRollback: NextSelectedLoadCommittedRollback | undefined;
+    if (crossedCommit) {
+      if (!saved || !storedReport || !latest) return fail();
+      const inherited = proveNextSelectedLoadRollbackBackup(
+        family,
+        saved.intent
+      );
+      if (
+        !backup.equals(inherited) ||
+        (!saved.intent.reportPresent &&
+          execution.entries.some((entry) => entry.path === reportPath))
+      )
+        return fail();
+      originalInventory = nextSelectedLoadGapInventory({
+        entries: execution.entries,
+        loadPath,
+        executionBytes,
+        backupSha256,
+        backupSize: backup.length,
+        reportPath,
+        report: saved.intent.reportPresent ? storedReport : undefined,
+      });
+      const transition = successors[transitionIndex];
+      if (!transition && !acquired) return fail();
+      const parent = transition ? records[transitionIndex] : latest;
+      if (!parent) return fail();
+      const proof = proveNextSelectedLoadCommittedRollback({
+        family,
+        original: saved.intent,
+        catalog,
+        reportPath,
+        report: storedReport,
+        parent: parent.intent,
+        previousOwner: transition?.intent.previousOwner ?? owner,
+      });
+      if (transition) {
+        if (
+          canonicalJson(transition.intent.committedRollback) !==
+          canonicalJson(proof)
+        )
+          return fail();
+      } else committedRollback = proof;
+    }
     const gap: NextSelectedLoadResumeGap = {
       runId,
       admissionSha256,
       executionBaselineSha256: sha256(executionBytes),
       priorLoadFamilySha256: record.priorLoadFamilySha256,
       journalSha256: delta.journalSha256,
-      inventorySha256: sha256(canonicalJson(inventory)),
-      ledgerRevision: ledgerDigest(catalog.ledger),
-      generation: rolledBack ? 2 : 3,
+      inventorySha256: sha256(canonicalJson(originalInventory)),
+      ledgerRevision: ledgerDigest(originalCatalog.ledger),
+      generation: originalStatus === "unchanged" ? 2 : 3,
       previousOwner: originalOwner,
       backupSha256,
       backupSize: backup.length,
-      reportPresent: !!storedReport,
+      reportPresent: crossedCommit
+        ? saved!.intent.reportPresent
+        : !!storedReport,
     };
     if (
       saved &&
@@ -314,6 +456,7 @@ export function readNextSelectedLoadInterruptionEvidence(
       successors,
       latest,
       acquired,
+      committedRollback,
     };
   } catch {
     return fail();

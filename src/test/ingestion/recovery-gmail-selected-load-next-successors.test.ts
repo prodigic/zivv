@@ -143,6 +143,70 @@ const verify = (
   });
 
 describe("B signed resume successor codec", () => {
+  it("binds one generation-two rollback commit in a distinct signed version", () => {
+    const bytes = signNextSelectedLoadResumeIntent(
+      { ...gap, generation: 2 },
+      epoch + 1,
+      key
+    );
+    const original = {
+      bytes,
+      intent: verifyNextSelectedLoadResumeIntent(bytes, key),
+    };
+    const committedRollback = {
+      ledgerRevision: sha256("exact committed B"),
+      inventorySha256: sha256("exact committed inventory"),
+    };
+    const options = {
+      initial: original,
+      parent: original,
+      sequence: 1,
+      journal: journal(acquiredInitial),
+      previousOwner: acquiredInitial,
+      startedAtEpochMs: original.intent.deadlineEpochMs,
+      key,
+      committedRollback,
+    };
+    const transition = prepareNextSelectedLoadResumeSuccessor(options);
+    const listed = [
+      fileEntry(transition.filename, transition.bytes),
+      stageEntry(transition.filename),
+    ];
+    const decoded = verify(listed, original, () => transition.bytes);
+    expect(decoded[0]!.intent.committedRollback).toEqual(committedRollback);
+    const body = JSON.parse(transition.bytes.toString("utf8"));
+    expect(body.version).toBe(2);
+    const forged = Buffer.from(canonicalJson({ ...body, version: 1 }) + "\n");
+    expect(() => verify(listed, original, () => forged)).toThrow();
+    expect(() =>
+      prepareNextSelectedLoadResumeSuccessor({
+        ...options,
+        initial,
+        parent: initial,
+      })
+    ).toThrow();
+    const duplicate = prepareNextSelectedLoadResumeSuccessor({
+      ...options,
+      parent: transition,
+      sequence: 2,
+      journal: journal(acquiredFirst),
+      previousOwner: acquiredFirst,
+      startedAtEpochMs: transition.intent.deadlineEpochMs,
+    });
+    expect(() =>
+      verify(
+        [
+          ...listed,
+          fileEntry(duplicate.filename, duplicate.bytes),
+          stageEntry(duplicate.filename),
+        ],
+        original,
+        (name) =>
+          name.endsWith(duplicate.filename) ? duplicate.bytes : transition.bytes
+      )
+    ).toThrow();
+  });
+
   it("authenticates a canonical two-link chain and rewinds only the acquired owner", () => {
     const chain = verify();
     expect(chain.map(({ intent }) => intent.sequence)).toEqual([1, 2]);

@@ -11,6 +11,11 @@ const prefix = "/resume-successor-";
 const digest = /^[a-f0-9]{64}$/;
 const limit = 999;
 
+export interface NextSelectedLoadCommittedRollback {
+  ledgerRevision: string;
+  inventorySha256: string;
+}
+
 export interface NextSelectedLoadResumeSuccessor {
   sequence: number;
   initialSha256: string;
@@ -21,6 +26,7 @@ export interface NextSelectedLoadResumeSuccessor {
   fence: number;
   startedAtEpochMs: number;
   deadlineEpochMs: number;
+  committedRollback?: NextSelectedLoadCommittedRollback;
 }
 
 interface RetryRecord {
@@ -42,7 +48,8 @@ function bodyFor(
   sequence: number,
   journalSha256: string,
   previousOwner: WeeklyRunLease,
-  startedAtEpochMs: number
+  startedAtEpochMs: number,
+  committedRollback?: NextSelectedLoadCommittedRollback
 ) {
   const prior = parent.intent;
   const { scope, owner, fence, expiresAtEpochMs } = previousOwner;
@@ -65,6 +72,18 @@ function bodyFor(
     startedAtEpochMs < prior.deadlineEpochMs
   )
     return fail();
+  if (
+    committedRollback !== undefined &&
+    (!committedRollback ||
+      !("generation" in initial.intent) ||
+      initial.intent.generation !== 2 ||
+      typeof committedRollback.ledgerRevision !== "string" ||
+      !digest.test(committedRollback.ledgerRevision) ||
+      typeof committedRollback.inventorySha256 !== "string" ||
+      !digest.test(committedRollback.inventorySha256))
+  )
+    return fail();
+
   const intent: NextSelectedLoadResumeSuccessor = {
     sequence,
     initialSha256: sha256(initial.bytes),
@@ -75,14 +94,22 @@ function bodyFor(
     fence: fence + 1,
     startedAtEpochMs,
     deadlineEpochMs: startedAtEpochMs + 180000,
+    ...(committedRollback
+      ? {
+          committedRollback: {
+            ledgerRevision: committedRollback.ledgerRevision,
+            inventorySha256: committedRollback.inventorySha256,
+          },
+        }
+      : {}),
   };
-  return { kind, version: 1, intent };
+  return { kind, version: committedRollback ? 2 : 1, intent };
 }
 
 function signature(body: ReturnType<typeof bodyFor>, key: Buffer) {
   if (!Buffer.isBuffer(key) || key.length !== 32) return fail();
   return createHmac("sha256", key)
-    .update(kind + "/v1\0")
+    .update(kind + "/v" + body.version + "\0")
     .update(canonicalJson(body))
     .digest();
 }
@@ -99,6 +126,7 @@ export function prepareNextSelectedLoadResumeSuccessor(input: {
   previousOwner: WeeklyRunLease;
   startedAtEpochMs: number;
   key: Buffer;
+  committedRollback?: NextSelectedLoadCommittedRollback;
 }) {
   const body = bodyFor(
     input.initial,
@@ -106,7 +134,8 @@ export function prepareNextSelectedLoadResumeSuccessor(input: {
     input.sequence,
     sha256(input.journal),
     input.previousOwner,
-    input.startedAtEpochMs
+    input.startedAtEpochMs,
+    input.committedRollback
   );
   return {
     filename: filename(input.sequence),
@@ -143,6 +172,7 @@ export function readNextSelectedLoadResumeSuccessors(input: {
   )
     return fail();
   let parent = input.initial;
+  let hasCommittedRollback = false;
   for (let sequence = 1; sequence <= count; sequence++) {
     const path = input.loadPath + "/" + filename(sequence);
     const stage = path + "-stage";
@@ -168,9 +198,11 @@ export function readNextSelectedLoadResumeSuccessors(input: {
       sequence,
       parsed.intent.journalSha256,
       parsed.intent.previousOwner,
-      parsed.intent.startedAtEpochMs
+      parsed.intent.startedAtEpochMs,
+      parsed.intent.committedRollback
     );
     if (
+      (hasCommittedRollback && !!body.intent.committedRollback) ||
       !bytes.equals(encode(body, parsed.signature)) ||
       !timingSafeEqual(
         Buffer.from(parsed.signature, "hex"),
@@ -180,6 +212,7 @@ export function readNextSelectedLoadResumeSuccessors(input: {
       return fail();
     const record = { path, stage, bytes, intent: body.intent };
     records.push(record);
+    hasCommittedRollback ||= !!record.intent.committedRollback;
     parent = record;
   }
   return records;

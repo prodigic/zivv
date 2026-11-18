@@ -1,4 +1,8 @@
-import { nextSelectedLoadGapInventory } from "./recovery-gmail-selected-load-next-gap.js";
+import {
+  nextSelectedLoadGapInventory,
+  proveNextSelectedLoadCommittedRollback,
+  proveNextSelectedLoadRollbackBackup,
+} from "./recovery-gmail-selected-load-next-gap.js";
 import { readInstalledNextSelectedLoadResumeIntent } from "./recovery-gmail-selected-load-next-resume-intent.js";
 import {
   readNextSelectedLoadResumeSuccessors,
@@ -138,6 +142,53 @@ function verifyCompletedNextResume(input: {
     input.backup.length === intent.backupSize &&
     sha256(input.backup) === intent.backupSha256;
   if (!originallyInherited && !originallyCommitted) return fail();
+  if (intent.generation === 2) {
+    proveNextSelectedLoadRollbackBackup(family, intent);
+    if (
+      !intent.reportPresent &&
+      execution.entries.some((entry) => entry.path === input.reportPath)
+    )
+      return fail();
+    const transitionIndex = successors.findIndex(
+      (record) => record.intent.committedRollback
+    );
+    const transition = successors[transitionIndex];
+    if (transition) {
+      const parent = records[transitionIndex];
+      if (
+        !parent ||
+        canonicalJson(transition.intent.committedRollback) !==
+          canonicalJson(
+            proveNextSelectedLoadCommittedRollback({
+              family,
+              original: intent,
+              catalog,
+              reportPath: input.reportPath,
+              report: input.report,
+              parent: parent.intent,
+              previousOwner: transition.intent.previousOwner,
+            })
+          )
+      )
+        return fail();
+    } else {
+      const commitTime = catalog.ledger.runs.find(
+        (run) => run.runId === plan.receipt.importRunId
+      )?.committedAtEpochMs;
+      if (
+        typeof commitTime !== "number" ||
+        commitTime < latest.intent.startedAtEpochMs ||
+        commitTime >= latest.intent.deadlineEpochMs
+      )
+        return fail();
+      assertSelectedGmailLoadCatalog(
+        plan,
+        effective.catalog.ledger,
+        catalog.ledger,
+        latest.intent.startedAtEpochMs
+      );
+    }
+  }
   const previousInventory = nextSelectedLoadGapInventory({
     entries: execution.entries,
     loadPath,
