@@ -115,3 +115,23 @@ export function verifySelectedLoadResult(
     loadAllowed: false as const,
   };
 }
+
+/** Build the exact result bytes used by initial completion and recovery. */
+export function signSelectedLoadHistoricalResult(
+  expected: SelectedLoadResultExpectation & {
+    guardedJournalSha256: string;
+    historyManifestSha256: string;
+  },
+  key: Buffer
+): Buffer {
+  if (!Buffer.isBuffer(key) || key.length !== 32)
+    throw Error("INVALID_SELECTED_LOAD_RESULT");
+  const body = { ...expected, kind: "zivv-selected-load-result", version: 3 };
+  const signature = createHmac("sha256", key)
+    .update("zivv-selected-load-result/v3\0")
+    .update(canonicalJson(body))
+    .digest("hex");
+  const bytes = Buffer.from(canonicalJson({ ...body, signature }) + "\n");
+  verifySelectedLoadResult(bytes, key, expected);
+  return bytes;
+}

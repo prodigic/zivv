@@ -1,3 +1,4 @@
+import { signSelectedLoadHistoricalResult } from "./recovery-gmail-selected-result-proof.js";
 import { assertSelectedLoadSettlementTransition } from "./recovery-gmail-selected-settlement-transition.js";
 import { DatabaseSync } from "node:sqlite";
 import { signSelectedLoadCompletionIntent } from "./recovery-gmail-selected-load-completion-intent.js";
@@ -959,10 +960,8 @@ async function installSelectedLoadCompletion(
     for (const { name, bytes } of history.files)
       assertInstalled(join(scope.directory, name), bytes);
   };
-  const result = signed(
+  const result = signSelectedLoadHistoricalResult(
     {
-      kind: "zivv-selected-load-result",
-      version: 3,
       ...identity,
       runId: state.runId,
       ledgerRevision,
@@ -973,8 +972,7 @@ async function installSelectedLoadCompletion(
       reportSha256: scope.plan.receipt.reportSha256,
       historyManifestSha256: history.manifestSha256,
     },
-    scope.key,
-    "zivv-selected-load-result/v3"
+    scope.key
   );
   const completionBytes = signSelectedLoadCompletionIntent(
     {
