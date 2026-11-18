@@ -476,7 +476,7 @@ it("replays a durable result after a retry worker dies before lease release", as
       fixture.input.recoveryKey
     );
     const reconstructedEntries = reconstructSelectedLoadResumeInventory({
-      completedEntries,
+      observedEntries: completedEntries,
       originalEntries: executionEvidence.entries,
       preResumeSnapshot: changedFiles.snapshot,
       intent: verifiedIntent,

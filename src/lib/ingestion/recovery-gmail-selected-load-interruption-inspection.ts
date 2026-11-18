@@ -11,9 +11,13 @@ import { observeSelectedLoadLease } from "./recovery-gmail-selected-lease-observ
 import {
   createSelectedGmailLoadEffectPlan,
   assertSelectedGmailLoadArtifact,
+  assertSelectedGmailLoadCatalog,
   selectedGmailLoadEvidence,
 } from "./recovery-gmail-selected-load-effects.js";
-import { verifySelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-intent.js";
+import {
+  verifySelectedLoadResumeIntent,
+  type SelectedLoadResumeIntent,
+} from "./recovery-gmail-selected-resume-intent.js";
 import { reconstructSelectedLoadResumeJournal } from "./recovery-gmail-selected-resume-journal.js";
 import { reconstructSelectedLoadResumeInventory } from "./recovery-gmail-selected-resume-inventory.js";
 import { verifySelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
@@ -312,6 +316,41 @@ export function readSelectedLoadInterruptionEvidence(
       | undefined;
     let stagedChunkCount = 0;
     let stagedChunkPartial = false;
+    const intentStage = intentPath + "-stage";
+    const restoreIntentSnapshot = (intent: SelectedLoadResumeIntent) =>
+      intent.snapshotEvidence
+        ? restoreResumeSnapshot(
+            intent.snapshotEvidence,
+            intent.snapshotEvidence.chunks.map(({ index }) =>
+              read(
+                load +
+                  "/resume-snapshot-" +
+                  String(index).padStart(3, "0") +
+                  ".bin",
+                4 * 1024 * 1024
+              )
+            )
+          )
+        : undefined;
+    const assertCommittedRollback = (intent: SelectedLoadResumeIntent) => {
+      const original = proveSelectedLoadCatalogDelta({
+        ...common,
+        observedGeneration: intent.generation,
+        observedLedger: checkpoint.ledger,
+      });
+      if (
+        original.disposition !== "unchanged" ||
+        original.ledgerRevision !== intent.ledgerRevision ||
+        catalog.generation !== intent.generation + 1
+      )
+        return fail();
+      assertSelectedGmailLoadCatalog(
+        plan,
+        checkpoint.ledger,
+        catalog.ledger,
+        intent.startedAtEpochMs
+      );
+    };
     if (hasResult) {
       const intent = verifySelectedLoadResumeIntent(
         read(intentPath, 65536),
@@ -323,17 +362,7 @@ export function readSelectedLoadInterruptionEvidence(
       )
         return fail();
       if (intent.version === 3) {
-        const original = proveSelectedLoadCatalogDelta({
-          ...common,
-          observedGeneration: intent.generation,
-          observedLedger: checkpoint.ledger,
-        });
-        if (
-          original.disposition !== "unchanged" ||
-          original.ledgerRevision !== intent.ledgerRevision ||
-          proveSelectedLoadCatalogDelta(common).disposition !== "committed"
-        )
-          return fail();
+        assertCommittedRollback(intent);
       } else if (
         intent.ledgerRevision !== ledgerDigest(catalog.ledger) ||
         intent.generation !== catalog.generation
@@ -372,21 +401,9 @@ export function readSelectedLoadInterruptionEvidence(
         executionBaseline,
         input.recoveryKey
       );
-      if (intent.snapshotEvidence)
-        priorSnapshot = restoreResumeSnapshot(
-          intent.snapshotEvidence,
-          intent.snapshotEvidence.chunks.map(({ index }) =>
-            read(
-              load +
-                "/resume-snapshot-" +
-                String(index).padStart(3, "0") +
-                ".bin",
-              4 * 1024 * 1024
-            )
-          )
-        );
+      priorSnapshot = restoreIntentSnapshot(intent);
       priorEntries = reconstructSelectedLoadResumeInventory({
-        completedEntries: entries.filter(
+        observedEntries: entries.filter(
           (entry) => !completedSuccessors.successorPaths.includes(entry.path)
         ),
         originalEntries: execution.entries,
@@ -467,24 +484,6 @@ export function readSelectedLoadInterruptionEvidence(
         return fail();
       completedResultSha256 = resultProof.resultSha256;
     }
-    if (
-      !hasResult &&
-      entries.some((entry) => entry.path.startsWith(load + "/resume-snapshot-"))
-    ) {
-      if (!changedFiles.snapshot) return fail();
-      const staged = observeSelectedLoadStagedSnapshot({
-        destination: root,
-        loadPath: load,
-        snapshot: changedFiles.snapshot,
-        entries,
-      });
-      priorEntries = staged.entries;
-      stagedSnapshotPaths = staged.stagedPaths;
-      stagedChunkCount = staged.completeChunks;
-      stagedChunkPartial = staged.partial;
-      incompleteSnapshotCandidate = staged.incompleteCandidate;
-    }
-    const intentStage = intentPath + "-stage";
     const hasIntentEvidence =
       !hasResult &&
       entries.some(
@@ -493,30 +492,63 @@ export function readSelectedLoadInterruptionEvidence(
           entry.path === intentStage ||
           entry.path.startsWith(intentStage + "/")
       );
-    if (hasIntentEvidence) {
+    const installed = hasIntentEvidence
+      ? inspectRecoveryInstalledFile(
+          join(root, intentPath),
+          join(root, intentStage),
+          65536
+        )
+      : undefined;
+    const initialBytes =
+      installed?.target?.bytes ?? installed?.candidate?.bytes;
+    const initial = initialBytes
+      ? verifySelectedLoadResumeIntent(initialBytes, input.recoveryKey)
+      : undefined;
+    if (hasIntentEvidence && !initial) return fail();
+    const settled = !!installed?.target && !installed.candidate;
+    const committedRollback =
+      initial?.version === 3 && catalog.generation === 2;
+    if (committedRollback) {
+      if (!settled) return fail();
+      assertCommittedRollback(initial);
+      priorSnapshot = restoreIntentSnapshot(initial);
+      if (
+        !priorSnapshot ||
+        canonicalJson(
+          decryptLedgerSnapshot(priorSnapshot, input.recoveryKey)
+        ) !== canonicalJson(checkpoint.ledger)
+      )
+        return fail();
+    }
+    const pendingSnapshot = committedRollback
+      ? priorSnapshot
+      : changedFiles.snapshot;
+    if (
+      !hasResult &&
+      entries.some((entry) => entry.path.startsWith(load + "/resume-snapshot-"))
+    ) {
+      if (!pendingSnapshot) return fail();
+      const staged = observeSelectedLoadStagedSnapshot({
+        destination: root,
+        loadPath: load,
+        snapshot: pendingSnapshot,
+        entries,
+      });
+      priorEntries = staged.entries;
+      stagedSnapshotPaths = staged.stagedPaths;
+      stagedChunkCount = staged.completeChunks;
+      stagedChunkPartial = staged.partial;
+      incompleteSnapshotCandidate = staged.incompleteCandidate;
+    }
+    if (initial && initialBytes) {
       if (stagedChunkPartial) return fail();
-      const prior = priorEntries.filter(
+      let prior = priorEntries.filter(
         (entry) =>
           entry.path !== intentPath &&
           entry.path !== intentStage &&
           !entry.path.startsWith(intentStage + "/") &&
           !entry.path.startsWith(load + "/resume-successor-")
       );
-      // Authenticate the initial installed bytes before using its hashes. The
-      // pending observer below independently closes and rechecks this family.
-      const installed = inspectRecoveryInstalledFile(
-        join(root, intentPath),
-        join(root, intentStage),
-        65536
-      );
-      const initialBytes =
-        installed.target?.bytes ?? installed.candidate?.bytes;
-      if (!initialBytes) return fail();
-      const initial = verifySelectedLoadResumeIntent(
-        initialBytes,
-        input.recoveryKey
-      );
-      const settled = !!installed.target && !installed.candidate;
       const successors = observeSelectedLoadIntentSuccessors({
         destination: root,
         loadPath: load,
@@ -531,6 +563,44 @@ export function readSelectedLoadInterruptionEvidence(
         latest: successors.latestV2Successor,
       });
       if (baselineJournal.acquired && !successors.lastSettled) return fail();
+      if (committedRollback) {
+        if (
+          !successors.lastSettled ||
+          (!baselineJournal.acquired && !successors.latestV2Successor)
+        )
+          return fail();
+        const state = validateWeeklyJournalRecoverySnapshot(journal);
+        const currentRun = state.runState.find((row) => row.id === runId);
+        if (
+          !currentRun ||
+          parseWeeklyRunState(JSON.parse(currentRun.payload)).stages[3]
+            ?.status !== "running" ||
+          state.stageArtifacts.some(
+            (item) => item.runId === runId && item.stage === "load"
+          )
+        )
+          return fail();
+        proveSelectedLoadPhysicalDelta({
+          ...common,
+          observedEntries: prior,
+          changedFiles,
+        });
+        const execution = verifySelectedLoadExecutionBaseline(
+          executionBaseline,
+          input.recoveryKey
+        );
+        prior = reconstructSelectedLoadResumeInventory({
+          observedEntries: entries.filter(
+            (entry) => !successors.successorPaths.includes(entry.path)
+          ),
+          originalEntries: execution.entries,
+          preResumeSnapshot: priorSnapshot,
+          intent: initial,
+          runId,
+          reportPath: report,
+          outcome: "committed-pending",
+        });
+      }
       const pending = observeSelectedLoadPendingIntent({
         destination: root,
         loadPath: load,
@@ -540,9 +610,11 @@ export function readSelectedLoadInterruptionEvidence(
         previousOwner: initial.previousOwner,
         admissionSha256: common.admissionSha256,
         executionBaselineSha256: sha256(executionBaseline),
-        ledgerRevision: ledgerDigest(catalog.ledger),
-        generation: catalog.generation,
-        snapshot: changedFiles.snapshot,
+        ledgerRevision: committedRollback
+          ? ledgerDigest(checkpoint.ledger)
+          : ledgerDigest(catalog.ledger),
+        generation: committedRollback ? 1 : catalog.generation,
+        snapshot: pendingSnapshot,
         key: input.recoveryKey,
       });
       if (
@@ -567,7 +639,7 @@ export function readSelectedLoadInterruptionEvidence(
       observedEntries: priorEntries,
       changedFiles: {
         ...changedFiles,
-        ...(hasResult ? { snapshot: priorSnapshot } : {}),
+        ...(hasResult || committedRollback ? { snapshot: priorSnapshot } : {}),
       },
     });
     if (

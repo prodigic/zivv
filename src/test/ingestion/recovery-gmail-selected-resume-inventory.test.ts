@@ -71,7 +71,7 @@ it("reconstructs only the inventory committed by the intent", () => {
     };
     expect(
       reconstructSelectedLoadResumeInventory({
-        completedEntries: completed,
+        observedEntries: completed,
         originalEntries: [oldSnapshot],
         preResumeSnapshot: retainedBytes,
         intent,
@@ -81,7 +81,7 @@ it("reconstructs only the inventory committed by the intent", () => {
     ).toEqual(prior);
     expect(() =>
       reconstructSelectedLoadResumeInventory({
-        completedEntries: completed,
+        observedEntries: completed,
         originalEntries: [oldSnapshot],
         intent: { ...intent, inventorySha256: "0".repeat(64) },
         runId: id,
@@ -90,13 +90,35 @@ it("reconstructs only the inventory committed by the intent", () => {
     ).toThrow();
     expect(() =>
       reconstructSelectedLoadResumeInventory({
-        completedEntries: completed.filter(
+        observedEntries: completed.filter(
           (entry) => entry.path !== root + "/load-result.json"
         ),
         originalEntries: [oldSnapshot],
         intent,
         runId: id,
         reportPath,
+      })
+    ).toThrow();
+    const pending = completed.filter(
+      (entry) => entry.path !== root + "/load-result.json"
+    );
+    const pendingInput = {
+      observedEntries: pending,
+      originalEntries: [oldSnapshot],
+      preResumeSnapshot: retainedBytes,
+      intent: { ...intent, version: 3 as const, generation: 1 },
+      runId: id,
+      reportPath,
+      outcome: "committed-pending" as const,
+    };
+    expect(reconstructSelectedLoadResumeInventory(pendingInput)).toEqual(prior);
+    expect(() =>
+      reconstructSelectedLoadResumeInventory({
+        ...pendingInput,
+        observedEntries: [
+          ...pending,
+          file(root + "/resume-intent.json-stage/abandoned.tmp", "f"),
+        ],
       })
     ).toThrow();
   }

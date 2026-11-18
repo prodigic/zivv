@@ -432,5 +432,14 @@ retained precommit snapshot must decrypt to the original ledger. Completion
 requires the exact planned generation-two catalog, the matching final backup,
 and the ordinary signed result and journal proof. A native test killed the
 fenced worker before commit and verified rollback, active-lease refusal, one
-successful retry, and an unchanged subsequent replay. A second interruption
-after the retry commits needs a separate pending-intent proof.
+successful retry, and an unchanged subsequent replay.
+
+A second worker death after replay commits and before the load journal advances
+can resume from a settled rollback intent. Inspection proves the exact committed
+catalog, reconstructs the original inventory and journal from the signed intent,
+and checks the retained original encrypted backup separately from the observed
+backup. After both the signed deadline and observed lease expire, the successor
+uses the committed import to finish the journal without writing the catalog again.
+The native two-worker test verifies both interruptions, refusal during the lease,
+a matching final encrypted backup, and an unchanged repeated result. Later
+journal interruption points and additional load families require separate proof.
