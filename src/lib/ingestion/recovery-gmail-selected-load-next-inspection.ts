@@ -9,6 +9,7 @@ import { proveRecoveryGmailSelectedLoadBaseline } from "./recovery-gmail-selecte
 import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
 import { validateWeeklyJournalRecoverySnapshot } from "./weekly-run-journal.js";
+import { parseWeeklyRunState } from "./weekly-run-state.js";
 
 function fail(): never {
   throw Error("INVALID_NEXT_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
@@ -18,7 +19,7 @@ function fail(): never {
  * The original checkpoint still anchors capture evidence. The prospective
  * import plan uses the prior load's independently verified canonical catalog.
  * This summary grants no installation, journal, or catalog writer authority. */
-export function inspectNextRecoveryGmailSelectedLoad(
+export function readNextSelectedLoadAdmissionEvidence(
   prior: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector
 ) {
@@ -68,6 +69,18 @@ export function inspectNextRecoveryGmailSelectedLoad(
     if (!source?.bytes || source.sha256 !== body?.sha256) return fail();
 
     const { ledger, generation } = observed.observedCatalog;
+    const predecessor = journal.runState.find(
+      (row) => row.id === observed.report.runId
+    );
+    if (!predecessor) return fail();
+    const predecessorImportId = parseWeeklyRunState(
+      JSON.parse(predecessor.payload)
+    ).stages.find((stage) => stage.stage === "load")?.evidence?.importRunId;
+    const predecessorCommit = ledger.runs.find(
+      (run) => run.runId === predecessorImportId
+    )?.committedAtEpochMs;
+    if (typeof predecessorCommit !== "number") return fail();
+
     const plan = createSelectedGmailLoadEffectPlan(
       { files: baseline.checkpoint.files, ledger },
       selected,
@@ -84,7 +97,7 @@ export function inspectNextRecoveryGmailSelectedLoad(
       generation,
       journalSha256: sha256(observed.observedJournal),
     };
-    return {
+    const report = {
       status: "next-selected-load-inspected" as const,
       previousRunId: priorLoad.runId,
       priorLoadFamilySha256: sha256(canonicalJson([priorLoad])),
@@ -102,9 +115,29 @@ export function inspectNextRecoveryGmailSelectedLoad(
       captureAllowed: false as const,
       loadAllowed: false as const,
     };
+    return {
+      report,
+      selector: selected.selection.selector,
+      source: selected.source,
+      anchorBaselineSha256: selected.baselineSha256,
+      runtimeIdentitySha256: selected.runtimeIdentitySha256,
+      earliestAdmissionEpochMs: Math.max(
+        baseline.checkpoint.createdAtEpochMs,
+        predecessorCommit,
+        selected.source.importObservedAtEpochMs
+      ),
+    };
   } catch {
     return fail();
   } finally {
     key?.fill(0);
   }
+}
+
+/** Report the observation without exposing private admission inputs. */
+export function inspectNextRecoveryGmailSelectedLoad(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector
+) {
+  return readNextSelectedLoadAdmissionEvidence(prior, next).report;
 }
