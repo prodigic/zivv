@@ -1,3 +1,5 @@
+import { join, relative, resolve, sep } from "node:path";
+import { inspectRecoveryInstalledFile } from "./encrypted-backup.js";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import { canonicalJson } from "./sqlite-store.js";
@@ -218,4 +220,57 @@ export function nextSelectedLoadResumeGap(
     ...gap
   } = intent;
   return gap;
+}
+
+/** Authenticate the exact installed intent or its one owned stage. */
+export function observeNextSelectedLoadResumeIntent(
+  destination: string,
+  loadPath: string,
+  entries: RecoveryRuntimeEntry[],
+  key: Buffer
+) {
+  const path = loadPath + "/" + nextSelectedLoadResumeIntentFilename;
+  const stage = path + "-stage";
+  const related = entries.filter((entry) => entry.path.startsWith(path));
+  if (!related.length) return undefined;
+  const directory = resolve(destination);
+  const observed = inspectRecoveryInstalledFile(
+    join(directory, path),
+    join(directory, stage),
+    8192
+  );
+  const { target, candidate } = observed;
+  const source = target ?? candidate;
+  if (
+    !source ||
+    (target && candidate && (target.nlink !== 2 || candidate.nlink !== 2))
+  )
+    return fail();
+  const paths = new Map<string, RecoveryRuntimeEntry>();
+  paths.set(stage, { path: stage, kind: "directory" });
+  for (const file of [target, candidate]) {
+    if (!file) continue;
+    const physical = relative(directory, file.path).split(sep).join("/");
+    paths.set(physical, {
+      path: physical,
+      kind: "file",
+      size: file.bytes.length,
+      sha256: sha256(file.bytes),
+    });
+  }
+  if (
+    related.length !== paths.size ||
+    related.some(
+      (entry) => canonicalJson(entry) !== canonicalJson(paths.get(entry.path))
+    )
+  )
+    return fail();
+  return {
+    path,
+    stage,
+    bytes: source.bytes,
+    intent: verifyNextSelectedLoadResumeIntent(source.bytes, key),
+    paths: new Set(paths.keys()),
+    observed,
+  };
 }

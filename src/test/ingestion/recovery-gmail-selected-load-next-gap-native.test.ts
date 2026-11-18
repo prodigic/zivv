@@ -3,7 +3,13 @@ import { createHash, createHmac } from "node:crypto";
 import { decryptLedgerSnapshot } from "../../lib/ingestion/encrypted-backup.js";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, readFileSync, renameSync } from "node:fs";
+import {
+  existsSync,
+  lstatSync,
+  readFileSync,
+  readdirSync,
+  renameSync,
+} from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { expect, it, vi } from "vitest";
@@ -20,20 +26,32 @@ import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gm
 vi.setConfig({ testTimeout: 600000 });
 it.each([
   {
+    label: "precommit",
+    linkedRetry: false,
     point: "catalog-before-commit",
     marker: "SELECTED_LOAD_TEST_CATALOG_BEFORE_COMMIT",
     status: "unchanged",
     generation: 2,
   },
   {
+    label: "postcommit",
+    linkedRetry: false,
+    point: "catalog-committed",
+    marker: "SELECTED_LOAD_TEST_CATALOG_COMMITTED",
+    status: "committed",
+    generation: 3,
+  },
+  {
+    label: "retry-intent-linked",
+    linkedRetry: true,
     point: "catalog-committed",
     marker: "SELECTED_LOAD_TEST_CATALOG_COMMITTED",
     status: "committed",
     generation: 3,
   },
 ] as const)(
-  "inspects B after worker death at $point",
-  async ({ point, marker, status, generation }) => {
+  "inspects B after worker death at $label",
+  async ({ point, marker, status, generation, linkedRetry }) => {
     const fixture = await createRecoveryGmailCaptureRuntimeFixture({
       loadableSource: true,
       seedAuthorityControls: true,
@@ -328,6 +346,118 @@ it.each([
           renameSync(retainedReport, reportPath);
         }
       }
+      if (linkedRetry) {
+        const retryChild = spawn(
+          process.execPath,
+          args(
+            `e.resumeRecoveredGmailNextSelectedLoadForTest(input,selector,${bytesExpression},'intent-linked')`
+          ),
+          {
+            cwd: join(root, "checkout"),
+            env,
+            stdio: ["pipe", "pipe", "pipe"],
+            windowsHide: true,
+          }
+        );
+        let retryOutput = "",
+          retryError = "",
+          retrySeen = false,
+          retryKilled = false,
+          retryTimedOut = false;
+        const retryTimer = setTimeout(() => {
+          retryTimedOut = true;
+          retryChild.kill("SIGKILL");
+        }, 180000);
+        retryChild.stdout.on("data", (bytes: Buffer) => {
+          retryOutput += bytes.toString("utf8");
+          if (
+            !retrySeen &&
+            retryOutput
+              .split(/\r?\n/)
+              .includes("SELECTED_LOAD_TEST_INTENT_LINKED")
+          ) {
+            retrySeen = true;
+            retryKilled = retryChild.kill("SIGKILL");
+          }
+        });
+        retryChild.stderr.on("data", (bytes: Buffer) => {
+          retryError += bytes.toString("utf8").slice(0, 2048);
+        });
+        const retryEnded = new Promise<{
+          code: number | null;
+          signal: NodeJS.Signals | null;
+        }>((resolve, reject) => {
+          retryChild.once("error", reject);
+          retryChild.once("exit", (code, signal) => resolve({ code, signal }));
+        });
+        retryChild.stdin.on("error", () => {});
+        retryChild.stdin.end(encodeRecoveryGmailSelectedLoadFrame(input));
+        let retryExit: { code: number | null; signal: NodeJS.Signals | null };
+        try {
+          retryExit = await retryEnded;
+        } finally {
+          clearTimeout(retryTimer);
+        }
+        if (!retrySeen || !retryKilled || retryTimedOut)
+          console.error(
+            "NEXT_GAP_LINKED_RETRY_DIAGNOSTIC",
+            retryError.slice(0, 1500)
+          );
+        expect(retryTimedOut).toBe(false);
+        expect(retrySeen).toBe(true);
+        expect(retryKilled).toBe(true);
+        expect(retryExit.signal).not.toBe("SIGABRT");
+        expect(retryExit.code).not.toBe(134);
+        expect(retryExit.code).not.toBe(3);
+        expect(retryExit.code === null || retryExit.code !== 0).toBe(true);
+        const intentPath = join(
+          root,
+          "recovery-gmail-load",
+          b.runId,
+          "resume-intent.json"
+        );
+        const stagePath = intentPath + "-stage";
+        const candidates = readdirSync(stagePath);
+        expect(candidates).toHaveLength(1);
+        const aliasPath = join(stagePath, candidates[0]!);
+        const targetStat = lstatSync(intentPath),
+          aliasStat = lstatSync(aliasPath);
+        expect(targetStat.nlink).toBe(2);
+        expect(aliasStat.nlink).toBe(2);
+        expect({ dev: aliasStat.dev, ino: aliasStat.ino }).toEqual({
+          dev: targetStat.dev,
+          ino: targetStat.ino,
+        });
+        expect(readFileSync(aliasPath)).toEqual(readFileSync(intentPath));
+        const linkedInventory = openPreparedRuntimeForAdmission(
+          fixture.input
+        ).inventoryGmailSelectedLoadExecution();
+        expect(readFileSync(catalogPath)).toEqual(catalogBytes);
+        expect(readFileSync(journalPath)).toEqual(journalBytes);
+        const linkedInspection = run(
+          `g.inspectNextSelectedLoadInterruption(input,selector,${bytesExpression})`
+        );
+        if (linkedInspection.status !== 0)
+          console.error(
+            "NEXT_GAP_LINKED_INSPECTION_DIAGNOSTIC",
+            linkedInspection.stderr.slice(0, 1500)
+          );
+        expect(linkedInspection.status).toBe(0);
+        expect(JSON.parse(linkedInspection.stdout)).toMatchObject({
+          status: "committed",
+          generation: 3,
+          lease: { status: "expired" },
+          loadAllowed: false,
+          activationAllowed: false,
+        });
+        expect(readFileSync(catalogPath)).toEqual(catalogBytes);
+        expect(readFileSync(journalPath)).toEqual(journalBytes);
+        expect(
+          openPreparedRuntimeForAdmission(
+            fixture.input
+          ).inventoryGmailSelectedLoadExecution()
+        ).toEqual(linkedInventory);
+      }
       const completed = resume();
       if (completed.status !== 0)
         console.error(
@@ -335,6 +465,16 @@ it.each([
           completed.stderr.slice(0, 1500)
         );
       expect(completed.status).toBe(0);
+      if (linkedRetry) {
+        const intentPath = join(
+          root,
+          "recovery-gmail-load",
+          b.runId,
+          "resume-intent.json"
+        );
+        expect(lstatSync(intentPath).nlink).toBe(1);
+        expect(readdirSync(intentPath + "-stage")).toEqual([]);
+      }
       const completedSummary = JSON.parse(completed.stdout) as {
         resultSha256: string;
       };
