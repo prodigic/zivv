@@ -65,7 +65,7 @@ function object(value: unknown, fields: readonly string[]) {
   return value as Record<string, unknown>;
 }
 
-function assertIdentity(
+export function assertSelectedLoadHistoryIdentity(
   value: unknown
 ): asserts value is SelectedLoadHistoryIdentity {
   const identity = object(value, identityKeys);
@@ -95,7 +95,7 @@ export function signSelectedLoadHistoryManifest(
   parts: HistoryParts<Buffer>,
   key: Buffer
 ): Buffer {
-  assertIdentity(identity);
+  assertSelectedLoadHistoryIdentity(identity);
   object(parts, partNames);
   const evidence = {} as HistoryParts<ResumeSnapshotEvidence>;
   for (const name of partNames) {
@@ -128,7 +128,7 @@ export function verifySelectedLoadHistoryManifest(
 ) {
   if (!Buffer.isBuffer(bytes) || bytes.length > maxManifestBytes)
     return invalid();
-  assertIdentity(expectedIdentity);
+  assertSelectedLoadHistoryIdentity(expectedIdentity);
   try {
     const { signature: saved, ...body } = object(
       JSON.parse(bytes.toString("utf8")),
@@ -145,7 +145,7 @@ export function verifySelectedLoadHistoryManifest(
       !timingSafeEqual(Buffer.from(saved, "hex"), signature(body, key))
     )
       return invalid();
-    assertIdentity(body.identity);
+    assertSelectedLoadHistoryIdentity(body.identity);
     if (canonicalJson(body.identity) !== canonicalJson(expectedIdentity))
       return invalid();
     const parts = object(body.parts, partNames);
