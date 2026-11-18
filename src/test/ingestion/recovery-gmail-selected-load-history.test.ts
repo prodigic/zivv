@@ -1,3 +1,4 @@
+import { isSelectedLoadHistoryFilename } from "../../lib/ingestion/recovery-gmail-selected-load-paths.js";
 import type { RecoveryRuntimeEntry } from "../../lib/ingestion/recovery-runtime.js";
 import { createHmac } from "node:crypto";
 import { expect, it } from "vitest";
@@ -8,7 +9,6 @@ import {
   restoreResumeSnapshot,
 } from "../../lib/ingestion/recovery-gmail-selected-resume-snapshot-evidence.js";
 import {
-  isSelectedLoadHistoryFilename,
   prepareSelectedLoadHistoryFiles,
   readSelectedLoadHistoryFiles,
   signSelectedLoadHistoryManifest,

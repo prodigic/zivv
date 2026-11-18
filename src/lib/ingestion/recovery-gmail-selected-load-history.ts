@@ -1,4 +1,8 @@
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
+import {
+  selectedLoadHistoryLayout,
+  selectedLoadHistoryManifestFilename,
+} from "./recovery-gmail-selected-load-paths.js";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
@@ -22,9 +26,12 @@ const partNames = ["encryptedCatalog", "guardedJournal", "inventory"] as const;
 type PartName = (typeof partNames)[number];
 type HistoryParts<T> = Record<PartName, T>;
 const limits: HistoryParts<number> = {
-  encryptedCatalog: 512 * 1024 * 1024,
-  guardedJournal: 256 * 1024 * 1024,
-  inventory: 32 * 1024 * 1024,
+  encryptedCatalog:
+    selectedLoadHistoryLayout.encryptedCatalog.chunks * resumeSnapshotChunkSize,
+  guardedJournal:
+    selectedLoadHistoryLayout.guardedJournal.chunks * resumeSnapshotChunkSize,
+  inventory:
+    selectedLoadHistoryLayout.inventory.chunks * resumeSnapshotChunkSize,
 };
 const identityKeys = [
   "admissionSha256",
@@ -158,27 +165,12 @@ export function verifySelectedLoadHistoryManifest(
   }
 }
 
-const filePrefixes: HistoryParts<string> = {
-  encryptedCatalog: "history-catalog-",
-  guardedJournal: "history-journal-",
-  inventory: "history-inventory-",
-};
-const manifestFilename = "history-manifest.json";
-
 function partFilename(part: PartName, index: number) {
-  return filePrefixes[part] + String(index).padStart(3, "0") + ".bin";
-}
-
-/** Exact final filenames for the historical manifest and bounded chunk sets. */
-export function isSelectedLoadHistoryFilename(name: string): boolean {
-  if (name === manifestFilename) return true;
-  return partNames.some((part) => {
-    if (!name.startsWith(filePrefixes[part])) return false;
-    const match = /^([0-9]{3})\.bin$/.exec(
-      name.slice(filePrefixes[part].length)
-    );
-    return !!match && Number(match[1]) < limits[part] / resumeSnapshotChunkSize;
-  });
+  return (
+    selectedLoadHistoryLayout[part].prefix +
+    String(index).padStart(3, "0") +
+    ".bin"
+  );
 }
 
 /** Produce ordered, immutable files for the existing secure intent installer.
@@ -203,7 +195,7 @@ export function prepareSelectedLoadHistoryFiles(
       });
     }
   }
-  files.push({ name: manifestFilename, bytes: manifest });
+  files.push({ name: selectedLoadHistoryManifestFilename, bytes: manifest });
   return { files, manifestSha256: sha256(manifest) };
 }
 
@@ -247,7 +239,7 @@ export function readSelectedLoadHistoryFiles(input: {
     return bytes;
   };
   const manifest = verifySelectedLoadHistoryManifest(
-    read(manifestFilename, maxManifestBytes),
+    read(selectedLoadHistoryManifestFilename, maxManifestBytes),
     input.key,
     input.identity
   );
