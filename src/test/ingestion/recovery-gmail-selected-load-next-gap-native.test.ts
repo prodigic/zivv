@@ -1,0 +1,262 @@
+import { spawn, spawnSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+import { expect, it, vi } from "vitest";
+import { encodeRecoveryGmailSelectedLoadFrame } from "../../lib/ingestion/recovery-gmail-selected-load-framing.js";
+import { resumeOperatorRecoveryGmailSelectedLoadEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-launcher.js";
+import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-runtime.js";
+import { readCanonicalSqliteLedgerReadOnly } from "../../lib/ingestion/sqlite-store.js";
+import {
+  readWeeklyJournalRecoverySnapshotReadOnly,
+  validateWeeklyJournalRecoverySnapshot,
+} from "../../lib/ingestion/weekly-run-journal.js";
+import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
+
+vi.setConfig({ testTimeout: 600000 });
+it.each([
+  {
+    point: "catalog-before-commit",
+    marker: "SELECTED_LOAD_TEST_CATALOG_BEFORE_COMMIT",
+    status: "unchanged",
+    generation: 2,
+  },
+  {
+    point: "catalog-committed",
+    marker: "SELECTED_LOAD_TEST_CATALOG_COMMITTED",
+    status: "committed",
+    generation: 3,
+  },
+] as const)(
+  "inspects B after worker death at $point",
+  async ({ point, marker, status, generation }) => {
+    const fixture = await createRecoveryGmailCaptureRuntimeFixture({
+      loadableSource: true,
+      seedAuthorityControls: true,
+      additionalReadyEdition: true,
+    });
+    let preserve = true;
+    try {
+      const root = fixture.input.destination;
+      const ready = fixture.nextReady!;
+      const first = fixture.sourceReceipts.find(
+        ({ receipt }) => receipt.messageId === "a1"
+      )!.receipt;
+      const input = {
+        ...fixture.input,
+        selector: {
+          batchId: ready.originalBatchId,
+          messageId: first.messageId,
+          rawSha256: first.rawSha256,
+          receiptId: first.receiptId,
+        },
+      };
+      const next = {
+        batchId: ready.nextBatchId,
+        messageId: ready.receipt.messageId,
+        rawSha256: ready.receipt.rawSha256,
+        receiptId: ready.receipt.receiptId,
+      };
+      const installed =
+        await resumeOperatorRecoveryGmailSelectedLoadEvidence(input);
+      const module = pathToFileURL(
+        join(
+          root,
+          "checkout/dist/lib/ingestion/recovery-gmail-selected-load-executor.js"
+        )
+      ).href;
+      const admission = pathToFileURL(
+        join(
+          root,
+          "checkout/dist/lib/ingestion/recovery-gmail-selected-load-next-admission.js"
+        )
+      ).href;
+      const gap = pathToFileURL(
+        join(
+          root,
+          "checkout/dist/lib/ingestion/recovery-gmail-selected-load-next-gap.js"
+        )
+      ).href;
+      const framing = pathToFileURL(
+        join(
+          root,
+          "checkout/dist/lib/ingestion/recovery-gmail-selected-load-framing.js"
+        )
+      ).href;
+      const bootstrap = pathToFileURL(
+        join(root, "bootstrap/module-boundary.mjs")
+      ).href;
+      const env = { ...process.env, ZIVV_LEDGER_HOME: join(root, "operator") };
+      const script = (call: string) =>
+        `try{const e=await import(${JSON.stringify(module)}),a=await import(${JSON.stringify(admission)}),g=await import(${JSON.stringify(gap)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const input=f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks));const selector=${JSON.stringify(next)};const r=await ${call};if(r)console.log(JSON.stringify(r));}catch(error){console.error(error instanceof Error?error.message:"NATIVE_ERROR");process.exitCode=1;}`;
+      const args = (call: string) => [
+        "--import",
+        bootstrap,
+        "--input-type=module",
+        "--eval",
+        script(call),
+      ];
+      const run = (call: string) =>
+        spawnSync(process.execPath, args(call), {
+          cwd: join(root, "checkout"),
+          env,
+          input: encodeRecoveryGmailSelectedLoadFrame(input),
+          encoding: "utf8",
+          windowsHide: true,
+          timeout: 180000,
+        });
+      const completedA = run("e.executeRecoveredGmailSelectedLoad(input)");
+      if (completedA.status !== 0)
+        console.error(
+          "NEXT_GAP_A_DIAGNOSTIC",
+          completedA.stderr.slice(0, 1500)
+        );
+      expect(completedA.status).toBe(0);
+      expect(JSON.parse(completedA.stdout)).toMatchObject({
+        runId: installed.runId,
+        generation: 2,
+      });
+      const catalogPath = join(root, "operator/ledger.sqlite");
+      const journalPath = join(root, "operator/weekly-runs.sqlite");
+      const priorJournal = validateWeeklyJournalRecoverySnapshot(
+        readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
+      );
+      const setup = run(
+        "(async()=>{const bytes=a.createRecoveryGmailNextSelectedLoadAdmission(input,selector,Date.now());return await e.installRecoveredGmailNextSelectedLoadAdmission(input,selector,bytes)})()"
+      );
+      if (setup.status !== 0)
+        console.error("NEXT_GAP_SETUP_DIAGNOSTIC", setup.stderr.slice(0, 1500));
+      expect(setup.status).toBe(0);
+      const b = JSON.parse(setup.stdout) as { runId: string };
+      expect(b.runId).toMatch(/^[a-f0-9]{64}$/);
+      expect(b.runId).not.toBe(installed.runId);
+      const admissionPath = join(
+        root,
+        "recovery-gmail-load",
+        b.runId,
+        "admission.json"
+      );
+      const bytesExpression = `(await import('node:fs')).readFileSync(${JSON.stringify(admissionPath)})`;
+      const child = spawn(
+        process.execPath,
+        args(
+          `e.executeRecoveredGmailNextSelectedLoadForTest(input,selector,${bytesExpression},${JSON.stringify(point)})`
+        ),
+        {
+          cwd: join(root, "checkout"),
+          env,
+          stdio: ["pipe", "pipe", "pipe"],
+          windowsHide: true,
+        }
+      );
+      let stdout = "",
+        stderr = "",
+        markerSeen = false,
+        killed = false,
+        timedOut = false;
+      const timer = setTimeout(() => {
+        timedOut = true;
+        child.kill("SIGKILL");
+      }, 180000);
+      child.stdout.on("data", (bytes: Buffer) => {
+        stdout += bytes.toString("utf8");
+        if (!markerSeen && stdout.split(/\r?\n/).includes(marker)) {
+          markerSeen = true;
+          killed = child.kill("SIGKILL");
+        }
+      });
+      child.stderr.on("data", (bytes: Buffer) => {
+        stderr += bytes.toString("utf8").slice(0, 2048);
+      });
+      const ended = new Promise<{
+        code: number | null;
+        signal: NodeJS.Signals | null;
+      }>((resolve, reject) => {
+        child.once("error", reject);
+        child.once("exit", (code, signal) => resolve({ code, signal }));
+      });
+      child.stdin.on("error", () => {});
+      child.stdin.end(encodeRecoveryGmailSelectedLoadFrame(input));
+      let exit: { code: number | null; signal: NodeJS.Signals | null };
+      try {
+        exit = await ended;
+      } finally {
+        clearTimeout(timer);
+      }
+      if (!markerSeen || !killed || timedOut)
+        console.error("NEXT_GAP_CHILD_DIAGNOSTIC", stderr.slice(0, 1500));
+      expect(timedOut).toBe(false);
+      expect(markerSeen).toBe(true);
+      expect(killed).toBe(true);
+      expect(exit.signal).not.toBe("SIGABRT");
+      expect(exit.code).not.toBe(134);
+      expect(exit.code).not.toBe(3);
+      expect(exit.code === null || exit.code !== 0).toBe(true);
+      const catalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
+      expect(catalog.generation).toBe(generation);
+      const journal = readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+      const state = validateWeeklyJournalRecoverySnapshot(journal);
+      const row = state.runState.find((item) => item.id === b.runId);
+      expect(row).toBeDefined();
+      expect(
+        (
+          JSON.parse(row!.payload) as {
+            stages: { stage: string; status: string }[];
+          }
+        ).stages.find((item) => item.stage === "load")?.status
+      ).toBe("running");
+      expect(
+        state.stageArtifacts.some(
+          (item) => item.runId === b.runId && item.stage === "load"
+        )
+      ).toBe(false);
+      for (const oldRow of priorJournal.runState)
+        expect(state.runState).toContainEqual(oldRow);
+      for (const oldArtifact of priorJournal.stageArtifacts)
+        expect(state.stageArtifacts).toContainEqual(oldArtifact);
+      expect(state.intakeEvidence).toEqual(priorJournal.intakeEvidence);
+      expect(
+        existsSync(
+          join(root, "recovery-gmail-load", b.runId, "load-result.json")
+        )
+      ).toBe(false);
+      const inventory = openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution();
+      const catalogBytes = readFileSync(catalogPath),
+        journalBytes = readFileSync(journalPath);
+      const inspected = run(
+        `g.inspectNextSelectedLoadInterruption(input,selector,${bytesExpression})`
+      );
+      if (inspected.status !== 0)
+        console.error(
+          "NEXT_GAP_INSPECTION_DIAGNOSTIC",
+          inspected.stderr.slice(0, 1500)
+        );
+      expect(inspected.status).toBe(0);
+      expect(JSON.parse(inspected.stdout)).toMatchObject({
+        status,
+        generation,
+        lease: { status: "active" },
+        loadAllowed: false,
+        activationAllowed: false,
+      });
+      expect(readFileSync(catalogPath)).toEqual(catalogBytes);
+      expect(readFileSync(journalPath)).toEqual(journalBytes);
+      expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+      expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+        journal
+      );
+      expect(
+        openPreparedRuntimeForAdmission(
+          fixture.input
+        ).inventoryGmailSelectedLoadExecution()
+      ).toEqual(inventory);
+      preserve = false;
+    } finally {
+      if (preserve)
+        console.error("SELECTED_LOAD_NEXT_GAP_PRESERVED", fixture.base);
+      fixture.cleanup(preserve);
+    }
+  }
+);
