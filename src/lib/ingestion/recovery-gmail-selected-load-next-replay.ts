@@ -1,3 +1,6 @@
+import { nextSelectedLoadGapInventory } from "./recovery-gmail-selected-load-next-gap.js";
+import { readInstalledNextSelectedLoadResumeIntent } from "./recovery-gmail-selected-load-next-resume-intent.js";
+import { reconstructSelectedLoadResumeJournal } from "./recovery-gmail-selected-resume-journal.js";
 import { join } from "node:path";
 import { decryptLedgerSnapshot } from "./encrypted-backup.js";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
@@ -82,6 +85,107 @@ function assertRecordedCompletionInventory(input: {
   if (canonicalJson(ordered) !== canonicalJson(projected)) return fail();
 }
 
+function verifyCompletedNextResume(input: {
+  saved: NonNullable<
+    ReturnType<typeof readInstalledNextSelectedLoadResumeIntent>
+  >;
+  family: ReturnType<typeof readNextSelectedLoadFamily>;
+  releasedJournal: Buffer;
+  catalog: ReturnType<typeof readCanonicalSqliteLedgerReadOnly>;
+  backup: Buffer;
+  reportPath: string;
+  report: Buffer;
+}) {
+  const { saved, family, catalog } = input;
+  const { intent } = saved;
+  const {
+    execution,
+    executionBytes,
+    effective,
+    loadPath,
+    runId,
+    admissionSha256,
+  } = family;
+  const { plan, proof, raw } = effective;
+  const resumedCatalog = intent.generation === 2 ? effective.catalog : catalog;
+  if (
+    intent.runId !== runId ||
+    intent.admissionSha256 !== admissionSha256 ||
+    intent.executionBaselineSha256 !== sha256(executionBytes) ||
+    intent.priorLoadFamilySha256 !== execution.priorLoadFamilySha256 ||
+    intent.ledgerRevision !== ledgerDigest(resumedCatalog.ledger) ||
+    intent.startedAtEpochMs <= execution.startedAtEpochMs ||
+    intent.startedAtEpochMs > Date.now()
+  )
+    return fail();
+
+  const inherited = execution.entries.find(
+    (entry) => entry.path === selectedLoadBackupPath
+  );
+  const originallyInherited =
+    inherited?.kind === "file" &&
+    inherited.size === intent.backupSize &&
+    inherited.sha256 === intent.backupSha256;
+  const originallyCommitted =
+    intent.generation === 3 &&
+    input.backup.length === intent.backupSize &&
+    sha256(input.backup) === intent.backupSha256;
+  if (!originallyInherited && !originallyCommitted) return fail();
+  const previousInventory = nextSelectedLoadGapInventory({
+    entries: execution.entries,
+    loadPath,
+    executionBytes,
+    backupSha256: intent.backupSha256,
+    backupSize: intent.backupSize,
+    reportPath: input.reportPath,
+    report: intent.reportPresent ? input.report : undefined,
+  });
+  if (sha256(canonicalJson(previousInventory)) !== intent.inventorySha256)
+    return fail();
+
+  const previous = reconstructSelectedLoadResumeJournal({
+    completedJournal: input.releasedJournal,
+    intent,
+    runId,
+  });
+  const disposition = intent.generation === 2 ? "unchanged" : "committed";
+  const delta = proveSelectedLoadRunDelta({
+    priorJournal: effective.journal,
+    observedJournal: previous,
+    startedAtEpochMs: execution.startedAtEpochMs,
+    admissionSha256,
+    plan,
+    source: proof.source,
+    runId,
+    raw,
+    observedLedger: resumedCatalog.ledger,
+    catalogDisposition: disposition,
+  });
+  if (
+    delta.status !== disposition ||
+    validateWeeklyJournalRecoverySnapshot(previous).stageArtifacts.some(
+      (entry) => entry.runId === runId && entry.stage === "load"
+    )
+  )
+    return fail();
+  return {
+    successor: {
+      previousOwner: intent.previousOwner,
+      deadlineEpochMs: intent.deadlineEpochMs,
+    },
+    successorSha256: sha256(saved.bytes),
+    addedEntries: [
+      {
+        path: saved.path,
+        kind: "file" as const,
+        size: saved.bytes.length,
+        sha256: sha256(saved.bytes),
+      },
+      { path: saved.stage, kind: "directory" as const },
+    ],
+  };
+}
+
 /** Return a completed successor's original result only after independently
  * proving the predecessor and the successor's entire live delta. No writes. */
 export function replayRecoveredGmailNextSelectedLoad(
@@ -98,6 +202,7 @@ export function replayRecoveredGmailNextSelectedLoad(
     wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
     const key = input.recoveryKey;
+    const family = readNextSelectedLoadFamily(input, next, admission);
     const {
       opened,
       root,
@@ -110,7 +215,7 @@ export function replayRecoveredGmailNextSelectedLoad(
       record,
       effective,
       admissionSha256,
-    } = readNextSelectedLoadFamily(input, next, admission);
+    } = family;
     const catalogPath = join(root, "operator/ledger.sqlite");
     const journalPath = join(root, "operator/weekly-runs.sqlite");
     const catalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
@@ -167,22 +272,10 @@ export function replayRecoveredGmailNextSelectedLoad(
     )
       return fail();
 
-    const delta = proveSelectedLoadRunDelta({
-      priorJournal: effective.journal,
-      observedJournal: journals.guardedJournal,
-      startedAtEpochMs: execution.startedAtEpochMs,
-      admissionSha256,
-      plan,
-      source: proof.source,
-      runId,
-      raw,
-      observedLedger: catalog.ledger,
-      catalogDisposition: "committed",
-    });
     const row = validateWeeklyJournalRecoverySnapshot(
       observedJournal
     ).runState.find((entry) => entry.id === runId);
-    if (delta.status !== "committed" || !row) return fail();
+    if (!row) return fail();
     const state = parseWeeklyRunState(JSON.parse(row.payload));
     if (
       state.stages.find((item) => item.stage === "load")?.status !== "succeeded"
@@ -199,9 +292,42 @@ export function replayRecoveredGmailNextSelectedLoad(
       )
     )
       return fail();
+    const saved = readInstalledNextSelectedLoadResumeIntent(
+      loadPath,
+      entries,
+      read,
+      key
+    );
+    const resumed = saved
+      ? verifyCompletedNextResume({
+          saved,
+          family,
+          releasedJournal: journals.releasedJournal,
+          catalog,
+          backup: snapshot,
+          reportPath,
+          report,
+        })
+      : undefined;
+    const delta = proveSelectedLoadRunDelta({
+      priorJournal: effective.journal,
+      observedJournal: journals.guardedJournal,
+      startedAtEpochMs: execution.startedAtEpochMs,
+      admissionSha256,
+      plan,
+      source: proof.source,
+      runId,
+      raw,
+      observedLedger: catalog.ledger,
+      catalogDisposition: "committed",
+      ...(resumed ? { successor: resumed.successor } : {}),
+    });
+    if (delta.status !== "committed") return fail();
     assertRecordedCompletionInventory({
       loadPath,
-      prior: execution.entries,
+      prior: resumed
+        ? [...execution.entries, ...resumed.addedEntries]
+        : execution.entries,
       actual: entries,
       history: history.parts.inventory,
       execution: executionBytes,
@@ -224,6 +350,7 @@ export function replayRecoveredGmailNextSelectedLoad(
         runStateSha256: sha256(canonicalJson(state)),
         reportSha256: plan.receipt.reportSha256,
         historyManifestSha256: history.manifestSha256,
+        ...(resumed ? { successorSha256: resumed.successorSha256 } : {}),
       }
     );
     if (

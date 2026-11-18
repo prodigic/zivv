@@ -1,3 +1,6 @@
+import { createHash, createHmac } from "node:crypto";
+import { decryptLedgerSnapshot } from "../../lib/ingestion/encrypted-backup.js";
+import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -118,6 +121,7 @@ it.each([
       });
       const catalogPath = join(root, "operator/ledger.sqlite");
       const journalPath = join(root, "operator/weekly-runs.sqlite");
+      const catalogA = readCanonicalSqliteLedgerReadOnly(catalogPath);
       const priorJournal = validateWeeklyJournalRecoverySnapshot(
         readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
       );
@@ -252,6 +256,153 @@ it.each([
           fixture.input
         ).inventoryGmailSelectedLoadExecution()
       ).toEqual(inventory);
+      const resume = () =>
+        run(
+          `e.resumeRecoveredGmailNextSelectedLoad(input,selector,${bytesExpression})`
+        );
+      const active = resume();
+      expect(active.status).toBe(1);
+      expect(active.stderr).toContain(
+        "RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE"
+      );
+      expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+      expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+        journal
+      );
+      expect(
+        openPreparedRuntimeForAdmission(
+          fixture.input
+        ).inventoryGmailSelectedLoadExecution()
+      ).toEqual(inventory);
+      const previousOwner = state.ownership.find(
+        (item) => item.scope === "prodigic/zivv/production"
+      );
+      expect(previousOwner).toBeDefined();
+      expect(previousOwner!.expiresAtEpochMs - Date.now()).toBeLessThanOrEqual(
+        180000
+      );
+      const deadline = Date.now() + 185000;
+      while (Date.now() <= previousOwner!.expiresAtEpochMs) {
+        if (Date.now() > deadline) throw Error("LEASE_WAIT_TIMEOUT");
+        await new Promise((resolve) =>
+          setTimeout(
+            resolve,
+            Math.min(
+              1000,
+              Math.max(1, previousOwner!.expiresAtEpochMs - Date.now() + 1)
+            )
+          )
+        );
+      }
+      const completed = resume();
+      if (completed.status !== 0)
+        console.error(
+          "NEXT_GAP_RESUME_DIAGNOSTIC",
+          completed.stderr.slice(0, 1500)
+        );
+      expect(completed.status).toBe(0);
+      const completedSummary = JSON.parse(completed.stdout) as {
+        resultSha256: string;
+      };
+      expect(completedSummary).toMatchObject({
+        status: "selected-load-complete",
+        runId: b.runId,
+        generation: 3,
+        activationAllowed: false,
+        captureAllowed: false,
+        loadAllowed: false,
+      });
+      const finalCatalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
+      expect(finalCatalog.generation).toBe(3);
+      if (status === "committed") expect(finalCatalog).toEqual(catalog);
+      else {
+        const previousRuns = new Set(
+          catalogA.ledger.runs.map((item) => item.runId)
+        );
+        const addedRuns = finalCatalog.ledger.runs.filter(
+          (item) => !previousRuns.has(item.runId)
+        );
+        expect(addedRuns).toHaveLength(1);
+        for (const oldRun of catalogA.ledger.runs)
+          expect(finalCatalog.ledger.runs).toContainEqual(oldRun);
+      }
+      const finalJournalBytes =
+        readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+      const finalJournal =
+        validateWeeklyJournalRecoverySnapshot(finalJournalBytes);
+      for (const oldRow of priorJournal.runState)
+        expect(finalJournal.runState).toContainEqual(oldRow);
+      for (const oldArtifact of priorJournal.stageArtifacts)
+        expect(finalJournal.stageArtifacts).toContainEqual(oldArtifact);
+      expect(finalJournal.intakeEvidence).toEqual(priorJournal.intakeEvidence);
+      expect(
+        finalJournal.ownership.find(
+          (item) => item.scope === "prodigic/zivv/production"
+        )
+      ).toMatchObject({ fence: previousOwner!.fence + 1, expiresAtEpochMs: 0 });
+      const resultPath = join(
+        root,
+        "recovery-gmail-load",
+        b.runId,
+        "load-result.json"
+      );
+      const resultBytes = readFileSync(resultPath);
+      const { signature, ...resultBody } = JSON.parse(
+        resultBytes.toString("utf8")
+      ) as Record<string, unknown>;
+      expect(resultBody).toMatchObject({
+        kind: "zivv-selected-load-result",
+        version: 3,
+        runId: b.runId,
+        generation: 3,
+      });
+      expect(signature).toBe(
+        createHmac("sha256", fixture.input.recoveryKey)
+          .update("zivv-selected-load-result/v3\0")
+          .update(canonicalJson(resultBody))
+          .digest("hex")
+      );
+      expect(completedSummary.resultSha256).toBe(
+        createHash("sha256").update(resultBytes).digest("hex")
+      );
+      expect(
+        decryptLedgerSnapshot(
+          readFileSync(
+            join(root, "checkout/data/ingestion/backups/ledger.snapshot.enc")
+          ),
+          fixture.input.recoveryKey
+        )
+      ).toEqual(finalCatalog.ledger);
+      const finalInventory = openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution();
+      const replayModule = pathToFileURL(
+        join(
+          root,
+          "checkout/dist/lib/ingestion/recovery-gmail-selected-load-next-replay.js"
+        )
+      ).href;
+      const replay = run(
+        `(await import(${JSON.stringify(replayModule)})).replayRecoveredGmailNextSelectedLoad(input,selector,${bytesExpression})`
+      );
+      if (replay.status !== 0)
+        console.error(
+          "NEXT_GAP_REPLAY_DIAGNOSTIC",
+          replay.stderr.slice(0, 1500)
+        );
+      expect(replay.status).toBe(0);
+      expect(JSON.parse(replay.stdout)).toEqual(completedSummary);
+      expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+        finalCatalog
+      );
+      expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+        finalJournalBytes
+      );
+      expect(
+        openPreparedRuntimeForAdmission(
+          fixture.input
+        ).inventoryGmailSelectedLoadExecution()
+      ).toEqual(finalInventory);
       preserve = false;
     } finally {
       if (preserve)

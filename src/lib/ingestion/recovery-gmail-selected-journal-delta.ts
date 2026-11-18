@@ -12,7 +12,10 @@ import {
   selectedGmailLoadEvidence,
   type SelectedGmailLoadEffectPlan,
 } from "./recovery-gmail-selected-load-effects.js";
-import { validateWeeklyJournalRecoverySnapshot } from "./weekly-run-journal.js";
+import {
+  validateWeeklyJournalRecoverySnapshot,
+  type WeeklyRunLease,
+} from "./weekly-run-journal.js";
 import {
   parseWeeklyRunState,
   type WeeklyRunSource,
@@ -74,6 +77,7 @@ export function proveSelectedLoadRunDelta(input: {
   raw: Buffer;
   observedLedger: IngestionLedger;
   catalogDisposition: "unchanged" | "committed";
+  successor?: { previousOwner: WeeklyRunLease; deadlineEpochMs: number };
 }) {
   const fail = (): never => {
     throw Error("INVALID_SELECTED_LOAD_JOURNAL_DELTA");
@@ -100,10 +104,22 @@ export function proveSelectedLoadRunDelta(input: {
       hash.slice(16, 20),
       hash.slice(20, 32),
     ].join("-");
+  const successor = input.successor;
+  if (
+    successor &&
+    (successor.previousOwner.scope !== production ||
+      successor.previousOwner.owner !== expectedOwner ||
+      successor.previousOwner.fence !== prior.fence + 1 ||
+      successor.previousOwner.expiresAtEpochMs >
+        input.startedAtEpochMs + 180000 ||
+      successor.previousOwner.expiresAtEpochMs <= input.startedAtEpochMs)
+  )
+    return fail();
   const held =
     owner.owner === expectedOwner &&
-    owner.fence === prior.fence + 1 &&
-    owner.expiresAtEpochMs <= input.startedAtEpochMs + 180000;
+    owner.fence === (successor?.previousOwner.fence ?? prior.fence) + 1 &&
+    owner.expiresAtEpochMs <=
+      (successor?.deadlineEpochMs ?? input.startedAtEpochMs + 180000);
   if (!held && canonicalJson(owner) !== canonicalJson(prior)) return fail();
   const selected = current.runState.find((row) => row.id === input.runId);
   same(
