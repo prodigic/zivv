@@ -2,7 +2,7 @@
 
 ## Inbox watch and handoff
 
-The Friday inbox automation checks the connected Gmail profile `zivvbayarea@gmail.com` for the current Friday in `America/Los_Angeles`, starting November 20, 2026. Select the matching Steve’s List edition from `skoepke@stevelist.com` using the source and correction rules in [Steve’s List email intake](steve-email-intake.md). Use the Friday edition date as the handoff identity, including when the message arrives late or has a correction.
+Use the scheduled Friday’s calendar date in `America/Los_Angeles` as the edition date. Check the connected Gmail profile `zivvbayarea@gmail.com` for the matching Steve’s List edition from `skoepke@stevelist.com` using the source and correction rules in [Steve’s List email intake](steve-email-intake.md). Carry that explicit date into the handoff and all retries, including when the message arrives late or has a correction. Preserve receipts and recorded publication cutoffs for completed editions.
 
 - If the source is absent before 6 p.m. Pacific, return quietly. At or after 6 p.m., report the missing source once per edition and keep polling on subsequent runs.
 - On arrival, check operator receipts, active workers and Codex chats for the edition. Create a new local Zivv chat titled `Zivv Steve’s List intake and publication — YYYY-MM-DD` as soon as a matching source is available and no owner exists. Give it the edition date, Gmail message ID and absolute path to this runbook. Tell it to execute the runbook through verified publication and backup.
