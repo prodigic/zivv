@@ -40,6 +40,13 @@ export interface RecoveryGmailCaptureRuntimeFixture {
   base: string;
   prepared: boolean;
   sourceReceipts: ReturnType<typeof listRetainedSteveEmailSources>;
+  nextReady?: {
+    originalBatchId: string;
+    nextBatchId: string;
+    receipt: ReturnType<
+      typeof listRetainedSteveEmailSources
+    >[number]["receipt"];
+  };
   composition?: {
     originalBatchId: string;
     priorBatchId: string;
@@ -196,8 +203,19 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
     withoutSelectedLoadFraming?: boolean;
     seedAuthorityControls?: boolean;
     loadableSource?: boolean;
+    additionalReadyEdition?: boolean;
   } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
+  if (
+    options.additionalReadyEdition &&
+    (options.composedBatches ||
+      options.reviewSecondMessage ||
+      options.invalidPendingMime ||
+      !options.loadableSource)
+  )
+    throw new Error(
+      "Additional ready edition requires the ordinary loadable fixture"
+    );
   if (
     options.invalidPendingMime &&
     (options.composedBatches || options.reviewSecondMessage)
@@ -392,6 +410,20 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
       );
     }
 
+    if (options.additionalReadyEdition) {
+      await captureWindow(
+        [
+          fixtureMessage(
+            "e1",
+            now - 15_000,
+            body("next edition", nextEdition.titleDate)
+          ),
+        ],
+        nextEdition.editionId,
+        []
+      );
+    }
+
     if (options.reviewSecondMessage) {
       // Replay the authenticated saved batch through ordinary intake without a
       // correction choice. Its second body is genuinely retained for review;
@@ -430,6 +462,36 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
     const batchIds = readdirSync(batchDirectory)
       .filter((name) => /^[a-f0-9]{64}\.json$/.test(name))
       .map((name) => name.slice(0, -5));
+
+    let nextReady: RecoveryGmailCaptureRuntimeFixture["nextReady"];
+    if (options.additionalReadyEdition) {
+      const receipts = listRetainedSteveEmailSources({
+        operatorDirectory: operator,
+        accountId: account,
+        expectedEditionId: nextEdition.editionId,
+      });
+      const receipt = receipts.find(
+        (item) => item.receipt.messageId === "e1"
+      )?.receipt;
+      const batches = readAuthenticatedSteveGmailBatches({
+        operatorDirectory: operator,
+      });
+      const uniqueBatch = (id: string) => {
+        const matches = batches.filter((batch) =>
+          batch.snapshots.some((item) => item.rawMessage.id === id)
+        );
+        if (matches.length !== 1)
+          throw new Error("Missing unique ready edition batch");
+        return matches[0]!.batchId;
+      };
+      if (!receipt || receipts.length !== 1 || receipt.disposition !== "ready")
+        throw new Error("Missing next ready edition receipt");
+      nextReady = {
+        originalBatchId: uniqueBatch("a1"),
+        nextBatchId: uniqueBatch("e1"),
+        receipt,
+      };
+    }
 
     let composition: RecoveryGmailCaptureRuntimeFixture["composition"];
     if (options.composedBatches) {
@@ -548,6 +610,7 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
         !options.withoutSelectedLoadFraming,
       sourceReceipts,
       ...(composition ? { composition } : {}),
+      ...(nextReady ? { nextReady } : {}),
       cleanup: (preserve) => cleanupFixture(base, preserve),
     };
   } catch (error) {

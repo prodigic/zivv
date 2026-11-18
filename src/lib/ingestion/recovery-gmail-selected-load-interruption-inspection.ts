@@ -84,6 +84,7 @@ export interface SelectedLoadInterruptionEvidence {
   physicalSnapshotSha256: string;
   executionBaseline: Buffer;
   completedResultSha256?: string;
+  completedHistoryManifestSha256?: string;
   completionPending?: {
     intent: ReturnType<typeof observeSelectedLoadCompletionIntentFile>;
     plan: ReturnType<typeof regenerateSelectedLoadCompletionPlan>;
@@ -330,6 +331,7 @@ export function readSelectedLoadInterruptionEvidence(
       | { path: string; bytes: Buffer; dev: number; ino: number }
       | undefined;
     let completedResultSha256: string | undefined;
+    let completedHistoryManifestSha256: string | undefined;
     let priorSnapshot: Buffer | undefined;
     let pendingIntentSha256: string | undefined;
     let pendingSuccessorCount: number | undefined;
@@ -741,7 +743,11 @@ export function readSelectedLoadInterruptionEvidence(
         guardedJournalSha256 !== resultProof.guardedJournalSha256
       )
         return fail();
-      if (!completionPending) completedResultSha256 = resultProof.resultSha256;
+      if (!completionPending) {
+        completedResultSha256 = resultProof.resultSha256;
+        if (guardedJournalSha256)
+          completedHistoryManifestSha256 = history?.manifestSha256;
+      }
     }
     const hasIntentEvidence =
       !hasResult &&
@@ -961,6 +967,9 @@ export function readSelectedLoadInterruptionEvidence(
       physicalSnapshotSha256: restored.physicalSnapshotSha256,
       executionBaseline,
       ...(completedResultSha256 ? { completedResultSha256 } : {}),
+      ...(completedHistoryManifestSha256
+        ? { completedHistoryManifestSha256 }
+        : {}),
       ...(completionPending ? { completionPending } : {}),
       ...(pendingIntentSha256 ? { pendingIntentSha256 } : {}),
       raw,

@@ -461,5 +461,10 @@ locks it rechecks the intent and physical prefix before installing the remaining
 signed bytes. It preserves the journal and its recorded fence. A subsequent
 request verifies and returns the same signed result.
 
-Admission of another selected receipt requires a separate proof of the ordered
-load family.
+Read-only next-receipt inspection requires one completed result with authenticated
+history and a released journal. It verifies that the next receipt was already
+ready in the anchored capture family, checks its exact canonical files, and
+derives a fresh import plan from the verified post-load catalog. The inspection
+commits the predecessor result, history manifest, catalog, generation and journal
+to the ordered load-family digest. A signed next admission must still bind this
+digest and recheck the physical state under the writer guards.
