@@ -108,6 +108,9 @@ it("inspects a distinct ready edition after the first selected load without writ
     const summary = JSON.parse(checked.stdout) as {
       runId: string;
       priorLoadFamilySha256: string;
+      catalogSha256: string;
+      journalSha256: string;
+      inventorySha256: string;
     };
     expect(summary).toMatchObject({
       status: "next-selected-load-inspected",
@@ -133,6 +136,95 @@ it("inspects a distinct ready edition after the first selected load without writ
         "INVALID_NEXT_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION"
       );
     }
+    const admissionModule = pathToFileURL(
+      join(
+        root,
+        "checkout/dist/lib/ingestion/recovery-gmail-selected-load-next-admission.js"
+      )
+    ).href;
+    const sqliteModule = pathToFileURL(
+      join(root, "checkout/dist/lib/ingestion/sqlite-store.js")
+    ).href;
+    const admissionCheck = run(
+      `(
+        async () => {
+          const admission = await import(${JSON.stringify(admissionModule)});
+          const { canonicalJson } = await import(${JSON.stringify(sqliteModule)});
+          const { createHmac } = await import("node:crypto");
+          const selector = ${JSON.stringify(nextSelector)};
+          const when = Date.now();
+          const create = admission.createRecoveryGmailNextSelectedLoadAdmission;
+          const authenticate = admission.authenticateRecoveryGmailNextSelectedLoadAdmission;
+          const bytes = create(input, selector, when);
+          const verified = authenticate(input, selector, bytes);
+          const again = create(input, selector, when, bytes);
+          const { signature, ...payload } = JSON.parse(bytes.toString('utf8'));
+          const encode = (record) => Buffer.from(canonicalJson(record) + '\\n');
+          const sign = (record) => createHmac('sha256', input.recoveryKey)
+            .update('zivv-recovery-gmail-selected-load-admission/v2\\0')
+            .update(canonicalJson(record)).digest('hex');
+          const wrongParent = { ...payload, priorLoadFamilySha256: 'f'.repeat(64) };
+          const rejects = (test) => {
+            try { test(); return false; }
+            catch (error) {
+              return error instanceof Error &&
+                error.message === 'INVALID_RECOVERY_GMAIL_NEXT_SELECTED_LOAD_ADMISSION';
+            }
+          };
+          return {
+            verified, when,
+            retryMatches: bytes.equals(again),
+            knownSignatureMatches: sign(payload) === signature,
+            wrongTime: rejects(() => create(input, selector, when - 1, bytes)),
+            tamper: rejects(() => authenticate(
+              input, selector, encode({ ...wrongParent, signature })
+            )),
+            wrongParent: rejects(() => authenticate(
+              input, selector, encode({ ...wrongParent, signature: sign(wrongParent) })
+            )),
+          };
+        }
+      )()`
+    );
+    if (admissionCheck.status !== 0)
+      console.error(
+        "NEXT_LOAD_ADMISSION_DIAGNOSTIC",
+        admissionCheck.stderr.slice(0, 1500)
+      );
+    expect(admissionCheck.status).toBe(0);
+    const admission = JSON.parse(admissionCheck.stdout) as {
+      when: number;
+      verified: {
+        catalogSha256: string;
+        journalSha256: string;
+        inventorySha256: string;
+      };
+    };
+    expect(admission).toMatchObject({
+      retryMatches: true,
+      knownSignatureMatches: true,
+      wrongTime: true,
+      tamper: true,
+      wrongParent: true,
+      verified: {
+        version: 2,
+        previousRunId: installed.runId,
+        priorLoadFamilySha256: summary.priorLoadFamilySha256,
+        generation: 2,
+        runId: summary.runId,
+        admittedAtEpochMs: admission.when,
+        loadAllowed: false,
+        activationAllowed: false,
+      },
+    });
+    expect(admission.verified).toMatchObject({
+      catalogSha256: (summary as unknown as { catalogSha256: string })
+        .catalogSha256,
+      journalSha256: (summary as unknown as { journalSha256: string })
+        .journalSha256,
+      inventorySha256: (summary as unknown as { inventorySha256: string })
+        .inventorySha256,
+    });
     expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
       journal

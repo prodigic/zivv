@@ -466,5 +466,12 @@ history and a released journal. It verifies that the next receipt was already
 ready in the anchored capture family, checks its exact canonical files, and
 derives a fresh import plan from the verified post-load catalog. The inspection
 commits the predecessor result, history manifest, catalog, generation and journal
-to the ordered load-family digest. A signed next admission must still bind this
-digest and recheck the physical state under the writer guards.
+to the ordered load-family digest.
+
+The version 2 selected-load admission signs that ordered predecessor digest,
+the generation and exact catalog, journal and physical inventory commitments,
+and the new selector, runtime and prospective import plan. Authentication
+reobserves the original prepared host and derives those commitments again.
+The saved time and bytes are reused on retry. The admission is detached
+evidence. Durable installation and execution require a fresh comparison under
+the journal and catalog writer guards.
