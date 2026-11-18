@@ -140,6 +140,7 @@ interface Scope {
     | "catalog-committed"
     | "rollback-catalog-committed"
     | "backup-flushed"
+    | "backup-settled-before-intent"
     | "history-first-chunk"
     | "completion-before-intent"
     | "completion-intent-partial";
@@ -1787,7 +1788,8 @@ async function resumeNextSelectedLoad(
     | "intent-linked"
     | "lease-acquired"
     | "rollback-catalog-committed"
-    | "backup-flushed",
+    | "backup-flushed"
+    | "backup-settled-before-intent",
   settledBackup?: NonNullable<
     ReturnType<typeof observeNextSelectedLoadBackupStage>
   >
@@ -2145,6 +2147,18 @@ async function resumeNextSelectedLoad(
             originalEntries.delete(pendingBackup.entry.path);
             originalEntries.set(installed.path, installed);
             scope!.assertCurrent();
+            if (testPause === "backup-settled-before-intent") {
+              process.stdout.write(
+                "SELECTED_LOAD_TEST_BACKUP_SETTLED_BEFORE_INTENT\n"
+              );
+              Atomics.wait(
+                new Int32Array(new SharedArrayBuffer(4)),
+                0,
+                0,
+                30000
+              );
+              throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+            }
             return;
           }
           if (staged) {
@@ -2229,12 +2243,14 @@ export function resumeRecoveredGmailNextSelectedLoadForTest(
     | "lease-acquired"
     | "rollback-catalog-committed"
     | "backup-flushed"
+    | "backup-settled-before-intent"
 ) {
   if (
     point !== "intent-linked" &&
     point !== "lease-acquired" &&
     point !== "rollback-catalog-committed" &&
-    point !== "backup-flushed"
+    point !== "backup-flushed" &&
+    point !== "backup-settled-before-intent"
   )
     return fail();
   return resumeNextSelectedLoad(prior, next, admission, point);
