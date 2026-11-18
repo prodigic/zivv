@@ -472,6 +472,12 @@ The version 2 selected-load admission signs that ordered predecessor digest,
 the generation and exact catalog, journal and physical inventory commitments,
 and the new selector, runtime and prospective import plan. Authentication
 reobserves the original prepared host and derives those commitments again.
-The saved time and bytes are reused on retry. The admission is detached
-evidence. Durable installation and execution require a fresh comparison under
-the journal and catalog writer guards.
+The saved time and bytes are reused on retry.
+
+The retained worker installs the next admission under the journal writer guard
+and then the canonical catalog writer guard. It rechecks the released predecessor
+and the full physical inventory under both locks before the first write. On retry
+it verifies the exact admission-only subtree and its owned stage, with every
+other path still included in predecessor verification. The installer preserves
+the catalog and journal and settles only the signed admission. Execution requires
+its own effective baseline and guarded transition.

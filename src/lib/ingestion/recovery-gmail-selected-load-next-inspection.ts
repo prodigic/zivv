@@ -2,6 +2,7 @@ import {
   copyRecoveryGmailSelectedReceiptSelector,
   type RecoveryGmailSelectedReceiptSelector,
 } from "./recovery-gmail-capture-admission-proof.js";
+import type { SelectedLoadAdmissionTail } from "./recovery-gmail-selected-load-admission-tail.js";
 import { createSelectedGmailLoadEffectPlan } from "./recovery-gmail-selected-load-effects.js";
 import type { RecoveryGmailSelectedLoadFrameInput } from "./recovery-gmail-selected-load-framing.js";
 import { readSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-interruption-inspection.js";
@@ -21,12 +22,13 @@ function fail(): never {
  * This summary grants no installation, journal, or catalog writer authority. */
 export function readNextSelectedLoadAdmissionEvidence(
   prior: RecoveryGmailSelectedLoadFrameInput,
-  next: RecoveryGmailSelectedReceiptSelector
+  next: RecoveryGmailSelectedReceiptSelector,
+  nextAdmission?: SelectedLoadAdmissionTail
 ) {
   let key: Buffer | undefined;
   try {
     const selector = copyRecoveryGmailSelectedReceiptSelector(next);
-    const observed = readSelectedLoadInterruptionEvidence(prior);
+    const observed = readSelectedLoadInterruptionEvidence(prior, nextAdmission);
     if (
       observed.report.status !== "completed" ||
       observed.report.lease.status !== "released" ||
@@ -81,10 +83,11 @@ export function readNextSelectedLoadAdmissionEvidence(
     )?.committedAtEpochMs;
     if (typeof predecessorCommit !== "number") return fail();
 
+    const raw = Buffer.from(source.bytes, "base64");
     const plan = createSelectedGmailLoadEffectPlan(
       { files: baseline.checkpoint.files, ledger },
       selected,
-      Buffer.from(source.bytes, "base64")
+      raw
     );
     const catalogSha256 = ledgerDigest(ledger);
     const priorLoad = {
@@ -121,6 +124,14 @@ export function readNextSelectedLoadAdmissionEvidence(
       source: selected.source,
       anchorBaselineSha256: selected.baselineSha256,
       runtimeIdentitySha256: selected.runtimeIdentitySha256,
+      effective: {
+        proof: selected,
+        plan,
+        raw,
+        catalog: observed.observedCatalog,
+        journal: observed.observedJournal,
+        entries: observed.physicalEntries,
+      },
       earliestAdmissionEpochMs: Math.max(
         baseline.checkpoint.createdAtEpochMs,
         predecessorCommit,

@@ -58,6 +58,10 @@ import { proveRecoveryGmailSelectedLoadBaseline } from "./recovery-gmail-selecte
 import { proveSelectedLoadJournalDelta } from "./recovery-gmail-selected-journal-delta.js";
 import { proveSelectedLoadCatalogDelta } from "./recovery-gmail-selected-catalog-delta.js";
 import { proveSelectedLoadPhysicalDelta } from "./recovery-gmail-selected-physical-delta.js";
+import {
+  observeSelectedLoadAdmissionTail,
+  type SelectedLoadAdmissionTail,
+} from "./recovery-gmail-selected-load-admission-tail.js";
 import { sha256 } from "./steve-preflight.js";
 
 export interface SelectedLoadInterruptionEvidence {
@@ -110,7 +114,8 @@ export interface SelectedLoadInterruptionEvidence {
 /** Strict, read-only observation of a first-attempt commit gap. No handles,
  * key, mutation authority or resumability claim are returned. */
 export function readSelectedLoadInterruptionEvidence(
-  supplied: RecoveryGmailSelectedLoadFrameInput
+  supplied: RecoveryGmailSelectedLoadFrameInput,
+  nextAdmission?: SelectedLoadAdmissionTail
 ): SelectedLoadInterruptionEvidence {
   const wire = encodeRecoveryGmailSelectedLoadFrame(supplied),
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
@@ -122,7 +127,11 @@ export function readSelectedLoadInterruptionEvidence(
       opened = openPreparedRuntimeForAdmission(runtime),
       root = resolve(runtime.destination);
     opened.assertRuntime();
-    const entries = opened.inventoryGmailSelectedLoadExecution(),
+    const allEntries = opened.inventoryGmailSelectedLoadExecution();
+    const entries = nextAdmission
+        ? observeSelectedLoadAdmissionTail(root, allEntries, nextAdmission)
+            .predecessorEntries
+        : allEntries,
       entriesByPath = new Map(entries.map((entry) => [entry.path, entry]));
     if (entriesByPath.size !== entries.length) return fail();
     const read = (path: string, limit: number): Buffer => {
@@ -914,7 +923,7 @@ export function readSelectedLoadInterruptionEvidence(
       return fail();
     const inventory = opened.inventoryGmailSelectedLoadExecution();
     if (
-      canonicalJson(entries) !== canonicalJson(inventory) ||
+      canonicalJson(allEntries) !== canonicalJson(inventory) ||
       canonicalJson(catalog) !==
         canonicalJson(
           readCanonicalSqliteLedgerReadOnly(
@@ -974,7 +983,7 @@ export function readSelectedLoadInterruptionEvidence(
       ...(pendingIntentSha256 ? { pendingIntentSha256 } : {}),
       raw,
       observedEntries: priorEntries,
-      physicalEntries: entries,
+      physicalEntries: allEntries,
       ...(pendingIntent ? { pendingIntent } : {}),
       ...(pendingSuccessors ? { pendingSuccessors } : {}),
       stagedSnapshotPaths,
