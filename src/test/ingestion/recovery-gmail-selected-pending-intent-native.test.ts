@@ -608,8 +608,11 @@ it.each(interruptionPoints)(
           successorSha256: string;
         };
         expect(result).toMatchObject({
-          version: 2,
+          version: 3,
           successorSha256: sha256(successorBytes),
+          historyManifestSha256: sha256(
+            readFileSync(join(directory, "history-manifest.json"))
+          ),
         });
         expect(inspectSelectedLoadInterruption(input)).toMatchObject({
           status: "completed",

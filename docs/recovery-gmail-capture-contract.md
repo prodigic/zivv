@@ -443,3 +443,13 @@ uses the committed import to finish the journal without writing the catalog agai
 The native two-worker test verifies both interruptions, refusal during the lease,
 a matching final encrypted backup, and an unchanged repeated result. Later
 journal interruption points and additional load families require separate proof.
+
+A version 3 completed result binds a private history manifest and the exact
+selected-load identity. Under the completion fence the worker installs bounded
+chunks for the final encrypted backup, guarded journal, and pre-result physical
+inventory. The result is installed after all chunks settle. The worker checks
+the files again after journal release. Inspection independently verifies the
+retained bytes and current catalog and journal, with a distinct proof for a
+direct load and the existing intent and successor checks for a resumed load.
+A partial history installation without a signed result remains a separate
+recovery case. The retained history does not admit another selected receipt.

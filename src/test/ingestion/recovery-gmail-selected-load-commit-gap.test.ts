@@ -1,3 +1,4 @@
+import { readSelectedLoadHistoryFiles } from "../../lib/ingestion/recovery-gmail-selected-load-history.js";
 import { observeSelectedLoadCompletedJournal } from "../../lib/ingestion/recovery-gmail-selected-completed-journal.js";
 import { createHmac } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
@@ -475,8 +476,29 @@ it("replays a durable result after a retry worker dies before lease release", as
       readFileSync(join(directory, "execution-baseline.json")),
       fixture.input.recoveryKey
     );
+    const history = readSelectedLoadHistoryFiles({
+      loadPath: "recovery-gmail-load/" + installed.runId,
+      entries: completedEntries,
+      read: (path) => readFileSync(join(root, path)),
+      identity: {
+        runId: installed.runId,
+        admissionSha256: installed.admissionSha256,
+        executionBaselineSha256: sha256(
+          readFileSync(join(directory, "execution-baseline.json"))
+        ),
+        priorFamilySha256: sha256(canonicalJson([])),
+        ledgerRevision: ledgerDigest(ledger),
+        generation: 2,
+      },
+      key: fixture.input.recoveryKey,
+    });
     const reconstructedEntries = reconstructSelectedLoadResumeInventory({
-      observedEntries: completedEntries,
+      observedEntries: completedEntries.filter(
+        (entry) =>
+          !entry.path.startsWith(
+            "recovery-gmail-load/" + installed.runId + "/history-"
+          )
+      ),
       originalEntries: executionEvidence.entries,
       preResumeSnapshot: changedFiles.snapshot,
       intent: verifiedIntent,
@@ -506,7 +528,9 @@ it("replays a durable result after a retry worker dies before lease release", as
     const resultBytes = readFileSync(join(directory, "load-result.json"));
     const resultValue = JSON.parse(resultBytes.toString("utf8")) as {
       reportSha256: string;
+      version: number;
     };
+    expect(resultValue.version).toBe(3);
     const finalJournalBytes = readWeeklyJournalRecoverySnapshotReadOnly(
       join(root, "operator/weekly-runs.sqlite")
     );
@@ -534,6 +558,8 @@ it("replays a durable result after a retry worker dies before lease release", as
         journalSha256: sha256(completedObservation.releasedJournal),
         runStateSha256: sha256(canonicalJson(finalState)),
         reportSha256: resultValue.reportSha256,
+        historyManifestSha256: history.manifestSha256,
+        guardedJournalSha256: sha256(history.parts.guardedJournal),
       })
     ).toMatchObject({
       status: "authenticated",
@@ -618,8 +644,10 @@ it("replays a durable result after a retry worker dies before lease release", as
     const { signature: _oldSignature, ...originalResult } = JSON.parse(
       resultBytes.toString("utf8")
     ) as Record<string, unknown>;
+    const { historyManifestSha256: _historyManifestSha256, ...legacyResult } =
+      originalResult;
     const successorResultBody = {
-      ...originalResult,
+      ...legacyResult,
       version: 2,
       journalSha256: sha256(successorJournal),
       guardedJournalSha256: sha256(successorJournal),
@@ -636,11 +664,8 @@ it("replays a durable result after a retry worker dies before lease release", as
     );
     const resultPath = join(directory, "load-result.json");
     writeFileSync(resultPath, successorResult);
-    expect(inspectSelectedLoadInterruption(input)).toMatchObject({
-      status: "completed",
-      loadAllowed: false,
-      activationAllowed: false,
-    });
+    // A legacy result cannot downgrade a load with an installed v3 history family.
+    expect(() => inspectSelectedLoadInterruption(input)).toThrow();
     const beforeInspection = readWeeklyJournalRecoverySnapshotReadOnly(
       join(root, "operator/weekly-runs.sqlite")
     );
