@@ -1,7 +1,7 @@
 # Durable Gmail acquisition handoff (#30)
 
 Implemented same-host acquisition, replay, local loading and freeze contract for
-#30. Credentials, supervisor integration and portable batch recovery remain
+#30. Windows OAuth provisioning and an explicit poll are available for operator setup. Supervisor integration and full portable batch recovery remain
 unfinished. No live ledger or schedule change is authorized by this document. Keep the
 manual capture/Friday commands unchanged. Reuse `readSteveGmailWindow`,
 `captureSteveEmail`, `listRetainedSteveEmailSources` and the existing production
@@ -109,6 +109,43 @@ silently classified as post-cutoff. An absent/empty batch area adds no key
 requirement to the manual path. Read-only partial-capture status does not repair;
 writable cached replay does. This closes the local acquired-before-freeze gap,
 not the unavoidable crash interval before any complete remote result is saved.
+
+## Explicit Windows OAuth poll
+
+A Windows operator can provision the read-only Gmail OAuth grant under the
+Windows identity that will run acquisition. Obtain the OAuth desktop client and a
+refresh token for Gmail read-only using the operator's approved consent flow.
+Keep the secret values out of shell arguments, environment variables, source
+control and transcripts. Feed UTF-8 JSON containing `clientId`, optional
+`clientSecret`, and `refreshToken` through a private stdin pipe from the
+operator's secret manager to this command.
+
+```powershell
+node scripts/steve-gmail.js provision --credential-dir "C:\private\zivv-gmail"
+```
+
+Use a dedicated directory on a local Windows volume alongside the operator
+store. The command restricts that directory to the current Windows user and
+stores only DPAPI-protected values in `gmail-credentials.sqlite`. Repeating
+provisioning with identical credentials is safe. To install a different grant,
+use a new dedicated directory, prove its Gmail profile, and change the configured
+path. Retain the old file privately until recovery has been verified. Reprovision
+on replacement hardware or under another Windows identity. Keep this directory
+outside the ledger, backups, and checkout.
+
+Run `npm run build:etl` before using the script. Supply the confirmed account,
+explicit Friday edition, and the half-open mailbox observation window in canonical UTC. For
+example, this command selects a November window for an isolated run.
+
+```powershell
+node scripts/steve-gmail.js poll --credential-dir "C:\private\zivv-gmail" --operator-dir "C:\private\zivv-operator" --account "<confirmed-mailbox>" --edition "2026-11-20" --from "2026-11-20T08:00:00.000Z" --until "2026-11-23T08:00:00.000Z"
+```
+
+The poll replays pending cached batches before accessing credentials. Fresh
+reads verify the Gmail profile and use the existing signed capture handoff.
+The credential store serializes refreshes and commits a rotated refresh token before using the new access token. A competing poll reports a busy credential store for a later retry. If the OAuth provider revokes the old grant and the process stops before it can commit the replacement, provision a renewed grant in a new private directory.
+A captured batch can contain review-required receipts. Corrections continue
+through the existing explicit approval path.
 
 ## Recovery boundary still requiring implementation
 

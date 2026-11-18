@@ -21,6 +21,11 @@ import {
   readSteveGmailHandoffStatus,
   replaySteveGmailBatch,
 } from "../../lib/ingestion/steve-gmail-handoff.js";
+import { captureSteveGmailWindowWithWindowsCredentials } from "../../lib/ingestion/steve-gmail-credential-poll.js";
+import {
+  provisionWindowsGmailCredentials,
+  withWindowsGmailCredentials,
+} from "../../lib/ingestion/windows-gmail-credentials.js";
 import { loadBackupKey } from "../../lib/ingestion/encrypted-backup.js";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
@@ -93,6 +98,14 @@ function fixture() {
 
 function requireKey(operatorDirectory: string) {
   loadBackupKey(operatorDirectory, true);
+}
+
+function deferred() {
+  let resolve!: () => void;
+  const promise = new Promise<void>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
 }
 
 function fakeFetcher(
@@ -245,6 +258,128 @@ describe("durable Steve Gmail handoff", () => {
     expect(result).toMatchObject({ status: "captured", replayed: true });
     expect(result.receipts[0]?.receiptId).toBe(first.receipts[0]?.receiptId);
     expect(existsSync(capturePath)).toBe(true);
+  });
+
+  it.skipIf(process.platform !== "win32")(
+    "uses the provisioned Gmail refresh grant and refuses a different profile",
+    async () => {
+      const { root, operatorDirectory } = fixture();
+      const credentialDirectory = join(root, "credentials");
+      provisionWindowsGmailCredentials(credentialDirectory, {
+        clientId: "synthetic-oauth-client",
+        refreshToken: "synthetic-refresh-token",
+      });
+      const selected = input(operatorDirectory, [message("a1")]);
+      const calls: string[] = [];
+      const firstExchange = deferred();
+      const allowRotation = deferred();
+      const fetcher = vi.fn(
+        async (request: RequestInfo | URL, init?: RequestInit) => {
+          const url = new URL(String(request));
+          calls.push(url.pathname);
+          if (url.hostname === "oauth2.googleapis.com") {
+            expect(init?.method).toBe("POST");
+            const sent = new URLSearchParams(String(init?.body)).get(
+              "refresh_token"
+            );
+            if (sent === "synthetic-refresh-token") {
+              firstExchange.resolve();
+              await allowRotation.promise;
+            } else {
+              expect(sent).toBe("synthetic-rotated-token");
+            }
+            return Response.json({
+              token_type: "Bearer",
+              expires_in: 3600,
+              access_token: "synthetic-access-token",
+              refresh_token: "synthetic-rotated-token",
+            });
+          }
+          expect(new Headers(init?.headers).get("authorization")).toBe(
+            "Bearer synthetic-access-token"
+          );
+          if (url.pathname.endsWith("/profile"))
+            await withWindowsGmailCredentials(
+              credentialDirectory,
+              async (grant) => {
+                expect(grant.refreshToken).toBe("synthetic-rotated-token");
+              }
+            );
+          return selected.fetcher(request);
+        }
+      );
+      const poll = { ...selected, credentialDirectory, fetcher };
+      const firstPoll = captureSteveGmailWindowWithWindowsCredentials(poll);
+      const reached = await Promise.race([
+        firstExchange.promise.then(() => true),
+        firstPoll.then(() => false),
+      ]);
+      expect(reached).toBe(true);
+      try {
+        await expect(
+          captureSteveGmailWindowWithWindowsCredentials(poll)
+        ).rejects.toThrow("GMAIL_CREDENTIAL_STORAGE_BUSY");
+        expect(calls).toEqual(["/token"]);
+      } finally {
+        allowRotation.resolve();
+      }
+      const result = await firstPoll;
+      expect(result).toMatchObject({
+        status: "captured",
+        replayed: false,
+        messageCount: 1,
+        receipts: [{ disposition: "ready" }],
+      });
+      expect(calls[0]).toBe("/token");
+      expect(calls.filter((path) => path.endsWith("/profile"))).toHaveLength(2);
+      expect(JSON.stringify(result)).not.toContain("synthetic-refresh-token");
+      expect(JSON.stringify(result)).not.toContain("synthetic-access-token");
+
+      calls.length = 0;
+      await expect(
+        captureSteveGmailWindowWithWindowsCredentials({
+          ...selected,
+          credentialDirectory,
+          expectedAccountId: "wrong-profile@fixture.invalid",
+          fetcher,
+        })
+      ).rejects.toThrow("GMAIL_ACCOUNT_MISMATCH");
+      expect(calls).toEqual(["/token", "/gmail/v1/users/me/profile"]);
+      expect(
+        readAuthenticatedSteveGmailBatches({ operatorDirectory })
+      ).toHaveLength(1);
+    }
+  );
+
+  it("replays cached intake before opening an absent credential store", async () => {
+    const { root, operatorDirectory } = fixture();
+    const selected = input(operatorDirectory, [message("a1")]);
+    const first = await captureSteveGmailWindow(selected);
+    const capturePath = join(
+      operatorDirectory,
+      "email-intake",
+      sha256(accountId),
+      "messages",
+      sha256("a1"),
+      "capture.json"
+    );
+    unlinkSync(capturePath);
+    const fetcher = vi.fn(async () => {
+      throw Error("UNEXPECTED_REMOTE_POLL");
+    });
+    const result = await captureSteveGmailWindowWithWindowsCredentials({
+      ...selected,
+      credentialDirectory: join(root, "missing-credentials"),
+      fetcher,
+    });
+    expect(result).toMatchObject({
+      status: "captured",
+      replayed: true,
+      batchIds: first.batchIds,
+      receipts: first.receipts,
+    });
+    expect(existsSync(capturePath)).toBe(true);
+    expect(fetcher).not.toHaveBeenCalled();
   });
 
   it("continues polling after a completed capture-only batch", async () => {

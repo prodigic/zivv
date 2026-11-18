@@ -1,3 +1,4 @@
+import { GmailOAuthError } from "./gmail-oauth-refresh.js";
 import {
   assertSteveGmailAccount,
   projectSteveGmailSnapshot,
@@ -162,7 +163,8 @@ export async function readSteveGmailWindow(
   let token: string;
   try {
     token = validToken(await input.getAccessToken());
-  } catch {
+  } catch (error) {
+    if (error instanceof GmailOAuthError) throw error;
     return fail("GMAIL_AUTH_REQUIRED");
   }
   const fetcher = input.fetcher ?? fetch;

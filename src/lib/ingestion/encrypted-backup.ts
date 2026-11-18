@@ -1,3 +1,7 @@
+import {
+  protectForWindows,
+  runWindowsPowerShell,
+} from "./windows-current-user-protection.js";
 import { selectedGmailLoadPartialWriteProbe } from "./recovery-gmail-selected-load-executor.js";
 import {
   assertNoRecoveredGmailCapture,
@@ -209,22 +213,6 @@ export async function synchronizeEncryptedSnapshot(
       throw new Error("Encrypted backup validation failed.");
     writeDurableFile(path, bytes);
   });
-}
-
-function protectForWindows(bytes: Buffer, unprotect = false): Buffer {
-  // Secrets travel through stdin, never through command arguments or logs.
-  const operation = unprotect ? "Unprotect" : "Protect";
-  const script = `$ErrorActionPreference='Stop'; $null=[Reflection.Assembly]::LoadWithPartialName('System.Security'); $bytes=[Convert]::FromBase64String([Console]::In.ReadToEnd()); $result=[System.Security.Cryptography.ProtectedData]::${operation}($bytes,$null,[System.Security.Cryptography.DataProtectionScope]::CurrentUser); [Console]::Out.Write([Convert]::ToBase64String($result))`;
-  const result = spawnSync(
-    "powershell.exe",
-    ["-NoProfile", "-NonInteractive", "-Command", script],
-    { input: bytes.toString("base64"), encoding: "utf8", windowsHide: true }
-  );
-  if (result.status !== 0)
-    throw new Error(
-      "Windows could not protect/unprotect the backup key for this user."
-    );
-  return Buffer.from(result.stdout.trim(), "base64");
 }
 
 /** Authenticate existing DPAPI/plaintext bytes without installing or changing them. */
@@ -655,20 +643,8 @@ export function secureOperatorDirectory(directory: string): void {
     return;
   }
   const script =
-    "$ErrorActionPreference='Stop'; $path=$env:ZIVV_SECURE_DIRECTORY; $acl=New-Object System.Security.AccessControl.DirectorySecurity; $acl.SetAccessRuleProtection($true,$false); $identity=[System.Security.Principal.WindowsIdentity]::GetCurrent().User; $rule=New-Object System.Security.AccessControl.FileSystemAccessRule($identity,'FullControl','ContainerInherit,ObjectInherit','None','Allow'); $acl.AddAccessRule($rule); [IO.Directory]::SetAccessControl($path,$acl)";
-  const result = spawnSync(
-    "powershell.exe",
-    ["-NoProfile", "-NonInteractive", "-Command", script],
-    {
-      env: { ...process.env, ZIVV_SECURE_DIRECTORY: directory },
-      encoding: "utf8",
-      windowsHide: true,
-    }
-  );
-  if (result.status !== 0)
-    throw new Error(
-      `Could not restrict the operator directory permissions: ${result.error?.message || result.stderr.trim()}`
-    );
+    "$ErrorActionPreference='Stop'; $path=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String([Console]::In.ReadToEnd())); $acl=New-Object System.Security.AccessControl.DirectorySecurity; $acl.SetAccessRuleProtection($true,$false); $identity=[System.Security.Principal.WindowsIdentity]::GetCurrent().User; $rule=New-Object System.Security.AccessControl.FileSystemAccessRule($identity,'FullControl','ContainerInherit,ObjectInherit','None','Allow'); $acl.AddAccessRule($rule); [IO.Directory]::SetAccessControl($path,$acl)";
+  runWindowsPowerShell(script, Buffer.from(directory).toString("base64"));
 }
 
 /** Generate once; Windows keeps the working key encrypted under the current user's DPAPI. */
