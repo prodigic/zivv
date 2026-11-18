@@ -16,7 +16,7 @@ import {
 import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
 
 vi.setConfig({ testTimeout: 900000 });
-it("inspects a worker death after the first completion history chunk", async () => {
+it("settles a worker death after the first completion history chunk", async () => {
   const fixture = await createRecoveryGmailCaptureRuntimeFixture({
     loadableSource: true,
     seedAuthorityControls: true,
@@ -196,6 +196,62 @@ it("inspects a worker death after the first completion history chunk", async () 
         fixture.input
       ).inventoryGmailSelectedLoadExecution()
     ).toEqual(beforeFiles);
+    const retry = () =>
+      spawnSync(
+        process.execPath,
+        args("m.resumeRecoveredGmailSelectedLoad(input)"),
+        {
+          cwd: join(root, "checkout"),
+          env,
+          input: encodeRecoveryGmailSelectedLoadFrame(input),
+          encoding: "utf8",
+          windowsHide: true,
+          timeout: 180000,
+        }
+      );
+    const recovered = retry();
+    if (recovered.status !== 0)
+      console.error(
+        "COMPLETION_SETTLEMENT_DIAGNOSTIC",
+        recovered.stderr.slice(0, 1500)
+      );
+    expect(recovered.status).toBe(0);
+    const result = JSON.parse(recovered.stdout) as { resultSha256: string };
+    expect(result).toMatchObject({
+      status: "selected-load-resumed",
+      runId: installed.runId,
+      generation: 2,
+      loadAllowed: false,
+      captureAllowed: false,
+      activationAllowed: false,
+    });
+    const completion = JSON.parse(
+      readFileSync(join(directory, "completion-intent.json"), "utf8")
+    ) as {
+      fields: { resultSha256: string };
+    };
+    expect(result.resultSha256).toBe(completion.fields.resultSha256);
+    expect(existsSync(join(directory, "load-result.json"))).toBe(true);
+    expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+      status: "completed",
+      runId: installed.runId,
+      loadAllowed: false,
+    });
+    const after = openPreparedRuntimeForAdmission(
+      fixture.input
+    ).inventoryGmailSelectedLoadExecution();
+    const replay = retry();
+    expect(replay.status).toBe(0);
+    expect(JSON.parse(replay.stdout)).toEqual(result);
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(after);
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      journal
+    );
     preserve = false;
   } finally {
     if (preserve)
