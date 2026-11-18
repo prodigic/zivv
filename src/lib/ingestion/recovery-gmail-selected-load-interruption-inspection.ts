@@ -1,3 +1,9 @@
+import { readSelectedLoadEntry } from "./recovery-gmail-selected-load-physical-reader.js";
+import {
+  readSelectedLoadHistoricalPredecessor,
+  selectedLoadBackupPath,
+} from "./recovery-gmail-selected-load-historical-predecessor.js";
+import { verifySelectedNextLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { reconstructSelectedLoadCompletionJournals } from "./recovery-gmail-selected-load-completion-intent.js";
 import { regenerateSelectedLoadCompletionPlan } from "./recovery-gmail-selected-load-completion-plan.js";
 import {
@@ -36,7 +42,6 @@ import {
 } from "./encrypted-backup.js";
 import { ledgerDigest } from "./sqlite-store.js";
 import { parseWeeklyRunState } from "./weekly-run-state.js";
-import { lstatSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
   canonicalJson,
@@ -115,7 +120,8 @@ export interface SelectedLoadInterruptionEvidence {
  * key, mutation authority or resumability claim are returned. */
 export function readSelectedLoadInterruptionEvidence(
   supplied: RecoveryGmailSelectedLoadFrameInput,
-  nextAdmission?: SelectedLoadAdmissionTail
+  nextAdmission?: SelectedLoadAdmissionTail,
+  nextExecutionBaseline?: Buffer
 ): SelectedLoadInterruptionEvidence {
   const wire = encodeRecoveryGmailSelectedLoadFrame(supplied),
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
@@ -128,32 +134,27 @@ export function readSelectedLoadInterruptionEvidence(
       root = resolve(runtime.destination);
     opened.assertRuntime();
     const allEntries = opened.inventoryGmailSelectedLoadExecution();
+    const nextExecution = nextExecutionBaseline
+      ? verifySelectedNextLoadExecutionBaseline(
+          nextExecutionBaseline,
+          input.recoveryKey
+        )
+      : undefined;
+    if (
+      nextExecution &&
+      (!nextAdmission ||
+        nextExecution.admissionSha256 !== sha256(nextAdmission.bytes))
+    )
+      return fail();
+    const effectiveEntries = nextExecution?.entries ?? allEntries;
     const entries = nextAdmission
-        ? observeSelectedLoadAdmissionTail(root, allEntries, nextAdmission)
-            .predecessorEntries
-        : allEntries,
-      entriesByPath = new Map(entries.map((entry) => [entry.path, entry]));
+      ? observeSelectedLoadAdmissionTail(root, effectiveEntries, nextAdmission)
+          .predecessorEntries
+      : effectiveEntries;
+    const entriesByPath = new Map(entries.map((entry) => [entry.path, entry]));
     if (entriesByPath.size !== entries.length) return fail();
-    const read = (path: string, limit: number): Buffer => {
-      const entry = entriesByPath.get(path);
-      if (!entry || entry.kind !== "file" || entry.size > limit) return fail();
-      const full = join(root, path),
-        before = lstatSync(full);
-      if (!before.isFile() || before.isSymbolicLink() || before.nlink !== 1)
-        return fail();
-      const bytes = readFileSync(full),
-        after = lstatSync(full);
-      if (
-        before.dev !== after.dev ||
-        before.ino !== after.ino ||
-        before.size !== after.size ||
-        after.nlink !== 1 ||
-        bytes.length !== entry.size ||
-        sha256(bytes) !== entry.sha256
-      )
-        return fail();
-      return bytes;
-    };
+    const read = (path: string, limit: number) =>
+      readSelectedLoadEntry(root, entriesByPath.get(path), limit);
     const loadNames = entries.filter(
       (entry) =>
         entry.kind === "directory" &&
@@ -280,12 +281,26 @@ export function readSelectedLoadInterruptionEvidence(
         load + "/execution-baseline.json",
         32 * 1024 * 1024
       );
-    const catalog = readCanonicalSqliteLedgerReadOnly(
-        join(root, "operator/ledger.sqlite")
-      ),
-      journal = readWeeklyJournalRecoverySnapshotReadOnly(
-        join(root, "operator/weekly-runs.sqlite")
-      );
+    const historical = nextExecution
+      ? readSelectedLoadHistoricalPredecessor({
+          root,
+          loadPath: load,
+          admission,
+          executionBaseline,
+          nextExecution,
+          entries,
+          read,
+          key: input.recoveryKey,
+        })
+      : undefined;
+    const catalog =
+        historical?.catalog ??
+        readCanonicalSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite")),
+      journal =
+        historical?.journal ??
+        readWeeklyJournalRecoverySnapshotReadOnly(
+          join(root, "operator/weekly-runs.sqlite")
+        );
     const common = {
       baseline,
       executionBaseline,
@@ -300,7 +315,7 @@ export function readSelectedLoadInterruptionEvidence(
     const key =
       "operator/" +
       (process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin");
-    const snapshot = "checkout/data/ingestion/backups/ledger.snapshot.enc";
+    const snapshot = selectedLoadBackupPath;
     const plan = createSelectedGmailLoadEffectPlan(
       opened.checkpoint,
       proof,
@@ -313,7 +328,9 @@ export function readSelectedLoadInterruptionEvidence(
     const changedFiles = {
       ...(entriesByPath.has(key) ? { key: read(key, 16384) } : {}),
       ...(entriesByPath.has(snapshot)
-        ? { snapshot: read(snapshot, 512 * 1024 * 1024) }
+        ? {
+            snapshot: historical?.snapshot ?? read(snapshot, 512 * 1024 * 1024),
+          }
         : {}),
       ...(entriesByPath.has(report)
         ? { report: read(report, 64 * 1024 * 1024) }
@@ -922,19 +939,20 @@ export function readSelectedLoadInterruptionEvidence(
     )
       return fail();
     const inventory = opened.inventoryGmailSelectedLoadExecution();
+    if (canonicalJson(allEntries) !== canonicalJson(inventory)) return fail();
     if (
-      canonicalJson(allEntries) !== canonicalJson(inventory) ||
-      canonicalJson(catalog) !==
+      !historical &&
+      (canonicalJson(catalog) !==
         canonicalJson(
           readCanonicalSqliteLedgerReadOnly(
             join(root, "operator/ledger.sqlite")
           )
         ) ||
-      !journal.equals(
-        readWeeklyJournalRecoverySnapshotReadOnly(
-          join(root, "operator/weekly-runs.sqlite")
-        )
-      )
+        !journal.equals(
+          readWeeklyJournalRecoverySnapshotReadOnly(
+            join(root, "operator/weekly-runs.sqlite")
+          )
+        ))
     )
       return fail();
     const owner = validateWeeklyJournalRecoverySnapshot(journal).ownership.find(
@@ -983,7 +1001,7 @@ export function readSelectedLoadInterruptionEvidence(
       ...(pendingIntentSha256 ? { pendingIntentSha256 } : {}),
       raw,
       observedEntries: priorEntries,
-      physicalEntries: allEntries,
+      physicalEntries: effectiveEntries,
       ...(pendingIntent ? { pendingIntent } : {}),
       ...(pendingSuccessors ? { pendingSuccessors } : {}),
       stagedSnapshotPaths,
