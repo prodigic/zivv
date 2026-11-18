@@ -1,5 +1,9 @@
 import { nextSelectedLoadGapInventory } from "./recovery-gmail-selected-load-next-gap.js";
 import { readInstalledNextSelectedLoadResumeIntent } from "./recovery-gmail-selected-load-next-resume-intent.js";
+import {
+  readNextSelectedLoadResumeSuccessors,
+  rewindNextSelectedLoadAcquiredRetries,
+} from "./recovery-gmail-selected-load-next-successors.js";
 import { reconstructSelectedLoadResumeJournal } from "./recovery-gmail-selected-resume-journal.js";
 import { join } from "node:path";
 import { decryptLedgerSnapshot } from "./encrypted-backup.js";
@@ -89,6 +93,7 @@ function verifyCompletedNextResume(input: {
   saved: NonNullable<
     ReturnType<typeof readInstalledNextSelectedLoadResumeIntent>
   >;
+  successors: ReturnType<typeof readNextSelectedLoadResumeSuccessors>;
   family: ReturnType<typeof readNextSelectedLoadFamily>;
   releasedJournal: Buffer;
   catalog: ReturnType<typeof readCanonicalSqliteLedgerReadOnly>;
@@ -96,7 +101,9 @@ function verifyCompletedNextResume(input: {
   reportPath: string;
   report: Buffer;
 }) {
-  const { saved, family, catalog } = input;
+  const { saved, successors, family, catalog } = input;
+  const records = [saved, ...successors];
+  const latest = successors.at(-1) ?? saved;
   const { intent } = saved;
   const {
     execution,
@@ -115,7 +122,7 @@ function verifyCompletedNextResume(input: {
     intent.priorLoadFamilySha256 !== execution.priorLoadFamilySha256 ||
     intent.ledgerRevision !== ledgerDigest(resumedCatalog.ledger) ||
     intent.startedAtEpochMs <= execution.startedAtEpochMs ||
-    intent.startedAtEpochMs > Date.now()
+    latest.intent.startedAtEpochMs > Date.now()
   )
     return fail();
 
@@ -143,11 +150,15 @@ function verifyCompletedNextResume(input: {
   if (sha256(canonicalJson(previousInventory)) !== intent.inventorySha256)
     return fail();
 
-  const previous = reconstructSelectedLoadResumeJournal({
+  const beforeCompletionRetry = reconstructSelectedLoadResumeJournal({
     completedJournal: input.releasedJournal,
-    intent,
+    intent: latest.intent,
     runId,
   });
+  const previous = rewindNextSelectedLoadAcquiredRetries(
+    beforeCompletionRetry,
+    records.slice(0, -1)
+  );
   const disposition = intent.generation === 2 ? "unchanged" : "committed";
   const delta = proveSelectedLoadRunDelta({
     priorJournal: effective.journal,
@@ -171,18 +182,19 @@ function verifyCompletedNextResume(input: {
   return {
     successor: {
       previousOwner: intent.previousOwner,
-      deadlineEpochMs: intent.deadlineEpochMs,
+      count: records.length,
+      deadlineEpochMs: latest.intent.deadlineEpochMs,
     },
-    successorSha256: sha256(saved.bytes),
-    addedEntries: [
+    successorSha256: sha256(latest.bytes),
+    addedEntries: records.flatMap(({ path, bytes, stage }) => [
       {
-        path: saved.path,
+        path,
         kind: "file" as const,
-        size: saved.bytes.length,
-        sha256: sha256(saved.bytes),
+        size: bytes.length,
+        sha256: sha256(bytes),
       },
-      { path: saved.stage, kind: "directory" as const },
-    ],
+      { path: stage, kind: "directory" as const },
+    ]),
   };
 }
 
@@ -298,9 +310,17 @@ export function replayRecoveredGmailNextSelectedLoad(
       read,
       key
     );
+    const successors = readNextSelectedLoadResumeSuccessors({
+      loadPath,
+      entries,
+      read,
+      initial: saved,
+      key,
+    });
     const resumed = saved
       ? verifyCompletedNextResume({
           saved,
+          successors,
           family,
           releasedJournal: journals.releasedJournal,
           catalog,

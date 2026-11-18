@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import {
+  hasGuardedNextSelectedLoadAcquisition,
   hasSelectedGmailLoadExecution,
   selectedGmailLoadLeaseOwner,
   selectedGmailLoadLeaseTtl,
@@ -11,7 +12,7 @@ import { chmodSync, existsSync, lstatSync, realpathSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { secureOperatorDirectory } from "./encrypted-backup.js";
-import { canonicalJson } from "./sqlite-store.js";
+import { canonicalJson, withStoreTransaction } from "./sqlite-store.js";
 import { assertOperatorInstallationWritable } from "./operator-installation.js";
 import {
   assertRecoveredGmailCaptureJournal,
@@ -869,8 +870,7 @@ export class WeeklyRunJournal {
       throw new Error("Corrupt journal ownership row");
   }
 
-  /** Serialize one destination. Takeover after expiry increments the fencing token. */
-  acquire(scope: string, ttlMs = 120000): WeeklyRunLease {
+  private validateAcquisition(scope: string, ttlMs: number): void {
     if (
       !/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,127}$/.test(scope) ||
       !Number.isSafeInteger(ttlMs) ||
@@ -878,38 +878,82 @@ export class WeeklyRunJournal {
       ttlMs > 3600000
     )
       throw new Error("Invalid ownership scope/TTL");
-    return this.transaction(() => {
-      const now = this.now();
-      const boundedTtl = selectedGmailLoadLeaseTtl(
-        recoveredGmailCaptureLeaseTtl(ttlMs)
-      );
-      const old = this.db
-        .prepare(
-          "SELECT scope,owner,fence,expires_at FROM ownership WHERE scope=?"
-        )
-        .get(scope);
-      if (old) this.validateOwner(old);
-      if (old && Number(old.expires_at) > now)
-        throw new Error("Weekly destination already has an active owner");
-      const lease = {
-        scope,
-        owner: restrictedJournalOwner() ?? randomUUID(),
-        fence: Number(old?.fence ?? 0) + 1,
-        expiresAtEpochMs: now + boundedTtl,
-      };
-      if (
-        !Number.isSafeInteger(lease.fence) ||
-        !Number.isSafeInteger(lease.expiresAtEpochMs)
+  }
+
+  private takeLease(scope: string, ttlMs: number): WeeklyRunLease {
+    const now = this.now();
+    const boundedTtl = selectedGmailLoadLeaseTtl(
+      recoveredGmailCaptureLeaseTtl(ttlMs)
+    );
+    const old = this.db
+      .prepare(
+        "SELECT scope,owner,fence,expires_at FROM ownership WHERE scope=?"
       )
-        throw new Error("Ownership counter overflow");
-      this.captureEffect("acquire", lease);
-      this.db
-        .prepare(
-          "INSERT INTO ownership VALUES(?,?,?,?) ON CONFLICT(scope) DO UPDATE SET owner=excluded.owner,fence=excluded.fence,expires_at=excluded.expires_at"
-        )
-        .run(scope, lease.owner, lease.fence, lease.expiresAtEpochMs);
-      return lease;
-    }, "read");
+      .get(scope);
+    if (old) this.validateOwner(old);
+    if (old && Number(old.expires_at) > now)
+      throw new Error("Weekly destination already has an active owner");
+    const lease = {
+      scope,
+      owner: restrictedJournalOwner() ?? randomUUID(),
+      fence: Number(old?.fence ?? 0) + 1,
+      expiresAtEpochMs: now + boundedTtl,
+    };
+    if (
+      !Number.isSafeInteger(lease.fence) ||
+      !Number.isSafeInteger(lease.expiresAtEpochMs)
+    )
+      throw new Error("Ownership counter overflow");
+    this.captureEffect("acquire", lease);
+    this.db
+      .prepare(
+        "INSERT INTO ownership VALUES(?,?,?,?) ON CONFLICT(scope) DO UPDATE SET owner=excluded.owner,fence=excluded.fence,expires_at=excluded.expires_at"
+      )
+      .run(scope, lease.owner, lease.fence, lease.expiresAtEpochMs);
+    return lease;
+  }
+
+  /** Serialize one destination. Takeover after expiry increments the fencing token. */
+  acquire(scope: string, ttlMs = 120000): WeeklyRunLease {
+    this.validateAcquisition(scope, ttlMs);
+    if (hasGuardedNextSelectedLoadAcquisition())
+      throw Error(
+        "RECOVERY_GMAIL_NEXT_LOAD_ACQUISITION_REQUIRES_CATALOG_GUARD"
+      );
+    return this.transaction(() => this.takeLease(scope, ttlMs), "read");
+  }
+
+  /** Commit B's retry fence while the exact catalog writer guard is still held. */
+  async acquireSelectedLoadRetry(
+    scope: string,
+    ttlMs: number
+  ): Promise<WeeklyRunLease> {
+    this.validateAcquisition(scope, ttlMs);
+    if (!hasGuardedNextSelectedLoadAcquisition())
+      throw Error(
+        "RECOVERY_GMAIL_NEXT_LOAD_ACQUISITION_REQUIRES_CATALOG_GUARD"
+      );
+    this.captureEffect("read");
+    const directory = dirname(this.path);
+    assertOperatorInstallationWritable(directory, "capture-journal");
+    this.db.exec("BEGIN IMMEDIATE");
+    try {
+      // The closed selected-load scope supplies the required canonical baseline.
+      return await withStoreTransaction(
+        join(directory, "ledger.sqlite"),
+        async () => {
+          assertOperatorInstallationWritable(directory, "capture-journal");
+          const lease = this.takeLease(scope, ttlMs);
+          assertOperatorInstallationWritable(directory, "capture-journal");
+          this.captureEffect("read");
+          this.db.exec("COMMIT");
+          return lease;
+        }
+      );
+    } catch (error) {
+      if (this.db.isTransaction) this.db.exec("ROLLBACK");
+      throw error;
+    }
   }
 
   renew(lease: WeeklyRunLease, ttlMs = 120000): WeeklyRunLease {

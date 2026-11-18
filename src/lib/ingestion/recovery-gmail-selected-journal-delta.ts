@@ -77,7 +77,11 @@ export function proveSelectedLoadRunDelta(input: {
   raw: Buffer;
   observedLedger: IngestionLedger;
   catalogDisposition: "unchanged" | "committed";
-  successor?: { previousOwner: WeeklyRunLease; deadlineEpochMs: number };
+  successor?: {
+    previousOwner: WeeklyRunLease;
+    count: number;
+    deadlineEpochMs: number;
+  };
 }) {
   const fail = (): never => {
     throw Error("INVALID_SELECTED_LOAD_JOURNAL_DELTA");
@@ -107,7 +111,9 @@ export function proveSelectedLoadRunDelta(input: {
   const successor = input.successor;
   if (
     successor &&
-    (successor.previousOwner.scope !== production ||
+    (!Number.isSafeInteger(successor.count) ||
+      successor.count < 1 ||
+      successor.previousOwner.scope !== production ||
       successor.previousOwner.owner !== expectedOwner ||
       successor.previousOwner.fence !== prior.fence + 1 ||
       successor.previousOwner.expiresAtEpochMs >
@@ -117,7 +123,7 @@ export function proveSelectedLoadRunDelta(input: {
     return fail();
   const held =
     owner.owner === expectedOwner &&
-    owner.fence === (successor?.previousOwner.fence ?? prior.fence) + 1 &&
+    owner.fence === prior.fence + 1 + (successor?.count ?? 0) &&
     owner.expiresAtEpochMs <=
       (successor?.deadlineEpochMs ?? input.startedAtEpochMs + 180000);
   if (!held && canonicalJson(owner) !== canonicalJson(prior)) return fail();

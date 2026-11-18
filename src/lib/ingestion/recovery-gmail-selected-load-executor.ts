@@ -1,3 +1,4 @@
+import { prepareNextSelectedLoadResumeSuccessor } from "./recovery-gmail-selected-load-next-successors.js";
 import { replayRecoveredGmailNextSelectedLoad } from "./recovery-gmail-selected-load-next-replay.js";
 import { readNextSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-next-gap.js";
 import {
@@ -600,6 +601,15 @@ export async function verifySelectedLoadResumeBarrier(): Promise<void> {
   );
   scope.resume.gateComplete = true;
 }
+export function hasGuardedNextSelectedLoadAcquisition(): boolean {
+  const scope = current();
+  return (
+    !!scope?.priorLoadFamilySha256 &&
+    !!scope.resume &&
+    !scope.resume.gateComplete
+  );
+}
+
 export function hasPendingSelectedLoadResume(): boolean {
   const scope = current();
   return !!scope?.resume && !scope.resume.gateComplete;
@@ -1761,7 +1771,7 @@ async function resumeNextSelectedLoad(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
   next: RecoveryGmailSelectedReceiptSelector,
   signedAdmission: Buffer,
-  testPause?: "intent-linked"
+  testPause?: "intent-linked" | "lease-acquired"
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoSelectedLoadInstallation();
@@ -1796,10 +1806,48 @@ async function resumeNextSelectedLoad(
     const now = Date.now();
     if (owner.expiresAtEpochMs >= now)
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
-    const bytes =
-      evidence.saved?.bytes ??
-      signNextSelectedLoadResumeIntent(gap, now, input.recoveryKey);
-    const intent = verifyNextSelectedLoadResumeIntent(bytes, input.recoveryKey);
+    const { saved, latest, successors, acquired } = evidence;
+    let retry: {
+      filename: string;
+      bytes: Buffer;
+      intent: {
+        owner: string;
+        fence: number;
+        startedAtEpochMs: number;
+        deadlineEpochMs: number;
+      };
+    };
+    if (saved && latest && acquired) {
+      if (now < latest.intent.deadlineEpochMs)
+        throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
+      retry = prepareNextSelectedLoadResumeSuccessor({
+        initial: saved,
+        parent: latest,
+        sequence: successors.length + 1,
+        journal,
+        previousOwner: owner,
+        startedAtEpochMs: now,
+        key: input.recoveryKey,
+      });
+    } else if (latest) {
+      retry = {
+        filename: basename(latest.path),
+        bytes: latest.bytes,
+        intent: latest.intent,
+      };
+    } else {
+      const bytes = signNextSelectedLoadResumeIntent(
+        gap,
+        now,
+        input.recoveryKey
+      );
+      retry = {
+        filename: nextSelectedLoadResumeIntentFilename,
+        bytes,
+        intent: verifyNextSelectedLoadResumeIntent(bytes, input.recoveryKey),
+      };
+    }
+    const { bytes, intent } = retry;
     if (intent.startedAtEpochMs > now || intent.deadlineEpochMs <= now)
       return fail();
 
@@ -1823,8 +1871,10 @@ async function resumeNextSelectedLoad(
     });
     const opened = openPreparedRuntimeForAdmission(runtime);
     const { proof, plan, raw } = effective;
-    const path = join(directory, nextSelectedLoadResumeIntentFilename);
+    const path = join(directory, retry.filename);
     const stage = path + "-stage";
+    const retryPath = "recovery-gmail-load/" + gap.runId + "/" + retry.filename;
+    const retryStage = retryPath + "-stage";
     const backup = join(root, "data/ingestion/backups/ledger.snapshot.enc");
     const report = join(
       root,
@@ -1852,9 +1902,13 @@ async function resumeNextSelectedLoad(
     const staged = evidence.saved?.observed.candidate;
     if (staged) transients.set(staged.path, bytes);
     let settling = false;
+    let retrySettled = false;
     scope = {
       active: true,
       chunkPauseTest: testPause,
+      ...(retry.filename === nextSelectedLoadResumeIntentFilename
+        ? {}
+        : { successor: { path } }),
       phase: "evidence",
       evidenceGuard: true,
       resume: {
@@ -1903,6 +1957,7 @@ async function resumeNextSelectedLoad(
         const actual = opened.inventoryGmailSelectedLoadExecution();
         const present = new Set<string>();
         for (const entry of actual) {
+          if (retrySettled && entry.path.startsWith(retryStage + "/")) fail();
           present.add(entry.path);
           const absolute = join(destination, entry.path);
           const before = originalEntries.get(entry.path);
@@ -1927,7 +1982,7 @@ async function resumeNextSelectedLoad(
             continue;
           fail();
         }
-        for (const entry of entries) {
+        for (const entry of originalEntries.values()) {
           if (present.has(entry.path)) continue;
           if (
             !settling ||
@@ -1963,6 +2018,7 @@ async function resumeNextSelectedLoad(
         await withCanonicalStoreTransaction(catalogPath, catalog, async () => {
           same(opened.inventoryGmailSelectedLoadExecution(), entries);
           scope!.assertCurrent();
+          if (intent.deadlineEpochMs <= Date.now()) fail();
           if (staged) {
             same(
               inspectRecoveryInstalledFile(path, stage, 8192),
@@ -1971,6 +2027,19 @@ async function resumeNextSelectedLoad(
             settling = true;
           }
           installRecoveryIntent(path, bytes, stage);
+          const settled = inspectRecoveryInstalledFile(path, stage, 8192);
+          if (!settled.target?.bytes.equals(bytes) || settled.candidate) fail();
+          originalEntries.set(retryPath, {
+            path: retryPath,
+            kind: "file",
+            size: bytes.length,
+            sha256: sha256(bytes),
+          });
+          originalEntries.set(retryStage, {
+            path: retryStage,
+            kind: "directory",
+          });
+          retrySettled = true;
           scope!.assertCurrent();
         });
         if (
@@ -2010,14 +2079,14 @@ export function resumeRecoveredGmailNextSelectedLoad(
   return resumeNextSelectedLoad(prior, next, admission);
 }
 
-/** Fixed staged-intent interruption for the retained test worker only. */
+/** Fixed retry pauses for the retained test worker only. */
 export function resumeRecoveredGmailNextSelectedLoadForTest(
   prior: RecoveryGmailSelectedLoadInstallationInput,
   next: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer,
-  point: "intent-linked"
+  point: "intent-linked" | "lease-acquired"
 ) {
-  if (point !== "intent-linked") return fail();
+  if (point !== "intent-linked" && point !== "lease-acquired") return fail();
   return resumeNextSelectedLoad(prior, next, admission, point);
 }
 

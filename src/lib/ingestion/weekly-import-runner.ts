@@ -1,4 +1,5 @@
 import {
+  hasGuardedNextSelectedLoadAcquisition,
   hasSelectedGmailLoadExecution,
   completeSelectedGmailLoad,
   hasPendingSelectedLoadResume,
@@ -237,14 +238,13 @@ export async function runWeeklyImport(input: {
   let lease: ReturnType<WeeklyRunJournal["acquire"]> | undefined;
   let state: WeeklyRunState;
   try {
-    lease = journal.acquire(
-      "prodigic/zivv/production",
-      input.leaseTtlMs ?? 120000
-    );
+    const ttl = input.leaseTtlMs ?? 120000;
+    lease = hasGuardedNextSelectedLoadAcquisition()
+      ? await journal.acquireSelectedLoadRetry("prodigic/zivv/production", ttl)
+      : journal.acquire("prodigic/zivv/production", ttl);
     let owned = lease;
     if (hasPendingSelectedLoadResume())
       await journal.guardOperation(owned, verifySelectedLoadResumeBarrier);
-    const ttl = input.leaseTtlMs ?? 120000;
     let renewalAt = Date.now() + Math.floor(ttl / 3);
     if (source) {
       if (source.importObservedAtEpochMs > Date.now())

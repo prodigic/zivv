@@ -23,11 +23,11 @@ import {
 } from "../../lib/ingestion/weekly-run-journal.js";
 import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
 
-vi.setConfig({ testTimeout: 600000 });
+vi.setConfig({ testTimeout: 780000 });
 it.each([
   {
     label: "precommit",
-    linkedRetry: false,
+    retryPoint: null,
     point: "catalog-before-commit",
     marker: "SELECTED_LOAD_TEST_CATALOG_BEFORE_COMMIT",
     status: "unchanged",
@@ -35,7 +35,7 @@ it.each([
   },
   {
     label: "postcommit",
-    linkedRetry: false,
+    retryPoint: null,
     point: "catalog-committed",
     marker: "SELECTED_LOAD_TEST_CATALOG_COMMITTED",
     status: "committed",
@@ -43,7 +43,15 @@ it.each([
   },
   {
     label: "retry-intent-linked",
-    linkedRetry: true,
+    retryPoint: "intent-linked",
+    point: "catalog-committed",
+    marker: "SELECTED_LOAD_TEST_CATALOG_COMMITTED",
+    status: "committed",
+    generation: 3,
+  },
+  {
+    label: "retry-lease-acquired",
+    retryPoint: "lease-acquired",
     point: "catalog-committed",
     marker: "SELECTED_LOAD_TEST_CATALOG_COMMITTED",
     status: "committed",
@@ -51,7 +59,7 @@ it.each([
   },
 ] as const)(
   "inspects B after worker death at $label",
-  async ({ point, marker, status, generation, linkedRetry }) => {
+  async ({ point, marker, status, generation, retryPoint }) => {
     const fixture = await createRecoveryGmailCaptureRuntimeFixture({
       loadableSource: true,
       seedAuthorityControls: true,
@@ -346,11 +354,15 @@ it.each([
           renameSync(retainedReport, reportPath);
         }
       }
-      if (linkedRetry) {
+      if (retryPoint) {
+        const retryMarker =
+          retryPoint === "intent-linked"
+            ? "SELECTED_LOAD_TEST_INTENT_LINKED"
+            : "SELECTED_LOAD_TEST_LEASE_ACQUIRED";
         const retryChild = spawn(
           process.execPath,
           args(
-            `e.resumeRecoveredGmailNextSelectedLoadForTest(input,selector,${bytesExpression},'intent-linked')`
+            `e.resumeRecoveredGmailNextSelectedLoadForTest(input,selector,${bytesExpression},${JSON.stringify(retryPoint)})`
           ),
           {
             cwd: join(root, "checkout"),
@@ -370,12 +382,7 @@ it.each([
         }, 180000);
         retryChild.stdout.on("data", (bytes: Buffer) => {
           retryOutput += bytes.toString("utf8");
-          if (
-            !retrySeen &&
-            retryOutput
-              .split(/\r?\n/)
-              .includes("SELECTED_LOAD_TEST_INTENT_LINKED")
-          ) {
+          if (!retrySeen && retryOutput.split(/\r?\n/).includes(retryMarker)) {
             retrySeen = true;
             retryKilled = retryChild.kill("SIGKILL");
           }
@@ -400,7 +407,7 @@ it.each([
         }
         if (!retrySeen || !retryKilled || retryTimedOut)
           console.error(
-            "NEXT_GAP_LINKED_RETRY_DIAGNOSTIC",
+            "NEXT_GAP_INTERRUPTED_RETRY_DIAGNOSTIC",
             retryError.slice(0, 1500)
           );
         expect(retryTimedOut).toBe(false);
@@ -416,47 +423,157 @@ it.each([
           b.runId,
           "resume-intent.json"
         );
-        const stagePath = intentPath + "-stage";
-        const candidates = readdirSync(stagePath);
-        expect(candidates).toHaveLength(1);
-        const aliasPath = join(stagePath, candidates[0]!);
-        const targetStat = lstatSync(intentPath),
-          aliasStat = lstatSync(aliasPath);
-        expect(targetStat.nlink).toBe(2);
-        expect(aliasStat.nlink).toBe(2);
-        expect({ dev: aliasStat.dev, ino: aliasStat.ino }).toEqual({
-          dev: targetStat.dev,
-          ino: targetStat.ino,
-        });
-        expect(readFileSync(aliasPath)).toEqual(readFileSync(intentPath));
-        const linkedInventory = openPreparedRuntimeForAdmission(
-          fixture.input
-        ).inventoryGmailSelectedLoadExecution();
-        expect(readFileSync(catalogPath)).toEqual(catalogBytes);
-        expect(readFileSync(journalPath)).toEqual(journalBytes);
-        const linkedInspection = run(
-          `g.inspectNextSelectedLoadInterruption(input,selector,${bytesExpression})`
-        );
-        if (linkedInspection.status !== 0)
-          console.error(
-            "NEXT_GAP_LINKED_INSPECTION_DIAGNOSTIC",
-            linkedInspection.stderr.slice(0, 1500)
+        if (retryPoint === "lease-acquired") {
+          const retryJournal =
+            readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+          const {
+            digest: _oldDigest,
+            ownership: oldOwnership,
+            ...oldState
+          } = state;
+          const {
+            digest: _retryDigest,
+            ownership: retryOwnership,
+            ...retryState
+          } = validateWeeklyJournalRecoverySnapshot(retryJournal);
+          expect(retryState).toEqual(oldState);
+          const retryOwner = retryOwnership.find(
+            (row) => row.scope === previousOwner!.scope
+          )!;
+          expect(retryOwner).toMatchObject({
+            scope: previousOwner!.scope,
+            owner: previousOwner!.owner,
+            fence: previousOwner!.fence + 1,
+          });
+          expect(retryOwner.expiresAtEpochMs).toBeGreaterThan(Date.now());
+          expect(retryOwnership).toEqual(
+            oldOwnership.map((row) =>
+              row.scope === retryOwner.scope ? retryOwner : row
+            )
           );
-        expect(linkedInspection.status).toBe(0);
-        expect(JSON.parse(linkedInspection.stdout)).toMatchObject({
-          status: "committed",
-          generation: 3,
-          lease: { status: "expired" },
-          loadAllowed: false,
-          activationAllowed: false,
-        });
-        expect(readFileSync(catalogPath)).toEqual(catalogBytes);
-        expect(readFileSync(journalPath)).toEqual(journalBytes);
-        expect(
-          openPreparedRuntimeForAdmission(
+          expect(lstatSync(intentPath).nlink).toBe(1);
+          expect(readdirSync(intentPath + "-stage")).toEqual([]);
+          const intentBytes = readFileSync(intentPath);
+          const { intent } = JSON.parse(intentBytes.toString("utf8")) as {
+            intent: { deadlineEpochMs: number };
+          };
+          expect(intent.deadlineEpochMs).toBeGreaterThanOrEqual(
+            retryOwner.expiresAtEpochMs
+          );
+          const retryInventory = openPreparedRuntimeForAdmission(
             fixture.input
-          ).inventoryGmailSelectedLoadExecution()
-        ).toEqual(linkedInventory);
+          ).inventoryGmailSelectedLoadExecution();
+          expect(
+            retryInventory.filter(
+              (entry) =>
+                entry.path !==
+                  `recovery-gmail-load/${b.runId}/resume-intent.json` &&
+                entry.path !==
+                  `recovery-gmail-load/${b.runId}/resume-intent.json-stage`
+            )
+          ).toEqual(inventory);
+          expect(retryInventory).toHaveLength(inventory.length + 2);
+          // Opening the guarded writer can checkpoint already committed WAL
+          // pages. Compare catalog contents across that open, then pin the
+          // main-file bytes for the detached inspection and active refusal.
+          expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+            catalog
+          );
+          const retryCatalogSha256 = sha256(readFileSync(catalogPath));
+          const retryJournalSha256 = sha256(readFileSync(journalPath));
+          const inspectRetry = () =>
+            run(
+              `g.inspectNextSelectedLoadInterruption(input,selector,${bytesExpression})`
+            );
+          const assertDetachedRetry = (lease: "active" | "expired") => {
+            const result = inspectRetry();
+            if (result.status !== 0)
+              console.error(
+                "NEXT_GAP_ACQUIRED_INSPECTION_DIAGNOSTIC",
+                result.stderr.slice(0, 1500)
+              );
+            expect(result.status).toBe(0);
+            expect(JSON.parse(result.stdout)).toMatchObject({
+              status: "committed",
+              generation: 3,
+              lease: { status: lease },
+              loadAllowed: false,
+              activationAllowed: false,
+            });
+          };
+          assertDetachedRetry("active");
+          const activeRetry = resume();
+          expect(activeRetry.status).toBe(1);
+          expect(activeRetry.stderr).toContain(
+            "RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE"
+          );
+          const expiry = Math.max(
+            retryOwner.expiresAtEpochMs,
+            intent.deadlineEpochMs
+          );
+          while (Date.now() <= expiry) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, Math.min(1000, expiry - Date.now() + 1))
+            );
+          }
+          assertDetachedRetry("expired");
+          expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+            catalog
+          );
+          expect(
+            readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
+          ).toEqual(retryJournal);
+          expect(sha256(readFileSync(catalogPath))).toBe(retryCatalogSha256);
+          expect(sha256(readFileSync(journalPath))).toBe(retryJournalSha256);
+          expect(readFileSync(intentPath)).toEqual(intentBytes);
+          expect(
+            openPreparedRuntimeForAdmission(
+              fixture.input
+            ).inventoryGmailSelectedLoadExecution()
+          ).toEqual(retryInventory);
+        } else {
+          const stagePath = intentPath + "-stage";
+          const candidates = readdirSync(stagePath);
+          expect(candidates).toHaveLength(1);
+          const aliasPath = join(stagePath, candidates[0]!);
+          const targetStat = lstatSync(intentPath),
+            aliasStat = lstatSync(aliasPath);
+          expect(targetStat.nlink).toBe(2);
+          expect(aliasStat.nlink).toBe(2);
+          expect({ dev: aliasStat.dev, ino: aliasStat.ino }).toEqual({
+            dev: targetStat.dev,
+            ino: targetStat.ino,
+          });
+          expect(readFileSync(aliasPath)).toEqual(readFileSync(intentPath));
+          const linkedInventory = openPreparedRuntimeForAdmission(
+            fixture.input
+          ).inventoryGmailSelectedLoadExecution();
+          expect(readFileSync(catalogPath)).toEqual(catalogBytes);
+          expect(readFileSync(journalPath)).toEqual(journalBytes);
+          const linkedInspection = run(
+            `g.inspectNextSelectedLoadInterruption(input,selector,${bytesExpression})`
+          );
+          if (linkedInspection.status !== 0)
+            console.error(
+              "NEXT_GAP_LINKED_INSPECTION_DIAGNOSTIC",
+              linkedInspection.stderr.slice(0, 1500)
+            );
+          expect(linkedInspection.status).toBe(0);
+          expect(JSON.parse(linkedInspection.stdout)).toMatchObject({
+            status: "committed",
+            generation: 3,
+            lease: { status: "expired" },
+            loadAllowed: false,
+            activationAllowed: false,
+          });
+          expect(readFileSync(catalogPath)).toEqual(catalogBytes);
+          expect(readFileSync(journalPath)).toEqual(journalBytes);
+          expect(
+            openPreparedRuntimeForAdmission(
+              fixture.input
+            ).inventoryGmailSelectedLoadExecution()
+          ).toEqual(linkedInventory);
+        }
       }
       const completed = resume();
       if (completed.status !== 0)
@@ -465,7 +582,7 @@ it.each([
           completed.stderr.slice(0, 1500)
         );
       expect(completed.status).toBe(0);
-      if (linkedRetry) {
+      if (retryPoint) {
         const intentPath = join(
           root,
           "recovery-gmail-load",
@@ -513,7 +630,10 @@ it.each([
         finalJournal.ownership.find(
           (item) => item.scope === "prodigic/zivv/production"
         )
-      ).toMatchObject({ fence: previousOwner!.fence + 1, expiresAtEpochMs: 0 });
+      ).toMatchObject({
+        fence: previousOwner!.fence + (retryPoint === "lease-acquired" ? 2 : 1),
+        expiresAtEpochMs: 0,
+      });
       const resultPath = join(
         root,
         "recovery-gmail-load",
@@ -530,6 +650,19 @@ it.each([
         runId: b.runId,
         generation: 3,
       });
+      if (retryPoint === "lease-acquired") {
+        const successor = join(
+          root,
+          "recovery-gmail-load",
+          b.runId,
+          "resume-successor-00001.json"
+        );
+        expect(lstatSync(successor).nlink).toBe(1);
+        expect(readdirSync(successor + "-stage")).toEqual([]);
+        expect(resultBody.successorSha256).toBe(
+          sha256(readFileSync(successor))
+        );
+      }
       expect(signature).toBe(
         createHmac("sha256", fixture.input.recoveryKey)
           .update("zivv-selected-load-result/v3\0")
