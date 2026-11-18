@@ -111,6 +111,7 @@ function validate(
   if (
     ![2, 3].includes(intent.generation) ||
     typeof intent.reportPresent !== "boolean" ||
+    (intent.generation === 3 && !intent.reportPresent) ||
     !Number.isSafeInteger(intent.backupSize) ||
     intent.backupSize < 1 ||
     intent.backupSize > 512 * 1024 * 1024 ||

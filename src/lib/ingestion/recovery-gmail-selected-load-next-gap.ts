@@ -192,7 +192,11 @@ export function readNextSelectedLoadInterruptionEvidence(
     const storedReport = entries.some((entry) => entry.path === reportPath)
       ? read(reportPath, 64 * 1024 * 1024)
       : undefined;
-    if (storedReport && !storedReport.equals(expectedReport)) return fail();
+    if (
+      (!rolledBack && !storedReport) ||
+      (storedReport && !storedReport.equals(expectedReport))
+    )
+      return fail();
 
     const inventory = nextSelectedLoadGapInventory({
       entries: execution.entries,

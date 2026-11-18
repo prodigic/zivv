@@ -1,8 +1,9 @@
+import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 import { createHash, createHmac } from "node:crypto";
 import { decryptLedgerSnapshot } from "../../lib/ingestion/encrypted-backup.js";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { expect, it, vi } from "vitest";
@@ -294,6 +295,39 @@ it.each([
           )
         );
       }
+      if (status === "committed") {
+        const added = catalog.ledger.runs.filter(
+          (candidate) =>
+            !catalogA.ledger.runs.some((old) => old.runId === candidate.runId)
+        );
+        expect(added).toHaveLength(1);
+        const reportPath = join(
+          root,
+          "checkout/data/ingestion/reports",
+          sha256(added[0]!.runId) + ".json"
+        );
+        const retainedReport = join(fixture.base, "retained-gap-report.json");
+        renameSync(reportPath, retainedReport);
+        try {
+          const withoutReport = openPreparedRuntimeForAdmission(
+            fixture.input
+          ).inventoryGmailSelectedLoadExecution();
+          const refused = resume();
+          expect(refused.status).toBe(1);
+          expect(refused.stderr).toContain(
+            "INVALID_NEXT_SELECTED_LOAD_INTERRUPTION_INSPECTION"
+          );
+          expect(readFileSync(catalogPath)).toEqual(catalogBytes);
+          expect(readFileSync(journalPath)).toEqual(journalBytes);
+          expect(
+            openPreparedRuntimeForAdmission(
+              fixture.input
+            ).inventoryGmailSelectedLoadExecution()
+          ).toEqual(withoutReport);
+        } finally {
+          renameSync(retainedReport, reportPath);
+        }
+      }
       const completed = resume();
       if (completed.status !== 0)
         console.error(
@@ -392,6 +426,9 @@ it.each([
         );
       expect(replay.status).toBe(0);
       expect(JSON.parse(replay.stdout)).toEqual(completedSummary);
+      const retried = resume();
+      expect(retried.status).toBe(0);
+      expect(JSON.parse(retried.stdout)).toEqual(completedSummary);
       expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
         finalCatalog
       );

@@ -1,3 +1,4 @@
+import { replayRecoveredGmailNextSelectedLoad } from "./recovery-gmail-selected-load-next-replay.js";
 import { readNextSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-next-gap.js";
 import {
   nextSelectedLoadResumeIntentFilename,
@@ -1773,6 +1774,18 @@ export async function resumeRecoveredGmailNextSelectedLoad(
   let scope: Scope | undefined;
   try {
     assertRetainedSelectedLoadExecutor(runtime.destination);
+    const runId = readNextSelectedLoadAdmissionRunId(
+      admission,
+      input.recoveryKey
+    );
+    const completed = join(
+      resolve(runtime.destination),
+      "recovery-gmail-load",
+      runId,
+      "load-result.json"
+    );
+    if (existsSync(completed))
+      return replayRecoveredGmailNextSelectedLoad(input, next, admission);
     const evidence = readNextSelectedLoadInterruptionEvidence(
       input,
       next,
