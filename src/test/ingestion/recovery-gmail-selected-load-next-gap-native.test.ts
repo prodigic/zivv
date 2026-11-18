@@ -86,9 +86,25 @@ it.each([
     status: "unchanged",
     generation: 2,
   },
+  {
+    label: "backup-flushed-fresh-restart",
+    retryPoint: null,
+    point: "backup-flushed",
+    marker: "SELECTED_LOAD_TEST_BACKUP_FLUSHED",
+    status: "committed",
+    generation: 3,
+  },
+  {
+    label: "backup-flushed-rollback-restart",
+    retryPoint: "backup-flushed",
+    point: "catalog-before-commit",
+    marker: "SELECTED_LOAD_TEST_CATALOG_BEFORE_COMMIT",
+    status: "unchanged",
+    generation: 2,
+  },
 ] as const)(
   "inspects B after worker death at $label",
-  async ({ point, marker, status, generation, retryPoint }) => {
+  async ({ label, point, marker, status, generation, retryPoint }) => {
     const committedRetry =
       retryPoint === "rollback-catalog-committed" ||
       retryPoint === "backup-flushed";
@@ -794,6 +810,86 @@ it.each([
           if (existsSync(flushed.path)) unlinkSync(flushed.path);
           renameSync(retained, flushed.path);
         }
+      }
+      if (label.endsWith("-restart")) {
+        expect(flushed).toBeDefined();
+        const beforeCatalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
+        const beforeJournal =
+          readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+        const stagedStat = lstatSync(flushed!.path);
+        const inventory = () =>
+          openPreparedRuntimeForAdmission(
+            fixture.input
+          ).inventoryGmailSelectedLoadExecution();
+        const beforeFiles = inventory();
+        const child = spawn(
+          process.execPath,
+          args(
+            `e.resumeRecoveredGmailNextSelectedLoadForTest(input,selector,${bytesExpression},'backup-settled-before-intent')`
+          ),
+          {
+            cwd: join(root, "checkout"),
+            env,
+            stdio: ["pipe", "pipe", "pipe"],
+            windowsHide: true,
+          }
+        );
+        let output = "";
+        let errors = "";
+        let killed = false;
+        const ended = new Promise<number | null>((resolve, reject) => {
+          child.once("error", reject);
+          child.once("exit", resolve);
+        });
+        const timer = setTimeout(() => child.kill("SIGKILL"), 180000);
+        child.stdout.on("data", (bytes: Buffer) => {
+          output += bytes.toString();
+          if (
+            !killed &&
+            output
+              .split(/\r?\n/)
+              .includes("SELECTED_LOAD_TEST_BACKUP_SETTLED_BEFORE_INTENT")
+          )
+            killed = child.kill("SIGKILL");
+        });
+        child.stderr.on("data", (bytes: Buffer) => {
+          errors += bytes.toString().slice(0, 1800);
+        });
+        child.stdin.on("error", () => {});
+        child.stdin.end(encodeRecoveryGmailSelectedLoadFrame(input));
+        try {
+          expect(await ended, errors).not.toBe(0);
+        } finally {
+          clearTimeout(timer);
+        }
+        expect(killed, errors).toBe(true);
+        expect(existsSync(flushed!.path)).toBe(false);
+        expect(readFileSync(backupPath)).toEqual(flushed!.bytes);
+        const installed = lstatSync(backupPath);
+        expect({ dev: installed.dev, ino: installed.ino }).toEqual({
+          dev: stagedStat.dev,
+          ino: stagedStat.ino,
+        });
+        const portable = "checkout/data/ingestion/backups/ledger.snapshot.enc";
+        const expected = beforeFiles
+          .filter((entry) => entry.path !== flushed!.portable)
+          .map((entry) =>
+            entry.path === portable
+              ? {
+                  path: portable,
+                  kind: "file",
+                  size: flushed!.bytes.length,
+                  sha256: sha256(flushed!.bytes),
+                }
+              : entry
+          );
+        expect(inventory()).toEqual(expected);
+        expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+          beforeCatalog
+        );
+        expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+          beforeJournal
+        );
       }
       const completed = resume();
       if (completed.status !== 0)
