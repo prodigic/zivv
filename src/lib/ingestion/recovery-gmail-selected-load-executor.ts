@@ -3,6 +3,7 @@ import {
   readNextSelectedLoadCompletionEvidence,
   replayRecoveredGmailNextSelectedLoad,
 } from "./recovery-gmail-selected-load-next-replay.js";
+import { observeNextSelectedLoadBackupStage } from "./recovery-gmail-selected-load-next-backup.js";
 import { readNextSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-next-gap.js";
 import {
   nextSelectedLoadResumeIntentFilename,
@@ -56,6 +57,7 @@ import {
   readSync,
   writeSync,
   fsyncSync,
+  renameSync,
 } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -137,6 +139,7 @@ interface Scope {
     | "catalog-before-commit"
     | "catalog-committed"
     | "rollback-catalog-committed"
+    | "backup-flushed"
     | "history-first-chunk"
     | "completion-before-intent"
     | "completion-intent-partial";
@@ -915,6 +918,18 @@ export function observeSelectedGmailLoadFile(
   if (!scope) return false;
   scope.assertCurrent();
   if (
+    scope.chunkPauseTest === "backup-flushed" &&
+    point === "flushed" &&
+    scope.phase === "run" &&
+    scope.generation === 3 &&
+    resolve(path) ===
+      join(scope.root, "data/ingestion/backups/ledger.snapshot.enc")
+  ) {
+    process.stdout.write("SELECTED_LOAD_TEST_BACKUP_FLUSHED\n");
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+    throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+  }
+  if (
     scope.chunkPauseTest === "linked" &&
     point === "linked" &&
     resolve(path) === join(scope.directory, "resume-snapshot-000.bin")
@@ -1449,6 +1464,7 @@ async function executeSelectedLoad(
   testPause?:
     | "catalog-before-commit"
     | "catalog-committed"
+    | "backup-flushed"
     | "history-first-chunk"
     | "completion-before-intent"
     | "completion-intent-partial",
@@ -1767,8 +1783,13 @@ async function resumeNextSelectedLoad(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
   next: RecoveryGmailSelectedReceiptSelector,
   signedAdmission: Buffer,
-  testPause?: "intent-linked" | "lease-acquired" | "rollback-catalog-committed"
-) {
+  testPause?:
+    | "intent-linked"
+    | "lease-acquired"
+    | "rollback-catalog-committed"
+    | "backup-flushed",
+  backupAlreadySettled = false
+): Promise<Awaited<ReturnType<typeof finishSelectedLoadWithWeeklyRunner>>> {
   assertNoSelectedGmailLoadExecution();
   assertNoSelectedLoadInstallation();
   assertNoRecoveredGmailCapture();
@@ -1840,7 +1861,9 @@ async function resumeNextSelectedLoad(
       next,
       admission
     );
-    const { owner, gap, effective, catalog, journal, entries } = evidence;
+    const { owner, gap, effective, catalog, journal, entries, pendingBackup } =
+      evidence;
+    if (pendingBackup && backupAlreadySettled) return fail();
     const now = Date.now();
     if (owner.expiresAtEpochMs >= now)
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
@@ -2043,7 +2066,7 @@ async function resumeNextSelectedLoad(
       },
     };
 
-    return await scopes.run(scope, async () => {
+    const result = await scopes.run(scope, async () => {
       const guard = new DatabaseSync(journalPath, { timeout: 10000 });
       try {
         guard.exec("BEGIN IMMEDIATE");
@@ -2058,6 +2081,55 @@ async function resumeNextSelectedLoad(
           same(opened.inventoryGmailSelectedLoadExecution(), entries);
           scope!.assertCurrent();
           if (intent.deadlineEpochMs <= Date.now()) fail();
+          if (pendingBackup) {
+            const current = observeNextSelectedLoadBackupStage({
+              root: destination,
+              entries,
+              catalog: catalog.ledger,
+              key: scope!.key,
+              inheritedBackup: true,
+            });
+            if (
+              !current ||
+              !current.bytes.equals(pendingBackup.bytes) ||
+              !readFileSync(backup).equals(evidence.backup)
+            )
+              fail();
+            same(current.entry, pendingBackup.entry);
+            same(current.target, pendingBackup.target);
+            same(current.candidateIdentity, pendingBackup.candidateIdentity);
+            same(current.targetIdentity, pendingBackup.targetIdentity);
+            const source = join(destination, pendingBackup.entry.path);
+            renameSync(source, backup);
+            if (process.platform !== "win32") {
+              const handle = openSync(dirname(backup), "r");
+              try {
+                fsyncSync(handle);
+              } finally {
+                closeSync(handle);
+              }
+            }
+            const installed = {
+              ...pendingBackup.entry,
+              path: pendingBackup.target.path,
+            };
+            const stat = lstatSync(backup);
+            if (
+              !stat.isFile() ||
+              stat.isSymbolicLink() ||
+              stat.nlink !== 1 ||
+              stat.dev !== pendingBackup.candidateIdentity.dev ||
+              stat.ino !== pendingBackup.candidateIdentity.ino ||
+              !readFileSync(backup).equals(pendingBackup.bytes) ||
+              lstatSync(source, { throwIfNoEntry: false })
+            )
+              fail();
+            files.set(backup, pendingBackup.bytes);
+            originalEntries.delete(pendingBackup.entry.path);
+            originalEntries.set(installed.path, installed);
+            scope!.assertCurrent();
+            return;
+          }
           if (staged) {
             same(
               inspectRecoveryInstalledFile(path, stage, 8192),
@@ -2093,12 +2165,23 @@ async function resumeNextSelectedLoad(
         scope!.evidenceGuard = false;
         guard.close();
       }
+      if (pendingBackup) return undefined;
       return finishSelectedLoadWithWeeklyRunner(scope!, opened, {
         admissionSha256: gap.admissionSha256,
         executionBaselineSha256: gap.executionBaselineSha256,
         successorSha256: sha256(bytes),
       });
     });
+    if (result) return result;
+    scope!.active = false;
+    scope!.key.fill(0);
+    return await resumeNextSelectedLoad(
+      input,
+      next,
+      admission,
+      testPause,
+      true
+    );
   } finally {
     if (scope) {
       scope.active = false;
@@ -2123,12 +2206,17 @@ export function resumeRecoveredGmailNextSelectedLoadForTest(
   prior: RecoveryGmailSelectedLoadInstallationInput,
   next: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer,
-  point: "intent-linked" | "lease-acquired" | "rollback-catalog-committed"
+  point:
+    | "intent-linked"
+    | "lease-acquired"
+    | "rollback-catalog-committed"
+    | "backup-flushed"
 ) {
   if (
     point !== "intent-linked" &&
     point !== "lease-acquired" &&
-    point !== "rollback-catalog-committed"
+    point !== "rollback-catalog-committed" &&
+    point !== "backup-flushed"
   )
     return fail();
   return resumeNextSelectedLoad(prior, next, admission, point);
@@ -2142,6 +2230,7 @@ export function executeRecoveredGmailNextSelectedLoadForTest(
   point:
     | "catalog-before-commit"
     | "catalog-committed"
+    | "backup-flushed"
     | "history-first-chunk"
     | "completion-before-intent"
     | "completion-intent-partial"
@@ -2151,6 +2240,7 @@ export function executeRecoveredGmailNextSelectedLoadForTest(
     admission.length > 65536 ||
     (point !== "catalog-before-commit" &&
       point !== "catalog-committed" &&
+      point !== "backup-flushed" &&
       point !== "history-first-chunk" &&
       point !== "completion-before-intent" &&
       point !== "completion-intent-partial")

@@ -1,3 +1,4 @@
+import { observeNextSelectedLoadBackupStage } from "./recovery-gmail-selected-load-next-backup.js";
 import {
   nextSelectedLoadResumeGap,
   observeNextSelectedLoadResumeIntent,
@@ -336,6 +337,13 @@ export function readNextSelectedLoadInterruptionEvidence(
     )
       return fail();
 
+    const pendingBackup = observeNextSelectedLoadBackupStage({
+      root,
+      entries,
+      catalog: catalog.ledger,
+      key: input.recoveryKey,
+      inheritedBackup: !rolledBack && inheritedBackup,
+    });
     const inventory = nextSelectedLoadGapInventory({
       entries: execution.entries,
       loadPath,
@@ -346,25 +354,52 @@ export function readNextSelectedLoadInterruptionEvidence(
       report: storedReport,
     });
     let originalInventory = inventory;
+    let originalBackupSha256 = backupSha256;
+    let originalBackupSize = backup.length;
+    if (
+      saved &&
+      (saved.intent.backupSha256 !== backupSha256 ||
+        saved.intent.backupSize !== backup.length)
+    ) {
+      const old = effective.snapshot;
+      if (
+        rolledBack ||
+        inheritedBackup ||
+        !old ||
+        previousBackup?.kind !== "file" ||
+        previousBackup.sha256 !== saved.intent.backupSha256 ||
+        previousBackup.size !== saved.intent.backupSize ||
+        sha256(old) !== previousBackup.sha256 ||
+        old.length !== previousBackup.size
+      )
+        return fail();
+      originalBackupSha256 = previousBackup.sha256;
+      originalBackupSize = previousBackup.size;
+      originalInventory = nextSelectedLoadGapInventory({
+        entries: execution.entries,
+        loadPath,
+        executionBytes,
+        backupSha256: originalBackupSha256,
+        backupSize: originalBackupSize,
+        reportPath,
+        report: storedReport,
+      });
+    }
     let committedRollback: NextSelectedLoadCommittedRollback | undefined;
     if (crossedCommit) {
       if (!saved || !storedReport || !latest) return fail();
-      const inherited = proveNextSelectedLoadRollbackBackup(
-        family,
-        saved.intent
-      );
+      proveNextSelectedLoadRollbackBackup(family, saved.intent);
       if (
-        !backup.equals(inherited) ||
-        (!saved.intent.reportPresent &&
-          execution.entries.some((entry) => entry.path === reportPath))
+        !saved.intent.reportPresent &&
+        execution.entries.some((entry) => entry.path === reportPath)
       )
         return fail();
       originalInventory = nextSelectedLoadGapInventory({
         entries: execution.entries,
         loadPath,
         executionBytes,
-        backupSha256,
-        backupSize: backup.length,
+        backupSha256: originalBackupSha256,
+        backupSize: originalBackupSize,
         reportPath,
         report: saved.intent.reportPresent ? storedReport : undefined,
       });
@@ -399,8 +434,8 @@ export function readNextSelectedLoadInterruptionEvidence(
       ledgerRevision: ledgerDigest(originalCatalog.ledger),
       generation: originalStatus === "unchanged" ? 2 : 3,
       previousOwner: originalOwner,
-      backupSha256,
-      backupSize: backup.length,
+      backupSha256: originalBackupSha256,
+      backupSize: originalBackupSize,
       reportPresent: crossedCommit
         ? saved!.intent.reportPresent
         : !!storedReport,
@@ -412,6 +447,7 @@ export function readNextSelectedLoadInterruptionEvidence(
     )
       return fail();
     const retryPaths = new Set(saved?.paths);
+    if (pendingBackup) retryPaths.add(pendingBackup.entry.path);
     for (const { path, stage } of successors) {
       retryPaths.add(path);
       retryPaths.add(stage);
@@ -451,6 +487,7 @@ export function readNextSelectedLoadInterruptionEvidence(
       record,
       effective,
       backup,
+      pendingBackup,
       gap,
       saved,
       successors,
