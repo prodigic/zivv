@@ -13,12 +13,20 @@ import { join } from "node:path";
 import { decryptLedgerSnapshot } from "./encrypted-backup.js";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
 import { proveSelectedLoadRunDelta } from "./recovery-gmail-selected-journal-delta.js";
-import { reconstructSelectedLoadCompletionJournals } from "./recovery-gmail-selected-load-completion-intent.js";
+import {
+  projectSelectedLoadReleasedJournal,
+  reconstructSelectedLoadCompletionJournals,
+  verifySelectedLoadCompletionIntent,
+} from "./recovery-gmail-selected-load-completion-intent.js";
 import {
   observeSelectedLoadCompletionIntentFile,
   observeSelectedLoadCompletionPrefix,
 } from "./recovery-gmail-selected-load-completion-prefix.js";
-import { regenerateSelectedLoadCompletionPlan } from "./recovery-gmail-selected-load-completion-plan.js";
+import {
+  prepareSelectedLoadCompletionSeal,
+  regenerateSelectedLoadCompletionPlan,
+} from "./recovery-gmail-selected-load-completion-plan.js";
+import { selectedLoadCompletionIntentFilename } from "./recovery-gmail-selected-load-paths.js";
 import { observeSelectedLoadLease } from "./recovery-gmail-selected-lease-observation.js";
 import { assertSelectedGmailLoadCatalog } from "./recovery-gmail-selected-load-effects.js";
 import {
@@ -287,16 +295,24 @@ export function readNextSelectedLoadCompletionEvidence(
       ledgerRevision,
       generation: catalog.generation,
     };
-    const completion = observeSelectedLoadCompletionIntentFile({
-      destination: root,
-      entries,
-      identity,
-      key,
-    });
-    const journals = reconstructSelectedLoadCompletionJournals(
-      observedJournal,
-      completion.fields
-    );
+    const intentPath = loadPath + "/" + selectedLoadCompletionIntentFilename;
+    const installed = entries.some(({ path }) => path.startsWith(intentPath))
+      ? observeSelectedLoadCompletionIntentFile({
+          destination: root,
+          entries,
+          identity,
+          key,
+        })
+      : undefined;
+    const journals = installed
+      ? reconstructSelectedLoadCompletionJournals(
+          observedJournal,
+          installed.fields
+        )
+      : {
+          ...projectSelectedLoadReleasedJournal(observedJournal),
+          guardedJournal: observedJournal,
+        };
     const snapshot = read(selectedLoadBackupPath, 512 * 1024 * 1024);
     if (
       canonicalJson(decryptLedgerSnapshot(snapshot, key)) !==
@@ -366,16 +382,64 @@ export function readNextSelectedLoadCompletionEvidence(
     });
     if (delta.status !== "committed") return fail();
     const runStateSha256 = sha256(canonicalJson(state));
-    const completionPlan = regenerateSelectedLoadCompletionPlan({
-      intent: completion.fields,
-      observedJournal,
+    const signedInput = {
       encryptedCatalog: snapshot,
       entries,
       runStateSha256,
       reportSha256: plan.receipt.reportSha256,
       successorSha256: resumed?.successorSha256,
       key,
-    });
+    };
+    const inventoryInput = {
+      loadPath,
+      prior: resumed
+        ? [...execution.entries, ...resumed.addedEntries]
+        : execution.entries,
+      execution: executionBytes,
+      snapshot,
+      reportPath,
+      report,
+    };
+    if (!installed) {
+      assertRecordedCompletionInventory({
+        ...inventoryInput,
+        inventory: entries,
+      });
+      const retry = successors.at(-1)?.intent ?? saved?.intent;
+      const started = retry?.startedAtEpochMs ?? execution.startedAtEpochMs;
+      const commitTime = catalog.ledger.runs.find(
+        (run) => run.runId === plan.receipt.importRunId
+      )?.committedAtEpochMs;
+      if (
+        owner.expiresAtEpochMs <= started ||
+        typeof commitTime !== "number" ||
+        commitTime >= owner.expiresAtEpochMs
+      )
+        return fail();
+    }
+    const proposed = installed
+      ? undefined
+      : prepareSelectedLoadCompletionSeal({
+          ...signedInput,
+          identity,
+          guardedJournal: observedJournal,
+        });
+    const completion = installed ?? {
+      ...verifySelectedLoadCompletionIntent(
+        proposed!.completionBytes,
+        key,
+        identity
+      ),
+      state: "absent" as const,
+      candidate: undefined,
+    };
+    const completionPlan =
+      proposed ??
+      regenerateSelectedLoadCompletionPlan({
+        ...signedInput,
+        intent: completion.fields,
+        observedJournal,
+      });
     const prefix = observeSelectedLoadCompletionPrefix({
       destination: root,
       runId,
@@ -389,17 +453,11 @@ export function readNextSelectedLoadCompletionEvidence(
     )
       return fail();
 
-    assertRecordedCompletionInventory({
-      loadPath,
-      prior: resumed
-        ? [...execution.entries, ...resumed.addedEntries]
-        : execution.entries,
-      inventory: completionPlan.inventory,
-      execution: executionBytes,
-      snapshot,
-      reportPath,
-      report,
-    });
+    if (installed)
+      assertRecordedCompletionInventory({
+        ...inventoryInput,
+        inventory: completionPlan.inventory,
+      });
 
     const result = verifySelectedLoadResult(completionPlan.result, key, {
       runId,

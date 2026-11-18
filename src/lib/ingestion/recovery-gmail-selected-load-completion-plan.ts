@@ -1,5 +1,7 @@
 import {
+  projectSelectedLoadReleasedJournal,
   reconstructSelectedLoadCompletionJournals,
+  signSelectedLoadCompletionIntent,
   type SelectedLoadCompletionIntent,
 } from "./recovery-gmail-selected-load-completion-intent.js";
 import { prepareSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
@@ -89,6 +91,65 @@ export function regenerateSelectedLoadCompletionPlan(input: {
     releasedJournal: journals.releasedJournal,
     guardedJournal: journals.guardedJournal,
     inventory,
+    loadAllowed: false as const,
+  };
+}
+
+/** Build exactly the seal the original worker would write for this proved state. */
+export function prepareSelectedLoadCompletionSeal(input: {
+  identity: SelectedLoadCompletionIntent["identity"];
+  guardedJournal: Buffer;
+  encryptedCatalog: Buffer;
+  entries: RecoveryRuntimeEntry[];
+  runStateSha256: string;
+  reportSha256: string;
+  successorSha256?: string;
+  key: Buffer;
+}) {
+  const { owner, releasedJournal } = projectSelectedLoadReleasedJournal(
+    input.guardedJournal
+  );
+  const history = prepareSelectedLoadHistoryFiles(
+    input.identity,
+    {
+      encryptedCatalog: input.encryptedCatalog,
+      guardedJournal: input.guardedJournal,
+      inventory: Buffer.from(canonicalJson(input.entries) + "\n"),
+    },
+    input.key
+  );
+  const { priorFamilySha256: _priorFamilySha256, ...resultIdentity } =
+    input.identity;
+  const fields = {
+    identity: input.identity,
+    owner,
+    guardedJournalSha256: sha256(input.guardedJournal),
+    releasedJournalSha256: sha256(releasedJournal),
+    historyManifestSha256: history.manifestSha256,
+  };
+  const result = signSelectedLoadHistoricalResult(
+    {
+      ...resultIdentity,
+      journalSha256: fields.releasedJournalSha256,
+      guardedJournalSha256: fields.guardedJournalSha256,
+      runStateSha256: input.runStateSha256,
+      reportSha256: input.reportSha256,
+      historyManifestSha256: history.manifestSha256,
+      ...(input.successorSha256
+        ? { successorSha256: input.successorSha256 }
+        : {}),
+    },
+    input.key
+  );
+  const intent = { ...fields, resultSha256: sha256(result) };
+  return {
+    ...history,
+    result,
+    intent,
+    completionBytes: signSelectedLoadCompletionIntent(intent, input.key),
+    guardedJournal: input.guardedJournal,
+    releasedJournal,
+    inventory: input.entries,
     loadAllowed: false as const,
   };
 }

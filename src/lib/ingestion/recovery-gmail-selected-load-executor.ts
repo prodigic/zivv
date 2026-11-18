@@ -18,12 +18,11 @@ import {
   readNextSelectedLoadAdmissionRunId,
 } from "./recovery-gmail-selected-load-next-admission.js";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
-import { signSelectedLoadHistoricalResult } from "./recovery-gmail-selected-result-proof.js";
+import { prepareSelectedLoadCompletionSeal } from "./recovery-gmail-selected-load-completion-plan.js";
 import { assertSelectedLoadSettlementTransition } from "./recovery-gmail-selected-settlement-transition.js";
 import { DatabaseSync } from "node:sqlite";
 import { signSelectedLoadCompletionIntent } from "./recovery-gmail-selected-load-completion-intent.js";
 import { selectedLoadCompletionIntentFilename } from "./recovery-gmail-selected-load-paths.js";
-import { prepareSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
 import { prepareSelectedLoadIntentSuccessor } from "./recovery-gmail-selected-successor-preparation.js";
 import {
   describeResumeSnapshot,
@@ -138,7 +137,8 @@ interface Scope {
     | "catalog-before-commit"
     | "catalog-committed"
     | "rollback-catalog-committed"
-    | "history-first-chunk";
+    | "history-first-chunk"
+    | "completion-before-intent";
   evidenceGuard?: boolean;
   nextAdmission?: { target: string; stage: string; bytes: Buffer };
   successor?: { path: string };
@@ -978,16 +978,6 @@ async function installSelectedLoadCompletion(
     join(scope.root, "data/ingestion/backups/ledger.snapshot.enc")
   );
   same(decryptLedgerSnapshot(encryptedCatalog, scope.key), scope.ledger);
-  const released = validateWeeklyJournalRecoverySnapshot(guardedJournal);
-  const owner = released.ownership.find((row) => row.scope === production);
-  if (!owner || owner.owner !== scope.owner || owner.fence !== scope.fence)
-    fail();
-  const guardedOwner = { ...owner };
-  owner.expiresAtEpochMs = 0;
-  const { digest: _digest, ...body } = released;
-  const releasedJournal = Buffer.from(
-    canonicalJson({ ...body, digest: sha256(canonicalJson(body)) }) + "\n"
-  );
   const observed = inventory();
   const loadPrefix = "recovery-gmail-load/" + state.runId + "/";
   const completionPrefix = loadPrefix + selectedLoadCompletionIntentFilename;
@@ -1010,15 +1000,22 @@ async function installSelectedLoadCompletion(
     ledgerRevision,
     generation: scope.generation,
   };
-  const history = prepareSelectedLoadHistoryFiles(
-    historyIdentity,
-    {
-      encryptedCatalog,
-      guardedJournal,
-      inventory: Buffer.from(canonicalJson(observed) + "\n"),
-    },
-    scope.key
-  );
+  const history = prepareSelectedLoadCompletionSeal({
+    identity: historyIdentity,
+    guardedJournal,
+    encryptedCatalog,
+    entries: observed,
+    runStateSha256: sha256(canonicalJson(state)),
+    reportSha256: scope.plan.receipt.reportSha256,
+    successorSha256: identity.successorSha256,
+    key: scope.key,
+  });
+  if (
+    history.intent.owner.owner !== scope.owner ||
+    history.intent.owner.fence !== scope.fence
+  )
+    fail();
+  const { result, releasedJournal, completionBytes } = history;
   const assertInstalled = (path: string, bytes: Buffer) => {
     const stage = path + "-stage";
     const stat = lstatSync(stage);
@@ -1036,31 +1033,6 @@ async function installSelectedLoadCompletion(
     for (const { name, bytes } of history.files)
       assertInstalled(join(scope.directory, name), bytes);
   };
-  const result = signSelectedLoadHistoricalResult(
-    {
-      ...identity,
-      runId: state.runId,
-      ledgerRevision,
-      generation: scope.generation,
-      journalSha256: sha256(releasedJournal),
-      guardedJournalSha256: sha256(guardedJournal),
-      runStateSha256: sha256(canonicalJson(state)),
-      reportSha256: scope.plan.receipt.reportSha256,
-      historyManifestSha256: history.manifestSha256,
-    },
-    scope.key
-  );
-  const completionBytes = signSelectedLoadCompletionIntent(
-    {
-      identity: historyIdentity,
-      owner: guardedOwner,
-      guardedJournalSha256: sha256(guardedJournal),
-      releasedJournalSha256: sha256(releasedJournal),
-      historyManifestSha256: history.manifestSha256,
-      resultSha256: sha256(result),
-    },
-    scope.key
-  );
   const completionPath = join(
     scope.directory,
     selectedLoadCompletionIntentFilename
@@ -1076,6 +1048,11 @@ async function installSelectedLoadCompletion(
   };
   scope.phase = "result";
   try {
+    if (scope.chunkPauseTest === "completion-before-intent") {
+      process.stdout.write("SELECTED_LOAD_TEST_COMPLETION_BEFORE_INTENT\n");
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+      throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+    }
     installEvidence(completionPath, completionBytes);
     assertInstalled(completionPath, completionBytes);
     for (const [index, { name, bytes }] of history.files.entries()) {
@@ -1458,7 +1435,8 @@ async function executeSelectedLoad(
   testPause?:
     | "catalog-before-commit"
     | "catalog-committed"
-    | "history-first-chunk",
+    | "history-first-chunk"
+    | "completion-before-intent",
   next?: NextSelectedLoadStart
 ) {
   assertNoSelectedGmailLoadExecution();
@@ -1801,10 +1779,25 @@ async function resumeNextSelectedLoad(
       loadDirectory,
       selectedLoadCompletionIntentFilename
     );
-    if (
+    const hasCompletionFiles =
       existsSync(completionPath) ||
       existsSync(completionPath + "-stage") ||
-      existsSync(join(loadDirectory, "load-result.json"))
+      existsSync(join(loadDirectory, "load-result.json"));
+    const row =
+      !hasCompletionFiles &&
+      existsSync(join(loadDirectory, "execution-baseline.json"))
+        ? validateWeeklyJournalRecoverySnapshot(
+            readWeeklyJournalRecoverySnapshotReadOnly(
+              join(resolve(runtime.destination), "operator/weekly-runs.sqlite")
+            )
+          ).runState.find((entry) => entry.id === runId)
+        : undefined;
+    if (
+      hasCompletionFiles ||
+      (row &&
+        parseWeeklyRunState(JSON.parse(row.payload)).stages.find(
+          (stage) => stage.stage === "load"
+        )?.status === "succeeded")
     ) {
       const evidence = readNextSelectedLoadCompletionEvidence(
         input,
@@ -2131,14 +2124,19 @@ export function executeRecoveredGmailNextSelectedLoadForTest(
   prior: RecoveryGmailSelectedLoadInstallationInput,
   selector: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer,
-  point: "catalog-before-commit" | "catalog-committed" | "history-first-chunk"
+  point:
+    | "catalog-before-commit"
+    | "catalog-committed"
+    | "history-first-chunk"
+    | "completion-before-intent"
 ) {
   if (
     !Buffer.isBuffer(admission) ||
     admission.length > 65536 ||
     (point !== "catalog-before-commit" &&
       point !== "catalog-committed" &&
-      point !== "history-first-chunk")
+      point !== "history-first-chunk" &&
+      point !== "completion-before-intent")
   )
     return fail();
   return executeSelectedLoad(prior, point, {
@@ -2365,12 +2363,21 @@ async function settleSelectedLoadCompletion(
   runtime: Omit<RecoveryGmailSelectedLoadInstallationInput, "selector">,
   evidence: Pick<
     SelectedLoadInterruptionEvidence,
-    | "completionPending"
-    | "observedCatalog"
-    | "observedJournal"
-    | "physicalEntries"
-    | "raw"
-  > & { report: Pick<SelectedLoadInterruptionEvidence["report"], "lease"> },
+    "observedCatalog" | "observedJournal" | "physicalEntries" | "raw"
+  > & {
+    report: Pick<SelectedLoadInterruptionEvidence["report"], "lease">;
+    completionPending?: Omit<
+      NonNullable<SelectedLoadInterruptionEvidence["completionPending"]>,
+      "intent"
+    > & {
+      intent:
+        | ReturnType<typeof observeSelectedLoadCompletionIntentFile>
+        | (Omit<
+            ReturnType<typeof observeSelectedLoadCompletionIntentFile>,
+            "state" | "candidate"
+          > & { state: "absent"; candidate?: undefined });
+    };
+  },
   proof: Baseline,
   plan: SelectedGmailLoadEffectPlan,
   original: IngestionLedger
@@ -2520,12 +2527,15 @@ async function settleSelectedLoadCompletion(
           async () => {
             const entries = opened.inventoryGmailSelectedLoadExecution();
             same(entries, evidence.physicalEntries);
-            const intent = observeSelectedLoadCompletionIntentFile({
-              destination,
-              entries,
-              identity: completion.intent.fields.identity,
-              key: scope.key,
-            });
+            const intent =
+              completion.intent.state === "absent"
+                ? completion.intent
+                : observeSelectedLoadCompletionIntentFile({
+                    destination,
+                    entries,
+                    identity: completion.intent.fields.identity,
+                    key: scope.key,
+                  });
             const prefix = observeSelectedLoadCompletionPrefix({
               destination,
               entries,

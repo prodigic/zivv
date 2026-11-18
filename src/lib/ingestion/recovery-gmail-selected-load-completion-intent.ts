@@ -187,3 +187,24 @@ export function reconstructSelectedLoadCompletionJournals(
     return invalid();
   return { guardedJournal, releasedJournal, loadAllowed: false as const };
 }
+
+/** Derive the exact release equivalent without changing the stored lease. */
+export function projectSelectedLoadReleasedJournal(guardedJournal: Buffer) {
+  const released = validateWeeklyJournalRecoverySnapshot(guardedJournal);
+  const owner = released.ownership.find(
+    (row) => row.scope === "prodigic/zivv/production"
+  );
+  if (!owner || owner.expiresAtEpochMs <= 0) return invalid();
+  const guardedOwner = { ...owner };
+  owner.expiresAtEpochMs = 0;
+  const { digest: _digest, ...body } = released;
+  return {
+    owner: guardedOwner,
+    releasedJournal: Buffer.from(
+      canonicalJson({
+        ...body,
+        digest: sha256(canonicalJson(body)),
+      }) + "\n"
+    ),
+  };
+}
