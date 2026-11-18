@@ -1,3 +1,9 @@
+import {
+  nextSelectedLoadResumeGap,
+  readInstalledNextSelectedLoadResumeIntent,
+  type NextSelectedLoadResumeGap,
+} from "./recovery-gmail-selected-load-next-resume-intent.js";
+import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import { join } from "node:path";
 import { decryptLedgerSnapshot } from "./encrypted-backup.js";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
@@ -13,6 +19,7 @@ import { selectedLoadBackupPath } from "./recovery-gmail-selected-load-historica
 import { readNextSelectedLoadFamily } from "./recovery-gmail-selected-load-next-family.js";
 import {
   canonicalJson,
+  ledgerDigest,
   readCanonicalSqliteLedgerReadOnly,
 } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
@@ -24,6 +31,46 @@ import { parseWeeklyRunState } from "./weekly-run-state.js";
 
 function fail(): never {
   throw Error("INVALID_NEXT_SELECTED_LOAD_INTERRUPTION_INSPECTION");
+}
+
+/** Derive the pre-resume inventory from the signed execution baseline and the
+ * three paths the running load may have installed before its load artifact. */
+export function nextSelectedLoadGapInventory(input: {
+  entries: RecoveryRuntimeEntry[];
+  loadPath: string;
+  executionBytes: Buffer;
+  backupSha256: string;
+  backupSize: number;
+  reportPath: string;
+  report: Buffer | undefined;
+}) {
+  const prior = new Map(input.entries.map((entry) => [entry.path, entry]));
+  if (prior.size !== input.entries.length) return fail();
+  const executionPath = input.loadPath + "/execution-baseline.json";
+  const executionStage = executionPath + "-stage";
+  prior.set(executionStage, { path: executionStage, kind: "directory" });
+  prior.set(executionPath, {
+    path: executionPath,
+    kind: "file",
+    size: input.executionBytes.length,
+    sha256: sha256(input.executionBytes),
+  });
+  prior.set(selectedLoadBackupPath, {
+    path: selectedLoadBackupPath,
+    kind: "file",
+    size: input.backupSize,
+    sha256: input.backupSha256,
+  });
+  if (input.report)
+    prior.set(input.reportPath, {
+      path: input.reportPath,
+      kind: "file",
+      size: input.report.length,
+      sha256: sha256(input.report),
+    });
+  return [...prior.values()].sort((a, b) =>
+    a.path < b.path ? -1 : a.path > b.path ? 1 : 0
+  );
 }
 
 /** Prove an interrupted second load before its load artifact or result exists.
@@ -112,59 +159,87 @@ export function readNextSelectedLoadInterruptionEvidence(
     )
       return fail();
 
-    const before = new Map(
-      execution.entries.map((entry) => [entry.path, entry])
-    );
-    const executionPath = loadPath + "/execution-baseline.json";
-    const executionStage = executionPath + "-stage";
-    before.set(executionStage, { path: executionStage, kind: "directory" });
-    before.set(executionPath, {
-      path: executionPath,
-      kind: "file",
-      size: executionBytes.length,
-      sha256: sha256(executionBytes),
-    });
     const backup = read(selectedLoadBackupPath, 512 * 1024 * 1024);
+    const backupSha256 = sha256(backup);
     const backupLedger = canonicalJson(
       decryptLedgerSnapshot(backup, input.recoveryKey)
     );
+    const previousBackup = execution.entries.find(
+      (entry) => entry.path === selectedLoadBackupPath
+    );
+    const inheritedBackup =
+      previousBackup?.kind === "file" &&
+      previousBackup.sha256 === backupSha256 &&
+      previousBackup.size === backup.length;
     if (
-      backupLedger !== canonicalJson(effective.catalog.ledger) &&
+      !inheritedBackup &&
       (rolledBack || backupLedger !== canonicalJson(catalog.ledger))
     )
       return fail();
-    before.set(selectedLoadBackupPath, {
-      path: selectedLoadBackupPath,
-      kind: "file",
-      size: backup.length,
-      sha256: sha256(backup),
-    });
+    if (
+      inheritedBackup &&
+      backupLedger !== canonicalJson(effective.catalog.ledger)
+    )
+      return fail();
 
     const reportPath =
       "checkout/data/ingestion/reports/" +
       sha256(plan.receipt.importRunId) +
       ".json";
-    const physicalReport = entries.find((entry) => entry.path === reportPath);
-    if (physicalReport) {
-      const report = read(reportPath, 64 * 1024 * 1024);
-      if (
-        !report.equals(
-          Buffer.from(JSON.stringify(plan.result.report, null, 2) + "\n")
-        )
-      )
-        return fail();
-      before.set(reportPath, {
-        path: reportPath,
-        kind: "file",
-        size: report.length,
-        sha256: sha256(report),
-      });
-    }
-    const expected = [...before.values()].sort((a, b) =>
-      a.path < b.path ? -1 : a.path > b.path ? 1 : 0
+    const expectedReport = Buffer.from(
+      JSON.stringify(plan.result.report, null, 2) + "\n"
+    );
+    const storedReport = entries.some((entry) => entry.path === reportPath)
+      ? read(reportPath, 64 * 1024 * 1024)
+      : undefined;
+    if (
+      (!rolledBack && !storedReport) ||
+      (storedReport && !storedReport.equals(expectedReport))
+    )
+      return fail();
+
+    const inventory = nextSelectedLoadGapInventory({
+      entries: execution.entries,
+      loadPath,
+      executionBytes,
+      backupSha256,
+      backupSize: backup.length,
+      reportPath,
+      report: storedReport,
+    });
+    const gap: NextSelectedLoadResumeGap = {
+      runId,
+      admissionSha256,
+      executionBaselineSha256: sha256(executionBytes),
+      priorLoadFamilySha256: record.priorLoadFamilySha256,
+      journalSha256: delta.journalSha256,
+      inventorySha256: sha256(canonicalJson(inventory)),
+      ledgerRevision: ledgerDigest(catalog.ledger),
+      generation: rolledBack ? 2 : 3,
+      previousOwner: owner,
+      backupSha256,
+      backupSize: backup.length,
+      reportPresent: !!storedReport,
+    };
+    const saved = readInstalledNextSelectedLoadResumeIntent(
+      loadPath,
+      entries,
+      read,
+      input.recoveryKey
     );
     if (
-      canonicalJson(expected) !== canonicalJson(entries) ||
+      saved &&
+      canonicalJson(nextSelectedLoadResumeGap(saved.intent)) !==
+        canonicalJson(gap)
+    )
+      return fail();
+    const inputEntries = saved
+      ? entries.filter(
+          (entry) => entry.path !== saved.path && entry.path !== saved.stage
+        )
+      : entries;
+    if (
+      canonicalJson(inventory) !== canonicalJson(inputEntries) ||
       canonicalJson(entries) !==
         canonicalJson(opened.inventoryGmailSelectedLoadExecution()) ||
       canonicalJson(catalog) !==
@@ -197,6 +272,8 @@ export function readNextSelectedLoadInterruptionEvidence(
       record,
       effective,
       backup,
+      gap,
+      saved,
     };
   } catch {
     return fail();

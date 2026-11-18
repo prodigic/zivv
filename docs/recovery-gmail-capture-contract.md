@@ -502,4 +502,11 @@ artifact. It distinguishes the exact generation-two predecessor catalog from
 the exact generation-three committed delta. The inspection checks the original
 journal rows, current owner, reviewed report if present, and the allowed
 encrypted backup transition. It reports lease state and preserved evidence.
-Taking ownership and finishing the interrupted run require a guarded transition.
+A guarded retry waits for the observed lease to expire, then signs a resume
+intent for the exact interrupted catalog, journal and file inventory. It
+installs the intent under the journal and catalog writer guards, advances the
+deterministic owner fence, and checks the same state in the normal fenced runner.
+A rolled-back load reruns its reviewed import. A committed load completes its
+journal from the committed import. The result binds the resume intent, and
+completed replay reconstructs the prior interrupted journal and inventory
+before accepting that result.
