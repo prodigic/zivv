@@ -99,7 +99,8 @@ interface Scope {
     | "lease-acquired"
     | "successor-linked"
     | "successor-flushed"
-    | "catalog-before-commit";
+    | "catalog-before-commit"
+    | "rollback-catalog-committed";
   evidenceGuard?: boolean;
   successor?: { path: string };
   incompleteSnapshot?: {
@@ -388,6 +389,14 @@ export function selectedGmailLoadCatalogCommit(
   if (committed && scope.pending) {
     scope.ledger = scope.pending;
     scope.generation++;
+    if (
+      scope.resume?.precommitRollback &&
+      scope.chunkPauseTest === "rollback-catalog-committed"
+    ) {
+      process.stdout.write("SELECTED_LOAD_TEST_ROLLBACK_CATALOG_COMMITTED\n");
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+      throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+    }
   }
   scope.pending = undefined;
 }
@@ -1311,6 +1320,7 @@ async function resumeSelectedLoadAttempt(
     | "lease-acquired"
     | "successor-linked"
     | "successor-flushed"
+    | "rollback-catalog-committed"
     | undefined
 ) {
   assertNoSelectedGmailLoadExecution();
@@ -2116,6 +2126,7 @@ async function resumeSelectedLoad(
     | "lease-acquired"
     | "successor-linked"
     | "successor-flushed"
+    | "rollback-catalog-committed"
     | undefined
 ) {
   const first = await resumeSelectedLoadAttempt(supplied, chunkPauseTest);
@@ -2140,7 +2151,8 @@ export function resumeRecoveredGmailSelectedLoadForTest(
     | "intent-linked"
     | "lease-acquired"
     | "successor-linked"
-    | "successor-flushed" = "linked"
+    | "successor-flushed"
+    | "rollback-catalog-committed" = "linked"
 ) {
   if (
     point !== "linked" &&
@@ -2148,7 +2160,8 @@ export function resumeRecoveredGmailSelectedLoadForTest(
     point !== "intent-linked" &&
     point !== "lease-acquired" &&
     point !== "successor-linked" &&
-    point !== "successor-flushed"
+    point !== "successor-flushed" &&
+    point !== "rollback-catalog-committed"
   )
     fail();
   return resumeSelectedLoad(input, point);

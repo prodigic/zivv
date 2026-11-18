@@ -7,7 +7,8 @@ import type { SelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-
  * caller must independently read and validate the real tree and run the full
  * physical delta proof on this result. This grants no replay authority. */
 export function reconstructSelectedLoadResumeInventory(input: {
-  completedEntries: RecoveryRuntimeEntry[];
+  observedEntries: RecoveryRuntimeEntry[];
+  outcome?: "committed-pending";
   originalEntries: RecoveryRuntimeEntry[];
   intent: SelectedLoadResumeIntent;
   runId: string;
@@ -31,18 +32,23 @@ export function reconstructSelectedLoadResumeInventory(input: {
     resultStage = root + "/load-result.json-stage";
   const snapshot = "checkout/data/ingestion/backups/ledger.snapshot.enc";
   const actual = new Map(
-    input.completedEntries.map((entry) => [entry.path, entry])
+    input.observedEntries.map((entry) => [entry.path, entry])
   );
   const original = new Map(
     input.originalEntries.map((entry) => [entry.path, entry])
   );
   if (
-    actual.size !== input.completedEntries.length ||
+    actual.size !== input.observedEntries.length ||
     original.size !== input.originalEntries.length ||
     actual.get(intentFile)?.kind !== "file" ||
     actual.get(intentStage)?.kind !== "directory" ||
-    actual.get(resultFile)?.kind !== "file" ||
-    actual.get(resultStage)?.kind !== "directory" ||
+    (input.outcome === "committed-pending"
+      ? input.intent.version !== 3 ||
+        actual.has(resultFile) ||
+        (actual.has(resultStage) &&
+          actual.get(resultStage)?.kind !== "directory")
+      : actual.get(resultFile)?.kind !== "file" ||
+        actual.get(resultStage)?.kind !== "directory") ||
     actual.get(snapshot)?.kind !== "file"
   )
     return fail();
@@ -81,7 +87,7 @@ export function reconstructSelectedLoadResumeInventory(input: {
   if (actual.get(input.reportPath)?.kind !== "file") return fail();
   for (const priorSnapshot of priorSnapshots)
     for (let mask = 0; mask < 1 << optional.length; mask++) {
-      const prior = input.completedEntries.filter(
+      const prior = input.observedEntries.filter(
         (entry) =>
           ![
             intentFile,
