@@ -1,3 +1,4 @@
+import type { RecoveryRuntimeEntry } from "../../lib/ingestion/recovery-runtime.js";
 import { createHmac } from "node:crypto";
 import { expect, it } from "vitest";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
@@ -7,6 +8,9 @@ import {
   restoreResumeSnapshot,
 } from "../../lib/ingestion/recovery-gmail-selected-resume-snapshot-evidence.js";
 import {
+  isSelectedLoadHistoryFilename,
+  prepareSelectedLoadHistoryFiles,
+  readSelectedLoadHistoryFiles,
   signSelectedLoadHistoryManifest,
   verifySelectedLoadHistoryManifest,
 } from "../../lib/ingestion/recovery-gmail-selected-load-history.js";
@@ -134,5 +138,76 @@ it("rejects invalid identity, noncanonical or changed signed manifests", () => {
       key,
       identity
     )
+  ).toThrow();
+});
+
+it("reconstructs only the settled files named by the signed historical manifest", () => {
+  const prepared = prepareSelectedLoadHistoryFiles(identity, parts, key);
+  const loadPath = "recovery-gmail-load/" + identity.runId;
+  const byPath = new Map(
+    prepared.files.map(({ name, bytes }) => [loadPath + "/" + name, bytes])
+  );
+  const entries: RecoveryRuntimeEntry[] = [];
+  for (const [path, bytes] of byPath) {
+    entries.push({
+      path,
+      kind: "file",
+      size: bytes.length,
+      sha256: sha256(bytes),
+    });
+    entries.push({ path: path + "-stage", kind: "directory" });
+  }
+  const input = {
+    loadPath,
+    entries,
+    key,
+    identity,
+    read: (path: string) => byPath.get(path)!,
+  };
+  expect(prepared.files.at(-1)?.name).toBe("history-manifest.json");
+  expect(
+    prepared.files.every(({ name }) => isSelectedLoadHistoryFilename(name))
+  ).toBe(true);
+  expect(isSelectedLoadHistoryFilename("history-inventory-008.bin")).toBe(
+    false
+  );
+  expect(isSelectedLoadHistoryFilename("../history-manifest.json")).toBe(false);
+  expect(readSelectedLoadHistoryFiles(input)).toEqual({
+    parts,
+    manifestSha256: prepared.manifestSha256,
+    loadAllowed: false,
+  });
+  expect(() =>
+    readSelectedLoadHistoryFiles({ ...input, entries: entries.slice(1) })
+  ).toThrow();
+  expect(() =>
+    readSelectedLoadHistoryFiles({
+      ...input,
+      entries: [
+        ...entries,
+        {
+          path: entries[1]!.path + "/abandoned.tmp",
+          kind: "file",
+          size: 1,
+          sha256: "a".repeat(64),
+        },
+      ],
+    })
+  ).toThrow();
+  const first = entries[0]!;
+  expect(() =>
+    readSelectedLoadHistoryFiles({
+      ...input,
+      read: (path) =>
+        path === first.path
+          ? Buffer.alloc(parts.encryptedCatalog.length, 7)
+          : input.read(path),
+    })
+  ).toThrow();
+  expect(() =>
+    readSelectedLoadHistoryFiles({
+      ...input,
+      loadPath: "recovery-gmail-load/" + "f".repeat(64),
+    })
   ).toThrow();
 });

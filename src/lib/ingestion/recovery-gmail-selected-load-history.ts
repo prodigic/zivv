@@ -1,8 +1,11 @@
+import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
 import {
   describeResumeSnapshot,
+  restoreResumeSnapshot,
+  resumeSnapshotChunkSize,
   validateResumeSnapshotEvidence,
   type ResumeSnapshotEvidence,
 } from "./recovery-gmail-selected-resume-snapshot-evidence.js";
@@ -153,4 +156,115 @@ export function verifySelectedLoadHistoryManifest(
   } catch {
     return invalid();
   }
+}
+
+const filePrefixes: HistoryParts<string> = {
+  encryptedCatalog: "history-catalog-",
+  guardedJournal: "history-journal-",
+  inventory: "history-inventory-",
+};
+const manifestFilename = "history-manifest.json";
+
+function partFilename(part: PartName, index: number) {
+  return filePrefixes[part] + String(index).padStart(3, "0") + ".bin";
+}
+
+/** Exact final filenames for the historical manifest and bounded chunk sets. */
+export function isSelectedLoadHistoryFilename(name: string): boolean {
+  if (name === manifestFilename) return true;
+  return partNames.some((part) => {
+    if (!name.startsWith(filePrefixes[part])) return false;
+    const match = /^([0-9]{3})\.bin$/.exec(
+      name.slice(filePrefixes[part].length)
+    );
+    return !!match && Number(match[1]) < limits[part] / resumeSnapshotChunkSize;
+  });
+}
+
+/** Produce ordered, immutable files for the existing secure intent installer.
+ * The guarded caller must authorize exactly this set and install the result last. */
+export function prepareSelectedLoadHistoryFiles(
+  identity: SelectedLoadHistoryIdentity,
+  parts: HistoryParts<Buffer>,
+  key: Buffer
+) {
+  const manifest = signSelectedLoadHistoryManifest(identity, parts, key);
+  const files: { name: string; bytes: Buffer }[] = [];
+  for (const part of partNames) {
+    const bytes = parts[part];
+    for (
+      let offset = 0;
+      offset < bytes.length;
+      offset += resumeSnapshotChunkSize
+    ) {
+      files.push({
+        name: partFilename(part, offset / resumeSnapshotChunkSize),
+        bytes: bytes.subarray(offset, offset + resumeSnapshotChunkSize),
+      });
+    }
+  }
+  files.push({ name: manifestFilename, bytes: manifest });
+  return { files, manifestSha256: sha256(manifest) };
+}
+
+/** Require a settled closed family. The supplied reader must independently bind
+ * every file to its observed entry and stable unlinked physical identity. */
+export function readSelectedLoadHistoryFiles(input: {
+  loadPath: string;
+  entries: readonly RecoveryRuntimeEntry[];
+  read: (path: string, limit: number) => Buffer;
+  identity: SelectedLoadHistoryIdentity;
+  key: Buffer;
+}) {
+  if (!/^recovery-gmail-load\/[a-f0-9]{64}$/.test(input.loadPath))
+    return invalid();
+  const prefix = input.loadPath + "/";
+  if (input.loadPath !== "recovery-gmail-load/" + input.identity.runId)
+    return invalid();
+  const observed = input.entries.filter((entry) =>
+    entry.path.startsWith(prefix + "history-")
+  );
+  const byPath = new Map(observed.map((entry) => [entry.path, entry]));
+  if (byPath.size !== observed.length) return invalid();
+  const read = (name: string, limit: number) => {
+    const path = prefix + name;
+    const file = byPath.get(path);
+    if (
+      file?.kind !== "file" ||
+      file.size > limit ||
+      byPath.get(path + "-stage")?.kind !== "directory"
+    )
+      return invalid();
+    const bytes = input.read(path, limit);
+    if (
+      !Buffer.isBuffer(bytes) ||
+      bytes.length !== file.size ||
+      sha256(bytes) !== file.sha256
+    )
+      return invalid();
+    byPath.delete(path);
+    byPath.delete(path + "-stage");
+    return bytes;
+  };
+  const manifest = verifySelectedLoadHistoryManifest(
+    read(manifestFilename, maxManifestBytes),
+    input.key,
+    input.identity
+  );
+  const parts = {} as HistoryParts<Buffer>;
+  for (const part of partNames) {
+    const evidence = manifest.parts[part];
+    parts[part] = restoreResumeSnapshot(
+      evidence,
+      evidence.chunks.map(({ index, size }) =>
+        read(partFilename(part, index), size)
+      )
+    );
+  }
+  if (byPath.size !== 0) return invalid();
+  return {
+    manifestSha256: manifest.manifestSha256,
+    parts,
+    loadAllowed: false as const,
+  };
 }
