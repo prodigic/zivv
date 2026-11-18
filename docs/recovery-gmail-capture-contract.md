@@ -451,5 +451,15 @@ inventory. The result is installed after all chunks settle. The worker checks
 the files again after journal release. Inspection independently verifies the
 retained bytes and current catalog and journal, with a distinct proof for a
 direct load and the existing intent and successor checks for a resumed load.
-A partial history installation without a signed result remains a separate
-recovery case. The retained history does not admit another selected receipt.
+
+Before installing history, the worker signs a completion intent for the exact
+chunks, manifest, guarded and released journal, and final result. Inspection can
+verify an interrupted installation and identify the first missing file or owned
+stage without changing it. Once the recorded lease expires, settlement acquires
+the journal writer lock and then the canonical catalog writer lock. Under both
+locks it rechecks the intent and physical prefix before installing the remaining
+signed bytes. It preserves the journal and its recorded fence. A subsequent
+request verifies and returns the same signed result.
+
+Admission of another selected receipt requires a separate proof of the ordered
+load family.
