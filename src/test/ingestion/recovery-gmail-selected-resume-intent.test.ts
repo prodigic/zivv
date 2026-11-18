@@ -62,6 +62,8 @@ it("authenticates a closed first-resume intent without granting authority", () =
   ).toThrow();
   const valid = sign(body);
   expect(verifySelectedLoadResumeIntent(valid, key)).toEqual(body);
+  const rollback = { ...body, version: 3, generation: 1 };
+  expect(verifySelectedLoadResumeIntent(sign(rollback), key)).toEqual(rollback);
   expect(() =>
     verifySelectedLoadResumeIntent(valid, Buffer.alloc(32, 8))
   ).toThrow();
@@ -74,6 +76,8 @@ it("authenticates a closed first-resume intent without granting authority", () =
   for (const invalid of [
     { ...body, fence: 3 },
     { ...body, generation: 3 },
+    { ...body, generation: 1 },
+    { ...rollback, generation: 2 },
     { ...body, startedAtEpochMs: 999, deadlineEpochMs: 180999 },
     { ...body, deadlineEpochMs: 181001 },
     { ...body, owner: "00000000-0000-0000-0000-000000000000" },

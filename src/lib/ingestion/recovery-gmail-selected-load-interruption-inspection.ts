@@ -44,6 +44,7 @@ import { validateRecoveryPreparedHostBinding } from "./recovery-host-binding.js"
 import { restoreRecoveryGmailSelectedLoadEvidence } from "./recovery-gmail-selected-load-evidence.js";
 import { proveRecoveryGmailSelectedLoadBaseline } from "./recovery-gmail-selected-load-proof.js";
 import { proveSelectedLoadJournalDelta } from "./recovery-gmail-selected-journal-delta.js";
+import { proveSelectedLoadCatalogDelta } from "./recovery-gmail-selected-catalog-delta.js";
 import { proveSelectedLoadPhysicalDelta } from "./recovery-gmail-selected-physical-delta.js";
 import { sha256 } from "./steve-preflight.js";
 
@@ -318,7 +319,22 @@ export function readSelectedLoadInterruptionEvidence(
       );
       if (
         intent.admissionSha256 !== common.admissionSha256 ||
-        intent.executionBaselineSha256 !== sha256(executionBaseline) ||
+        intent.executionBaselineSha256 !== sha256(executionBaseline)
+      )
+        return fail();
+      if (intent.version === 3) {
+        const original = proveSelectedLoadCatalogDelta({
+          ...common,
+          observedGeneration: intent.generation,
+          observedLedger: checkpoint.ledger,
+        });
+        if (
+          original.disposition !== "unchanged" ||
+          original.ledgerRevision !== intent.ledgerRevision ||
+          proveSelectedLoadCatalogDelta(common).disposition !== "committed"
+        )
+          return fail();
+      } else if (
         intent.ledgerRevision !== ledgerDigest(catalog.ledger) ||
         intent.generation !== catalog.generation
       )

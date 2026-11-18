@@ -2,6 +2,7 @@ import {
   hasSelectedGmailLoadExecution,
   completeSelectedGmailLoad,
   hasPendingSelectedLoadResume,
+  selectedGmailLoadAllowsRollbackReplay,
   verifySelectedLoadResumeBarrier,
 } from "./recovery-gmail-selected-load-executor.js";
 import { weeklyRunRulesDigest } from "./weekly-run-context.js";
@@ -568,7 +569,8 @@ export async function runWeeklyImport(input: {
             } else {
               const reviewed = await reviewedArtifact();
               let result;
-              if (recovering) result = await committedImport();
+              if (recovering && !selectedGmailLoadAllowsRollbackReplay())
+                result = await committedImport();
               else
                 result = await journal.guardOperation(owned, async () => {
                   try {

@@ -424,3 +424,13 @@ The first-attempt interruption inspector restores the authenticated original cap
 Interruption inspection reports whether the observed production lease is active, expired, or released at the actual observation time; it grants no takeover authority. A read-only SQLite BEGIN IMMEDIATE does not exclude a writer. The existing journal guard nested around an owned canonical catalog transaction was tested to exclude competing writers on both databases. A resume coordinator must reacquire and recheck under those real locks after lease expiry.
 
 A closed first-attempt commit-gap resume now refuses an active lease, records a signed resume intent, obtains the next fence after expiry, and rechecks the unchanged inspected journal plus canonical catalog while holding both journal and catalog writer guards. It invokes the normal runner to recover the existing committed import and signs its result. A genuine killed-worker fixture passed active-lease refusal, natural expiry, guarded resume, fence increment, receipt authentication, unchanged catalog generation, and duplicate refusal. A crash during this resume, a lost response, staged aliases, and later-load composition remain fail-closed and require additional recovery proof. This does not activate scheduling or grant live-operator authority.
+
+A version 3 rollback replay intent binds the generation-one catalog and its
+original ledger revision. Retry requires the authenticated load-running journal,
+no load artifact, an expired owner, and a matching physical inventory. Any
+retained precommit snapshot must decrypt to the original ledger. Completion
+requires the exact planned generation-two catalog, the matching final backup,
+and the ordinary signed result and journal proof. A native test killed the
+fenced worker before commit and verified rollback, active-lease refusal, one
+successful retry, and an unchanged subsequent replay. A second interruption
+after the retry commits needs a separate pending-intent proof.
