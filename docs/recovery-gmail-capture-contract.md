@@ -488,5 +488,12 @@ installs that baseline under both writer guards, then admits only the second
 run and its planned effects. Evidence and journal rows from the first load stay
 pinned. The new result signs history for the resulting catalog and binds the
 admitted predecessor. The fresh execution entry refuses a repeat once the
-second execution baseline exists. Replay requires a separate family-aware delta
-proof.
+second execution baseline exists.
+
+Completed second-load replay reconstructs the released first-load view from its
+retained encrypted catalog, guarded journal and physical-history commitments.
+It verifies that result again against the archived capture baseline and original
+run delta. It then checks the live catalog, journal, encrypted backup, import
+report, and physical delta for the second run before returning the original
+signed result without changing either load. Incomplete second-load effects
+still require a guarded recovery transition.

@@ -23,12 +23,17 @@ function fail(): never {
 export function readNextSelectedLoadAdmissionEvidence(
   prior: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
-  nextAdmission?: SelectedLoadAdmissionTail
+  nextAdmission?: SelectedLoadAdmissionTail,
+  nextExecutionBaseline?: Buffer
 ) {
   let key: Buffer | undefined;
   try {
     const selector = copyRecoveryGmailSelectedReceiptSelector(next);
-    const observed = readSelectedLoadInterruptionEvidence(prior, nextAdmission);
+    const observed = readSelectedLoadInterruptionEvidence(
+      prior,
+      nextAdmission,
+      nextExecutionBaseline
+    );
     if (
       observed.report.status !== "completed" ||
       observed.report.lease.status !== "released" ||

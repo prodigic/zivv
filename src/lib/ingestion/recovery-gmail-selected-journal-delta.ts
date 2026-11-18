@@ -10,9 +10,13 @@ import {
   createSelectedGmailLoadEffectPlan,
   assertSelectedGmailLoadArtifact,
   selectedGmailLoadEvidence,
+  type SelectedGmailLoadEffectPlan,
 } from "./recovery-gmail-selected-load-effects.js";
 import { validateWeeklyJournalRecoverySnapshot } from "./weekly-run-journal.js";
-import { parseWeeklyRunState } from "./weekly-run-state.js";
+import {
+  parseWeeklyRunState,
+  type WeeklyRunSource,
+} from "./weekly-run-state.js";
 import type { IngestionLedger } from "../../types/ingestion.js";
 
 /** Read-only first-attempt logical journal proof. Physical origin, SQL identity,
@@ -31,9 +35,6 @@ export function proveSelectedLoadJournalDelta(input: {
   const fail = (): never => {
     throw Error("INVALID_SELECTED_LOAD_JOURNAL_DELTA");
   };
-  const same = (a: unknown, b: unknown) => {
-    if (canonicalJson(a) !== canonicalJson(b)) fail();
-  };
   const execution = verifySelectedLoadExecutionBaseline(
     input.executionBaseline,
     input.baseline.recoveryKey
@@ -46,9 +47,41 @@ export function proveSelectedLoadJournalDelta(input: {
     proof,
     input.raw
   );
-  const original = validateWeeklyJournalRecoverySnapshot(
-    Buffer.from(input.baseline.current.journal, "base64")
-  );
+  return proveSelectedLoadRunDelta({
+    priorJournal: Buffer.from(input.baseline.current.journal, "base64"),
+    observedJournal: input.observedJournal,
+    startedAtEpochMs: execution.startedAtEpochMs,
+    admissionSha256: input.admissionSha256,
+    plan,
+    source: proof.source,
+    runId: proof.runState.runId,
+    raw: input.raw,
+    observedLedger: input.observedLedger,
+    catalogDisposition: catalog.disposition,
+  });
+}
+
+/** Explain the selected run only, using an independently proved prior catalog
+ * and journal. Reusable for the first run and an authenticated successor. */
+export function proveSelectedLoadRunDelta(input: {
+  priorJournal: Buffer;
+  observedJournal: Buffer;
+  startedAtEpochMs: number;
+  admissionSha256: string;
+  plan: SelectedGmailLoadEffectPlan;
+  source: WeeklyRunSource;
+  runId: string;
+  raw: Buffer;
+  observedLedger: IngestionLedger;
+  catalogDisposition: "unchanged" | "committed";
+}) {
+  const fail = (): never => {
+    throw Error("INVALID_SELECTED_LOAD_JOURNAL_DELTA");
+  };
+  const same = (a: unknown, b: unknown) => {
+    if (canonicalJson(a) !== canonicalJson(b)) fail();
+  };
+  const original = validateWeeklyJournalRecoverySnapshot(input.priorJournal);
   const current = validateWeeklyJournalRecoverySnapshot(input.observedJournal);
   same(current.intakeEvidence, original.intakeEvidence);
   const production = "prodigic/zivv/production";
@@ -70,24 +103,22 @@ export function proveSelectedLoadJournalDelta(input: {
   const held =
     owner.owner === expectedOwner &&
     owner.fence === prior.fence + 1 &&
-    owner.expiresAtEpochMs <= execution.startedAtEpochMs + 180000;
+    owner.expiresAtEpochMs <= input.startedAtEpochMs + 180000;
   if (!held && canonicalJson(owner) !== canonicalJson(prior)) return fail();
-  const selected = current.runState.find(
-    (row) => row.id === proof.runState.runId
-  );
+  const selected = current.runState.find((row) => row.id === input.runId);
   same(
-    current.runState.filter((row) => row.id !== proof.runState.runId),
+    current.runState.filter((row) => row.id !== input.runId),
     original.runState
   );
   const oldArtifacts = original.stageArtifacts;
   same(
-    current.stageArtifacts.filter((row) => row.runId !== proof.runState.runId),
+    current.stageArtifacts.filter((row) => row.runId !== input.runId),
     oldArtifacts
   );
   if (!selected) {
     if (
-      catalog.disposition !== "unchanged" ||
-      current.stageArtifacts.some((row) => row.runId === proof.runState.runId)
+      input.catalogDisposition !== "unchanged" ||
+      current.stageArtifacts.some((row) => row.runId === input.runId)
     )
       return fail();
     return {
@@ -98,7 +129,9 @@ export function proveSelectedLoadJournalDelta(input: {
   }
   if (!held || selected.scope !== production) return fail();
   const state = parseWeeklyRunState(JSON.parse(selected.payload));
-  same(state.source, proof.source);
+  if (state.runId !== selected.id || state.revision !== selected.revision)
+    return fail();
+  same(state.source, input.source);
   const stages = state.stages.slice(0, 4);
   for (const item of state.stages.slice(4))
     if (item.status !== "pending") return fail();
@@ -113,8 +146,8 @@ export function proveSelectedLoadJournalDelta(input: {
       same(
         item.evidence,
         selectedGmailLoadEvidence(
-          plan,
-          proof.source,
+          input.plan,
+          input.source,
           item.stage,
           input.observedLedger
         )
@@ -127,7 +160,7 @@ export function proveSelectedLoadJournalDelta(input: {
     if (row.attempt > 1 || (row.attempt === 0 && row.stage !== "acquire"))
       return fail();
     assertSelectedGmailLoadArtifact(
-      plan,
+      input.plan,
       row.stage,
       Buffer.from(row.bytes, "base64"),
       input.raw,
@@ -146,15 +179,15 @@ export function proveSelectedLoadJournalDelta(input: {
       return fail();
   const load = stages[3]!;
   if (
-    catalog.disposition === "committed" &&
+    input.catalogDisposition === "committed" &&
     (stages.slice(0, 3).some((item) => item.status !== "succeeded") ||
       !["running", "succeeded"].includes(load.status))
   )
     return fail();
-  if (catalog.disposition === "unchanged" && load.status === "succeeded")
+  if (input.catalogDisposition === "unchanged" && load.status === "succeeded")
     return fail();
   return {
-    status: catalog.disposition,
+    status: input.catalogDisposition,
     runId: state.runId,
     revision: state.revision,
     journalSha256: sha256(input.observedJournal),

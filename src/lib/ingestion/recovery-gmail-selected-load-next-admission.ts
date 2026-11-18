@@ -139,6 +139,26 @@ export function readNextSelectedLoadAdmissionForInstallation(
   next: RecoveryGmailSelectedReceiptSelector,
   bytes: Buffer
 ) {
+  return observeAdmission(prior, next, bytes);
+}
+
+/** Prove the next admission using the first load's historical evidence.
+ * This projection supplies no live mutation authority. */
+export function readNextSelectedLoadAdmissionForReplay(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  bytes: Buffer,
+  executionBaseline: Buffer
+) {
+  return observeAdmission(prior, next, bytes, executionBaseline);
+}
+
+function observeAdmission(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  bytes: Buffer,
+  executionBaseline?: Buffer
+) {
   try {
     const parsed = read(bytes, prior.recoveryKey);
     if (
@@ -147,7 +167,12 @@ export function readNextSelectedLoadAdmissionForInstallation(
     )
       return fail();
     const tail = { runId: parsed.runId, bytes };
-    const evidence = readNextSelectedLoadAdmissionEvidence(prior, next, tail);
+    const evidence = readNextSelectedLoadAdmissionEvidence(
+      prior,
+      next,
+      tail,
+      executionBaseline
+    );
     const record = body(evidence, parsed.admittedAtEpochMs);
     if (canonicalJson(record) !== canonicalJson(parsed)) return fail();
     return { record, tail, effective: evidence.effective };

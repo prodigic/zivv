@@ -1,5 +1,5 @@
 import { createHash, createHmac } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { decryptLedgerSnapshot } from "../../lib/ingestion/encrypted-backup.js";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
 import { validateWeeklyJournalRecoverySnapshot } from "../../lib/ingestion/weekly-run-journal.js";
@@ -444,6 +444,70 @@ it("installs only a distinct second admission and settles exact retries", async 
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
       afterJournalBytes
     );
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(afterInventory);
+    const replayModule = pathToFileURL(
+      join(
+        root,
+        "checkout/dist/lib/ingestion/recovery-gmail-selected-load-next-replay.js"
+      )
+    ).href;
+    const replayNext = () =>
+      run(
+        `(await import(${JSON.stringify(replayModule)})).replayRecoveredGmailNextSelectedLoad(input,${JSON.stringify(nextSelector)},(await import('node:fs')).readFileSync(${JSON.stringify(join(nextDirectory, "admission.json"))}))`
+      );
+    const sqlCatalogBeforeReplay = readFileSync(catalogPath);
+    const sqlJournalBeforeReplay = readFileSync(journalPath);
+    const firstReplay = replayNext();
+    if (firstReplay.status !== 0)
+      console.error(
+        "NEXT_LOAD_REPLAY_DIAGNOSTIC",
+        firstReplay.stderr.slice(0, 1500)
+      );
+    expect(firstReplay.status).toBe(0);
+    expect(JSON.parse(firstReplay.stdout)).toEqual(JSON.parse(next.stdout));
+    const secondReplay = replayNext();
+    expect(secondReplay.status).toBe(0);
+    expect(JSON.parse(secondReplay.stdout)).toEqual(JSON.parse(next.stdout));
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+      afterCatalog
+    );
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      afterJournalBytes
+    );
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(afterInventory);
+    expect(readFileSync(catalogPath)).toEqual(sqlCatalogBeforeReplay);
+    expect(readFileSync(journalPath)).toEqual(sqlJournalBeforeReplay);
+    const foreignPath = join(firstDirectory, "foreign-fixture.bin");
+    const foreignBytes = Buffer.from("synthetic unexpected prior-load file");
+    const beforeCatalogFile = readFileSync(catalogPath);
+    const beforeJournalFile = readFileSync(journalPath);
+    writeFileSync(foreignPath, foreignBytes, { flag: "wx" });
+    try {
+      const refusedReplay = replayNext();
+      expect(refusedReplay.status).toBe(1);
+      expect(refusedReplay.stderr).toContain(
+        "INVALID_RECOVERY_GMAIL_NEXT_SELECTED_LOAD_REPLAY"
+      );
+      expect(readFileSync(foreignPath)).toEqual(foreignBytes);
+      expect(readFileSync(catalogPath)).toEqual(beforeCatalogFile);
+      expect(readFileSync(journalPath)).toEqual(beforeJournalFile);
+      expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+        afterCatalog
+      );
+      expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+        afterJournalBytes
+      );
+    } finally {
+      unlinkSync(foreignPath);
+    }
     expect(
       openPreparedRuntimeForAdmission(
         fixture.input
