@@ -8,7 +8,7 @@ import { sha256 } from "./steve-preflight.js";
 import type { WeeklyRunLease } from "./weekly-run-journal.js";
 export interface SelectedLoadResumeIntent {
   kind: "zivv-selected-load-resume-intent";
-  version: 2;
+  version: 2 | 3;
   snapshotEvidence: ResumeSnapshotEvidence | null;
   admissionSha256: string;
   executionBaselineSha256: string;
@@ -70,8 +70,10 @@ export function verifySelectedLoadResumeIntent(
   if (
     canonicalJson(Object.keys(value).sort()) !== canonicalJson(keys.sort()) ||
     value.kind !== "zivv-selected-load-resume-intent" ||
-    value.version !== 2 ||
-    value.generation !== 2 ||
+    !(
+      (value.version === 2 && value.generation === 2) ||
+      (value.version === 3 && value.generation === 1)
+    ) ||
     typeof value.signature !== "string" ||
     !/^[a-f0-9]{64}$/.test(value.signature)
   )

@@ -112,6 +112,7 @@ interface Scope {
     observedJournal: WeeklyJournalRecoverySnapshot;
     previousOwner: WeeklyRunLease;
     gateComplete: boolean;
+    precommitRollback?: boolean;
   };
   finish?: (state: WeeklyRunState, snapshot: Buffer) => Promise<void>;
   active: boolean;
@@ -546,6 +547,15 @@ export async function verifySelectedLoadResumeBarrier(): Promise<void> {
 export function hasPendingSelectedLoadResume(): boolean {
   const scope = current();
   return !!scope?.resume && !scope.resume.gateComplete;
+}
+/** Only the authenticated selected-load resume may replay a rolled-back load. */
+export function selectedGmailLoadAllowsRollbackReplay(): boolean {
+  const scope = current();
+  return (
+    !!scope?.resume?.precommitRollback &&
+    scope.resume.gateComplete &&
+    scope.phase === "run"
+  );
 }
 export function selectedGmailLoadJournal(input: {
   path: string;
@@ -1313,7 +1323,7 @@ async function resumeSelectedLoadAttempt(
     assertRetainedSelectedLoadExecutor(runtime.destination);
     const evidence = readSelectedLoadInterruptionEvidence(input);
     if (
-      !["committed", "completed", "pending-intent"].includes(
+      !["committed", "completed", "pending-intent", "unchanged"].includes(
         evidence.report.status
       )
     )
@@ -1364,6 +1374,64 @@ async function resumeSelectedLoadAttempt(
       Date.now() < evidence.pendingSuccessors!.effectiveDeadlineEpochMs
     )
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
+    const precommitRollback =
+      evidence.observedCatalog.generation === 1 &&
+      canonicalJson(evidence.observedCatalog.ledger) ===
+        canonicalJson(original.checkpoint.ledger);
+    if (evidence.report.status === "unchanged" && !precommitRollback) fail();
+    if (precommitRollback) {
+      const journal = validateWeeklyJournalRecoverySnapshot(
+        evidence.observedJournal
+      );
+      const row = journal.runState.find(
+        (item) => item.id === proof.runState.runId
+      );
+      if (!row) fail();
+      const state = parseWeeklyRunState(JSON.parse(row.payload));
+      if (
+        state.stages
+          .slice(0, 3)
+          .some((stage) => stage.status !== "succeeded") ||
+        state.stages[3]?.stage !== "load" ||
+        state.stages[3].status !== "running" ||
+        journal.stageArtifacts.some(
+          (item) => item.runId === state.runId && item.stage === "load"
+        )
+      )
+        fail();
+      const originalEntries = new Map(
+        started.entries.map((entry) => [entry.path, entry])
+      );
+      const currentEntries = new Map(
+        evidence.observedEntries.map((entry) => [entry.path, entry])
+      );
+      if (
+        evidence.changedFiles.snapshot &&
+        canonicalJson(
+          decryptLedgerSnapshot(
+            evidence.changedFiles.snapshot,
+            input.recoveryKey
+          )
+        ) !== canonicalJson(original.checkpoint.ledger)
+      )
+        fail();
+      const report =
+        "checkout/data/ingestion/reports/" +
+        sha256(plan.result.report.runId) +
+        ".json";
+      if (originalEntries.has(report)) fail();
+      const observedReport = currentEntries.get(report);
+      const expectedReport = Buffer.from(
+        JSON.stringify(plan.result.report, null, 2) + "\n"
+      );
+      if (
+        observedReport &&
+        (observedReport.kind !== "file" ||
+          observedReport.size !== expectedReport.length ||
+          observedReport.sha256 !== sha256(expectedReport))
+      )
+        fail();
+    }
     const settlingEvidence =
       pending && !evidence.pendingSuccessors!.lastSettled
         ? evidence.pendingSuccessors!.unsettled
@@ -1425,7 +1493,7 @@ async function resumeSelectedLoadAttempt(
     const initialIntent = signed(
       {
         kind: "zivv-selected-load-resume-intent",
-        version: 2,
+        version: precommitRollback ? 3 : 2,
         snapshotEvidence,
         admissionSha256: evidence.admissionSha256,
         executionBaselineSha256: sha256(evidence.executionBaseline),
@@ -1532,6 +1600,11 @@ async function resumeSelectedLoadAttempt(
       files.set(snapshotPath, evidence.changedFiles.snapshot);
     if (evidence.changedFiles.report)
       files.set(reportPath, evidence.changedFiles.report);
+    else if (precommitRollback)
+      files.set(
+        reportPath,
+        Buffer.from(JSON.stringify(plan.result.report, null, 2) + "\n")
+      );
     if (settling) files.set(settling.target, settling.bytes);
     else if (successor && successorPath)
       files.set(successorPath, successor.bytes);
@@ -1633,6 +1706,7 @@ async function resumeSelectedLoadAttempt(
         observedJournal: savedJournal,
         previousOwner,
         gateComplete: false,
+        precommitRollback,
       },
       assertCurrent: () => {
         if (settling) {

@@ -1,5 +1,6 @@
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { decryptLedgerSnapshot } from "../../lib/ingestion/encrypted-backup.js";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { expect, it, vi } from "vitest";
@@ -16,7 +17,7 @@ import {
 } from "../../lib/ingestion/weekly-run-journal.js";
 
 vi.setConfig({ testTimeout: 900000 });
-it("rolls back the catalog and refuses unproved precommit replay after worker death", async () => {
+it("replays the authenticated load after a precommit worker death", async () => {
   const fixture = await createRecoveryGmailCaptureRuntimeFixture({
     loadableSource: true,
     seedAuthorityControls: true,
@@ -102,8 +103,15 @@ it("rolls back the catalog and refuses unproved precommit replay after worker de
     expect(lockStatus).toBe(17);
     const catalogPath = join(root, "operator/ledger.sqlite"),
       journalPath = join(root, "operator/weekly-runs.sqlite");
+    const snapshotPath = join(
+      root,
+      "checkout/data/ingestion/backups/ledger.snapshot.enc"
+    );
     const catalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
     expect(catalog).toEqual({ ledger: host.checkpoint.ledger, generation: 1 });
+    expect(
+      decryptLedgerSnapshot(readFileSync(snapshotPath), input.recoveryKey)
+    ).toEqual(catalog.ledger);
     const journal = readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
     const state = validateWeeklyJournalRecoverySnapshot(journal),
       row = state.runState.find((item) => item.id === installed.runId);
@@ -128,28 +136,30 @@ it("rolls back the catalog and refuses unproved precommit replay after worker de
     const beforeFiles = openPreparedRuntimeForAdmission(
       fixture.input
     ).inventoryGmailSelectedLoadExecution();
-    const resumeScript = `try{const m=await import(${JSON.stringify(module)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);await m.resumeRecoveredGmailSelectedLoad(f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)));}catch(e){console.error(e instanceof Error?e.message:"NATIVE_RESUME_ERROR");process.exitCode=1;}`;
-    const retry = spawnSync(
-      process.execPath,
-      [
-        "--import",
-        pathToFileURL(join(root, "bootstrap/module-boundary.mjs")).href,
-        "--input-type=module",
-        "--eval",
-        resumeScript,
-      ],
-      {
-        cwd: join(root, "checkout"),
-        env: { ...process.env, ZIVV_LEDGER_HOME: join(root, "operator") },
-        input: encodeRecoveryGmailSelectedLoadFrame(input),
-        encoding: "utf8",
-        windowsHide: true,
-        timeout: 180000,
-      }
-    );
-    expect(retry.status).toBe(1);
-    expect(retry.stderr).toContain(
-      "RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED"
+    const resumeScript = `try{const m=await import(${JSON.stringify(module)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const r=await m.resumeRecoveredGmailSelectedLoad(f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks)));console.log(JSON.stringify(r));}catch(e){console.error(e instanceof Error?e.message:"NATIVE_RESUME_ERROR");process.exitCode=1;}`;
+    const retry = () =>
+      spawnSync(
+        process.execPath,
+        [
+          "--import",
+          pathToFileURL(join(root, "bootstrap/module-boundary.mjs")).href,
+          "--input-type=module",
+          "--eval",
+          resumeScript,
+        ],
+        {
+          cwd: join(root, "checkout"),
+          env: { ...process.env, ZIVV_LEDGER_HOME: join(root, "operator") },
+          input: encodeRecoveryGmailSelectedLoadFrame(input),
+          encoding: "utf8",
+          windowsHide: true,
+          timeout: 180000,
+        }
+      );
+    const active = retry();
+    expect(active.status).toBe(1);
+    expect(active.stderr).toContain(
+      "RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE"
     );
     expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
@@ -160,6 +170,61 @@ it("rolls back the catalog and refuses unproved precommit replay after worker de
         fixture.input
       ).inventoryGmailSelectedLoadExecution()
     ).toEqual(beforeFiles);
+    const owner = state.ownership.find(
+      (item) => item.scope === "prodigic/zivv/production"
+    );
+    expect(owner).toBeDefined();
+    while (Date.now() <= owner!.expiresAtEpochMs)
+      await new Promise((resolve) =>
+        setTimeout(
+          resolve,
+          Math.min(1000, Math.max(1, owner!.expiresAtEpochMs - Date.now() + 1))
+        )
+      );
+    const completed = retry();
+    if (completed.status !== 0)
+      console.error(
+        "ROLLBACK_REPLAY_DIAGNOSTIC",
+        completed.stderr.slice(0, 1500)
+      );
+    expect(completed.status).toBe(0);
+    expect(JSON.parse(completed.stdout)).toMatchObject({
+      status: "selected-load-resumed",
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      runId: installed.runId,
+      generation: 2,
+    });
+    const afterCatalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
+    const afterJournal = readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+    expect(afterCatalog.generation).toBe(2);
+    expect(
+      decryptLedgerSnapshot(readFileSync(snapshotPath), input.recoveryKey)
+    ).toEqual(afterCatalog.ledger);
+    expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+      status: "completed",
+      runId: installed.runId,
+      loadAllowed: false,
+      activationAllowed: false,
+    });
+    const afterFiles = openPreparedRuntimeForAdmission(
+      fixture.input
+    ).inventoryGmailSelectedLoadExecution();
+    const replay = retry();
+    expect(replay.status).toBe(0);
+    expect(JSON.parse(replay.stdout)).toEqual(JSON.parse(completed.stdout));
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+      afterCatalog
+    );
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      afterJournal
+    );
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(afterFiles);
     preserve = false;
   } finally {
     if (preserve)
