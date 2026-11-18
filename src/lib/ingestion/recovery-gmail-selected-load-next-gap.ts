@@ -133,9 +133,15 @@ export function proveNextSelectedLoadCommittedRollback(input: {
     previousOwner.fence !== parent.fence ||
     typeof committed !== "number" ||
     committed < parent.startedAtEpochMs ||
-    committed > (previousOwner.expiresAtEpochMs || parent.deadlineEpochMs)
+    committed >= (previousOwner.expiresAtEpochMs || parent.deadlineEpochMs)
   )
     return fail();
+  assertSelectedGmailLoadCatalog(
+    family.effective.plan,
+    family.effective.catalog.ledger,
+    catalog.ledger,
+    parent.startedAtEpochMs
+  );
   const inventory = nextSelectedLoadGapInventory({
     entries: family.execution.entries,
     loadPath: family.loadPath,
@@ -221,6 +227,7 @@ export function readNextSelectedLoadInterruptionEvidence(
     );
 
     const rolledBack = catalog.generation === execution.generation;
+    const crossedCommit = !rolledBack && saved?.intent.generation === 2;
     if (rolledBack) {
       if (
         canonicalJson(catalog.ledger) !==
@@ -229,18 +236,18 @@ export function readNextSelectedLoadInterruptionEvidence(
         return fail();
     } else {
       if (catalog.generation !== execution.generation + 1) return fail();
-      assertSelectedGmailLoadCatalog(
-        plan,
-        effective.catalog.ledger,
-        catalog.ledger,
-        execution.startedAtEpochMs
-      );
+      if (!crossedCommit)
+        assertSelectedGmailLoadCatalog(
+          plan,
+          effective.catalog.ledger,
+          catalog.ledger,
+          execution.startedAtEpochMs
+        );
     }
     const status = rolledBack ? "unchanged" : "committed";
     const transitionIndex = successors.findIndex(
       (record) => record.intent.committedRollback
     );
-    const crossedCommit = !rolledBack && saved?.intent.generation === 2;
     if (transitionIndex >= 0 && !crossedCommit) return fail();
     const originalCatalog = crossedCommit ? effective.catalog : catalog;
     const originalStatus =

@@ -178,9 +178,15 @@ function verifyCompletedNextResume(input: {
       if (
         typeof commitTime !== "number" ||
         commitTime < latest.intent.startedAtEpochMs ||
-        commitTime > latest.intent.deadlineEpochMs
+        commitTime >= latest.intent.deadlineEpochMs
       )
         return fail();
+      assertSelectedGmailLoadCatalog(
+        plan,
+        effective.catalog.ledger,
+        catalog.ledger,
+        latest.intent.startedAtEpochMs
+      );
     }
   }
   const previousInventory = nextSelectedLoadGapInventory({

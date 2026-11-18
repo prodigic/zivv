@@ -483,6 +483,7 @@ it.each([
             kind: string;
             version: number;
             intent: {
+              startedAtEpochMs: number;
               deadlineEpochMs: number;
               generation: number;
               previousOwner: typeof previousOwner;
@@ -518,6 +519,12 @@ it.each([
                 )
             );
             expect(added).toHaveLength(1);
+            expect(added[0]!.committedAtEpochMs).toBeGreaterThanOrEqual(
+              intent.startedAtEpochMs
+            );
+            expect(added[0]!.committedAtEpochMs).toBeLessThan(
+              retryOwner.expiresAtEpochMs
+            );
             for (const old of catalogA.ledger.runs)
               expect(retryCatalog.ledger.runs).toContainEqual(old);
             for (const key of [
