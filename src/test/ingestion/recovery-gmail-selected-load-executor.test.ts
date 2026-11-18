@@ -3,6 +3,9 @@ import {
   resumeRecoveredGmailSelectedLoad,
 } from "../../lib/ingestion/recovery-gmail-selected-load-executor.js";
 import { proveSelectedLoadJournalDelta } from "../../lib/ingestion/recovery-gmail-selected-journal-delta.js";
+import { readSelectedLoadHistoryFiles } from "../../lib/ingestion/recovery-gmail-selected-load-history.js";
+import { inspectSelectedLoadInterruption } from "../../lib/ingestion/recovery-gmail-selected-load-interruption-inspection.js";
+import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-runtime.js";
 import { verifySelectedLoadResult } from "../../lib/ingestion/recovery-gmail-selected-result-proof.js";
 import { createHmac } from "node:crypto";
 import { readRecoveryGmailHostForLoadInstallation } from "../../lib/ingestion/recovery-gmail-capture-admission.js";
@@ -92,7 +95,7 @@ it("loads the exact ready source through the normal runner in a genuine retained
       )
     ).href;
     const script = `try {const m=await import(${JSON.stringify(entry)}),f=await import(${JSON.stringify(frame)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const input=f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks));console.log(JSON.stringify(await m.executeRecoveredGmailSelectedLoad(input)));input.recoveryKey.fill(0);}catch(e){console.error(JSON.stringify({code:e instanceof Error&&/^[A-Z0-9_]{1,80}$/.test(e.message)?e.message:'SELECTED_LOAD_NATIVE_ERROR',frames:(e.stack??'').split('\\n').slice(1,7).flatMap(line=>{const m=/([A-Za-z0-9-]+\\.js):(\\d+):(\\d+)/.exec(line);return m?[m[1]+':'+m[2]+':'+m[3]]:[]})}));process.exitCode=1;}`;
-    const run = (additionalNodeArguments: string[] = []) =>
+    const run = (additionalNodeArguments: string[] = [], resume = false) =>
       spawnSync(
         process.execPath,
         [
@@ -101,7 +104,12 @@ it("loads the exact ready source through the normal runner in a genuine retained
           ...additionalNodeArguments,
           "--input-type=module",
           "--eval",
-          script,
+          resume
+            ? script.replace(
+                "m.executeRecoveredGmailSelectedLoad(input)",
+                "m.resumeRecoveredGmailSelectedLoad(input)"
+              )
+            : script,
         ],
         {
           cwd: join(root, "checkout"),
@@ -232,11 +240,12 @@ it("loads the exact ready source through the normal runner in a genuine retained
     ) as Record<string, unknown>;
     expect(signature).toBe(
       createHmac("sha256", fixture.input.recoveryKey)
-        .update("zivv-selected-load-result/v1\0")
+        .update("zivv-selected-load-result/v3\0")
         .update(canonicalJson(signedResult))
         .digest("hex")
     );
     expect(signedResult).toMatchObject({
+      version: 3,
       runId: report.runId,
       generation: 2,
       ledgerRevision: report.ledgerRevision,
@@ -249,6 +258,26 @@ it("loads the exact ready source through the normal runner in a genuine retained
       )
     );
     expect(signedResult.runStateSha256).toBe(sha256(canonicalJson(state)));
+    expect(existsSync(join(directory, "resume-intent.json"))).toBe(false);
+    const observed = openPreparedRuntimeForAdmission(
+      fixture.input
+    ).inventoryGmailSelectedLoadExecution();
+    const history = readSelectedLoadHistoryFiles({
+      loadPath: "recovery-gmail-load/" + report.runId,
+      entries: observed,
+      key: fixture.input.recoveryKey,
+      read: (path) => readFileSync(join(root, path)),
+      identity: {
+        runId: report.runId,
+        admissionSha256: installed.admissionSha256,
+        executionBaselineSha256: sha256(
+          readFileSync(join(directory, "execution-baseline.json"))
+        ),
+        priorFamilySha256: sha256(canonicalJson([])),
+        ledgerRevision: report.ledgerRevision,
+        generation: 2,
+      },
+    });
     expect(
       verifySelectedLoadResult(resultBytes, fixture.input.recoveryKey, {
         admissionSha256: installed.admissionSha256,
@@ -265,6 +294,8 @@ it("loads the exact ready source through the normal runner in a genuine retained
         ),
         runStateSha256: sha256(canonicalJson(state)),
         reportSha256: signedResult.reportSha256 as string,
+        historyManifestSha256: history.manifestSha256,
+        guardedJournalSha256: sha256(history.parts.guardedJournal),
       })
     ).toMatchObject({
       status: "authenticated",
@@ -291,6 +322,29 @@ it("loads the exact ready source through the normal runner in a genuine retained
     expect(
       readSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
     ).toEqual(ledger);
+    expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+      status: "completed",
+      runId: report.runId,
+      loadAllowed: false,
+      activationAllowed: false,
+    });
+    const sealedReplay = run([], true);
+    if (sealedReplay.status !== 0)
+      console.error(
+        "SELECTED_SOURCE_LOAD replay diagnostic",
+        sealedReplay.stderr
+      );
+    expect(sealedReplay.status).toBe(0);
+    expect(JSON.parse(sealedReplay.stdout)).toMatchObject({
+      status: "selected-load-resumed",
+      resultSha256: report.resultSha256,
+      generation: 2,
+    });
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(observed);
     expect(existsSync(join(fixture.base, "original checkout"))).toBe(false);
     preserve = false;
     console.error("SELECTED_SOURCE_LOAD verified", Date.now());

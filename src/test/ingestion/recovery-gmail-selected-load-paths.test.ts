@@ -1,6 +1,9 @@
 import { expect, it } from "vitest";
 import { join, resolve } from "node:path";
-import { selectedLoadTemporaryTarget } from "../../lib/ingestion/recovery-gmail-selected-load-paths.js";
+import {
+  selectedLoadHistoryAliasTarget,
+  selectedLoadTemporaryTarget,
+} from "../../lib/ingestion/recovery-gmail-selected-load-paths.js";
 
 it("allows only actual installer, snapshot and report temporary families", () => {
   const root = resolve("fixture"),
@@ -59,6 +62,33 @@ it("allows only actual installer, snapshot and report temporary families", () =>
       context
     )
   ).toBe(join(directory, "resume-successor-10000.json"));
+  const history = "history-journal-063.bin";
+  expect(
+    selectedLoadTemporaryTarget(
+      join(directory, history + "-stage", history + two),
+      context
+    )
+  ).toBe(join(directory, history));
+  const loadRoot = "recovery-gmail-load/" + "a".repeat(64) + "/";
+  expect(
+    selectedLoadHistoryAliasTarget(
+      loadRoot + history + "-stage/" + history + one
+    )
+  ).toBe(loadRoot + history);
+  expect(
+    selectedLoadHistoryAliasTarget(loadRoot + "history-manifest.json")
+  ).toBe(loadRoot + "history-manifest.json");
+  expect(
+    selectedLoadHistoryAliasTarget(loadRoot + "history-journal-064.bin")
+  ).toBeUndefined();
+  expect(
+    selectedLoadHistoryAliasTarget(
+      loadRoot + history + "-stage/history-journal-062.bin" + one
+    )
+  ).toBeUndefined();
+  expect(
+    selectedLoadHistoryAliasTarget("foreign/" + loadRoot + history)
+  ).toBeUndefined();
   expect(selectedLoadTemporaryTarget(snapshot + one, context)).toBe(snapshot);
   expect(
     selectedLoadTemporaryTarget(

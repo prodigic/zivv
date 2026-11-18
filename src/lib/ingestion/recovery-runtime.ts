@@ -27,10 +27,24 @@ import { resolvePrivateCandidateDirectory } from "./private-artifacts.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { compiledEtlDigest } from "./source-build.js";
 import { sha256 } from "./steve-preflight.js";
+import {
+  selectedLoadHistoryAliasTarget,
+  selectedLoadHistoryLayout,
+  selectedLoadHistoryManifestFilename,
+} from "./recovery-gmail-selected-load-paths.js";
+import { resumeSnapshotChunkSize } from "./recovery-gmail-selected-resume-snapshot-evidence.js";
 
 const receiptName = "prepared-runtime.json";
 const kind = "zivv-prepared-recovery-runtime";
 const maxBytes = 512 * 1024 * 1024;
+const maxHistoryManifestBytes = 64 * 1024;
+const maxHistoryTreeBytes =
+  Object.values(selectedLoadHistoryLayout).reduce(
+    (sum, part) => sum + part.chunks,
+    1
+  ) *
+    resumeSnapshotChunkSize +
+  maxHistoryManifestBytes * 2;
 export type RecoveryRuntimeEntry =
   | { path: string; kind: "directory" }
   | { path: string; kind: "file"; size: number; sha256: string }
@@ -116,6 +130,7 @@ function inventory(
     modules = join(root, "checkout/node_modules");
   let total = 0,
     evidenceTotal = 0,
+    historyTotal = 0,
     visited = 0;
   const linked = new Map<
     string,
@@ -125,6 +140,10 @@ function inventory(
     process.platform === "win32" ? "backup-key.dpapi" : "backup-key.bin";
   function captureAliasTarget(path: string): string | undefined {
     if (path === "operator/" + workingKey) return path;
+    if (allowResumeSnapshotEvidence) {
+      const history = selectedLoadHistoryAliasTarget(path);
+      if (history) return history;
+    }
     const load =
       /^(recovery-gmail-load\/[a-f0-9]{64}\/)(baseline\.json|admission\.json|chunks\/[a-f0-9]{64}\.bin)$/.exec(
         path
@@ -216,16 +235,25 @@ function inventory(
         if (!omit?.(entry)) entries.push(entry);
         walk(physical, path + "/");
       } else {
+        const historical = allowResumeSnapshotEvidence
+          ? selectedLoadHistoryAliasTarget(path)
+          : undefined;
         if (
           !stat.isFile() ||
           (stat.nlink !== 1 &&
             !(gmailCapture && stat.nlink === 2 && captureAliasTarget(path))) ||
-          (allowResumeSnapshotEvidence &&
-          /^recovery-gmail-load\/[a-f0-9]{64}\/resume-snapshot-[0-9]{3}\.bin(?:-stage\/resume-snapshot-[0-9]{3}\.bin(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2})?$/.test(
-            path
-          )
-            ? (evidenceTotal += stat.size) > maxBytes + 4 * 1024 * 1024
-            : (total += stat.size) > maxBytes)
+          (historical
+            ? stat.size >
+                (historical.endsWith("/" + selectedLoadHistoryManifestFilename)
+                  ? maxHistoryManifestBytes
+                  : resumeSnapshotChunkSize) ||
+              (historyTotal += stat.size) > maxHistoryTreeBytes
+            : allowResumeSnapshotEvidence &&
+                /^recovery-gmail-load\/[a-f0-9]{64}\/resume-snapshot-[0-9]{3}\.bin(?:-stage\/resume-snapshot-[0-9]{3}\.bin(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2})?$/.test(
+                  path
+                )
+              ? (evidenceTotal += stat.size) > maxBytes + 4 * 1024 * 1024
+              : (total += stat.size) > maxBytes)
         )
           fail();
         if (omit?.({ path, kind: "file", size: stat.size, sha256: "" }))

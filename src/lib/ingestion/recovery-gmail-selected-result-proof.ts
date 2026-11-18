@@ -11,6 +11,8 @@ interface SelectedLoadResultExpectation {
   runStateSha256: string;
   reportSha256: string;
   successorSha256?: string;
+  historyManifestSha256?: string;
+  guardedJournalSha256?: string;
 }
 /** Authentication only. Callers must independently prove the original admission,
  * current physical files, SQL catalog and complete journal before relying on it. */
@@ -56,15 +58,22 @@ export function verifySelectedLoadResult(
     "runStateSha256",
     "reportSha256",
   ];
-  if (value.version === 2) fields.push("successorSha256");
+  const hasHistory = value.version === 3;
+  if (
+    value.version === 2 ||
+    (hasHistory && Object.hasOwn(value, "successorSha256"))
+  )
+    fields.push("successorSha256");
+  if (hasHistory) fields.push("historyManifestSha256");
   if (
     canonicalJson(Object.keys(value).sort()) !== canonicalJson(fields.sort()) ||
     value.kind !== "zivv-selected-load-result" ||
-    (value.version !== 1 && value.version !== 2) ||
+    (value.version !== 1 && value.version !== 2 && !hasHistory) ||
     typeof value.signature !== "string" ||
     !/^[a-f0-9]{64}$/.test(value.signature) ||
+    typeof value.generation !== "number" ||
     !Number.isSafeInteger(value.generation) ||
-    value.generation !== 2
+    (hasHistory ? value.generation < 2 : value.generation !== 2)
   )
     return fail();
   for (const field of fields.filter(
@@ -89,17 +98,13 @@ export function verifySelectedLoadResult(
   if (
     canonicalJson(Object.keys(expected).sort()) !==
     canonicalJson(
-      [
-        "admissionSha256",
-        "executionBaselineSha256",
-        "runId",
-        "ledgerRevision",
-        "generation",
-        "journalSha256",
-        "runStateSha256",
-        "reportSha256",
-        ...(value.version === 2 ? ["successorSha256"] : []),
-      ].sort()
+      fields
+        .filter(
+          (field) =>
+            !["kind", "version", "signature"].includes(field) &&
+            (hasHistory || field !== "guardedJournalSha256")
+        )
+        .sort()
     )
   )
     return fail();

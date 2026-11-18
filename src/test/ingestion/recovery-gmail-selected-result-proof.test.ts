@@ -88,4 +88,54 @@ it("authenticates exact completion evidence without granting replay authority", 
       expected
     )
   ).toThrow();
+
+  const historyManifestSha256 = "f".repeat(64);
+  for (const successor of [{}, { successorSha256 }]) {
+    const historicalBody = {
+      ...body,
+      ...successor,
+      generation: 3,
+      version: 3,
+      historyManifestSha256,
+    };
+    const historySignature = createHmac("sha256", key)
+      .update("zivv-selected-load-result/v3\0")
+      .update(canonicalJson(historicalBody))
+      .digest("hex");
+    const historyBytes = Buffer.from(
+      canonicalJson({ ...historicalBody, signature: historySignature }) + "\n"
+    );
+    const historyExpected = {
+      ...expected,
+      ...successor,
+      generation: 3,
+      guardedJournalSha256: digest,
+      historyManifestSha256,
+    };
+    expect(
+      verifySelectedLoadResult(historyBytes, key, historyExpected)
+    ).toMatchObject({
+      status: "authenticated",
+      loadAllowed: false,
+    });
+    expect(() =>
+      verifySelectedLoadResult(historyBytes, key, {
+        ...historyExpected,
+        historyManifestSha256: "e".repeat(64),
+      })
+    ).toThrow();
+    expect(() =>
+      verifySelectedLoadResult(historyBytes, key, {
+        ...historyExpected,
+        guardedJournalSha256: "e".repeat(64),
+      })
+    ).toThrow();
+    expect(() =>
+      verifySelectedLoadResult(historyBytes, key, {
+        ...expected,
+        ...successor,
+        generation: 3,
+      })
+    ).toThrow();
+  }
 });

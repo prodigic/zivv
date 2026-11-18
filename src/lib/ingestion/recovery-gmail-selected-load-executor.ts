@@ -1,5 +1,6 @@
 import { assertSelectedLoadSettlementTransition } from "./recovery-gmail-selected-settlement-transition.js";
 import { DatabaseSync } from "node:sqlite";
+import { prepareSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
 import { prepareSelectedLoadIntentSuccessor } from "./recovery-gmail-selected-successor-preparation.js";
 import {
   describeResumeSnapshot,
@@ -116,6 +117,7 @@ interface Scope {
     precommitRollback?: boolean;
   };
   finish?: (state: WeeklyRunState, snapshot: Buffer) => Promise<void>;
+  assertCompletionFiles?: () => void;
   active: boolean;
   deadline: number;
   startedAt: number;
@@ -124,6 +126,7 @@ interface Scope {
   directory: string;
   key: Buffer;
   phase: "evidence" | "key" | "run" | "result";
+  historyTargets?: Set<string>;
   source: Baseline["source"];
   run: Baseline["runState"];
   initialRun: Baseline["initialState"];
@@ -670,9 +673,16 @@ export function selectedGmailLoadFile(
         absolute.slice(scope.directory.length + 1)
       ) &&
       dirname(absolute) === scope.directory;
+    const isHistoryStage =
+      scope.phase === "result" &&
+      absolute.endsWith("-stage") &&
+      scope.historyTargets?.has(absolute.slice(0, -6));
     if (
       !scope.directories.has(absolute) ||
-      (!permitted.includes(absolute) && !isSnapshotStage && !isSuccessorStage)
+      (!permitted.includes(absolute) &&
+        !isSnapshotStage &&
+        !isSuccessorStage &&
+        !isHistoryStage)
     )
       fail();
     return true;
@@ -738,7 +748,8 @@ export function selectedGmailLoadFile(
     (target === resumeIntentFile &&
       (!scope.resume || scope.phase !== "evidence")) ||
     (target === executionFile && scope.phase !== "evidence") ||
-    (target === resultFile && scope.phase !== "result") ||
+    ((target === resultFile || scope.historyTargets?.has(target)) &&
+      scope.phase !== "result") ||
     (target === reportFile && scope.phase !== "run") ||
     (target === join(scope.operator, keyName) && scope.phase !== "key")
   )
@@ -858,6 +869,135 @@ export function observeSelectedGmailLoadFile(
     }
   }
   return true;
+}
+
+/** Seal the exact guarded completion state before writing its signed result. */
+async function installSelectedLoadCompletion(
+  scope: Scope,
+  state: WeeklyRunState,
+  guardedJournal: Buffer,
+  identity: {
+    admissionSha256: string;
+    executionBaselineSha256: string;
+    successorSha256?: string;
+  },
+  inventory: () => RecoveryRuntimeEntry[]
+) {
+  if (current() !== scope || scope.phase !== "run") fail();
+  await withCanonicalStoreTransaction(
+    join(scope.operator, "ledger.sqlite"),
+    { generation: scope.generation, ledger: scope.ledger },
+    async () => {}
+  );
+  allowedJournal(scope, guardedJournal);
+  if (
+    state.stages.find((item) => item.stage === "load")?.status !== "succeeded"
+  )
+    fail();
+  scope.assertCurrent();
+  const encryptedCatalog = readFileSync(
+    join(scope.root, "data/ingestion/backups/ledger.snapshot.enc")
+  );
+  same(decryptLedgerSnapshot(encryptedCatalog, scope.key), scope.ledger);
+  const released = validateWeeklyJournalRecoverySnapshot(guardedJournal);
+  const owner = released.ownership.find((row) => row.scope === production);
+  if (!owner || owner.owner !== scope.owner || owner.fence !== scope.fence)
+    fail();
+  owner.expiresAtEpochMs = 0;
+  const { digest: _digest, ...body } = released;
+  const releasedJournal = Buffer.from(
+    canonicalJson({ ...body, digest: sha256(canonicalJson(body)) }) + "\n"
+  );
+  const observed = inventory();
+  const historyPrefix = "recovery-gmail-load/" + state.runId + "/history-";
+  if (
+    observed.some((entry) => entry.path.startsWith(historyPrefix)) ||
+    scope.previousFiles.size ||
+    [...scope.transients.keys()].some((path) => existsSync(path))
+  )
+    fail();
+  const ledgerRevision = ledgerDigest(scope.ledger);
+  const history = prepareSelectedLoadHistoryFiles(
+    {
+      runId: state.runId,
+      admissionSha256: identity.admissionSha256,
+      executionBaselineSha256: identity.executionBaselineSha256,
+      priorFamilySha256: sha256(canonicalJson([])),
+      ledgerRevision,
+      generation: scope.generation,
+    },
+    {
+      encryptedCatalog,
+      guardedJournal,
+      inventory: Buffer.from(canonicalJson(observed) + "\n"),
+    },
+    scope.key
+  );
+  const assertInstalled = (path: string, bytes: Buffer) => {
+    const stage = path + "-stage";
+    const stat = lstatSync(stage);
+    if (!stat.isDirectory() || stat.isSymbolicLink()) fail();
+    const installed = inspectRecoveryInstalledFile(path, stage);
+    if (
+      installed.candidate ||
+      !installed.target ||
+      installed.target.nlink !== 1 ||
+      !installed.target.bytes.equals(bytes)
+    )
+      fail();
+  };
+  const assertHistoryFiles = () => {
+    for (const { name, bytes } of history.files)
+      assertInstalled(join(scope.directory, name), bytes);
+  };
+  scope.phase = "result";
+  try {
+    for (const { name, bytes } of history.files) {
+      const path = join(scope.directory, name),
+        stage = path + "-stage";
+      if (scope.files.has(path) || scope.directories.has(stage)) fail();
+      scope.files.set(path, bytes);
+      scope.directories.add(stage);
+      scope.historyTargets ??= new Set();
+      scope.historyTargets.add(path);
+      installRecoveryIntent(path, bytes, stage);
+    }
+    assertHistoryFiles();
+    const result = signed(
+      {
+        kind: "zivv-selected-load-result",
+        version: 3,
+        ...identity,
+        runId: state.runId,
+        ledgerRevision,
+        generation: scope.generation,
+        journalSha256: sha256(releasedJournal),
+        guardedJournalSha256: sha256(guardedJournal),
+        runStateSha256: sha256(canonicalJson(state)),
+        reportSha256: scope.plan.receipt.reportSha256,
+        historyManifestSha256: history.manifestSha256,
+      },
+      scope.key,
+      "zivv-selected-load-result/v3"
+    );
+    const resultPath = join(scope.directory, "load-result.json");
+    scope.files.set(resultPath, result);
+    installRecoveryIntent(resultPath, result, resultPath + "-stage");
+    scope.assertCompletionFiles = () => {
+      assertHistoryFiles();
+      assertInstalled(resultPath, result);
+    };
+    scope.assertCurrent();
+    scope.assertCompletionFiles();
+    if (
+      scope.previousFiles.size ||
+      [...scope.transients.keys()].some((path) => existsSync(path))
+    )
+      fail();
+    return { result, releasedJournal };
+  } finally {
+    scope.phase = "run";
+  }
 }
 
 function signed(value: unknown, key: Buffer, domain: string) {
@@ -1192,66 +1332,18 @@ async function executeSelectedLoadFirst(
       scope!.phase = "run";
       let result: Buffer | undefined, expectedReleased: Buffer | undefined;
       scope!.finish = async (state, snapshot) => {
-        await withCanonicalStoreTransaction(
-          location.path,
-          { generation: scope!.generation, ledger: scope!.ledger },
-          async () => {}
-        );
-        allowedJournal(scope!, snapshot);
-        const load = state.stages.find((item) => item.stage === "load");
-        if (load?.status !== "succeeded") fail();
-        scope!.assertCurrent();
-        same(
-          decryptLedgerSnapshot(
-            readFileSync(
-              join(root, "data/ingestion/backups/ledger.snapshot.enc")
-            ),
-            input.recoveryKey
-          ),
-          scope!.ledger
-        );
-        const released = validateWeeklyJournalRecoverySnapshot(snapshot);
-        released.ownership.find(
-          (row) => row.scope === production
-        )!.expiresAtEpochMs = 0;
-        const { digest: _digest, ...body } = released;
-        expectedReleased = Buffer.from(
-          canonicalJson({ ...body, digest: sha256(canonicalJson(body)) }) + "\n"
-        );
-        result = signed(
+        const sealed = await installSelectedLoadCompletion(
+          scope!,
+          state,
+          snapshot,
           {
-            kind: "zivv-selected-load-result",
-            version: 1,
             admissionSha256: installed.admissionSha256,
             executionBaselineSha256: sha256(execution),
-            runId: state.runId,
-            ledgerRevision: ledgerDigest(scope!.ledger),
-            generation: scope!.generation,
-            journalSha256: sha256(expectedReleased!),
-            guardedJournalSha256: sha256(snapshot),
-            runStateSha256: sha256(canonicalJson(state)),
-            reportSha256: scope!.plan.receipt.reportSha256,
           },
-          input.recoveryKey,
-          "zivv-selected-load-result/v1"
+          opened.inventoryGmailSelectedLoadExecution
         );
-        scope!.phase = "result";
-        try {
-          scope!.files.set(join(directory, "load-result.json"), result);
-          installRecoveryIntent(
-            join(directory, "load-result.json"),
-            result,
-            join(directory, "load-result.json-stage")
-          );
-          scope!.assertCurrent();
-          if (
-            scope!.previousFiles.size ||
-            [...scope!.transients.keys()].some((path) => existsSync(path))
-          )
-            fail();
-        } finally {
-          scope!.phase = "run";
-        }
+        result = sealed.result;
+        expectedReleased = sealed.releasedJournal;
       };
       const state = await runWeeklyImport({
         root,
@@ -1271,6 +1363,8 @@ async function executeSelectedLoadFirst(
         expectedReleased.toString("base64")
       );
       scope!.assertCurrent();
+      if (!scope!.assertCompletionFiles) fail();
+      scope!.assertCompletionFiles();
       return {
         status: "selected-load-complete" as const,
         activationAllowed: false as const,
@@ -2004,69 +2098,21 @@ async function resumeSelectedLoadAttempt(
       scope!.phase = "run";
       let result: Buffer | undefined, expectedReleased: Buffer | undefined;
       scope!.finish = async (state, snapshot) => {
-        await withCanonicalStoreTransaction(
-          location.path,
-          { generation: scope!.generation, ledger: scope!.ledger },
-          async () => {}
-        );
-        allowedJournal(scope!, snapshot);
-        if (
-          state.stages.find((item) => item.stage === "load")?.status !==
-          "succeeded"
-        )
-          fail();
-        scope!.assertCurrent();
-        same(
-          decryptLedgerSnapshot(readFileSync(snapshotPath), input.recoveryKey),
-          scope!.ledger
-        );
-        const released = validateWeeklyJournalRecoverySnapshot(snapshot);
-        released.ownership.find(
-          (item) => item.scope === production
-        )!.expiresAtEpochMs = 0;
-        const { digest: _digest, ...body } = released;
-        expectedReleased = Buffer.from(
-          canonicalJson({ ...body, digest: sha256(canonicalJson(body)) }) + "\n"
-        );
-        result = signed(
+        const sealed = await installSelectedLoadCompletion(
+          scope!,
+          state,
+          snapshot,
           {
-            kind: "zivv-selected-load-result",
-            version: successor ? 2 : 1,
+            admissionSha256: evidence.admissionSha256,
+            executionBaselineSha256: sha256(evidence.executionBaseline),
             ...(successor
               ? { successorSha256: successor.successorSha256 }
               : {}),
-            admissionSha256: evidence.admissionSha256,
-            executionBaselineSha256: sha256(evidence.executionBaseline),
-            runId: state.runId,
-            ledgerRevision: ledgerDigest(scope!.ledger),
-            generation: scope!.generation,
-            journalSha256: sha256(expectedReleased),
-            guardedJournalSha256: sha256(snapshot),
-            runStateSha256: sha256(canonicalJson(state)),
-            reportSha256: plan.receipt.reportSha256,
           },
-          input.recoveryKey,
-          successor
-            ? "zivv-selected-load-result/v2"
-            : "zivv-selected-load-result/v1"
+          opened.inventoryGmailSelectedLoadExecution
         );
-        scope!.phase = "result";
-        try {
-          scope!.files.set(join(directory, "load-result.json"), result);
-          installRecoveryIntent(
-            join(directory, "load-result.json"),
-            result,
-            join(directory, "load-result.json-stage")
-          );
-          scope!.assertCurrent();
-          if (
-            scope!.previousFiles.size ||
-            [...scope!.transients.keys()].some((path) => existsSync(path))
-          )
-            fail();
-        } finally {
-          scope!.phase = "run";
-        }
+        result = sealed.result;
+        expectedReleased = sealed.releasedJournal;
       };
       const state = await runWeeklyImport({
         root,
@@ -2092,6 +2138,8 @@ async function resumeSelectedLoadAttempt(
         expectedReleased.toString("base64")
       );
       scope!.assertCurrent();
+      if (!scope!.assertCompletionFiles) fail();
+      scope!.assertCompletionFiles();
       return {
         status: "selected-load-resumed" as const,
         activationAllowed: false as const,

@@ -1,3 +1,4 @@
+import { readSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
 import { reconstructSelectedLoadIntentBaseline } from "./recovery-gmail-selected-intent-baseline.js";
 import { observeSelectedLoadIntentSuccessors } from "./recovery-gmail-selected-intent-successors.js";
 import { observeSelectedLoadPendingIntent } from "./recovery-gmail-selected-pending-intent.js";
@@ -352,66 +353,209 @@ export function readSelectedLoadInterruptionEvidence(
       );
     };
     if (hasResult) {
-      const intent = verifySelectedLoadResumeIntent(
-        read(intentPath, 65536),
-        input.recoveryKey
+      const resultStage = resultPath + "-stage";
+      const historyPrefix = load + "/history-";
+      const withHistory = entries.some((entry) =>
+        entry.path.startsWith(historyPrefix)
       );
+      const completedEntries = entries.filter(
+        (entry) => !entry.path.startsWith(historyPrefix)
+      );
+      const history = withHistory
+        ? readSelectedLoadHistoryFiles({
+            loadPath: load,
+            entries,
+            read,
+            identity: {
+              runId,
+              admissionSha256: common.admissionSha256,
+              executionBaselineSha256: sha256(executionBaseline),
+              priorFamilySha256: sha256(canonicalJson([])),
+              ledgerRevision: ledgerDigest(catalog.ledger),
+              generation: catalog.generation,
+            },
+            key: input.recoveryKey,
+          })
+        : undefined;
+      let historyOwner:
+        | ReturnType<
+            typeof validateWeeklyJournalRecoverySnapshot
+          >["ownership"][number]
+        | undefined;
+      let historyInventory: RecoveryRuntimeEntry[] | undefined;
+      let historyReleasedJournal: Buffer | undefined;
+      if (history) {
+        if (
+          !changedFiles.snapshot?.equals(history.parts.encryptedCatalog) ||
+          entriesByPath.get(resultStage)?.kind !== "directory"
+        )
+          return fail();
+        const projected = completedEntries.filter(
+          (entry) => entry.path !== resultPath
+        );
+        const withoutStage = projected.filter(
+          (entry) => entry.path !== resultStage
+        );
+        if (
+          history.parts.inventory.equals(
+            Buffer.from(canonicalJson(projected) + "\n")
+          )
+        )
+          historyInventory = projected;
+        else if (
+          history.parts.inventory.equals(
+            Buffer.from(canonicalJson(withoutStage) + "\n")
+          )
+        )
+          historyInventory = withoutStage;
+        else return fail();
+        const retained = validateWeeklyJournalRecoverySnapshot(
+          history.parts.guardedJournal
+        );
+        historyOwner = retained.ownership.find(
+          (row) => row.scope === "prodigic/zivv/production"
+        );
+        if (!historyOwner || historyOwner.expiresAtEpochMs <= 0) return fail();
+        const currentOwner = validateWeeklyJournalRecoverySnapshot(
+          journal
+        ).ownership.find((row) => row.scope === historyOwner!.scope);
+        if (
+          currentOwner &&
+          observeSelectedLoadLease(currentOwner.expiresAtEpochMs).status ===
+            "active"
+        )
+          throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
+        const { digest: _digest, ...body } = retained;
+        const released = {
+          ...body,
+          ownership: body.ownership.map((row) =>
+            row.scope === historyOwner!.scope
+              ? { ...row, expiresAtEpochMs: 0 }
+              : row
+          ),
+        };
+        const releasedBytes = Buffer.from(
+          canonicalJson({
+            ...released,
+            digest: sha256(canonicalJson(released)),
+          }) + "\n"
+        );
+        if (
+          !releasedBytes.equals(journal) &&
+          (!history.parts.guardedJournal.equals(journal) ||
+            observeSelectedLoadLease(historyOwner.expiresAtEpochMs).status !==
+              "expired")
+        )
+          return fail();
+        historyReleasedJournal = releasedBytes;
+      }
+      const hasResume = entries.some(
+        (entry) =>
+          entry.path === intentPath ||
+          entry.path === intentStage ||
+          entry.path.startsWith(intentStage + "/") ||
+          entry.path.startsWith(load + "/resume-")
+      );
+      let successorSha256: string | undefined;
+      let guardedJournalSha256: string | null;
+      let releasedJournal: Buffer;
       if (
-        intent.admissionSha256 !== common.admissionSha256 ||
-        intent.executionBaselineSha256 !== sha256(executionBaseline)
-      )
-        return fail();
-      if (intent.version === 3) {
-        assertCommittedRollback(intent);
-      } else if (
-        intent.ledgerRevision !== ledgerDigest(catalog.ledger) ||
-        intent.generation !== catalog.generation
-      )
-        return fail();
-      const completedSuccessors = observeSelectedLoadIntentSuccessors({
-        destination: root,
-        loadPath: load,
-        entries,
-        initial: read(intentPath, 65536),
-        key: input.recoveryKey,
-        initialSettled: true,
-      });
-      if (
-        !completedSuccessors.lastSettled ||
-        (completedSuccessors.successorCount &&
-          !completedSuccessors.latestV2Successor)
-      )
-        return fail();
-      const effective = completedSuccessors.latestV2Successor ?? intent;
-      const completedJournal = observeSelectedLoadCompletedJournal(
-        journal,
-        effective
-      );
-      const preEffectiveJournal = reconstructSelectedLoadResumeJournal({
-        completedJournal: completedJournal.releasedJournal,
-        intent: effective,
-        runId,
-      });
-      priorJournal = reconstructSelectedLoadIntentBaseline({
-        observedJournal: preEffectiveJournal,
-        initial: intent,
-        latest: completedSuccessors.latestV2Successor,
-      }).baselineJournal;
-      const execution = verifySelectedLoadExecutionBaseline(
-        executionBaseline,
-        input.recoveryKey
-      );
-      priorSnapshot = restoreIntentSnapshot(intent);
-      priorEntries = reconstructSelectedLoadResumeInventory({
-        observedEntries: entries.filter(
-          (entry) => !completedSuccessors.successorPaths.includes(entry.path)
-        ),
-        originalEntries: execution.entries,
-        preResumeSnapshot: priorSnapshot,
-        intent,
-        runId,
-        reportPath: report,
-      });
+        !hasResume &&
+        history &&
+        historyInventory &&
+        historyOwner &&
+        historyReleasedJournal
+      ) {
+        const execution = verifySelectedLoadExecutionBaseline(
+          executionBaseline,
+          input.recoveryKey
+        );
+        if (
+          historyOwner.expiresAtEpochMs < execution.startedAtEpochMs ||
+          historyOwner.expiresAtEpochMs > execution.startedAtEpochMs + 180000
+        )
+          return fail();
+        priorEntries = historyInventory;
+        priorJournal = history.parts.guardedJournal;
+        priorSnapshot = history.parts.encryptedCatalog;
+        guardedJournalSha256 = sha256(priorJournal);
+        releasedJournal = historyReleasedJournal;
+      } else {
+        const intent = verifySelectedLoadResumeIntent(
+          read(intentPath, 65536),
+          input.recoveryKey
+        );
+        if (
+          intent.admissionSha256 !== common.admissionSha256 ||
+          intent.executionBaselineSha256 !== sha256(executionBaseline)
+        )
+          return fail();
+        if (intent.version === 3) {
+          assertCommittedRollback(intent);
+        } else if (
+          intent.ledgerRevision !== ledgerDigest(catalog.ledger) ||
+          intent.generation !== catalog.generation
+        )
+          return fail();
+        const completedSuccessors = observeSelectedLoadIntentSuccessors({
+          destination: root,
+          loadPath: load,
+          entries: completedEntries,
+          initial: read(intentPath, 65536),
+          key: input.recoveryKey,
+          initialSettled: true,
+        });
+        if (
+          !completedSuccessors.lastSettled ||
+          (completedSuccessors.successorCount &&
+            !completedSuccessors.latestV2Successor)
+        )
+          return fail();
+        const effective = completedSuccessors.latestV2Successor ?? intent;
+        const completedJournal = observeSelectedLoadCompletedJournal(
+          journal,
+          effective
+        );
+        if (
+          historyOwner &&
+          (historyOwner.owner !== effective.owner ||
+            historyOwner.fence !== effective.fence ||
+            historyOwner.expiresAtEpochMs < effective.startedAtEpochMs ||
+            historyOwner.expiresAtEpochMs > effective.deadlineEpochMs)
+        )
+          return fail();
+        guardedJournalSha256 = history
+          ? sha256(history.parts.guardedJournal)
+          : completedJournal.guardedJournalSha256;
+        releasedJournal = completedJournal.releasedJournal;
+        successorSha256 =
+          completedSuccessors.latestV2Successor?.successorSha256;
+        const preEffectiveJournal = reconstructSelectedLoadResumeJournal({
+          completedJournal: completedJournal.releasedJournal,
+          intent: effective,
+          runId,
+        });
+        priorJournal = reconstructSelectedLoadIntentBaseline({
+          observedJournal: preEffectiveJournal,
+          initial: intent,
+          latest: completedSuccessors.latestV2Successor,
+        }).baselineJournal;
+        const execution = verifySelectedLoadExecutionBaseline(
+          executionBaseline,
+          input.recoveryKey
+        );
+        priorSnapshot = restoreIntentSnapshot(intent);
+        priorEntries = reconstructSelectedLoadResumeInventory({
+          observedEntries: completedEntries.filter(
+            (entry) => !completedSuccessors.successorPaths.includes(entry.path)
+          ),
+          originalEntries: execution.entries,
+          preResumeSnapshot: priorSnapshot,
+          intent,
+          runId,
+          reportPath: report,
+        });
+      }
       const finalJournal = validateWeeklyJournalRecoverySnapshot(journal);
       const selected = finalJournal.runState.find((row) => row.id === runId);
       if (!selected) return fail();
@@ -465,21 +609,21 @@ export function readSelectedLoadInterruptionEvidence(
           runId,
           ledgerRevision: ledgerDigest(catalog.ledger),
           generation: catalog.generation,
-          journalSha256: sha256(completedJournal.releasedJournal),
+          journalSha256: sha256(releasedJournal),
           runStateSha256: sha256(canonicalJson(state)),
           reportSha256: plan.receipt.reportSha256,
-          ...(completedSuccessors.latestV2Successor
+          ...(successorSha256 ? { successorSha256 } : {}),
+          ...(history && guardedJournalSha256
             ? {
-                successorSha256:
-                  completedSuccessors.latestV2Successor.successorSha256,
+                historyManifestSha256: history.manifestSha256,
+                guardedJournalSha256,
               }
             : {}),
         }
       );
       if (
-        completedJournal.guardedJournalSha256 &&
-        completedJournal.guardedJournalSha256 !==
-          resultProof.guardedJournalSha256
+        guardedJournalSha256 &&
+        guardedJournalSha256 !== resultProof.guardedJournalSha256
       )
         return fail();
       completedResultSha256 = resultProof.resultSha256;
