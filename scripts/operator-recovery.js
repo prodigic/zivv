@@ -49,6 +49,47 @@ function privateInput(path, limit) {
   return readFileSync(absolute);
 }
 
+const selectedLoadCommands = [
+  "inspect-selected-load",
+  "install-selected-load",
+  "inspect-selected-load-interruption",
+];
+
+async function runSelectedLoadCommand(command, input, selectorFile) {
+  const { copyRecoveryGmailSelectedReceiptSelector } =
+    await import("../dist/lib/ingestion/recovery-gmail-capture-admission-proof.js");
+  const { canonicalJson } =
+    await import("../dist/lib/ingestion/sqlite-store.js");
+  const bytes = privateInput(selectorFile, 16 * 1024);
+  let selector;
+  try {
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    selector = copyRecoveryGmailSelectedReceiptSelector(JSON.parse(text));
+    const canonical = canonicalJson(selector);
+    if (
+      !bytes.equals(Buffer.from(canonical)) &&
+      !bytes.equals(Buffer.from(canonical + "\n"))
+    )
+      throw Error("INVALID_RECOVERY_GMAIL_SELECTED_LOAD_SELECTOR");
+  } catch {
+    throw Error("INVALID_RECOVERY_GMAIL_SELECTED_LOAD_SELECTOR");
+  }
+  const selected = { ...input, selector };
+  if (command === "install-selected-load") {
+    const { resumeOperatorRecoveryGmailSelectedLoadEvidence } =
+      await import("../dist/lib/ingestion/recovery-gmail-selected-load-launcher.js");
+    return resumeOperatorRecoveryGmailSelectedLoadEvidence(selected);
+  }
+  if (command === "inspect-selected-load-interruption") {
+    const { inspectSelectedLoadInterruption } =
+      await import("../dist/lib/ingestion/recovery-gmail-selected-load-interruption-inspection.js");
+    return inspectSelectedLoadInterruption(selected);
+  }
+  const { inspectInstalledRecoveryGmailSelectedLoadEvidence } =
+    await import("../dist/lib/ingestion/recovery-gmail-selected-load-installation.js");
+  return inspectInstalledRecoveryGmailSelectedLoadEvidence(selected);
+}
+
 try {
   const [command, ...args] = process.argv.slice(2),
     options = {};
@@ -71,6 +112,7 @@ try {
         "source-commit",
         "batch-id",
         "corrections-file",
+        "selector-file",
       ].includes(key) ||
       Object.hasOwn(options, key) ||
       !value ||
@@ -80,6 +122,7 @@ try {
     options[key] = value;
   }
   const chainCommand = ["prepare-chain", "resume-chain"].includes(command);
+  const selectedLoadCommand = selectedLoadCommands.includes(command);
   const expected = chainCommand
     ? [
         "file",
@@ -138,7 +181,16 @@ try {
                 ? ["file", "key", "receipt", "destination", "npm-cli"]
                 : command === "stage" || command === "inspect"
                   ? ["file", "key", "destination"]
-                  : [];
+                  : selectedLoadCommand
+                    ? [
+                        "file",
+                        "key",
+                        "receipt",
+                        "destination",
+                        "npm-cli",
+                        "selector-file",
+                      ]
+                    : [];
   if (
     !expected.length ||
     JSON.stringify(Object.keys(options).sort()) !==
@@ -184,7 +236,23 @@ try {
       options.file,
       (chainCommand ? 768 : 384) * 1024 * 1024
     );
-    if (chainCommand) {
+    if (selectedLoadCommand) {
+      try {
+        inspection = await runSelectedLoadCommand(
+          command,
+          {
+            archive,
+            recoveryKey: key,
+            retirementReceipt: privateInput(options.receipt, 16 * 1024),
+            destination: resolve(options.destination),
+            npmCli: resolve(options["npm-cli"]),
+          },
+          options["selector-file"]
+        );
+      } finally {
+        key.fill(0);
+      }
+    } else if (chainCommand) {
       const {
         prepareOperatorRecoveryResultChain,
         resumeOperatorRecoveryResultChainCandidate,
