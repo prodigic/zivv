@@ -1,5 +1,8 @@
 import { prepareNextSelectedLoadResumeSuccessor } from "./recovery-gmail-selected-load-next-successors.js";
-import { replayRecoveredGmailNextSelectedLoad } from "./recovery-gmail-selected-load-next-replay.js";
+import {
+  readNextSelectedLoadCompletionEvidence,
+  replayRecoveredGmailNextSelectedLoad,
+} from "./recovery-gmail-selected-load-next-replay.js";
 import { readNextSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-next-gap.js";
 import {
   nextSelectedLoadResumeIntentFilename,
@@ -1789,14 +1792,41 @@ async function resumeNextSelectedLoad(
       admission,
       input.recoveryKey
     );
-    const completed = join(
+    const loadDirectory = join(
       resolve(runtime.destination),
       "recovery-gmail-load",
-      runId,
-      "load-result.json"
+      runId
     );
-    if (existsSync(completed))
-      return replayRecoveredGmailNextSelectedLoad(input, next, admission);
+    const completionPath = join(
+      loadDirectory,
+      selectedLoadCompletionIntentFilename
+    );
+    if (
+      existsSync(completionPath) ||
+      existsSync(completionPath + "-stage") ||
+      existsSync(join(loadDirectory, "load-result.json"))
+    ) {
+      const evidence = readNextSelectedLoadCompletionEvidence(
+        input,
+        next,
+        admission
+      );
+      if (evidence.report.lease.status === "active")
+        throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
+      if (evidence.completionPending) {
+        const { proof, plan, catalog } = evidence.effective;
+        await settleSelectedLoadCompletion(
+          runtime,
+          evidence,
+          proof,
+          plan,
+          catalog.ledger
+        );
+        return replayRecoveredGmailNextSelectedLoad(input, next, admission);
+      }
+      const { lease: _lease, ...result } = evidence.report;
+      return { ...result, status: "selected-load-complete" as const };
+    }
     const evidence = readNextSelectedLoadInterruptionEvidence(
       input,
       next,
@@ -2096,17 +2126,19 @@ export function resumeRecoveredGmailNextSelectedLoadForTest(
   return resumeNextSelectedLoad(prior, next, admission, point);
 }
 
-/** Fixed second-load test pauses at the protected catalog commit. */
+/** Fixed second-load test pauses at guarded catalog and history boundaries. */
 export function executeRecoveredGmailNextSelectedLoadForTest(
   prior: RecoveryGmailSelectedLoadInstallationInput,
   selector: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer,
-  point: "catalog-before-commit" | "catalog-committed"
+  point: "catalog-before-commit" | "catalog-committed" | "history-first-chunk"
 ) {
   if (
     !Buffer.isBuffer(admission) ||
     admission.length > 65536 ||
-    (point !== "catalog-before-commit" && point !== "catalog-committed")
+    (point !== "catalog-before-commit" &&
+      point !== "catalog-committed" &&
+      point !== "history-first-chunk")
   )
     return fail();
   return executeSelectedLoad(prior, point, {
@@ -2331,9 +2363,17 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
 
 async function settleSelectedLoadCompletion(
   runtime: Omit<RecoveryGmailSelectedLoadInstallationInput, "selector">,
-  evidence: SelectedLoadInterruptionEvidence,
+  evidence: Pick<
+    SelectedLoadInterruptionEvidence,
+    | "completionPending"
+    | "observedCatalog"
+    | "observedJournal"
+    | "physicalEntries"
+    | "raw"
+  > & { report: Pick<SelectedLoadInterruptionEvidence["report"], "lease"> },
   proof: Baseline,
-  plan: SelectedGmailLoadEffectPlan
+  plan: SelectedGmailLoadEffectPlan,
+  original: IngestionLedger
 ) {
   const completion = evidence.completionPending;
   if (!completion || evidence.report.lease.status === "active") fail();
@@ -2404,7 +2444,7 @@ async function settleSelectedLoadCompletion(
     initialRun: proof.initialState,
     raw: evidence.raw,
     plan,
-    original: evidence.originalBaseline.checkpoint.ledger,
+    original,
     ledger: evidence.observedCatalog.ledger,
     generation: evidence.observedCatalog.generation,
     owner: owner.owner,
@@ -2625,7 +2665,13 @@ async function resumeSelectedLoadAttempt(
       evidence.raw
     );
     if (evidence.report.status === "completion-pending") {
-      await settleSelectedLoadCompletion(runtime, evidence, proof, plan);
+      await settleSelectedLoadCompletion(
+        runtime,
+        evidence,
+        proof,
+        plan,
+        original.checkpoint.ledger
+      );
       return { settled: true as const };
     }
     if (evidence.report.status === "completed") {

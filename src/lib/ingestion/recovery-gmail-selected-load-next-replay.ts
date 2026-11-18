@@ -14,7 +14,12 @@ import { decryptLedgerSnapshot } from "./encrypted-backup.js";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
 import { proveSelectedLoadRunDelta } from "./recovery-gmail-selected-journal-delta.js";
 import { reconstructSelectedLoadCompletionJournals } from "./recovery-gmail-selected-load-completion-intent.js";
-import { observeSelectedLoadCompletionIntentFile } from "./recovery-gmail-selected-load-completion-prefix.js";
+import {
+  observeSelectedLoadCompletionIntentFile,
+  observeSelectedLoadCompletionPrefix,
+} from "./recovery-gmail-selected-load-completion-prefix.js";
+import { regenerateSelectedLoadCompletionPlan } from "./recovery-gmail-selected-load-completion-plan.js";
+import { observeSelectedLoadLease } from "./recovery-gmail-selected-lease-observation.js";
 import { assertSelectedGmailLoadCatalog } from "./recovery-gmail-selected-load-effects.js";
 import {
   decodeRecoveryGmailSelectedLoadFrame,
@@ -22,9 +27,7 @@ import {
   type RecoveryGmailSelectedLoadFrameInput,
 } from "./recovery-gmail-selected-load-framing.js";
 import { selectedLoadBackupPath } from "./recovery-gmail-selected-load-historical-predecessor.js";
-import { readSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
 import { readNextSelectedLoadFamily } from "./recovery-gmail-selected-load-next-family.js";
-import { selectedLoadCompletionIntentFilename } from "./recovery-gmail-selected-load-paths.js";
 import { verifySelectedLoadResult } from "./recovery-gmail-selected-result-proof.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import {
@@ -46,33 +49,15 @@ function fail(): never {
 function assertRecordedCompletionInventory(input: {
   loadPath: string;
   prior: RecoveryRuntimeEntry[];
-  actual: RecoveryRuntimeEntry[];
-  history: Buffer;
+  inventory: RecoveryRuntimeEntry[];
   execution: Buffer;
   snapshot: Buffer;
   reportPath: string;
   report: Buffer;
 }) {
-  const { loadPath, prior, actual } = input;
-  const result = loadPath + "/load-result.json";
-  const stage = result + "-stage";
-  const intent = loadPath + "/" + selectedLoadCompletionIntentFilename;
-  if (
-    !actual.some((entry) => entry.path === stage && entry.kind === "directory")
-  )
-    return fail();
-  const projected = actual.filter(
-    (entry) =>
-      entry.path !== result &&
-      entry.path !== stage &&
-      !entry.path.startsWith(loadPath + "/history-") &&
-      !entry.path.startsWith(intent)
-  );
-  // Intent/history names were independently verified against their exact files.
-  // No extra files (including children of the result stage) are projected out.
-  if (!input.history.equals(Buffer.from(canonicalJson(projected) + "\n")))
-    return fail();
+  const { loadPath, prior } = input;
   const expected = new Map(prior.map((entry) => [entry.path, entry]));
+  if (expected.size !== prior.length) return fail();
   const execution = loadPath + "/execution-baseline.json";
   const executionStage = execution + "-stage";
   expected.set(executionStage, { path: executionStage, kind: "directory" });
@@ -90,7 +75,7 @@ function assertRecordedCompletionInventory(input: {
   const ordered = [...expected.values()].sort((a, b) =>
     a.path < b.path ? -1 : a.path > b.path ? 1 : 0
   );
-  if (canonicalJson(ordered) !== canonicalJson(projected)) return fail();
+  if (canonicalJson(ordered) !== canonicalJson(input.inventory)) return fail();
 }
 
 function verifyCompletedNextResume(input: {
@@ -249,9 +234,9 @@ function verifyCompletedNextResume(input: {
   };
 }
 
-/** Return a completed successor's original result only after independently
- * proving the predecessor and the successor's entire live delta. No writes. */
-export function replayRecoveredGmailNextSelectedLoad(
+/** Authenticate the second load's completed journal and its exact signed file
+ * prefix. This detached observation supplies no writer permission. */
+export function readNextSelectedLoadCompletionEvidence(
   supplied: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
   signedAdmission: Buffer
@@ -308,37 +293,23 @@ export function replayRecoveredGmailNextSelectedLoad(
       identity,
       key,
     });
-    if (
-      completion.state !== "settled" ||
-      (completion.fields.owner.expiresAtEpochMs > Date.now() &&
-        sha256(observedJournal) !== completion.fields.releasedJournalSha256)
-    )
-      return fail();
     const journals = reconstructSelectedLoadCompletionJournals(
       observedJournal,
       completion.fields
     );
-    const history = readSelectedLoadHistoryFiles({
-      loadPath,
-      entries,
-      read,
-      identity,
-      key,
-    });
     const snapshot = read(selectedLoadBackupPath, 512 * 1024 * 1024);
     if (
-      history.manifestSha256 !== completion.fields.historyManifestSha256 ||
-      !history.parts.encryptedCatalog.equals(snapshot) ||
-      !history.parts.guardedJournal.equals(journals.guardedJournal) ||
       canonicalJson(decryptLedgerSnapshot(snapshot, key)) !==
-        canonicalJson(catalog.ledger)
+      canonicalJson(catalog.ledger)
     )
       return fail();
 
-    const row = validateWeeklyJournalRecoverySnapshot(
-      observedJournal
-    ).runState.find((entry) => entry.id === runId);
-    if (!row) return fail();
+    const observed = validateWeeklyJournalRecoverySnapshot(observedJournal);
+    const owner = observed.ownership.find(
+      (entry) => entry.scope === "prodigic/zivv/production"
+    );
+    const row = observed.runState.find((entry) => entry.id === runId);
+    if (!owner || !row) return fail();
     const state = parseWeeklyRunState(JSON.parse(row.payload));
     if (
       state.stages.find((item) => item.stage === "load")?.status !== "succeeded"
@@ -394,36 +365,55 @@ export function replayRecoveredGmailNextSelectedLoad(
       ...(resumed ? { successor: resumed.successor } : {}),
     });
     if (delta.status !== "committed") return fail();
+    const runStateSha256 = sha256(canonicalJson(state));
+    const completionPlan = regenerateSelectedLoadCompletionPlan({
+      intent: completion.fields,
+      observedJournal,
+      encryptedCatalog: snapshot,
+      entries,
+      runStateSha256,
+      reportSha256: plan.receipt.reportSha256,
+      successorSha256: resumed?.successorSha256,
+      key,
+    });
+    const prefix = observeSelectedLoadCompletionPrefix({
+      destination: root,
+      runId,
+      entries,
+      files: completionPlan.files,
+      result: completionPlan.result,
+    });
+    if (
+      completion.state !== "settled" &&
+      (prefix.settledCount !== 0 || prefix.next?.state !== "absent")
+    )
+      return fail();
+
     assertRecordedCompletionInventory({
       loadPath,
       prior: resumed
         ? [...execution.entries, ...resumed.addedEntries]
         : execution.entries,
-      actual: entries,
-      history: history.parts.inventory,
+      inventory: completionPlan.inventory,
       execution: executionBytes,
       snapshot,
       reportPath,
       report,
     });
 
-    const result = verifySelectedLoadResult(
-      read(loadPath + "/load-result.json", 65536),
-      key,
-      {
-        runId,
-        admissionSha256,
-        executionBaselineSha256: identity.executionBaselineSha256,
-        ledgerRevision,
-        generation: catalog.generation,
-        journalSha256: sha256(journals.releasedJournal),
-        guardedJournalSha256: sha256(journals.guardedJournal),
-        runStateSha256: sha256(canonicalJson(state)),
-        reportSha256: plan.receipt.reportSha256,
-        historyManifestSha256: history.manifestSha256,
-        ...(resumed ? { successorSha256: resumed.successorSha256 } : {}),
-      }
-    );
+    const result = verifySelectedLoadResult(completionPlan.result, key, {
+      runId,
+      admissionSha256,
+      executionBaselineSha256: identity.executionBaselineSha256,
+      ledgerRevision,
+      generation: catalog.generation,
+      journalSha256: sha256(journals.releasedJournal),
+      guardedJournalSha256: sha256(journals.guardedJournal),
+      runStateSha256,
+      reportSha256: plan.receipt.reportSha256,
+      historyManifestSha256: completion.fields.historyManifestSha256,
+      ...(resumed ? { successorSha256: resumed.successorSha256 } : {}),
+    });
     if (
       result.resultSha256 !== completion.fields.resultSha256 ||
       canonicalJson(entries) !==
@@ -435,17 +425,37 @@ export function replayRecoveredGmailNextSelectedLoad(
       )
     )
       return fail();
+    const lease = observeSelectedLoadLease(owner.expiresAtEpochMs);
     return {
-      status: "selected-load-complete" as const,
-      activationAllowed: false as const,
-      captureAllowed: false as const,
-      loadAllowed: false as const,
-      runId,
-      ledgerRevision,
-      generation: catalog.generation,
-      resultSha256: result.resultSha256,
-      admissionSha256,
-      accepted: plan.result.report.acceptedEventIds.length,
+      report: {
+        status: prefix.next
+          ? ("completion-pending" as const)
+          : ("selected-load-complete" as const),
+        lease,
+        activationAllowed: false as const,
+        captureAllowed: false as const,
+        loadAllowed: false as const,
+        runId,
+        ledgerRevision,
+        generation: catalog.generation,
+        resultSha256: result.resultSha256,
+        admissionSha256,
+        accepted: plan.result.report.acceptedEventIds.length,
+      },
+      ...(prefix.next
+        ? {
+            completionPending: {
+              intent: completion,
+              plan: completionPlan,
+              prefix,
+            },
+          }
+        : {}),
+      effective,
+      raw,
+      physicalEntries: entries,
+      observedCatalog: catalog,
+      observedJournal,
     };
   } catch {
     return fail();
@@ -453,4 +463,32 @@ export function replayRecoveredGmailNextSelectedLoad(
     input?.recoveryKey.fill(0);
     wire?.fill(0);
   }
+}
+
+export function inspectNextSelectedLoadCompletion(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer
+) {
+  return readNextSelectedLoadCompletionEvidence(prior, next, admission).report;
+}
+
+/** Return only an already settled result after re-proving the complete family. */
+export function replayRecoveredGmailNextSelectedLoad(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer
+) {
+  const { report } = readNextSelectedLoadCompletionEvidence(
+    prior,
+    next,
+    admission
+  );
+  if (
+    report.status !== "selected-load-complete" ||
+    report.lease.status === "active"
+  )
+    return fail();
+  const { lease: _lease, ...completed } = report;
+  return { ...completed, status: "selected-load-complete" as const };
 }
