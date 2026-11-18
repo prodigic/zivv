@@ -500,19 +500,10 @@ function addLocalCalendarDays(date: string, days: number): string {
   ].join("-");
 }
 
-/** Convert a Los Angeles local midnight to an epoch, accounting for DST. */
-export function localDateStartEpochMs(date: string): number {
-  const parsed = parseLocalDate(date);
-  const localMidnight: LocalDateTimeParts = {
-    ...parsed,
-    hour: 0,
-    minute: 0,
-    second: 0,
-  };
-  const naiveEpoch = utcEpochForParts(localMidnight);
+function losAngelesTimeEpochMs(parts: LocalDateTimeParts): number {
+  const naiveEpoch = utcEpochForParts(parts);
   let candidate = naiveEpoch;
-  // Offset iteration converges for the normal one-hour DST transitions and
-  // avoids relying on the machine's process timezone.
+  // Offset iteration keeps the conversion independent of the machine timezone.
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const corrected = naiveEpoch - offsetAtEpoch(candidate);
     if (corrected === candidate) return candidate;
@@ -521,6 +512,58 @@ export function localDateStartEpochMs(date: string): number {
   return candidate;
 }
 
+/** Convert a Los Angeles local midnight to an epoch, accounting for DST. */
+export function localDateStartEpochMs(date: string): number {
+  return losAngelesTimeEpochMs({
+    ...parseLocalDate(date),
+    hour: 0,
+    minute: 0,
+    second: 0,
+  });
+}
+
+/** Pacific boundaries for one explicitly selected Friday edition. */
+export function fridayDeliveryTimes(editionId: string): {
+  publicationNotBeforeEpochMs: number;
+  missingSourceAlertAtEpochMs: number;
+  newSourceReviewAtEpochMs: number;
+} {
+  if (typeof editionId !== "string") {
+    throw new WeeklyEditionError("INVALID_WINDOW", "Invalid Friday edition");
+  }
+  const date = parseLocalDate(editionId);
+  const friday = new Date(0);
+  friday.setUTCFullYear(date.year, date.month - 1, date.day);
+  friday.setUTCHours(12, 0, 0, 0);
+  if (friday.getUTCDay() !== 5) {
+    throw new WeeklyEditionError("INVALID_WINDOW", "Edition must be a Friday");
+  }
+  const evening: LocalDateTimeParts = {
+    ...date,
+    hour: 18,
+    minute: 0,
+    second: 0,
+  };
+  const alert = losAngelesTimeEpochMs(evening);
+  const observed = localDateTimeParts(alert);
+  if (
+    observed.year !== evening.year ||
+    observed.month !== evening.month ||
+    observed.day !== evening.day ||
+    observed.hour !== 18 ||
+    observed.minute !== 0 ||
+    observed.second !== 0
+  ) {
+    throw new WeeklyEditionError("INVALID_WINDOW", "Invalid Friday alert time");
+  }
+  return {
+    publicationNotBeforeEpochMs: localDateStartEpochMs(editionId),
+    missingSourceAlertAtEpochMs: alert,
+    newSourceReviewAtEpochMs: localDateStartEpochMs(
+      addLocalCalendarDays(editionId, 3)
+    ),
+  };
+}
 export const localMidnightEpochMs = localDateStartEpochMs;
 
 export function formatLosAngelesDate(epochMs: number): string {

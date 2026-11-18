@@ -4,7 +4,7 @@ import { DatabaseSync } from "node:sqlite";
 import PostalMime, { addressParser, type Header } from "postal-mime";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
-import { localDateStartEpochMs } from "./weekly.js";
+import { fridayDeliveryTimes, localDateStartEpochMs } from "./weekly.js";
 import {
   secureOperatorDirectory,
   writeDurableFile,
@@ -322,11 +322,7 @@ function edition(text: string): string {
     fail("INVALID_STEVE_EDITION");
   return date;
 }
-function mondayAfter(friday: string): number {
-  const date = new Date(friday + "T12:00:00Z");
-  date.setUTCDate(date.getUTCDate() + 3);
-  return localDateStartEpochMs(date.toISOString().slice(0, 10));
-}
+
 function parseReceipt(bytes: Buffer): SteveEmailReceipt {
   const value = JSON.parse(bytes.toString("utf8")) as SteveEmailReceipt;
   same(
@@ -1049,7 +1045,7 @@ export async function captureSteveEmail(input: {
       receipt = parseReceipt(receiptBytes);
     } else {
       const admittedAt = Date.now();
-      if (admittedAt >= mondayAfter(editionId))
+      if (admittedAt >= fridayDeliveryTimes(editionId).newSourceReviewAtEpochMs)
         fail("SOURCE_WINDOW_REQUIRES_REVIEW");
       const siblings = prior.filter((r) => r.editionId === editionId);
       if (correctionOf) {
