@@ -1,3 +1,8 @@
+import {
+  reconstructSelectedLoadCompletionJournals,
+  verifySelectedLoadCompletionIntent,
+} from "./recovery-gmail-selected-load-completion-intent.js";
+import { selectedLoadCompletionIntentFilename } from "./recovery-gmail-selected-load-paths.js";
 import { readSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
 import { reconstructSelectedLoadIntentBaseline } from "./recovery-gmail-selected-intent-baseline.js";
 import { observeSelectedLoadIntentSuccessors } from "./recovery-gmail-selected-intent-successors.js";
@@ -358,25 +363,53 @@ export function readSelectedLoadInterruptionEvidence(
       const withHistory = entries.some((entry) =>
         entry.path.startsWith(historyPrefix)
       );
-      const completedEntries = entries.filter(
-        (entry) => !entry.path.startsWith(historyPrefix)
+      const completionPath = load + "/" + selectedLoadCompletionIntentFilename;
+      const completionEntries = entries.filter((entry) =>
+        entry.path.startsWith(completionPath)
       );
+      const completedEntries = entries.filter(
+        (entry) =>
+          !entry.path.startsWith(historyPrefix) &&
+          !entry.path.startsWith(completionPath)
+      );
+      const historyIdentity = {
+        runId,
+        admissionSha256: common.admissionSha256,
+        executionBaselineSha256: sha256(executionBaseline),
+        priorFamilySha256: sha256(canonicalJson([])),
+        ledgerRevision: ledgerDigest(catalog.ledger),
+        generation: catalog.generation,
+      };
+      const resultBytes = read(resultPath, 65536);
+      const completion = completionEntries.length
+        ? verifySelectedLoadCompletionIntent(
+            read(completionPath, 4096),
+            input.recoveryKey,
+            historyIdentity
+          )
+        : undefined;
+      if (
+        completion &&
+        (completionEntries.length !== 2 ||
+          entriesByPath.get(completionPath + "-stage")?.kind !== "directory" ||
+          completion.fields.resultSha256 !== sha256(resultBytes))
+      )
+        return fail();
       const history = withHistory
         ? readSelectedLoadHistoryFiles({
             loadPath: load,
             entries,
             read,
-            identity: {
-              runId,
-              admissionSha256: common.admissionSha256,
-              executionBaselineSha256: sha256(executionBaseline),
-              priorFamilySha256: sha256(canonicalJson([])),
-              ledgerRevision: ledgerDigest(catalog.ledger),
-              generation: catalog.generation,
-            },
+            identity: historyIdentity,
             key: input.recoveryKey,
           })
         : undefined;
+      if (
+        completion &&
+        (!history ||
+          completion.fields.historyManifestSha256 !== history.manifestSha256)
+      )
+        return fail();
       let historyOwner:
         | ReturnType<
             typeof validateWeeklyJournalRecoverySnapshot
@@ -448,6 +481,17 @@ export function readSelectedLoadInterruptionEvidence(
         )
           return fail();
         historyReleasedJournal = releasedBytes;
+        if (completion) {
+          const journals = reconstructSelectedLoadCompletionJournals(
+            journal,
+            completion.fields
+          );
+          if (
+            !journals.guardedJournal.equals(history.parts.guardedJournal) ||
+            !journals.releasedJournal.equals(releasedBytes)
+          )
+            return fail();
+        }
       }
       const hasResume = entries.some(
         (entry) =>
@@ -601,7 +645,7 @@ export function readSelectedLoadInterruptionEvidence(
       )
         return fail();
       const resultProof = verifySelectedLoadResult(
-        read(resultPath, 65536),
+        resultBytes,
         input.recoveryKey,
         {
           admissionSha256: common.admissionSha256,

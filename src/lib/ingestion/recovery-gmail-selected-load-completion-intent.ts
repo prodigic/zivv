@@ -10,7 +10,7 @@ import {
   type SelectedLoadHistoryIdentity,
 } from "./recovery-gmail-selected-load-history.js";
 
-interface SelectedLoadCompletionIntent {
+export interface SelectedLoadCompletionIntent {
   identity: SelectedLoadHistoryIdentity;
   owner: WeeklyRunLease;
   guardedJournalSha256: string;

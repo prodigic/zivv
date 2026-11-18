@@ -1,7 +1,10 @@
+import { verifySelectedLoadCompletionIntent } from "./recovery-gmail-selected-load-completion-intent.js";
+import type { SelectedLoadHistoryIdentity } from "./recovery-gmail-selected-load-history.js";
 import { lstatSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path";
 import { inspectRecoveryInstalledFile } from "./encrypted-backup.js";
 import {
+  selectedLoadCompletionIntentFilename,
   selectedLoadHistoryLayout,
   selectedLoadHistoryManifestFilename,
 } from "./recovery-gmail-selected-load-paths.js";
@@ -157,4 +160,76 @@ export function observeSelectedLoadCompletionPrefix(input: {
     ...(next ? { next } : {}),
     loadAllowed: false as const,
   };
+}
+
+/** Authenticate the completion intent when its result has not yet been
+ * installed. A signed candidate is evidence only, never a settlement permit. */
+export function observeSelectedLoadCompletionIntentFile(input: {
+  destination: string;
+  identity: SelectedLoadHistoryIdentity;
+  key: Buffer;
+  entries: RecoveryRuntimeEntry[];
+}) {
+  if (!/^[a-f0-9]{64}$/.test(input.identity.runId)) return invalid();
+  const portable =
+    "recovery-gmail-load/" +
+    input.identity.runId +
+    "/" +
+    selectedLoadCompletionIntentFilename;
+  const path = join(input.destination, portable);
+  const stage = path + "-stage";
+  const relevant = input.entries.filter((entry) =>
+    entry.path.startsWith(portable)
+  );
+  const entries = new Map(relevant.map((entry) => [entry.path, entry]));
+  if (
+    entries.size !== relevant.length ||
+    entries.get(portable + "-stage")?.kind !== "directory"
+  )
+    return invalid();
+  const stat = lstatSync(stage);
+  if (!stat.isDirectory() || stat.isSymbolicLink()) return invalid();
+  entries.delete(portable + "-stage");
+  const { target, candidate } = inspectRecoveryInstalledFile(path, stage, 4096);
+  const observed = target ?? candidate;
+  if (
+    !observed ||
+    (target && candidate && (target.nlink !== 2 || candidate.nlink !== 2))
+  )
+    return invalid();
+  const names = readdirSync(stage);
+  if (
+    candidate
+      ? names.length !== 1 || names[0] !== basename(candidate.path)
+      : names.length !== 0
+  )
+    return invalid();
+  for (const [entryPath, physical] of [
+    [portable, target],
+    [
+      candidate ? portable + "-stage/" + basename(candidate.path) : "",
+      candidate,
+    ],
+  ] as const) {
+    if (!physical) continue;
+    const entry = entries.get(entryPath);
+    if (
+      entry?.kind !== "file" ||
+      entry.size !== physical.bytes.length ||
+      entry.sha256 !== sha256(physical.bytes)
+    )
+      return invalid();
+    entries.delete(entryPath);
+  }
+  if (entries.size !== 0) return invalid();
+  const evidence = verifySelectedLoadCompletionIntent(
+    observed.bytes,
+    input.key,
+    input.identity
+  );
+  return {
+    ...evidence,
+    state: target ? (candidate ? "linked" : "settled") : "candidate",
+    ...(candidate ? { candidate } : {}),
+  } as const;
 }

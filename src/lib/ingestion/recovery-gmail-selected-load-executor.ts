@@ -1,5 +1,7 @@
 import { assertSelectedLoadSettlementTransition } from "./recovery-gmail-selected-settlement-transition.js";
 import { DatabaseSync } from "node:sqlite";
+import { signSelectedLoadCompletionIntent } from "./recovery-gmail-selected-load-completion-intent.js";
+import { selectedLoadCompletionIntentFilename } from "./recovery-gmail-selected-load-paths.js";
 import { prepareSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
 import { prepareSelectedLoadIntentSuccessor } from "./recovery-gmail-selected-successor-preparation.js";
 import {
@@ -903,29 +905,36 @@ async function installSelectedLoadCompletion(
   const owner = released.ownership.find((row) => row.scope === production);
   if (!owner || owner.owner !== scope.owner || owner.fence !== scope.fence)
     fail();
+  const guardedOwner = { ...owner };
   owner.expiresAtEpochMs = 0;
   const { digest: _digest, ...body } = released;
   const releasedJournal = Buffer.from(
     canonicalJson({ ...body, digest: sha256(canonicalJson(body)) }) + "\n"
   );
   const observed = inventory();
-  const historyPrefix = "recovery-gmail-load/" + state.runId + "/history-";
+  const loadPrefix = "recovery-gmail-load/" + state.runId + "/";
+  const completionPrefix = loadPrefix + selectedLoadCompletionIntentFilename;
   if (
-    observed.some((entry) => entry.path.startsWith(historyPrefix)) ||
+    observed.some(
+      (entry) =>
+        entry.path.startsWith(loadPrefix + "history-") ||
+        entry.path.startsWith(completionPrefix)
+    ) ||
     scope.previousFiles.size ||
     [...scope.transients.keys()].some((path) => existsSync(path))
   )
     fail();
   const ledgerRevision = ledgerDigest(scope.ledger);
+  const historyIdentity = {
+    runId: state.runId,
+    admissionSha256: identity.admissionSha256,
+    executionBaselineSha256: identity.executionBaselineSha256,
+    priorFamilySha256: sha256(canonicalJson([])),
+    ledgerRevision,
+    generation: scope.generation,
+  };
   const history = prepareSelectedLoadHistoryFiles(
-    {
-      runId: state.runId,
-      admissionSha256: identity.admissionSha256,
-      executionBaselineSha256: identity.executionBaselineSha256,
-      priorFamilySha256: sha256(canonicalJson([])),
-      ledgerRevision,
-      generation: scope.generation,
-    },
+    historyIdentity,
     {
       encryptedCatalog,
       guardedJournal,
@@ -950,40 +959,59 @@ async function installSelectedLoadCompletion(
     for (const { name, bytes } of history.files)
       assertInstalled(join(scope.directory, name), bytes);
   };
+  const result = signed(
+    {
+      kind: "zivv-selected-load-result",
+      version: 3,
+      ...identity,
+      runId: state.runId,
+      ledgerRevision,
+      generation: scope.generation,
+      journalSha256: sha256(releasedJournal),
+      guardedJournalSha256: sha256(guardedJournal),
+      runStateSha256: sha256(canonicalJson(state)),
+      reportSha256: scope.plan.receipt.reportSha256,
+      historyManifestSha256: history.manifestSha256,
+    },
+    scope.key,
+    "zivv-selected-load-result/v3"
+  );
+  const completionBytes = signSelectedLoadCompletionIntent(
+    {
+      identity: historyIdentity,
+      owner: guardedOwner,
+      guardedJournalSha256: sha256(guardedJournal),
+      releasedJournalSha256: sha256(releasedJournal),
+      historyManifestSha256: history.manifestSha256,
+      resultSha256: sha256(result),
+    },
+    scope.key
+  );
+  const completionPath = join(
+    scope.directory,
+    selectedLoadCompletionIntentFilename
+  );
+  const installEvidence = (path: string, bytes: Buffer) => {
+    const stage = path + "-stage";
+    if (scope.files.has(path) || scope.directories.has(stage)) fail();
+    scope.files.set(path, bytes);
+    scope.directories.add(stage);
+    scope.historyTargets ??= new Set();
+    scope.historyTargets.add(path);
+    installRecoveryIntent(path, bytes, stage);
+  };
   scope.phase = "result";
   try {
-    for (const { name, bytes } of history.files) {
-      const path = join(scope.directory, name),
-        stage = path + "-stage";
-      if (scope.files.has(path) || scope.directories.has(stage)) fail();
-      scope.files.set(path, bytes);
-      scope.directories.add(stage);
-      scope.historyTargets ??= new Set();
-      scope.historyTargets.add(path);
-      installRecoveryIntent(path, bytes, stage);
-    }
+    installEvidence(completionPath, completionBytes);
+    assertInstalled(completionPath, completionBytes);
+    for (const { name, bytes } of history.files)
+      installEvidence(join(scope.directory, name), bytes);
     assertHistoryFiles();
-    const result = signed(
-      {
-        kind: "zivv-selected-load-result",
-        version: 3,
-        ...identity,
-        runId: state.runId,
-        ledgerRevision,
-        generation: scope.generation,
-        journalSha256: sha256(releasedJournal),
-        guardedJournalSha256: sha256(guardedJournal),
-        runStateSha256: sha256(canonicalJson(state)),
-        reportSha256: scope.plan.receipt.reportSha256,
-        historyManifestSha256: history.manifestSha256,
-      },
-      scope.key,
-      "zivv-selected-load-result/v3"
-    );
     const resultPath = join(scope.directory, "load-result.json");
     scope.files.set(resultPath, result);
     installRecoveryIntent(resultPath, result, resultPath + "-stage");
     scope.assertCompletionFiles = () => {
+      assertInstalled(completionPath, completionBytes);
       assertHistoryFiles();
       assertInstalled(resultPath, result);
     };
