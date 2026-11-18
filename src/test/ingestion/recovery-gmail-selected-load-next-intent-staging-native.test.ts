@@ -13,7 +13,12 @@ import { expect, it, vi } from "vitest";
 import { encodeRecoveryGmailSelectedLoadFrame } from "../../lib/ingestion/recovery-gmail-selected-load-framing.js";
 import { resumeOperatorRecoveryGmailSelectedLoadEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-launcher.js";
 import { verifySelectedLoadCompletionIntent } from "../../lib/ingestion/recovery-gmail-selected-load-completion-intent.js";
-import { openPreparedRuntimeForAdmission } from "../../lib/ingestion/recovery-runtime.js";
+import {
+  openPreparedRuntimeForAdmission,
+  type RecoveryRuntimeEntry,
+} from "../../lib/ingestion/recovery-runtime.js";
+import { verifySelectedLoadHistoryManifest } from "../../lib/ingestion/recovery-gmail-selected-load-history.js";
+import { selectedLoadHistoryLayout } from "../../lib/ingestion/recovery-gmail-selected-load-paths.js";
 import { readCanonicalSqliteLedgerReadOnly } from "../../lib/ingestion/sqlite-store.js";
 import {
   readWeeklyJournalRecoverySnapshotReadOnly,
@@ -278,13 +283,12 @@ it("settles a successor interrupted during its intent write without another fenc
         resultSha256: string;
       };
     };
-    expect(
-      verifySelectedLoadCompletionIntent(
-        intentBytes,
-        fixture.input.recoveryKey,
-        intent.fields.identity
-      )
-    ).toMatchObject({
+    const verifiedIntent = verifySelectedLoadCompletionIntent(
+      intentBytes,
+      fixture.input.recoveryKey,
+      intent.fields.identity
+    );
+    expect(verifiedIntent).toMatchObject({
       fields: { identity: { runId: nextRunId, generation: 3 } },
       loadAllowed: false,
     });
@@ -293,25 +297,54 @@ it("settles a successor interrupted during its intent write without another fenc
       intent.fields.resultSha256
     );
     expect(result.resultSha256).toBe(intent.fields.resultSha256);
-    expect(existsSync(join(directory, "history-manifest.json"))).toBe(true);
-    expect(
-      readdirSync(directory).some((name) => name.startsWith("history-catalog-"))
-    ).toBe(true);
-    expect(
-      readdirSync(directory).some((name) => name.startsWith("history-journal-"))
-    ).toBe(true);
-    expect(
-      readdirSync(directory).some((name) =>
-        name.startsWith("history-inventory-")
-      )
-    ).toBe(true);
+    const manifestBytes = readFileSync(
+      join(directory, "history-manifest.json")
+    );
+    const manifest = verifySelectedLoadHistoryManifest(
+      manifestBytes,
+      fixture.input.recoveryKey,
+      verifiedIntent.fields.identity
+    );
+    expect(manifest.manifestSha256).toBe(
+      verifiedIntent.fields.historyManifestSha256
+    );
+    const family = "recovery-gmail-load/" + nextRunId + "/";
+    const expected = new Map<string, RecoveryRuntimeEntry>(
+      prefix.map((entry) => [entry.path, entry])
+    );
+    expected.delete(family + "completion-intent.json-stage/" + candidates[0]);
+    const add = (name: string, size: number, sha256: string) => {
+      const path = family + name;
+      expected.set(path, { path, kind: "file", size, sha256 });
+      expected.set(path + "-stage", {
+        path: path + "-stage",
+        kind: "directory",
+      });
+    };
+    add(
+      "completion-intent.json",
+      intentBytes.length,
+      verifiedIntent.intentSha256
+    );
+    add("load-result.json", resultBytes.length, result.resultSha256);
+    add("history-manifest.json", manifestBytes.length, manifest.manifestSha256);
+    for (const part of [
+      "encryptedCatalog",
+      "guardedJournal",
+      "inventory",
+    ] as const) {
+      for (const chunk of manifest.parts[part].chunks) {
+        const name =
+          selectedLoadHistoryLayout[part].prefix +
+          String(chunk.index).padStart(3, "0") +
+          ".bin";
+        add(name, chunk.size, chunk.sha256);
+      }
+    }
     const after = inventory();
-    for (const entry of prefix)
-      if (
-        entry.path !==
-        `recovery-gmail-load/${nextRunId}/completion-intent.json-stage/${candidates[0]}`
-      )
-        expect(after).toContainEqual(entry);
+    expect(new Map(after.map((entry) => [entry.path, entry]))).toEqual(
+      expected
+    );
     expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
       journal
