@@ -1,3 +1,9 @@
+import { createHash, createHmac } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { decryptLedgerSnapshot } from "../../lib/ingestion/encrypted-backup.js";
+import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
+import { validateWeeklyJournalRecoverySnapshot } from "../../lib/ingestion/weekly-run-journal.js";
+import { verifySelectedLoadCompletionIntent } from "../../lib/ingestion/recovery-gmail-selected-load-completion-intent.js";
 import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -309,6 +315,140 @@ it("installs only a distinct second admission and settles exact retries", async 
         },
       ].sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
     );
+    const firstDirectory = join(root, "recovery-gmail-load", installed.runId);
+    const nextDirectory = join(root, "recovery-gmail-load", summary.runId);
+    const firstExecution = JSON.parse(
+      readFileSync(join(firstDirectory, "execution-baseline.json"), "utf8")
+    ) as { generation: number };
+    expect(firstExecution.generation).toBe(1);
+    expect(catalog.generation).toBe(2);
+    const beforeExecution = openPreparedRuntimeForAdmission(
+      fixture.input
+    ).inventoryGmailSelectedLoadExecution();
+    const priorFamily = beforeExecution.filter(
+      (item) =>
+        item.path === `recovery-gmail-load/${installed.runId}` ||
+        item.path.startsWith(`recovery-gmail-load/${installed.runId}/`)
+    );
+    const beforeJournal = validateWeeklyJournalRecoverySnapshot(journal);
+    const executeNext = () =>
+      run(
+        `e.executeRecoveredGmailNextSelectedLoad(input,${JSON.stringify(nextSelector)},(await import('node:fs')).readFileSync(${JSON.stringify(join(nextDirectory, "admission.json"))}))`
+      );
+    const next = executeNext();
+    if (next.status !== 0)
+      console.error(
+        "NEXT_LOAD_EXECUTION_DIAGNOSTIC",
+        next.stderr.slice(0, 1500)
+      );
+    expect(next.status).toBe(0);
+    expect(JSON.parse(next.stdout)).toMatchObject({
+      runId: summary.runId,
+      generation: 3,
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+    });
+    const afterCatalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
+    expect(afterCatalog.generation).toBe(3);
+    expect(
+      decryptLedgerSnapshot(
+        readFileSync(
+          join(root, "checkout/data/ingestion/backups/ledger.snapshot.enc")
+        ),
+        fixture.input.recoveryKey
+      )
+    ).toEqual(afterCatalog.ledger);
+    const afterJournalBytes =
+      readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+    const afterJournal =
+      validateWeeklyJournalRecoverySnapshot(afterJournalBytes);
+    for (const row of beforeJournal.runState)
+      expect(afterJournal.runState).toContainEqual(row);
+    for (const row of beforeJournal.stageArtifacts)
+      expect(afterJournal.stageArtifacts).toContainEqual(row);
+    expect(afterJournal.intakeEvidence).toEqual(beforeJournal.intakeEvidence);
+    const afterInventory = openPreparedRuntimeForAdmission(
+      fixture.input
+    ).inventoryGmailSelectedLoadExecution();
+    expect(
+      afterInventory.filter(
+        (item) =>
+          item.path === `recovery-gmail-load/${installed.runId}` ||
+          item.path.startsWith(`recovery-gmail-load/${installed.runId}/`)
+      )
+    ).toEqual(priorFamily);
+    const completionBytes = readFileSync(
+      join(nextDirectory, "completion-intent.json")
+    );
+    const completion = JSON.parse(completionBytes.toString("utf8")) as {
+      fields: {
+        identity: {
+          runId: string;
+          admissionSha256: string;
+          executionBaselineSha256: string;
+          priorFamilySha256: string;
+          ledgerRevision: string;
+          generation: number;
+        };
+      };
+    };
+    expect(
+      verifySelectedLoadCompletionIntent(
+        completionBytes,
+        fixture.input.recoveryKey,
+        completion.fields.identity
+      )
+    ).toMatchObject({
+      fields: {
+        identity: {
+          runId: summary.runId,
+          generation: 3,
+          priorFamilySha256: summary.priorLoadFamilySha256,
+        },
+      },
+      loadAllowed: false,
+    });
+    const executionBytes = readFileSync(
+      join(nextDirectory, "execution-baseline.json")
+    );
+    const { signature: executionSignature, ...executionBody } = JSON.parse(
+      executionBytes.toString("utf8")
+    ) as Record<string, unknown>;
+    expect(executionBody).toMatchObject({
+      version: 2,
+      generation: 2,
+      priorLoadFamilySha256: summary.priorLoadFamilySha256,
+      catalogSha256: summary.catalogSha256,
+      journalSha256: summary.journalSha256,
+    });
+    expect(executionBody.physicalSnapshotSha256).toBe(
+      createHash("sha256")
+        .update(canonicalJson(executionBody.entries))
+        .digest("hex")
+    );
+    expect(executionSignature).toBe(
+      createHmac("sha256", fixture.input.recoveryKey)
+        .update("zivv-selected-load-execution-baseline/v2\0")
+        .update(canonicalJson(executionBody))
+        .digest("hex")
+    );
+    const repeatedExecution = executeNext();
+    expect(repeatedExecution.status).toBe(1);
+    expect(repeatedExecution.stderr).toContain(
+      "RECOVERY_GMAIL_SELECTED_LOAD_REPLAY_REQUIRES_DELTA_PROOF"
+    );
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+      afterCatalog
+    );
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      afterJournalBytes
+    );
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(afterInventory);
     preserve = false;
   } finally {
     if (preserve)

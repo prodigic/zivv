@@ -155,3 +155,13 @@ export function readNextSelectedLoadAdmissionForInstallation(
     return fail();
   }
 }
+
+/** Identify the signed fixed directory before admitting a fresh execution. */
+export function readNextSelectedLoadAdmissionRunId(
+  bytes: Buffer,
+  key: Buffer
+): string {
+  const { runId } = read(bytes, key);
+  if (typeof runId !== "string" || !/^[a-f0-9]{64}$/.test(runId)) return fail();
+  return runId;
+}

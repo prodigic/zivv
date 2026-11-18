@@ -2,7 +2,10 @@ import {
   observeSelectedLoadAdmissionTail,
   selectedLoadAdmissionTailPaths,
 } from "./recovery-gmail-selected-load-admission-tail.js";
-import { readNextSelectedLoadAdmissionForInstallation } from "./recovery-gmail-selected-load-next-admission.js";
+import {
+  readNextSelectedLoadAdmissionForInstallation,
+  readNextSelectedLoadAdmissionRunId,
+} from "./recovery-gmail-selected-load-next-admission.js";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
 import { signSelectedLoadHistoricalResult } from "./recovery-gmail-selected-result-proof.js";
 import { assertSelectedLoadSettlementTransition } from "./recovery-gmail-selected-settlement-transition.js";
@@ -24,7 +27,10 @@ import {
   observeSelectedLoadCompletionPrefix,
 } from "./recovery-gmail-selected-load-completion-prefix.js";
 import { verifySelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
-import { signSelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
+import {
+  signSelectedLoadExecutionBaseline,
+  signSelectedNextLoadExecutionBaseline,
+} from "./recovery-gmail-execution-baseline.js";
 import { selectedLoadTemporaryTarget } from "./recovery-gmail-selected-load-paths.js";
 import { createRecoveryGmailSelectedLoadEvidence } from "./recovery-gmail-selected-load-evidence.js";
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -148,6 +154,7 @@ interface Scope {
   phase: "evidence" | "key" | "run" | "result";
   historyTargets?: Set<string>;
   completionRepair?: true;
+  priorLoadFamilySha256?: string;
   source: Baseline["source"];
   run: Baseline["runState"];
   initialRun: Baseline["initialState"];
@@ -970,7 +977,7 @@ async function installSelectedLoadCompletion(
     runId: state.runId,
     admissionSha256: identity.admissionSha256,
     executionBaselineSha256: identity.executionBaselineSha256,
-    priorFamilySha256: sha256(canonicalJson([])),
+    priorFamilySha256: scope.priorLoadFamilySha256 ?? sha256(canonicalJson([])),
     ledgerRevision,
     generation: scope.generation,
   };
@@ -1164,86 +1171,246 @@ function assertRetainedSelectedLoadExecutor(destination: string): void {
     throw Error("RECOVERY_GMAIL_SELECTED_LOAD_RETAINED_EXECUTOR_REQUIRED");
 }
 
-/** First admitted source load only. No caller callback, run or catalog override.
+function prepareSelectedLoadFirst(
+  input: RecoveryGmailSelectedLoadInstallationInput
+) {
+  const { selector, ...runtime } = input;
+  const verifiedRuntime = openPreparedRuntimeForAdmission(runtime);
+  const loadRoot = join(resolve(runtime.destination), "recovery-gmail-load");
+  if (
+    existsSync(loadRoot) &&
+    readdirSync(loadRoot).some(
+      (name) =>
+        /^[a-f0-9]{64}$/.test(name) &&
+        existsSync(join(loadRoot, name, "execution-baseline.json"))
+    )
+  )
+    throw Error("RECOVERY_GMAIL_SELECTED_LOAD_REPLAY_REQUIRES_DELTA_PROOF");
+  verifiedRuntime.assertRuntime();
+  const installed = inspectInstalledRecoveryGmailSelectedLoadEvidence(input);
+  const host = readRecoveryGmailHostForLoadInstallation(runtime),
+    opened = openPreparedRuntimeForAdmission(runtime);
+  if (
+    !host.checkpoint.files.some(
+      (file) =>
+        file.area === "checkout" &&
+        file.path ===
+          "dist/lib/ingestion/recovery-gmail-selected-load-executor.js" &&
+        file.bytes &&
+        Buffer.from(file.bytes, "base64")
+          .toString("utf8")
+          .includes("recoveryGmailSelectedLoadExecutorVersion = 1")
+    )
+  )
+    fail();
+  const baselineInput = {
+    checkpoint: host.checkpoint,
+    recoveryKey: input.recoveryKey,
+    completed: host.completed,
+    unfinishedAdmissions: host.unfinishedAdmissions,
+    current: host.current,
+    currentLedger: host.checkpoint.ledger,
+    currentRuntime: host.currentRuntime,
+    priorLoads: [],
+    selector,
+    ...(host.ownProductionOwnership
+      ? { ownProductionOwnership: host.ownProductionOwnership }
+      : {}),
+  };
+  const proof = proveRecoveryGmailSelectedLoadBaseline(baselineInput);
+  const root = join(resolve(runtime.destination), "checkout"),
+    operator = join(resolve(runtime.destination), "operator"),
+    directory = join(
+      resolve(runtime.destination),
+      "recovery-gmail-load",
+      installed.runId
+    );
+  const location = projectLedgerLocation(root);
+  if (
+    location.backend !== "sqlite" ||
+    resolve(location.path) !== join(operator, "ledger.sqlite")
+  )
+    fail();
+  if (existsSync(join(directory, "execution-baseline.json")))
+    throw Error("RECOVERY_GMAIL_SELECTED_LOAD_REPLAY_REQUIRES_DELTA_PROOF");
+  const evidence = proof.selection.canonicalEvidence.find((file) =>
+    file.path.endsWith("/bodies/" + selector.receiptId + "/source.txt")
+  );
+  if (!evidence) fail();
+  const raw = readFileSync(join(operator, evidence.path));
+  if (sha256(raw) !== proof.source.rawSha256) fail();
+  const plan = createSelectedGmailLoadEffectPlan(host.checkpoint, proof, raw);
+  const entries = opened.inventoryGmailLoadInstallation();
+  if (
+    sha256(
+      canonicalJson(
+        entries.filter(
+          (entry) =>
+            !/^operator\/weekly-runs\.sqlite(?:-wal|-shm)?$/.test(entry.path) &&
+            entry.path !== "recovery-gmail-load" &&
+            !entry.path.startsWith("recovery-gmail-load/")
+        )
+      )
+    ) !== installed.physicalSnapshotSha256
+  )
+    fail();
+  const savedAdmission = readFileSync(join(directory, "admission.json"));
+  if (sha256(savedAdmission) !== installed.admissionSha256) fail();
+  const packet = createRecoveryGmailSelectedLoadEvidence({
+    baseline: baselineInput,
+    binding: host.binding,
+    physicalSnapshotSha256: installed.physicalSnapshotSha256,
+    admission: savedAdmission,
+  });
+  const readonlyFiles = new Map<string, Buffer>([
+    [join(directory, "admission.json"), savedAdmission],
+    [join(directory, "baseline.json"), packet.manifest],
+  ]);
+  const readonlyDirectories = new Set([
+    dirname(directory),
+    directory,
+    join(directory, "stages"),
+    join(directory, "stages/baseline"),
+    join(directory, "stages/admission"),
+  ]);
+  for (const chunk of packet.chunks) {
+    readonlyFiles.set(
+      join(directory, "chunks", chunk.id + ".bin"),
+      chunk.bytes
+    );
+    readonlyDirectories.add(join(directory, "chunks"));
+    readonlyDirectories.add(join(directory, "stages", chunk.id));
+  }
+  for (const [path, bytes] of readonlyFiles)
+    if (!readFileSync(path).equals(bytes)) fail();
+  const journal = Buffer.from(host.current.journal, "base64");
+  return {
+    kind: "first" as const,
+    admissionSha256: installed.admissionSha256,
+    evidenceSha256: installed.evidenceSha256,
+    physicalSnapshotSha256: installed.physicalSnapshotSha256,
+    proof,
+    plan,
+    raw,
+    catalog: { ledger: host.checkpoint.ledger, generation: 1 as const },
+    journal,
+    entries,
+    opened,
+    directory,
+    readonlyFiles,
+    readonlyDirectories,
+  };
+}
+
+interface NextSelectedLoadStart {
+  selector: RecoveryGmailSelectedReceiptSelector;
+  admission: Buffer;
+}
+
+function prepareSelectedLoadNext(
+  input: RecoveryGmailSelectedLoadInstallationInput,
+  next: NextSelectedLoadStart
+) {
+  const root = resolve(input.destination);
+  const id = readNextSelectedLoadAdmissionRunId(
+    next.admission,
+    input.recoveryKey
+  );
+  const { directory, target, stage } = selectedLoadAdmissionTailPaths(root, id);
+  if (
+    existsSync(join(directory, "execution-baseline.json")) ||
+    existsSync(join(directory, "execution-baseline.json-stage"))
+  )
+    throw Error("RECOVERY_GMAIL_SELECTED_LOAD_REPLAY_REQUIRES_DELTA_PROOF");
+  const { record, tail, effective } =
+    readNextSelectedLoadAdmissionForInstallation(
+      input,
+      next.selector,
+      next.admission
+    );
+  const installed = observeSelectedLoadAdmissionTail(
+    root,
+    effective.entries,
+    tail
+  );
+  if (
+    record.runId !== id ||
+    record.generation !== 2 ||
+    effective.catalog.generation !== 2 ||
+    !installed.observed.target ||
+    installed.observed.candidate
+  )
+    return fail();
+
+  return {
+    kind: "next" as const,
+    admissionSha256: sha256(next.admission),
+    priorRunId: record.previousRunId,
+    priorLoadFamilySha256: record.priorLoadFamilySha256,
+    catalogSha256: record.catalogSha256,
+    journalSha256: record.journalSha256,
+    ...effective,
+    directory,
+    readonlyFiles: new Map([[target, Buffer.from(next.admission)]]),
+    readonlyDirectories: new Set([
+      dirname(directory),
+      directory,
+      dirname(stage),
+      stage,
+    ]),
+    opened: openPreparedRuntimeForAdmission(input),
+  };
+}
+
+/** Start a freshly admitted load with the fixed runner and checked catalog.
  * Interrupted SQL effects require the separate original-baseline replay composer. */
-async function executeSelectedLoadFirst(
+async function executeSelectedLoad(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
-  testPause?: "catalog-before-commit" | "history-first-chunk"
+  testPause?: "catalog-before-commit" | "history-first-chunk",
+  next?: NextSelectedLoadStart
 ) {
   assertNoSelectedGmailLoadExecution();
+  assertNoSelectedLoadInstallation();
   assertNoRecoveredGmailCapture();
   const wire = encodeRecoveryGmailSelectedLoadFrame(supplied),
     input = decodeRecoveryGmailSelectedLoadFrame(wire),
-    { selector, ...runtime } = input;
+    { selector: _selector, ...runtime } = input;
   let scope: Scope | undefined;
   try {
     assertRetainedSelectedLoadExecutor(runtime.destination);
-    const verifiedRuntime = openPreparedRuntimeForAdmission(runtime);
-    const loadRoot = join(resolve(runtime.destination), "recovery-gmail-load");
-    if (
-      existsSync(loadRoot) &&
-      readdirSync(loadRoot).some(
-        (name) =>
-          /^[a-f0-9]{64}$/.test(name) &&
-          existsSync(join(loadRoot, name, "execution-baseline.json"))
-      )
-    )
-      throw Error("RECOVERY_GMAIL_SELECTED_LOAD_REPLAY_REQUIRES_DELTA_PROOF");
-    verifiedRuntime.assertRuntime();
-    const installed = inspectInstalledRecoveryGmailSelectedLoadEvidence(input);
-    const host = readRecoveryGmailHostForLoadInstallation(runtime),
-      opened = openPreparedRuntimeForAdmission(runtime);
-    if (
-      !host.checkpoint.files.some(
-        (file) =>
-          file.area === "checkout" &&
-          file.path ===
-            "dist/lib/ingestion/recovery-gmail-selected-load-executor.js" &&
-          file.bytes &&
-          Buffer.from(file.bytes, "base64")
-            .toString("utf8")
-            .includes("recoveryGmailSelectedLoadExecutorVersion = 1")
-      )
-    )
-      fail();
-    const baselineInput = {
-      checkpoint: host.checkpoint,
-      recoveryKey: input.recoveryKey,
-      completed: host.completed,
-      unfinishedAdmissions: host.unfinishedAdmissions,
-      current: host.current,
-      currentLedger: host.checkpoint.ledger,
-      currentRuntime: host.currentRuntime,
-      priorLoads: [],
-      selector,
-      ...(host.ownProductionOwnership
-        ? { ownProductionOwnership: host.ownProductionOwnership }
-        : {}),
-    };
-    const proof = proveRecoveryGmailSelectedLoadBaseline(baselineInput);
+    const start = next
+      ? prepareSelectedLoadNext(input, next)
+      : prepareSelectedLoadFirst(input);
+    const {
+      directory,
+      opened,
+      entries,
+      readonlyFiles,
+      readonlyDirectories,
+      proof,
+      plan,
+      raw,
+      admissionSha256,
+    } = start;
+    const journal = validateWeeklyJournalRecoverySnapshot(start.journal);
     const root = join(resolve(runtime.destination), "checkout"),
-      operator = join(resolve(runtime.destination), "operator"),
-      directory = join(
-        resolve(runtime.destination),
-        "recovery-gmail-load",
-        installed.runId
-      );
+      operator = join(resolve(runtime.destination), "operator");
     const location = projectLedgerLocation(root);
     if (
       location.backend !== "sqlite" ||
       resolve(location.path) !== join(operator, "ledger.sqlite")
     )
-      fail();
-    if (existsSync(join(directory, "execution-baseline.json")))
-      throw Error("RECOVERY_GMAIL_SELECTED_LOAD_REPLAY_REQUIRES_DELTA_PROOF");
-    const evidence = proof.selection.canonicalEvidence.find((file) =>
-      file.path.endsWith("/bodies/" + selector.receiptId + "/source.txt")
+      return fail();
+    const previousOwner = journal.ownership.find(
+      (row) => row.scope === production
     );
-    if (!evidence) fail();
-    const raw = readFileSync(join(operator, evidence.path));
-    if (sha256(raw) !== proof.source.rawSha256) fail();
-    const startedAt = Date.now(),
-      plan = createSelectedGmailLoadEffectPlan(host.checkpoint, proof, raw);
+    if (start.kind === "next" && previousOwner?.expiresAtEpochMs !== 0)
+      return fail();
+    const predecessorPrefix =
+      start.kind === "next"
+        ? "recovery-gmail-load/" + start.priorRunId
+        : undefined;
+    const startedAt = Date.now();
     const sqlIdentities = ["ledger.sqlite", "weekly-runs.sqlite"].map(
       (name) => {
         const path = join(operator, name),
@@ -1252,55 +1419,7 @@ async function executeSelectedLoadFirst(
         return { path, dev: stat.dev, ino: stat.ino };
       }
     );
-    const entries = opened.inventoryGmailLoadInstallation();
-    if (
-      sha256(
-        canonicalJson(
-          entries.filter(
-            (entry) =>
-              !/^operator\/weekly-runs\.sqlite(?:-wal|-shm)?$/.test(
-                entry.path
-              ) &&
-              entry.path !== "recovery-gmail-load" &&
-              !entry.path.startsWith("recovery-gmail-load/")
-          )
-        )
-      ) !== installed.physicalSnapshotSha256
-    )
-      fail();
-    const savedAdmission = readFileSync(join(directory, "admission.json"));
-    if (sha256(savedAdmission) !== installed.admissionSha256) fail();
-    const packet = createRecoveryGmailSelectedLoadEvidence({
-      baseline: baselineInput,
-      binding: host.binding,
-      physicalSnapshotSha256: installed.physicalSnapshotSha256,
-      admission: savedAdmission,
-    });
-    const readonlyFiles = new Map<string, Buffer>([
-      [join(directory, "admission.json"), savedAdmission],
-      [join(directory, "baseline.json"), packet.manifest],
-    ]);
-    const readonlyDirectories = new Set([
-      dirname(directory),
-      directory,
-      join(directory, "stages"),
-      join(directory, "stages/baseline"),
-      join(directory, "stages/admission"),
-    ]);
-    for (const chunk of packet.chunks) {
-      readonlyFiles.set(
-        join(directory, "chunks", chunk.id + ".bin"),
-        chunk.bytes
-      );
-      readonlyDirectories.add(join(directory, "chunks"));
-      readonlyDirectories.add(join(directory, "stages", chunk.id));
-    }
-    for (const [path, bytes] of readonlyFiles)
-      if (!readFileSync(path).equals(bytes)) fail();
-    const journal = validateWeeklyJournalRecoverySnapshot(
-      Buffer.from(host.current.journal, "base64")
-    );
-    const ownerHash = sha256("selected-load/" + installed.admissionSha256),
+    const ownerHash = sha256("selected-load/" + admissionSha256),
       owner = [
         ownerHash.slice(0, 8),
         ownerHash.slice(8, 12),
@@ -1309,17 +1428,32 @@ async function executeSelectedLoadFirst(
         ownerHash.slice(20, 32),
       ].join("-");
     const files = new Map<string, Buffer>();
-    const execution = signSelectedLoadExecutionBaseline(
-      {
-        admissionSha256: installed.admissionSha256,
-        evidenceSha256: installed.evidenceSha256,
-        physicalSnapshotSha256: installed.physicalSnapshotSha256,
-        generation: 1,
-        startedAtEpochMs: startedAt,
-        entries,
-      },
-      input.recoveryKey
-    );
+    const execution =
+      start.kind === "first"
+        ? signSelectedLoadExecutionBaseline(
+            {
+              admissionSha256,
+              evidenceSha256: start.evidenceSha256,
+              physicalSnapshotSha256: start.physicalSnapshotSha256,
+              generation: 1,
+              startedAtEpochMs: startedAt,
+              entries,
+            },
+            input.recoveryKey
+          )
+        : signSelectedNextLoadExecutionBaseline(
+            {
+              admissionSha256,
+              catalogSha256: start.catalogSha256,
+              journalSha256: start.journalSha256,
+              priorLoadFamilySha256: start.priorLoadFamilySha256,
+              physicalSnapshotSha256: sha256(canonicalJson(entries)),
+              generation: 2,
+              startedAtEpochMs: startedAt,
+              entries,
+            },
+            input.recoveryKey
+          );
     files.set(join(directory, "execution-baseline.json"), execution);
     files.set(
       join(
@@ -1357,13 +1491,13 @@ async function executeSelectedLoadFirst(
       initialRun: proof.initialState,
       raw,
       plan,
-      original: structuredClone(host.checkpoint.ledger),
-      ledger: structuredClone(host.checkpoint.ledger),
-      generation: 1,
+      original: structuredClone(start.catalog.ledger),
+      ledger: structuredClone(start.catalog.ledger),
+      generation: start.catalog.generation,
+      priorLoadFamilySha256:
+        start.kind === "next" ? start.priorLoadFamilySha256 : undefined,
       owner,
-      fence:
-        (journal.ownership.find((row) => row.scope === production)?.fence ??
-          0) + 1,
+      fence: (previousOwner?.fence ?? 0) + 1,
       journal,
       files,
       directories,
@@ -1389,6 +1523,15 @@ async function executeSelectedLoadFirst(
           const absolute = join(runtime.destination, entry.path),
             before = originalEntries.get(entry.path),
             expected = scope!.files.get(absolute);
+          if (
+            predecessorPrefix &&
+            (entry.path === predecessorPrefix ||
+              entry.path.startsWith(predecessorPrefix + "/"))
+          ) {
+            if (!before || canonicalJson(before) !== canonicalJson(entry))
+              fail();
+            continue;
+          }
           if (
             entry.path === "recovery-gmail-load" ||
             entry.path.startsWith("recovery-gmail-load/")
@@ -1453,11 +1596,48 @@ async function executeSelectedLoadFirst(
     };
     scope.assertCurrent();
     return await scopes.run(scope, async () => {
-      installRecoveryIntent(
-        join(directory, "execution-baseline.json"),
-        execution,
-        join(directory, "execution-baseline.json-stage")
-      );
+      const install = () =>
+        installRecoveryIntent(
+          join(directory, "execution-baseline.json"),
+          execution,
+          join(directory, "execution-baseline.json-stage")
+        );
+      if (start.kind === "next") {
+        const journalPath = join(operator, "weekly-runs.sqlite");
+        const guard = new DatabaseSync(journalPath, { timeout: 10000 });
+        scope!.evidenceGuard = true;
+        try {
+          guard.exec("BEGIN IMMEDIATE");
+          if (
+            !readWeeklyJournalRecoverySnapshotInTransaction(guard).equals(
+              start.journal
+            )
+          )
+            fail();
+          await withCanonicalStoreTransaction(
+            location.path,
+            start.catalog,
+            async () => {
+              same(opened.inventoryGmailSelectedLoadExecution(), entries);
+              scope!.assertCurrent();
+              install();
+            }
+          );
+          if (
+            !readWeeklyJournalRecoverySnapshotInTransaction(guard).equals(
+              start.journal
+            )
+          )
+            fail();
+          guard.exec("COMMIT");
+        } catch (error) {
+          if (guard.isTransaction) guard.exec("ROLLBACK");
+          throw error;
+        } finally {
+          scope!.evidenceGuard = false;
+          guard.close();
+        }
+      } else install();
       scope!.phase = "key";
       installRecoveredBackupKey(operator, input.recoveryKey, {
         stagingDirectory: scope!.keyStage,
@@ -1471,7 +1651,7 @@ async function executeSelectedLoadFirst(
           state,
           snapshot,
           {
-            admissionSha256: installed.admissionSha256,
+            admissionSha256: admissionSha256,
             executionBaselineSha256: sha256(execution),
           },
           opened.inventoryGmailSelectedLoadExecution
@@ -1508,7 +1688,7 @@ async function executeSelectedLoadFirst(
         ledgerRevision: ledgerDigest(scope!.ledger),
         generation: scope!.generation,
         resultSha256: sha256(result),
-        admissionSha256: installed.admissionSha256,
+        admissionSha256: admissionSha256,
         accepted: plan.result.report.acceptedEventIds.length,
       };
     });
@@ -1526,8 +1706,21 @@ async function executeSelectedLoadFirst(
 export function executeRecoveredGmailSelectedLoad(
   input: RecoveryGmailSelectedLoadInstallationInput
 ) {
-  return executeSelectedLoadFirst(input);
+  return executeSelectedLoad(input);
 }
+/** Execute a distinct installed second receipt against the released first load. */
+export function executeRecoveredGmailNextSelectedLoad(
+  prior: RecoveryGmailSelectedLoadInstallationInput,
+  selector: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer
+) {
+  if (!Buffer.isBuffer(admission) || admission.length > 65536) return fail();
+  return executeSelectedLoad(prior, undefined, {
+    selector,
+    admission: Buffer.from(admission),
+  });
+}
+
 /** Fixed test-only pauses at durable boundaries of the retained worker. */
 export function executeRecoveredGmailSelectedLoadForTest(
   input: RecoveryGmailSelectedLoadInstallationInput,
@@ -1535,7 +1728,7 @@ export function executeRecoveredGmailSelectedLoadForTest(
 ) {
   if (point !== "catalog-before-commit" && point !== "history-first-chunk")
     fail();
-  return executeSelectedLoadFirst(input, point);
+  return executeSelectedLoad(input, point);
 }
 
 /** Resume exactly one inspected committed first-attempt gap. Scope remains

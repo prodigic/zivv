@@ -479,5 +479,14 @@ and then the canonical catalog writer guard. It rechecks the released predecesso
 and the full physical inventory under both locks before the first write. On retry
 it verifies the exact admission-only subtree and its owned stage, with every
 other path still included in predecessor verification. The installer preserves
-the catalog and journal and settles only the signed admission. Execution requires
-its own effective baseline and guarded transition.
+the catalog and journal and settles only the signed admission.
+
+Execution for a second selected receipt reuses the normal fenced runner. The
+worker signs the predecessor family, effective generation-two catalog, released
+journal, and full physical inventory in its v2 execution baseline. The worker
+installs that baseline under both writer guards, then admits only the second
+run and its planned effects. Evidence and journal rows from the first load stay
+pinned. The new result signs history for the resulting catalog and binds the
+admitted predecessor. The fresh execution entry refuses a repeat once the
+second execution baseline exists. Replay requires a separate family-aware delta
+proof.
