@@ -138,7 +138,8 @@ interface Scope {
     | "catalog-committed"
     | "rollback-catalog-committed"
     | "history-first-chunk"
-    | "completion-before-intent";
+    | "completion-before-intent"
+    | "completion-intent-partial";
   evidenceGuard?: boolean;
   nextAdmission?: { target: string; stage: string; bytes: Buffer };
   successor?: { path: string };
@@ -864,7 +865,9 @@ export function selectedGmailLoadPartialWriteProbe(
   fd: number
 ): boolean {
   const scope = current();
-  if (!scope || scope.chunkPauseTest !== "partial") return false;
+  if (!scope) return false;
+  const intent = scope.chunkPauseTest === "completion-intent-partial";
+  if (!intent && scope.chunkPauseTest !== "partial") return false;
   const absolute = resolve(path);
   const target = selectedLoadTemporaryTarget(absolute, {
     operator: scope.operator,
@@ -877,10 +880,17 @@ export function selectedGmailLoadPartialWriteProbe(
     ),
     snapshot: join(scope.root, "data/ingestion/backups/ledger.snapshot.enc"),
   });
-  if (target !== join(scope.directory, "resume-snapshot-000.bin")) return false;
   if (
-    scope.phase !== "evidence" ||
-    !scope.evidenceGuard ||
+    target !==
+    join(
+      scope.directory,
+      intent ? selectedLoadCompletionIntentFilename : "resume-snapshot-000.bin"
+    )
+  )
+    return false;
+  if (
+    scope.phase !== (intent ? "result" : "evidence") ||
+    (!intent && !scope.evidenceGuard) ||
     !scope.files.get(target)?.equals(bytes) ||
     bytes.length < 2
   )
@@ -889,7 +899,11 @@ export function selectedGmailLoadPartialWriteProbe(
   const count = Math.min(32, bytes.length - 1);
   if (writeSync(fd, bytes, 0, count) !== count) fail();
   fsyncSync(fd);
-  process.stdout.write("SELECTED_LOAD_TEST_CHUNK_PARTIAL\n");
+  process.stdout.write(
+    intent
+      ? "SELECTED_LOAD_TEST_COMPLETION_INTENT_PARTIAL\n"
+      : "SELECTED_LOAD_TEST_CHUNK_PARTIAL\n"
+  );
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
   throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
 }
@@ -1436,7 +1450,8 @@ async function executeSelectedLoad(
     | "catalog-before-commit"
     | "catalog-committed"
     | "history-first-chunk"
-    | "completion-before-intent",
+    | "completion-before-intent"
+    | "completion-intent-partial",
   next?: NextSelectedLoadStart
 ) {
   assertNoSelectedGmailLoadExecution();
@@ -2129,6 +2144,7 @@ export function executeRecoveredGmailNextSelectedLoadForTest(
     | "catalog-committed"
     | "history-first-chunk"
     | "completion-before-intent"
+    | "completion-intent-partial"
 ) {
   if (
     !Buffer.isBuffer(admission) ||
@@ -2136,7 +2152,8 @@ export function executeRecoveredGmailNextSelectedLoadForTest(
     (point !== "catalog-before-commit" &&
       point !== "catalog-committed" &&
       point !== "history-first-chunk" &&
-      point !== "completion-before-intent")
+      point !== "completion-before-intent" &&
+      point !== "completion-intent-partial")
   )
     return fail();
   return executeSelectedLoad(prior, point, {
@@ -2535,6 +2552,10 @@ async function settleSelectedLoadCompletion(
                     entries,
                     identity: completion.intent.fields.identity,
                     key: scope.key,
+                    ...(completion.intent.state === "stage-only" ||
+                    completion.intent.state === "partial"
+                      ? { expectedBytes: expectedIntent }
+                      : {}),
                   });
             const prefix = observeSelectedLoadCompletionPrefix({
               destination,
@@ -2561,11 +2582,13 @@ async function settleSelectedLoadCompletion(
             retainCandidate(next.candidate, nextBytes);
             scope.phase = "result";
             try {
-              if (next.state === "partial") {
-                const incomplete = next.candidate;
+              const finishPartial = (
+                incomplete: typeof next.candidate,
+                expected: Buffer
+              ) => {
                 if (
                   !incomplete ||
-                  !nextBytes
+                  !expected
                     .subarray(0, incomplete.bytes.length)
                     .equals(incomplete.bytes)
                 )
@@ -2576,10 +2599,14 @@ async function settleSelectedLoadCompletion(
                   incomplete.bytes,
                   "install"
                 );
-                completeRetainedPrefixFile(incomplete, nextBytes);
+                completeRetainedPrefixFile(incomplete, expected);
                 scope.incompleteSnapshot = undefined;
                 scope.assertCurrent();
-              }
+              };
+              if (intent.state === "partial")
+                finishPartial(intent.candidate, expectedIntent);
+              if (next.state === "partial")
+                finishPartial(next.candidate, nextBytes);
               for (const { name, bytes } of batch) {
                 const path = join(directory, name);
                 installRecoveryIntent(path, bytes, path + "-stage");
