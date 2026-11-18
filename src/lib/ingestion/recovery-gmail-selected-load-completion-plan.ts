@@ -49,8 +49,8 @@ export function regenerateSelectedLoadCompletionPlan(input: {
   if (projection.some(({ path }) => path === resultStage))
     projections.push(projection.filter(({ path }) => path !== resultStage));
   const candidates = projections
-    .map((inventory) =>
-      prepareSelectedLoadHistoryFiles(
+    .map((inventory) => ({
+      ...prepareSelectedLoadHistoryFiles(
         intent.identity,
         {
           encryptedCatalog: input.encryptedCatalog,
@@ -58,13 +58,14 @@ export function regenerateSelectedLoadCompletionPlan(input: {
           inventory: Buffer.from(canonicalJson(inventory) + "\n"),
         },
         input.key
-      )
-    )
+      ),
+      inventory,
+    }))
     .filter(
       ({ manifestSha256 }) => manifestSha256 === intent.historyManifestSha256
     );
   if (candidates.length !== 1) return fail();
-  const { files } = candidates[0]!;
+  const { files, inventory } = candidates[0]!;
   const { priorFamilySha256: _priorFamilySha256, ...resultIdentity } =
     intent.identity;
   const result = signSelectedLoadHistoricalResult(
@@ -86,6 +87,8 @@ export function regenerateSelectedLoadCompletionPlan(input: {
     files,
     result,
     releasedJournal: journals.releasedJournal,
+    guardedJournal: journals.guardedJournal,
+    inventory,
     loadAllowed: false as const,
   };
 }

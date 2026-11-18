@@ -104,7 +104,8 @@ interface Scope {
     | "successor-linked"
     | "successor-flushed"
     | "catalog-before-commit"
-    | "rollback-catalog-committed";
+    | "rollback-catalog-committed"
+    | "history-first-chunk";
   evidenceGuard?: boolean;
   successor?: { path: string };
   incompleteSnapshot?: {
@@ -1002,8 +1003,14 @@ async function installSelectedLoadCompletion(
   try {
     installEvidence(completionPath, completionBytes);
     assertInstalled(completionPath, completionBytes);
-    for (const { name, bytes } of history.files)
+    for (const [index, { name, bytes }] of history.files.entries()) {
       installEvidence(join(scope.directory, name), bytes);
+      if (index === 0 && scope.chunkPauseTest === "history-first-chunk") {
+        process.stdout.write("SELECTED_LOAD_TEST_HISTORY_FIRST_CHUNK\n");
+        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+        throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+      }
+    }
     assertHistoryFiles();
     const resultPath = join(scope.directory, "load-result.json");
     scope.files.set(resultPath, result);
@@ -1060,7 +1067,7 @@ function assertRetainedSelectedLoadExecutor(destination: string): void {
  * Interrupted SQL effects require the separate original-baseline replay composer. */
 async function executeSelectedLoadFirst(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
-  testPause?: "catalog-before-commit"
+  testPause?: "catalog-before-commit" | "history-first-chunk"
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoRecoveredGmailCapture();
@@ -1420,12 +1427,13 @@ export function executeRecoveredGmailSelectedLoad(
 ) {
   return executeSelectedLoadFirst(input);
 }
-/** Fixed test-only precommit pause in the retained worker. */
+/** Fixed test-only pauses at durable boundaries of the retained worker. */
 export function executeRecoveredGmailSelectedLoadForTest(
   input: RecoveryGmailSelectedLoadInstallationInput,
-  point: "catalog-before-commit"
+  point: "catalog-before-commit" | "history-first-chunk"
 ) {
-  if (point !== "catalog-before-commit") fail();
+  if (point !== "catalog-before-commit" && point !== "history-first-chunk")
+    fail();
   return executeSelectedLoadFirst(input, point);
 }
 

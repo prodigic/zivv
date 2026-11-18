@@ -1,7 +1,9 @@
+import { reconstructSelectedLoadCompletionJournals } from "./recovery-gmail-selected-load-completion-intent.js";
+import { regenerateSelectedLoadCompletionPlan } from "./recovery-gmail-selected-load-completion-plan.js";
 import {
-  reconstructSelectedLoadCompletionJournals,
-  verifySelectedLoadCompletionIntent,
-} from "./recovery-gmail-selected-load-completion-intent.js";
+  observeSelectedLoadCompletionIntentFile,
+  observeSelectedLoadCompletionPrefix,
+} from "./recovery-gmail-selected-load-completion-prefix.js";
 import { selectedLoadCompletionIntentFilename } from "./recovery-gmail-selected-load-paths.js";
 import { readSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
 import { reconstructSelectedLoadIntentBaseline } from "./recovery-gmail-selected-intent-baseline.js";
@@ -65,7 +67,8 @@ export interface SelectedLoadInterruptionEvidence {
       | "unchanged"
       | "committed"
       | "completed"
-      | "pending-intent";
+      | "pending-intent"
+      | "completion-pending";
     runId: string;
     journalSha256: string;
     inventorySha256: string;
@@ -81,6 +84,11 @@ export interface SelectedLoadInterruptionEvidence {
   physicalSnapshotSha256: string;
   executionBaseline: Buffer;
   completedResultSha256?: string;
+  completionPending?: {
+    intent: ReturnType<typeof observeSelectedLoadCompletionIntentFile>;
+    plan: ReturnType<typeof regenerateSelectedLoadCompletionPlan>;
+    prefix: ReturnType<typeof observeSelectedLoadCompletionPrefix>;
+  };
   pendingIntentSha256?: string;
   raw: Buffer;
   observedEntries: RecoveryRuntimeEntry[];
@@ -303,7 +311,18 @@ export function readSelectedLoadInterruptionEvidence(
     };
     const resultPath = load + "/load-result.json";
     const intentPath = load + "/resume-intent.json";
-    const hasResult = entriesByPath.has(resultPath);
+    const resultStage = resultPath + "-stage";
+    const completionPath = load + "/" + selectedLoadCompletionIntentFilename;
+    const hasCompletionIntent = entries.some((entry) =>
+      entry.path.startsWith(completionPath)
+    );
+    const resultTargetPresent = entriesByPath.has(resultPath);
+    const interruptedCompletion =
+      hasCompletionIntent &&
+      (!resultTargetPresent ||
+        entries.some((entry) => entry.path.startsWith(resultStage + "/")));
+    const hasResult = resultTargetPresent || interruptedCompletion;
+    let completionPending: SelectedLoadInterruptionEvidence["completionPending"];
     let priorJournal = journal;
     let priorEntries = entries;
     let stagedSnapshotPaths: string[] = [];
@@ -358,14 +377,9 @@ export function readSelectedLoadInterruptionEvidence(
       );
     };
     if (hasResult) {
-      const resultStage = resultPath + "-stage";
       const historyPrefix = load + "/history-";
       const withHistory = entries.some((entry) =>
         entry.path.startsWith(historyPrefix)
-      );
-      const completionPath = load + "/" + selectedLoadCompletionIntentFilename;
-      const completionEntries = entries.filter((entry) =>
-        entry.path.startsWith(completionPath)
       );
       const completedEntries = entries.filter(
         (entry) =>
@@ -380,30 +394,104 @@ export function readSelectedLoadInterruptionEvidence(
         ledgerRevision: ledgerDigest(catalog.ledger),
         generation: catalog.generation,
       };
-      const resultBytes = read(resultPath, 65536);
-      const completion = completionEntries.length
-        ? verifySelectedLoadCompletionIntent(
-            read(completionPath, 4096),
-            input.recoveryKey,
-            historyIdentity
-          )
-        : undefined;
-      if (
-        completion &&
-        (completionEntries.length !== 2 ||
-          entriesByPath.get(completionPath + "-stage")?.kind !== "directory" ||
-          completion.fields.resultSha256 !== sha256(resultBytes))
-      )
-        return fail();
-      const history = withHistory
-        ? readSelectedLoadHistoryFiles({
-            loadPath: load,
+      const completion = hasCompletionIntent
+        ? observeSelectedLoadCompletionIntentFile({
+            destination: root,
             entries,
-            read,
             identity: historyIdentity,
             key: input.recoveryKey,
           })
         : undefined;
+      if (
+        completion &&
+        !interruptedCompletion &&
+        completion.state !== "settled"
+      )
+        return fail();
+      const finalJournal = validateWeeklyJournalRecoverySnapshot(journal);
+      const selected = finalJournal.runState.find((row) => row.id === runId);
+      if (!selected) return fail();
+      const state = parseWeeklyRunState(JSON.parse(selected.payload));
+      const hasResume = entries.some(
+        (entry) =>
+          entry.path === intentPath ||
+          entry.path === intentStage ||
+          entry.path.startsWith(intentStage + "/") ||
+          entry.path.startsWith(load + "/resume-")
+      );
+      const successors = hasResume
+        ? observeSelectedLoadIntentSuccessors({
+            destination: root,
+            loadPath: load,
+            entries: completedEntries,
+            initial: read(intentPath, 65536),
+            key: input.recoveryKey,
+            initialSettled: true,
+          })
+        : undefined;
+      if (
+        successors &&
+        (!successors.lastSettled ||
+          (successors.successorCount && !successors.latestV2Successor))
+      )
+        return fail();
+      let resultBytes: Buffer;
+      let history: ReturnType<typeof readSelectedLoadHistoryFiles> | undefined;
+      if (interruptedCompletion) {
+        if (!completion || !changedFiles.snapshot) return fail();
+        const regenerated = regenerateSelectedLoadCompletionPlan({
+          intent: completion.fields,
+          observedJournal: journal,
+          encryptedCatalog: changedFiles.snapshot,
+          entries,
+          runStateSha256: sha256(canonicalJson(state)),
+          reportSha256: plan.receipt.reportSha256,
+          ...(successors?.latestV2Successor
+            ? { successorSha256: successors.latestV2Successor.successorSha256 }
+            : {}),
+          key: input.recoveryKey,
+        });
+        const prefix = observeSelectedLoadCompletionPrefix({
+          destination: root,
+          runId,
+          entries,
+          files: regenerated.files,
+          result: regenerated.result,
+        });
+        if (
+          completion.state !== "settled" &&
+          (prefix.settledCount !== 0 || prefix.next?.state !== "absent")
+        )
+          return fail();
+        if (!prefix.next) return fail();
+        completionPending = { intent: completion, plan: regenerated, prefix };
+        resultBytes = regenerated.result;
+        history = {
+          manifestSha256: completion.fields.historyManifestSha256,
+          parts: {
+            encryptedCatalog: changedFiles.snapshot,
+            guardedJournal: regenerated.guardedJournal,
+            inventory: Buffer.from(canonicalJson(regenerated.inventory) + "\n"),
+          },
+          loadAllowed: false,
+        };
+      } else {
+        resultBytes = read(resultPath, 65536);
+        if (
+          completion &&
+          completion.fields.resultSha256 !== sha256(resultBytes)
+        )
+          return fail();
+        history = withHistory
+          ? readSelectedLoadHistoryFiles({
+              loadPath: load,
+              entries,
+              read,
+              identity: historyIdentity,
+              key: input.recoveryKey,
+            })
+          : undefined;
+      }
       if (
         completion &&
         (!history ||
@@ -420,12 +508,13 @@ export function readSelectedLoadInterruptionEvidence(
       if (history) {
         if (
           !changedFiles.snapshot?.equals(history.parts.encryptedCatalog) ||
-          entriesByPath.get(resultStage)?.kind !== "directory"
+          (!completionPending &&
+            entriesByPath.get(resultStage)?.kind !== "directory")
         )
           return fail();
-        const projected = completedEntries.filter(
-          (entry) => entry.path !== resultPath
-        );
+        const projected =
+          completionPending?.plan.inventory ??
+          completedEntries.filter((entry) => entry.path !== resultPath);
         const withoutStage = projected.filter(
           (entry) => entry.path !== resultStage
         );
@@ -493,13 +582,6 @@ export function readSelectedLoadInterruptionEvidence(
             return fail();
         }
       }
-      const hasResume = entries.some(
-        (entry) =>
-          entry.path === intentPath ||
-          entry.path === intentStage ||
-          entry.path.startsWith(intentStage + "/") ||
-          entry.path.startsWith(load + "/resume-")
-      );
       let successorSha256: string | undefined;
       let guardedJournalSha256: string | null;
       let releasedJournal: Buffer;
@@ -541,20 +623,8 @@ export function readSelectedLoadInterruptionEvidence(
           intent.generation !== catalog.generation
         )
           return fail();
-        const completedSuccessors = observeSelectedLoadIntentSuccessors({
-          destination: root,
-          loadPath: load,
-          entries: completedEntries,
-          initial: read(intentPath, 65536),
-          key: input.recoveryKey,
-          initialSettled: true,
-        });
-        if (
-          !completedSuccessors.lastSettled ||
-          (completedSuccessors.successorCount &&
-            !completedSuccessors.latestV2Successor)
-        )
-          return fail();
+        if (!successors) return fail();
+        const completedSuccessors = successors;
         const effective = completedSuccessors.latestV2Successor ?? intent;
         const completedJournal = observeSelectedLoadCompletedJournal(
           journal,
@@ -590,9 +660,14 @@ export function readSelectedLoadInterruptionEvidence(
         );
         priorSnapshot = restoreIntentSnapshot(intent);
         priorEntries = reconstructSelectedLoadResumeInventory({
-          observedEntries: completedEntries.filter(
+          observedEntries: (
+            completionPending?.plan.inventory ?? completedEntries
+          ).filter(
             (entry) => !completedSuccessors.successorPaths.includes(entry.path)
           ),
+          ...(completionPending
+            ? { outcome: "completion-staging" as const }
+            : {}),
           originalEntries: execution.entries,
           preResumeSnapshot: priorSnapshot,
           intent,
@@ -600,10 +675,6 @@ export function readSelectedLoadInterruptionEvidence(
           reportPath: report,
         });
       }
-      const finalJournal = validateWeeklyJournalRecoverySnapshot(journal);
-      const selected = finalJournal.runState.find((row) => row.id === runId);
-      if (!selected) return fail();
-      const state = parseWeeklyRunState(JSON.parse(selected.payload));
       const loadState = state.stages.find((stage) => stage.stage === "load");
       if (
         !loadState ||
@@ -670,7 +741,7 @@ export function readSelectedLoadInterruptionEvidence(
         guardedJournalSha256 !== resultProof.guardedJournalSha256
       )
         return fail();
-      completedResultSha256 = resultProof.resultSha256;
+      if (!completionPending) completedResultSha256 = resultProof.resultSha256;
     }
     const hasIntentEvidence =
       !hasResult &&
@@ -858,11 +929,13 @@ export function readSelectedLoadInterruptionEvidence(
     const lease = observeSelectedLoadLease(owner.expiresAtEpochMs);
     return {
       report: {
-        status: hasResult
-          ? ("completed" as const)
-          : pendingIntentSha256
-            ? ("pending-intent" as const)
-            : j.status,
+        status: completionPending
+          ? ("completion-pending" as const)
+          : hasResult
+            ? ("completed" as const)
+            : pendingIntentSha256
+              ? ("pending-intent" as const)
+              : j.status,
         runId: j.runId ?? runId,
         journalSha256:
           hasResult || pendingIntentSha256 ? sha256(journal) : j.journalSha256,
@@ -888,6 +961,7 @@ export function readSelectedLoadInterruptionEvidence(
       physicalSnapshotSha256: restored.physicalSnapshotSha256,
       executionBaseline,
       ...(completedResultSha256 ? { completedResultSha256 } : {}),
+      ...(completionPending ? { completionPending } : {}),
       ...(pendingIntentSha256 ? { pendingIntentSha256 } : {}),
       raw,
       observedEntries: priorEntries,

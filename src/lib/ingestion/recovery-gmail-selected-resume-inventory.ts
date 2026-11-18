@@ -8,7 +8,7 @@ import type { SelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-
  * physical delta proof on this result. This grants no replay authority. */
 export function reconstructSelectedLoadResumeInventory(input: {
   observedEntries: RecoveryRuntimeEntry[];
-  outcome?: "committed-pending";
+  outcome?: "committed-pending" | "completion-staging";
   originalEntries: RecoveryRuntimeEntry[];
   intent: SelectedLoadResumeIntent;
   runId: string;
@@ -47,8 +47,9 @@ export function reconstructSelectedLoadResumeInventory(input: {
         actual.has(resultFile) ||
         (actual.has(resultStage) &&
           actual.get(resultStage)?.kind !== "directory")
-      : actual.get(resultFile)?.kind !== "file" ||
-        actual.get(resultStage)?.kind !== "directory") ||
+      : input.outcome !== "completion-staging" &&
+        (actual.get(resultFile)?.kind !== "file" ||
+          actual.get(resultStage)?.kind !== "directory")) ||
     actual.get(snapshot)?.kind !== "file"
   )
     return fail();
