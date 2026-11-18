@@ -177,3 +177,38 @@ and [#38](https://github.com/prodigic/zivv/issues/38), not completed by staging.
 The existing [manual Friday path](journaled-weekly-import.md#run-and-resume)
 continues to work in the normal installation. This optional checkpoint installs
 no scheduler and changes no live catalog, publisher flags, production ref or key.
+
+## Inspect and install selected Gmail load evidence
+
+For a prepared recovery checkout, select one authenticated
+ready Gmail receipt using its exact cached batch ID, message ID, raw SHA-256, and
+receipt ID. Keep the selector alongside the other private recovery inputs. The
+selector file contains one canonical UTF-8 JSON object in this order. A final LF
+is optional.
+
+```json
+{
+  "batchId": "<batch-id>",
+  "messageId": "<message-id>",
+  "rawSha256": "<raw-sha256>",
+  "receiptId": "<receipt-id>"
+}
+```
+
+Use the existing verified retirement receipt, prepared destination, and relocated
+npm executable. Run the production CLI from a checkout that has passed
+`npm run build:etl`.
+
+```text
+node scripts/operator-recovery.js inspect-selected-load --file <capsule> --key <private-key-file> --receipt <retirement-receipt> --destination <prepared-root> --npm-cli <relocated-npm-cli> --selector-file <private-selector>
+node scripts/operator-recovery.js install-selected-load --file <capsule> --key <private-key-file> --receipt <retirement-receipt> --destination <prepared-root> --npm-cli <relocated-npm-cli> --selector-file <private-selector>
+node scripts/operator-recovery.js inspect-selected-load-interruption --file <capsule> --key <private-key-file> --receipt <retirement-receipt> --destination <prepared-root> --npm-cli <relocated-npm-cli> --selector-file <private-selector>
+```
+
+The first command verifies installed load evidence. The installation command
+uses the authenticated retained worker, then rechecks the exact evidence on the
+host. An identical installation retry returns the verified existing report.
+After a load attempt has durable execution evidence, the interruption command
+independently reports the proven state and lease without applying effects.
+Keep the installation quarantined. The load execution and replay commands
+require their separately reviewed launcher.

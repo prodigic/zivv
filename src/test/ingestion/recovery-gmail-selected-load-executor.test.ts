@@ -10,8 +10,8 @@ import { verifySelectedLoadResult } from "../../lib/ingestion/recovery-gmail-sel
 import { createHmac } from "node:crypto";
 import { readRecoveryGmailHostForLoadInstallation } from "../../lib/ingestion/recovery-gmail-capture-admission.js";
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { expect, it, vi } from "vitest";
 import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
@@ -50,8 +50,133 @@ it("loads the exact ready source through the normal runner in a genuine retained
         receiptId: receipt.receiptId,
       },
     };
+    // The fixture already retains its synthetic capsule, receipt and private key
+    // under a secured base. Exercise the actual operator CLI against that same host.
+    const selectorFile = join(fixture.base, "selected-receipt.json");
+    const foreignSelectorFile = join(
+      fixture.base,
+      "foreign-selected-receipt.json"
+    );
+    writeFileSync(selectorFile, canonicalJson(input.selector) + "\n", {
+      flag: "wx",
+      mode: 0o600,
+    });
+    writeFileSync(
+      foreignSelectorFile,
+      canonicalJson({ ...input.selector, receiptId: "f".repeat(64) }) + "\n",
+      { flag: "wx", mode: 0o600 }
+    );
+    const cliArgs = [
+      "--file",
+      join(fixture.base, "retired-operator.enc"),
+      "--key",
+      join(fixture.base, "fixture-recovery-key.base64"),
+      "--receipt",
+      join(fixture.base, "retired-operator.enc.retirement.json"),
+      "--destination",
+      root,
+      "--npm-cli",
+      fixture.input.npmCli,
+      "--selector-file",
+      selectorFile,
+    ];
+    const cli = (command: string, args = cliArgs) => {
+      const result = spawnSync(
+        process.execPath,
+        [resolve("scripts/operator-recovery.js"), command, ...args],
+        {
+          cwd: resolve("."),
+          encoding: "utf8",
+          windowsHide: true,
+          timeout: 600_000,
+          maxBuffer: 128 * 1024,
+        }
+      );
+      expect(result.error).toBeUndefined();
+      const output = result.stdout + result.stderr;
+      for (const privateValue of [
+        fixture.base,
+        root,
+        fixture.input.recoveryKey.toString("base64"),
+      ])
+        expect(output).not.toContain(privateValue);
+      return result;
+    };
+    const beforeCliLedger = readFileSync(join(root, "operator/ledger.sqlite"));
+    const operator = join(root, "operator");
+    const journalFiles = () =>
+      readdirSync(operator)
+        .filter((name) => /^weekly-runs\.sqlite(?:-(?:wal|shm))?$/.test(name))
+        .sort()
+        .map((name) => [name, readFileSync(join(operator, name))]);
+    const beforeCliJournal = journalFiles();
+    const duplicate = cli("inspect-selected-load", [
+      ...cliArgs,
+      "--selector-file",
+      selectorFile,
+    ]);
+    expect(duplicate.status).not.toBe(0);
+    expect(duplicate.stdout).toBe("");
+    const duplicateKeyFile = join(
+      fixture.base,
+      "duplicate-selected-receipt.json"
+    );
+    writeFileSync(
+      duplicateKeyFile,
+      '{"batchId":"' +
+        input.selector.batchId +
+        '",' +
+        canonicalJson(input.selector).slice(1),
+      { flag: "wx", mode: 0o600 }
+    );
+    const duplicateKey = cli(
+      "install-selected-load",
+      cliArgs.map((value) =>
+        value === selectorFile ? duplicateKeyFile : value
+      )
+    );
+    expect(duplicateKey.status).toBe(1);
+    expect(JSON.parse(duplicateKey.stderr.trim()).error).toBe(
+      "INVALID_RECOVERY_GMAIL_SELECTED_LOAD_SELECTOR"
+    );
+    const foreign = cli(
+      "install-selected-load",
+      cliArgs.map((value) =>
+        value === selectorFile ? foreignSelectorFile : value
+      )
+    );
+    expect(foreign.status).not.toBe(0);
+    expect(foreign.stdout).toBe("");
+    expect(readFileSync(join(root, "operator/ledger.sqlite"))).toEqual(
+      beforeCliLedger
+    );
+    expect(journalFiles()).toEqual(beforeCliJournal);
+    expect(existsSync(join(root, "recovery-gmail-load"))).toBe(false);
+    const beforeInstall = cli("inspect-selected-load");
+    expect(beforeInstall.status).toBe(1);
+    expect(JSON.parse(beforeInstall.stderr.trim()).error).toBe(
+      "RECOVERY_GMAIL_SELECTED_LOAD_NOT_INSTALLED"
+    );
+    const firstInstall = cli("install-selected-load");
+    expect(firstInstall.status).toBe(0);
+    const firstInstallReport = JSON.parse(firstInstall.stdout.trim()) as Record<
+      string,
+      unknown
+    >;
+    expect(firstInstallReport.command).toBe("install-selected-load");
+    const inspection = cli("inspect-selected-load");
+    expect(inspection.status).toBe(0);
+    expect(JSON.parse(inspection.stdout.trim())).toEqual({
+      ...firstInstallReport,
+      command: "inspect-selected-load",
+    });
+    const replayInstall = cli("install-selected-load");
+    expect(replayInstall.status).toBe(0);
+    expect(JSON.parse(replayInstall.stdout.trim())).toEqual(firstInstallReport);
     const installed =
       await resumeOperatorRecoveryGmailSelectedLoadEvidence(input);
+    const { command: _command, ...cliInstalled } = firstInstallReport;
+    expect(cliInstalled).toEqual(installed);
     vi.stubEnv("ZIVV_LEDGER_HOME", join(root, "operator"));
     try {
       await expect(executeRecoveredGmailSelectedLoad(input)).rejects.toThrow(
@@ -322,11 +447,22 @@ it("loads the exact ready source through the normal runner in a genuine retained
     expect(
       readSqliteLedgerReadOnly(join(root, "operator/ledger.sqlite"))
     ).toEqual(ledger);
-    expect(inspectSelectedLoadInterruption(input)).toMatchObject({
+    const directInterruption = inspectSelectedLoadInterruption(input);
+    expect(directInterruption).toMatchObject({
       status: "completed",
       runId: report.runId,
       loadAllowed: false,
       activationAllowed: false,
+    });
+    const cliInterruption = cli("inspect-selected-load-interruption");
+    expect(cliInterruption.status).toBe(0);
+    expect(JSON.parse(cliInterruption.stdout.trim())).toEqual({
+      command: "inspect-selected-load-interruption",
+      ...directInterruption,
+      lease: {
+        ...directInterruption.lease,
+        observedAtEpochMs: expect.any(Number),
+      },
     });
     const sealedReplay = run([], true);
     if (sealedReplay.status !== 0)
