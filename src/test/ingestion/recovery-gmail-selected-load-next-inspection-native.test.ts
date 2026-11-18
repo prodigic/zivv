@@ -10,7 +10,7 @@ import { readWeeklyJournalRecoverySnapshotReadOnly } from "../../lib/ingestion/w
 import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
 
 vi.setConfig({ testTimeout: 600000 });
-it("inspects a distinct ready edition after the first selected load without writes", async () => {
+it("installs only a distinct second admission and settles exact retries", async () => {
   const fixture = await createRecoveryGmailCaptureRuntimeFixture({
     loadableSource: true,
     seedAuthorityControls: true,
@@ -145,6 +145,21 @@ it("inspects a distinct ready edition after the first selected load without writ
     const sqliteModule = pathToFileURL(
       join(root, "checkout/dist/lib/ingestion/sqlite-store.js")
     ).href;
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      journal
+    );
+    expect(
+      openPreparedRuntimeForAdmission(
+        fixture.input
+      ).inventoryGmailSelectedLoadExecution()
+    ).toEqual(inventory);
+    const legacyInspector = pathToFileURL(
+      join(
+        root,
+        "checkout/dist/lib/ingestion/recovery-gmail-selected-load-interruption-inspection.js"
+      )
+    ).href;
     const admissionCheck = run(
       `(
         async () => {
@@ -171,17 +186,39 @@ it("inspects a distinct ready edition after the first selected load without writ
                 error.message === 'INVALID_RECOVERY_GMAIL_NEXT_SELECTED_LOAD_ADMISSION';
             }
           };
+          const wrongTime = rejects(() => create(input, selector, when - 1, bytes));
+          const tamper = rejects(() => authenticate(input, selector, encode({ ...wrongParent, signature })));
+          const wrongParentRejected = rejects(() => authenticate(input, selector, encode({ ...wrongParent, signature: sign(wrongParent) })));
+          const knownSignatureMatches = sign(payload) === signature;
+          const installer = e.installRecoveredGmailNextSelectedLoadAdmission;
+          const firstInstall = await installer(input, selector, bytes);
+          const secondInstall = await installer(input, selector, bytes);
+          const digest = (await import('node:crypto')).createHash('sha256').update(bytes).digest('hex');
+          const fs = await import('node:fs');
+          const paths = await import('node:path');
+          const directory = paths.join(input.destination, 'recovery-gmail-load', verified.runId);
+          const target = paths.join(directory, 'admission.json');
+          const alias = paths.join(directory, 'stages/admission', 'admission.json.1234.0123456789abcdef.tmp');
+          fs.linkSync(target, alias);
+          const linkedRetry = await installer(input, selector, bytes);
+          const cleanupVerified = !fs.existsSync(alias) &&
+            fs.lstatSync(target).nlink === 1 && fs.readFileSync(target).equals(bytes);
+          const foreign = paths.join(directory, 'unexpected-fixture.bin');
+          const foreignBytes = Buffer.from('synthetic foreign entry');
+          fs.writeFileSync(foreign, foreignBytes, {flag:'wx'});
+          let foreignRefused = false, foreignPreserved = false;
+          try {
+            try { await installer(input, selector, bytes); } catch { foreignRefused = true; }
+            foreignPreserved = fs.readFileSync(foreign).equals(foreignBytes);
+          } finally { fs.unlinkSync(foreign); }
+          const legacy = await import(${JSON.stringify(legacyInspector)});
+          let legacyRefused = false;
+          try { legacy.inspectSelectedLoadInterruption(input); } catch { legacyRefused = true; }
           return {
-            verified, when,
+            verified, when, firstInstall, secondInstall, linkedRetry, cleanupVerified,
+            digest, byteLength: bytes.length, foreignRefused, foreignPreserved, legacyRefused,
             retryMatches: bytes.equals(again),
-            knownSignatureMatches: sign(payload) === signature,
-            wrongTime: rejects(() => create(input, selector, when - 1, bytes)),
-            tamper: rejects(() => authenticate(
-              input, selector, encode({ ...wrongParent, signature })
-            )),
-            wrongParent: rejects(() => authenticate(
-              input, selector, encode({ ...wrongParent, signature: sign(wrongParent) })
-            )),
+            knownSignatureMatches, wrongTime, tamper, wrongParent: wrongParentRejected,
           };
         }
       )()`
@@ -194,6 +231,11 @@ it("inspects a distinct ready edition after the first selected load without writ
     expect(admissionCheck.status).toBe(0);
     const admission = JSON.parse(admissionCheck.stdout) as {
       when: number;
+      firstInstall: unknown;
+      secondInstall: unknown;
+      linkedRetry: unknown;
+      digest: string;
+      byteLength: number;
       verified: {
         catalogSha256: string;
         journalSha256: string;
@@ -206,6 +248,18 @@ it("inspects a distinct ready edition after the first selected load without writ
       wrongTime: true,
       tamper: true,
       wrongParent: true,
+      foreignRefused: true,
+      foreignPreserved: true,
+      legacyRefused: true,
+      cleanupVerified: true,
+      firstInstall: {
+        status: "next-load-admission-installed",
+        runId: summary.runId,
+        admissionSha256: admission.digest,
+        priorLoadFamilySha256: summary.priorLoadFamilySha256,
+        loadAllowed: false,
+        activationAllowed: false,
+      },
       verified: {
         version: 2,
         previousRunId: installed.runId,
@@ -225,6 +279,8 @@ it("inspects a distinct ready edition after the first selected load without writ
       inventorySha256: (summary as unknown as { inventorySha256: string })
         .inventorySha256,
     });
+    expect(admission.secondInstall).toEqual(admission.firstInstall);
+    expect(admission.linkedRetry).toEqual(admission.firstInstall);
     expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
       journal
@@ -233,7 +289,26 @@ it("inspects a distinct ready edition after the first selected load without writ
       openPreparedRuntimeForAdmission(
         fixture.input
       ).inventoryGmailSelectedLoadExecution()
-    ).toEqual(inventory);
+    ).toEqual(
+      [
+        ...inventory,
+        { path: `recovery-gmail-load/${summary.runId}`, kind: "directory" },
+        {
+          path: `recovery-gmail-load/${summary.runId}/stages`,
+          kind: "directory",
+        },
+        {
+          path: `recovery-gmail-load/${summary.runId}/stages/admission`,
+          kind: "directory",
+        },
+        {
+          path: `recovery-gmail-load/${summary.runId}/admission.json`,
+          kind: "file",
+          size: admission.byteLength,
+          sha256: admission.digest,
+        },
+      ].sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
+    );
     preserve = false;
   } finally {
     if (preserve)

@@ -12,11 +12,9 @@ function fail(): never {
 }
 
 function body(
-  prior: RecoveryGmailSelectedLoadFrameInput,
-  next: RecoveryGmailSelectedReceiptSelector,
+  evidence: ReturnType<typeof readNextSelectedLoadAdmissionEvidence>,
   admittedAtEpochMs: number
 ) {
-  const evidence = readNextSelectedLoadAdmissionEvidence(prior, next);
   if (
     !Number.isSafeInteger(admittedAtEpochMs) ||
     admittedAtEpochMs < evidence.earliestAdmissionEpochMs ||
@@ -82,7 +80,10 @@ export function authenticateRecoveryGmailNextSelectedLoadAdmission(
     // Check the fixed-size framing and MAC before inspecting a prepared runtime.
     const parsed = read(admission, prior.recoveryKey);
     if (typeof parsed.admittedAtEpochMs !== "number") return fail();
-    const expected = body(prior, next, parsed.admittedAtEpochMs);
+    const expected = body(
+      readNextSelectedLoadAdmissionEvidence(prior, next),
+      parsed.admittedAtEpochMs
+    );
     if (canonicalJson(expected) !== canonicalJson(parsed)) return fail();
     return expected;
   } catch {
@@ -115,7 +116,10 @@ export function createRecoveryGmailNextSelectedLoadAdmission(
       if (saved.admittedAtEpochMs !== admittedAtEpochMs) return fail();
       return bytes;
     }
-    const payload = body(prior, next, admittedAtEpochMs);
+    const payload = body(
+      readNextSelectedLoadAdmissionEvidence(prior, next),
+      admittedAtEpochMs
+    );
     const bytes = Buffer.from(
       canonicalJson({
         ...payload,
@@ -123,6 +127,30 @@ export function createRecoveryGmailNextSelectedLoadAdmission(
       }) + "\n"
     );
     return validAdmissionBuffer(bytes);
+  } catch {
+    return fail();
+  }
+}
+
+/** Observe admission-only retry evidence. An authenticated, fixed tail can be
+ * projected out only while independently proving the predecessor and this intent. */
+export function readNextSelectedLoadAdmissionForInstallation(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  bytes: Buffer
+) {
+  try {
+    const parsed = read(bytes, prior.recoveryKey);
+    if (
+      typeof parsed.runId !== "string" ||
+      typeof parsed.admittedAtEpochMs !== "number"
+    )
+      return fail();
+    const tail = { runId: parsed.runId, bytes };
+    const evidence = readNextSelectedLoadAdmissionEvidence(prior, next, tail);
+    const record = body(evidence, parsed.admittedAtEpochMs);
+    if (canonicalJson(record) !== canonicalJson(parsed)) return fail();
+    return { record, tail, effective: evidence.effective };
   } catch {
     return fail();
   }

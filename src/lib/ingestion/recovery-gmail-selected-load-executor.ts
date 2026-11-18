@@ -1,3 +1,9 @@
+import {
+  observeSelectedLoadAdmissionTail,
+  selectedLoadAdmissionTailPaths,
+} from "./recovery-gmail-selected-load-admission-tail.js";
+import { readNextSelectedLoadAdmissionForInstallation } from "./recovery-gmail-selected-load-next-admission.js";
+import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
 import { signSelectedLoadHistoricalResult } from "./recovery-gmail-selected-result-proof.js";
 import { assertSelectedLoadSettlementTransition } from "./recovery-gmail-selected-settlement-transition.js";
 import { DatabaseSync } from "node:sqlite";
@@ -53,6 +59,7 @@ import {
   type CaptureJournalEffect,
 } from "./recovery-gmail-capture-admission.js";
 import {
+  assertNoSelectedLoadInstallation,
   inspectInstalledRecoveryGmailSelectedLoadEvidence,
   type RecoveryGmailSelectedLoadInstallationInput,
 } from "./recovery-gmail-selected-load-installation.js";
@@ -70,6 +77,7 @@ import {
 } from "./recovery-gmail-selected-load-effects.js";
 import {
   installRecoveryIntent,
+  secureOperatorDirectory,
   inspectRecoveryInstalledFile,
   installRecoveredBackupKey,
   validateRecoveredBackupKeyBytes,
@@ -114,6 +122,7 @@ interface Scope {
     | "rollback-catalog-committed"
     | "history-first-chunk";
   evidenceGuard?: boolean;
+  nextAdmission?: { target: string; stage: string; bytes: Buffer };
   successor?: { path: string };
   incompleteSnapshot?: {
     path: string;
@@ -651,6 +660,27 @@ export function selectedGmailLoadFile(
   if (!scope) return false;
   scope.assertCurrent();
   const absolute = resolve(path);
+  if (scope.nextAdmission) {
+    if (scope.phase !== "evidence" || !scope.evidenceGuard) return fail();
+    const { target, stage, bytes: expected } = scope.nextAdmission;
+    if (effect === "directory") {
+      if (!scope.directories.has(absolute)) return fail();
+      return true;
+    }
+    const candidate =
+      dirname(absolute) === stage &&
+      /^admission\.json(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.test(
+        basename(absolute)
+      );
+    if (
+      (!candidate && absolute !== target) ||
+      !bytes?.equals(expected) ||
+      (effect === "unlink" && !candidate)
+    )
+      return fail();
+    if (candidate) scope.transients.set(absolute, expected);
+    return true;
+  }
   if (effect === "directory") {
     const permitted =
       scope.phase === "key"
@@ -1512,6 +1542,199 @@ export function executeRecoveredGmailSelectedLoadForTest(
  * private and quarantined; interruption of this retry requires later proof. */
 /** Settle the observed file prefix under both writer locks without changing
  * the original catalog, journal, or ownership fence. */
+/** Install only the next signed admission behind both prepared-host writer
+ * guards. The existing run, catalog, journal and recovery key stay untouched. */
+export async function installRecoveredGmailNextSelectedLoadAdmission(
+  supplied: RecoveryGmailSelectedLoadInstallationInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  signedAdmission: Buffer
+) {
+  assertNoSelectedGmailLoadExecution();
+  assertNoSelectedLoadInstallation();
+  assertNoRecoveredGmailCapture();
+  if (!Buffer.isBuffer(signedAdmission) || signedAdmission.length > 65536)
+    return fail();
+
+  const bytes = Buffer.from(signedAdmission);
+  const wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
+  const input = decodeRecoveryGmailSelectedLoadFrame(wire);
+  const { selector: _selector, ...runtime } = input;
+  let scope: Scope | undefined;
+  try {
+    assertRetainedSelectedLoadExecutor(runtime.destination);
+    const observe = () =>
+      readNextSelectedLoadAdmissionForInstallation(input, next, bytes);
+    const { record, tail, effective } = observe();
+    const destination = resolve(runtime.destination);
+    const { directory, stage, target } = selectedLoadAdmissionTailPaths(
+      destination,
+      tail.runId
+    );
+    const root = join(destination, "checkout"),
+      operator = join(destination, "operator"),
+      journalPath = join(operator, "weekly-runs.sqlite"),
+      catalogPath = join(operator, "ledger.sqlite");
+    const location = projectLedgerLocation(root);
+    if (location.backend !== "sqlite" || resolve(location.path) !== catalogPath)
+      return fail();
+
+    const journal = validateWeeklyJournalRecoverySnapshot(effective.journal);
+    const owner = journal.ownership.find((row) => row.scope === production);
+    if (!owner || owner.expiresAtEpochMs !== 0) return fail();
+    const identities = [journalPath, catalogPath].map((path) => {
+      const stat = lstatSync(path);
+      if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1)
+        return fail();
+      return { path, dev: stat.dev, ino: stat.ino };
+    });
+    const opened = openPreparedRuntimeForAdmission(runtime);
+    const before = observeSelectedLoadAdmissionTail(
+      destination,
+      effective.entries,
+      tail
+    );
+    const initial = new Map(
+      before.predecessorEntries.map((entry) => [entry.path, entry])
+    );
+    if (initial.size !== before.predecessorEntries.length) return fail();
+
+    const directories = new Set([directory, dirname(stage), stage]);
+    const transients = new Map<string, Buffer>();
+    if (before.observed.candidate)
+      transients.set(before.observed.candidate.path, bytes);
+    const admissionSha256 = sha256(bytes);
+    const startedAt = Date.now();
+    scope = {
+      active: true,
+      phase: "evidence",
+      evidenceGuard: true,
+      nextAdmission: { target, stage, bytes },
+      deadline: startedAt + 180000,
+      startedAt,
+      root,
+      operator,
+      directory,
+      key: Buffer.from(input.recoveryKey),
+      source: effective.proof.source,
+      run: effective.proof.runState,
+      initialRun: effective.proof.initialState,
+      raw: effective.raw,
+      plan: effective.plan,
+      original: effective.catalog.ledger,
+      ledger: effective.catalog.ledger,
+      generation: effective.catalog.generation,
+      owner: owner.owner,
+      fence: owner.fence,
+      journal,
+      files: new Map([[target, bytes]]),
+      directories,
+      transients,
+      readonlyFiles: new Map(),
+      previousFiles: new Map(),
+      keyStage: join(directory, "key-stage"),
+      originalEntries: initial,
+      assertCurrent: () => {
+        for (const identity of identities) {
+          const stat = lstatSync(identity.path);
+          if (
+            !stat.isFile() ||
+            stat.isSymbolicLink() ||
+            stat.nlink !== 1 ||
+            stat.dev !== identity.dev ||
+            stat.ino !== identity.ino
+          )
+            fail();
+        }
+        const entries = opened.inventoryGmailSelectedLoadExecution();
+        const predecessor: RecoveryRuntimeEntry[] = [];
+        for (const entry of entries) {
+          const path = join(destination, entry.path);
+          if (path !== directory && !entry.path.startsWith(tailPrefix))
+            predecessor.push(entry);
+          else if (entry.kind === "directory" && directories.has(path))
+            continue;
+          else if (
+            entry.kind !== "file" ||
+            (path !== target && !transients.has(path)) ||
+            (!(
+              entry.size === bytes.length && entry.sha256 === admissionSha256
+            ) &&
+              !(entry.size === 0 && writing && transients.has(path)))
+          )
+            fail();
+        }
+        same(predecessor, before.predecessorEntries);
+      },
+    };
+    const tailPrefix = "recovery-gmail-load/" + tail.runId + "/";
+    let writing = false;
+    return await scopes.run(scope, async () => {
+      const guard = new DatabaseSync(journalPath, { timeout: 10000 });
+      try {
+        guard.exec("BEGIN IMMEDIATE");
+        if (
+          !readWeeklyJournalRecoverySnapshotInTransaction(guard).equals(
+            effective.journal
+          )
+        )
+          fail();
+        await withCanonicalStoreTransaction(
+          catalogPath,
+          effective.catalog,
+          async () => {
+            const locked = scopes.exit(observe);
+            same(locked.record, record);
+            same(locked.effective.entries, effective.entries);
+            scope!.assertCurrent();
+            writing = true;
+            try {
+              if (!existsSync(directory)) secureOperatorDirectory(directory);
+              installRecoveryIntent(target, bytes, stage);
+            } finally {
+              writing = false;
+            }
+            scope!.assertCurrent();
+            const settled = observeSelectedLoadAdmissionTail(
+              destination,
+              opened.inventoryGmailSelectedLoadExecution(),
+              tail
+            );
+            if (!settled.observed.target || settled.observed.candidate) fail();
+          }
+        );
+        if (
+          !readWeeklyJournalRecoverySnapshotInTransaction(guard).equals(
+            effective.journal
+          )
+        )
+          fail();
+        guard.exec("COMMIT");
+        return {
+          status: "next-load-admission-installed" as const,
+          runId: record.runId,
+          admissionSha256,
+          priorLoadFamilySha256: record.priorLoadFamilySha256,
+          loadAllowed: false as const,
+          captureAllowed: false as const,
+          activationAllowed: false as const,
+        };
+      } catch (error) {
+        if (guard.isTransaction) guard.exec("ROLLBACK");
+        throw error;
+      } finally {
+        guard.close();
+      }
+    });
+  } finally {
+    if (scope) {
+      scope.active = false;
+      scope.key.fill(0);
+    }
+    input.recoveryKey.fill(0);
+    wire.fill(0);
+  }
+}
+
 async function settleSelectedLoadCompletion(
   runtime: Omit<RecoveryGmailSelectedLoadInstallationInput, "selector">,
   evidence: SelectedLoadInterruptionEvidence,
