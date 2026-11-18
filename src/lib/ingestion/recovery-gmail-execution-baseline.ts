@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { canonicalJson } from "./sqlite-store.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
+import { sha256 } from "./steve-preflight.js";
 
 export interface SelectedLoadExecutionBaseline {
   admissionSha256: string;
@@ -10,7 +11,6 @@ export interface SelectedLoadExecutionBaseline {
   startedAtEpochMs: number;
   entries: RecoveryRuntimeEntry[];
 }
-const domain = "zivv-selected-load-execution-baseline/v1\0";
 function fail(): never {
   throw Error("INVALID_SELECTED_LOAD_EXECUTION_BASELINE");
 }
@@ -37,13 +37,16 @@ function validate(baseline: SelectedLoadExecutionBaseline): void {
     ) ||
     baseline.generation !== 1 ||
     !Number.isSafeInteger(baseline.startedAtEpochMs) ||
-    baseline.startedAtEpochMs < 0 ||
-    !Array.isArray(baseline.entries) ||
-    baseline.entries.length > 50000
+    baseline.startedAtEpochMs < 0
   )
     fail();
+  validateEntries(baseline.entries);
+}
+
+function validateEntries(entries: RecoveryRuntimeEntry[]): void {
+  if (!Array.isArray(entries) || entries.length > 50000) fail();
   let previous = "";
-  for (const entry of baseline.entries) {
+  for (const entry of entries) {
     if (
       !entry ||
       typeof entry.path !== "string" ||
@@ -77,9 +80,12 @@ function validate(baseline: SelectedLoadExecutionBaseline): void {
     } else fail();
   }
 }
-function signature(body: string, key: Buffer): string {
+function signature(body: string, key: Buffer, version: 1 | 2): string {
   if (!Buffer.isBuffer(key) || key.length !== 32) fail();
-  return createHmac("sha256", key).update(domain).update(body).digest("hex");
+  return createHmac("sha256", key)
+    .update("zivv-selected-load-execution-baseline/v" + version + "\0")
+    .update(body)
+    .digest("hex");
 }
 /** Detached authenticated evidence only; this grants no execution or replay authority. */
 export function signSelectedLoadExecutionBaseline(
@@ -87,15 +93,19 @@ export function signSelectedLoadExecutionBaseline(
   key: Buffer
 ): Buffer {
   validate(baseline);
+  return encode(baseline, key, 1);
+}
+
+function encode(baseline: object, key: Buffer, version: 1 | 2): Buffer {
   const payload = {
     kind: "zivv-selected-load-execution-baseline",
-    version: 1,
+    version,
     ...baseline,
   };
   return Buffer.from(
     canonicalJson({
       ...payload,
-      signature: signature(canonicalJson(payload), key),
+      signature: signature(canonicalJson(payload), key, version),
     }) + "\n"
   );
 }
@@ -103,6 +113,16 @@ export function verifySelectedLoadExecutionBaseline(
   bytes: Buffer,
   key: Buffer
 ): SelectedLoadExecutionBaseline {
+  const baseline = read(
+    bytes,
+    key,
+    1
+  ) as unknown as SelectedLoadExecutionBaseline;
+  validate(baseline);
+  return structuredClone(baseline);
+}
+
+function read(bytes: Buffer, key: Buffer, expectedVersion: 1 | 2) {
   if (!Buffer.isBuffer(bytes) || bytes.length > 32 * 1024 * 1024) fail();
   let value: Record<string, unknown>;
   try {
@@ -120,15 +140,86 @@ export function verifySelectedLoadExecutionBaseline(
   const { signature: saved, kind, version, ...rest } = value;
   if (
     kind !== "zivv-selected-load-execution-baseline" ||
-    version !== 1 ||
+    version !== expectedVersion ||
     typeof saved !== "string" ||
     !/^[a-f0-9]{64}$/.test(saved)
   )
     fail();
-  const expected = signature(canonicalJson({ kind, version, ...rest }), key);
+  const expected = signature(
+    canonicalJson({ kind, version, ...rest }),
+    key,
+    expectedVersion
+  );
   if (!timingSafeEqual(Buffer.from(saved, "hex"), Buffer.from(expected, "hex")))
     fail();
-  const baseline = rest as unknown as SelectedLoadExecutionBaseline;
-  validate(baseline);
+  return rest;
+}
+
+export interface SelectedNextLoadExecutionBaseline {
+  admissionSha256: string;
+  catalogSha256: string;
+  journalSha256: string;
+  priorLoadFamilySha256: string;
+  physicalSnapshotSha256: string;
+  generation: 2;
+  startedAtEpochMs: number;
+  entries: RecoveryRuntimeEntry[];
+}
+
+function validateNext(baseline: SelectedNextLoadExecutionBaseline): void {
+  if (
+    !baseline ||
+    Object.keys(baseline).sort().join(",") !==
+      [
+        "admissionSha256",
+        "catalogSha256",
+        "entries",
+        "generation",
+        "journalSha256",
+        "physicalSnapshotSha256",
+        "priorLoadFamilySha256",
+        "startedAtEpochMs",
+      ].join(",") ||
+    ![
+      baseline.admissionSha256,
+      baseline.catalogSha256,
+      baseline.journalSha256,
+      baseline.priorLoadFamilySha256,
+      baseline.physicalSnapshotSha256,
+    ].every(
+      (value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
+    ) ||
+    baseline.generation !== 2 ||
+    !Number.isSafeInteger(baseline.startedAtEpochMs) ||
+    baseline.startedAtEpochMs < 0
+  )
+    fail();
+  validateEntries(baseline.entries);
+  if (
+    sha256(canonicalJson(baseline.entries)) !== baseline.physicalSnapshotSha256
+  )
+    fail();
+}
+
+/** Retain both SQL commitments and the complete pre-effect file inventory. */
+export function signSelectedNextLoadExecutionBaseline(
+  baseline: SelectedNextLoadExecutionBaseline,
+  key: Buffer
+): Buffer {
+  validateNext(baseline);
+  return encode(baseline, key, 2);
+}
+
+/** Authenticate v2 strictly. Fresh host validation still belongs to the caller. */
+export function verifySelectedNextLoadExecutionBaseline(
+  bytes: Buffer,
+  key: Buffer
+): SelectedNextLoadExecutionBaseline {
+  const baseline = read(
+    bytes,
+    key,
+    2
+  ) as unknown as SelectedNextLoadExecutionBaseline;
+  validateNext(baseline);
   return structuredClone(baseline);
 }
