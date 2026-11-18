@@ -296,14 +296,26 @@ export function readNextSelectedLoadCompletionEvidence(
       generation: catalog.generation,
     };
     const intentPath = loadPath + "/" + selectedLoadCompletionIntentFilename;
-    const installed = entries.some(({ path }) => path.startsWith(intentPath))
-      ? observeSelectedLoadCompletionIntentFile({
+    const hasIntentStage = entries.some(
+      ({ path }) => path === intentPath + "-stage"
+    );
+    let installed:
+      | ReturnType<typeof observeSelectedLoadCompletionIntentFile>
+      | undefined;
+    if (entries.some(({ path }) => path.startsWith(intentPath))) {
+      try {
+        installed = observeSelectedLoadCompletionIntentFile({
           destination: root,
           entries,
           identity,
           key,
-        })
-      : undefined;
+        });
+      } catch (error) {
+        // A canonical intent can only be authenticated from its existing bytes.
+        if (!hasIntentStage || entries.some(({ path }) => path === intentPath))
+          throw error;
+      }
+    }
     const journals = installed
       ? reconstructSelectedLoadCompletionJournals(
           observedJournal,
@@ -400,10 +412,13 @@ export function readNextSelectedLoadCompletionEvidence(
       reportPath,
       report,
     };
+    const preIntentInventory = entries.filter(
+      ({ path }) => !path.startsWith(intentPath)
+    );
     if (!installed) {
       assertRecordedCompletionInventory({
         ...inventoryInput,
-        inventory: entries,
+        inventory: preIntentInventory,
       });
       const retry = successors.at(-1)?.intent ?? saved?.intent;
       const started = retry?.startedAtEpochMs ?? execution.startedAtEpochMs;
@@ -421,18 +436,29 @@ export function readNextSelectedLoadCompletionEvidence(
       ? undefined
       : prepareSelectedLoadCompletionSeal({
           ...signedInput,
+          entries: preIntentInventory,
           identity,
           guardedJournal: observedJournal,
         });
-    const completion = installed ?? {
-      ...verifySelectedLoadCompletionIntent(
-        proposed!.completionBytes,
-        key,
-        identity
-      ),
-      state: "absent" as const,
-      candidate: undefined,
-    };
+    const completion =
+      installed ??
+      (hasIntentStage
+        ? observeSelectedLoadCompletionIntentFile({
+            destination: root,
+            entries,
+            identity,
+            key,
+            expectedBytes: proposed!.completionBytes,
+          })
+        : {
+            ...verifySelectedLoadCompletionIntent(
+              proposed!.completionBytes,
+              key,
+              identity
+            ),
+            state: "absent" as const,
+            candidate: undefined,
+          });
     const completionPlan =
       proposed ??
       regenerateSelectedLoadCompletionPlan({

@@ -169,6 +169,7 @@ export function observeSelectedLoadCompletionIntentFile(input: {
   identity: SelectedLoadHistoryIdentity;
   key: Buffer;
   entries: RecoveryRuntimeEntry[];
+  expectedBytes?: Buffer;
 }) {
   if (!/^[a-f0-9]{64}$/.test(input.identity.runId)) return invalid();
   const portable =
@@ -193,7 +194,7 @@ export function observeSelectedLoadCompletionIntentFile(input: {
   const { target, candidate } = inspectRecoveryInstalledFile(path, stage, 4096);
   const observed = target ?? candidate;
   if (
-    !observed ||
+    (!observed && !input.expectedBytes) ||
     (target && candidate && (target.nlink !== 2 || candidate.nlink !== 2))
   )
     return invalid();
@@ -222,14 +223,33 @@ export function observeSelectedLoadCompletionIntentFile(input: {
     entries.delete(entryPath);
   }
   if (entries.size !== 0) return invalid();
+  let bytes = observed?.bytes;
+  let state: "settled" | "linked" | "candidate" | "stage-only" | "partial" =
+    target ? (candidate ? "linked" : "settled") : "candidate";
+  const expected = input.expectedBytes;
+  if (expected && !bytes?.equals(expected)) {
+    if (
+      target ||
+      (candidate &&
+        (candidate.nlink !== 1 ||
+          candidate.bytes.length >= expected.length ||
+          !expected
+            .subarray(0, candidate.bytes.length)
+            .equals(candidate.bytes)))
+    )
+      return invalid();
+    bytes = expected;
+    state = candidate ? "partial" : "stage-only";
+  }
+  if (!bytes) return invalid();
   const evidence = verifySelectedLoadCompletionIntent(
-    observed.bytes,
+    bytes,
     input.key,
     input.identity
   );
   return {
     ...evidence,
-    state: target ? (candidate ? "linked" : "settled") : "candidate",
+    state,
     ...(candidate ? { candidate } : {}),
   } as const;
 }

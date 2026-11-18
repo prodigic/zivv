@@ -13,7 +13,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { RecoveryRuntimeEntry } from "../../lib/ingestion/recovery-runtime.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
-import { observeSelectedLoadCompletionPrefix } from "../../lib/ingestion/recovery-gmail-selected-load-completion-prefix.js";
+import {
+  observeSelectedLoadCompletionIntentFile,
+  observeSelectedLoadCompletionPrefix,
+} from "../../lib/ingestion/recovery-gmail-selected-load-completion-prefix.js";
+import { signSelectedLoadCompletionIntent } from "../../lib/ingestion/recovery-gmail-selected-load-completion-intent.js";
 
 const runId = "a".repeat(64);
 const loadPath = "recovery-gmail-load/" + runId;
@@ -68,7 +72,16 @@ function fixture() {
       files,
       result,
     });
-  return { destination, stage, target, candidate, makeStage, settle, observe };
+  return {
+    destination,
+    stage,
+    target,
+    candidate,
+    makeStage,
+    settle,
+    observe,
+    entries,
+  };
 }
 
 it("recognizes settled prefixes and requires the result after the manifest", () => {
@@ -170,5 +183,61 @@ it("refuses after-gap effects, unknown family members, and changed bytes", () =>
     } finally {
       rmSync(f.destination, { recursive: true, force: true });
     }
+  }
+});
+
+it("classifies only the staging directory and exact intent prefix after independent reconstruction", () => {
+  const f = fixture();
+  const name = "completion-intent.json";
+  const key = Buffer.alloc(32, 7);
+  const identity = {
+    runId,
+    admissionSha256: "b".repeat(64),
+    executionBaselineSha256: "c".repeat(64),
+    priorFamilySha256: "d".repeat(64),
+    ledgerRevision: "e".repeat(64),
+    generation: 3,
+  };
+  const expectedBytes = signSelectedLoadCompletionIntent(
+    {
+      identity,
+      owner: {
+        scope: "prodigic/zivv/production",
+        owner: "12345678-1234-1234-1234-123456789abc",
+        fence: 7,
+        expiresAtEpochMs: 12000,
+      },
+      guardedJournalSha256: "f".repeat(64),
+      releasedJournalSha256: "1".repeat(64),
+      historyManifestSha256: "2".repeat(64),
+      resultSha256: "3".repeat(64),
+    },
+    key
+  );
+  const observe = (expected?: Buffer) =>
+    observeSelectedLoadCompletionIntentFile({
+      destination: f.destination,
+      identity,
+      key,
+      entries: f.entries(),
+      expectedBytes: expected,
+    });
+  try {
+    f.makeStage(name);
+    expect(() => observe()).toThrow();
+    expect(observe(expectedBytes)).toMatchObject({ state: "stage-only" });
+    const partial = expectedBytes.subarray(0, 59);
+    const path = join(f.destination, f.candidate(name));
+    writeFileSync(path, partial);
+    expect(() => observe()).toThrow();
+    expect(observe(expectedBytes)).toMatchObject({
+      state: "partial",
+      candidate: { bytes: partial, nlink: 1 },
+    });
+    expect(readFileSync(path)).toEqual(partial);
+    writeFileSync(path, Buffer.alloc(partial.length, 0));
+    expect(() => observe(expectedBytes)).toThrow();
+  } finally {
+    rmSync(f.destination, { recursive: true, force: true });
   }
 });
