@@ -1,6 +1,6 @@
 import {
   nextSelectedLoadResumeGap,
-  readInstalledNextSelectedLoadResumeIntent,
+  observeNextSelectedLoadResumeIntent,
   type NextSelectedLoadResumeGap,
 } from "./recovery-gmail-selected-load-next-resume-intent.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
@@ -221,10 +221,10 @@ export function readNextSelectedLoadInterruptionEvidence(
       backupSize: backup.length,
       reportPresent: !!storedReport,
     };
-    const saved = readInstalledNextSelectedLoadResumeIntent(
+    const saved = observeNextSelectedLoadResumeIntent(
+      root,
       loadPath,
       entries,
-      read,
       input.recoveryKey
     );
     if (
@@ -234,9 +234,7 @@ export function readNextSelectedLoadInterruptionEvidence(
     )
       return fail();
     const inputEntries = saved
-      ? entries.filter(
-          (entry) => entry.path !== saved.path && entry.path !== saved.stage
-        )
+      ? entries.filter((entry) => !saved.paths.has(entry.path))
       : entries;
     if (
       canonicalJson(inventory) !== canonicalJson(inputEntries) ||

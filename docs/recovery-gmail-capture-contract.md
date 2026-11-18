@@ -510,3 +510,8 @@ A rolled-back load reruns its reviewed import. A committed load completes its
 journal from the committed import. The result binds the resume intent, and
 completed replay reconstructs the prior interrupted journal and inventory
 before accepting that result.
+
+If a retry worker stops with one exact signed intent stage, inspection retains
+the original expiry and fence. The guarded installer rechecks the intent and
+stage identities before adoption or unlink. It permits disappearance of that
+stage only when its exact file remains installed at the canonical intent path.

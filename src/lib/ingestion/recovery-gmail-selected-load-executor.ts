@@ -1757,10 +1757,11 @@ export function executeRecoveredGmailNextSelectedLoad(
 }
 
 /** Resume the exact second-load gap under a new fence after natural expiry. */
-export async function resumeRecoveredGmailNextSelectedLoad(
+async function resumeNextSelectedLoad(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
   next: RecoveryGmailSelectedReceiptSelector,
-  signedAdmission: Buffer
+  signedAdmission: Buffer,
+  testPause?: "intent-linked"
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoSelectedLoadInstallation();
@@ -1848,8 +1849,12 @@ export async function resumeRecoveredGmailNextSelectedLoad(
     );
     if (originalEntries.size !== entries.length) return fail();
     const transients = new Map<string, Buffer>();
+    const staged = evidence.saved?.observed.candidate;
+    if (staged) transients.set(staged.path, bytes);
+    let settling = false;
     scope = {
       active: true,
+      chunkPauseTest: testPause,
       phase: "evidence",
       evidenceGuard: true,
       resume: {
@@ -1922,7 +1927,25 @@ export async function resumeRecoveredGmailNextSelectedLoad(
             continue;
           fail();
         }
-        for (const entry of entries) if (!present.has(entry.path)) fail();
+        for (const entry of entries) {
+          if (present.has(entry.path)) continue;
+          if (
+            !settling ||
+            !staged ||
+            join(destination, entry.path) !== staged.path
+          )
+            fail();
+          const target = lstatSync(path);
+          if (
+            !target.isFile() ||
+            target.isSymbolicLink() ||
+            target.nlink !== 1 ||
+            target.dev !== staged.dev ||
+            target.ino !== staged.ino ||
+            !readFileSync(path).equals(bytes)
+          )
+            fail();
+        }
       },
     };
 
@@ -1940,6 +1963,13 @@ export async function resumeRecoveredGmailNextSelectedLoad(
         await withCanonicalStoreTransaction(catalogPath, catalog, async () => {
           same(opened.inventoryGmailSelectedLoadExecution(), entries);
           scope!.assertCurrent();
+          if (staged) {
+            same(
+              inspectRecoveryInstalledFile(path, stage, 8192),
+              evidence.saved!.observed
+            );
+            settling = true;
+          }
           installRecoveryIntent(path, bytes, stage);
           scope!.assertCurrent();
         });
@@ -1969,6 +1999,26 @@ export async function resumeRecoveredGmailNextSelectedLoad(
     input.recoveryKey.fill(0);
     wire.fill(0);
   }
+}
+
+/** Resume the exact second-load gap under a new fence after natural expiry. */
+export function resumeRecoveredGmailNextSelectedLoad(
+  prior: RecoveryGmailSelectedLoadInstallationInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer
+) {
+  return resumeNextSelectedLoad(prior, next, admission);
+}
+
+/** Fixed staged-intent interruption for the retained test worker only. */
+export function resumeRecoveredGmailNextSelectedLoadForTest(
+  prior: RecoveryGmailSelectedLoadInstallationInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer,
+  point: "intent-linked"
+) {
+  if (point !== "intent-linked") return fail();
+  return resumeNextSelectedLoad(prior, next, admission, point);
 }
 
 /** Fixed second-load test pauses at the protected catalog commit. */
