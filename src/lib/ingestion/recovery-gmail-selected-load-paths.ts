@@ -6,6 +6,7 @@ export const selectedLoadHistoryLayout = {
   inventory: { prefix: "history-inventory-", chunks: 8 },
 } as const;
 export const selectedLoadHistoryManifestFilename = "history-manifest.json";
+export const selectedLoadCompletionIntentFilename = "completion-intent.json";
 
 export function isSelectedLoadHistoryFilename(name: string): boolean {
   if (name === selectedLoadHistoryManifestFilename) return true;
@@ -18,11 +19,15 @@ export function isSelectedLoadHistoryFilename(name: string): boolean {
 
 function selectedLoadHistoryStagedFilename(path: string) {
   const match =
-    /^(history-[a-z0-9.-]+)-stage\/\1(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
+    /^(history-[a-z0-9.-]+|completion-intent\.json)-stage\/\1(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.exec(
       path
     );
   const name = match?.[1];
-  return name && isSelectedLoadHistoryFilename(name) ? name : undefined;
+  return name &&
+    (isSelectedLoadHistoryFilename(name) ||
+      name === selectedLoadCompletionIntentFilename)
+    ? name
+    : undefined;
 }
 
 /** Recognize a target or matching installer alias within one exact load root. */
@@ -32,7 +37,11 @@ export function selectedLoadHistoryAliasTarget(
   const match = /^(recovery-gmail-load\/[a-f0-9]{64}\/)(.+)$/.exec(path);
   if (!match) return undefined;
   const name = match[2]!;
-  if (isSelectedLoadHistoryFilename(name)) return path;
+  if (
+    isSelectedLoadHistoryFilename(name) ||
+    name === selectedLoadCompletionIntentFilename
+  )
+    return path;
   const staged = selectedLoadHistoryStagedFilename(name);
   return staged ? match[1] + staged : undefined;
 }

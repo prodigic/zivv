@@ -1,12 +1,22 @@
+import { signSelectedLoadHistoricalResult } from "./recovery-gmail-selected-result-proof.js";
 import { assertSelectedLoadSettlementTransition } from "./recovery-gmail-selected-settlement-transition.js";
 import { DatabaseSync } from "node:sqlite";
+import { signSelectedLoadCompletionIntent } from "./recovery-gmail-selected-load-completion-intent.js";
+import { selectedLoadCompletionIntentFilename } from "./recovery-gmail-selected-load-paths.js";
 import { prepareSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
 import { prepareSelectedLoadIntentSuccessor } from "./recovery-gmail-selected-successor-preparation.js";
 import {
   describeResumeSnapshot,
   resumeSnapshotChunkSize,
 } from "./recovery-gmail-selected-resume-snapshot-evidence.js";
-import { readSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-interruption-inspection.js";
+import {
+  readSelectedLoadInterruptionEvidence,
+  type SelectedLoadInterruptionEvidence,
+} from "./recovery-gmail-selected-load-interruption-inspection.js";
+import {
+  observeSelectedLoadCompletionIntentFile,
+  observeSelectedLoadCompletionPrefix,
+} from "./recovery-gmail-selected-load-completion-prefix.js";
 import { verifySelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { signSelectedLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { selectedLoadTemporaryTarget } from "./recovery-gmail-selected-load-paths.js";
@@ -101,7 +111,8 @@ interface Scope {
     | "successor-linked"
     | "successor-flushed"
     | "catalog-before-commit"
-    | "rollback-catalog-committed";
+    | "rollback-catalog-committed"
+    | "history-first-chunk";
   evidenceGuard?: boolean;
   successor?: { path: string };
   incompleteSnapshot?: {
@@ -127,6 +138,7 @@ interface Scope {
   key: Buffer;
   phase: "evidence" | "key" | "run" | "result";
   historyTargets?: Set<string>;
+  completionRepair?: true;
   source: Baseline["source"];
   run: Baseline["runState"];
   initialRun: Baseline["initialState"];
@@ -688,7 +700,8 @@ export function selectedGmailLoadFile(
     return true;
   }
   if (
-    scope.phase === "evidence" &&
+    (scope.phase === "evidence" ||
+      (scope.phase === "result" && scope.completionRepair)) &&
     scope.evidenceGuard &&
     effect === "install" &&
     scope.incompleteSnapshot &&
@@ -903,29 +916,36 @@ async function installSelectedLoadCompletion(
   const owner = released.ownership.find((row) => row.scope === production);
   if (!owner || owner.owner !== scope.owner || owner.fence !== scope.fence)
     fail();
+  const guardedOwner = { ...owner };
   owner.expiresAtEpochMs = 0;
   const { digest: _digest, ...body } = released;
   const releasedJournal = Buffer.from(
     canonicalJson({ ...body, digest: sha256(canonicalJson(body)) }) + "\n"
   );
   const observed = inventory();
-  const historyPrefix = "recovery-gmail-load/" + state.runId + "/history-";
+  const loadPrefix = "recovery-gmail-load/" + state.runId + "/";
+  const completionPrefix = loadPrefix + selectedLoadCompletionIntentFilename;
   if (
-    observed.some((entry) => entry.path.startsWith(historyPrefix)) ||
+    observed.some(
+      (entry) =>
+        entry.path.startsWith(loadPrefix + "history-") ||
+        entry.path.startsWith(completionPrefix)
+    ) ||
     scope.previousFiles.size ||
     [...scope.transients.keys()].some((path) => existsSync(path))
   )
     fail();
   const ledgerRevision = ledgerDigest(scope.ledger);
+  const historyIdentity = {
+    runId: state.runId,
+    admissionSha256: identity.admissionSha256,
+    executionBaselineSha256: identity.executionBaselineSha256,
+    priorFamilySha256: sha256(canonicalJson([])),
+    ledgerRevision,
+    generation: scope.generation,
+  };
   const history = prepareSelectedLoadHistoryFiles(
-    {
-      runId: state.runId,
-      admissionSha256: identity.admissionSha256,
-      executionBaselineSha256: identity.executionBaselineSha256,
-      priorFamilySha256: sha256(canonicalJson([])),
-      ledgerRevision,
-      generation: scope.generation,
-    },
+    historyIdentity,
     {
       encryptedCatalog,
       guardedJournal,
@@ -950,40 +970,62 @@ async function installSelectedLoadCompletion(
     for (const { name, bytes } of history.files)
       assertInstalled(join(scope.directory, name), bytes);
   };
+  const result = signSelectedLoadHistoricalResult(
+    {
+      ...identity,
+      runId: state.runId,
+      ledgerRevision,
+      generation: scope.generation,
+      journalSha256: sha256(releasedJournal),
+      guardedJournalSha256: sha256(guardedJournal),
+      runStateSha256: sha256(canonicalJson(state)),
+      reportSha256: scope.plan.receipt.reportSha256,
+      historyManifestSha256: history.manifestSha256,
+    },
+    scope.key
+  );
+  const completionBytes = signSelectedLoadCompletionIntent(
+    {
+      identity: historyIdentity,
+      owner: guardedOwner,
+      guardedJournalSha256: sha256(guardedJournal),
+      releasedJournalSha256: sha256(releasedJournal),
+      historyManifestSha256: history.manifestSha256,
+      resultSha256: sha256(result),
+    },
+    scope.key
+  );
+  const completionPath = join(
+    scope.directory,
+    selectedLoadCompletionIntentFilename
+  );
+  const installEvidence = (path: string, bytes: Buffer) => {
+    const stage = path + "-stage";
+    if (scope.files.has(path) || scope.directories.has(stage)) fail();
+    scope.files.set(path, bytes);
+    scope.directories.add(stage);
+    scope.historyTargets ??= new Set();
+    scope.historyTargets.add(path);
+    installRecoveryIntent(path, bytes, stage);
+  };
   scope.phase = "result";
   try {
-    for (const { name, bytes } of history.files) {
-      const path = join(scope.directory, name),
-        stage = path + "-stage";
-      if (scope.files.has(path) || scope.directories.has(stage)) fail();
-      scope.files.set(path, bytes);
-      scope.directories.add(stage);
-      scope.historyTargets ??= new Set();
-      scope.historyTargets.add(path);
-      installRecoveryIntent(path, bytes, stage);
+    installEvidence(completionPath, completionBytes);
+    assertInstalled(completionPath, completionBytes);
+    for (const [index, { name, bytes }] of history.files.entries()) {
+      installEvidence(join(scope.directory, name), bytes);
+      if (index === 0 && scope.chunkPauseTest === "history-first-chunk") {
+        process.stdout.write("SELECTED_LOAD_TEST_HISTORY_FIRST_CHUNK\n");
+        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+        throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+      }
     }
     assertHistoryFiles();
-    const result = signed(
-      {
-        kind: "zivv-selected-load-result",
-        version: 3,
-        ...identity,
-        runId: state.runId,
-        ledgerRevision,
-        generation: scope.generation,
-        journalSha256: sha256(releasedJournal),
-        guardedJournalSha256: sha256(guardedJournal),
-        runStateSha256: sha256(canonicalJson(state)),
-        reportSha256: scope.plan.receipt.reportSha256,
-        historyManifestSha256: history.manifestSha256,
-      },
-      scope.key,
-      "zivv-selected-load-result/v3"
-    );
     const resultPath = join(scope.directory, "load-result.json");
     scope.files.set(resultPath, result);
     installRecoveryIntent(resultPath, result, resultPath + "-stage");
     scope.assertCompletionFiles = () => {
+      assertInstalled(completionPath, completionBytes);
       assertHistoryFiles();
       assertInstalled(resultPath, result);
     };
@@ -997,6 +1039,68 @@ async function installSelectedLoadCompletion(
     return { result, releasedJournal };
   } finally {
     scope.phase = "run";
+  }
+}
+
+/** Finish only the already pinned physical candidate and exact planned suffix. */
+function completeRetainedPrefixFile(
+  incomplete: NonNullable<Scope["incompleteSnapshot"]>,
+  full: Buffer
+) {
+  const fd = openSync(incomplete.path, "r+");
+  try {
+    const opened = fstatSync(fd),
+      named = lstatSync(incomplete.path);
+    if (
+      !opened.isFile() ||
+      named.isSymbolicLink() ||
+      opened.nlink !== 1 ||
+      named.nlink !== 1 ||
+      opened.dev !== incomplete.dev ||
+      opened.ino !== incomplete.ino ||
+      named.dev !== opened.dev ||
+      named.ino !== opened.ino ||
+      opened.size !== incomplete.bytes.length ||
+      named.size !== opened.size
+    )
+      fail();
+    const observed = Buffer.alloc(incomplete.bytes.length);
+    let readOffset = 0;
+    while (readOffset < observed.length) {
+      const count = readSync(
+        fd,
+        observed,
+        readOffset,
+        observed.length - readOffset,
+        readOffset
+      );
+      if (count <= 0) fail();
+      readOffset += count;
+    }
+    if (!observed.equals(incomplete.bytes)) fail();
+    let offset = observed.length;
+    while (offset < full.length) {
+      const written = writeSync(fd, full, offset, full.length - offset, offset);
+      if (written <= 0) fail();
+      offset += written;
+    }
+    fsyncSync(fd);
+    const after = fstatSync(fd),
+      currentName = lstatSync(incomplete.path);
+    if (
+      after.dev !== opened.dev ||
+      after.ino !== opened.ino ||
+      after.nlink !== 1 ||
+      after.size !== full.length ||
+      currentName.isSymbolicLink() ||
+      currentName.dev !== opened.dev ||
+      currentName.ino !== opened.ino ||
+      currentName.nlink !== 1 ||
+      currentName.size !== full.length
+    )
+      fail();
+  } finally {
+    closeSync(fd);
   }
 }
 
@@ -1034,7 +1138,7 @@ function assertRetainedSelectedLoadExecutor(destination: string): void {
  * Interrupted SQL effects require the separate original-baseline replay composer. */
 async function executeSelectedLoadFirst(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
-  testPause?: "catalog-before-commit"
+  testPause?: "catalog-before-commit" | "history-first-chunk"
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoRecoveredGmailCapture();
@@ -1394,17 +1498,268 @@ export function executeRecoveredGmailSelectedLoad(
 ) {
   return executeSelectedLoadFirst(input);
 }
-/** Fixed test-only precommit pause in the retained worker. */
+/** Fixed test-only pauses at durable boundaries of the retained worker. */
 export function executeRecoveredGmailSelectedLoadForTest(
   input: RecoveryGmailSelectedLoadInstallationInput,
-  point: "catalog-before-commit"
+  point: "catalog-before-commit" | "history-first-chunk"
 ) {
-  if (point !== "catalog-before-commit") fail();
+  if (point !== "catalog-before-commit" && point !== "history-first-chunk")
+    fail();
   return executeSelectedLoadFirst(input, point);
 }
 
 /** Resume exactly one inspected committed first-attempt gap. Scope remains
  * private and quarantined; interruption of this retry requires later proof. */
+/** Settle the observed file prefix under both writer locks without changing
+ * the original catalog, journal, or ownership fence. */
+async function settleSelectedLoadCompletion(
+  runtime: Omit<RecoveryGmailSelectedLoadInstallationInput, "selector">,
+  evidence: SelectedLoadInterruptionEvidence,
+  proof: Baseline,
+  plan: SelectedGmailLoadEffectPlan
+) {
+  const completion = evidence.completionPending;
+  if (!completion || evidence.report.lease.status === "active") fail();
+  const destination = resolve(runtime.destination);
+  const root = join(destination, "checkout");
+  const operator = join(destination, "operator");
+  const directory = join(
+    destination,
+    "recovery-gmail-load",
+    proof.runState.runId
+  );
+  const location = projectLedgerLocation(root);
+  if (
+    location.backend !== "sqlite" ||
+    resolve(location.path) !== join(operator, "ledger.sqlite")
+  )
+    fail();
+  const opened = openPreparedRuntimeForAdmission(runtime);
+  const initial = new Map(
+    evidence.physicalEntries.map((entry) => [entry.path, entry])
+  );
+  if (initial.size !== evidence.physicalEntries.length) fail();
+  const journal = validateWeeklyJournalRecoverySnapshot(
+    evidence.observedJournal
+  );
+  const owner = journal.ownership.find((row) => row.scope === production);
+  if (!owner || owner.expiresAtEpochMs > Date.now()) fail();
+  const expectedIntent = signSelectedLoadCompletionIntent(
+    completion.intent.fields,
+    runtime.recoveryKey
+  );
+  if (sha256(expectedIntent) !== completion.intent.intentSha256) fail();
+  const batch = [
+    { name: selectedLoadCompletionIntentFilename, bytes: expectedIntent },
+    ...completion.plan.files,
+    { name: "load-result.json", bytes: completion.plan.result },
+  ];
+  const files = new Map(
+    batch.map(({ name, bytes }) => [join(directory, name), bytes])
+  );
+  if (files.size !== batch.length) fail();
+  const directories = new Set([
+    directory,
+    dirname(directory),
+    ...[...files.keys()].map((path) => path + "-stage"),
+  ]);
+  const identities = ["ledger.sqlite", "weekly-runs.sqlite"].map((name) => {
+    const path = join(operator, name),
+      stat = lstatSync(path);
+    if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1) fail();
+    return { path, dev: stat.dev, ino: stat.ino };
+  });
+  const removable = new Set<string>();
+  const transients = new Map<string, Buffer>();
+  const scope: Scope = {
+    active: true,
+    phase: "evidence",
+    evidenceGuard: true,
+    completionRepair: true,
+    deadline: Date.now() + 180000,
+    startedAt: Date.now(),
+    root,
+    operator,
+    directory,
+    key: Buffer.from(runtime.recoveryKey),
+    source: proof.source,
+    run: proof.runState,
+    initialRun: proof.initialState,
+    raw: evidence.raw,
+    plan,
+    original: evidence.originalBaseline.checkpoint.ledger,
+    ledger: evidence.observedCatalog.ledger,
+    generation: evidence.observedCatalog.generation,
+    owner: owner.owner,
+    fence: owner.fence,
+    journal,
+    files,
+    directories,
+    transients,
+    historyTargets: new Set(files.keys()),
+    readonlyFiles: new Map(),
+    previousFiles: new Map(),
+    keyStage: join(directory, "key-stage"),
+    originalEntries: initial,
+    assertCurrent: () => {
+      for (const identity of identities) {
+        const stat = lstatSync(identity.path);
+        if (
+          !stat.isFile() ||
+          stat.isSymbolicLink() ||
+          stat.nlink !== 1 ||
+          stat.dev !== identity.dev ||
+          stat.ino !== identity.ino
+        )
+          fail();
+      }
+      const entries = opened.inventoryGmailSelectedLoadExecution();
+      const seen = new Set<string>();
+      const matches = (entry: RecoveryRuntimeEntry, expected: Buffer) =>
+        entry.kind === "file" &&
+        entry.size === expected.length &&
+        entry.sha256 === sha256(expected);
+      for (const entry of entries) {
+        seen.add(entry.path);
+        const path = join(destination, entry.path);
+        const before = initial.get(entry.path);
+        if (before && canonicalJson(before) === canonicalJson(entry)) continue;
+        const planned = files.get(path);
+        const temporary = transients.get(path);
+        if (
+          (entry.kind === "directory" && directories.has(path)) ||
+          (planned && matches(entry, planned)) ||
+          (temporary &&
+            (matches(entry, temporary) ||
+              (entry.kind === "file" && entry.size === 0)))
+        )
+          continue;
+        fail();
+      }
+      for (const entry of initial.keys())
+        if (!seen.has(entry) && !removable.has(join(destination, entry)))
+          fail();
+    },
+  };
+  try {
+    await scopes.run(scope, async () => {
+      scope.assertCurrent();
+      const journalGuard = new DatabaseSync(
+        join(operator, "weekly-runs.sqlite"),
+        { timeout: 10000 }
+      );
+      try {
+        journalGuard.exec("BEGIN IMMEDIATE");
+        if (
+          !readWeeklyJournalRecoverySnapshotInTransaction(journalGuard).equals(
+            evidence.observedJournal
+          ) ||
+          owner.expiresAtEpochMs > Date.now()
+        )
+          fail();
+        await withCanonicalStoreTransaction(
+          location.path,
+          evidence.observedCatalog,
+          async () => {
+            const entries = opened.inventoryGmailSelectedLoadExecution();
+            same(entries, evidence.physicalEntries);
+            const intent = observeSelectedLoadCompletionIntentFile({
+              destination,
+              entries,
+              identity: completion.intent.fields.identity,
+              key: scope.key,
+            });
+            const prefix = observeSelectedLoadCompletionPrefix({
+              destination,
+              entries,
+              runId: proof.runState.runId,
+              files: completion.plan.files,
+              result: completion.plan.result,
+            });
+            same(intent, completion.intent);
+            same(prefix, completion.prefix);
+            const retainCandidate = (
+              candidate: typeof intent.candidate,
+              bytes: Buffer
+            ) => {
+              if (!candidate) return;
+              transients.set(candidate.path, bytes);
+              removable.add(candidate.path);
+            };
+            retainCandidate(intent.candidate, expectedIntent);
+            const next = prefix.next;
+            if (!next) fail();
+            const nextBytes = files.get(join(directory, next.name));
+            if (!nextBytes) fail();
+            retainCandidate(next.candidate, nextBytes);
+            scope.phase = "result";
+            try {
+              if (next.state === "partial") {
+                const incomplete = next.candidate;
+                if (
+                  !incomplete ||
+                  !nextBytes
+                    .subarray(0, incomplete.bytes.length)
+                    .equals(incomplete.bytes)
+                )
+                  fail();
+                scope.incompleteSnapshot = incomplete;
+                selectedGmailLoadFile(
+                  incomplete.path,
+                  incomplete.bytes,
+                  "install"
+                );
+                completeRetainedPrefixFile(incomplete, nextBytes);
+                scope.incompleteSnapshot = undefined;
+                scope.assertCurrent();
+              }
+              for (const { name, bytes } of batch) {
+                const path = join(directory, name);
+                installRecoveryIntent(path, bytes, path + "-stage");
+              }
+              scope.assertCurrent();
+              const after = opened.inventoryGmailSelectedLoadExecution();
+              if (
+                observeSelectedLoadCompletionIntentFile({
+                  destination,
+                  entries: after,
+                  identity: intent.fields.identity,
+                  key: scope.key,
+                }).state !== "settled" ||
+                observeSelectedLoadCompletionPrefix({
+                  destination,
+                  entries: after,
+                  runId: proof.runState.runId,
+                  files: completion.plan.files,
+                  result: completion.plan.result,
+                }).next
+              )
+                fail();
+            } finally {
+              scope.phase = "evidence";
+            }
+          }
+        );
+        if (
+          !readWeeklyJournalRecoverySnapshotInTransaction(journalGuard).equals(
+            evidence.observedJournal
+          )
+        )
+          fail();
+        journalGuard.exec("COMMIT");
+      } catch (error) {
+        if (journalGuard.isTransaction) journalGuard.exec("ROLLBACK");
+        throw error;
+      } finally {
+        journalGuard.close();
+      }
+    });
+  } finally {
+    scope.active = false;
+    scope.key.fill(0);
+  }
+}
+
 async function resumeSelectedLoadAttempt(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
   chunkPauseTest:
@@ -1427,9 +1782,13 @@ async function resumeSelectedLoadAttempt(
     assertRetainedSelectedLoadExecutor(runtime.destination);
     const evidence = readSelectedLoadInterruptionEvidence(input);
     if (
-      !["committed", "completed", "pending-intent", "unchanged"].includes(
-        evidence.report.status
-      )
+      ![
+        "committed",
+        "completed",
+        "pending-intent",
+        "unchanged",
+        "completion-pending",
+      ].includes(evidence.report.status)
     )
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_NOT_COMMITTED");
     if (evidence.report.lease.status === "active")
@@ -1448,6 +1807,10 @@ async function resumeSelectedLoadAttempt(
       proof,
       evidence.raw
     );
+    if (evidence.report.status === "completion-pending") {
+      await settleSelectedLoadCompletion(runtime, evidence, proof, plan);
+      return { settled: true as const };
+    }
     if (evidence.report.status === "completed") {
       if (!evidence.completedResultSha256) fail();
       return {
@@ -1959,67 +2322,7 @@ async function resumeSelectedLoadAttempt(
                     .equals(incomplete.bytes)
                 )
                   fail();
-                const fd = openSync(incomplete.path, "r+");
-                try {
-                  const opened = fstatSync(fd),
-                    named = lstatSync(incomplete.path);
-                  if (
-                    !opened.isFile() ||
-                    named.isSymbolicLink() ||
-                    opened.nlink !== 1 ||
-                    named.nlink !== 1 ||
-                    opened.dev !== incomplete.dev ||
-                    opened.ino !== incomplete.ino ||
-                    named.dev !== opened.dev ||
-                    named.ino !== opened.ino ||
-                    opened.size !== incomplete.bytes.length ||
-                    named.size !== opened.size
-                  )
-                    fail();
-                  const observed = Buffer.alloc(incomplete.bytes.length);
-                  let readOffset = 0;
-                  while (readOffset < observed.length) {
-                    const count = readSync(
-                      fd,
-                      observed,
-                      readOffset,
-                      observed.length - readOffset,
-                      readOffset
-                    );
-                    if (count <= 0) fail();
-                    readOffset += count;
-                  }
-                  if (!observed.equals(incomplete.bytes)) fail();
-                  let offset = observed.length;
-                  while (offset < full.length) {
-                    const written = writeSync(
-                      fd,
-                      full,
-                      offset,
-                      full.length - offset,
-                      offset
-                    );
-                    if (written <= 0) fail();
-                    offset += written;
-                  }
-                  fsyncSync(fd);
-                  const after = fstatSync(fd),
-                    currentName = lstatSync(incomplete.path);
-                  if (
-                    after.dev !== opened.dev ||
-                    after.ino !== opened.ino ||
-                    after.nlink !== 1 ||
-                    after.size !== full.length ||
-                    currentName.isSymbolicLink() ||
-                    currentName.dev !== opened.dev ||
-                    currentName.ino !== opened.ino ||
-                    currentName.nlink !== 1 ||
-                    currentName.size !== full.length
-                  )
-                    fail();
-                } finally {
-                  closeSync(fd);
-                }
+                completeRetainedPrefixFile(incomplete, full);
                 scope!.incompleteSnapshot = undefined;
                 scope!.assertCurrent();
               }
