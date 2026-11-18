@@ -517,6 +517,12 @@ it.each([
             );
           }
           assertDetachedRetry("expired");
+          expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
+            catalog
+          );
+          expect(
+            readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
+          ).toEqual(retryJournal);
           expect(sha256(readFileSync(catalogPath))).toBe(retryCatalogSha256);
           expect(sha256(readFileSync(journalPath))).toBe(retryJournalSha256);
           expect(readFileSync(intentPath)).toEqual(intentBytes);

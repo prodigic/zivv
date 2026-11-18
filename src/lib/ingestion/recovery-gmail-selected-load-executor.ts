@@ -601,6 +601,15 @@ export async function verifySelectedLoadResumeBarrier(): Promise<void> {
   );
   scope.resume.gateComplete = true;
 }
+export function hasGuardedNextSelectedLoadAcquisition(): boolean {
+  const scope = current();
+  return (
+    !!scope?.priorLoadFamilySha256 &&
+    !!scope.resume &&
+    !scope.resume.gateComplete
+  );
+}
+
 export function hasPendingSelectedLoadResume(): boolean {
   const scope = current();
   return !!scope?.resume && !scope.resume.gateComplete;
@@ -1969,7 +1978,7 @@ async function resumeNextSelectedLoad(
             continue;
           fail();
         }
-        for (const entry of entries) {
+        for (const entry of originalEntries.values()) {
           if (present.has(entry.path)) continue;
           if (
             !settling ||
@@ -2014,6 +2023,20 @@ async function resumeNextSelectedLoad(
             settling = true;
           }
           installRecoveryIntent(path, bytes, stage);
+          const settled = inspectRecoveryInstalledFile(path, stage, 8192);
+          if (!settled.target?.bytes.equals(bytes) || settled.candidate) fail();
+          const retryPath =
+            "recovery-gmail-load/" + gap.runId + "/" + retry.filename;
+          originalEntries.set(retryPath, {
+            path: retryPath,
+            kind: "file",
+            size: bytes.length,
+            sha256: sha256(bytes),
+          });
+          originalEntries.set(retryPath + "-stage", {
+            path: retryPath + "-stage",
+            kind: "directory",
+          });
           scope!.assertCurrent();
         });
         if (
