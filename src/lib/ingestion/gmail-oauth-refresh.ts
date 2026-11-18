@@ -2,15 +2,29 @@ const tokenEndpoint = "https://oauth2.googleapis.com/token";
 const readonlyScope = "https://www.googleapis.com/auth/gmail.readonly";
 const maxResponseBytes = 64 * 1024;
 
+type GmailOAuthErrorCode =
+  | "GMAIL_AUTH_CONFIGURATION_REQUIRED"
+  | "GMAIL_AUTH_REQUIRED"
+  | "GMAIL_AUTH_RETRYABLE_FAILURE"
+  | "GMAIL_AUTH_TRANSPORT_FAILED"
+  | "GMAIL_READONLY_SCOPE_REQUIRED"
+  | "GMAIL_TOKEN_RESPONSE_INVALID"
+  | "GMAIL_TOKEN_EXPIRED_DURING_REFRESH"
+  | "GMAIL_CREDENTIAL_STORAGE_FAILED"
+  | "GMAIL_CREDENTIAL_STORAGE_BUSY"
+  | "GMAIL_CREDENTIAL_STORAGE_UNSAFE"
+  | "GMAIL_CREDENTIAL_NOT_PROVISIONED"
+  | "GMAIL_CREDENTIAL_ALREADY_PROVISIONED";
+
 export class GmailOAuthError extends Error {
-  readonly code: string;
-  constructor(code: string) {
+  readonly code: GmailOAuthErrorCode;
+  constructor(code: GmailOAuthErrorCode) {
     super(code);
     this.name = "GmailOAuthError";
     this.code = code;
   }
 }
-function fail(code: string): never {
+function fail(code: GmailOAuthErrorCode): never {
   throw new GmailOAuthError(code);
 }
 function secret(value: unknown, maximum: number): string {
