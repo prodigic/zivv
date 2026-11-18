@@ -3,6 +3,10 @@ import {
   observeNextSelectedLoadResumeIntent,
   type NextSelectedLoadResumeGap,
 } from "./recovery-gmail-selected-load-next-resume-intent.js";
+import {
+  readNextSelectedLoadResumeSuccessors,
+  rewindNextSelectedLoadAcquiredRetries,
+} from "./recovery-gmail-selected-load-next-successors.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import { join } from "node:path";
 import { decryptLedgerSnapshot } from "./encrypted-backup.js";
@@ -105,6 +109,37 @@ export function readNextSelectedLoadInterruptionEvidence(
     const catalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
     const journal = readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
     const { plan, proof, raw } = effective;
+    const saved = observeNextSelectedLoadResumeIntent(
+      root,
+      loadPath,
+      entries,
+      input.recoveryKey
+    );
+    const successors = readNextSelectedLoadResumeSuccessors({
+      loadPath,
+      entries,
+      read,
+      initial: saved,
+      key: input.recoveryKey,
+    });
+    if (
+      successors.length &&
+      (!saved?.observed.target || saved.observed.candidate)
+    )
+      return fail();
+    const records = saved ? [saved, ...successors] : [];
+    const latest = records.at(-1);
+    const acquired =
+      !!latest && latest.intent.journalSha256 !== sha256(journal);
+    if (
+      (latest && latest.intent.startedAtEpochMs > Date.now()) ||
+      (acquired && (!saved?.observed.target || saved.observed.candidate))
+    )
+      return fail();
+    const originalJournal = rewindNextSelectedLoadAcquiredRetries(
+      journal,
+      acquired ? records : records.slice(0, -1)
+    );
 
     const rolledBack = catalog.generation === execution.generation;
     if (rolledBack) {
@@ -125,7 +160,7 @@ export function readNextSelectedLoadInterruptionEvidence(
     const status = rolledBack ? "unchanged" : "committed";
     const delta = proveSelectedLoadRunDelta({
       priorJournal: effective.journal,
-      observedJournal: journal,
+      observedJournal: originalJournal,
       startedAtEpochMs: execution.startedAtEpochMs,
       admissionSha256,
       plan,
@@ -135,16 +170,23 @@ export function readNextSelectedLoadInterruptionEvidence(
       observedLedger: catalog.ledger,
       catalogDisposition: status,
     });
-    const retained = validateWeeklyJournalRecoverySnapshot(journal);
+    const retained = validateWeeklyJournalRecoverySnapshot(originalJournal);
+    const owner = validateWeeklyJournalRecoverySnapshot(journal).ownership.find(
+      (item) => item.scope === "prodigic/zivv/production"
+    );
     const row = retained.runState.find((item) => item.id === runId);
-    const owner = retained.ownership.find(
+    const originalOwner = retained.ownership.find(
       (item) => item.scope === "prodigic/zivv/production"
     );
     if (
       delta.status !== status ||
       !row ||
       !owner ||
-      owner.expiresAtEpochMs < execution.startedAtEpochMs
+      !originalOwner ||
+      (latest &&
+        !acquired &&
+        canonicalJson(owner) !== canonicalJson(latest.intent.previousOwner)) ||
+      originalOwner.expiresAtEpochMs < execution.startedAtEpochMs
     )
       return fail();
     const state = parseWeeklyRunState(JSON.parse(row.payload));
@@ -216,26 +258,23 @@ export function readNextSelectedLoadInterruptionEvidence(
       inventorySha256: sha256(canonicalJson(inventory)),
       ledgerRevision: ledgerDigest(catalog.ledger),
       generation: rolledBack ? 2 : 3,
-      previousOwner: owner,
+      previousOwner: originalOwner,
       backupSha256,
       backupSize: backup.length,
       reportPresent: !!storedReport,
     };
-    const saved = observeNextSelectedLoadResumeIntent(
-      root,
-      loadPath,
-      entries,
-      input.recoveryKey
-    );
     if (
       saved &&
       canonicalJson(nextSelectedLoadResumeGap(saved.intent)) !==
         canonicalJson(gap)
     )
       return fail();
-    const inputEntries = saved
-      ? entries.filter((entry) => !saved.paths.has(entry.path))
-      : entries;
+    const retryPaths = new Set(saved?.paths);
+    for (const { path, stage } of successors) {
+      retryPaths.add(path);
+      retryPaths.add(stage);
+    }
+    const inputEntries = entries.filter((entry) => !retryPaths.has(entry.path));
     if (
       canonicalJson(inventory) !== canonicalJson(inputEntries) ||
       canonicalJson(entries) !==
@@ -250,7 +289,7 @@ export function readNextSelectedLoadInterruptionEvidence(
       runId,
       generation: catalog.generation,
       lease: observeSelectedLoadLease(owner.expiresAtEpochMs),
-      journalSha256: delta.journalSha256,
+      journalSha256: sha256(journal),
       inventorySha256: sha256(canonicalJson(entries)),
       physicalValidationRequired: true as const,
       loadAllowed: false as const,
@@ -272,6 +311,9 @@ export function readNextSelectedLoadInterruptionEvidence(
       backup,
       gap,
       saved,
+      successors,
+      latest,
+      acquired,
     };
   } catch {
     return fail();
