@@ -1788,7 +1788,9 @@ async function resumeNextSelectedLoad(
     | "lease-acquired"
     | "rollback-catalog-committed"
     | "backup-flushed",
-  backupAlreadySettled = false
+  settledBackup?: NonNullable<
+    ReturnType<typeof observeNextSelectedLoadBackupStage>
+  >
 ): Promise<Awaited<ReturnType<typeof finishSelectedLoadWithWeeklyRunner>>> {
   assertNoSelectedGmailLoadExecution();
   assertNoSelectedLoadInstallation();
@@ -1863,7 +1865,11 @@ async function resumeNextSelectedLoad(
     );
     const { owner, gap, effective, catalog, journal, entries, pendingBackup } =
       evidence;
-    if (pendingBackup && backupAlreadySettled) return fail();
+    if (
+      settledBackup &&
+      (pendingBackup || !evidence.backup.equals(settledBackup.bytes))
+    )
+      return fail();
     const now = Date.now();
     if (owner.expiresAtEpochMs >= now)
       throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
@@ -2013,6 +2019,17 @@ async function resumeNextSelectedLoad(
             stat.nlink !== 1 ||
             stat.dev !== identity.dev ||
             stat.ino !== identity.ino
+          )
+            fail();
+        }
+        if (settledBackup) {
+          const stat = lstatSync(backup);
+          if (
+            !stat.isFile() ||
+            stat.isSymbolicLink() ||
+            stat.nlink !== 1 ||
+            stat.dev !== settledBackup.candidateIdentity.dev ||
+            stat.ino !== settledBackup.candidateIdentity.ino
           )
             fail();
         }
@@ -2175,12 +2192,13 @@ async function resumeNextSelectedLoad(
     if (result) return result;
     scope!.active = false;
     scope!.key.fill(0);
+    if (!pendingBackup) return fail();
     return await resumeNextSelectedLoad(
       input,
       next,
       admission,
       testPause,
-      true
+      pendingBackup
     );
   } finally {
     if (scope) {

@@ -1,4 +1,7 @@
-import { observeNextSelectedLoadBackupStage } from "./recovery-gmail-selected-load-next-backup.js";
+import {
+  assertNextSelectedLoadBackupEnvelope,
+  observeNextSelectedLoadBackupStage,
+} from "./recovery-gmail-selected-load-next-backup.js";
 import {
   nextSelectedLoadResumeGap,
   observeNextSelectedLoadResumeIntent,
@@ -315,6 +318,7 @@ export function readNextSelectedLoadInterruptionEvidence(
       (rolledBack || backupLedger !== canonicalJson(catalog.ledger))
     )
       return fail();
+    if (!inheritedBackup) assertNextSelectedLoadBackupEnvelope(backup);
     if (
       inheritedBackup &&
       backupLedger !== canonicalJson(effective.catalog.ledger)

@@ -20,6 +20,36 @@ function identity(path: string) {
   return { dev: stat.dev, ino: stat.ino };
 }
 
+export function assertNextSelectedLoadBackupEnvelope(bytes: Buffer) {
+  const envelope: Record<string, unknown> = JSON.parse(bytes.toString("utf8"));
+  if (
+    !envelope ||
+    typeof envelope !== "object" ||
+    Array.isArray(envelope) ||
+    canonicalJson(Object.keys(envelope).sort()) !==
+      canonicalJson([
+        "cipher",
+        "ciphertext",
+        "compression",
+        "format",
+        "keyId",
+        "nonce",
+        "tag",
+        "version",
+      ]) ||
+    !bytes.equals(Buffer.from(canonicalJson(envelope) + "\n"))
+  )
+    fail();
+  for (const name of ["nonce", "tag", "ciphertext"]) {
+    const value = envelope[name];
+    if (
+      typeof value !== "string" ||
+      Buffer.from(value, "base64").toString("base64") !== value
+    )
+      fail();
+  }
+}
+
 export function observeNextSelectedLoadBackupStage(input: {
   root: string;
   entries: RecoveryRuntimeEntry[];
@@ -49,6 +79,7 @@ export function observeNextSelectedLoadBackupStage(input: {
   if (canonicalJson(targetIdentity) === canonicalJson(candidateIdentity))
     return fail();
   const bytes = readSelectedLoadEntry(input.root, entry, maxSnapshotBytes);
+  assertNextSelectedLoadBackupEnvelope(bytes);
   if (
     canonicalJson(decryptLedgerSnapshot(bytes, input.key)) !==
       canonicalJson(input.catalog) ||

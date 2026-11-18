@@ -776,6 +776,24 @@ it.each([
         } finally {
           unlinkSync(conflict);
         }
+        const retained = join(fixture.base, "retained-flushed-backup.enc");
+        renameSync(flushed.path, retained);
+        try {
+          // The encrypted payload still authenticates, but the file could not
+          // have been emitted by the canonical writer.
+          const modified = Buffer.concat([flushed.bytes, Buffer.from("\n")]);
+          writeFileSync(flushed.path, modified, { flag: "wx" });
+          const rejected = resume();
+          expect(rejected.status).toBe(1);
+          expect(rejected.stderr).toContain(
+            "INVALID_NEXT_SELECTED_LOAD_INTERRUPTION_INSPECTION"
+          );
+          expect(readFileSync(flushed.path)).toEqual(modified);
+          expect(readFileSync(backupPath)).toEqual(originalBackup);
+        } finally {
+          if (existsSync(flushed.path)) unlinkSync(flushed.path);
+          renameSync(retained, flushed.path);
+        }
       }
       const completed = resume();
       if (completed.status !== 0)
