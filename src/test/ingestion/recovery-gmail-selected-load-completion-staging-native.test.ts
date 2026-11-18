@@ -56,7 +56,7 @@ it("settles a worker death after the first completion history chunk", async () =
     ).href;
     const env = { ...process.env, ZIVV_LEDGER_HOME: join(root, "operator") };
     const wrap = (call: string) =>
-      `try{const m=await import(${JSON.stringify(module)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const input=f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks));await ${call};}catch(e){console.error(e instanceof Error?e.message:"NATIVE_CHILD_ERROR");process.exitCode=1;}`;
+      `try{const m=await import(${JSON.stringify(module)}),f=await import(${JSON.stringify(framing)});const chunks=[];for await(const c of process.stdin)chunks.push(c);const input=f.decodeRecoveryGmailSelectedLoadFrame(Buffer.concat(chunks));const result=await ${call};process.stdout.write(JSON.stringify(result)+"\\n");}catch(e){console.error(e instanceof Error?e.message:"NATIVE_CHILD_ERROR");process.exitCode=1;}`;
     const args = (call: string) => [
       "--import",
       bootstrap,
