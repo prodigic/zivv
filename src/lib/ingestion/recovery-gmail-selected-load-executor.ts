@@ -1682,9 +1682,16 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
           catalogPath,
           effective.catalog,
           async () => {
-            const locked = scopes.exit(observe);
-            same(locked.record, record);
-            same(locked.effective.entries, effective.entries);
+            // Both transactions already prove the exact admitted SQL state.
+            // Use a fresh full enumeration instead of opening another catalog transaction.
+            const entries = opened.inventoryGmailSelectedLoadExecution();
+            same(entries, effective.entries);
+            const locked = observeSelectedLoadAdmissionTail(
+              destination,
+              entries,
+              tail
+            );
+            same(locked.observed, before.observed);
             scope!.assertCurrent();
             writing = true;
             try {
