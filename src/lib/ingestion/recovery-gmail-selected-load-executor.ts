@@ -1771,7 +1771,7 @@ async function resumeNextSelectedLoad(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
   next: RecoveryGmailSelectedReceiptSelector,
   signedAdmission: Buffer,
-  testPause?: "intent-linked" | "lease-acquired"
+  testPause?: "intent-linked" | "lease-acquired" | "rollback-catalog-committed"
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoSelectedLoadInstallation();
@@ -1828,6 +1828,7 @@ async function resumeNextSelectedLoad(
         previousOwner: owner,
         startedAtEpochMs: now,
         key: input.recoveryKey,
+        committedRollback: evidence.committedRollback,
       });
     } else if (latest) {
       retry = {
@@ -1915,7 +1916,7 @@ async function resumeNextSelectedLoad(
         observedJournal: validateWeeklyJournalRecoverySnapshot(journal),
         previousOwner: owner,
         gateComplete: false,
-        precommitRollback: gap.generation === 2,
+        precommitRollback: evidence.report.status === "unchanged",
       },
       priorLoadFamilySha256: gap.priorLoadFamilySha256,
       deadline: intent.deadlineEpochMs,
@@ -2084,9 +2085,14 @@ export function resumeRecoveredGmailNextSelectedLoadForTest(
   prior: RecoveryGmailSelectedLoadInstallationInput,
   next: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer,
-  point: "intent-linked" | "lease-acquired"
+  point: "intent-linked" | "lease-acquired" | "rollback-catalog-committed"
 ) {
-  if (point !== "intent-linked" && point !== "lease-acquired") return fail();
+  if (
+    point !== "intent-linked" &&
+    point !== "lease-acquired" &&
+    point !== "rollback-catalog-committed"
+  )
+    return fail();
   return resumeNextSelectedLoad(prior, next, admission, point);
 }
 

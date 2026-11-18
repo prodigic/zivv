@@ -135,6 +135,7 @@ export function readNextSelectedLoadAdmissionEvidence(
         raw,
         catalog: observed.observedCatalog,
         journal: observed.observedJournal,
+        snapshot: observed.changedFiles.snapshot,
         entries: observed.physicalEntries,
       },
       earliestAdmissionEpochMs: Math.max(

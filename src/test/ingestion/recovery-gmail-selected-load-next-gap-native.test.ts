@@ -1,7 +1,10 @@
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
 import { createHash, createHmac } from "node:crypto";
 import { decryptLedgerSnapshot } from "../../lib/ingestion/encrypted-backup.js";
-import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
+import {
+  canonicalJson,
+  ledgerDigest,
+} from "../../lib/ingestion/sqlite-store.js";
 import { spawn, spawnSync } from "node:child_process";
 import {
   existsSync,
@@ -56,6 +59,14 @@ it.each([
     marker: "SELECTED_LOAD_TEST_CATALOG_COMMITTED",
     status: "committed",
     generation: 3,
+  },
+  {
+    label: "retry-rollback-catalog-committed",
+    retryPoint: "rollback-catalog-committed",
+    point: "catalog-before-commit",
+    marker: "SELECTED_LOAD_TEST_CATALOG_BEFORE_COMMIT",
+    status: "unchanged",
+    generation: 2,
   },
 ] as const)(
   "inspects B after worker death at $label",
@@ -354,11 +365,18 @@ it.each([
           renameSync(retainedReport, reportPath);
         }
       }
+      let interruptedRetryCatalog: typeof catalog | undefined;
+      let interruptedIntentBytes: Buffer | undefined;
+      let interruptedCommitEvidence:
+        | { ledgerRevision: string; inventorySha256: string }
+        | undefined;
       if (retryPoint) {
         const retryMarker =
           retryPoint === "intent-linked"
             ? "SELECTED_LOAD_TEST_INTENT_LINKED"
-            : "SELECTED_LOAD_TEST_LEASE_ACQUIRED";
+            : retryPoint === "lease-acquired"
+              ? "SELECTED_LOAD_TEST_LEASE_ACQUIRED"
+              : "SELECTED_LOAD_TEST_ROLLBACK_CATALOG_COMMITTED";
         const retryChild = spawn(
           process.execPath,
           args(
@@ -423,7 +441,10 @@ it.each([
           b.runId,
           "resume-intent.json"
         );
-        if (retryPoint === "lease-acquired") {
+        if (
+          retryPoint === "lease-acquired" ||
+          retryPoint === "rollback-catalog-committed"
+        ) {
           const retryJournal =
             readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
           const {
@@ -454,31 +475,115 @@ it.each([
           expect(lstatSync(intentPath).nlink).toBe(1);
           expect(readdirSync(intentPath + "-stage")).toEqual([]);
           const intentBytes = readFileSync(intentPath);
-          const { intent } = JSON.parse(intentBytes.toString("utf8")) as {
-            intent: { deadlineEpochMs: number };
+          interruptedIntentBytes = intentBytes;
+          const { signature: intentSignature, ...intentBody } = JSON.parse(
+            intentBytes.toString("utf8")
+          ) as {
+            signature: string;
+            kind: string;
+            version: number;
+            intent: {
+              deadlineEpochMs: number;
+              generation: number;
+              previousOwner: typeof previousOwner;
+              fence: number;
+            };
           };
+          const { intent } = intentBody;
+          expect(intentSignature).toBe(
+            createHmac("sha256", fixture.input.recoveryKey)
+              .update("zivv-selected-next-load-resume-intent/v1\0")
+              .update(canonicalJson(intentBody))
+              .digest("hex")
+          );
+          expect(intent).toMatchObject({
+            generation,
+            previousOwner,
+            fence: previousOwner!.fence + 1,
+          });
           expect(intent.deadlineEpochMs).toBeGreaterThanOrEqual(
             retryOwner.expiresAtEpochMs
           );
           const retryInventory = openPreparedRuntimeForAdmission(
             fixture.input
           ).inventoryGmailSelectedLoadExecution();
-          expect(
-            retryInventory.filter(
-              (entry) =>
-                entry.path !==
-                  `recovery-gmail-load/${b.runId}/resume-intent.json` &&
-                entry.path !==
-                  `recovery-gmail-load/${b.runId}/resume-intent.json-stage`
-            )
-          ).toEqual(inventory);
-          expect(retryInventory).toHaveLength(inventory.length + 2);
+          const retryCatalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
+          if (retryPoint === "rollback-catalog-committed") {
+            interruptedRetryCatalog = retryCatalog;
+            expect(retryCatalog.generation).toBe(3);
+            const added = retryCatalog.ledger.runs.filter(
+              (candidate) =>
+                !catalogA.ledger.runs.some(
+                  (old) => old.runId === candidate.runId
+                )
+            );
+            expect(added).toHaveLength(1);
+            for (const old of catalogA.ledger.runs)
+              expect(retryCatalog.ledger.runs).toContainEqual(old);
+            for (const key of [
+              "events",
+              "artists",
+              "venues",
+              "redirects",
+            ] as const)
+              for (const old of catalogA.ledger[key])
+                expect(retryCatalog.ledger[key]).toContainEqual(old);
+            const report = `checkout/data/ingestion/reports/${sha256(added[0]!.runId)}.json`;
+            const backup =
+              "checkout/data/ingestion/backups/ledger.snapshot.enc";
+            const intentPaths = [
+              `recovery-gmail-load/${b.runId}/resume-intent.json`,
+              `recovery-gmail-load/${b.runId}/resume-intent.json-stage`,
+            ];
+            expect(retryInventory.some((entry) => entry.path === report)).toBe(
+              true
+            );
+            expect(
+              retryInventory.filter(
+                (entry) =>
+                  ![report, backup, ...intentPaths].includes(entry.path)
+              )
+            ).toEqual(
+              inventory.filter(
+                (entry) =>
+                  ![report, backup, ...intentPaths].includes(entry.path)
+              )
+            );
+            expect(
+              retryInventory.find((entry) => entry.path === backup)
+            ).toEqual(inventory.find((entry) => entry.path === backup));
+            interruptedCommitEvidence = {
+              ledgerRevision: ledgerDigest(retryCatalog.ledger),
+              inventorySha256: sha256(
+                canonicalJson(
+                  retryInventory.filter(
+                    (entry) => !intentPaths.includes(entry.path)
+                  )
+                )
+              ),
+            };
+            const backupLedger = decryptLedgerSnapshot(
+              readFileSync(join(root, backup)),
+              fixture.input.recoveryKey
+            );
+            expect(backupLedger).toEqual(catalog.ledger);
+          } else {
+            expect(
+              retryInventory.filter(
+                (entry) =>
+                  entry.path !==
+                    `recovery-gmail-load/${b.runId}/resume-intent.json` &&
+                  entry.path !==
+                    `recovery-gmail-load/${b.runId}/resume-intent.json-stage`
+              )
+            ).toEqual(inventory);
+            expect(retryInventory).toHaveLength(inventory.length + 2);
+          }
           // Opening the guarded writer can checkpoint already committed WAL
           // pages. Compare catalog contents across that open, then pin the
           // main-file bytes for the detached inspection and active refusal.
-          expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
-            catalog
-          );
+          if (retryPoint === "lease-acquired")
+            expect(retryCatalog).toEqual(catalog);
           const retryCatalogSha256 = sha256(readFileSync(catalogPath));
           const retryJournalSha256 = sha256(readFileSync(journalPath));
           const inspectRetry = () =>
@@ -518,7 +623,7 @@ it.each([
           }
           assertDetachedRetry("expired");
           expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(
-            catalog
+            retryCatalog
           );
           expect(
             readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
@@ -605,6 +710,8 @@ it.each([
       });
       const finalCatalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
       expect(finalCatalog.generation).toBe(3);
+      if (interruptedRetryCatalog)
+        expect(finalCatalog).toEqual(interruptedRetryCatalog);
       if (status === "committed") expect(finalCatalog).toEqual(catalog);
       else {
         const previousRuns = new Set(
@@ -631,7 +738,12 @@ it.each([
           (item) => item.scope === "prodigic/zivv/production"
         )
       ).toMatchObject({
-        fence: previousOwner!.fence + (retryPoint === "lease-acquired" ? 2 : 1),
+        fence:
+          previousOwner!.fence +
+          (retryPoint === "lease-acquired" ||
+          retryPoint === "rollback-catalog-committed"
+            ? 2
+            : 1),
         expiresAtEpochMs: 0,
       });
       const resultPath = join(
@@ -650,7 +762,10 @@ it.each([
         runId: b.runId,
         generation: 3,
       });
-      if (retryPoint === "lease-acquired") {
+      if (
+        retryPoint === "lease-acquired" ||
+        retryPoint === "rollback-catalog-committed"
+      ) {
         const successor = join(
           root,
           "recovery-gmail-load",
@@ -659,6 +774,49 @@ it.each([
         );
         expect(lstatSync(successor).nlink).toBe(1);
         expect(readdirSync(successor + "-stage")).toEqual([]);
+        const successorBytes = readFileSync(successor);
+        const { signature: successorSignature, ...successorBody } = JSON.parse(
+          successorBytes.toString("utf8")
+        ) as {
+          signature: string;
+          version: number;
+          intent: {
+            committedRollback?: typeof interruptedCommitEvidence;
+            sequence: number;
+            initialSha256: string;
+            parentSha256: string;
+          };
+        };
+        const initialBytes = readFileSync(
+          join(root, "recovery-gmail-load", b.runId, "resume-intent.json")
+        );
+        expect(initialBytes).toEqual(interruptedIntentBytes);
+        expect(successorBody.intent).toMatchObject({
+          sequence: 1,
+          initialSha256: sha256(initialBytes),
+          parentSha256: sha256(initialBytes),
+        });
+        expect(successorBody.version).toBe(
+          retryPoint === "rollback-catalog-committed" ? 2 : 1
+        );
+        expect(successorBody.intent.committedRollback).toEqual(
+          interruptedCommitEvidence
+        );
+        expect(successorSignature).toBe(
+          createHmac("sha256", fixture.input.recoveryKey)
+            .update(
+              "zivv-selected-next-load-resume-successor/v" +
+                successorBody.version +
+                "\0"
+            )
+            .update(canonicalJson(successorBody))
+            .digest("hex")
+        );
+        expect(
+          readdirSync(join(root, "recovery-gmail-load", b.runId)).filter(
+            (name) => /^resume-successor-\d{5}\.json$/.test(name)
+          )
+        ).toEqual(["resume-successor-00001.json"]);
         expect(resultBody.successorSha256).toBe(
           sha256(readFileSync(successor))
         );
