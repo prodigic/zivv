@@ -1873,6 +1873,8 @@ async function resumeNextSelectedLoad(
     const { proof, plan, raw } = effective;
     const path = join(directory, retry.filename);
     const stage = path + "-stage";
+    const retryPath = "recovery-gmail-load/" + gap.runId + "/" + retry.filename;
+    const retryStage = retryPath + "-stage";
     const backup = join(root, "data/ingestion/backups/ledger.snapshot.enc");
     const report = join(
       root,
@@ -1900,6 +1902,7 @@ async function resumeNextSelectedLoad(
     const staged = evidence.saved?.observed.candidate;
     if (staged) transients.set(staged.path, bytes);
     let settling = false;
+    let retrySettled = false;
     scope = {
       active: true,
       chunkPauseTest: testPause,
@@ -1954,6 +1957,7 @@ async function resumeNextSelectedLoad(
         const actual = opened.inventoryGmailSelectedLoadExecution();
         const present = new Set<string>();
         for (const entry of actual) {
+          if (retrySettled && entry.path.startsWith(retryStage + "/")) fail();
           present.add(entry.path);
           const absolute = join(destination, entry.path);
           const before = originalEntries.get(entry.path);
@@ -2025,18 +2029,17 @@ async function resumeNextSelectedLoad(
           installRecoveryIntent(path, bytes, stage);
           const settled = inspectRecoveryInstalledFile(path, stage, 8192);
           if (!settled.target?.bytes.equals(bytes) || settled.candidate) fail();
-          const retryPath =
-            "recovery-gmail-load/" + gap.runId + "/" + retry.filename;
           originalEntries.set(retryPath, {
             path: retryPath,
             kind: "file",
             size: bytes.length,
             sha256: sha256(bytes),
           });
-          originalEntries.set(retryPath + "-stage", {
-            path: retryPath + "-stage",
+          originalEntries.set(retryStage, {
+            path: retryStage,
             kind: "directory",
           });
+          retrySettled = true;
           scope!.assertCurrent();
         });
         if (
