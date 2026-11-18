@@ -1,7 +1,6 @@
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { decryptLedgerSnapshot } from "./encrypted-backup.js";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
-import { verifySelectedNextLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import { proveSelectedLoadRunDelta } from "./recovery-gmail-selected-journal-delta.js";
 import { reconstructSelectedLoadCompletionJournals } from "./recovery-gmail-selected-load-completion-intent.js";
 import { observeSelectedLoadCompletionIntentFile } from "./recovery-gmail-selected-load-completion-prefix.js";
@@ -13,17 +12,10 @@ import {
 } from "./recovery-gmail-selected-load-framing.js";
 import { selectedLoadBackupPath } from "./recovery-gmail-selected-load-historical-predecessor.js";
 import { readSelectedLoadHistoryFiles } from "./recovery-gmail-selected-load-history.js";
-import {
-  readNextSelectedLoadAdmissionForReplay,
-  readNextSelectedLoadAdmissionRunId,
-} from "./recovery-gmail-selected-load-next-admission.js";
+import { readNextSelectedLoadFamily } from "./recovery-gmail-selected-load-next-family.js";
 import { selectedLoadCompletionIntentFilename } from "./recovery-gmail-selected-load-paths.js";
-import { readSelectedLoadEntry } from "./recovery-gmail-selected-load-physical-reader.js";
 import { verifySelectedLoadResult } from "./recovery-gmail-selected-result-proof.js";
-import {
-  openPreparedRuntimeForAdmission,
-  type RecoveryRuntimeEntry,
-} from "./recovery-runtime.js";
+import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
 import {
   canonicalJson,
   ledgerDigest,
@@ -105,47 +97,20 @@ export function replayRecoveredGmailNextSelectedLoad(
     const admission = Buffer.from(signedAdmission);
     wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
-    const { selector: _selector, recoveryKey: key, ...host } = input;
-    const opened = openPreparedRuntimeForAdmission({
-      ...host,
-      recoveryKey: key,
-    });
-    const root = resolve(host.destination);
-    const entries = opened.inventoryGmailSelectedLoadExecution();
-    const byPath = new Map(entries.map((entry) => [entry.path, entry]));
-    if (byPath.size !== entries.length) return fail();
-    const read = (path: string, limit: number) =>
-      readSelectedLoadEntry(root, byPath.get(path), limit);
-
-    const runId = readNextSelectedLoadAdmissionRunId(admission, key);
-    const loadPath = "recovery-gmail-load/" + runId;
-    if (!read(loadPath + "/admission.json", 65536).equals(admission))
-      return fail();
-    const executionBytes = read(
-      loadPath + "/execution-baseline.json",
-      32 * 1024 * 1024
-    );
-    const execution = verifySelectedNextLoadExecutionBaseline(
+    const key = input.recoveryKey;
+    const {
+      opened,
+      root,
+      entries,
+      read,
+      loadPath,
+      runId,
       executionBytes,
-      key
-    );
-    const { record, effective } = readNextSelectedLoadAdmissionForReplay(
-      input,
-      next,
-      admission,
-      executionBytes
-    );
-    const admissionSha256 = sha256(admission);
-    if (
-      execution.admissionSha256 !== admissionSha256 ||
-      execution.priorLoadFamilySha256 !== record.priorLoadFamilySha256 ||
-      execution.catalogSha256 !== record.catalogSha256 ||
-      execution.journalSha256 !== record.journalSha256 ||
-      execution.startedAtEpochMs < record.admittedAtEpochMs ||
-      execution.startedAtEpochMs > Date.now()
-    )
-      return fail();
-
+      execution,
+      record,
+      effective,
+      admissionSha256,
+    } = readNextSelectedLoadFamily(input, next, admission);
     const catalogPath = join(root, "operator/ledger.sqlite");
     const journalPath = join(root, "operator/weekly-runs.sqlite");
     const catalog = readCanonicalSqliteLedgerReadOnly(catalogPath);

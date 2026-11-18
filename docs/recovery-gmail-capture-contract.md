@@ -495,5 +495,11 @@ retained encrypted catalog, guarded journal and physical-history commitments.
 It verifies that result again against the archived capture baseline and original
 run delta. It then checks the live catalog, journal, encrypted backup, import
 report, and physical delta for the second run before returning the original
-signed result without changing either load. Incomplete second-load effects
-still require a guarded recovery transition.
+signed result without changing either load.
+
+Second-load interruption inspection verifies a running load with no load
+artifact. It distinguishes the exact generation-two predecessor catalog from
+the exact generation-three committed delta. The inspection checks the original
+journal rows, current owner, reviewed report if present, and the allowed
+encrypted backup transition. It reports lease state and preserved evidence.
+Taking ownership and finishing the interrupted run require a guarded transition.

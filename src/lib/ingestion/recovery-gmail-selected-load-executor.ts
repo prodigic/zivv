@@ -125,6 +125,7 @@ interface Scope {
     | "successor-linked"
     | "successor-flushed"
     | "catalog-before-commit"
+    | "catalog-committed"
     | "rollback-catalog-committed"
     | "history-first-chunk";
   evidenceGuard?: boolean;
@@ -420,6 +421,14 @@ export function selectedGmailLoadCatalogCommit(
   if (committed && scope.pending) {
     scope.ledger = scope.pending;
     scope.generation++;
+    if (
+      scope.priorLoadFamilySha256 &&
+      scope.chunkPauseTest === "catalog-committed"
+    ) {
+      process.stdout.write("SELECTED_LOAD_TEST_CATALOG_COMMITTED\n");
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30000);
+      throw Error("SELECTED_LOAD_TEST_PAUSE_EXPIRED");
+    }
     if (
       scope.resume?.precommitRollback &&
       scope.chunkPauseTest === "rollback-catalog-committed"
@@ -1366,7 +1375,10 @@ function prepareSelectedLoadNext(
  * Interrupted SQL effects require the separate original-baseline replay composer. */
 async function executeSelectedLoad(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
-  testPause?: "catalog-before-commit" | "history-first-chunk",
+  testPause?:
+    | "catalog-before-commit"
+    | "catalog-committed"
+    | "history-first-chunk",
   next?: NextSelectedLoadStart
 ) {
   assertNoSelectedGmailLoadExecution();
@@ -1716,6 +1728,25 @@ export function executeRecoveredGmailNextSelectedLoad(
 ) {
   if (!Buffer.isBuffer(admission) || admission.length > 65536) return fail();
   return executeSelectedLoad(prior, undefined, {
+    selector,
+    admission: Buffer.from(admission),
+  });
+}
+
+/** Fixed second-load test pauses at the protected catalog commit. */
+export function executeRecoveredGmailNextSelectedLoadForTest(
+  prior: RecoveryGmailSelectedLoadInstallationInput,
+  selector: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer,
+  point: "catalog-before-commit" | "catalog-committed"
+) {
+  if (
+    !Buffer.isBuffer(admission) ||
+    admission.length > 65536 ||
+    (point !== "catalog-before-commit" && point !== "catalog-committed")
+  )
+    return fail();
+  return executeSelectedLoad(prior, point, {
     selector,
     admission: Buffer.from(admission),
   });
