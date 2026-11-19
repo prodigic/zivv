@@ -88,3 +88,11 @@ procedure. The parent does not rerun the job automatically.
 
 The regular `poll`, `poll-friday`, and manual import commands remain available.
 This entry point registers no scheduled task.
+
+The retained Gmail restart rehearsal runs the production poll and credential
+handoff libraries inside fresh Windows workers supervised by the Job Object.
+A synthetic Friday wake restores the exact pending signed capture before
+credential access. A second worker at Monday midnight returns the review
+boundary without running capture. Both preserve the signed batch. The
+rehearsal uses a controlled clock and a forbidden network adapter. A real
+Windows restart and a scheduled run remain separate acceptance steps.
