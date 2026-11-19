@@ -540,6 +540,9 @@ export function readNextSelectedLoadCompletionEvidence(
       ...(!prefix.next && lease.status === "released"
         ? {
             completionIdentity: {
+              preparedReceiptSha256: opened.receiptSha256,
+              archiveSha256: sha256(input.archive),
+              retirementReceiptSha256: sha256(input.retirementReceipt),
               priorFamilySha256: identity.priorFamilySha256,
               executionBaselineSha256: identity.executionBaselineSha256,
               historyManifestSha256: completion.fields.historyManifestSha256,

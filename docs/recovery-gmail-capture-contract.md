@@ -531,3 +531,10 @@ The original and second-load formats remain valid. A future third execution
 needs its own authenticated baseline and evidence for interruption, replay and
 settlement after generation four. The inspector keeps the replacement
 quarantined and grants no capture, load, freeze or activation permission.
+
+The detached v3 admission binds that plan to the exact retired archive,
+retirement receipt, prepared host, both predecessor selectors and the signed
+second admission. It also binds the third source, runtime and original intent
+time. A replay verifies the versioned signature first and then re-derives the
+entire current plan. It returns the exact retained bytes. Keep the signed
+intent private. No installer or third writer consumes this format yet.
