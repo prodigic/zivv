@@ -1,11 +1,18 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { setImmediate as yieldToReporter } from "node:timers/promises";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   openRecoveryImportRemoteForTest,
+  observeReplacementAcknowledgedWatermarkForTest,
   openRecoveryImportRemote,
 } from "../../lib/ingestion/recovery-import-remote.js";
 import { captureOperatorRecoveryCheckpoint } from "../../lib/ingestion/operator-recovery.js";
@@ -15,6 +22,12 @@ import {
   writeSqliteLedger,
 } from "../../lib/ingestion/sqlite-store.js";
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
+import {
+  createEmptyWeeklyEditionLedger,
+  prepareWeeklyEdition,
+  markWeeklyEditionPublished,
+  serializeWeeklyEditionLedger,
+} from "../../lib/ingestion/weekly.js";
 import { createWeeklyRunState } from "../../lib/ingestion/weekly-run-state.js";
 import { createAcknowledgedRecoveryRemoteFixture } from "./fixtures/recovery-import-remote-fixture.js";
 const hash = (bytes: Buffer | string) =>
@@ -324,4 +337,85 @@ describe("canonical remote gate for import-only recovery", () => {
       })
     ).toThrow("OBSERVATION_BEFORE_ACKNOWLEDGED_CUTOFF");
   }, 60_000);
+  it("observes only the exact archived published watermark and rechecks canonical authority", async () => {
+    const editionId = "2026-10-16";
+    const cutoff = Date.parse("2026-10-16T19:00:00Z");
+    const draft = prepareWeeklyEdition(createEmptyWeeklyEditionLedger(), [], {
+      editionId,
+      cutoffEpochMs: cutoff,
+      datasetVersion: "recovery-fixture",
+    }).ledger;
+    const published = markWeeklyEditionPublished(draft, editionId).ledger;
+    const weeklyPath = join(
+      f.originalRoot,
+      "data/ingestion/weekly-editions.json"
+    );
+    const putWeekly = (value: typeof published) =>
+      write(weeklyPath, serializeWeeklyEditionLedger(value));
+    const makeInput = async () => ({
+      repositoryRoot: f.root,
+      bareDirectory: f.bare,
+      checkpoint: await captureOperatorRecoveryCheckpoint(f.originalRoot),
+      recoveryKey: key,
+    });
+    const head = f.store.read().head!;
+    const refs = f.refs();
+    const symbolicHead = f.git(["symbolic-ref", "HEAD"]);
+    try {
+      putWeekly(published);
+      const input = await makeInput();
+      const observed = observeReplacementAcknowledgedWatermarkForTest(input);
+      expect(observed).toMatchObject({
+        status: "replacement-publication-watermark-observed",
+        activationAllowed: false,
+        binding: {
+          mainHead: f.sourceCommit,
+          acknowledgedOperationId: f.operationId,
+          acknowledgedCandidateId: f.candidateId,
+          acknowledgedLedgerRevision: f.ledgerRevision,
+          acknowledgedCutoffEpochMs: cutoff,
+          editionId,
+          membershipSha256: hash("[]"),
+          datasetVersion: "recovery-fixture",
+        },
+      });
+      expect(observed.assertCurrent()).toBeUndefined();
+      expect(f.refs()).toBe(refs);
+      expect(f.git(["symbolic-ref", "HEAD"])).toBe(symbolicHead);
+
+      const changed = structuredClone(published);
+      changed.editions[0]!.eventIds = [123];
+      putWeekly(changed);
+      const changedInput = await makeInput();
+      expect(() =>
+        observeReplacementAcknowledgedWatermarkForTest(changedInput)
+      ).toThrow("REPLACEMENT_PUBLICATION_WATERMARK_UNVERIFIED");
+      putWeekly(draft);
+      const draftInput = await makeInput();
+      expect(() =>
+        observeReplacementAcknowledgedWatermarkForTest(draftInput)
+      ).toThrow("REPLACEMENT_PUBLICATION_WATERMARK_UNVERIFIED");
+      unlinkSync(weeklyPath);
+      const missingInput = await makeInput();
+      expect(() =>
+        observeReplacementAcknowledgedWatermarkForTest(missingInput)
+      ).toThrow("REPLACEMENT_PUBLICATION_WATERMARK_UNVERIFIED");
+      putWeekly(published);
+      f.setControl(f.claimHead);
+      try {
+        expect(() =>
+          observeReplacementAcknowledgedWatermarkForTest(input)
+        ).toThrow("REPLACEMENT_PUBLICATION_WATERMARK_UNVERIFIED");
+        expect(() => observed.assertCurrent()).toThrow();
+      } finally {
+        f.setControl(head);
+      }
+      expect(observed.assertCurrent()).toBeUndefined();
+      expect(f.refs()).toBe(refs);
+      expect(f.git(["symbolic-ref", "HEAD"])).toBe(symbolicHead);
+    } finally {
+      rmSync(weeklyPath, { force: true });
+      f.setControl(head);
+    }
+  }, 120_000);
 });

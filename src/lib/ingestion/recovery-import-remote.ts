@@ -21,7 +21,12 @@ import {
 import { validateWeeklyJournalRecoverySnapshot } from "./weekly-run-journal.js";
 import { parseWeeklyRunState } from "./weekly-run-state.js";
 import { decryptLedgerSnapshot } from "./encrypted-backup.js";
-import { ledgerDigest } from "./sqlite-store.js";
+import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
+import type { ReleaseCandidate } from "./release-candidate.js";
+import {
+  getLatestPublishedWeeklyEdition,
+  parseWeeklyEditionLedger,
+} from "./weekly.js";
 import { readPublicationPayloadGit } from "./publication-git.js";
 import { verifyPublicationPayload } from "./publication-payload.js";
 
@@ -51,23 +56,25 @@ function refuse(code: string): never {
   throw new Error(`RECOVERY_IMPORT_REMOTE_${code}`);
 }
 
-function open(
-  input: RecoveryImportRemoteInput,
-  transport: PromotionControlTransport
-): RecoveryImportRemote {
-  const checkpoint = validateOperatorRecoveryCheckpoint(input.checkpoint);
-  const journal = validateWeeklyJournalRecoverySnapshot(
-    Buffer.from(checkpoint.journal, "base64")
-  );
-  const retained = journal.runState.find(
-    (row) => row.id === input.runId && row.scope === "prodigic/zivv/production"
-  );
-  if (!retained) refuse("RUN_NOT_RETAINED");
-  const run = parseWeeklyRunState(JSON.parse(retained.payload));
+interface RecoveryPublicationInput {
+  repositoryRoot: string;
+  recoveryKey: Buffer;
+}
+
+function openCanonicalRecoveryPublication(
+  input: RecoveryPublicationInput,
+  transport: PromotionControlTransport,
+  checkPublication: (publication: {
+    candidate: ReleaseCandidate;
+    ledgerRevision: string;
+    currentAcknowledgement: boolean;
+    verifiedManifest: Buffer | undefined;
+  }) => void
+) {
   if (!Buffer.isBuffer(input.recoveryKey) || input.recoveryKey.length !== 32)
     refuse("INVALID_KEY");
-  const key = Buffer.from(input.recoveryKey);
-  const root = realpathSync(input.repositoryRoot);
+  const repositoryRoot = input.repositoryRoot;
+  const root = realpathSync(repositoryRoot);
   const mainHead = transport.readMainHead?.();
   if (!mainHead) refuse("MAIN_REQUIRED");
   transport.fetchCommit(mainHead);
@@ -94,7 +101,8 @@ function open(
       "acknowledged"
   );
   if (!acknowledged?.parentBytes) refuse("ACKNOWLEDGED_WATERMARK_REQUIRED");
-  const event = parsePromotionControl(acknowledged.bytes).lastTransition.event;
+  const completedControl = parsePromotionControl(acknowledged.bytes);
+  const event = completedControl.lastTransition.event;
   const operation = parsePromotionControl(acknowledged.parentBytes).active;
   if (
     event.type !== "acknowledged" ||
@@ -144,17 +152,23 @@ function open(
     request.publicInventorySha256
   )
     refuse("INVENTORY_MISMATCH");
-  const ledger = decryptLedgerSnapshot(payload.snapshot, key);
-  const revision = ledgerDigest(ledger);
-  if (
-    revision !== payload.receipt.candidate.ledgerRevision ||
-    revision !== checkpoint.ledgerRevision
-  )
-    refuse("LEDGER_DIVERGED");
-  if (
-    run.source.importObservedAtEpochMs < payload.receipt.candidate.cutoffEpochMs
-  )
-    refuse("OBSERVATION_BEFORE_ACKNOWLEDGED_CUTOFF");
+  const candidate = payload.receipt.candidate;
+  const key = Buffer.from(input.recoveryKey);
+  let revision: string;
+  try {
+    revision = ledgerDigest(decryptLedgerSnapshot(payload.snapshot, key));
+  } finally {
+    key.fill(0);
+  }
+  if (revision !== candidate.ledgerRevision) refuse("LEDGER_DIVERGED");
+  checkPublication({
+    candidate,
+    ledgerRevision: revision,
+    verifiedManifest: payload.publicFiles.get("data/manifest.json"),
+    currentAcknowledgement:
+      canonicalJson(current.lastVerified) ===
+      canonicalJson(completedControl.lastVerified),
+  });
   const env: NodeJS.ProcessEnv = {};
   for (const name of [
     "PATH",
@@ -211,7 +225,7 @@ function open(
     acknowledgedCutoffEpochMs: payload.receipt.candidate.cutoffEpochMs,
   });
   function assertCurrent(): void {
-    if (realpathSync(input.repositoryRoot) !== root) refuse("REPOSITORY_MOVED");
+    if (realpathSync(repositoryRoot) !== root) refuse("REPOSITORY_MOVED");
     if (
       transport.readMainHead?.() !== binding.mainHead ||
       transport.readHead(store.ref) !== binding.controlHead ||
@@ -220,6 +234,32 @@ function open(
       refuse("REMOTE_CHANGED");
   }
   assertCurrent();
+  return { binding, assertCurrent, candidate };
+}
+
+function open(
+  input: RecoveryImportRemoteInput,
+  transport: PromotionControlTransport
+): RecoveryImportRemote {
+  const checkpoint = validateOperatorRecoveryCheckpoint(input.checkpoint);
+  const journal = validateWeeklyJournalRecoverySnapshot(
+    Buffer.from(checkpoint.journal, "base64")
+  );
+  const retained = journal.runState.find(
+    (row) => row.id === input.runId && row.scope === "prodigic/zivv/production"
+  );
+  if (!retained) refuse("RUN_NOT_RETAINED");
+  const run = parseWeeklyRunState(JSON.parse(retained.payload));
+  const { binding, assertCurrent } = openCanonicalRecoveryPublication(
+    input,
+    transport,
+    ({ candidate, ledgerRevision }) => {
+      if (ledgerRevision !== checkpoint.ledgerRevision)
+        refuse("LEDGER_DIVERGED");
+      if (run.source.importObservedAtEpochMs < candidate.cutoffEpochMs)
+        refuse("OBSERVATION_BEFORE_ACKNOWLEDGED_CUTOFF");
+    }
+  );
   return Object.freeze({ binding, assertCurrent });
 }
 
@@ -247,4 +287,86 @@ export function openRecoveryImportRemoteForTest(
       input.bareDirectory
     )
   );
+}
+
+/** Isolated read-only replacement preflight against a canonical bare Git fixture. */
+export function observeReplacementAcknowledgedWatermarkForTest(
+  input: RecoveryPublicationInput & {
+    bareDirectory: string;
+    checkpoint: OperatorRecoveryCheckpoint;
+  }
+) {
+  const unavailable = () => {
+    throw Error("REPLACEMENT_PUBLICATION_WATERMARK_UNVERIFIED");
+  };
+  try {
+    const checkpoint = validateOperatorRecoveryCheckpoint(input.checkpoint);
+    const record = checkpoint.files.find(
+      (entry) =>
+        entry.area === "checkout" &&
+        entry.path === "data/ingestion/weekly-editions.json"
+    );
+    if (!record?.bytes) return unavailable();
+    const weekly = parseWeeklyEditionLedger(
+      JSON.parse(
+        new TextDecoder("utf-8", { fatal: true }).decode(
+          Buffer.from(record.bytes, "base64")
+        )
+      )
+    );
+    const edition = getLatestPublishedWeeklyEdition(weekly);
+    if (!edition) return unavailable();
+    const transport = createBareTestPromotionControlTransport(
+      input.repositoryRoot,
+      input.bareDirectory
+    );
+    const observed = openCanonicalRecoveryPublication(
+      input,
+      transport,
+      ({
+        candidate,
+        ledgerRevision,
+        currentAcknowledgement,
+        verifiedManifest,
+      }) => {
+        if (!verifiedManifest) return unavailable();
+        const manifest = JSON.parse(
+          new TextDecoder("utf-8", { fatal: true }).decode(verifiedManifest)
+        ) as { weeklyEdition?: unknown };
+        const archivedEdition = {
+          editionId: edition.editionId,
+          startEpochMs: edition.startEpochMs,
+          endEpochMs: edition.endEpochMs,
+          eventIds: edition.eventIds.map(Number),
+          datasetVersion: edition.datasetVersion,
+        };
+        if (
+          !currentAcknowledgement ||
+          ledgerRevision !== checkpoint.ledgerRevision ||
+          edition.editionId !== candidate.editionId ||
+          edition.endEpochMs !== candidate.cutoffEpochMs ||
+          weekly.publishedCutoffEpochMs !== candidate.cutoffEpochMs ||
+          canonicalJson(manifest.weeklyEdition) !==
+            canonicalJson(archivedEdition) ||
+          sha256(Buffer.from(canonicalJson(edition.eventIds))) !==
+            candidate.membershipSha256
+        )
+          return unavailable();
+      }
+    );
+    return Object.freeze({
+      status: "replacement-publication-watermark-observed" as const,
+      activationAllowed: false as const,
+      binding: Object.freeze({
+        ...observed.binding,
+        editionId: observed.candidate.editionId,
+        membershipSha256: observed.candidate.membershipSha256,
+        datasetVersion: edition.datasetVersion,
+        releaseDatasetVersion: observed.candidate.datasetVersion,
+      }),
+      assertCurrent: observed.assertCurrent,
+    });
+  } catch {
+    return unavailable();
+  }
 }
