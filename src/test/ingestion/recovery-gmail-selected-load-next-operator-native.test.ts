@@ -392,6 +392,81 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
         thirdSelector
       )
     ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
+    const thirdSelectorFile = join(fixture.base, "third-selector.json");
+    const thirdAdmissionFile = join(fixture.base, "third-admission.json");
+    writeFileSync(thirdSelectorFile, canonicalJson(thirdSelector) + "\n", {
+      flag: "wx",
+      mode: 0o600,
+    });
+    const thirdArgs = [
+      ...withAdmission,
+      "--third-selector-file",
+      thirdSelectorFile,
+    ];
+    expect(success("inspect-third-selected-load", thirdArgs)).toEqual({
+      ...thirdInspection,
+      command: "inspect-third-selected-load",
+    });
+    const unsafeThirdAdmission = join(root, "unsafe-third-admission.json");
+    for (const output of [unsafeThirdAdmission, admissionFile]) {
+      const refusal = run("prepare-third-selected-load", [
+        ...thirdArgs,
+        "--third-admission-file",
+        output,
+      ]);
+      expect(refusal.status).toBe(1);
+      expect(refusal.stdout).toBe("");
+      expect(readFileSync(admissionFile)).toEqual(bytes);
+      expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+      expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+        journal
+      );
+    }
+    expect(existsSync(unsafeThirdAdmission)).toBe(false);
+    const unexpected = run("inspect-third-selected-load", [
+      ...thirdArgs,
+      "--third-admission-file",
+      thirdAdmissionFile,
+    ]);
+    expect(unexpected.status).toBe(1);
+    expect(unexpected.stdout).toBe("");
+    expect(existsSync(thirdAdmissionFile)).toBe(false);
+    const thirdPrepareArgs = [
+      ...thirdArgs,
+      "--third-admission-file",
+      thirdAdmissionFile,
+    ];
+    const thirdPrepared = success(
+      "prepare-third-selected-load",
+      thirdPrepareArgs
+    );
+    const cliAdmission = readFileSync(thirdAdmissionFile);
+    const cliBody = authenticateRecoveryGmailThirdSelectedLoadAdmission(
+      family,
+      thirdSelector,
+      cliAdmission
+    );
+    expect(thirdPrepared).toEqual({
+      command: "prepare-third-selected-load",
+      status: "third-load-admission-prepared",
+      runId: thirdInspection.runId,
+      completedPrefixSha256: thirdInspection.completedPrefixSha256,
+      admissionSha256: digest(cliAdmission),
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+    });
+    expect(cliBody.runId).toBe(thirdInspection.runId);
+    expect(success("prepare-third-selected-load", thirdPrepareArgs)).toEqual(
+      thirdPrepared
+    );
+    expect(readFileSync(thirdAdmissionFile)).toEqual(cliAdmission);
+    expect(readFileSync(admissionFile)).toEqual(bytes);
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      journal
+    );
     const admittedAt = Date.now();
     const thirdAdmission = createRecoveryGmailThirdSelectedLoadAdmission(
       family,

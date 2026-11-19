@@ -59,7 +59,13 @@ function privateInput(path, limit) {
   return readFileSync(absolute);
 }
 
+const thirdSelectedLoadCommands = [
+  "inspect-third-selected-load",
+  "prepare-third-selected-load",
+];
+
 const nextSelectedLoadCommands = [
+  ...thirdSelectedLoadCommands,
   "inspect-next-selected-load",
   "prepare-next-selected-load",
   "install-next-selected-load",
@@ -110,46 +116,92 @@ function safeSelectedLoadError(error) {
   return error;
 }
 
-async function prepareNextSelectedLoadAdmission(prior, next, requested) {
+function selectedLoadAdmissionOutput(destination, requested) {
   const requestedPath = resolve(requested);
   const parent = resolvePrivateCandidateDirectory(dirname(requestedPath));
   const target = join(parent, basename(requestedPath));
-  const prepared = resolvePrivateCandidateDirectory(prior.destination);
+  const prepared = resolvePrivateCandidateDirectory(destination);
   const relativeTarget = relative(prepared, target);
   if (
     !relativeTarget ||
     (!relativeTarget.startsWith(".." + sep) && !isAbsolute(relativeTarget))
   )
     throw Error("UNSAFE_RECOVERY_ADMISSION_OUTPUT");
-  const stage = target + "-stage";
+  return { target, stage: target + "-stage" };
+}
+
+async function saveSelectedLoadAdmission(output, create, verify, mismatch) {
+  const { target, stage } = output;
+  const { sha256 } = await import("../dist/lib/ingestion/steve-preflight.js");
+  const saved = inspectRecoveryInstalledFile(target, stage, 64 * 1024);
+  const bytes = saved.target?.bytes ?? saved.candidate?.bytes ?? create();
+  const record = verify(bytes);
+  installRecoveryIntent(target, bytes, stage);
+  const observed = inspectRecoveryInstalledFile(target, stage, 64 * 1024);
+  if (!observed.target?.bytes.equals(bytes) || observed.candidate)
+    throw Error(mismatch);
+  return { record, admissionSha256: sha256(bytes) };
+}
+
+async function prepareNextSelectedLoadAdmission(prior, next, requested) {
+  const output = selectedLoadAdmissionOutput(prior.destination, requested);
   const {
     createRecoveryGmailNextSelectedLoadAdmission,
     readNextSelectedLoadAdmissionForInstallation,
   } =
     await import("../dist/lib/ingestion/recovery-gmail-selected-load-next-admission.js");
-  const { sha256 } = await import("../dist/lib/ingestion/steve-preflight.js");
-  const saved = inspectRecoveryInstalledFile(target, stage, 64 * 1024);
-  const bytes =
-    saved.target?.bytes ??
-    saved.candidate?.bytes ??
-    createRecoveryGmailNextSelectedLoadAdmission(prior, next, Date.now());
-  const { record } = readNextSelectedLoadAdmissionForInstallation(
-    prior,
-    next,
-    bytes
+  const { record, admissionSha256 } = await saveSelectedLoadAdmission(
+    output,
+    () => createRecoveryGmailNextSelectedLoadAdmission(prior, next, Date.now()),
+    (bytes) =>
+      readNextSelectedLoadAdmissionForInstallation(prior, next, bytes).record,
+    "RECOVERY_GMAIL_NEXT_SELECTED_LOAD_ADMISSION_MISMATCH"
   );
-  installRecoveryIntent(target, bytes, stage);
-  const observed = inspectRecoveryInstalledFile(target, stage, 64 * 1024);
-  if (!observed.target?.bytes.equals(bytes) || observed.candidate)
-    throw Error("RECOVERY_GMAIL_NEXT_SELECTED_LOAD_ADMISSION_MISMATCH");
   return {
     status: "next-load-admission-prepared",
     runId: record.runId,
     priorLoadFamilySha256: record.priorLoadFamilySha256,
-    admissionSha256: sha256(bytes),
+    admissionSha256,
     activationAllowed: false,
     captureAllowed: false,
     loadAllowed: false,
+  };
+}
+
+async function runThirdSelectedLoadCommand(command, family, options) {
+  const third = await readSelectedLoadSelector(options["third-selector-file"]);
+  if (command === "inspect-third-selected-load") {
+    const { inspectThirdRecoveryGmailSelectedLoad } =
+      await import("../dist/lib/ingestion/recovery-gmail-selected-load-third-inspection.js");
+    return inspectThirdRecoveryGmailSelectedLoad(family, third);
+  }
+
+  const output = selectedLoadAdmissionOutput(
+    family.prior.destination,
+    options["third-admission-file"]
+  );
+  const {
+    createRecoveryGmailThirdSelectedLoadAdmission,
+    authenticateRecoveryGmailThirdSelectedLoadAdmission,
+  } =
+    await import("../dist/lib/ingestion/recovery-gmail-selected-load-third-admission.js");
+  const { record, admissionSha256 } = await saveSelectedLoadAdmission(
+    output,
+    () =>
+      createRecoveryGmailThirdSelectedLoadAdmission(family, third, Date.now()),
+    (bytes) =>
+      authenticateRecoveryGmailThirdSelectedLoadAdmission(family, third, bytes),
+    "RECOVERY_GMAIL_THIRD_SELECTED_LOAD_ADMISSION_MISMATCH"
+  );
+  return {
+    status: "third-load-admission-prepared",
+    runId: record.runId,
+    completedPrefixSha256: record.completedPrefixSha256,
+    admissionSha256,
+    activationAllowed: false,
+    captureAllowed: false,
+    loadAllowed: false,
+    freezeAllowed: false,
   };
 }
 
@@ -173,6 +225,12 @@ async function runSelectedLoadCommand(command, input, options) {
       );
     const admission = privateInput(options["admission-file"], 64 * 1024);
     try {
+      if (thirdSelectedLoadCommands.includes(command))
+        return await runThirdSelectedLoadCommand(
+          command,
+          { prior: selected, next, admission },
+          options
+        );
       if (command === "inspect-composed-gmail-obligations") {
         const cutoffEpochMs = Date.parse(options.cutoff);
         if (
@@ -263,7 +321,9 @@ try {
         "corrections-file",
         "selector-file",
         "next-selector-file",
+        "third-selector-file",
         "admission-file",
+        "third-admission-file",
         "cutoff",
       ].includes(key) ||
       Object.hasOwn(options, key) ||
@@ -347,6 +407,12 @@ try {
                               ...(command === "inspect-next-selected-load"
                                 ? []
                                 : ["admission-file"]),
+                              ...(thirdSelectedLoadCommands.includes(command)
+                                ? ["third-selector-file"]
+                                : []),
+                              ...(command === "prepare-third-selected-load"
+                                ? ["third-admission-file"]
+                                : []),
                               ...(command ===
                               "inspect-composed-gmail-obligations"
                                 ? ["cutoff"]
