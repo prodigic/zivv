@@ -41,6 +41,10 @@ the launcher exit. [libuv Windows child process behavior](https://github.com/lib
 | 223       | Setup was refused before the worker could run.                                          |
 | 224       | The runner could not confirm the outcome. Inspect the retained attempt before retrying. |
 
-This runner is a process-supervision component. The retained launchers still need
-the integrated job, deadline, output, and result-verification path before
-scheduled adoption.
+The selected-load evidence installer uses this job runner on Windows. Its host
+build verifies the reviewed source hash, compiles with the fixed system compiler
+in a new private temporary directory, and launches the authenticated retained
+Node worker through the runner. The host verifies the installed evidence before
+returning success. Missing build support refuses before a retained process starts.
+Execution and resume, the other retained launchers, and scheduler-context
+rehearsal remain separate integration work.

@@ -66,7 +66,7 @@ internal static class WindowsJobRunner
             if (clock.ElapsedMilliseconds >= deadlineMs)
                 return StopJob(job, worker.Process, DeadlineStopped);
             if (Native.ResumeThread(worker.Thread) != 1)
-                return StopJob(job, worker.Process, SetupRefused);
+                return StopJob(job, worker.Process, TerminationUnconfirmed);
 
             for (;;)
             {
