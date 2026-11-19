@@ -17,7 +17,17 @@ import {
 import { bootstrapLedger } from "../../../lib/ingestion/ledger.js";
 import { retireAndCaptureOperatorRecovery } from "../../../lib/ingestion/operator-recovery.js";
 import { prepareOperatorRecoveryRuntime } from "../../../lib/ingestion/recovery-runtime.js";
-import { writeSqliteLedger } from "../../../lib/ingestion/sqlite-store.js";
+import {
+  readSqliteLedgerReadOnly,
+  writeSqliteLedger,
+} from "../../../lib/ingestion/sqlite-store.js";
+import {
+  createEmptyWeeklyEditionLedger,
+  prepareWeeklyEdition,
+  markWeeklyEditionPublished,
+  serializeWeeklyEditionLedger,
+} from "../../../lib/ingestion/weekly.js";
+import { createAcknowledgedRecoveryRemoteFixture } from "./recovery-import-remote-fixture.js";
 import {
   listRetainedSteveEmailSources,
   prepareSteveEmailCapture,
@@ -52,6 +62,13 @@ export interface RecoveryGmailCaptureRuntimeFixture {
     receipt: ReturnType<
       typeof listRetainedSteveEmailSources
     >[number]["receipt"];
+  };
+  retainedOriginal?: {
+    oldRoot: string;
+    oldNpmCli: string;
+    authority: Awaited<
+      ReturnType<typeof createAcknowledgedRecoveryRemoteFixture>
+    >;
   };
   composition?: {
     originalBatchId: string;
@@ -204,6 +221,7 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
   options: {
     reviewSecondMessage?: boolean;
     composedBatches?: boolean;
+    retainPublishedOriginalForPreflight?: boolean;
     invalidPendingMime?: boolean;
     withoutSelectedLoadInspector?: boolean;
     withoutSelectedLoadFraming?: boolean;
@@ -213,6 +231,11 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
     thirdReadyEdition?: boolean;
   } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
+  if (
+    options.retainPublishedOriginalForPreflight &&
+    (!options.composedBatches || !options.loadableSource)
+  )
+    throw new Error("Retained preflight requires composed loadable batches");
   if (options.thirdReadyEdition && !options.additionalReadyEdition)
     throw new Error(
       "Third ready edition requires the additional ready edition"
@@ -646,6 +669,26 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
       }
     }
 
+    let retainedOriginal: RecoveryGmailCaptureRuntimeFixture["retainedOriginal"];
+    if (options.retainPublishedOriginalForPreflight) {
+      const draft = prepareWeeklyEdition(createEmptyWeeklyEditionLedger(), [], {
+        editionId: "2026-10-16",
+        cutoffEpochMs: Date.parse("2026-10-16T19:00:00Z"),
+        datasetVersion: "recovery-fixture",
+      }).ledger;
+      write(
+        join(root, "data/ingestion/weekly-editions.json"),
+        serializeWeeklyEditionLedger(
+          markWeeklyEditionPublished(draft, "2026-10-16").ledger
+        )
+      );
+      const authority = await createAcknowledgedRecoveryRemoteFixture({
+        directory: join(base, "authority"),
+        ledger: readSqliteLedgerReadOnly(join(operator, "ledger.sqlite")),
+        recoveryKey,
+      });
+      retainedOriginal = { oldRoot: root, oldNpmCli: npmCli, authority };
+    }
     const out = join(base, "retired-operator.enc");
     await retireAndCaptureOperatorRecovery({ root, out, npmCli });
     const archive = readFileSync(out);
@@ -655,9 +698,11 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
     const ownedRoot = assertOwnedDirectory(base, root);
     const ownedOperator = assertOwnedDirectory(base, operator);
     const ownedTool = assertOwnedDirectory(base, tool);
-    rmSync(ownedRoot, { recursive: true, force: true });
-    rmSync(ownedOperator, { recursive: true, force: true });
-    rmSync(ownedTool, { recursive: true, force: true });
+    if (!options.retainPublishedOriginalForPreflight) {
+      rmSync(ownedRoot, { recursive: true, force: true });
+      rmSync(ownedOperator, { recursive: true, force: true });
+      rmSync(ownedTool, { recursive: true, force: true });
+    }
 
     const input: RecoveryRuntimeInput = {
       archive,
@@ -682,6 +727,7 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
         !options.withoutSelectedLoadFraming,
       sourceReceipts,
       ...(composition ? { composition } : {}),
+      ...(retainedOriginal ? { retainedOriginal } : {}),
       ...(nextReady ? { nextReady } : {}),
       ...(thirdReady ? { thirdReady } : {}),
       cleanup: (preserve) => cleanupFixture(base, preserve),
