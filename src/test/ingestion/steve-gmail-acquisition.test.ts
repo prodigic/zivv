@@ -86,6 +86,130 @@ function input(fetcher: typeof fetch) {
 }
 
 describe("readSteveGmailWindow", () => {
+  it("returns strict missing only after matching stable mailbox history", async () => {
+    const { fetcher, requests } = fixtureFetcher({
+      profileBefore: { ...profile(), historyId: "12345678901234567890" },
+      profileAfter: { ...profile(), historyId: "12345678901234567890" },
+      pages: [{ messages: [], resultSizeEstimate: 0 }],
+    });
+    expect(
+      await readSteveGmailWindow({
+        ...input(fetcher),
+        requireStableMailboxForMissing: true,
+      })
+    ).toEqual({ status: "missing", snapshots: [] });
+    expect(
+      requests.filter((request) => request.url === `${origin}/profile`)
+    ).toHaveLength(2);
+  });
+
+  it("refuses a changing mailbox history only for strict missing", async () => {
+    const { fetcher } = fixtureFetcher({
+      profileBefore: { ...profile(), historyId: "11" },
+      profileAfter: { ...profile(), historyId: "12" },
+    });
+    await expect(
+      readSteveGmailWindow({
+        ...input(fetcher),
+        requireStableMailboxForMissing: true,
+      })
+    ).rejects.toThrow("GMAIL_MAILBOX_OBSERVATION_CHANGED");
+    const legacy = fixtureFetcher({
+      profileBefore: { ...profile(), historyId: "11" },
+      profileAfter: { ...profile(), historyId: "12" },
+    });
+    expect(await readSteveGmailWindow(input(legacy.fetcher))).toEqual({
+      status: "missing",
+      snapshots: [],
+    });
+  });
+
+  it.each([undefined, null, "", "0", "-1", "1.5", "1e2", "1".repeat(21), 11])(
+    "refuses invalid mailbox history %s for strict missing",
+    async (historyId) => {
+      const { fetcher } = fixtureFetcher({
+        profileBefore: { ...profile(), historyId },
+        profileAfter: { ...profile(), historyId },
+      });
+      await expect(
+        readSteveGmailWindow({
+          ...input(fetcher),
+          requireStableMailboxForMissing: true,
+        })
+      ).rejects.toThrow("GMAIL_MAILBOX_OBSERVATION_UNVERIFIED");
+    }
+  );
+
+  it("requires a valid history on both profile observations", async () => {
+    const { fetcher } = fixtureFetcher({
+      profileBefore: profile(),
+      profileAfter: { ...profile(), historyId: null },
+    });
+    await expect(
+      readSteveGmailWindow({
+        ...input(fetcher),
+        requireStableMailboxForMissing: true,
+      })
+    ).rejects.toThrow("GMAIL_MAILBOX_OBSERVATION_UNVERIFIED");
+  });
+  it("refuses a positive estimate with no listed IDs but permits a filtered boundary ID", async () => {
+    const empty = fixtureFetcher({ pages: [{ resultSizeEstimate: 1 }] });
+    await expect(
+      readSteveGmailWindow({
+        ...input(empty.fetcher),
+        requireStableMailboxForMissing: true,
+      })
+    ).rejects.toThrow("GMAIL_MAILBOX_OBSERVATION_UNVERIFIED");
+    const boundary = fixtureFetcher({
+      pages: [{ messages: [{ id: "a1" }], resultSizeEstimate: 1 }],
+      messages: {
+        a1: { full: message("a1", endEpochMs), raw: { id: "a1", raw } },
+      },
+    });
+    expect(
+      await readSteveGmailWindow({
+        ...input(boundary.fetcher),
+        requireStableMailboxForMissing: true,
+      })
+    ).toEqual({ status: "missing", snapshots: [] });
+  });
+
+  it("rejects a future window before acquiring a token or calling the network", async () => {
+    const { fetcher, requests } = fixtureFetcher({});
+    let tokenCalls = 0;
+    const futureEnd = Date.now() + 60_000;
+    await expect(
+      readSteveGmailWindow({
+        ...input(fetcher),
+        startEpochMs: futureEnd - 1_000,
+        endEpochMs: futureEnd,
+        requireStableMailboxForMissing: true,
+        getAccessToken: async () => {
+          tokenCalls++;
+          return "synthetic-token-123";
+        },
+      })
+    ).rejects.toThrow("GMAIL_WINDOW_NOT_OBSERVED");
+    expect(tokenCalls).toBe(0);
+    expect(requests).toEqual([]);
+  });
+
+  it("still returns found snapshots when mailbox history changes", async () => {
+    const { fetcher } = fixtureFetcher({
+      profileBefore: { ...profile(), historyId: "11" },
+      profileAfter: { ...profile(), historyId: "12" },
+      pages: [{ messages: [{ id: "a1" }] }],
+    });
+    const result = await readSteveGmailWindow({
+      ...input(fetcher),
+      requireStableMailboxForMissing: true,
+    });
+    expect(result.status).toBe("found");
+    if (result.status !== "found") throw new Error("expected snapshot");
+    expect(result.snapshots.map((snapshot) => snapshot.rawMessage.id)).toEqual([
+      "a1",
+    ]);
+  });
   it("paginates, deduplicates, filters exact bounds, sorts, and reuses one bearer token", async () => {
     const { fetcher, requests } = fixtureFetcher({
       pages: [

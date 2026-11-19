@@ -415,6 +415,19 @@ describe("durable Steve Gmail handoff", () => {
     expect(existsSync(operatorDirectory)).toBe(false);
   });
 
+  it("refuses to treat a handoff with unverified mailbox history as strict absence", async () => {
+    const root = mkdtempSync(join(tmpdir(), "zivv-gmail-empty-"));
+    roots.push(root);
+    const operatorDirectory = join(root, "operator");
+    await expect(
+      captureSteveGmailWindow({
+        ...input(operatorDirectory, []),
+        requireStableMailboxForMissing: true,
+      })
+    ).rejects.toThrow("GMAIL_MAILBOX_OBSERVATION_UNVERIFIED");
+    expect(existsSync(operatorDirectory)).toBe(false);
+  });
+
   it("rejects a changed signed batch before capture", async () => {
     const { operatorDirectory } = fixture();
     const result = await captureSteveGmailWindow(
