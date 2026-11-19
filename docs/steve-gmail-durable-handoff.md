@@ -147,6 +147,17 @@ The credential store serializes refreshes and commits a rotated refresh token be
 A captured batch can contain review-required receipts. Corrections continue
 through the existing explicit approval path.
 
+The supervised poll can opt into stable mailbox evidence for an empty search.
+It only searches through elapsed time, checks the same verified account before
+and after listing, and requires the mailbox history ID to match across those
+profiles. A changed cursor or an empty result with a positive size estimate
+cannot support a missing-source notice. A verified captured message remains
+usable when the mailbox changes mid-scan. This check describes the bounded Gmail
+search and does not prove completeness beyond its configured window or search
+scope. [Gmail profile history](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users/getProfile)
+and [message list pagination](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list)
+define the observations used here.
+
 ## Recovery boundary still requiring implementation
 
 The current operator recovery inventory rejects the new `email-acquisition`

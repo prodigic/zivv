@@ -1227,6 +1227,7 @@ export async function captureSteveGmailWindow(input: {
   endEpochMs: number;
   getAccessToken?: () => Promise<string>;
   fetcher?: typeof fetch;
+  requireStableMailboxForMissing?: boolean;
   correctionOfByMessageId?: Record<string, string>;
 }): Promise<SteveGmailBatchResult> {
   try {
@@ -1248,6 +1249,9 @@ export async function captureSteveGmailWindow(input: {
         input.getAccessToken ??
         (() => Promise.reject(new Error("GMAIL_AUTH_REQUIRED"))),
       ...(input.fetcher ? { fetcher: input.fetcher } : {}),
+      ...(input.requireStableMailboxForMissing
+        ? { requireStableMailboxForMissing: true }
+        : {}),
     });
     if (window.status === "missing") {
       await recoverSteveGmailBatchStaging(operatorDirectory);

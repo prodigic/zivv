@@ -18,6 +18,7 @@ export interface SteveGmailWindow {
   endEpochMs: number;
   getAccessToken: () => Promise<string>;
   fetcher?: typeof fetch;
+  requireStableMailboxForMissing?: boolean;
 }
 
 export type SteveGmailWindowResult =
@@ -155,11 +156,20 @@ function validateWindow(start: number, end: number): void {
     fail("INVALID_GMAIL_WINDOW");
 }
 
+function mailboxHistoryId(profile: unknown): string {
+  const id = object(profile).historyId;
+  if (typeof id !== "string" || !/^[1-9][0-9]{0,19}$/.test(id))
+    return fail("GMAIL_MAILBOX_OBSERVATION_UNVERIFIED");
+  return id;
+}
 /** Read one bounded Gmail window; this performs no local writes or mutations. */
 export async function readSteveGmailWindow(
   input: SteveGmailWindow
 ): Promise<SteveGmailWindowResult> {
   validateWindow(input.startEpochMs, input.endEpochMs);
+  const requireStable = input.requireStableMailboxForMissing === true;
+  if (requireStable && input.endEpochMs - 1 > Date.now())
+    return fail("GMAIL_WINDOW_NOT_OBSERVED");
   let token: string;
   try {
     token = validToken(await input.getAccessToken());
@@ -179,12 +189,18 @@ export async function readSteveGmailWindow(
   const ids = new Set<string>();
   const seenTokens = new Set<string>();
   let nextToken: string | undefined;
+  let positiveEstimate = false;
   for (let page = 0; page < maxPages; page++) {
     const params = new URLSearchParams({ q: query, maxResults: "100" });
     if (nextToken) params.set("pageToken", nextToken);
     const listed = object(
       await readJson(fetcher, `${apiRoot}/messages?${params.toString()}`, token)
     );
+    if (
+      typeof listed.resultSizeEstimate === "number" &&
+      listed.resultSizeEstimate > 0
+    )
+      positiveEstimate = true;
     for (const id of listedMessageIds(
       listed.messages === undefined ? [] : listed.messages
     )) {
@@ -234,6 +250,14 @@ export async function readSteveGmailWindow(
   }
   const profileAfter = await readJson(fetcher, `${apiRoot}/profile`, token);
   assertSteveGmailAccount(input.expectedAccountId, profileAfter);
+  if (requireStable && snapshots.length === 0) {
+    if (input.endEpochMs - 1 > Date.now())
+      return fail("GMAIL_WINDOW_NOT_OBSERVED");
+    if (mailboxHistoryId(profileBefore) !== mailboxHistoryId(profileAfter))
+      return fail("GMAIL_MAILBOX_OBSERVATION_CHANGED");
+    if (ids.size === 0 && positiveEstimate)
+      return fail("GMAIL_MAILBOX_OBSERVATION_UNVERIFIED");
+  }
   snapshots.sort(
     (left, right) =>
       left.fullMessage.internal_date - right.fullMessage.internal_date ||
