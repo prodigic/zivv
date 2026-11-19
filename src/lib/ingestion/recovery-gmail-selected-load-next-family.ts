@@ -3,7 +3,6 @@ import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capt
 import {
   observeSelectedLoadAdmissionTail,
   selectedLoadAdmissionTailPaths,
-  type SelectedLoadAdmissionTail,
 } from "./recovery-gmail-selected-load-admission-tail.js";
 import { verifySelectedNextLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import type { RecoveryGmailSelectedLoadFrameInput } from "./recovery-gmail-selected-load-framing.js";
@@ -13,6 +12,10 @@ import {
 } from "./recovery-gmail-selected-load-next-admission.js";
 import { readSelectedLoadEntry } from "./recovery-gmail-selected-load-physical-reader.js";
 import { verifyThirdSelectedLoadAdmissionRecord } from "./recovery-gmail-selected-load-third-admission-format.js";
+import {
+  observeThirdSelectedLoadStartTail,
+  type SelectedThirdLoadEvidenceTail,
+} from "./recovery-gmail-selected-load-third-start-tail.js";
 import { openPreparedRuntimeForAdmission } from "./recovery-runtime.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
@@ -27,7 +30,7 @@ export function readNextSelectedLoadFamily(
   input: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer,
-  thirdTail?: SelectedLoadAdmissionTail
+  thirdTail?: SelectedThirdLoadEvidenceTail
 ) {
   const { selector: _selector, recoveryKey: key, ...host } = input;
   const opened = openPreparedRuntimeForAdmission({
@@ -52,8 +55,19 @@ export function readNextSelectedLoadFamily(
       return fail();
   }
   const allEntries = opened.inventoryGmailSelectedLoadExecution();
+  const start =
+    thirdTail?.executionBaseline === undefined
+      ? undefined
+      : observeThirdSelectedLoadStartTail(
+          root,
+          allEntries,
+          thirdTail,
+          thirdTail.executionBaseline,
+          key
+        );
+  const beforeThirdStartEntries = start?.beforeStart ?? allEntries;
   const projection = thirdTail
-    ? observeSelectedLoadAdmissionTail(root, allEntries, thirdTail)
+    ? observeSelectedLoadAdmissionTail(root, beforeThirdStartEntries, thirdTail)
     : undefined;
   const entries = projection?.predecessorEntries ?? allEntries;
   const tailBase = thirdTail
@@ -62,7 +76,7 @@ export function readNextSelectedLoadFamily(
   const thirdAdmissionPresence = projection
     ? projection.observed.target && !projection.observed.candidate
       ? ("installed" as const)
-      : allEntries.some(({ path }) => path === tailBase)
+      : beforeThirdStartEntries.some(({ path }) => path === tailBase)
         ? ("staging" as const)
         : ("absent" as const)
     : undefined;
@@ -104,6 +118,8 @@ export function readNextSelectedLoadFamily(
     root,
     entries,
     allEntries,
+    beforeThirdStartEntries,
+    thirdStartPresence: start?.presence,
     thirdAdmissionPresence,
     read,
     loadPath,

@@ -35,7 +35,7 @@ import {
   type RecoveryGmailSelectedLoadFrameInput,
 } from "./recovery-gmail-selected-load-framing.js";
 import { selectedLoadBackupPath } from "./recovery-gmail-selected-load-historical-predecessor.js";
-import type { SelectedLoadAdmissionTail } from "./recovery-gmail-selected-load-admission-tail.js";
+import type { SelectedThirdLoadEvidenceTail } from "./recovery-gmail-selected-load-third-start-tail.js";
 import { readNextSelectedLoadFamily } from "./recovery-gmail-selected-load-next-family.js";
 import { verifySelectedLoadResult } from "./recovery-gmail-selected-result-proof.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
@@ -249,7 +249,7 @@ function readNextSelectedLoadCompletion(
   supplied: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
   signedAdmission: Buffer,
-  thirdTail?: SelectedLoadAdmissionTail
+  thirdTail?: SelectedThirdLoadEvidenceTail
 ) {
   let wire: Buffer | undefined,
     input: RecoveryGmailSelectedLoadFrameInput | undefined;
@@ -271,6 +271,8 @@ function readNextSelectedLoadCompletion(
       root,
       entries,
       allEntries,
+      beforeThirdStartEntries,
+      thirdStartPresence,
       thirdAdmissionPresence,
       read,
       loadPath,
@@ -559,7 +561,8 @@ function readNextSelectedLoadCompletion(
           }
         : {}),
       physicalEntries: entries,
-      allPhysicalEntries: allEntries,
+      allPhysicalEntries: beforeThirdStartEntries,
+      ...(thirdStartPresence ? { thirdStartPresence } : {}),
       ...(thirdAdmissionPresence ? { thirdAdmissionPresence } : {}),
       observedCatalog: catalog,
       observedJournal,
@@ -586,7 +589,7 @@ export function readNextSelectedLoadCompletionBeforeThirdAdmission(
   prior: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer,
-  tail: SelectedLoadAdmissionTail
+  tail: SelectedThirdLoadEvidenceTail
 ) {
   return readNextSelectedLoadCompletion(prior, next, admission, tail);
 }

@@ -6,6 +6,7 @@ import {
   verifyThirdSelectedLoadAdmissionRecord,
 } from "./recovery-gmail-selected-load-third-admission-format.js";
 import { readThirdSelectedLoadAdmissionEvidence } from "./recovery-gmail-selected-load-third-inspection.js";
+import type { SelectedThirdLoadEvidenceTail } from "./recovery-gmail-selected-load-third-start-tail.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
 
@@ -17,7 +18,7 @@ function payload(
   family: RecoveryGmailNextSelectedLoadFrameInput,
   third: RecoveryGmailSelectedReceiptSelector,
   admittedAtEpochMs: number,
-  installedTail?: { runId: string; bytes: Buffer }
+  installedTail?: SelectedThirdLoadEvidenceTail
 ) {
   const evidence = readThirdSelectedLoadAdmissionEvidence(
     family,
@@ -54,6 +55,7 @@ function payload(
   return {
     body,
     thirdAdmissionPresence: evidence.thirdAdmissionPresence,
+    thirdStartPresence: evidence.thirdStartPresence,
     effective: evidence.effective,
   };
 }
@@ -114,6 +116,30 @@ export function readThirdSelectedLoadAdmissionForInstallation(
   third: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer
 ) {
+  return readThirdSelectedLoadAdmissionPrefix(family, third, admission);
+}
+
+/** Reprove only the released prefix and the supplied authenticated start. */
+export function readThirdSelectedLoadAdmissionWithStartBaseline(
+  family: RecoveryGmailNextSelectedLoadFrameInput,
+  third: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer,
+  executionBaseline: Buffer
+) {
+  return readThirdSelectedLoadAdmissionPrefix(
+    family,
+    third,
+    admission,
+    executionBaseline
+  );
+}
+
+function readThirdSelectedLoadAdmissionPrefix(
+  family: RecoveryGmailNextSelectedLoadFrameInput,
+  third: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer,
+  executionBaseline?: Buffer
+) {
   try {
     const bytes = Buffer.from(checkedThirdSelectedLoadAdmission(admission));
     const { body, admittedAtEpochMs } = verifyThirdSelectedLoadAdmissionRecord(
@@ -130,8 +156,13 @@ export function readThirdSelectedLoadAdmissionForInstallation(
     const {
       body: expected,
       thirdAdmissionPresence: presence,
+      thirdStartPresence,
       effective,
-    } = payload(family, third, admittedAtEpochMs, { runId, bytes });
+    } = payload(family, third, admittedAtEpochMs, {
+      runId,
+      bytes,
+      executionBaseline,
+    });
     if (!presence || canonicalJson(expected) !== canonicalJson(body))
       return invalid();
     return {
@@ -139,6 +170,7 @@ export function readThirdSelectedLoadAdmissionForInstallation(
       tail: { runId, bytes },
       effective,
       presence,
+      thirdStartPresence,
     };
   } catch {
     return invalid();

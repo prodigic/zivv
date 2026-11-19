@@ -29,6 +29,7 @@ import { runOperatorRecoveryGmailThirdSelectedLoadInstallation } from "../../lib
 import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-next-replay.js";
 import {
   prepareThirdSelectedLoadExecutionBaseline,
+  inspectInstalledThirdSelectedLoadExecutionBaseline,
   authenticateThirdSelectedLoadExecutionBaseline,
 } from "../../lib/ingestion/recovery-gmail-selected-load-third-start.js";
 import { signSelectedThirdLoadExecutionBaseline } from "../../lib/ingestion/recovery-gmail-execution-baseline.js";
@@ -876,6 +877,64 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
         family.admission
       )
     ).toThrow();
+    const baselinePath = join(thirdDirectory, "execution-baseline.json");
+    const baselineStage = baselinePath + "-stage";
+    const baselineCandidate = join(
+      baselineStage,
+      "execution-baseline.json." + process.pid + ".bbbbbbbbbbbbbbbb.tmp"
+    );
+    const observe = () =>
+      inspectInstalledThirdSelectedLoadExecutionBaseline(
+        installInput,
+        startBytes
+      );
+    expect(observe()).toEqual({
+      status: "third-load-start-observed",
+      presence: "absent",
+      runId: thirdInspection.runId,
+      executionBaselineSha256: digest(startBytes),
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+    });
+    mkdirSync(baselineStage);
+    expect(observe().presence).toBe("staging");
+    writeFileSync(baselineCandidate, startBytes);
+    expect(observe().presence).toBe("staging");
+    linkSync(baselineCandidate, baselinePath);
+    expect(observe().presence).toBe("staging");
+    expect(lstatSync(baselinePath).nlink).toBe(2);
+    expect(readFileSync(baselineCandidate)).toEqual(startBytes);
+    unlinkSync(baselineCandidate);
+    expect(observe().presence).toBe("installed");
+    expect(() =>
+      authenticateThirdSelectedLoadExecutionBaseline(installInput, startBytes)
+    ).toThrow();
+    expect(() =>
+      inspectInstalledRecoveryGmailThirdSelectedLoadAdmission(
+        family,
+        thirdSelector,
+        thirdAdmission
+      )
+    ).toThrow();
+    const unexpected = join(baselineStage, "unrelated");
+    writeFileSync(unexpected, "keep");
+    expect(observe).toThrow("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START");
+    expect(readFileSync(unexpected, "utf8")).toBe("keep");
+    unlinkSync(unexpected);
+    writeFileSync(baselinePath, alteredCatalogBaseline);
+    expect(observe).toThrow("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START");
+    expect(() =>
+      inspectInstalledThirdSelectedLoadExecutionBaseline(
+        installInput,
+        alteredCatalogBaseline
+      )
+    ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START");
+    expect(readFileSync(baselinePath)).toEqual(alteredCatalogBaseline);
+    unlinkSync(baselinePath);
+    rmdirSync(baselineStage);
+    expect(observe().presence).toBe("absent");
     expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
       journal
