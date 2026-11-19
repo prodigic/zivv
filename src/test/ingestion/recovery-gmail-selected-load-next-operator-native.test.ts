@@ -1036,27 +1036,32 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       installInput,
       Date.now()
     );
-    // The preceding installer checkpoint supplies this exact settled layout.
-    // This fixture sets up the private evidence before exercising actual C effects.
-    mkdirSync(baselineStage);
-    writeFileSync(baselinePath, freshStart);
-    expect(() =>
-      inspectThirdSelectedLoadCompletion(installInput, freshStart)
-    ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_COMPLETION");
     const execution = { input: installInput, executionBaseline: freshStart };
     const detachedStartPath = join(fixture.base, "third-execute-baseline.json");
     writeFileSync(detachedStartPath, freshStart);
+    const startArgs = [
+      ...withAdmission,
+      "--third-selector-file",
+      thirdSelectorFile,
+      "--third-admission-file",
+      thirdAdmissionFile,
+      "--third-execution-baseline-file",
+      detachedStartPath,
+    ];
+    expect(
+      success("install-third-selected-load-start", startArgs)
+    ).toMatchObject({
+      status: "third-load-start-installed",
+      runId: thirdInspection.runId,
+      executionBaselineSha256: digest(freshStart),
+      loadAllowed: false,
+    });
+    expect(() =>
+      inspectThirdSelectedLoadCompletion(installInput, freshStart)
+    ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_COMPLETION");
     const { command: thirdCommand, ...thirdResult } = success(
       "execute-third-selected-load",
-      [
-        ...withAdmission,
-        "--third-selector-file",
-        thirdSelectorFile,
-        "--third-admission-file",
-        thirdAdmissionFile,
-        "--third-execution-baseline-file",
-        detachedStartPath,
-      ]
+      startArgs
     );
     expect(thirdCommand).toBe("execute-third-selected-load");
     expect(thirdResult).toMatchObject({

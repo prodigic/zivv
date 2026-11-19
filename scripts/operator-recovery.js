@@ -59,11 +59,17 @@ function privateInput(path, limit) {
   return readFileSync(absolute);
 }
 
+const thirdSelectedLoadStartCommands = [
+  "prepare-third-selected-load-start",
+  "install-third-selected-load-start",
+  "execute-third-selected-load",
+];
+
 const thirdSelectedLoadCommands = [
+  ...thirdSelectedLoadStartCommands,
   "inspect-third-selected-load",
   "prepare-third-selected-load",
   "install-third-selected-load",
-  "execute-third-selected-load",
 ];
 
 const nextSelectedLoadCommands = [
@@ -132,14 +138,20 @@ function selectedLoadAdmissionOutput(destination, requested) {
   return { target, stage: target + "-stage" };
 }
 
-async function saveSelectedLoadAdmission(output, create, verify, mismatch) {
+async function saveSelectedLoadAdmission(
+  output,
+  create,
+  verify,
+  mismatch,
+  limit = 64 * 1024
+) {
   const { target, stage } = output;
   const { sha256 } = await import("../dist/lib/ingestion/steve-preflight.js");
-  const saved = inspectRecoveryInstalledFile(target, stage, 64 * 1024);
+  const saved = inspectRecoveryInstalledFile(target, stage, limit);
   const bytes = saved.target?.bytes ?? saved.candidate?.bytes ?? create();
   const record = verify(bytes);
   installRecoveryIntent(target, bytes, stage);
-  const observed = inspectRecoveryInstalledFile(target, stage, 64 * 1024);
+  const observed = inspectRecoveryInstalledFile(target, stage, limit);
   if (!observed.target?.bytes.equals(bytes) || observed.candidate)
     throw Error(mismatch);
   return { record, admissionSha256: sha256(bytes) };
@@ -178,22 +190,57 @@ async function runThirdSelectedLoadCommand(command, family, options) {
     return inspectThirdRecoveryGmailSelectedLoad(family, third);
   }
 
-  if (command === "execute-third-selected-load") {
+  if (thirdSelectedLoadStartCommands.includes(command)) {
+    const { maxThirdSelectedLoadBaselineBytes } =
+      await import("../dist/lib/ingestion/recovery-gmail-selected-load-third-start-framing.js");
     const admission = privateInput(options["third-admission-file"], 64 * 1024);
     let executionBaseline;
     try {
-      const { maxThirdSelectedLoadBaselineBytes } =
-        await import("../dist/lib/ingestion/recovery-gmail-selected-load-third-start-framing.js");
-      executionBaseline = privateInput(
-        options["third-execution-baseline-file"],
-        maxThirdSelectedLoadBaselineBytes
+      const input = { family, third, admission };
+      const path = options["third-execution-baseline-file"];
+      if (command !== "prepare-third-selected-load-start") {
+        executionBaseline = privateInput(
+          path,
+          maxThirdSelectedLoadBaselineBytes
+        );
+        const {
+          runOperatorRecoveryGmailThirdStartInstallation,
+          runOperatorRecoveryGmailThirdSelectedLoadExecution,
+        } =
+          await import("../dist/lib/ingestion/recovery-gmail-selected-load-launcher.js");
+        const operation =
+          command === "install-third-selected-load-start"
+            ? runOperatorRecoveryGmailThirdStartInstallation
+            : runOperatorRecoveryGmailThirdSelectedLoadExecution;
+        return await operation({ input, executionBaseline });
+      }
+      const {
+        prepareThirdSelectedLoadExecutionBaseline,
+        readThirdSelectedLoadStartForInstallation,
+      } =
+        await import("../dist/lib/ingestion/recovery-gmail-selected-load-third-start.js");
+      const output = selectedLoadAdmissionOutput(
+        family.prior.destination,
+        path
       );
-      const { runOperatorRecoveryGmailThirdSelectedLoadExecution } =
-        await import("../dist/lib/ingestion/recovery-gmail-selected-load-launcher.js");
-      return await runOperatorRecoveryGmailThirdSelectedLoadExecution({
-        input: { family, third, admission },
-        executionBaseline,
-      });
+      const { record, admissionSha256: executionBaselineSha256 } =
+        await saveSelectedLoadAdmission(
+          output,
+          () => prepareThirdSelectedLoadExecutionBaseline(input, Date.now()),
+          (bytes) =>
+            readThirdSelectedLoadStartForInstallation(input, bytes).baseline,
+          "RECOVERY_GMAIL_THIRD_START_REPORT_MISMATCH",
+          maxThirdSelectedLoadBaselineBytes
+        );
+      return {
+        status: "third-load-start-prepared",
+        runId: record.runId,
+        executionBaselineSha256,
+        activationAllowed: false,
+        captureAllowed: false,
+        loadAllowed: false,
+        freezeAllowed: false,
+      };
     } finally {
       admission.fill(0);
       executionBaseline?.fill(0);
@@ -453,11 +500,13 @@ try {
                               ...([
                                 "prepare-third-selected-load",
                                 "install-third-selected-load",
-                                "execute-third-selected-load",
+                                ...thirdSelectedLoadStartCommands,
                               ].includes(command)
                                 ? ["third-admission-file"]
                                 : []),
-                              ...(command === "execute-third-selected-load"
+                              ...(thirdSelectedLoadStartCommands.includes(
+                                command
+                              )
                                 ? ["third-execution-baseline-file"]
                                 : []),
                               ...(command ===
