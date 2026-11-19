@@ -13,6 +13,7 @@ import {
 import {
   observeSelectedLoadAdmissionTail,
   selectedLoadAdmissionTailPaths,
+  type SelectedLoadAdmissionTail,
 } from "./recovery-gmail-selected-load-admission-tail.js";
 import {
   readNextSelectedLoadAdmissionForInstallation,
@@ -70,6 +71,7 @@ import {
 import {
   openPreparedRuntimeForAdmission,
   type RecoveryRuntimeEntry,
+  type RecoveryRuntimeInput,
 } from "./recovery-runtime.js";
 import {
   readRecoveryGmailHostForLoadInstallation,
@@ -85,6 +87,12 @@ import {
   encodeRecoveryGmailSelectedLoadFrame,
   decodeRecoveryGmailSelectedLoadFrame,
 } from "./recovery-gmail-selected-load-framing.js";
+import { readThirdSelectedLoadAdmissionForInstallation } from "./recovery-gmail-selected-load-third-admission.js";
+import {
+  decodeRecoveryGmailThirdSelectedLoadFrame,
+  encodeRecoveryGmailThirdSelectedLoadFrame,
+  type RecoveryGmailThirdSelectedLoadFrameInput,
+} from "./recovery-gmail-selected-load-third-framing.js";
 import { proveRecoveryGmailSelectedLoadBaseline } from "./recovery-gmail-selected-load-proof.js";
 import {
   createSelectedGmailLoadEffectPlan,
@@ -118,6 +126,7 @@ import {
 import { sha256 } from "./steve-preflight.js";
 
 export const recoveryGmailSelectedLoadExecutorVersion = 1;
+export const recoveryGmailThirdSelectedLoadInstallerVersion = 1;
 const production = "prodigic/zivv/production";
 const sqlFiles = /^operator\/(?:ledger|weekly-runs)\.sqlite(?:-wal|-shm)?$/;
 const keyName =
@@ -2300,29 +2309,21 @@ export function executeRecoveredGmailSelectedLoadForTest(
  * private and quarantined; interruption of this retry requires later proof. */
 /** Settle the observed file prefix under both writer locks without changing
  * the original catalog, journal, or ownership fence. */
-/** Install only the next signed admission behind both prepared-host writer
- * guards. The existing run, catalog, journal and recovery key stay untouched. */
-export async function installRecoveredGmailNextSelectedLoadAdmission(
-  supplied: RecoveryGmailSelectedLoadInstallationInput,
-  next: RecoveryGmailSelectedReceiptSelector,
-  signedAdmission: Buffer
-) {
-  assertNoSelectedGmailLoadExecution();
-  assertNoSelectedLoadInstallation();
-  assertNoRecoveredGmailCapture();
-  if (!Buffer.isBuffer(signedAdmission) || signedAdmission.length > 65536)
-    return fail();
+type SelectedLoadAdmissionInstallationEvidence = Pick<
+  ReturnType<typeof readNextSelectedLoadAdmissionForInstallation>["effective"],
+  "proof" | "raw" | "plan" | "catalog" | "journal" | "entries"
+>;
 
-  const bytes = Buffer.from(signedAdmission);
-  const wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
-  const input = decodeRecoveryGmailSelectedLoadFrame(wire);
-  const { selector: _selector, ...runtime } = input;
+/** Mutate only the exact signed admission files while both local stores are guarded. */
+async function installSelectedLoadAdmissionWithGuards(
+  runtime: RecoveryRuntimeInput,
+  tail: SelectedLoadAdmissionTail,
+  effective: SelectedLoadAdmissionInstallationEvidence,
+  preparedReceiptSha256?: string
+): Promise<void> {
+  const { bytes } = tail;
   let scope: Scope | undefined;
   try {
-    assertRetainedSelectedLoadExecutor(runtime.destination);
-    const observe = () =>
-      readNextSelectedLoadAdmissionForInstallation(input, next, bytes);
-    const { record, tail, effective } = observe();
     const destination = resolve(runtime.destination);
     const { directory, stage, target } = selectedLoadAdmissionTailPaths(
       destination,
@@ -2346,6 +2347,11 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
       return { path, dev: stat.dev, ino: stat.ino };
     });
     const opened = openPreparedRuntimeForAdmission(runtime);
+    if (
+      preparedReceiptSha256 !== undefined &&
+      opened.receiptSha256 !== preparedReceiptSha256
+    )
+      return fail();
     const before = observeSelectedLoadAdmissionTail(
       destination,
       effective.entries,
@@ -2360,7 +2366,7 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
     const transients = new Map<string, Buffer>();
     if (before.observed.candidate)
       transients.set(before.observed.candidate.path, bytes);
-    const admissionSha256 = sha256(bytes);
+    const admissionSha256 = sha256(tail.bytes);
     const startedAt = Date.now();
     scope = {
       active: true,
@@ -2372,7 +2378,7 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
       root,
       operator,
       directory,
-      key: Buffer.from(input.recoveryKey),
+      key: Buffer.from(runtime.recoveryKey),
       source: effective.proof.source,
       run: effective.proof.runState,
       initialRun: effective.proof.initialState,
@@ -2426,7 +2432,7 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
     };
     const tailPrefix = "recovery-gmail-load/" + tail.runId + "/";
     let writing = false;
-    return await scopes.run(scope, async () => {
+    await scopes.run(scope, async () => {
       const guard = new DatabaseSync(journalPath, { timeout: 10000 });
       try {
         guard.exec("BEGIN IMMEDIATE");
@@ -2474,15 +2480,6 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
         )
           fail();
         guard.exec("COMMIT");
-        return {
-          status: "next-load-admission-installed" as const,
-          runId: record.runId,
-          admissionSha256,
-          priorLoadFamilySha256: record.priorLoadFamilySha256,
-          loadAllowed: false as const,
-          captureAllowed: false as const,
-          activationAllowed: false as const,
-        };
       } catch (error) {
         if (guard.isTransaction) guard.exec("ROLLBACK");
         throw error;
@@ -2495,7 +2492,84 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
       scope.active = false;
       scope.key.fill(0);
     }
+  }
+}
+
+/** Install only the next signed admission behind both prepared-host writer guards. */
+export async function installRecoveredGmailNextSelectedLoadAdmission(
+  supplied: RecoveryGmailSelectedLoadInstallationInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  signedAdmission: Buffer
+) {
+  assertNoSelectedGmailLoadExecution();
+  assertNoSelectedLoadInstallation();
+  assertNoRecoveredGmailCapture();
+  if (!Buffer.isBuffer(signedAdmission) || signedAdmission.length > 65536)
+    return fail();
+
+  const bytes = Buffer.from(signedAdmission);
+  const wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
+  const input = decodeRecoveryGmailSelectedLoadFrame(wire);
+  const { selector: _selector, ...runtime } = input;
+  try {
+    assertRetainedSelectedLoadExecutor(runtime.destination);
+    const { record, tail, effective } =
+      readNextSelectedLoadAdmissionForInstallation(input, next, bytes);
+    await installSelectedLoadAdmissionWithGuards(runtime, tail, effective);
+    return {
+      status: "next-load-admission-installed" as const,
+      runId: record.runId,
+      admissionSha256: sha256(bytes),
+      priorLoadFamilySha256: record.priorLoadFamilySha256,
+      loadAllowed: false as const,
+      captureAllowed: false as const,
+      activationAllowed: false as const,
+    };
+  } finally {
     input.recoveryKey.fill(0);
+    wire.fill(0);
+  }
+}
+
+/** Install only the exact third admission. This grants no execution scope. */
+export async function installRecoveredGmailThirdSelectedLoadAdmission(
+  supplied: RecoveryGmailThirdSelectedLoadFrameInput
+) {
+  assertNoSelectedGmailLoadExecution();
+  assertNoSelectedLoadInstallation();
+  assertNoRecoveredGmailCapture();
+  const wire = encodeRecoveryGmailThirdSelectedLoadFrame(supplied);
+  let input: RecoveryGmailThirdSelectedLoadFrameInput | undefined;
+  try {
+    input = decodeRecoveryGmailThirdSelectedLoadFrame(wire);
+    const { selector: _selector, ...runtime } = input.family.prior;
+    assertRetainedSelectedLoadExecutor(runtime.destination);
+    const { record, tail, effective } =
+      readThirdSelectedLoadAdmissionForInstallation(
+        input.family,
+        input.third,
+        input.admission
+      );
+    await installSelectedLoadAdmissionWithGuards(
+      runtime,
+      tail,
+      effective,
+      record.preparedReceiptSha256
+    );
+    return {
+      status: "third-load-admission-installed" as const,
+      runId: record.runId,
+      admissionSha256: sha256(tail.bytes),
+      completedPrefixSha256: record.completedPrefixSha256,
+      loadAllowed: false as const,
+      captureAllowed: false as const,
+      activationAllowed: false as const,
+      freezeAllowed: false as const,
+    };
+  } finally {
+    input?.family.prior.recoveryKey.fill(0);
+    input?.family.admission.fill(0);
+    input?.admission.fill(0);
     wire.fill(0);
   }
 }

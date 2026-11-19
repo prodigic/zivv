@@ -245,7 +245,7 @@ function verifyCompletedNextResume(input: {
 
 /** Authenticate the second load's completed journal and its exact signed file
  * prefix. This detached observation supplies no writer permission. */
-export function readNextSelectedLoadCompletionEvidence(
+function readNextSelectedLoadCompletion(
   supplied: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
   signedAdmission: Buffer,
@@ -559,6 +559,7 @@ export function readNextSelectedLoadCompletionEvidence(
           }
         : {}),
       physicalEntries: entries,
+      allPhysicalEntries: allEntries,
       ...(thirdAdmissionPresence ? { thirdAdmissionPresence } : {}),
       observedCatalog: catalog,
       observedJournal,
@@ -569,6 +570,25 @@ export function readNextSelectedLoadCompletionEvidence(
     input?.recoveryKey.fill(0);
     wire?.fill(0);
   }
+}
+
+export function readNextSelectedLoadCompletionEvidence(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer
+) {
+  return readNextSelectedLoadCompletion(prior, next, admission);
+}
+
+/** Internal predecessor evidence. The caller checks the full v3 intent
+ * against the projected released state before granting any installation. */
+export function readNextSelectedLoadCompletionBeforeThirdAdmission(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer,
+  tail: SelectedLoadAdmissionTail
+) {
+  return readNextSelectedLoadCompletion(prior, next, admission, tail);
 }
 
 export function inspectNextSelectedLoadCompletion(

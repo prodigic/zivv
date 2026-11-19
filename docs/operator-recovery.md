@@ -302,3 +302,29 @@ two recovered corrections and proves their two original messages remain
 unresolved at the later bound. Changed successor weekly evidence refuses the
 observation. Host shutdown and credential fencing remain operational
 prerequisites.
+
+### Inspect and prepare a third retained receipt
+
+Use the first and second selector files and the signed second admission from
+the completed runs. Supply a separate private, canonical selector for the
+third receipt. The operator report includes the planned run and prefix hashes.
+
+```powershell
+node scripts/operator-recovery.js inspect-third-selected-load `
+  --file '<archive>' --key '<private recovery key file>' --receipt '<retirement receipt>' `
+  --destination '<prepared root>' --npm-cli '<relocated npm-cli.js>' `
+  --selector-file '<first selector>' --next-selector-file '<second selector>' `
+  --admission-file '<second admission>' --third-selector-file '<third selector>'
+```
+
+To preserve the exact plan, use `prepare-third-selected-load` with the same
+arguments plus `--third-admission-file '<private output outside the prepared root>'`.
+A retry authenticates and preserves the saved intent. The third receipt stays
+pending and the two predecessor results stay in place.
+
+Use `install-third-selected-load` with the exact same selector and admission
+arguments to install that signed intent through the retained worker. Both
+local writer guards recheck the catalog, journal and full inventory before
+the worker can settle the named admission and its stage. A retry recognizes
+the same installed bytes. This command installs the admission only. Third
+execution still requires a separate proof and entry point.

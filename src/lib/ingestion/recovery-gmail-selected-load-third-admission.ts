@@ -51,7 +51,11 @@ function payload(
     source: evidence.source,
     runtimeIdentitySha256: evidence.runtimeIdentitySha256,
   };
-  return { body, thirdAdmissionPresence: evidence.thirdAdmissionPresence };
+  return {
+    body,
+    thirdAdmissionPresence: evidence.thirdAdmissionPresence,
+    effective: evidence.effective,
+  };
 }
 
 /** Authenticate a detached third admission and reprove its exact live prefix. */
@@ -105,7 +109,7 @@ export function createRecoveryGmailThirdSelectedLoadAdmission(
  * Verify an exact fixed third-admission prefix without adopting its files.
  * The signed identity is checked before projecting out only this admission.
  */
-export function inspectInstalledRecoveryGmailThirdSelectedLoadAdmission(
+export function readThirdSelectedLoadAdmissionForInstallation(
   family: RecoveryGmailNextSelectedLoadFrameInput,
   third: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer
@@ -123,26 +127,41 @@ export function inspectInstalledRecoveryGmailThirdSelectedLoadAdmission(
       !/^[a-f0-9]{64}$/.test(runId)
     )
       return invalid();
-    const { body: expected, thirdAdmissionPresence: presence } = payload(
-      family,
-      third,
-      admittedAtEpochMs,
-      { runId, bytes }
-    );
+    const {
+      body: expected,
+      thirdAdmissionPresence: presence,
+      effective,
+    } = payload(family, third, admittedAtEpochMs, { runId, bytes });
     if (!presence || canonicalJson(expected) !== canonicalJson(body))
       return invalid();
     return {
-      status: "third-load-admission-observed" as const,
+      record: expected,
+      tail: { runId, bytes },
+      effective,
       presence,
-      runId,
-      admissionSha256: sha256(bytes),
-      completedPrefixSha256: expected.completedPrefixSha256,
-      activationAllowed: false as const,
-      captureAllowed: false as const,
-      loadAllowed: false as const,
-      freezeAllowed: false as const,
     };
   } catch {
     return invalid();
   }
+}
+
+/** Return only the observed fixed admission status and its public-safe digests. */
+export function inspectInstalledRecoveryGmailThirdSelectedLoadAdmission(
+  family: RecoveryGmailNextSelectedLoadFrameInput,
+  third: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer
+) {
+  const { record, tail, presence } =
+    readThirdSelectedLoadAdmissionForInstallation(family, third, admission);
+  return {
+    status: "third-load-admission-observed" as const,
+    presence,
+    runId: record.runId,
+    admissionSha256: sha256(tail.bytes),
+    completedPrefixSha256: record.completedPrefixSha256,
+    activationAllowed: false as const,
+    captureAllowed: false as const,
+    loadAllowed: false as const,
+    freezeAllowed: false as const,
+  };
 }

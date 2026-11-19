@@ -5,7 +5,10 @@ import {
 import type { SelectedLoadAdmissionTail } from "./recovery-gmail-selected-load-admission-tail.js";
 import { planCapturedLoadAfterPredecessor } from "./recovery-gmail-selected-load-captured-plan.js";
 import type { RecoveryGmailNextSelectedLoadFrameInput } from "./recovery-gmail-selected-load-next-framing.js";
-import { readNextSelectedLoadCompletionEvidence } from "./recovery-gmail-selected-load-next-replay.js";
+import {
+  readNextSelectedLoadCompletionBeforeThirdAdmission,
+  readNextSelectedLoadCompletionEvidence,
+} from "./recovery-gmail-selected-load-next-replay.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
 
@@ -32,12 +35,18 @@ export function readThirdSelectedLoadAdmissionEvidence(
     if ([first.receiptId, second.receiptId].includes(selector.receiptId))
       return invalid();
 
-    const completed = readNextSelectedLoadCompletionEvidence(
-      family.prior,
-      second,
-      family.admission,
-      installedTail
-    );
+    const completed = installedTail
+      ? readNextSelectedLoadCompletionBeforeThirdAdmission(
+          family.prior,
+          second,
+          family.admission,
+          installedTail
+        )
+      : readNextSelectedLoadCompletionEvidence(
+          family.prior,
+          second,
+          family.admission
+        );
     const {
       report,
       observedCatalog,
@@ -106,6 +115,14 @@ export function readThirdSelectedLoadAdmissionEvidence(
     return {
       report: reportCommitments,
       thirdAdmissionPresence: completed.thirdAdmissionPresence,
+      effective: {
+        proof: planned.proof,
+        raw: planned.raw,
+        plan: planned.plan,
+        catalog: observedCatalog,
+        journal: observedJournal,
+        entries: completed.allPhysicalEntries,
+      },
       firstSelector: completed.effective.originalBaseline.selector,
       secondSelector: completed.effective.proof.selection.selector,
       secondAdmissionSha256: report.admissionSha256,
