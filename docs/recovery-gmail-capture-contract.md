@@ -515,3 +515,19 @@ If a retry worker stops with one exact signed intent stage, inspection retains
 the original expiry and fence. The guarded installer rechecks the intent and
 stage identities before adoption or unlink. It permits disappearance of that
 stage only when its exact file remains installed at the canonical intent path.
+
+### Inspect a third retained receipt
+
+The read-only third-receipt inspector verifies the first two completed loads
+and their released journal at catalog generation three. It binds the ordered
+first-load family, second admission, execution baseline, result and history,
+together with the current catalog, journal and physical inventory. It verifies
+the third receipt inside the original capture family and derives its normal
+import plan against the generation-three catalog. The report carries hashes
+and run identifiers. It preserves the two previous results, the encrypted
+backup and the third receipt's pending status.
+
+The original and second-load formats remain valid. A future third execution
+needs its own authenticated baseline and evidence for interruption, replay and
+settlement after generation four. The inspector keeps the replacement
+quarantined and grants no capture, load, freeze or activation permission.

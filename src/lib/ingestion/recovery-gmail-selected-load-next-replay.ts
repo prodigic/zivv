@@ -537,6 +537,15 @@ export function readNextSelectedLoadCompletionEvidence(
         : {}),
       effective,
       raw,
+      ...(!prefix.next && lease.status === "released"
+        ? {
+            completionIdentity: {
+              priorFamilySha256: identity.priorFamilySha256,
+              executionBaselineSha256: identity.executionBaselineSha256,
+              historyManifestSha256: completion.fields.historyManifestSha256,
+            },
+          }
+        : {}),
       physicalEntries: entries,
       observedCatalog: catalog,
       observedJournal,

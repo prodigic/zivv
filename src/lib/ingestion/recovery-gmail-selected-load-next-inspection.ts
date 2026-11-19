@@ -3,14 +3,11 @@ import {
   type RecoveryGmailSelectedReceiptSelector,
 } from "./recovery-gmail-capture-admission-proof.js";
 import type { SelectedLoadAdmissionTail } from "./recovery-gmail-selected-load-admission-tail.js";
-import { createSelectedGmailLoadEffectPlan } from "./recovery-gmail-selected-load-effects.js";
+import { planCapturedLoadAfterPredecessor } from "./recovery-gmail-selected-load-captured-plan.js";
 import type { RecoveryGmailSelectedLoadFrameInput } from "./recovery-gmail-selected-load-framing.js";
 import { readSelectedLoadInterruptionEvidence } from "./recovery-gmail-selected-load-interruption-inspection.js";
-import { proveRecoveryGmailSelectedLoadBaseline } from "./recovery-gmail-selected-load-proof.js";
 import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
-import { validateWeeklyJournalRecoverySnapshot } from "./weekly-run-journal.js";
-import { parseWeeklyRunState } from "./weekly-run-state.js";
 
 function fail(): never {
   throw Error("INVALID_NEXT_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
@@ -44,56 +41,21 @@ export function readNextSelectedLoadAdmissionEvidence(
       return fail();
 
     key = Buffer.from(prior.recoveryKey);
-    const baseline = observed.originalBaseline;
-    const selected = proveRecoveryGmailSelectedLoadBaseline({
-      ...baseline,
-      selector,
-      recoveryKey: key,
-    });
-    const journal = validateWeeklyJournalRecoverySnapshot(
-      observed.observedJournal
-    );
-    if (
-      selected.runState.runId === observed.report.runId ||
-      selected.runDisposition !== "new" ||
-      journal.runState.some((row) => row.id === selected.runState.runId)
-    )
-      return fail();
-
-    const physical = new Map(
-      observed.physicalEntries.map((entry) => [entry.path, entry])
-    );
-    for (const file of selected.selection.canonicalEvidence) {
-      const entry = physical.get("operator/" + file.path);
-      if (entry?.kind !== "file" || entry.sha256 !== file.sha256) return fail();
-    }
-    const body = selected.selection.canonicalEvidence.find(({ path }) =>
-      path.endsWith("/bodies/" + selector.receiptId + "/source.txt")
-    );
-    const source = baseline.current.files.find(
-      (file) => file.area === "operator" && file.path === body?.path
-    );
-    if (!source?.bytes || source.sha256 !== body?.sha256) return fail();
-
     const { ledger, generation } = observed.observedCatalog;
-    const predecessor = journal.runState.find(
-      (row) => row.id === observed.report.runId
-    );
-    if (!predecessor) return fail();
-    const predecessorImportId = parseWeeklyRunState(
-      JSON.parse(predecessor.payload)
-    ).stages.find((stage) => stage.stage === "load")?.evidence?.importRunId;
-    const predecessorCommit = ledger.runs.find(
-      (run) => run.runId === predecessorImportId
-    )?.committedAtEpochMs;
-    if (typeof predecessorCommit !== "number") return fail();
-
-    const raw = Buffer.from(source.bytes, "base64");
-    const plan = createSelectedGmailLoadEffectPlan(
-      { files: baseline.checkpoint.files, ledger },
-      selected,
-      raw
-    );
+    const {
+      proof: selected,
+      plan,
+      raw,
+      earliestAdmissionEpochMs,
+    } = planCapturedLoadAfterPredecessor({
+      originalBaseline: observed.originalBaseline,
+      observedCatalog: observed.observedCatalog,
+      observedJournal: observed.observedJournal,
+      physicalEntries: observed.physicalEntries,
+      predecessorRunId: observed.report.runId,
+      selector,
+      key,
+    });
     const catalogSha256 = ledgerDigest(ledger);
     const priorLoad = {
       runId: observed.report.runId,
@@ -130,6 +92,7 @@ export function readNextSelectedLoadAdmissionEvidence(
       anchorBaselineSha256: selected.baselineSha256,
       runtimeIdentitySha256: selected.runtimeIdentitySha256,
       effective: {
+        originalBaseline: observed.originalBaseline,
         proof: selected,
         plan,
         raw,
@@ -138,11 +101,7 @@ export function readNextSelectedLoadAdmissionEvidence(
         snapshot: observed.changedFiles.snapshot,
         entries: observed.physicalEntries,
       },
-      earliestAdmissionEpochMs: Math.max(
-        baseline.checkpoint.createdAtEpochMs,
-        predecessorCommit,
-        selected.source.importObservedAtEpochMs
-      ),
+      earliestAdmissionEpochMs,
     };
   } catch {
     return fail();

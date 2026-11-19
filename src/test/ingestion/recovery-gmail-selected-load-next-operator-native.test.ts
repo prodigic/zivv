@@ -1,6 +1,12 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmdirSync,
+  writeFileSync,
+} from "node:fs";
 import { join, resolve } from "node:path";
 import { expect, it, vi } from "vitest";
 import {
@@ -9,6 +15,8 @@ import {
 } from "../../lib/ingestion/sqlite-store.js";
 import { readWeeklyJournalRecoverySnapshotReadOnly } from "../../lib/ingestion/weekly-run-journal.js";
 import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
+import { inspectThirdRecoveryGmailSelectedLoad } from "../../lib/ingestion/recovery-gmail-selected-load-third-inspection.js";
+import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-next-replay.js";
 
 vi.setConfig({ testTimeout: 1_200_000 });
 
@@ -291,6 +299,121 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       "load-result.json"
     );
     const resultBytes = readFileSync(resultFile);
+    const family = {
+      prior: { ...fixture.input, selector: firstSelector },
+      next: nextSelector,
+      admission: bytes,
+    };
+    const thirdSelector = {
+      batchId: third.batchId,
+      messageId: third.receipt.messageId,
+      rawSha256: third.receipt.rawSha256,
+      receiptId: third.receipt.receiptId,
+    };
+    const completed = readNextSelectedLoadCompletionEvidence(
+      family.prior,
+      family.next,
+      family.admission
+    );
+    expect(completed.report.lease.status).toBe("released");
+    const digest = (value: string | Buffer) =>
+      createHash("sha256").update(value).digest("hex");
+    const expectedPrefix = digest(
+      canonicalJson({
+        domain: "zivv-recovery-gmail-selected-load-prefix/v1",
+        firstLoadFamilySha256: completed.completionIdentity!.priorFamilySha256,
+        second: {
+          runId: completed.report.runId,
+          admissionSha256: completed.report.admissionSha256,
+          executionBaselineSha256:
+            completed.completionIdentity!.executionBaselineSha256,
+          historyManifestSha256:
+            completed.completionIdentity!.historyManifestSha256,
+          resultSha256: completed.report.resultSha256,
+        },
+        catalogSha256: completed.report.ledgerRevision,
+        generation: completed.report.generation,
+        journalSha256: digest(completed.observedJournal),
+        inventorySha256: digest(canonicalJson(completed.physicalEntries)),
+      })
+    );
+    const thirdInspection = inspectThirdRecoveryGmailSelectedLoad(
+      family,
+      thirdSelector
+    );
+    expect(thirdInspection).toMatchObject({
+      status: "third-selected-load-inspected",
+      previousRunId: loaded.runId,
+      generation: 3,
+      catalogSha256: loaded.ledgerRevision,
+      journalSha256: digest(journal),
+      completedPrefixSha256: expectedPrefix,
+      physicalValidationRequired: true,
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+    });
+    for (const hash of [
+      thirdInspection.completedPrefixSha256,
+      thirdInspection.inventorySha256,
+      thirdInspection.anchorBaselineSha256,
+      thirdInspection.selectionSha256,
+      thirdInspection.captureFamilySha256,
+      thirdInspection.runId,
+      thirdInspection.reportSha256,
+    ])
+      expect(hash).toMatch(/^[a-f0-9]{64}$/);
+    expect(thirdInspection.importRunId).toMatch(/^steveslist-v6-[a-f0-9]{64}$/);
+    expect(thirdInspection.runId).not.toBe(firstResult.runId);
+    expect(thirdInspection.runId).not.toBe(loaded.runId);
+    expect(
+      inspectThirdRecoveryGmailSelectedLoad(family, thirdSelector)
+    ).toEqual(thirdInspection);
+    expect(() =>
+      inspectThirdRecoveryGmailSelectedLoad(family, firstSelector)
+    ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
+    expect(() =>
+      inspectThirdRecoveryGmailSelectedLoad(family, nextSelector)
+    ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
+    expect(() =>
+      inspectThirdRecoveryGmailSelectedLoad(family, {
+        ...thirdSelector,
+        receiptId: "f".repeat(64),
+      })
+    ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
+    expect(() =>
+      inspectThirdRecoveryGmailSelectedLoad(
+        { ...family, admission: altered },
+        thirdSelector
+      )
+    ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
+    const thirdDirectory = join(
+      root,
+      "recovery-gmail-load",
+      thirdInspection.runId
+    );
+    expect(existsSync(thirdDirectory)).toBe(false);
+    const foreignDirectory = join(root, "recovery-gmail-load", "f".repeat(64));
+    expect(existsSync(foreignDirectory)).toBe(false);
+    mkdirSync(foreignDirectory);
+    try {
+      expect(() =>
+        inspectThirdRecoveryGmailSelectedLoad(family, thirdSelector)
+      ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
+    } finally {
+      rmdirSync(foreignDirectory);
+    }
+    expect(
+      inspectThirdRecoveryGmailSelectedLoad(family, thirdSelector)
+    ).toEqual(thirdInspection);
+    expect(existsSync(thirdDirectory)).toBe(false);
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      journal
+    );
+    expect(readFileSync(resultFile)).toEqual(resultBytes);
+    expect(readFileSync(admissionFile)).toEqual(bytes);
     const badAudit = run("inspect-composed-gmail-obligations", [
       ...nextArgs,
       "--admission-file",
