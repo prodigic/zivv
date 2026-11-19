@@ -63,6 +63,7 @@ const thirdSelectedLoadCommands = [
   "inspect-third-selected-load",
   "prepare-third-selected-load",
   "install-third-selected-load",
+  "execute-third-selected-load",
 ];
 
 const nextSelectedLoadCommands = [
@@ -175,6 +176,28 @@ async function runThirdSelectedLoadCommand(command, family, options) {
     const { inspectThirdRecoveryGmailSelectedLoad } =
       await import("../dist/lib/ingestion/recovery-gmail-selected-load-third-inspection.js");
     return inspectThirdRecoveryGmailSelectedLoad(family, third);
+  }
+
+  if (command === "execute-third-selected-load") {
+    const admission = privateInput(options["third-admission-file"], 64 * 1024);
+    let executionBaseline;
+    try {
+      const { maxThirdSelectedLoadBaselineBytes } =
+        await import("../dist/lib/ingestion/recovery-gmail-selected-load-third-start-framing.js");
+      executionBaseline = privateInput(
+        options["third-execution-baseline-file"],
+        maxThirdSelectedLoadBaselineBytes
+      );
+      const { runOperatorRecoveryGmailThirdSelectedLoadExecution } =
+        await import("../dist/lib/ingestion/recovery-gmail-selected-load-launcher.js");
+      return await runOperatorRecoveryGmailThirdSelectedLoadExecution({
+        input: { family, third, admission },
+        executionBaseline,
+      });
+    } finally {
+      admission.fill(0);
+      executionBaseline?.fill(0);
+    }
   }
 
   if (command === "install-third-selected-load") {
@@ -340,6 +363,7 @@ try {
         "third-selector-file",
         "admission-file",
         "third-admission-file",
+        "third-execution-baseline-file",
         "cutoff",
       ].includes(key) ||
       Object.hasOwn(options, key) ||
@@ -429,8 +453,12 @@ try {
                               ...([
                                 "prepare-third-selected-load",
                                 "install-third-selected-load",
+                                "execute-third-selected-load",
                               ].includes(command)
                                 ? ["third-admission-file"]
+                                : []),
+                              ...(command === "execute-third-selected-load"
+                                ? ["third-execution-baseline-file"]
                                 : []),
                               ...(command ===
                               "inspect-composed-gmail-obligations"

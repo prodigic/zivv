@@ -79,13 +79,21 @@ internal static class WindowsJobRunner
                 if (left <= 0) return StopJob(job, worker.Process, DeadlineStopped);
                 if (active == 0)
                 {
-                    uint exitCode;
-                    if (Native.WaitForSingleObject(worker.Process, 0) != WaitObject ||
-                        !Native.GetExitCodeProcess(worker.Process, out exitCode))
+                    uint rootState = Native.WaitForSingleObject(worker.Process, 0);
+                    // Job accounting and the process handle are separate
+                    // observations. Allow the handle to catch up within the
+                    // same deadline before reporting an unconfirmed exit.
+                    if (rootState != WaitObject && rootState != WaitTimeout)
                         return TerminationUnconfirmed;
-                    if (clock.ElapsedMilliseconds >= deadlineMs)
-                        return StopJob(job, worker.Process, DeadlineStopped);
-                    return exitCode == 0 ? 0 : WorkerFailed;
+                    if (rootState == WaitObject)
+                    {
+                        uint exitCode;
+                        if (!Native.GetExitCodeProcess(worker.Process, out exitCode))
+                            return TerminationUnconfirmed;
+                        if (clock.ElapsedMilliseconds >= deadlineMs)
+                            return StopJob(job, worker.Process, DeadlineStopped);
+                        return exitCode == 0 ? 0 : WorkerFailed;
+                    }
                 }
                 uint observedParent = Native.WaitForSingleObject(parent, (uint)Math.Min(left, 25));
                 if (observedParent != WaitTimeout)

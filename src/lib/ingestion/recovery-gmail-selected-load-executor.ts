@@ -87,7 +87,13 @@ import {
   encodeRecoveryGmailSelectedLoadFrame,
   decodeRecoveryGmailSelectedLoadFrame,
 } from "./recovery-gmail-selected-load-framing.js";
-import { readThirdSelectedLoadAdmissionForInstallation } from "./recovery-gmail-selected-load-third-admission.js";
+import {
+  readThirdSelectedLoadAdmissionForInstallation,
+  readThirdSelectedLoadAdmissionWithStartBaseline,
+} from "./recovery-gmail-selected-load-third-admission.js";
+import { verifySelectedThirdLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
+import { inspectInstalledThirdSelectedLoadExecutionBaseline } from "./recovery-gmail-selected-load-third-start.js";
+import { observeThirdSelectedLoadStartTail } from "./recovery-gmail-selected-load-third-start-tail.js";
 import {
   decodeRecoveryGmailThirdSelectedLoadFrame,
   encodeRecoveryGmailThirdSelectedLoadFrame,
@@ -106,6 +112,7 @@ import {
   secureOperatorDirectory,
   inspectRecoveryInstalledFile,
   installRecoveredBackupKey,
+  loadBackupKey,
   validateRecoveredBackupKeyBytes,
   decryptLedgerSnapshot,
 } from "./encrypted-backup.js";
@@ -127,6 +134,7 @@ import { sha256 } from "./steve-preflight.js";
 
 export const recoveryGmailSelectedLoadExecutorVersion = 1;
 export const recoveryGmailThirdSelectedLoadInstallerVersion = 1;
+export const recoveryGmailThirdSelectedLoadExecutorVersion = 1;
 const production = "prodigic/zivv/production";
 const sqlFiles = /^operator\/(?:ledger|weekly-runs)\.sqlite(?:-wal|-shm)?$/;
 const keyName =
@@ -1407,6 +1415,99 @@ function prepareSelectedLoadNext(
   };
 }
 
+interface ThirdSelectedLoadStart {
+  input: RecoveryGmailThirdSelectedLoadFrameInput;
+  executionBaseline: Buffer;
+}
+
+function prepareSelectedLoadThird(
+  prior: RecoveryGmailSelectedLoadInstallationInput,
+  request: ThirdSelectedLoadStart
+) {
+  const { input, executionBaseline } = request;
+  const observation = inspectInstalledThirdSelectedLoadExecutionBaseline(
+    input,
+    executionBaseline
+  );
+  const { record, tail, effective } =
+    readThirdSelectedLoadAdmissionWithStartBaseline(
+      input.family,
+      input.third,
+      input.admission,
+      executionBaseline
+    );
+  const baseline = verifySelectedThirdLoadExecutionBaseline(
+    executionBaseline,
+    prior.recoveryKey
+  );
+  if (
+    observation.presence !== "installed" ||
+    effective.catalog.generation !== 3 ||
+    baseline.generation !== 3 ||
+    baseline.completedPrefixSha256 !== record.completedPrefixSha256 ||
+    baseline.runId !== record.runId
+  )
+    return fail();
+  const opened = openPreparedRuntimeForAdmission(prior);
+  if (opened.receiptSha256 !== baseline.preparedReceiptSha256) return fail();
+  const root = resolve(prior.destination);
+  const entries = opened.inventoryGmailSelectedLoadExecution();
+  const start = observeThirdSelectedLoadStartTail(
+    root,
+    entries,
+    tail,
+    executionBaseline,
+    prior.recoveryKey
+  );
+  if (start.presence !== "installed") return fail();
+  same(start.beforeStart, effective.entries);
+  const { directory, stage, target, base } = selectedLoadAdmissionTailPaths(
+    root,
+    record.runId
+  );
+  const executionPath = join(directory, "execution-baseline.json");
+  const predecessorPrefixes = baseline.entries
+    .filter(
+      ({ path, kind }) =>
+        kind === "directory" &&
+        /^recovery-gmail-load\/[a-f0-9]{64}$/.test(path) &&
+        path !== base
+    )
+    .map(({ path }) => path);
+  const reportPath =
+    "checkout/data/ingestion/reports/" +
+    sha256(effective.plan.receipt.importRunId) +
+    ".json";
+  if (
+    predecessorPrefixes.length !== 2 ||
+    baseline.entries.some(({ path }) => path === reportPath)
+  )
+    return fail();
+  return {
+    kind: "third" as const,
+    ...effective,
+    entries,
+    opened,
+    directory,
+    executionBaseline,
+    startedAtEpochMs: baseline.startedAtEpochMs,
+    predecessorPrefixes,
+    admissionSha256: baseline.admissionSha256,
+    priorLoadFamilySha256: baseline.completedPrefixSha256,
+    readonlyFiles: new Map([
+      [target, Buffer.from(input.admission)],
+      [executionPath, Buffer.from(executionBaseline)],
+    ]),
+    readonlyDirectories: new Set([
+      dirname(directory),
+      directory,
+      dirname(stage),
+      stage,
+      executionPath + "-stage",
+    ]),
+  };
+}
+
 async function finishSelectedLoadWithWeeklyRunner(
   scope: Scope,
   opened: ReturnType<typeof openPreparedRuntimeForAdmission>,
@@ -1478,7 +1579,8 @@ async function executeSelectedLoad(
     | "history-first-chunk"
     | "completion-before-intent"
     | "completion-intent-partial",
-  next?: NextSelectedLoadStart
+  next?: NextSelectedLoadStart,
+  third?: ThirdSelectedLoadStart
 ) {
   assertNoSelectedGmailLoadExecution();
   assertNoSelectedLoadInstallation();
@@ -1489,9 +1591,12 @@ async function executeSelectedLoad(
   let scope: Scope | undefined;
   try {
     assertRetainedSelectedLoadExecutor(runtime.destination);
-    const start = next
-      ? prepareSelectedLoadNext(input, next)
-      : prepareSelectedLoadFirst(input);
+    if (next && third) return fail();
+    const start = third
+      ? prepareSelectedLoadThird(input, third)
+      : next
+        ? prepareSelectedLoadNext(input, next)
+        : prepareSelectedLoadFirst(input);
     const {
       directory,
       opened,
@@ -1515,13 +1620,19 @@ async function executeSelectedLoad(
     const previousOwner = journal.ownership.find(
       (row) => row.scope === production
     );
-    if (start.kind === "next" && previousOwner?.expiresAtEpochMs !== 0)
+    if (start.kind !== "first" && previousOwner?.expiresAtEpochMs !== 0)
       return fail();
-    const predecessorPrefix =
-      start.kind === "next"
-        ? "recovery-gmail-load/" + start.priorRunId
-        : undefined;
-    const startedAt = Date.now();
+    const predecessorPrefixes =
+      start.kind === "third"
+        ? start.predecessorPrefixes
+        : start.kind === "next"
+          ? ["recovery-gmail-load/" + start.priorRunId]
+          : [];
+    const enteredAt = Date.now();
+    const startedAt =
+      start.kind === "third" ? start.startedAtEpochMs : enteredAt;
+    const deadline = startedAt + 180_000;
+    if (enteredAt >= deadline) return fail();
     const sqlIdentities = ["ledger.sqlite", "weekly-runs.sqlite"].map(
       (name) => {
         const path = join(operator, name),
@@ -1540,31 +1651,33 @@ async function executeSelectedLoad(
       ].join("-");
     const files = new Map<string, Buffer>();
     const execution =
-      start.kind === "first"
-        ? signSelectedLoadExecutionBaseline(
-            {
-              admissionSha256,
-              evidenceSha256: start.evidenceSha256,
-              physicalSnapshotSha256: start.physicalSnapshotSha256,
-              generation: 1,
-              startedAtEpochMs: startedAt,
-              entries,
-            },
-            input.recoveryKey
-          )
-        : signSelectedNextLoadExecutionBaseline(
-            {
-              admissionSha256,
-              catalogSha256: start.catalogSha256,
-              journalSha256: start.journalSha256,
-              priorLoadFamilySha256: start.priorLoadFamilySha256,
-              physicalSnapshotSha256: sha256(canonicalJson(entries)),
-              generation: 2,
-              startedAtEpochMs: startedAt,
-              entries,
-            },
-            input.recoveryKey
-          );
+      start.kind === "third"
+        ? start.executionBaseline
+        : start.kind === "first"
+          ? signSelectedLoadExecutionBaseline(
+              {
+                admissionSha256,
+                evidenceSha256: start.evidenceSha256,
+                physicalSnapshotSha256: start.physicalSnapshotSha256,
+                generation: 1,
+                startedAtEpochMs: startedAt,
+                entries,
+              },
+              input.recoveryKey
+            )
+          : signSelectedNextLoadExecutionBaseline(
+              {
+                admissionSha256,
+                catalogSha256: start.catalogSha256,
+                journalSha256: start.journalSha256,
+                priorLoadFamilySha256: start.priorLoadFamilySha256,
+                physicalSnapshotSha256: sha256(canonicalJson(entries)),
+                generation: 2,
+                startedAtEpochMs: startedAt,
+                entries,
+              },
+              input.recoveryKey
+            );
     files.set(join(directory, "execution-baseline.json"), execution);
     files.set(
       join(
@@ -1590,7 +1703,7 @@ async function executeSelectedLoad(
     scope = {
       active: true,
       chunkPauseTest: testPause,
-      deadline: startedAt + 180_000,
+      deadline,
       startedAt,
       root,
       operator,
@@ -1606,7 +1719,7 @@ async function executeSelectedLoad(
       ledger: structuredClone(start.catalog.ledger),
       generation: start.catalog.generation,
       priorLoadFamilySha256:
-        start.kind === "next" ? start.priorLoadFamilySha256 : undefined,
+        start.kind !== "first" ? start.priorLoadFamilySha256 : undefined,
       owner,
       fence: (previousOwner?.fence ?? 0) + 1,
       journal,
@@ -1635,9 +1748,10 @@ async function executeSelectedLoad(
             before = originalEntries.get(entry.path),
             expected = scope!.files.get(absolute);
           if (
-            predecessorPrefix &&
-            (entry.path === predecessorPrefix ||
-              entry.path.startsWith(predecessorPrefix + "/"))
+            predecessorPrefixes.some(
+              (prefix) =>
+                entry.path === prefix || entry.path.startsWith(prefix + "/")
+            )
           ) {
             if (!before || canonicalJson(before) !== canonicalJson(entry))
               fail();
@@ -1713,7 +1827,7 @@ async function executeSelectedLoad(
           execution,
           join(directory, "execution-baseline.json-stage")
         );
-      if (start.kind === "next") {
+      if (start.kind !== "first") {
         const journalPath = join(operator, "weekly-runs.sqlite");
         const guard = new DatabaseSync(journalPath, { timeout: 10000 });
         scope!.evidenceGuard = true;
@@ -1731,7 +1845,7 @@ async function executeSelectedLoad(
             async () => {
               same(opened.inventoryGmailSelectedLoadExecution(), entries);
               scope!.assertCurrent();
-              install();
+              if (start.kind === "next") install();
             }
           );
           if (
@@ -1750,9 +1864,18 @@ async function executeSelectedLoad(
         }
       } else install();
       scope!.phase = "key";
-      installRecoveredBackupKey(operator, input.recoveryKey, {
-        stagingDirectory: scope!.keyStage,
-      });
+      if (start.kind === "third") {
+        const existingKey = loadBackupKey(operator);
+        try {
+          if (!existingKey.equals(input.recoveryKey)) return fail();
+        } finally {
+          existingKey.fill(0);
+        }
+      } else {
+        installRecoveredBackupKey(operator, input.recoveryKey, {
+          stagingDirectory: scope!.keyStage,
+        });
+      }
       scope!.assertCurrent();
       return finishSelectedLoadWithWeeklyRunner(scope!, opened, {
         admissionSha256,
@@ -1775,6 +1898,36 @@ export function executeRecoveredGmailSelectedLoad(
 ) {
   return executeSelectedLoad(input);
 }
+/** Execute one settled, still-unmutated third start through the fixed runner. */
+export async function executeRecoveredGmailThirdSelectedLoad(
+  supplied: RecoveryGmailThirdSelectedLoadFrameInput,
+  signedStart: Buffer
+) {
+  if (
+    !Buffer.isBuffer(signedStart) ||
+    !signedStart.length ||
+    signedStart.length > 16 * 1024 * 1024
+  )
+    return fail();
+  const executionBaseline = Buffer.from(signedStart);
+  let wire: Buffer | undefined;
+  let input: RecoveryGmailThirdSelectedLoadFrameInput | undefined;
+  try {
+    wire = encodeRecoveryGmailThirdSelectedLoadFrame(supplied);
+    input = decodeRecoveryGmailThirdSelectedLoadFrame(wire);
+    return await executeSelectedLoad(input.family.prior, undefined, undefined, {
+      input,
+      executionBaseline,
+    });
+  } finally {
+    executionBaseline.fill(0);
+    input?.family.prior.recoveryKey.fill(0);
+    input?.family.admission.fill(0);
+    input?.admission.fill(0);
+    wire?.fill(0);
+  }
+}
+
 /** Execute a distinct installed second receipt against the released first load. */
 export function executeRecoveredGmailNextSelectedLoad(
   prior: RecoveryGmailSelectedLoadInstallationInput,

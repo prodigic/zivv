@@ -596,3 +596,19 @@ The native fixture verifies this path with a changed shared backup. It
 preserves that backup and proves the third receipt, run identity, pre-effect
 catalog and journal from signed evidence. Substituting a prior receipt
 refuses. There is no generation-four execution or settlement in this path.
+
+### Fresh third execution profile
+
+The third execute command consumes a private detached copy of the exact
+installed v3 start, together with the existing archive, retirement receipt,
+prepared host, predecessor admission and three distinct receipt selectors.
+The retained worker checks both private stores and preserves both predecessor
+trees. Its lease deadline is bounded by the signed start. An elapsed start
+refuses before writes. A fresh start requires an unused report path and reads
+the existing working key. The fixed weekly runner stops at load.
+
+The parent verifies the exact generation-four catalog, run, report, encrypted
+backup and released signed settlement before accepting success. It can
+return that already-settled proof without starting another worker. An
+interrupted third execution requires a separate, verified recovery path.
+The CLI exposes no freeze, publication, scheduler or activation options.

@@ -56,7 +56,7 @@ function fail(): never {
   throw Error("INVALID_RECOVERY_GMAIL_NEXT_SELECTED_LOAD_REPLAY");
 }
 
-function assertRecordedCompletionInventory(input: {
+export function assertRecordedCompletionInventory(input: {
   loadPath: string;
   prior: RecoveryRuntimeEntry[];
   inventory: RecoveryRuntimeEntry[];
