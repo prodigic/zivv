@@ -16,12 +16,15 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
   const fixture = await createRecoveryGmailCaptureRuntimeFixture({
     loadableSource: true,
     additionalReadyEdition: true,
+    thirdReadyEdition: true,
   });
   let preserve = true;
   try {
     const root = fixture.input.destination;
     const ready = fixture.nextReady!;
     expect(ready).toBeDefined();
+    const third = fixture.thirdReady!;
+    expect(third).toBeDefined();
     const first = fixture.sourceReceipts.find(
       ({ receipt }) => receipt.messageId === "a1"
     )!.receipt;
@@ -247,7 +250,20 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       messageSha256: messageHash("b1"),
       status: "capture-pending",
     });
-    expect(audit.blockingBatchCount).toBeGreaterThan(0);
+    const thirdBatch = batches.find((batch) => batch.batchId === third.batchId);
+    expect(thirdBatch).toBeDefined();
+    expect(thirdBatch!.messages).toContainEqual(
+      expect.objectContaining({
+        messageSha256: messageHash("f1"),
+        status: "load-pending",
+        receiptId: third.receipt.receiptId,
+        deliveryId: third.receipt.deliveryId,
+        sourceSha256: third.receipt.sourceSha256,
+        firstObservedAtEpochMs: third.receipt.firstObservedAtEpochMs,
+        loadRunIds: [],
+      })
+    );
+    expect(audit.blockingBatchCount).toBe(2);
     const earliest = Math.min(
       ...batches.map((batch) => batch.firstSavedAtEpochMs)
     );

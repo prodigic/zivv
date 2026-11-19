@@ -47,6 +47,12 @@ export interface RecoveryGmailCaptureRuntimeFixture {
       typeof listRetainedSteveEmailSources
     >[number]["receipt"];
   };
+  thirdReady?: {
+    batchId: string;
+    receipt: ReturnType<
+      typeof listRetainedSteveEmailSources
+    >[number]["receipt"];
+  };
   composition?: {
     originalBatchId: string;
     priorBatchId: string;
@@ -204,8 +210,13 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
     seedAuthorityControls?: boolean;
     loadableSource?: boolean;
     additionalReadyEdition?: boolean;
+    thirdReadyEdition?: boolean;
   } = {}
 ): Promise<RecoveryGmailCaptureRuntimeFixture> {
+  if (options.thirdReadyEdition && !options.additionalReadyEdition)
+    throw new Error(
+      "Third ready edition requires the additional ready edition"
+    );
   if (
     options.additionalReadyEdition &&
     (options.composedBatches ||
@@ -424,6 +435,20 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
       );
     }
 
+    const thirdEdition = nextFriday(
+      Date.parse(nextEdition.editionId + "T12:00:00Z") + 7 * 86_400_000
+    );
+    if (options.thirdReadyEdition) {
+      const thirdShow = new Date(showDate.getTime() + 14 * 86_400_000);
+      const thirdLine = `${thirdShow.toLocaleString("en-US", { month: "short", timeZone: "UTC" }).toLowerCase()} ${thirdShow.getUTCDate()} ${thirdShow.getUTCFullYear()} Fifth Fixture Band at Test Room, Oakland a/a $20 8pm`;
+      const thirdBody = `THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest ${thirdEdition.titleDate}\n${thirdLine}\n`;
+      await captureWindow(
+        [fixtureMessage("f1", now - 12_000, thirdBody)],
+        thirdEdition.editionId,
+        []
+      );
+    }
+
     if (options.reviewSecondMessage) {
       // Replay the authenticated saved batch through ordinary intake without a
       // correction choice. Its second body is genuinely retained for review;
@@ -491,6 +516,53 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
         nextBatchId: uniqueBatch("e1"),
         receipt,
       };
+    }
+
+    let thirdReady: RecoveryGmailCaptureRuntimeFixture["thirdReady"];
+    if (options.thirdReadyEdition) {
+      const receipts = listRetainedSteveEmailSources({
+        operatorDirectory: operator,
+        accountId: account,
+        expectedEditionId: thirdEdition.editionId,
+      });
+      const receipt = receipts.find(
+        (item) => item.receipt.messageId === "f1"
+      )?.receipt;
+      const batches = readAuthenticatedSteveGmailBatches({
+        operatorDirectory: operator,
+      });
+      const matched = batches.filter((batch) =>
+        batch.snapshots.some((item) => item.rawMessage.id === "f1")
+      );
+      if (
+        !receipt ||
+        receipts.length !== 1 ||
+        receipt.disposition !== "ready" ||
+        receipt.editionId !== thirdEdition.editionId ||
+        receipt.editionId === nextEdition.editionId ||
+        receipt.receiptId === nextReady?.receipt.receiptId ||
+        matched.length !== 1 ||
+        matched[0]!.batchId === nextReady?.nextBatchId ||
+        matched[0]!.batchId === nextReady?.originalBatchId
+      )
+        throw new Error("Missing distinct third ready edition receipt");
+      const journal = new WeeklyRunJournal(operator);
+      try {
+        if (
+          journal
+            .listRuns("prodigic/zivv/production")
+            .some(
+              (run) =>
+                run.source.deliveryId === receipt.deliveryId &&
+                run.stages.find((stage) => stage.stage === "load")?.status ===
+                  "succeeded"
+            )
+        )
+          throw new Error("Third ready receipt was already loaded");
+      } finally {
+        journal.close();
+      }
+      thirdReady = { batchId: matched[0]!.batchId, receipt };
     }
 
     let composition: RecoveryGmailCaptureRuntimeFixture["composition"];
@@ -611,6 +683,7 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
       sourceReceipts,
       ...(composition ? { composition } : {}),
       ...(nextReady ? { nextReady } : {}),
+      ...(thirdReady ? { thirdReady } : {}),
       cleanup: (preserve) => cleanupFixture(base, preserve),
     };
   } catch (error) {
