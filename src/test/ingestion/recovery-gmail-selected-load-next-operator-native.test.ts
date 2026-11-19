@@ -2,7 +2,10 @@ import { spawnSync } from "node:child_process";
 import { createHash, createHmac } from "node:crypto";
 import {
   existsSync,
+  linkSync,
+  lstatSync,
   mkdirSync,
+  renameSync,
   readFileSync,
   rmdirSync,
   unlinkSync,
@@ -22,6 +25,7 @@ import {
   authenticateRecoveryGmailThirdSelectedLoadAdmission,
   inspectInstalledRecoveryGmailThirdSelectedLoadAdmission,
 } from "../../lib/ingestion/recovery-gmail-selected-load-third-admission.js";
+import { runOperatorRecoveryGmailThirdSelectedLoadInstallation } from "../../lib/ingestion/recovery-gmail-selected-load-launcher.js";
 import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-next-replay.js";
 
 vi.setConfig({ testTimeout: 1_200_000 });
@@ -659,6 +663,137 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
       journal
     );
+    expect(readFileSync(resultFile)).toEqual(resultBytes);
+    expect(readFileSync(admissionFile)).toEqual(bytes);
+    const installerBackupPath = join(
+      root,
+      "checkout/data/ingestion/backups/ledger.snapshot.enc"
+    );
+    const backupBeforeThirdInstall = readFileSync(installerBackupPath);
+    const changedBody = {
+      ...signedBody,
+      completedPrefixSha256: "0".repeat(64),
+    };
+    const alteredSignedAdmission = Buffer.from(
+      canonicalJson({
+        ...changedBody,
+        signature: createHmac("sha256", family.prior.recoveryKey)
+          .update("zivv-recovery-gmail-selected-load-admission/v3\0")
+          .update(canonicalJson(changedBody))
+          .digest("hex"),
+      }) + "\n"
+    );
+    await expect(
+      runOperatorRecoveryGmailThirdSelectedLoadInstallation({
+        family,
+        third: thirdSelector,
+        admission: alteredSignedAdmission,
+      })
+    ).rejects.toThrow();
+    expect(existsSync(thirdDirectory)).toBe(false);
+    const installInput = {
+      family,
+      third: thirdSelector,
+      admission: thirdAdmission,
+    };
+    const preparedReceiptPath = join(root, "prepared-runtime.json");
+    const originalPreparation = readFileSync(preparedReceiptPath);
+    try {
+      writeFileSync(
+        preparedReceiptPath,
+        Buffer.concat([originalPreparation, Buffer.from("\n")])
+      );
+      await expect(
+        runOperatorRecoveryGmailThirdSelectedLoadInstallation(installInput)
+      ).rejects.toThrow();
+      expect(existsSync(thirdDirectory)).toBe(false);
+    } finally {
+      writeFileSync(preparedReceiptPath, originalPreparation);
+    }
+    const thirdSelectorFile = join(fixture.base, "third-selector-install.json");
+    const thirdAdmissionFile = join(
+      fixture.base,
+      "third-admission-install.json"
+    );
+    writeFileSync(thirdSelectorFile, canonicalJson(thirdSelector) + "\n", {
+      flag: "wx",
+      mode: 0o600,
+    });
+    writeFileSync(thirdAdmissionFile, thirdAdmission, {
+      flag: "wx",
+      mode: 0o600,
+    });
+    const { command: _installedCommand, ...installedThird } = success(
+      "install-third-selected-load",
+      [
+        ...withAdmission,
+        "--third-selector-file",
+        thirdSelectorFile,
+        "--third-admission-file",
+        thirdAdmissionFile,
+      ]
+    );
+    expect(installedThird).toEqual({
+      status: "third-load-admission-installed",
+      runId: thirdInspection.runId,
+      admissionSha256: digest(thirdAdmission),
+      completedPrefixSha256: thirdInspection.completedPrefixSha256,
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+    });
+    expect(
+      await runOperatorRecoveryGmailThirdSelectedLoadInstallation(installInput)
+    ).toEqual(installedThird);
+    const thirdTarget = join(thirdDirectory, "admission.json");
+    const candidate = join(
+      thirdDirectory,
+      "stages",
+      "admission",
+      "admission.json." + process.pid + ".aaaaaaaaaaaaaaaa.tmp"
+    );
+    const initialIdentity = lstatSync(thirdTarget);
+    // The fixture models the durable candidate before and after the final link.
+    renameSync(thirdTarget, candidate);
+    expect(
+      await runOperatorRecoveryGmailThirdSelectedLoadInstallation(installInput)
+    ).toEqual(installedThird);
+    expect(existsSync(candidate)).toBe(false);
+    expect(lstatSync(thirdTarget).ino).toBe(initialIdentity.ino);
+    linkSync(thirdTarget, candidate);
+    expect(lstatSync(thirdTarget).nlink).toBe(2);
+    expect(
+      await runOperatorRecoveryGmailThirdSelectedLoadInstallation(installInput)
+    ).toEqual(installedThird);
+    expect(existsSync(candidate)).toBe(false);
+    expect(lstatSync(thirdTarget).nlink).toBe(1);
+    expect(lstatSync(thirdTarget).ino).toBe(initialIdentity.ino);
+    expect(
+      success("install-third-selected-load", [
+        ...withAdmission,
+        "--third-selector-file",
+        thirdSelectorFile,
+        "--third-admission-file",
+        thirdAdmissionFile,
+      ])
+    ).toEqual({ ...installedThird, command: "install-third-selected-load" });
+    expect(readFileSync(join(thirdDirectory, "admission.json"))).toEqual(
+      thirdAdmission
+    );
+    expect(existsSync(join(thirdDirectory, "load-result.json"))).toBe(false);
+    expect(() =>
+      readNextSelectedLoadCompletionEvidence(
+        family.prior,
+        family.next,
+        family.admission
+      )
+    ).toThrow();
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      journal
+    );
+    expect(readFileSync(installerBackupPath)).toEqual(backupBeforeThirdInstall);
     expect(readFileSync(resultFile)).toEqual(resultBytes);
     expect(readFileSync(admissionFile)).toEqual(bytes);
     preserve = false;
