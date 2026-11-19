@@ -26,6 +26,7 @@ import {
   SteveEmailLoadError,
 } from "../../lib/ingestion/steve-email-load.js";
 import { CURRENT_STEVE_IMPORTER } from "../../lib/ingestion/steve-import-review.js";
+import { runFridayMailboxWake } from "../../lib/ingestion/steve-gmail-friday-wake.js";
 import {
   readWeeklyJournalRecoverySnapshotReadOnly,
   validateWeeklyJournalRecoverySnapshot,
@@ -339,6 +340,155 @@ describe("local load of retained Steve email receipts", () => {
       expect(existsSync(join(other, "weekly-runs.sqlite"))).toBe(false);
     }
   }, 180_000);
+  it("does not poll or create private effects before the configured opening", async () => {
+    const { root, base, operatorDirectory } = fixture();
+    const frame = Buffer.from(
+      JSON.stringify({
+        operatorDirectory,
+        credentialDirectory: join(base, "absent-credentials"),
+        expectedAccountId: accountId,
+        earlyScanDays: 0,
+      })
+    );
+    const poll = vi.fn(async () => ({ status: "missing", editionId }));
+    const result = await runFridayMailboxWake(root, frame, 5000, {
+      clock: () => Date.parse("2026-10-15T19:00:00Z"),
+      poll,
+    });
+    expect(result).toMatchObject({
+      status: "not-open",
+      editionId,
+      scanStartsAtEpochMs: Date.parse("2026-10-16T07:00:00Z"),
+    });
+    expect(poll).not.toHaveBeenCalled();
+    expect(existsSync(join(operatorDirectory, "weekly-runs.sqlite"))).toBe(
+      false
+    );
+    expect(existsSync(join(base, "absent-credentials"))).toBe(false);
+  });
+
+  it("passes one exact worker frame and loads the captured receipt without duplicate SQL effects", async () => {
+    const { root, base, operatorDirectory } = fixture();
+    vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
+    await initializeLedger(operatorDirectory);
+    const captured = await capture(operatorDirectory, "a1");
+    const credentialDirectory = join(base, "absent-credentials");
+    const config = Buffer.from(
+      JSON.stringify({
+        operatorDirectory,
+        credentialDirectory,
+        expectedAccountId: accountId,
+        earlyScanDays: 0,
+      })
+    );
+    const frames: Array<{ frame: unknown; budget: number }> = [];
+    const poll = vi.fn(async (bytes: Buffer, budget: number) => {
+      frames.push({ frame: JSON.parse(bytes.toString("utf8")), budget });
+      return {
+        status: "captured",
+        editionId,
+        attempts: 1,
+        batchCount: 1,
+        messageCount: 1,
+        readyCount: 1,
+        reviewRequiredCount: 0,
+        replayed: false,
+      };
+    });
+    const deps = { clock: () => observedAt, poll };
+    const result = await runFridayMailboxWake(root, config, 5000, deps);
+    expect(result).toEqual({
+      editionId,
+      status: "loaded",
+      mailboxStatus: "captured",
+      counts: {
+        ready: 1,
+        reviewRequired: 0,
+        loaded: 1,
+        blocked: 0,
+        failed: 0,
+        notProcessed: 0,
+      },
+    });
+    expect(frames).toEqual([
+      {
+        budget: 5000,
+        frame: {
+          operatorDirectory,
+          credentialDirectory,
+          expectedAccountId: accountId,
+          expectedEditionId: editionId,
+          scanStartsAt: "2026-10-16T07:00:00.000Z",
+        },
+      },
+    ]);
+    const path = join(operatorDirectory, "ledger.sqlite");
+    const ledger = readCanonicalSqliteLedgerReadOnly(path);
+    expect(ledger.ledger.runs).toHaveLength(1);
+    expect(ledger.ledger.events).toHaveLength(1);
+    expect(await runFridayMailboxWake(root, config, 5000, deps)).toEqual(
+      result
+    );
+    expect(readCanonicalSqliteLedgerReadOnly(path)).toEqual(ledger);
+    expect(existsSync(credentialDirectory)).toBe(false);
+    expect(existsSync(join(root, "data/ingestion/weekly-editions.json"))).toBe(
+      false
+    );
+    expect(existsSync(join(operatorDirectory, "weekly-publication"))).toBe(
+      false
+    );
+    for (const value of [
+      accountId,
+      operatorDirectory,
+      credentialDirectory,
+      captured.receipt.receiptId,
+      captured.source.toString("utf8"),
+    ])
+      expect(JSON.stringify(result)).not.toContain(value);
+  }, 60_000);
+
+  it("refuses a wrong operator before polling and a mismatched report before loading", async () => {
+    const { root, base, operatorDirectory } = fixture();
+    vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
+    await initializeLedger(operatorDirectory);
+    await capture(operatorDirectory, "a1");
+    const path = join(operatorDirectory, "ledger.sqlite");
+    const ledger = readCanonicalSqliteLedgerReadOnly(path);
+    const other = join(base, "other-operator");
+    mkdirSync(other);
+    const config = (operator: string) =>
+      Buffer.from(
+        JSON.stringify({
+          operatorDirectory: operator,
+          credentialDirectory: join(base, "credentials"),
+          expectedAccountId: accountId,
+          earlyScanDays: 0,
+        })
+      );
+    const poll = vi.fn(async () => ({
+      status: "captured",
+      editionId: "2026-10-23",
+    }));
+    await expect(
+      runFridayMailboxWake(root, config(other), 5000, {
+        clock: () => observedAt,
+        poll,
+      })
+    ).rejects.toThrow();
+    expect(poll).not.toHaveBeenCalled();
+    await expect(
+      runFridayMailboxWake(root, config(operatorDirectory), 5000, {
+        clock: () => observedAt,
+        poll,
+      })
+    ).rejects.toThrow("FRIDAY_GMAIL_WORKER_REPORT_UNVERIFIED");
+    expect(poll).toHaveBeenCalledTimes(1);
+    expect(readCanonicalSqliteLedgerReadOnly(path)).toEqual(ledger);
+    expect(ledger.ledger.runs).toHaveLength(0);
+    expect(existsSync(join(root, "data/ingestion/weekly-editions.json"))).toBe(
+      false
+    );
+  }, 60_000);
   it("withholds review-required receipts and never creates a load run for them", async () => {
     const { root, operatorDirectory } = fixture();
     vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
