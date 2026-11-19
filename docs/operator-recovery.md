@@ -285,3 +285,11 @@ into the scratch reader while leaving local and remote refs unchanged. A
 successful observation is a point-in-time watermark. The composed cutoff audit
 accepts a separate read-only audit bound and cannot establish publication on
 its own.
+
+The composed replacement rehearsal checks a still-available old fence, an exact
+prepared successor from the same retirement evidence, and the canonical
+published watermark in an isolated bare Git authority. It authenticates
+both local installations again and rechecks the remote heads before returning
+one read-only report. Use the separate selected-load composition proof for a
+successor whose private ledger has advanced. Host shutdown and credential
+fencing remain operational prerequisites.
