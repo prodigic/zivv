@@ -152,6 +152,46 @@ it("composes original, interrupted prior and prospective own batches after delet
       "capture-pending"
     );
     expect(existsSync(familyPath(own.batchId, "admission.json"))).toBe(false);
+
+    // b1 is a genuine, ready recovered receipt with no child. It belongs to
+    // the same account as OWN but a different edition. The normal launcher
+    // performs selection in its parent-side admission inspection before spawn.
+    const recoveredParent = receipt(journal(), composition.receiptIds.b1);
+    const originalParent = fixture.sourceReceipts[0]!.receipt;
+    expect(recoveredParent).toMatchObject({
+      disposition: "ready",
+      accountSha256: originalParent.accountSha256,
+      correctionOf: composition.receiptIds.a1,
+      firstObservedAtEpochMs: firstObservation,
+    });
+    expect(recoveredParent.editionId).not.toBe(selection.editionId);
+    const beforeWrongParentJournal = journal();
+    const immutableInventory = () =>
+      opened.inventoryImmutable((entry) =>
+        /^operator\/weekly-runs\.sqlite-(?:wal|shm)$/.test(entry.path)
+      );
+    const beforeWrongParentFiles = immutableInventory();
+    const wrongParent = {
+      ...own,
+      correctionOfByMessageId: { d1: composition.receiptIds.b1 },
+    };
+    await expect(resumeOperatorRecoveryGmailBatch(wrongParent)).rejects.toThrow(
+      "INVALID_RECOVERY_GMAIL_CAPTURE_SELECTION"
+    );
+    expect(journal()).toEqual(beforeWrongParentJournal);
+    expect(immutableInventory()).toEqual(beforeWrongParentFiles);
+    expect(existsSync(familyPath(own.batchId, "admission.json"))).toBe(false);
+    expect(existsSync(familyPath(own.batchId, "result.json"))).toBe(false);
+    expect(readFileSync(familyPath(prior.batchId, "admission.json"))).toEqual(
+      priorAdmission
+    );
+    expect(readFileSync(familyPath(prior.batchId, "result.json"))).toEqual(
+      priorResult
+    );
+    expect(
+      receipt(journal(), composition.receiptIds.b1).firstObservedAtEpochMs
+    ).toBe(firstObservation);
+
     const ownStarted = Date.now();
     console.error("CAPTURE_MULTIBATCH own-start", ownStarted);
     const ownReport = await resumeOperatorRecoveryGmailBatch(own);
