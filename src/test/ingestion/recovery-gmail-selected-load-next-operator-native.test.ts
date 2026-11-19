@@ -5,6 +5,7 @@ import {
   mkdirSync,
   readFileSync,
   rmdirSync,
+  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { join, resolve } from "node:path";
@@ -19,6 +20,7 @@ import { inspectThirdRecoveryGmailSelectedLoad } from "../../lib/ingestion/recov
 import {
   createRecoveryGmailThirdSelectedLoadAdmission,
   authenticateRecoveryGmailThirdSelectedLoadAdmission,
+  inspectInstalledRecoveryGmailThirdSelectedLoadAdmission,
 } from "../../lib/ingestion/recovery-gmail-selected-load-third-admission.js";
 import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-next-replay.js";
 
@@ -534,10 +536,93 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       thirdInspection.runId
     );
     expect(existsSync(thirdDirectory)).toBe(false);
+    const backupPath = join(
+      root,
+      "checkout/data/ingestion/backups/ledger.snapshot.enc"
+    );
+    const backupBytes = readFileSync(backupPath);
+    const observeTail = () =>
+      inspectInstalledRecoveryGmailThirdSelectedLoadAdmission(
+        family,
+        thirdSelector,
+        thirdAdmission
+      );
+    const expectedTail = {
+      status: "third-load-admission-observed",
+      runId: thirdInspection.runId,
+      admissionSha256: digest(thirdAdmission),
+      completedPrefixSha256: thirdInspection.completedPrefixSha256,
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+    };
+    expect(observeTail()).toEqual({ ...expectedTail, presence: "absent" });
+    const stageDir = join(thirdDirectory, "stages");
+    const admissionStageDir = join(stageDir, "admission");
+    const installedAdmission = join(thirdDirectory, "admission.json");
+    const extra = join(thirdDirectory, "extra");
+    mkdirSync(thirdDirectory);
+    try {
+      expect(observeTail()).toEqual({ ...expectedTail, presence: "staging" });
+      expect(() =>
+        readNextSelectedLoadCompletionEvidence(
+          family.prior,
+          family.next,
+          family.admission
+        )
+      ).toThrow();
+      mkdirSync(stageDir);
+      mkdirSync(admissionStageDir);
+      writeFileSync(installedAdmission, thirdAdmission, {
+        flag: "wx",
+        mode: 0o600,
+      });
+      expect(observeTail()).toEqual({ ...expectedTail, presence: "installed" });
+      expect(() =>
+        readNextSelectedLoadCompletionEvidence(
+          family.prior,
+          family.next,
+          family.admission
+        )
+      ).toThrow();
+      writeFileSync(extra, "unexpected", { flag: "wx" });
+      try {
+        expect(observeTail).toThrow();
+      } finally {
+        unlinkSync(extra);
+      }
+      writeFileSync(
+        installedAdmission,
+        Buffer.concat([thirdAdmission, Buffer.from("\n")])
+      );
+      expect(observeTail).toThrow();
+      writeFileSync(installedAdmission, thirdAdmission);
+      expect(() =>
+        inspectInstalledRecoveryGmailThirdSelectedLoadAdmission(
+          family,
+          thirdSelector,
+          Buffer.from(canonicalJson(badSignature) + "\n")
+        )
+      ).toThrow();
+      expect(observeTail()).toEqual({ ...expectedTail, presence: "installed" });
+    } finally {
+      if (existsSync(extra)) unlinkSync(extra);
+      if (existsSync(installedAdmission)) unlinkSync(installedAdmission);
+      if (existsSync(admissionStageDir)) rmdirSync(admissionStageDir);
+      if (existsSync(stageDir)) rmdirSync(stageDir);
+      rmdirSync(thirdDirectory);
+    }
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      journal
+    );
+    expect(readFileSync(backupPath)).toEqual(backupBytes);
     const foreignDirectory = join(root, "recovery-gmail-load", "f".repeat(64));
     expect(existsSync(foreignDirectory)).toBe(false);
     mkdirSync(foreignDirectory);
     try {
+      expect(observeTail).toThrow();
       expect(() =>
         inspectThirdRecoveryGmailSelectedLoad(family, thirdSelector)
       ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");

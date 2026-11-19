@@ -538,3 +538,11 @@ second admission. It also binds the third source, runtime and original intent
 time. A replay verifies the versioned signature first and then re-derives the
 entire current plan. It returns the exact retained bytes. Keep the signed
 intent private. No installer or third writer consumes this format yet.
+
+The installed-intent observer authenticates the v3 format before examining the
+exact third run directory and its admission stage. It binds the archive,
+retirement, prepared host and both predecessor selectors. It can recognize
+an absent intent, a partial directory or the exact installed bytes while
+rechecking the original generation-three family and unchanged live catalog
+and journal. An unrelated file or directory refuses the observation. The
+ordinary second-load path still requires its exact inventory.
