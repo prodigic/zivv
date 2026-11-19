@@ -251,3 +251,20 @@ admission, and a canonical UTC `--cutoff` such as
 redacted message identities, matching successful loads, and the number of
 batches saved before the cutoff with unresolved messages. The prepared
 installation stays quarantined, including when the count is zero.
+
+### Observe the cooperative fence on an available retired installation
+
+`inspectRetiredOperatorLeaseFence` authenticates the portable retirement
+archive, then reads the original installation at its recorded physical paths.
+It rechecks the retirement marker, protected key, runtime, catalog and files.
+The archived production lease must retain the same owner and fence, with the
+live lease expiry set to zero after retirement. The report contains digests
+and the numeric fence.
+
+A portable receipt can still establish the historical retirement after the
+original directory is gone. Current physical fence observation requires the
+original host identity, paths and protected key. An operational cutover also
+requires independently verified host shutdown or fencing, credential ownership,
+and reconciliation with the current canonical production release. SQLite may
+create ordinary read-side journal files while the logical snapshot stays
+unchanged.
