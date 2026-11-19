@@ -115,3 +115,31 @@ The plan reports the existing Friday publication and missing-source
 boundaries. A periodic caller must still use the supervised poll, retain
 evidence and follow the existing load and publication controls. The command
 neither registers a task nor invokes a worker.
+
+## Run one explicit wake through load
+
+Use a reviewed checkout that already has its production build dependencies
+and private SQLite layout. Keep the JSON configuration outside the worktree.
+It contains exactly the absolute credentialDirectory and operatorDirectory,
+the confirmed expectedAccountId and the reviewed integer earlyScanDays.
+
+```powershell
+Get-Content -LiteralPath "$privateWakeConfig" -Raw -Encoding utf8 |
+  node scripts/steve-gmail.js run-friday-wake --root "$reviewedCheckout" --worker-budget-ms $workerBudgetMs
+```
+
+The wake selects the current Pacific edition. Before its opening time it
+returns without touching the store or starting a process. In the window it
+confirms that the configured checkout uses the same physical operator
+directory before starting the supervised mailbox worker. When the worker
+returns a confirmed capture or mailbox scan for that edition, the command
+uses its retained receipts and stops at load. The result shows the mailbox
+status and aggregate load outcome. Missing, refused or uncertain worker
+results are handled by the existing evidence and retry paths. A receipt that
+requires attention stays visible as a nonzero result.
+
+The budget limits the mailbox worker and its descendants. Normal load uses
+the existing private writer controls. Reconcile a lost worker outcome before
+rerunning. Use the offline load command when the source has already been
+retained and the provider is unavailable. Freeze, publication, alerting, task
+registration and operating-system restart acceptance remain separate steps.

@@ -101,13 +101,14 @@ function errorDisposition(errorCode: string): "blocked" | "failed" {
     : "failed";
 }
 
-/** Load retained ready receipts in receipt order through the normal weekly worker. */
-export async function loadRetainedSteveEmailSources(
-  input: LoadRetainedSteveEmailSourcesInput
-): Promise<SteveEmailLoadResult> {
+/** Resolve only the same existing operator SQLite used by the reviewed checkout. */
+export function requireConfiguredSteveEmailLoadOperator(
+  root: string,
+  operatorDirectory: string
+) {
   let location: ReturnType<typeof projectLedgerLocation>;
   try {
-    location = projectLedgerLocation(input.root);
+    location = projectLedgerLocation(root);
   } catch {
     return fail("INVALID_PROJECT_LEDGER_CONFIGURATION");
   }
@@ -117,12 +118,42 @@ export async function loadRetainedSteveEmailSources(
   let suppliedOperator: string;
   try {
     configuredOperator = realpathSync(location.directory);
-    suppliedOperator = realpathSync(resolve(input.operatorDirectory));
+    suppliedOperator = realpathSync(resolve(operatorDirectory));
   } catch {
     return fail("OPERATOR_STORE_MISMATCH");
   }
   if (configuredOperator !== suppliedOperator) fail("OPERATOR_STORE_MISMATCH");
   if (!existsSync(location.path)) fail("SHARED_SQLITE_REQUIRED");
+  return suppliedOperator;
+}
+
+export function summarizeRetainedSteveEmailLoad({
+  editionId,
+  counts,
+}: SteveEmailLoadResult) {
+  const needsAttention =
+    counts.reviewRequired ||
+    counts.blocked ||
+    counts.failed ||
+    counts.notProcessed;
+  return {
+    editionId,
+    status: needsAttention
+      ? ("attention-required" as const)
+      : counts.loaded
+        ? ("loaded" as const)
+        : ("no-retained-source" as const),
+    counts,
+  };
+}
+/** Load retained ready receipts in receipt order through the normal weekly worker. */
+export async function loadRetainedSteveEmailSources(
+  input: LoadRetainedSteveEmailSourcesInput
+): Promise<SteveEmailLoadResult> {
+  const suppliedOperator = requireConfiguredSteveEmailLoadOperator(
+    input.root,
+    input.operatorDirectory
+  );
 
   let retained: Array<{ receipt: SteveEmailReceipt; source: Buffer }>;
   try {
