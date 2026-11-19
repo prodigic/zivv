@@ -290,6 +290,15 @@ The composed replacement rehearsal checks a still-available old fence, an exact
 prepared successor from the same retirement evidence, and the canonical
 published watermark in an isolated bare Git authority. It authenticates
 both local installations again and rechecks the remote heads before returning
-one read-only report. Use the separate selected-load composition proof for a
-successor whose private ledger has advanced. Host shutdown and credential
-fencing remain operational prerequisites.
+one read-only report.
+
+For a loaded successor, the rehearsal binds its exact signed selected-load
+result and released lease to the prepared installation. It checks the recovered
+catalog, matches the successor's archived weekly edition to the canonical
+published watermark, and reports any remaining capture obligations. The
+acknowledged cutoff must have zero unresolved obligations before it. A separate
+later read-only bound can expose unresolved parents. The native fixture loads
+two recovered corrections and proves their two original messages remain
+unresolved at the later bound. Changed successor weekly evidence refuses the
+observation. Host shutdown and credential fencing remain operational
+prerequisites.
