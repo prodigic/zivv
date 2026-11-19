@@ -139,6 +139,23 @@ a worker failure. The checkout must select the same physical SQLite operator
 store. Its report contains counts and receipt/run identities, never message
 bodies or account addresses. It does not freeze or publish.
 
+For an explicit offline load, build the reviewed checkout and pipe a private
+UTF-8 JSON file into the Gmail CLI. The file contains exactly
+operatorDirectory, expectedAccountId and expectedEditionId. Use the absolute
+configured operator path and a canonical Friday edition ID.
+
+```powershell
+Get-Content -LiteralPath "$privateLoadConfig" -Raw -Encoding utf8 |
+  node scripts/steve-gmail.js load-retained --root "$reviewedCheckout"
+```
+
+The result contains the edition and aggregate counts. An empty ready set can
+return no-retained-source without establishing Gmail absence. Review-required,
+blocked, failed or unprocessed receipts produce attention-required with a
+nonzero exit. Keep the private journal for exact run identities. This command
+has no token or connection to Gmail, and stops at load. It remains independent
+from the polling command, the manual file path and scheduled activation.
+
 Freeze additionally requires exact successful loads for batches saved before its
 cutoff, including receipts admitted after that cutoff. Batch evidence remains
 private. Portable batch recovery is still unsupported under #106; the existing

@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import {
   existsSync,
   mkdirSync,
@@ -18,12 +19,17 @@ import {
 import {
   canonicalJson,
   writeSqliteLedger,
+  readCanonicalSqliteLedgerReadOnly,
 } from "../../lib/ingestion/sqlite-store.js";
 import {
   loadRetainedSteveEmailSources,
   SteveEmailLoadError,
 } from "../../lib/ingestion/steve-email-load.js";
 import { CURRENT_STEVE_IMPORTER } from "../../lib/ingestion/steve-import-review.js";
+import {
+  readWeeklyJournalRecoverySnapshotReadOnly,
+  validateWeeklyJournalRecoverySnapshot,
+} from "../../lib/ingestion/weekly-run-journal.js";
 
 const accountId = "synthetic-account@fixture.invalid";
 const editionId = "2026-10-16";
@@ -201,6 +207,138 @@ describe("local load of retained Steve email receipts", () => {
     );
   }, 30_000);
 
+  it("loads a retained receipt offline through the CLI and replays without extra effects", async () => {
+    const { base, root, operatorDirectory } = fixture();
+    vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
+    await initializeLedger(operatorDirectory);
+    const retained = await capture(operatorDirectory, "a1");
+    const preload = join(base, "forbid-network.cjs");
+    writeFileSync(
+      preload,
+      "globalThis.fetch = async () => { throw Error('UNEXPECTED_NETWORK'); };\n"
+    );
+    const frame = {
+      operatorDirectory,
+      expectedAccountId: accountId,
+      expectedEditionId: editionId,
+    };
+    const run = () =>
+      spawnSync(
+        process.execPath,
+        [
+          "--require",
+          preload,
+          resolve("scripts/steve-gmail.js"),
+          "load-retained",
+          "--root",
+          root,
+        ],
+        {
+          cwd: resolve("."),
+          env: { ...process.env, ZIVV_LEDGER_HOME: operatorDirectory },
+          input: JSON.stringify(frame),
+          encoding: "utf8",
+          windowsHide: true,
+          timeout: 60_000,
+        }
+      );
+    const first = run();
+    expect(first.error).toBeUndefined();
+    expect(first.status).toBe(0);
+    expect(JSON.parse(first.stdout)).toEqual({
+      editionId,
+      status: "loaded",
+      counts: {
+        ready: 1,
+        reviewRequired: 0,
+        loaded: 1,
+        blocked: 0,
+        failed: 0,
+        notProcessed: 0,
+      },
+    });
+    const ledgerPath = join(operatorDirectory, "ledger.sqlite");
+    const journalPath = join(operatorDirectory, "weekly-runs.sqlite");
+    const ledger = readCanonicalSqliteLedgerReadOnly(ledgerPath);
+    const journal = readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
+    expect(ledger.ledger.runs).toHaveLength(1);
+    expect(ledger.ledger.events).toHaveLength(1);
+    const second = run();
+    expect(second.status).toBe(0);
+    expect(JSON.parse(second.stdout)).toEqual(JSON.parse(first.stdout));
+    expect(readCanonicalSqliteLedgerReadOnly(ledgerPath)).toEqual(ledger);
+    expect(
+      validateWeeklyJournalRecoverySnapshot(
+        readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
+      ).runState
+    ).toEqual(validateWeeklyJournalRecoverySnapshot(journal).runState);
+    expect(existsSync(join(root, "data/ingestion/weekly-editions.json"))).toBe(
+      false
+    );
+    expect(existsSync(join(operatorDirectory, "weekly-publication"))).toBe(
+      false
+    );
+    for (const result of [first, second]) {
+      expect(result.stderr).toBe("");
+      for (const secret of [
+        accountId,
+        root,
+        operatorDirectory,
+        retained.receipt.receiptId,
+        retained.source.toString("utf8"),
+      ])
+        expect(result.stdout + result.stderr).not.toContain(secret);
+    }
+  }, 180_000);
+
+  it("refuses a mismatched store and extra frame fields before ledger or journal effects", async () => {
+    const { base, root, operatorDirectory } = fixture();
+    vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
+    await initializeLedger(operatorDirectory);
+    const other = join(base, "other-operator");
+    mkdirSync(other);
+    const ledgerPath = join(operatorDirectory, "ledger.sqlite");
+    const before = readCanonicalSqliteLedgerReadOnly(ledgerPath);
+    const frame = {
+      operatorDirectory,
+      expectedAccountId: accountId,
+      expectedEditionId: editionId,
+    };
+    for (const input of [
+      { ...frame, operatorDirectory: other },
+      { ...frame, extra: "private-extra" },
+    ]) {
+      const result = spawnSync(
+        process.execPath,
+        [resolve("scripts/steve-gmail.js"), "load-retained", "--root", root],
+        {
+          cwd: resolve("."),
+          env: { ...process.env, ZIVV_LEDGER_HOME: operatorDirectory },
+          input: JSON.stringify(input),
+          encoding: "utf8",
+          windowsHide: true,
+          timeout: 60_000,
+        }
+      );
+      expect(result.error).toBeUndefined();
+      expect(result.status).not.toBe(0);
+      expect(result.stdout).toBe("");
+      expect(result.stderr).toMatch(/^\{"error":"[A-Z][A-Z0-9_]+"\}\s*$/);
+      for (const secret of [
+        root,
+        operatorDirectory,
+        other,
+        accountId,
+        "private-extra",
+      ])
+        expect(result.stderr).not.toContain(secret);
+      expect(readCanonicalSqliteLedgerReadOnly(ledgerPath)).toEqual(before);
+      expect(existsSync(join(operatorDirectory, "weekly-runs.sqlite"))).toBe(
+        false
+      );
+      expect(existsSync(join(other, "weekly-runs.sqlite"))).toBe(false);
+    }
+  }, 180_000);
   it("withholds review-required receipts and never creates a load run for them", async () => {
     const { root, operatorDirectory } = fixture();
     vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
