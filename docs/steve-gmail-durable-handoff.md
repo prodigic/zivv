@@ -158,6 +158,24 @@ scope. [Gmail profile history](https://developers.google.com/workspace/gmail/api
 and [message list pagination](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list)
 define the observations used here.
 
+For one supervised invocation, use `poll-friday` with the configured private
+credential directory, operator directory, confirmed account, expected edition,
+and start of the search window. Use a start at or before Friday midnight Pacific
+so the scan can include expected early arrivals.
+
+```powershell
+node scripts/steve-gmail.js poll-friday --credential-dir "C:\private\zivv-gmail" --operator-dir "C:\private\zivv-operator" --account "<confirmed-mailbox>" --edition "2026-11-20" --from "2026-11-19T08:00:00.000Z"
+```
+
+The command bounds the scan to the current instant and stops starting new
+captures at Monday midnight Pacific. It retries only transient provider and
+credential-lock failures, after two and eight seconds. Each attempt recalculates
+the elapsed window and uses the retained handoff first. Only a completed stable
+scan emits missing-source evidence. Captures and replay return receipt status
+for review or loading through the existing private path. After the window
+closes, use the existing explicit review path for late deliveries or pending
+private evidence. This command does not install a schedule or send a notice.
+
 ## Recovery boundary still requiring implementation
 
 The current operator recovery inventory rejects the new `email-acquisition`
