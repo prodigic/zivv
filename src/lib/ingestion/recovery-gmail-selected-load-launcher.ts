@@ -1,3 +1,11 @@
+import { inspectThirdSelectedLoadCompletion } from "./recovery-gmail-selected-load-third-completion.js";
+import { inspectInstalledThirdSelectedLoadExecutionBaseline } from "./recovery-gmail-selected-load-third-start.js";
+import {
+  decodeThirdSelectedLoadStartFrame,
+  encodeThirdSelectedLoadStartFrame,
+  maxThirdSelectedLoadStartFrameBytes,
+  type RecoveryGmailThirdSelectedLoadStartFrameInput,
+} from "./recovery-gmail-selected-load-third-start-framing.js";
 import { inspectInstalledRecoveryGmailThirdSelectedLoadAdmission } from "./recovery-gmail-selected-load-third-admission.js";
 import {
   decodeRecoveryGmailThirdSelectedLoadFrame,
@@ -681,6 +689,86 @@ export async function runOperatorRecoveryGmailThirdSelectedLoadInstallation(
     input?.family.prior.recoveryKey.fill(0);
     input?.family.admission.fill(0);
     input?.admission.fill(0);
+    wire?.fill(0);
+  }
+}
+
+/** Execute once from an exact installed start, or verify an already settled result. */
+export async function runOperatorRecoveryGmailThirdSelectedLoadExecution(
+  supplied: RecoveryGmailThirdSelectedLoadStartFrameInput
+) {
+  let wire: Buffer | undefined;
+  let input: RecoveryGmailThirdSelectedLoadStartFrameInput | undefined;
+  try {
+    wire = encodeThirdSelectedLoadStartFrame(supplied);
+    input = decodeThirdSelectedLoadStartFrame(wire);
+    const { prior } = input.input.family;
+    const executorPath = "recovery-gmail-selected-load-executor.js";
+    const framingPath = "recovery-gmail-selected-load-third-start-framing.js";
+    verifyRetainedSelectedLoadCapabilities(prior, [
+      [executorPath, "recoveryGmailThirdSelectedLoadExecutorVersion = 1"],
+      [framingPath, "recoveryGmailThirdStartFramingVersion = 1"],
+    ]);
+    try {
+      return inspectThirdSelectedLoadCompletion(
+        input.input,
+        input.executionBaseline
+      );
+    } catch {
+      const start = inspectInstalledThirdSelectedLoadExecutionBaseline(
+        input.input,
+        input.executionBaseline
+      );
+      if (start.presence !== "installed")
+        throw Error("RECOVERY_GMAIL_THIRD_START_NOT_INSTALLED");
+    }
+
+    const root = resolve(prior.destination);
+    const entry = pathToFileURL(
+      join(root, "checkout/dist/lib/ingestion", executorPath)
+    ).href;
+    const framing = pathToFileURL(
+      join(root, "checkout/dist/lib/ingestion", framingPath)
+    ).href;
+    const script = `
+      let input; let frame; const chunks = [];
+      try {
+        const executor = await import(${JSON.stringify(entry)});
+        const framing = await import(${JSON.stringify(framing)});
+        if (executor.recoveryGmailThirdSelectedLoadExecutorVersion !== 1 || framing.recoveryGmailThirdStartFramingVersion !== 1) throw Error('RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME');
+        let size = 0;
+        for await (const chunk of process.stdin) { if ((size += chunk.length) > ${maxThirdSelectedLoadStartFrameBytes}) throw Error('INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START_FRAME'); chunks.push(chunk); }
+        frame = Buffer.concat(chunks, size);
+        input = framing.decodeThirdSelectedLoadStartFrame(frame);
+        for (const chunk of chunks) chunk.fill(0);
+        console.log(JSON.stringify(await executor.executeRecoveredGmailThirdSelectedLoad(input.input, input.executionBaseline)));
+      } catch (error) {
+        console.error(JSON.stringify({loadError:error instanceof Error && /^[A-Z0-9_]{1,80}$/.test(error.message) ? error.message : '${errorCode}'}));
+        process.exitCode = 1;
+      } finally {
+        input?.input.family.prior.recoveryKey.fill(0);
+        input?.input.family.admission.fill(0);
+        input?.input.admission.fill(0);
+        input?.executionBaseline.fill(0);
+        frame?.fill(0);
+        for (const chunk of chunks) chunk.fill(0);
+      }
+    `;
+    const report = await invokeRetainedSelectedLoadWorker(root, script, wire);
+    const verified = inspectThirdSelectedLoadCompletion(
+      input.input,
+      input.executionBaseline
+    );
+    if (canonicalJson(report) !== canonicalJson(verified))
+      throw Error("RECOVERY_GMAIL_THIRD_EXECUTION_REPORT_MISMATCH");
+    return verified;
+  } catch (error) {
+    throw failure(error);
+  } finally {
+    input?.input.family.prior.recoveryKey.fill(0);
+    input?.input.family.admission.fill(0);
+    input?.input.admission.fill(0);
+    input?.executionBaseline.fill(0);
     wire?.fill(0);
   }
 }

@@ -14,7 +14,7 @@ import { secureOperatorDirectory } from "./encrypted-backup.js";
 import { resolvePrivateCandidateDirectory } from "./private-artifacts.js";
 
 const runnerSourceSha256 =
-  "9436f7523a6d4e9f033654aa40142c902554b2c1de78ffa13b3692792252b344";
+  "070ab2940d0675d70bafc0f6c9dfbc34ba9340c5617b64e177b62bada4889127";
 const prefix = "zivv-recovery-windows-job-";
 const unavailable = "RECOVERY_WINDOWS_JOB_RUNNER_UNAVAILABLE";
 
