@@ -5,14 +5,23 @@ import {
   type FridayMonitorEvaluation,
   type FridayMonitorNotice,
 } from "./friday-monitor-evidence.js";
+import { inspectFridayVerifiedReleaseCoverage } from "./friday-release-coverage.js";
 import { inspectFridayVerifiedRelease } from "./friday-verified-release.js";
 import { PROMOTION_DESTINATIONS } from "./promotion-control.js";
 import { fridayDeliveryTimes } from "./weekly.js";
 
+type PublicationEvidence = Parameters<typeof inspectFridayVerifiedRelease>[0];
+type CoverageEvidence = Parameters<
+  typeof inspectFridayVerifiedReleaseCoverage
+>[0];
+type Coverage = NonNullable<
+  ReturnType<typeof inspectFridayVerifiedReleaseCoverage>
+>["coverage"];
 type PublicationNotice = NonNullable<
   ReturnType<typeof inspectFridayVerifiedRelease>
->;
-type PublicationEvidence = Parameters<typeof inspectFridayVerifiedRelease>[0];
+> & {
+  coverage?: Coverage;
+};
 
 interface OutboxRecord<Notice> {
   notice: Notice;
@@ -63,6 +72,7 @@ function validKey(value: unknown): value is string {
 function validAttempt(value: unknown): value is string {
   return (
     typeof value === "string" &&
+    value.length === 36 &&
     /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(
       value
     )
@@ -70,7 +80,11 @@ function validAttempt(value: unknown): value is string {
 }
 
 function validReceipt(value: unknown): value is string {
-  return typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
+  return (
+    typeof value === "string" &&
+    value.length === 64 &&
+    /^[a-f0-9]{64}$/.test(value)
+  );
 }
 
 function noticeFromJson(key: string, json: unknown): FridayMonitorNotice {
@@ -112,7 +126,45 @@ function publicationEdition(key: string): string {
   return match[1];
 }
 
-function publicationFromJson(key: string, json: unknown): PublicationNotice {
+function checkedCoverage(value: unknown, addedEventCount: number): Coverage {
+  if (!value || typeof value !== "object" || Array.isArray(value))
+    return invalid();
+  const fields = value as Record<string, unknown>;
+  const count = (name: keyof Coverage): number => {
+    const amount = fields[name];
+    if (
+      typeof amount !== "number" ||
+      !Number.isSafeInteger(amount) ||
+      amount < 0
+    )
+      return invalid();
+    return amount;
+  };
+  const coverage: Coverage = {
+    missingShowArtwork: count("missingShowArtwork"),
+    distinctArtists: count("distinctArtists"),
+    artistsWithoutLinks: count("artistsWithoutLinks"),
+    artistsWithoutReviews: count("artistsWithoutReviews"),
+    distinctVenues: count("distinctVenues"),
+    venuesWithoutMapLocation: count("venuesWithoutMapLocation"),
+  };
+  if (
+    coverage.missingShowArtwork > addedEventCount ||
+    coverage.artistsWithoutLinks > coverage.distinctArtists ||
+    coverage.artistsWithoutReviews > coverage.distinctArtists ||
+    coverage.venuesWithoutMapLocation > coverage.distinctVenues ||
+    (addedEventCount === 0) !== (coverage.distinctArtists === 0) ||
+    (addedEventCount === 0) !== (coverage.distinctVenues === 0)
+  )
+    return invalid();
+  return coverage;
+}
+
+function publicationFromJson(
+  key: string,
+  json: unknown,
+  allowCoverage: boolean
+): PublicationNotice {
   if (typeof json !== "string" || json.length > 1024) return invalid();
   try {
     const editionId = publicationEdition(key);
@@ -146,6 +198,13 @@ function publicationFromJson(key: string, json: unknown): PublicationNotice {
       acknowledgementId,
       releaseId,
       deduplicationKey: key,
+      ...(fields.coverage === undefined
+        ? {}
+        : {
+            coverage: allowCoverage
+              ? checkedCoverage(fields.coverage, addedEventCount)
+              : invalid(),
+          }),
     };
     if (JSON.stringify(notice) !== json) return invalid();
     return notice;
@@ -181,7 +240,7 @@ function settings(database: DatabaseSync) {
   };
 }
 
-function outboxVersion(database: DatabaseSync): 1 | 2 {
+function outboxVersion(database: DatabaseSync): 1 | 2 | 3 {
   const objects = database
     .prepare(
       "SELECT application_id, user_version, name, type, sql " +
@@ -202,11 +261,11 @@ function outboxVersion(database: DatabaseSync): 1 | 2 {
     return invalid();
   if (current.user_version === 1 && objects.length === 1) return 1;
   if (
-    current.user_version === 2 &&
+    (current.user_version === 2 || current.user_version === 3) &&
     objects.length === 2 &&
     tableMatches(publicationTable, publicationSchema)
   )
-    return 2;
+    return current.user_version;
   return invalid();
 }
 
@@ -256,8 +315,27 @@ export class FridayNoticeOutbox {
   /** Explicitly upgrade a dedicated outbox while preserving every earlier claim. */
   enablePublicationNotices(): void {
     write(this.#database, () => {
-      if (outboxVersion(this.#database) === 2) return;
+      if (outboxVersion(this.#database) !== 1) return;
       this.#database.exec(`${publicationSchema}; PRAGMA user_version=2`);
+    });
+  }
+
+  /** Explicitly allow coverage-bearing intents. Existing rows stay exact. */
+  enablePublicationCoverage(): void {
+    write(this.#database, () => {
+      const version = outboxVersion(this.#database);
+      if (version === 3) return;
+      if (version === 1) this.#database.exec(publicationSchema);
+      else {
+        const rows = this.#database
+          .prepare(`SELECT key FROM ${publicationTable}`)
+          .iterate();
+        for (const { key } of rows) {
+          if (typeof key !== "string" || !this.inspectPublication(key))
+            return invalid();
+        }
+      }
+      this.#database.exec("PRAGMA user_version=3");
     });
   }
 
@@ -278,16 +356,28 @@ export class FridayNoticeOutbox {
   recordVerifiedPublication(
     input: PublicationEvidence
   ): FridayPublicationNoticeOutboxRecord | null {
-    const notice = inspectFridayVerifiedRelease(input);
+    return this.#recordPublication(inspectFridayVerifiedRelease(input));
+  }
+
+  recordVerifiedPublicationWithCoverage(
+    input: CoverageEvidence
+  ): FridayPublicationNoticeOutboxRecord | null {
+    return this.#recordPublication(inspectFridayVerifiedReleaseCoverage(input));
+  }
+
+  #recordPublication(
+    notice: PublicationNotice | null
+  ): FridayPublicationNoticeOutboxRecord | null {
     if (!notice) return null;
     return write(this.#database, () => {
-      this.#requirePublication();
+      const version = this.#publicationVersion();
+      if (notice.coverage !== undefined && version < 3) return invalid();
       const json = JSON.stringify(notice);
       const record = this.#record(
         publicationTable,
         notice.deduplicationKey,
         json,
-        publicationFromJson
+        (key, saved) => publicationFromJson(key, saved, version === 3)
       );
       if (JSON.stringify(record.notice) !== json)
         throw Error("FRIDAY_PUBLICATION_NOTICE_CONFLICT");
@@ -314,14 +404,18 @@ export class FridayNoticeOutbox {
     return this.#inspect(monitorTable, key, noticeFromJson);
   }
 
-  #requirePublication(): void {
-    if (outboxVersion(this.#database) !== 2) return invalid();
+  #publicationVersion(): 2 | 3 {
+    const version = outboxVersion(this.#database);
+    if (version === 1) return invalid();
+    return version;
   }
 
   inspectPublication(key: string): FridayPublicationNoticeOutboxRecord | null {
     publicationEdition(key);
-    this.#requirePublication();
-    return this.#inspect(publicationTable, key, publicationFromJson);
+    const version = this.#publicationVersion();
+    return this.#inspect(publicationTable, key, (name, saved) =>
+      publicationFromJson(name, saved, version === 3)
+    );
   }
 
   #inspect<Notice>(
@@ -365,16 +459,39 @@ export class FridayNoticeOutbox {
     key: string,
     readEvidence: () => PublicationEvidence
   ): FridayPublicationNoticeOutboxRecord | null {
+    return this.#claimVerifiedPublication(
+      key,
+      readEvidence,
+      inspectFridayVerifiedRelease
+    );
+  }
+
+  claimPublicationWithCoverage(
+    key: string,
+    readEvidence: () => CoverageEvidence
+  ): FridayPublicationNoticeOutboxRecord | null {
+    return this.#claimVerifiedPublication(
+      key,
+      readEvidence,
+      inspectFridayVerifiedReleaseCoverage
+    );
+  }
+
+  #claimVerifiedPublication<Evidence>(
+    key: string,
+    readEvidence: () => Evidence,
+    inspect: (evidence: Evidence) => PublicationNotice | null
+  ): FridayPublicationNoticeOutboxRecord | null {
     return write(this.#database, () => {
       const previous = this.inspectPublication(key);
       if (previous?.status !== "pending") return null;
-      let input: PublicationEvidence;
+      let input: Evidence;
       try {
         input = readEvidence();
       } catch {
         throw Error("FRIDAY_PUBLICATION_NOTICE_EVIDENCE_UNAVAILABLE");
       }
-      const notice = inspectFridayVerifiedRelease(input);
+      const notice = inspect(input);
       if (!notice || JSON.stringify(notice) !== JSON.stringify(previous.notice))
         throw Error("FRIDAY_PUBLICATION_NOTICE_CONFLICT");
       return this.#claim(publicationTable, key, previous);

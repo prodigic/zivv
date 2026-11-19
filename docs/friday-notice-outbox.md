@@ -33,3 +33,25 @@ to coordinate with production promotion before sending and verify the provider's
 receipt. The rehearsal uses a temporary database and synthetic release evidence.
 Coverage-gap rendering, independent hosting and durable off-host recovery remain
 part of #37.
+
+### Coverage and delivery
+
+Use `enablePublicationCoverage()` to opt into the coverage-aware schema. It
+validates existing publication rows before the upgrade and preserves valid
+alert and publication rows, including unknown and sent claims. A new coverage-bearing intent stores the exact verified counts.
+An older publication row for the same edition retains its original proof.
+
+The dispatcher rechecks the exact current release and its coverage while
+claiming. It checks them again before calling the selected provider. If
+authority fails after the claim, the claim stays unknown and the provider
+is not called. A later attempt reconciles the exact prior claim through
+the provider and does not send again. Gmail reconciliation binds the immutable
+release proof and message content to the exact attempt. It checks the Sent
+identity and decodes the bounded plain-text body in the same response. The
+[full message format](https://developers.google.com/workspace/gmail/api/reference/rest/v1/Format)
+requires access beyond metadata alone.
+
+The integrated rehearsal uses synthetic Gmail responses. Production still
+needs reviewed provider credentials, private storage and independent
+monitoring. Coordinate the sender with the production promotion fence
+before enabling unattended delivery.

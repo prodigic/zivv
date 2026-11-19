@@ -18,6 +18,8 @@ import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { acknowledgeVerifiedWeeklyRelease } from "../../lib/ingestion/weekly-acknowledgement.js";
 import { inspectFridayVerifiedRelease } from "../../lib/ingestion/friday-verified-release.js";
 import { FridayNoticeOutbox } from "../../lib/ingestion/friday-notice-outbox.js";
+import { dispatchFridayPublicationNotice } from "../../lib/ingestion/friday-notice-dispatch.js";
+import { createFridayGmailPublicationNoticeProvider } from "../../lib/ingestion/friday-gmail-notice-provider.js";
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
 import {
   createWeeklyRunState,
@@ -112,6 +114,66 @@ function controlStore(root: string) {
     validateTransition: validatePromotionAppend,
   });
 }
+const coverageFiles = new Map<string, Buffer>([
+  [
+    "data/events-2026-10.json",
+    Buffer.from(
+      canonicalJson({
+        chunkId: "2026-10",
+        events: [
+          { id: 101, artistIds: [1, 2], headlinerArtistId: 1, venueId: 7 },
+          { id: 999, artistIds: [3], headlinerArtistId: 3, venueId: 8 },
+        ],
+      })
+    ),
+  ],
+  [
+    "data/artists.json",
+    Buffer.from(
+      canonicalJson([
+        {
+          id: 1,
+          links: [{ kind: "website", url: "https://artist.example/" }],
+          vibe: {
+            summary: "A synthetic review summary",
+            reviews: [{ url: "https://review.example/" }],
+          },
+        },
+        {
+          id: 2,
+          links: [{ kind: "website", url: "javascript:alert(1)" }],
+          vibe: { reviews: [{ url: "javascript:alert(1)" }] },
+        },
+        { id: 3, links: [], vibe: { reviews: [] } },
+      ])
+    ),
+  ],
+  [
+    "data/venues.json",
+    Buffer.from(
+      canonicalJson([
+        { id: 7 },
+        {
+          id: 8,
+          mapLocation: {
+            latitude: 37.8,
+            longitude: -122.3,
+            precision: "address",
+            sourceUrl: "https://maps.example/",
+          },
+        },
+      ])
+    ),
+  ],
+]);
+const coverageFileInfo = (path: string) => {
+  const bytes = coverageFiles.get("data/" + path)!;
+  return {
+    filename: path,
+    size: bytes.length,
+    checksum: "sha256-" + hash(bytes),
+  };
+};
 const siteDatasetVersion = "2026-10-10T01:00:00.000Z";
 function fixtureManifest(weekly: WeeklyEditionLedger): Buffer {
   const { status: _status, ...edition } = weekly.editions[0]!;
@@ -119,6 +181,17 @@ function fixtureManifest(weekly: WeeklyEditionLedger): Buffer {
     canonicalJson({
       datasetVersion: siteDatasetVersion,
       weeklyEdition: edition,
+      chunks: {
+        events: [
+          {
+            ...coverageFileInfo("events-2026-10.json"),
+            chunkId: "2026-10",
+            eventCount: 2,
+          },
+        ],
+        artists: coverageFileInfo("artists.json"),
+        venues: coverageFileInfo("venues.json"),
+      },
     })
   );
 }
@@ -146,11 +219,27 @@ function candidateFor(weekly: Buffer): ReleaseCandidate {
     applicationBuildSha256: "4".repeat(64),
     applicationProvenanceSha256: "6".repeat(64),
     files: [
+      ...[...coverageFiles]
+        .filter(([path]) => path < "data/manifest.json")
+        .map(([path, bytes]) => ({
+          path,
+          size: bytes.length,
+          sha256: hash(bytes),
+        }))
+        .sort((a, b) => a.path.localeCompare(b.path)),
       {
         path: "data/manifest.json",
         size: manifest.length,
         sha256: hash(manifest),
       },
+      ...[...coverageFiles]
+        .filter(([path]) => path > "data/manifest.json")
+        .map(([path, bytes]) => ({
+          path,
+          size: bytes.length,
+          sha256: hash(bytes),
+        }))
+        .sort((a, b) => a.path.localeCompare(b.path)),
       { path: "index.html", size: 10, sha256: "5".repeat(64) },
     ],
   };
@@ -497,6 +586,252 @@ describe("verified weekly acknowledgement with native control and private journa
     });
     expect(inspectFridayVerifiedRelease(args)).toEqual(observed);
 
+    const coverageArgs = {
+      ...args,
+      publicFiles: new Map([
+        ...coverageFiles,
+        ["data/manifest.json", args.manifest],
+      ]),
+    };
+    const coveragePath = join(dirname(f.root), "coverage-outbox.sqlite");
+    const coverageDb = new DatabaseSync(coveragePath);
+    try {
+      const outbox = FridayNoticeOutbox.initialize(coverageDb);
+      outbox.enablePublicationNotices();
+      expect(() =>
+        outbox.recordVerifiedPublicationWithCoverage(coverageArgs)
+      ).toThrow("INVALID_FRIDAY_NOTICE_OUTBOX");
+      outbox.enablePublicationCoverage();
+      outbox.enablePublicationCoverage();
+      const pending =
+        outbox.recordVerifiedPublicationWithCoverage(coverageArgs)!;
+      expect(pending).toEqual({
+        notice: {
+          ...observed,
+          coverage: {
+            missingShowArtwork: 1,
+            distinctArtists: 2,
+            artistsWithoutLinks: 1,
+            artistsWithoutReviews: 1,
+            distinctVenues: 1,
+            venuesWithoutMapLocation: 1,
+          },
+        },
+        status: "pending",
+        attemptId: null,
+        receiptSha256: null,
+      });
+      expect(
+        outbox.recordVerifiedPublicationWithCoverage(coverageArgs)
+      ).toEqual(pending);
+      const key = observed!.deduplicationKey;
+      const altered = new Map(coverageArgs.publicFiles);
+      altered.set("data/venues.json", Buffer.from("[]"));
+      expect(() =>
+        outbox.claimPublicationWithCoverage(key, () => ({
+          ...coverageArgs,
+          publicFiles: altered,
+        }))
+      ).toThrow();
+      expect(outbox.inspectPublication(key)).toEqual(pending);
+      const readEvidence = vi.fn(() => coverageArgs);
+      const claimed = outbox.claimPublicationWithCoverage(key, readEvidence)!;
+      expect(claimed).toMatchObject({
+        ...pending,
+        status: "delivery-unknown",
+        attemptId: expect.stringMatching(/^[0-9a-f-]{36}$/),
+      });
+      expect(readEvidence).toHaveBeenCalledTimes(1);
+      expect(outbox.claimPublicationWithCoverage(key, readEvidence)).toBeNull();
+      expect(readEvidence).toHaveBeenCalledTimes(1);
+      const reopenedDb = new DatabaseSync(coveragePath);
+      try {
+        const reopened = new FridayNoticeOutbox(reopenedDb);
+        expect(reopened.inspectPublication(key)).toEqual(claimed);
+        const sent = reopened.confirmPublicationSent(
+          key,
+          claimed.attemptId!,
+          "a".repeat(64)
+        );
+        expect(sent).toEqual({
+          ...claimed,
+          status: "sent",
+          receiptSha256: "a".repeat(64),
+        });
+        expect(
+          outbox.recordVerifiedPublicationWithCoverage(coverageArgs)
+        ).toEqual(sent);
+      } finally {
+        reopenedDb.close();
+      }
+    } finally {
+      coverageDb.close();
+    }
+    const gmailPath = join(dirname(f.root), "coverage-gmail-outbox.sqlite");
+    let gmailDb = new DatabaseSync(gmailPath);
+    let rawText = "";
+    let posts = 0;
+    let changedSentBody = true;
+    const response = (value: unknown) =>
+      new Response(JSON.stringify(value), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    const fetcher: typeof fetch = async (input, init) => {
+      const url = new URL(String(input));
+      if (url.origin !== "https://gmail.googleapis.com")
+        throw Error("UNEXPECTED_SYNTHETIC_ENDPOINT");
+      if (url.pathname.endsWith("/profile")) {
+        expect(init?.method).toBe("GET");
+        return response({ emailAddress: "synthetic-sender@example.invalid" });
+      }
+      if (url.pathname.endsWith("/messages/send")) {
+        expect(init?.method).toBe("POST");
+        posts++;
+        const body = JSON.parse(String(init?.body)) as { raw: string };
+        rawText = Buffer.from(body.raw, "base64url").toString("utf8");
+        throw Error("SYNTHETIC_LOST_RESPONSE");
+      }
+      if (url.pathname.endsWith("/messages/a1")) {
+        const headers = rawText
+          .split(/\r?\n/)
+          .filter((line) =>
+            /^(from|to|subject|message-id|x-zivv-notice):/i.test(line)
+          )
+          .map((line) => {
+            const index = line.indexOf(":");
+            return {
+              name: line.slice(0, index),
+              value: line.slice(index + 1).trim(),
+            };
+          });
+        expect(init?.method).toBe("GET");
+        expect(url.searchParams.get("format")).toBe("full");
+        expect(url.searchParams.has("metadataHeaders")).toBe(false);
+        const separator = rawText.indexOf("\r\n\r\n");
+        expect(separator).toBeGreaterThan(0);
+        const body = Buffer.from(
+          rawText.slice(separator + 4) +
+            (changedSentBody ? "unexpected replacement" : "")
+        );
+        return response({
+          id: "a1",
+          labelIds: ["SENT"],
+          payload: {
+            headers,
+            mimeType: "text/plain",
+            body: { size: body.length, data: body.toString("base64url") },
+          },
+        });
+      }
+      if (url.pathname.endsWith("/messages")) {
+        expect(init?.method).toBe("GET");
+        expect(url.searchParams.get("labelIds")).toBe("SENT");
+        expect(url.searchParams.get("maxResults")).toBe("2");
+        const marker = /^Message-ID: (.+)\r?$/m.exec(rawText)?.[1]?.trim();
+        expect(marker).toBeTruthy();
+        expect(url.searchParams.get("q")).toBe("rfc822msgid:" + marker);
+        return response({ messages: [{ id: "a1" }] });
+      }
+      throw Error("UNEXPECTED_SYNTHETIC_ENDPOINT");
+    };
+    const provider = createFridayGmailPublicationNoticeProvider({
+      expectedAccountId: "synthetic-sender@example.invalid",
+      recipient: "synthetic-recipient@example.invalid",
+      getAccessToken: async () => "synthetic-token",
+      fetcher,
+    });
+    try {
+      const outbox = FridayNoticeOutbox.initialize(gmailDb);
+      outbox.enablePublicationCoverage();
+      const queued =
+        outbox.recordVerifiedPublicationWithCoverage(coverageArgs)!;
+      const key = queued.notice.deduplicationKey;
+      await expect(
+        dispatchFridayPublicationNotice(
+          outbox,
+          key,
+          () => coverageArgs,
+          provider
+        )
+      ).rejects.toThrow("FRIDAY_NOTICE_DELIVERY_UNKNOWN");
+      const held = outbox.inspectPublication(key)!;
+      expect(held.status).toBe("delivery-unknown");
+      for (const line of [
+        "Live release https://www.prodigic.com/zivv/",
+        "Added shows 1",
+        "Shows without artwork 1 of 1",
+        "Artists without a link 1 of 2",
+        "Artists without a cited review 1 of 2",
+        "Venues without a map location 1 of 1",
+      ])
+        expect(rawText).toContain(line);
+      expect(posts).toBe(1);
+      gmailDb.close();
+      gmailDb = new DatabaseSync(gmailPath);
+      const reopened = new FridayNoticeOutbox(gmailDb);
+      const noReleaseReads = vi.fn(() => {
+        throw Error("RECONCILIATION_MUST_USE_SAVED_CLAIM");
+      });
+      await expect(
+        dispatchFridayPublicationNotice(reopened, key, noReleaseReads, provider)
+      ).rejects.toThrow("FRIDAY_NOTICE_RECONCILIATION_UNAVAILABLE");
+      expect(reopened.inspectPublication(key)).toEqual(held);
+      changedSentBody = false;
+      const sent = await dispatchFridayPublicationNotice(
+        reopened,
+        key,
+        noReleaseReads,
+        provider
+      );
+      expect(noReleaseReads).not.toHaveBeenCalled();
+      expect(sent).toMatchObject({
+        notice: queued.notice,
+        status: "sent",
+        attemptId: held.attemptId,
+        receiptSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      });
+      expect(posts).toBe(1);
+    } finally {
+      gmailDb.close();
+    }
+
+    const staleDb = new DatabaseSync(
+      join(dirname(f.root), "coverage-stale-outbox.sqlite")
+    );
+    try {
+      const outbox = FridayNoticeOutbox.initialize(staleDb);
+      outbox.enablePublicationCoverage();
+      const queued =
+        outbox.recordVerifiedPublicationWithCoverage(coverageArgs)!;
+      let reads = 0;
+      await expect(
+        dispatchFridayPublicationNotice(
+          outbox,
+          queued.notice.deduplicationKey,
+          () => {
+            reads++;
+            return reads === 1
+              ? coverageArgs
+              : {
+                  ...coverageArgs,
+                  store: {
+                    ...store,
+                    read: () => f.store.readAt(f.deployedHead),
+                  },
+                };
+          },
+          provider
+        )
+      ).rejects.toThrow("FRIDAY_PUBLICATION_NOTICE_EVIDENCE_CHANGED");
+      expect(reads).toBe(2);
+      expect(posts).toBe(1);
+      expect(
+        outbox.inspectPublication(queued.notice.deduplicationKey)?.status
+      ).toBe("delivery-unknown");
+    } finally {
+      staleDb.close();
+    }
     const outboxPath = join(dirname(f.root), "publication-outbox.sqlite");
     const outboxDb = new DatabaseSync(outboxPath);
     const peerDb = new DatabaseSync(outboxPath);
@@ -574,6 +909,12 @@ describe("verified weekly acknowledgement with native control and private journa
       } finally {
         reopenedDb.close();
       }
+      outbox.enablePublicationCoverage();
+      expect(outbox.inspectPublication(key)).toEqual(sent);
+      expect(() =>
+        outbox.recordVerifiedPublicationWithCoverage(coverageArgs)
+      ).toThrow("FRIDAY_PUBLICATION_NOTICE_CONFLICT");
+      expect(outbox.inspectPublication(key)).toEqual(sent);
       expect(outbox.recordVerifiedPublication(args)).toEqual(sent);
       expect(outbox.claimPublication(key, shouldNotRead)).toBeNull();
       expect(shouldNotRead).not.toHaveBeenCalled();
