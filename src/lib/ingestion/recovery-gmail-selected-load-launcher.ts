@@ -11,7 +11,7 @@ import { inspectNextSelectedLoadInterruption } from "./recovery-gmail-selected-l
 import { inspectNextSelectedLoadCompletion } from "./recovery-gmail-selected-load-next-replay.js";
 import { sha256 } from "./steve-preflight.js";
 import { withRecoveryWindowsJobRunner } from "./recovery-windows-job-runner.js";
-import { spawn } from "node:child_process";
+import { runRecoveryWorkerProcess } from "./recovery-worker-process.js";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { verifyOperatorRetirementEvidence } from "./operator-recovery.js";
@@ -277,172 +277,37 @@ function invokeRetainedSelectedLoadWorker(
     script,
   ];
   const cwd = join(root, "checkout");
-  const deadline = 240_000;
-  const run = (jobRunner?: string) =>
-    new Promise<unknown>((accept, reject) => {
-      const child = spawn(
-        jobRunner ?? process.execPath,
-        jobRunner
-          ? [
-              String(process.pid),
-              String(deadline),
-              process.execPath,
-              cwd,
-              ...nodeArgs,
-            ]
-          : nodeArgs,
-        {
-          cwd,
-          env,
-          windowsHide: true,
-          shell: false,
-          stdio: ["pipe", "pipe", "pipe"],
-          detached: Boolean(jobRunner) || process.platform !== "win32",
-        }
-      );
-      const output: Buffer[] = [];
-      const diagnostic: Buffer[] = [];
-      let size = 0;
-      let settled = false;
-      let overLimit = false;
-      let ioFailed = false;
-      let stopRequested = false;
-      let termination: ReturnType<typeof setTimeout> | undefined;
-      let exited:
-        | { code: number | null; signal: NodeJS.Signals | null }
-        | undefined;
-      const unconfirmed =
-        "RECOVERY_GMAIL_SELECTED_LOAD_TERMINATION_UNCONFIRMED";
-
-      function finish() {
-        if (
-          settled ||
-          !exited ||
-          !(child.stdout.readableEnded || child.stdout.destroyed) ||
-          !(child.stderr.readableEnded || child.stderr.destroyed) ||
-          !(child.stdin.writableFinished || child.stdin.destroyed)
-        )
-          return;
-        settled = true;
-        clearTimeout(timer);
-        clearTimeout(termination);
-
-        if (jobRunner) {
-          // Native 223 proves that the worker did not start, even if stdin got EPIPE.
-          if (!exited.signal && exited.code === 223) {
-            reject(failure(Error("RECOVERY_WINDOWS_JOB_RUNNER_SETUP_REFUSED")));
-            return;
-          }
-          if (
-            stopRequested ||
-            exited.signal ||
-            (exited.code !== 0 &&
-              exited.code !== 220 &&
-              exited.code !== 221 &&
-              exited.code !== 222)
-          ) {
-            reject(failure(Error(unconfirmed)));
-            return;
-          }
-          if (exited.code === 221 || exited.code === 222) {
-            reject(failure(Error("RECOVERY_WINDOWS_JOB_RUNNER_STOPPED")));
-            return;
-          }
-        }
-        if (
-          stopRequested ||
-          overLimit ||
-          ioFailed ||
-          !child.stdin.writableFinished
-        ) {
-          reject(failure(Error(errorCode)));
-          return;
-        }
-        if (exited.code !== 0 || exited.signal) {
-          const text = Buffer.concat(diagnostic).toString("utf8");
-          const code = /\{"loadError":"([A-Z0-9_]{1,80})"/.exec(text)?.[1];
-          reject(failure(Error(code ?? errorCode)));
-          return;
-        }
-        try {
-          accept(
-            JSON.parse(
-              new TextDecoder("utf-8", { fatal: true }).decode(
-                Buffer.concat(output)
-              )
-            ) as unknown
-          );
-        } catch {
-          reject(failure(Error(errorCode)));
-        }
-      }
-
-      function stop() {
-        if (settled || stopRequested) return;
-        stopRequested = true;
-        clearTimeout(timer);
-        try {
-          if (!jobRunner && process.platform !== "win32" && child.pid)
-            process.kill(-child.pid, "SIGKILL");
-          else child.kill("SIGKILL");
-        } catch {
-          child.kill("SIGKILL");
-        }
-        child.stdin.destroy();
-        termination = setTimeout(() => {
-          if (settled) return;
-          settled = true;
-          reject(failure(Error(unconfirmed)));
-        }, 10_000);
-        finish();
-      }
-
-      function collect(chunks: Buffer[], chunk: Buffer) {
-        if (overLimit) return;
-        size += chunk.length;
-        if (size <= 64 * 1024) {
-          chunks.push(chunk);
-          return;
-        }
-        overLimit = true;
-        // Keep draining bounded memory until the native deadline proves the
-        // tree is empty. Forcibly exiting the helper would lose that proof.
-        if (!jobRunner) stop();
-      }
-
-      function streamFailed() {
-        ioFailed = true;
-        if (!jobRunner) stop();
-        finish();
-      }
-
-      child.stdout.on("data", (chunk: Buffer) => collect(output, chunk));
-      child.stderr.on("data", (chunk: Buffer) => collect(diagnostic, chunk));
-      child.stdout.on("end", finish);
-      child.stderr.on("end", finish);
-      child.stdin.on("finish", finish);
-      child.stdout.on("error", streamFailed);
-      child.stderr.on("error", streamFailed);
-      child.stdin.on("error", streamFailed);
-      child.stdout.on("close", finish);
-      child.stderr.on("close", finish);
-      child.stdin.on("close", finish);
-      child.on("exit", (code, signal) => {
-        exited = { code, signal };
-        finish();
-      });
-      child.on("error", () => {
-        if (!child.pid) {
-          settled = true;
-          clearTimeout(timer);
-          clearTimeout(termination);
-          reject(failure(Error(errorCode)));
-        } else stop();
-      });
-      child.on("close", finish);
-      const timer = setTimeout(stop, deadline + (jobRunner ? 20_000 : 0));
-      child.stdin.end(wire);
+  const run = async (jobRunner?: string) => {
+    const result = await runRecoveryWorkerProcess({
+      nodeArgs,
+      cwd,
+      env,
+      input: wire,
+      deadlineMs: 240_000,
+      ...(jobRunner ? { jobRunner } : {}),
     });
+    if (result.status === "setup-refused")
+      throw failure(Error("RECOVERY_WINDOWS_JOB_RUNNER_SETUP_REFUSED"));
+    if (result.status === "termination-unconfirmed")
+      throw failure(
+        Error("RECOVERY_GMAIL_SELECTED_LOAD_TERMINATION_UNCONFIRMED")
+      );
+    if (result.status === "stopped")
+      throw failure(Error("RECOVERY_WINDOWS_JOB_RUNNER_STOPPED"));
+    if (result.status !== "exited") throw failure(Error(errorCode));
+    if (result.code !== 0 || result.signal) {
+      const text = result.stderr.toString("utf8");
+      const code = /\{"loadError":"([A-Z0-9_]{1,80})"/.exec(text)?.[1];
+      throw failure(Error(code ?? errorCode));
+    }
+    try {
+      return JSON.parse(
+        new TextDecoder("utf-8", { fatal: true }).decode(result.stdout)
+      ) as unknown;
+    } catch {
+      throw failure(Error(errorCode));
+    }
+  };
   return process.platform === "win32"
     ? withRecoveryWindowsJobRunner(run)
     : run();
