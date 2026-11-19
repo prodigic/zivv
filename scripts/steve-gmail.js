@@ -2,7 +2,10 @@
 import { isAbsolute } from "node:path";
 import { captureSteveGmailWindowWithWindowsCredentials } from "../dist/lib/ingestion/steve-gmail-credential-poll.js";
 import { pollFridayGmailWithWindowsCredentials } from "../dist/lib/ingestion/steve-gmail-friday-poll.js";
-import { parseCutoffEpochMs } from "../dist/lib/ingestion/weekly.js";
+import {
+  fridayDeliveryTimes,
+  parseCutoffEpochMs,
+} from "../dist/lib/ingestion/weekly.js";
 import { provisionWindowsGmailCredentials } from "../dist/lib/ingestion/windows-gmail-credentials.js";
 
 const credentialLimit = 32 * 1024;
@@ -61,6 +64,67 @@ function utcInstant(value) {
   return instant;
 }
 
+async function loadRetained(root) {
+  const invalid = () => {
+    throw Error("INVALID_FRIDAY_GMAIL_LOAD_INPUT");
+  };
+  if (!isAbsolute(root) || process.stdin.isTTY) return invalid();
+  const { readFridayGmailWorkerInput } =
+    await import("../dist/lib/ingestion/steve-gmail-friday-supervised.js");
+  const bytes = await readFridayGmailWorkerInput(process.stdin);
+  let input;
+  try {
+    input = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    if (
+      !input ||
+      typeof input !== "object" ||
+      Array.isArray(input) ||
+      Object.keys(input).length !== 3
+    )
+      return invalid();
+    const { operatorDirectory, expectedAccountId, expectedEditionId } = input;
+    if (
+      typeof operatorDirectory !== "string" ||
+      operatorDirectory.length > 4096 ||
+      !isAbsolute(operatorDirectory) ||
+      typeof expectedAccountId !== "string" ||
+      expectedAccountId.length > 320 ||
+      !/^[^\s@\p{Cc}]+@[^\s@\p{Cc}]+$/u.test(expectedAccountId) ||
+      typeof expectedEditionId !== "string" ||
+      expectedEditionId.length !== 10
+    )
+      return invalid();
+    fridayDeliveryTimes(expectedEditionId);
+  } catch {
+    return invalid();
+  } finally {
+    bytes.fill(0);
+  }
+  const { loadRetainedSteveEmailSources } =
+    await import("../dist/lib/ingestion/steve-email-load.js");
+  const { editionId, counts } = await loadRetainedSteveEmailSources({
+    root,
+    operatorDirectory: input.operatorDirectory,
+    accountId: input.expectedAccountId,
+    expectedEditionId: input.expectedEditionId,
+  });
+  const needsAttention =
+    counts.reviewRequired ||
+    counts.blocked ||
+    counts.failed ||
+    counts.notProcessed;
+  if (needsAttention) process.exitCode = 1;
+  return {
+    editionId,
+    status: needsAttention
+      ? "attention-required"
+      : counts.loaded
+        ? "loaded"
+        : "no-retained-source",
+    counts,
+  };
+}
+
 try {
   const [command, ...args] = process.argv.slice(2);
   if (command === "provision") {
@@ -85,6 +149,9 @@ try {
     } finally {
       frame.fill(0);
     }
+  } else if (command === "load-retained") {
+    const root = options(args, ["--root"])("--root");
+    console.log(JSON.stringify(await loadRetained(root)));
   } else if (command === "poll" || command === "poll-friday") {
     const get = options(args, [
       "--credential-dir",
