@@ -276,7 +276,7 @@ requires an idle production control whose current release matches the latest
 acknowledgement, the exact retained artifact, and its source ancestry on
 current main. The archived original ledger revision must match the decrypted
 publication snapshot. The archived weekly edition must be published with the
-same edition, cutoff, dataset and membership as the candidate. A private ledger
+same edition, cutoff, dataset and membership as the frozen weekly edition in the verified manifest. The site export has its own dataset version. A private ledger
 with later unproven changes needs separate reconciliation.
 
 The fixture uses an isolated bare authority. Rechecking its binding reads main,

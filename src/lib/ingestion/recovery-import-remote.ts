@@ -68,6 +68,7 @@ function openCanonicalRecoveryPublication(
     candidate: ReleaseCandidate;
     ledgerRevision: string;
     currentAcknowledgement: boolean;
+    verifiedManifest: Buffer | undefined;
   }) => void
 ) {
   if (!Buffer.isBuffer(input.recoveryKey) || input.recoveryKey.length !== 32)
@@ -163,6 +164,7 @@ function openCanonicalRecoveryPublication(
   checkPublication({
     candidate,
     ledgerRevision: revision,
+    verifiedManifest: payload.publicFiles.get("data/manifest.json"),
     currentAcknowledgement:
       canonicalJson(current.lastVerified) ===
       canonicalJson(completedControl.lastVerified),
@@ -321,14 +323,31 @@ export function observeReplacementAcknowledgedWatermarkForTest(
     const observed = openCanonicalRecoveryPublication(
       input,
       transport,
-      ({ candidate, ledgerRevision, currentAcknowledgement }) => {
+      ({
+        candidate,
+        ledgerRevision,
+        currentAcknowledgement,
+        verifiedManifest,
+      }) => {
+        if (!verifiedManifest) return unavailable();
+        const manifest = JSON.parse(
+          new TextDecoder("utf-8", { fatal: true }).decode(verifiedManifest)
+        ) as { weeklyEdition?: unknown };
+        const archivedEdition = {
+          editionId: edition.editionId,
+          startEpochMs: edition.startEpochMs,
+          endEpochMs: edition.endEpochMs,
+          eventIds: edition.eventIds.map(Number),
+          datasetVersion: edition.datasetVersion,
+        };
         if (
           !currentAcknowledgement ||
           ledgerRevision !== checkpoint.ledgerRevision ||
           edition.editionId !== candidate.editionId ||
           edition.endEpochMs !== candidate.cutoffEpochMs ||
           weekly.publishedCutoffEpochMs !== candidate.cutoffEpochMs ||
-          edition.datasetVersion !== candidate.datasetVersion ||
+          canonicalJson(manifest.weeklyEdition) !==
+            canonicalJson(archivedEdition) ||
           sha256(Buffer.from(canonicalJson(edition.eventIds))) !==
             candidate.membershipSha256
         )
@@ -342,7 +361,8 @@ export function observeReplacementAcknowledgedWatermarkForTest(
         ...observed.binding,
         editionId: observed.candidate.editionId,
         membershipSha256: observed.candidate.membershipSha256,
-        datasetVersion: observed.candidate.datasetVersion,
+        datasetVersion: edition.datasetVersion,
+        releaseDatasetVersion: observed.candidate.datasetVersion,
       }),
       assertCurrent: observed.assertCurrent,
     });
