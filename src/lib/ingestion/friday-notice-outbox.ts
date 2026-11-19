@@ -6,6 +6,7 @@ import {
   type FridayMonitorNotice,
 } from "./friday-monitor-evidence.js";
 import { fridayDeliveryTimes } from "./weekly.js";
+import { readVerifiedFridayWatchdogEvidence } from "./friday-independent-watchdog.js";
 
 export interface FridayNoticeOutboxRecord {
   notice: FridayMonitorNotice;
@@ -165,6 +166,13 @@ export class FridayNoticeOutbox {
       objects[0].sql !== schema
     )
       return invalid();
+  }
+
+  /** Record only the signed evidence supplied by the configured independent observer. */
+  recordVerifiedWatchdog(
+    input: Parameters<typeof readVerifiedFridayWatchdogEvidence>[0]
+  ): FridayNoticeOutboxRecord | null {
+    return this.record(readVerifiedFridayWatchdogEvidence(input));
   }
 
   record(input: FridayMonitorEvaluation): FridayNoticeOutboxRecord | null {

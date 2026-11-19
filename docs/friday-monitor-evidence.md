@@ -27,3 +27,11 @@ revision key with a closed reason and action. An active lease, stale
 observation, missing run, pending stage or completed run produces no
 stage alert. The observation identifies local journal state and lease status.
 The independent missed-start source remains separate.
+
+The watchdog outbox adapter verifies the configured independent Ed25519 key
+and the exact signed edition, expected start, result and covered-through time.
+It measures freshness from the covered-through time. A new signature cannot
+extend old coverage. An exact due-time observation can produce one durable
+missed-start claim. A failed, uncertain or incomplete observation produces no
+claim. Deploying an independent start registry, choosing the observer and
+configuring its key remain operational work.
