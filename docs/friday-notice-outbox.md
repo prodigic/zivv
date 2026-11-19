@@ -1,6 +1,6 @@
 # Friday notification outbox
 
-The outbox records the two notice kinds from the [Friday evidence planner](friday-monitor-evidence.md) in a dedicated SQLite database. This checkpoint exposes a library for isolated rehearsal. The weekly runner and CLI have no notification dispatcher.
+The outbox records alerts from the [Friday evidence planner](friday-monitor-evidence.md) and can also store the evidence for one publication notice per edition in a dedicated SQLite database. This checkpoint exposes a library for isolated rehearsal. The weekly runner and CLI have no notification dispatcher.
 
 ```text
 Fresh evidence -> pending intent
@@ -13,4 +13,23 @@ Separately verified, matching acknowledgement -> sent receipt
 - After a crash or an unknown response, preserve the exact database and reconcile the claim with the delivery provider. A claim remains unknown even if the process died before calling the provider. Verifying an acknowledgement separately is required before recording the receipt digest. Never recreate a missing database to clear a claim or send again.
 - Notice records contain only the bounded notice fields, the local attempt ID, and an optional digest of the verified acknowledgement. The later delivery adapter is responsible for provider idempotency, private identity and credentials, validated receipt evidence, and deciding whether an old pending notice is still actionable.
 
-The isolated tests use private temporary databases and simulated acknowledgements. Independently hosted monitoring, persistent off-host recovery, verified release notices, and external delivery are separate #37 work.
+### Publication notices
+
+Initialize the dedicated outbox first and use `enablePublicationNotices()` to
+explicitly upgrade its schema. The upgrade adds the publication notice table
+in one transaction and preserves existing alert claims and receipts. Reopen the
+same database with a version that understands the upgraded schema.
+
+Record the release using its persisted acknowledgement and the current production
+control. To claim a pending notice, supply a fresh evidence reader for the same
+release. Changes to its candidate, manifest, published weekly state or current
+release leave the intent pending for review. An edition key stays bound to the
+first recorded proof. A later correction with different release evidence raises a
+conflict. Reconcile a previously committed attempt against its saved proof and
+attempt ID.
+
+The database lock serializes local attempts. A delivery integration still needs
+to coordinate with production promotion before sending and verify the provider's
+receipt. The rehearsal uses a temporary database and synthetic release evidence.
+Coverage-gap rendering, independent hosting and durable off-host recovery remain
+part of #37.
