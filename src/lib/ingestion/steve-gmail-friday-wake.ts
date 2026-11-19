@@ -5,6 +5,7 @@ import {
   summarizeRetainedSteveEmailLoad,
 } from "./steve-email-load.js";
 import { pollFridayGmailInWindowsJob } from "./steve-gmail-friday-supervised.js";
+import { readSteveGmailHandoffStatus } from "./steve-gmail-handoff.js";
 import { planFridayMailboxWake } from "./weekly.js";
 
 export interface FridayMailboxWakeDependencies {
@@ -117,5 +118,41 @@ export async function runFridayMailboxWake(
     accountId: config.expectedAccountId,
     expectedEditionId: editionId,
   });
-  return { ...summarizeRetainedSteveEmailLoad(loaded), mailboxStatus };
+  const summary = summarizeRetainedSteveEmailLoad(loaded);
+  const result = { ...summary, mailboxStatus };
+  if (mailboxStatus !== "missing" || summary.status !== "no-retained-source")
+    return result;
+
+  const observation = report.mailboxEvidence;
+  if (
+    !observation ||
+    typeof observation !== "object" ||
+    Array.isArray(observation) ||
+    !("kind" in observation) ||
+    observation.kind !== "mailbox-scan" ||
+    !("status" in observation) ||
+    observation.status !== "absent" ||
+    !("scannedThroughEpochMs" in observation) ||
+    typeof observation.scannedThroughEpochMs !== "number" ||
+    !Number.isSafeInteger(observation.scannedThroughEpochMs) ||
+    observation.scannedThroughEpochMs < wake.scanStartsAtEpochMs ||
+    observation.scannedThroughEpochMs >= wake.newSourceReviewAtEpochMs ||
+    observation.scannedThroughEpochMs > clock()
+  )
+    throw Error("FRIDAY_GMAIL_WORKER_REPORT_UNVERIFIED");
+
+  const handoff = readSteveGmailHandoffStatus({
+    operatorDirectory,
+    expectedAccountId: config.expectedAccountId,
+    expectedEditionId: editionId,
+  });
+  if (handoff.batches.length !== 0) return result;
+  return {
+    ...result,
+    missingSourceEvidence: {
+      kind: "mailbox-scan" as const,
+      status: "absent" as const,
+      scannedThroughEpochMs: observation.scannedThroughEpochMs,
+    },
+  };
 }
