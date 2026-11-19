@@ -85,8 +85,14 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       return result;
     };
     const success = (command: string, args: string[]) => {
+      const started = performance.now();
       const result = run(command, args);
-      expect(result.status).toBe(0);
+      const elapsed = Math.round(performance.now() - started);
+      const code = /^\{"error":"([A-Z_]{1,64})",/m.exec(result.stderr)?.[1];
+      expect(
+        result.status,
+        `${command} failed after ${elapsed} ms (${code ?? "no safe error code"})`
+      ).toBe(0);
       const report = JSON.parse(result.stdout.trim()) as Record<
         string,
         unknown

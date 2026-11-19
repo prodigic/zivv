@@ -587,7 +587,7 @@ export async function runOperatorRecoveryGmailNextSelectedLoad(
         ? observeInstalledNextLoad(input)
         : observeNextLoadCompletion(input);
     if (!verified || canonicalJson(report) !== canonicalJson(verified))
-      throw Error(errorCode);
+      throw Error("RECOVERY_GMAIL_NEXT_SELECTED_LOAD_REPORT_MISMATCH");
     return verified;
   } catch (error) {
     throw failure(error);
