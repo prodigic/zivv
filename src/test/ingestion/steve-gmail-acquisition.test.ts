@@ -429,3 +429,103 @@ describe("readSteveGmailWindow", () => {
     }
   );
 });
+
+describe("fresh Gmail scan budget", () => {
+  it.each([0, -1, 1.5, 2_147_483_648, NaN, Infinity])(
+    "rejects invalid budget %s before OAuth or network",
+    async (freshScanTimeoutMs) => {
+      let tokenCalls = 0;
+      const { fetcher, requests } = fixtureFetcher({});
+      await expect(
+        readSteveGmailWindow({
+          ...input(fetcher),
+          freshScanTimeoutMs,
+          getAccessToken: async () => {
+            tokenCalls++;
+            return "synthetic-token";
+          },
+        })
+      ).rejects.toThrow(/^INVALID_GMAIL_FRESH_SCAN_BUDGET$/);
+      expect(tokenCalls).toBe(0);
+      expect(requests).toEqual([]);
+    }
+  );
+
+  it("starts the scan budget after token acquisition resolves", async () => {
+    const { fetcher } = fixtureFetcher({});
+    let releaseToken!: (token: string) => void;
+    const token = new Promise<string>((resolveToken) => {
+      releaseToken = resolveToken;
+    });
+    const scan = readSteveGmailWindow({
+      ...input(fetcher),
+      freshScanTimeoutMs: 100,
+      getAccessToken: () => token,
+    });
+    // Longer than the entire scan budget, while authentication is still pending.
+    await new Promise((resolveDelay) => setTimeout(resolveDelay, 150));
+    releaseToken("synthetic-token");
+    await expect(scan).resolves.toEqual({ status: "missing", snapshots: [] });
+  });
+
+  it("expires while a later page stalls and never reports partial results", async () => {
+    const seenSignals: AbortSignal[] = [];
+    const aborted: string[] = [];
+    const fetcher: typeof fetch = async (request, init) => {
+      const url = String(request);
+      const signal = init?.signal;
+      if (!signal) throw Error("missing signal");
+      seenSignals.push(signal);
+      if (url === `${origin}/profile`) return jsonResponse(profile());
+      if (new URL(url).searchParams.has("pageToken")) {
+        return new Promise<Response>((_resolve, reject) => {
+          const onAbort = () => {
+            aborted.push("page");
+            reject(Error("aborted"));
+          };
+          if (signal.aborted) onAbort();
+          else signal.addEventListener("abort", onAbort, { once: true });
+        });
+      }
+      return jsonResponse({ messages: [{ id: "a1" }], nextPageToken: "next" });
+    };
+    await expect(
+      readSteveGmailWindow({ ...input(fetcher), freshScanTimeoutMs: 50 })
+    ).rejects.toThrow(/^GMAIL_FRESH_SCAN_DEADLINE$/);
+    expect(aborted).toEqual(["page"]);
+    expect(seenSignals.length).toBeGreaterThanOrEqual(3);
+    expect(seenSignals.every((signal) => signal.aborted)).toBe(true);
+  });
+
+  it("expires while consuming a response body and cannot report absence", async () => {
+    let bodyAborted = false;
+    const fetcher: typeof fetch = async (request, init) => {
+      if (String(request) === `${origin}/profile`)
+        return jsonResponse(profile());
+      const signal = init?.signal;
+      if (!signal) throw Error("missing signal");
+      return new Response(
+        new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('{"messages":'));
+            const onAbort = () => {
+              bodyAborted = true;
+              controller.error(Error("aborted"));
+            };
+            if (signal.aborted) onAbort();
+            else signal.addEventListener("abort", onAbort, { once: true });
+          },
+        }),
+        { headers: { "content-type": "application/json" } }
+      );
+    };
+    await expect(
+      readSteveGmailWindow({
+        ...input(fetcher),
+        freshScanTimeoutMs: 50,
+        requireStableMailboxForMissing: true,
+      })
+    ).rejects.toThrow(/^GMAIL_FRESH_SCAN_DEADLINE$/);
+    expect(bodyAborted).toBe(true);
+  });
+});

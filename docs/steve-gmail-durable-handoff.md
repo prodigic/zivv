@@ -176,6 +176,14 @@ for review or loading through the existing private path. After the window
 closes, use the existing explicit review path for late deliveries or pending
 private evidence. This command does not install a schedule or send a notice.
 
+Each supervised attempt gives the fresh Gmail search at most 60 seconds after
+the access token is available. That single budget covers both profile checks,
+pagination, and message bodies in addition to the existing per-request limit.
+Cached batch replay and durable capture are outside the HTTP budget. An
+expired scan reports `GMAIL_FRESH_SCAN_DEADLINE` without returning a partial
+capture or a missing-source observation. The next explicit poll can recheck
+after inspection of the failure.
+
 ## Recovery boundary still requiring implementation
 
 The current operator recovery inventory rejects the new `email-acquisition`
