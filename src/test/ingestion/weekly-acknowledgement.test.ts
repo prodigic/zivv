@@ -16,6 +16,7 @@ import { dirname, join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { acknowledgeVerifiedWeeklyRelease } from "../../lib/ingestion/weekly-acknowledgement.js";
+import { inspectFridayVerifiedRelease } from "../../lib/ingestion/friday-verified-release.js";
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
 import {
   createWeeklyRunState,
@@ -427,6 +428,88 @@ afterAll(() => {
 });
 
 describe("verified weekly acknowledgement with native control and private journal", () => {
+  it("inspects only the exact current acknowledged release without changing state", async () => {
+    const f = fixture();
+    const candidate = Buffer.from(canonicalJson(f.candidate));
+    const weekly = () =>
+      parseWeeklyEditionLedger(JSON.parse(readFileSync(f.weeklyPath, "utf8")));
+    expect(
+      inspectFridayVerifiedRelease({
+        state: f.state,
+        candidate,
+        weeklyLedger: weekly(),
+        store: f.store,
+      })
+    ).toBeNull();
+    const completed = await f.run();
+    const current = f.readControl();
+    if (current.lastVerified.kind !== "candidateRelease")
+      throw new Error("Expected verified fixture release");
+    const ack = completed.stages.find(
+      (stage) => stage.stage === "acknowledge"
+    )!.evidence!;
+    expect(current.lastVerified.request.requestId).not.toBe(completed.runId);
+    const beforeHead = f.store.read().head;
+    const beforeWeekly = readFileSync(f.weeklyPath);
+    const beforeState = f.journal.loadOwned(completed.runId, f.lease);
+    const append = vi.fn(f.store.compareAndAppend);
+    const store = { ...f.store, compareAndAppend: append };
+    const args = { state: completed, candidate, weeklyLedger: weekly(), store };
+    const observed = inspectFridayVerifiedRelease(args);
+    expect(observed).toEqual({
+      status: "verified-release",
+      editionId: "2026-10-09",
+      liveUrl: "https://www.prodigic.com/zivv/",
+      addedEventCount: 1,
+      candidateId: f.candidate.candidateId,
+      verificationReceiptId: current.lastVerified.verification.receiptId,
+      acknowledgementId: ack.acknowledgementId,
+      releaseId: current.lastVerified.releaseId,
+      deduplicationKey: "friday/2026-10-09/published",
+    });
+    expect(inspectFridayVerifiedRelease(args)).toEqual(observed);
+
+    const membership = structuredClone(args.weeklyLedger);
+    membership.editions[0]!.eventIds = [102];
+    expect(() =>
+      inspectFridayVerifiedRelease({ ...args, weeklyLedger: membership })
+    ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
+    const changedCutoff = structuredClone(args.weeklyLedger);
+    changedCutoff.publishedCutoffEpochMs = cutoff - 1;
+    expect(() =>
+      inspectFridayVerifiedRelease({ ...args, weeklyLedger: changedCutoff })
+    ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
+    expect(() =>
+      inspectFridayVerifiedRelease({ ...args, candidate: Buffer.from("{}") })
+    ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
+    expect(() =>
+      inspectFridayVerifiedRelease({
+        ...args,
+        store: { ...store, ref: "refs/heads/not-production" },
+      })
+    ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
+    expect(() =>
+      inspectFridayVerifiedRelease({
+        ...args,
+        store: {
+          ...store,
+          readAt: () => {
+            throw new Error("synthetic missing ancestor");
+          },
+        },
+      })
+    ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
+    expect(() =>
+      inspectFridayVerifiedRelease({
+        ...args,
+        store: { ...store, read: () => f.store.readAt(f.deployedHead) },
+      })
+    ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
+    expect(append).not.toHaveBeenCalled();
+    expect(f.store.read().head).toBe(beforeHead);
+    expect(readFileSync(f.weeklyPath)).toEqual(beforeWeekly);
+    expect(f.journal.loadOwned(completed.runId, f.lease)).toEqual(beforeState);
+  }, 90_000);
   it("reconstructs an accepted acknowledgement intent from canonical history with its original bytes, digest and timestamp", async () => {
     const f = fixture(),
       before = readFileSync(f.weeklyPath);

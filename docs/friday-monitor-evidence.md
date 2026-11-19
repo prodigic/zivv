@@ -8,3 +8,15 @@ The monitor planner creates a deduplication key and a fixed notice payload from 
 - Repeated evidence for the same edition, notice kind, and due time produces the same payload and key. The payload contains only those fields and a schema version.
 
 The planner leaves `weekly:run-import` and the manual acquisition and publication path unchanged. It needs an authenticated evidence adapter, a durable notification store and an independent watcher before use. Delivery also needs private credentials and a way to reconcile a send whose result is unknown. Successful-release notices require separate live-and-recorded publication evidence.
+
+A separate verified-release inspection prepares evidence for one success notice
+per edition. It checks the native acknowledgement at its canonical control
+ancestor, the exact candidate and its live verification, and the matching
+published cutoff and membership in the weekly ledger. Current production control
+must be idle on that release. During another rollout, or after rollback or a
+newer publication, the inspector refuses to announce a stale release.
+
+The inspection returns the verified live link, exact count of additions, and
+edition-scoped deduplication key. It performs no promotion append, ledger write,
+or send. A later adapter must still attach the relevant coverage gaps and
+reconcile delivery.
