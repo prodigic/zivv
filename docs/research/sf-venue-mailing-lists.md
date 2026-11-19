@@ -4,7 +4,7 @@
 
 The audit covers **162 San Francisco venue records** with at least one confirmed or sold-out show dated in calendar year 2026. The November 13 Zivv export lists **2,441 qualifying shows** across those records. This includes past shows and shows scheduled through December 31. The subscription totals count each shared mailing list once.
 
-**Last inbox check:** November 18, 2026 at 9:00 a.m. Pacific. Rechecked alias confirmations and the inbox; no new messages or confirmation status changes.
+**Last inbox check:** November 18, 2026 at 9:00 p.m. Pacific. Rechecked alias confirmations; two venue newsletters were filed under mailers. No confirmation status changed.
 
 **Inbox monitoring:** 9 a.m. and 9 p.m. Pacific in the dedicated SF venue mailing-list confirmations chat. The monitor updates this summary after each successful check and updates venue rows when their status changes. Confirmation links and message identifiers stay in Gmail.
 
