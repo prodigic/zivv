@@ -298,3 +298,74 @@ it("refuses to upgrade or reopen a corrupted versioned schema", () => {
     "INVALID_FRIDAY_NOTICE_OUTBOX"
   );
 });
+
+it("preserves pending and ambiguous alert claims through the coverage upgrade", () => {
+  const { path, store } = fixture();
+  store.enablePublicationNotices();
+  const pending = store.record(evaluation())!;
+  const other = store.record({
+    ...evaluation(),
+    editionId: "2026-10-23",
+    nowEpochMs: due,
+    evidence: {
+      kind: "independent-watchdog",
+      status: "not-started",
+      expectedStartEpochMs: due,
+      observedAtEpochMs: due,
+    },
+  })!;
+  const claimed = store.claim(other.notice.key)!;
+  store.enablePublicationCoverage();
+  store.enablePublicationCoverage();
+  const reopened = new FridayNoticeOutbox(open(path));
+  expect(reopened.inspect(pending.notice.key)).toEqual(pending);
+  expect(reopened.inspect(other.notice.key)).toEqual(claimed);
+  expect(reopened.claim(other.notice.key)).toBeNull();
+  expect(
+    reopened.confirmSent(other.notice.key, claimed.attemptId!, receipt)
+  ).toEqual({ ...claimed, status: "sent", receiptSha256: receipt });
+  expect(reopened.claim(pending.notice.key)).toMatchObject({
+    status: "delivery-unknown",
+    notice: pending.notice,
+  });
+});
+
+it("refuses a coverage-bearing legacy publication row before upgrading", () => {
+  const { db, store } = fixture();
+  store.enablePublicationNotices();
+  const key = "friday/2026-10-30/published";
+  const json = JSON.stringify({
+    status: "verified-release",
+    editionId: "2026-10-30",
+    liveUrl: "https://www.prodigic.com/zivv/",
+    addedEventCount: 1,
+    candidateId: "a".repeat(64),
+    verificationReceiptId: "b".repeat(64),
+    acknowledgementId: "c".repeat(64),
+    releaseId: "d".repeat(64),
+    deduplicationKey: key,
+    coverage: {
+      missingShowArtwork: 1,
+      distinctArtists: 1,
+      artistsWithoutLinks: 1,
+      artistsWithoutReviews: 1,
+      distinctVenues: 1,
+      venuesWithoutMapLocation: 1,
+    },
+  });
+  db.prepare(
+    "INSERT INTO friday_publication_notice(key, notice_json, status) VALUES (?, ?, 'pending')"
+  ).run(key, json);
+  expect(() => store.inspectPublication(key)).toThrow(
+    "INVALID_FRIDAY_NOTICE_OUTBOX"
+  );
+  expect(() => store.enablePublicationCoverage()).toThrow(
+    "INVALID_FRIDAY_NOTICE_OUTBOX"
+  );
+  expect(db.prepare("PRAGMA user_version").get()?.user_version).toBe(2);
+  expect(
+    db
+      .prepare("SELECT notice_json FROM friday_publication_notice WHERE key=?")
+      .get(key)?.notice_json
+  ).toBe(json);
+});
