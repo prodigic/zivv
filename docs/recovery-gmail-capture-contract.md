@@ -537,7 +537,8 @@ retirement receipt, prepared host, both predecessor selectors and the signed
 second admission. It also binds the third source, runtime and original intent
 time. A replay verifies the versioned signature first and then re-derives the
 entire current plan. It returns the exact retained bytes. Keep the signed
-intent private. No installer or third writer consumes this format yet.
+intent private. The retained installer consumes only this signed admission. Its
+scope stops at the fixed admission evidence and grants no third writer access.
 
 The installed-intent observer authenticates the v3 format before examining the
 exact third run directory and its admission stage. It binds the archive,
@@ -555,3 +556,16 @@ the installed third admission separately. Authentication reads the original
 signature first and compares every field against the current host. This
 checkpoint prepares detached evidence and does not install a baseline or
 start an import.
+
+The separate installed-start observer authenticates the detached baseline and
+recognizes only its fixed target and staging directory. Empty staging, a
+flushed candidate and the exact two-link transition report staging. A settled
+file reports installed. Before replaying the two-load proof, the observer
+checks that removing only this baseline prefix yields the entire signed
+pre-effect inventory. The prior inspection and installer continue to refuse
+the extra files. This observation opens no writer and changes no files or SQL.
+
+The Windows operator fixture exercised all four start states, a changed signed
+baseline and an unexpected stage file. It verified that the two earlier loads,
+the released generation-three journal and its exact encrypted backup remained
+intact. Generation-four execution and post-effect replay require further proof.

@@ -3,7 +3,10 @@ import {
   verifySelectedThirdLoadExecutionBaseline,
   type SelectedThirdLoadExecutionBaseline,
 } from "./recovery-gmail-execution-baseline.js";
-import { readThirdSelectedLoadAdmissionForInstallation } from "./recovery-gmail-selected-load-third-admission.js";
+import {
+  readThirdSelectedLoadAdmissionForInstallation,
+  readThirdSelectedLoadAdmissionWithStartBaseline,
+} from "./recovery-gmail-selected-load-third-admission.js";
 import type { RecoveryGmailThirdSelectedLoadFrameInput } from "./recovery-gmail-selected-load-third-framing.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
@@ -14,20 +17,29 @@ function invalid(): never {
 
 function observeStart(
   input: RecoveryGmailThirdSelectedLoadFrameInput,
-  startedAtEpochMs: number
-): SelectedThirdLoadExecutionBaseline {
+  startedAtEpochMs: number,
+  executionBaseline?: Buffer
+) {
   if (
     !Number.isSafeInteger(startedAtEpochMs) ||
     startedAtEpochMs < 0 ||
     startedAtEpochMs > Date.now()
   )
     return invalid();
-  const { record, effective, presence, tail } =
-    readThirdSelectedLoadAdmissionForInstallation(
-      input.family,
-      input.third,
-      input.admission
-    );
+  const prefix =
+    executionBaseline === undefined
+      ? readThirdSelectedLoadAdmissionForInstallation(
+          input.family,
+          input.third,
+          input.admission
+        )
+      : readThirdSelectedLoadAdmissionWithStartBaseline(
+          input.family,
+          input.third,
+          input.admission,
+          executionBaseline
+        );
+  const { record, effective, presence, tail, thirdStartPresence } = prefix;
   if (
     presence !== "installed" ||
     effective.catalog.generation !== 3 ||
@@ -35,7 +47,7 @@ function observeStart(
   )
     return invalid();
 
-  return {
+  const baseline: SelectedThirdLoadExecutionBaseline = {
     runId: record.runId,
     admissionSha256: sha256(tail.bytes),
     completedPrefixSha256: record.completedPrefixSha256,
@@ -48,6 +60,7 @@ function observeStart(
     startedAtEpochMs,
     entries: effective.entries,
   };
+  return { baseline, presence: thirdStartPresence };
 }
 
 /** Bind a detached pre-effect baseline to the exact installed third admission.
@@ -57,9 +70,9 @@ export function prepareThirdSelectedLoadExecutionBaseline(
   startedAtEpochMs: number
 ): Buffer {
   try {
-    const evidence = observeStart(input, startedAtEpochMs);
+    const { baseline } = observeStart(input, startedAtEpochMs);
     return signSelectedThirdLoadExecutionBaseline(
-      evidence,
+      baseline,
       input.family.prior.recoveryKey
     );
   } catch {
@@ -77,9 +90,44 @@ export function authenticateThirdSelectedLoadExecutionBaseline(
       bytes,
       input.family.prior.recoveryKey
     );
-    const observed = observeStart(input, retained.startedAtEpochMs);
+    const { baseline: observed } = observeStart(
+      input,
+      retained.startedAtEpochMs
+    );
     if (canonicalJson(retained) !== canonicalJson(observed)) return invalid();
     return observed;
+  } catch {
+    return invalid();
+  }
+}
+
+/** Verify an exact start tail without installing it or opening a writer. */
+export function inspectInstalledThirdSelectedLoadExecutionBaseline(
+  input: RecoveryGmailThirdSelectedLoadFrameInput,
+  bytes: Buffer
+) {
+  try {
+    const retained = verifySelectedThirdLoadExecutionBaseline(
+      bytes,
+      input.family.prior.recoveryKey
+    );
+    const { baseline, presence } = observeStart(
+      input,
+      retained.startedAtEpochMs,
+      bytes
+    );
+    if (!presence || canonicalJson(retained) !== canonicalJson(baseline))
+      return invalid();
+    return {
+      status: "third-load-start-observed" as const,
+      presence,
+      runId: baseline.runId,
+      executionBaselineSha256: sha256(bytes),
+      activationAllowed: false as const,
+      captureAllowed: false as const,
+      loadAllowed: false as const,
+      freezeAllowed: false as const,
+    };
   } catch {
     return invalid();
   }
