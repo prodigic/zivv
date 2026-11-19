@@ -70,6 +70,13 @@ export interface RecoveryGmailCaptureRuntimeFixture {
       ReturnType<typeof createAcknowledgedRecoveryRemoteFixture>
     >;
   };
+  latePending?: {
+    batchId: string;
+    editionId: string;
+    messageId: "e2";
+    receiptId: string;
+    firstSavedAtEpochMs: number;
+  };
   composition?: {
     originalBatchId: string;
     priorBatchId: string;
@@ -221,6 +228,7 @@ export async function createRecoveryGmailCaptureRuntimeFixture(
   options: {
     reviewSecondMessage?: boolean;
     composedBatches?: boolean;
+    latePendingEdition?: boolean;
     retainPublishedOriginalForPreflight?: boolean;
     invalidPendingMime?: boolean;
     withoutSelectedLoadInspector?: boolean;
@@ -642,6 +650,83 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
         throw new Error("Unexpected original/prospective receipt identity");
     }
 
+    let latePending: RecoveryGmailCaptureRuntimeFixture["latePending"];
+    if (options.latePendingEdition) {
+      // Use an actual old Friday and actual current acquisition time. The
+      // handoff must durably save the signed batch before ordinary intake
+      // refuses its new admission; no clock or journal writer is mocked here.
+      const lateEdition = nextFriday(
+        Date.parse(editionId + "T12:00:00Z") - 14 * 86_400_000
+      );
+      const receivedAt = Date.parse(lateEdition.editionId + "T20:00:00Z");
+      const lateMessage = fixtureMessage(
+        "e2",
+        receivedAt,
+        body("late", lateEdition.titleDate)
+      );
+      const started = Date.now();
+      let refused = false;
+      try {
+        await captureSteveGmailWindow({
+          operatorDirectory: operator,
+          expectedAccountId: account,
+          expectedEditionId: lateEdition.editionId,
+          startEpochMs: receivedAt - 1_000,
+          endEpochMs: now,
+          getAccessToken: async () => "synthetic_fixture_token",
+          fetcher: fakeGmail([lateMessage]),
+        });
+      } catch (error) {
+        if (
+          !(error instanceof Error) ||
+          error.message !== "SOURCE_WINDOW_REQUIRES_REVIEW"
+        )
+          throw error;
+        refused = true;
+      }
+      if (!refused) throw new Error("Expected late admission refusal");
+      const batches = readAuthenticatedSteveGmailBatches({
+        operatorDirectory: operator,
+      });
+      const matches = batches.filter(
+        (batch) =>
+          batch.expectedEditionId === lateEdition.editionId &&
+          batch.snapshots.some((snapshot) => snapshot.rawMessage.id === "e2")
+      );
+      if (
+        matches.length !== 1 ||
+        matches[0]!.snapshots.length !== 1 ||
+        matches[0]!.firstSavedAtEpochMs < started ||
+        matches[0]!.firstSavedAtEpochMs > Date.now()
+      )
+        throw new Error("Missing genuine late pending batch");
+      const batch = matches[0]!;
+      const snapshot = batch.snapshots[0]!;
+      const prepared = await prepareSteveEmailCapture({
+        accountId: account,
+        expectedEditionId: lateEdition.editionId,
+        observedAtEpochMs: snapshot.observedAtEpochMs,
+        rawMessage: snapshot.rawMessage,
+        fullMessage: snapshot.fullMessage,
+      });
+      if (
+        listRetainedSteveEmailSources({
+          operatorDirectory: operator,
+          accountId: account,
+          expectedEditionId: lateEdition.editionId,
+        }).length !== 0
+      )
+        throw new Error("Late source unexpectedly admitted");
+      latePending = {
+        batchId: batch.batchId,
+        editionId: lateEdition.editionId,
+        messageId: "e2",
+        receiptId: prepared.receiptId,
+        firstSavedAtEpochMs: batch.firstSavedAtEpochMs,
+      };
+      batchIds.push(batch.batchId);
+    }
+
     if (options.seedAuthorityControls) {
       // Ordinary production journal APIs establish the valid running control
       // before retirement. The retained probe may refuse its next transition;
@@ -727,6 +812,7 @@ if(process.argv[2]==='--version') console.log('11.6.0'); else {
         !options.withoutSelectedLoadFraming,
       sourceReceipts,
       ...(composition ? { composition } : {}),
+      ...(latePending ? { latePending } : {}),
       ...(retainedOriginal ? { retainedOriginal } : {}),
       ...(nextReady ? { nextReady } : {}),
       ...(thirdReady ? { thirdReady } : {}),

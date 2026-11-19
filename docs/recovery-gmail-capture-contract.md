@@ -515,3 +515,17 @@ If a retry worker stops with one exact signed intent stage, inspection retains
 the original expiry and fence. The guarded installer rechecks the intent and
 stage identities before adoption or unlink. It permits disappearance of that
 stage only when its exact file remains installed at the canonical intent path.
+
+### Exercise correction and late-source refusal
+
+The three-batch deleted-host rehearsal rejects a ready predecessor from a
+different edition during parent-side admission inspection. The ordinary
+launcher then accepts the matching correction and replays both previously
+completed batches. The refusal preserves the predecessor bytes and leaves the
+new batch unadmitted.
+
+A separate deleted-host rehearsal retains a signed acquisition made after its
+edition's Monday review boundary. The retained worker returns
+`SOURCE_WINDOW_REQUIRES_REVIEW` for the initial capture and the retry. The
+attempt keeps one exact partial admission and releases its lease. The source
+stays pending and the previous intake, run and artifact records stay exact.
