@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { isAbsolute } from "node:path";
 import { captureSteveGmailWindowWithWindowsCredentials } from "../dist/lib/ingestion/steve-gmail-credential-poll.js";
+import { pollFridayGmailWithWindowsCredentials } from "../dist/lib/ingestion/steve-gmail-friday-poll.js";
 import { parseCutoffEpochMs } from "../dist/lib/ingestion/weekly.js";
 import { provisionWindowsGmailCredentials } from "../dist/lib/ingestion/windows-gmail-credentials.js";
 
@@ -68,27 +69,37 @@ try {
     if (!isAbsolute(directory)) throw Error("GMAIL_CREDENTIAL_STORAGE_UNSAFE");
     await provision(directory);
     console.log(JSON.stringify({ status: "credential-provisioned" }));
-  } else if (command === "poll") {
+  } else if (command === "poll" || command === "poll-friday") {
     const get = options(args, [
       "--credential-dir",
       "--operator-dir",
       "--account",
       "--edition",
       "--from",
-      "--until",
+      ...(command === "poll" ? ["--until"] : []),
     ]);
     const credentialDirectory = get("--credential-dir");
     const operatorDirectory = get("--operator-dir");
     if (!isAbsolute(credentialDirectory) || !isAbsolute(operatorDirectory))
       throw Error("INVALID_GMAIL_ACQUISITION_ARGUMENTS");
-    const result = await captureSteveGmailWindowWithWindowsCredentials({
+    const common = {
       credentialDirectory,
       operatorDirectory,
       expectedAccountId: get("--account"),
       expectedEditionId: get("--edition"),
-      startEpochMs: utcInstant(get("--from")),
-      endEpochMs: utcInstant(get("--until")),
-    });
+    };
+    const startEpochMs = utcInstant(get("--from"));
+    const result =
+      command === "poll"
+        ? await captureSteveGmailWindowWithWindowsCredentials({
+            ...common,
+            startEpochMs,
+            endEpochMs: utcInstant(get("--until")),
+          })
+        : await pollFridayGmailWithWindowsCredentials({
+            ...common,
+            scanStartsAtEpochMs: startEpochMs,
+          });
     console.log(JSON.stringify(result));
   } else {
     throw Error("INVALID_GMAIL_ACQUISITION_ARGUMENTS");
