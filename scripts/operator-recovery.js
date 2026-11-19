@@ -65,6 +65,7 @@ const nextSelectedLoadCommands = [
   "install-next-selected-load",
   "execute-next-selected-load",
   "resume-next-selected-load",
+  "inspect-composed-gmail-obligations",
 ];
 
 const selectedLoadCommands = [
@@ -172,6 +173,22 @@ async function runSelectedLoadCommand(command, input, options) {
       );
     const admission = privateInput(options["admission-file"], 64 * 1024);
     try {
+      if (command === "inspect-composed-gmail-obligations") {
+        const cutoffEpochMs = Date.parse(options.cutoff);
+        if (
+          !Number.isSafeInteger(cutoffEpochMs) ||
+          new Date(cutoffEpochMs).toISOString() !== options.cutoff
+        )
+          throw Error("INVALID_RECOVERY_GMAIL_CUTOFF");
+        const { inspectComposedRecoveryGmailObligations } =
+          await import("../dist/lib/ingestion/recovery-gmail-inspector.js");
+        return inspectComposedRecoveryGmailObligations({
+          prior: selected,
+          next,
+          admission,
+          cutoffEpochMs,
+        });
+      }
       const { runOperatorRecoveryGmailNextSelectedLoad } =
         await import("../dist/lib/ingestion/recovery-gmail-selected-load-launcher.js");
       const operation =
@@ -247,6 +264,7 @@ try {
         "selector-file",
         "next-selector-file",
         "admission-file",
+        "cutoff",
       ].includes(key) ||
       Object.hasOwn(options, key) ||
       !value ||
@@ -329,6 +347,10 @@ try {
                               ...(command === "inspect-next-selected-load"
                                 ? []
                                 : ["admission-file"]),
+                              ...(command ===
+                              "inspect-composed-gmail-obligations"
+                                ? ["cutoff"]
+                                : []),
                             ]
                           : []),
                       ]

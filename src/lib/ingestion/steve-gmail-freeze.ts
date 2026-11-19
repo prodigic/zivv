@@ -6,6 +6,28 @@ import {
 } from "./steve-email-intake.js";
 import { sha256 } from "./steve-preflight.js";
 import type { WeeklyRunJournal } from "./weekly-run-journal.js";
+import type { WeeklyRunState } from "./weekly-run-state.js";
+
+type SteveGmailLoadIdentity = {
+  editionId: string;
+  deliveryId: string;
+  sourceSha256: string;
+  firstObservedAtEpochMs: number;
+};
+
+/** Exact succeeded load evidence used by both intake gates and recovery reports. */
+export function matchesSuccessfulSteveGmailLoad(
+  run: WeeklyRunState,
+  receipt: SteveGmailLoadIdentity
+): boolean {
+  return (
+    run.source.editionId === receipt.editionId &&
+    run.source.deliveryId === receipt.deliveryId &&
+    run.source.rawSha256 === receipt.sourceSha256 &&
+    run.source.importObservedAtEpochMs === receipt.firstObservedAtEpochMs &&
+    run.stages.find((stage) => stage.stage === "load")?.status === "succeeded"
+  );
+}
 
 const scope = "prodigic/zivv/production";
 class SteveGmailFreezeError extends Error {
@@ -99,16 +121,7 @@ export function assertNoPendingSteveGmailBatches(input: {
         if (
           !input.journal
             .findDelivery(scope, receipt.editionId, receipt.deliveryId)
-            .some(
-              (run) =>
-                run.source.editionId === receipt.editionId &&
-                run.source.deliveryId === receipt.deliveryId &&
-                run.source.rawSha256 === receipt.sourceSha256 &&
-                run.source.importObservedAtEpochMs ===
-                  receipt.firstObservedAtEpochMs &&
-                run.stages.find((stage) => stage.stage === "load")?.status ===
-                  "succeeded"
-            )
+            .some((run) => matchesSuccessfulSteveGmailLoad(run, receipt))
         )
           fail();
       }

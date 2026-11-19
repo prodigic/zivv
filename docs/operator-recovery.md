@@ -243,3 +243,11 @@ receipt, prepared root and relocated npm arguments as the first load.
 
 Use one stable admission path for each selected successor. A signed admission
 remains private alongside the other recovery inputs.
+
+After the first and second results are independently verified, use
+`inspect-composed-gmail-obligations` with both selectors, the same private
+admission, and a canonical UTC `--cutoff` such as
+`2026-11-20T20:00:00.000Z`. The report lists the authenticated batches,
+redacted message identities, matching successful loads, and the number of
+batches saved before the cutoff with unresolved messages. The prepared
+installation stays quarantined, including when the count is zero.
