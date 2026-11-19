@@ -531,3 +531,12 @@ The original and second-load formats remain valid. A future third execution
 needs its own authenticated baseline and evidence for interruption, replay and
 settlement after generation four. The inspector keeps the replacement
 quarantined and grants no capture, load, freeze or activation permission.
+
+The settled-history reader reconstructs a prior catalog and released journal
+from the signed completion intent, manifest, history chunks and exact
+installed result. It checks the named production run and its loaded ledger
+revision. The current shared backup is a separate input to a live proof. The
+rehearsal reads the second load's original encrypted catalog and journal from
+its history while withholding the live backup path from the history reader.
+A future third writer still needs to prove its own live delta and any
+predecessor resume lineage.

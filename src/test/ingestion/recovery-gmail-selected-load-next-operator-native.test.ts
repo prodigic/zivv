@@ -17,6 +17,11 @@ import { readWeeklyJournalRecoverySnapshotReadOnly } from "../../lib/ingestion/w
 import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
 import { inspectThirdRecoveryGmailSelectedLoad } from "../../lib/ingestion/recovery-gmail-selected-load-third-inspection.js";
 import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-next-replay.js";
+import {
+  readSettledSelectedLoadHistory,
+  selectedLoadBackupPath,
+} from "../../lib/ingestion/recovery-gmail-selected-load-historical-predecessor.js";
+import { readSelectedLoadEntry } from "../../lib/ingestion/recovery-gmail-selected-load-physical-reader.js";
 
 vi.setConfig({ testTimeout: 1_200_000 });
 
@@ -318,6 +323,75 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
     expect(completed.report.lease.status).toBe("released");
     const digest = (value: string | Buffer) =>
       createHash("sha256").update(value).digest("hex");
+    const identity = {
+      runId: completed.report.runId,
+      admissionSha256: completed.report.admissionSha256,
+      executionBaselineSha256:
+        completed.completionIdentity!.executionBaselineSha256,
+      priorFamilySha256: completed.completionIdentity!.priorFamilySha256,
+      ledgerRevision: completed.report.ledgerRevision,
+      generation: completed.report.generation,
+    };
+    // The live backup may already belong to a later generation. History must
+    // reconstruct without consulting it, while reading every retained entry
+    // through the stable physical reader.
+    const historyEntries = completed.physicalEntries.filter(
+      (entry) => entry.path !== selectedLoadBackupPath
+    );
+    const entryMap = new Map(
+      historyEntries.map((entry) => [entry.path, entry])
+    );
+    const read = (path: string, limit: number) =>
+      readSelectedLoadEntry(root, entryMap.get(path), limit);
+    const historyInput = {
+      root,
+      entries: historyEntries,
+      read,
+      key: fixture.input.recoveryKey,
+      identity,
+    };
+    const history = readSettledSelectedLoadHistory(historyInput);
+    expect(history.catalog).toEqual(catalog);
+    expect(history.journal).toEqual(journal);
+    expect(history.snapshot).toEqual(
+      readFileSync(join(root, selectedLoadBackupPath))
+    );
+    expect(history.resultSha256).toBe(completed.report.resultSha256);
+    expect(history.historyManifestSha256).toBe(
+      completed.completionIdentity!.historyManifestSha256
+    );
+    expect(history.loadAllowed).toBe(false);
+    expect(() =>
+      readSettledSelectedLoadHistory({
+        ...historyInput,
+        identity: { ...identity, ledgerRevision: "f".repeat(64) },
+      })
+    ).toThrow();
+    const resultPath = `recovery-gmail-load/${identity.runId}/load-result.json`;
+    const missingResultEntries = historyEntries.filter(
+      (entry) => entry.path !== resultPath
+    );
+    expect(() =>
+      readSettledSelectedLoadHistory({
+        ...historyInput,
+        entries: missingResultEntries,
+      })
+    ).toThrow();
+    const historyPath = historyEntries.find(
+      (entry) =>
+        entry.kind === "file" &&
+        entry.path.startsWith(`recovery-gmail-load/${identity.runId}/history-`)
+    )!.path;
+    expect(() =>
+      readSettledSelectedLoadHistory({
+        ...historyInput,
+        read: (path, limit) => {
+          const value = read(path, limit);
+          if (path === historyPath) value[0] ^= 1;
+          return value;
+        },
+      })
+    ).toThrow();
     const expectedPrefix = digest(
       canonicalJson({
         domain: "zivv-recovery-gmail-selected-load-prefix/v1",
