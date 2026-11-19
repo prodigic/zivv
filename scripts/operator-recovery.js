@@ -8,7 +8,15 @@ import {
   readFileSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, resolve } from "node:path";
+import {
+  basename,
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
+} from "node:path";
 import {
   captureOperatorRecoveryCheckpoint,
   decryptOperatorRecovery,
@@ -30,6 +38,8 @@ import { resumeOperatorRecoveryVerified } from "../dist/lib/ingestion/recovery-v
 import { recaptureOperatorRecoveryFrozenResult } from "../dist/lib/ingestion/recovery-result-recapture.js";
 import {
   loadBackupKey,
+  inspectRecoveryInstalledFile,
+  installRecoveryIntent,
   secureOperatorDirectory,
 } from "../dist/lib/ingestion/encrypted-backup.js";
 import { projectLedgerLocation } from "../dist/lib/ingestion/store-location.js";
@@ -49,7 +59,16 @@ function privateInput(path, limit) {
   return readFileSync(absolute);
 }
 
+const nextSelectedLoadCommands = [
+  "inspect-next-selected-load",
+  "prepare-next-selected-load",
+  "install-next-selected-load",
+  "execute-next-selected-load",
+  "resume-next-selected-load",
+];
+
 const selectedLoadCommands = [
+  ...nextSelectedLoadCommands,
   "inspect-selected-load",
   "install-selected-load",
   "execute-selected-load",
@@ -57,7 +76,7 @@ const selectedLoadCommands = [
   "inspect-selected-load-interruption",
 ];
 
-async function runSelectedLoadCommand(command, input, selectorFile) {
+async function readSelectedLoadSelector(selectorFile) {
   const { copyRecoveryGmailSelectedReceiptSelector } =
     await import("../dist/lib/ingestion/recovery-gmail-capture-admission-proof.js");
   const { canonicalJson } =
@@ -76,7 +95,102 @@ async function runSelectedLoadCommand(command, input, selectorFile) {
   } catch {
     throw Error("INVALID_RECOVERY_GMAIL_SELECTED_LOAD_SELECTOR");
   }
-  const selected = { ...input, selector };
+  return selector;
+}
+
+function safeSelectedLoadError(error) {
+  if (
+    error instanceof Error &&
+    error.message === "RECOVERY_GMAIL_SELECTED_LOAD_EXECUTION_FAILED" &&
+    error.cause instanceof Error &&
+    /^[A-Z][A-Z0-9_]{2,79}$/.test(error.cause.message)
+  )
+    return Error(error.cause.message);
+  return error;
+}
+
+async function prepareNextSelectedLoadAdmission(prior, next, requested) {
+  const requestedPath = resolve(requested);
+  const parent = resolvePrivateCandidateDirectory(dirname(requestedPath));
+  const target = join(parent, basename(requestedPath));
+  const prepared = resolvePrivateCandidateDirectory(prior.destination);
+  const relativeTarget = relative(prepared, target);
+  if (
+    !relativeTarget ||
+    (!relativeTarget.startsWith(".." + sep) && !isAbsolute(relativeTarget))
+  )
+    throw Error("UNSAFE_RECOVERY_ADMISSION_OUTPUT");
+  const stage = target + "-stage";
+  const {
+    createRecoveryGmailNextSelectedLoadAdmission,
+    readNextSelectedLoadAdmissionForInstallation,
+  } =
+    await import("../dist/lib/ingestion/recovery-gmail-selected-load-next-admission.js");
+  const { sha256 } = await import("../dist/lib/ingestion/steve-preflight.js");
+  const saved = inspectRecoveryInstalledFile(target, stage, 64 * 1024);
+  const bytes =
+    saved.target?.bytes ??
+    saved.candidate?.bytes ??
+    createRecoveryGmailNextSelectedLoadAdmission(prior, next, Date.now());
+  const { record } = readNextSelectedLoadAdmissionForInstallation(
+    prior,
+    next,
+    bytes
+  );
+  installRecoveryIntent(target, bytes, stage);
+  const observed = inspectRecoveryInstalledFile(target, stage, 64 * 1024);
+  if (!observed.target?.bytes.equals(bytes) || observed.candidate)
+    throw Error("RECOVERY_GMAIL_NEXT_SELECTED_LOAD_ADMISSION_MISMATCH");
+  return {
+    status: "next-load-admission-prepared",
+    runId: record.runId,
+    priorLoadFamilySha256: record.priorLoadFamilySha256,
+    admissionSha256: sha256(bytes),
+    activationAllowed: false,
+    captureAllowed: false,
+    loadAllowed: false,
+  };
+}
+
+async function runSelectedLoadCommand(command, input, options) {
+  const selected = {
+    ...input,
+    selector: await readSelectedLoadSelector(options["selector-file"]),
+  };
+  if (nextSelectedLoadCommands.includes(command)) {
+    const next = await readSelectedLoadSelector(options["next-selector-file"]);
+    if (command === "inspect-next-selected-load") {
+      const { inspectNextRecoveryGmailSelectedLoad } =
+        await import("../dist/lib/ingestion/recovery-gmail-selected-load-next-inspection.js");
+      return inspectNextRecoveryGmailSelectedLoad(selected, next);
+    }
+    if (command === "prepare-next-selected-load")
+      return prepareNextSelectedLoadAdmission(
+        selected,
+        next,
+        options["admission-file"]
+      );
+    const admission = privateInput(options["admission-file"], 64 * 1024);
+    try {
+      const { runOperatorRecoveryGmailNextSelectedLoad } =
+        await import("../dist/lib/ingestion/recovery-gmail-selected-load-launcher.js");
+      const operation =
+        command === "install-next-selected-load"
+          ? "install"
+          : command === "execute-next-selected-load"
+            ? "execute"
+            : "resume";
+      return await runOperatorRecoveryGmailNextSelectedLoad(operation, {
+        prior: selected,
+        next,
+        admission,
+      });
+    } catch (error) {
+      throw safeSelectedLoadError(error);
+    } finally {
+      admission.fill(0);
+    }
+  }
   if (
     command === "install-selected-load" ||
     command === "execute-selected-load" ||
@@ -95,14 +209,7 @@ async function runSelectedLoadCommand(command, input, selectorFile) {
         );
       return await launcher.resumeOperatorRecoveryGmailSelectedLoad(selected);
     } catch (error) {
-      if (
-        error instanceof Error &&
-        error.message === "RECOVERY_GMAIL_SELECTED_LOAD_EXECUTION_FAILED" &&
-        error.cause instanceof Error &&
-        /^[A-Z][A-Z0-9_]{2,79}$/.test(error.cause.message)
-      )
-        throw Error(error.cause.message);
-      throw error;
+      throw safeSelectedLoadError(error);
     }
   }
   if (command === "inspect-selected-load-interruption") {
@@ -138,6 +245,8 @@ try {
         "batch-id",
         "corrections-file",
         "selector-file",
+        "next-selector-file",
+        "admission-file",
       ].includes(key) ||
       Object.hasOwn(options, key) ||
       !value ||
@@ -214,6 +323,14 @@ try {
                         "destination",
                         "npm-cli",
                         "selector-file",
+                        ...(nextSelectedLoadCommands.includes(command)
+                          ? [
+                              "next-selector-file",
+                              ...(command === "inspect-next-selected-load"
+                                ? []
+                                : ["admission-file"]),
+                            ]
+                          : []),
                       ]
                     : [];
   if (
@@ -272,7 +389,7 @@ try {
             destination: resolve(options.destination),
             npmCli: resolve(options["npm-cli"]),
           },
-          options["selector-file"]
+          options
         );
       } finally {
         key.fill(0);

@@ -219,5 +219,27 @@ result and released lease before reporting the first load as complete.
 
 A stopped worker can leave a durable attempt. Inspect that attempt before
 retrying after an unconfirmed stop or a lost response. Keep the installation
-quarantined. A second selected receipt requires its own signed successor
-admission and launcher.
+quarantined. A second selected receipt requires its own signed successor admission.
+
+### Load a distinct second receipt
+
+Keep the first selector file as the predecessor and create a second private
+selector for the next ready receipt. Use the same capsule, key, retirement
+receipt, prepared root and relocated npm arguments as the first load.
+
+- `inspect-next-selected-load` takes the first `--selector-file` and the
+  `--next-selector-file`. It verifies the released first load and the distinct
+  second selection.
+- `prepare-next-selected-load` also takes `--admission-file`, the path to a
+  private output file outside the prepared tree. It writes one authenticated
+  predecessor-bound admission. Repeating preparation before execution uses
+  the exact previously signed bytes.
+- `install-next-selected-load` uses both selectors and the same admission file.
+  It verifies and installs the signed intent under the retained writer guards.
+- `execute-next-selected-load` and `resume-next-selected-load` use that installed
+  admission. Preserve the same file after interruption. The host verifies the
+  signed result, full predecessor and successor history, catalog, journal and
+  released lease before reporting completion.
+
+Use one stable admission path for each selected successor. A signed admission
+remains private alongside the other recovery inputs.
