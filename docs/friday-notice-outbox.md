@@ -25,3 +25,22 @@ must bind the exact key, attempt ID, and digest before the outbox records it.
 The adapter has no concrete mail provider. Its isolated rehearsal simulates an
 accepted delivery with a lost reply, reopens the database, and reconciles the
 existing delivery exactly once.
+
+### Gmail provider rehearsal
+
+The Gmail adapter takes explicitly configured sender and recipient addresses,
+a separate access-token supplier, and a fetch implementation. The outbox
+prepares the authenticated sender before acquiring its durable claim. The
+adapter encodes the bounded notice as MIME and uses the claim to derive a stable
+RFC Message-ID and notice marker. [Gmail sending](https://developers.google.com/workspace/gmail/api/guides/sending)
+
+After Gmail accepts the request, the adapter checks the Sent label, sender,
+recipient, subject, Message-ID, and marker. For an uncertain send, it searches
+Sent by the exact Message-ID and verifies one matching result. Missing,
+ambiguous, or inconsistent evidence leaves the claim held.
+[Gmail message search](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list)
+
+The acquisition credential stays read-only. A reviewed notification credential
+needs separate send and Sent-read access. The tests use only synthetic HTTP and
+disposable databases. Production credential setup, address review and delivery
+rehearsal remain prerequisites.
