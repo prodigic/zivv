@@ -80,7 +80,7 @@ function validateEntries(entries: RecoveryRuntimeEntry[]): void {
     } else fail();
   }
 }
-function signature(body: string, key: Buffer, version: 1 | 2): string {
+function signature(body: string, key: Buffer, version: 1 | 2 | 3): string {
   if (!Buffer.isBuffer(key) || key.length !== 32) fail();
   return createHmac("sha256", key)
     .update("zivv-selected-load-execution-baseline/v" + version + "\0")
@@ -96,7 +96,7 @@ export function signSelectedLoadExecutionBaseline(
   return encode(baseline, key, 1);
 }
 
-function encode(baseline: object, key: Buffer, version: 1 | 2): Buffer {
+function encode(baseline: object, key: Buffer, version: 1 | 2 | 3): Buffer {
   const payload = {
     kind: "zivv-selected-load-execution-baseline",
     version,
@@ -122,7 +122,7 @@ export function verifySelectedLoadExecutionBaseline(
   return structuredClone(baseline);
 }
 
-function read(bytes: Buffer, key: Buffer, expectedVersion: 1 | 2) {
+function read(bytes: Buffer, key: Buffer, expectedVersion: 1 | 2 | 3) {
   if (!Buffer.isBuffer(bytes) || bytes.length > 32 * 1024 * 1024) fail();
   let value: Record<string, unknown>;
   try {
@@ -142,6 +142,7 @@ function read(bytes: Buffer, key: Buffer, expectedVersion: 1 | 2) {
     kind !== "zivv-selected-load-execution-baseline" ||
     version !== expectedVersion ||
     typeof saved !== "string" ||
+    (expectedVersion === 3 && saved.length !== 64) ||
     !/^[a-f0-9]{64}$/.test(saved)
   )
     fail();
@@ -221,5 +222,105 @@ export function verifySelectedNextLoadExecutionBaseline(
     2
   ) as unknown as SelectedNextLoadExecutionBaseline;
   validateNext(baseline);
+  return structuredClone(baseline);
+}
+
+export interface SelectedThirdLoadExecutionBaseline {
+  runId: string;
+  admissionSha256: string;
+  completedPrefixSha256: string;
+  preparedReceiptSha256: string;
+  catalogSha256: string;
+  journalSha256: string;
+  predecessorInventorySha256: string;
+  physicalSnapshotSha256: string;
+  generation: 3;
+  startedAtEpochMs: number;
+  entries: RecoveryRuntimeEntry[];
+}
+
+function validateThird(baseline: SelectedThirdLoadExecutionBaseline): void {
+  const fields = [
+    "runId",
+    "admissionSha256",
+    "completedPrefixSha256",
+    "preparedReceiptSha256",
+    "catalogSha256",
+    "journalSha256",
+    "predecessorInventorySha256",
+    "physicalSnapshotSha256",
+  ] as const;
+  if (
+    !baseline ||
+    Object.keys(baseline).sort().join(",") !==
+      [...fields, "generation", "startedAtEpochMs", "entries"]
+        .sort()
+        .join(",") ||
+    fields.some((field) => {
+      const value = baseline[field];
+      return (
+        typeof value !== "string" ||
+        value.length !== 64 ||
+        !/^[a-f0-9]{64}$/.test(value)
+      );
+    }) ||
+    baseline.generation !== 3 ||
+    !Number.isSafeInteger(baseline.startedAtEpochMs) ||
+    baseline.startedAtEpochMs < 0
+  )
+    return fail();
+  validateEntries(baseline.entries);
+
+  const root = "recovery-gmail-load/" + baseline.runId;
+  const expected = [
+    { path: root, kind: "directory" },
+    { path: root + "/admission.json", kind: "file" },
+    { path: root + "/stages", kind: "directory" },
+    { path: root + "/stages/admission", kind: "directory" },
+  ];
+  const predecessor: RecoveryRuntimeEntry[] = [];
+  const tail: RecoveryRuntimeEntry[] = [];
+  for (const entry of baseline.entries) {
+    if (entry.path === root || entry.path.startsWith(root + "/"))
+      tail.push(entry);
+    else predecessor.push(entry);
+  }
+  const admission = tail.find(({ path }) => path === root + "/admission.json");
+  if (
+    canonicalJson(tail.map(({ path, kind }) => ({ path, kind }))) !==
+      canonicalJson(expected) ||
+    admission?.kind !== "file" ||
+    admission.size < 1 ||
+    admission.size > 65536 ||
+    admission.sha256 !== baseline.admissionSha256 ||
+    sha256(canonicalJson(predecessor)) !==
+      baseline.predecessorInventorySha256 ||
+    sha256(canonicalJson(baseline.entries)) !== baseline.physicalSnapshotSha256
+  )
+    fail();
+}
+
+/** Pin one installed third admission and both verified pre-effect views. */
+export function signSelectedThirdLoadExecutionBaseline(
+  baseline: SelectedThirdLoadExecutionBaseline,
+  key: Buffer
+): Buffer {
+  validateThird(baseline);
+  const bytes = encode(baseline, key, 3);
+  if (bytes.length > 32 * 1024 * 1024) return fail();
+  return bytes;
+}
+
+/** Authenticate the format only. Observing the live state requires separate proof. */
+export function verifySelectedThirdLoadExecutionBaseline(
+  bytes: Buffer,
+  key: Buffer
+): SelectedThirdLoadExecutionBaseline {
+  const baseline = read(
+    bytes,
+    key,
+    3
+  ) as unknown as SelectedThirdLoadExecutionBaseline;
+  validateThird(baseline);
   return structuredClone(baseline);
 }
