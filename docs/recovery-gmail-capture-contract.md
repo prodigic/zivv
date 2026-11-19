@@ -569,3 +569,17 @@ The Windows operator fixture exercised all four start states, a changed signed
 baseline and an unexpected stage file. It verified that the two earlier loads,
 the released generation-three journal and its exact encrypted backup remained
 intact. Generation-four execution and post-effect replay require further proof.
+
+The signed predecessor-history reader binds that installed third baseline to
+the complete authenticated first-load proof and the second load's settled
+completion. It reads the second load's signed journal, exact encrypted backup,
+manifest and result from retained history. The canonical earlier load
+directories and installed third admission remain pinned to the actual tree.
+The fixture changes the shared backup and proves the older bytes are recovered
+without reading the replacement as history. It refuses a changed baseline, a
+missing admission stage or an extra predecessor file.
+
+The returned catalog and released journal are historical. This witness leaves
+the current SQL and shared backup untouched. Re-derive the third plan and
+check the full live generation-four delta before authorizing execution or
+claiming settlement.

@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import type { RecoveryGmailNextSelectedLoadFrameInput } from "./recovery-gmail-selected-load-next-framing.js";
 import { canonicalJson } from "./sqlite-store.js";
+import { sha256 } from "./steve-preflight.js";
 
 const domain = "zivv-recovery-gmail-selected-load-admission/v3\0";
 const maximum = 64 * 1024;
@@ -54,6 +56,53 @@ export function verifyThirdSelectedLoadAdmissionRecord(
   )
     return invalid();
   return { body, admittedAtEpochMs: body.admittedAtEpochMs };
+}
+
+/** Bind the signed third admission to one exact prepared host and predecessor pair. */
+export function verifyThirdSelectedLoadAdmissionForHost(
+  { prior, next, admission }: RecoveryGmailNextSelectedLoadFrameInput,
+  runId: string,
+  bytes: Buffer,
+  preparedReceiptSha256: string
+) {
+  const verified = verifyThirdSelectedLoadAdmissionRecord(
+    bytes,
+    prior.recoveryKey
+  );
+  const { body } = verified;
+  if (
+    body.runId !== runId ||
+    body.archiveSha256 !== sha256(prior.archive) ||
+    body.retirementReceiptSha256 !== sha256(prior.retirementReceipt) ||
+    body.preparedReceiptSha256 !== preparedReceiptSha256 ||
+    body.secondAdmissionSha256 !== sha256(admission) ||
+    canonicalJson(body.firstSelector) !== canonicalJson(prior.selector) ||
+    canonicalJson(body.secondSelector) !== canonicalJson(next)
+  )
+    return invalid();
+  return verified;
+}
+
+export function digestThirdSelectedLoadCompletedPrefix(commitments: {
+  firstLoadFamilySha256: string;
+  second: {
+    runId: string;
+    admissionSha256: string;
+    executionBaselineSha256: string;
+    historyManifestSha256: string;
+    resultSha256: string;
+  };
+  catalogSha256: string;
+  generation: number;
+  journalSha256: string;
+  inventorySha256: string;
+}): string {
+  return sha256(
+    canonicalJson({
+      ...commitments,
+      domain: "zivv-recovery-gmail-selected-load-prefix/v1",
+    })
+  );
 }
 
 /** Wire preparation only. The detached intent builder must bind actual authority. */
