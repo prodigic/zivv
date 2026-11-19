@@ -170,6 +170,15 @@ describe.skipIf(process.platform !== "win32")("Windows job runner", () => {
     expect(result.status).toBe(220);
   });
 
+  it("joins repeated short worker exits and reports their exact result", () => {
+    for (let read = 0; read < 16; read++) {
+      const code = read % 2 === 0 ? 0 : 7;
+      const result = run(10_000, ["-e", "process.exitCode=" + code]);
+      expect(result.error).toBeUndefined();
+      expect(result.status).toBe(code === 0 ? 0 : 220);
+    }
+  }, 30_000);
+
   it("waits for and reaps a descendant after the root exits", async () => {
     const sentinel = join(root, "descendant-sentinel.txt");
     const rootDone = join(root, "root-exited.txt");

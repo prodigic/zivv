@@ -8,6 +8,11 @@ import {
   decodeRecoveryGmailNextSelectedLoadFrame as decodeFamily,
 } from "../../lib/ingestion/recovery-gmail-selected-load-next-framing.js";
 import { canonicalJson } from "../../lib/ingestion/sqlite-store.js";
+import {
+  decodeThirdSelectedLoadStartFrame as decodeStart,
+  encodeThirdSelectedLoadStartFrame as encodeStart,
+  maxThirdSelectedLoadBaselineBytes,
+} from "../../lib/ingestion/recovery-gmail-selected-load-third-start-framing.js";
 
 const input = () => ({
   family: {
@@ -164,4 +169,53 @@ it("requires canonical UTF-8 selector bytes and rejects manual receipt substitut
   const invalidUtf8 = Buffer.from(canonical);
   invalidUtf8[0] = 0xff;
   expect(() => decode(replaceSelector(wire, invalidUtf8))).toThrow();
+});
+
+it("separates the start frame and owns its private baseline and nested evidence", () => {
+  const value = {
+    input: input(),
+    executionBaseline: Buffer.from("private start"),
+  };
+  const wire = encodeStart(value);
+  expect(wire.subarray(0, 4).toString()).toBe("ZGLS");
+  const restored = decodeStart(wire);
+  expect(restored).toEqual(value);
+  expect(() => decode(wire)).toThrow();
+  expect(() => decodeStart(encode(value.input))).toThrow();
+  value.input.family.prior.recoveryKey.fill(0);
+  value.executionBaseline.fill(0);
+  wire.fill(0);
+  expect(restored.input.family.prior.recoveryKey).toEqual(Buffer.alloc(32, 7));
+  expect(restored.executionBaseline.toString()).toBe("private start");
+});
+
+it("refuses start frame accessors, extra data and invalid declared sizes", () => {
+  const value = {
+    input: input(),
+    executionBaseline: Buffer.from("private start"),
+  };
+  const getter = vi.fn();
+  expect(() =>
+    encodeStart(
+      Object.defineProperty({ ...value }, "executionBaseline", { get: getter })
+    )
+  ).toThrow();
+  expect(() => encodeStart({ ...value, extra: true })).toThrow();
+  expect(getter).not.toHaveBeenCalled();
+  expect(() =>
+    encodeStart({ ...value, executionBaseline: Buffer.alloc(0) })
+  ).toThrow();
+  expect(() =>
+    encodeStart({
+      ...value,
+      executionBaseline: Buffer.alloc(maxThirdSelectedLoadBaselineBytes + 1),
+    })
+  ).toThrow();
+  const wire = encodeStart(value);
+  for (const offset of [5, 9]) {
+    const bad = Buffer.from(wire);
+    bad.writeUInt32BE(0xffffffff, offset);
+    expect(() => decodeStart(bad)).toThrow();
+  }
+  expect(() => decodeStart(Buffer.concat([wire, Buffer.of(0)]))).toThrow();
 });

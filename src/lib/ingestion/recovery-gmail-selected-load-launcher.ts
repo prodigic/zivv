@@ -1,3 +1,10 @@
+import { inspectInstalledThirdSelectedLoadExecutionBaseline } from "./recovery-gmail-selected-load-third-start.js";
+import {
+  decodeThirdSelectedLoadStartFrame,
+  encodeThirdSelectedLoadStartFrame,
+  maxThirdSelectedLoadStartFrameBytes,
+  type RecoveryGmailThirdSelectedLoadStartFrameInput,
+} from "./recovery-gmail-selected-load-third-start-framing.js";
 import { inspectInstalledRecoveryGmailThirdSelectedLoadAdmission } from "./recovery-gmail-selected-load-third-admission.js";
 import {
   decodeRecoveryGmailThirdSelectedLoadFrame,
@@ -681,6 +688,88 @@ export async function runOperatorRecoveryGmailThirdSelectedLoadInstallation(
     input?.family.prior.recoveryKey.fill(0);
     input?.family.admission.fill(0);
     input?.admission.fill(0);
+    wire?.fill(0);
+  }
+}
+
+function observeInstalledThirdStart({
+  input,
+  executionBaseline,
+}: RecoveryGmailThirdSelectedLoadStartFrameInput) {
+  const {
+    status: _observed,
+    presence,
+    ...report
+  } = inspectInstalledThirdSelectedLoadExecutionBaseline(
+    input,
+    executionBaseline
+  );
+  if (presence !== "installed") return undefined;
+  return { status: "third-load-start-installed" as const, ...report };
+}
+
+/** Use the retained worker to install only an authenticated third start baseline. */
+export async function runOperatorRecoveryGmailThirdStartInstallation(
+  supplied: RecoveryGmailThirdSelectedLoadStartFrameInput
+) {
+  let wire: Buffer | undefined;
+  let input: RecoveryGmailThirdSelectedLoadStartFrameInput | undefined;
+  try {
+    wire = encodeThirdSelectedLoadStartFrame(supplied);
+    input = decodeThirdSelectedLoadStartFrame(wire);
+    const { prior } = input.input.family;
+    const executorPath = "recovery-gmail-selected-load-executor.js";
+    const framingPath = "recovery-gmail-selected-load-third-start-framing.js";
+    verifyRetainedSelectedLoadCapabilities(prior, [
+      [executorPath, "recoveryGmailThirdStartInstallerVersion = 1"],
+      [framingPath, "recoveryGmailThirdStartFramingVersion = 1"],
+    ]);
+    const previous = observeInstalledThirdStart(input);
+    if (previous) return previous;
+
+    const root = resolve(prior.destination);
+    const entry = pathToFileURL(
+      join(root, "checkout/dist/lib/ingestion", executorPath)
+    ).href;
+    const framing = pathToFileURL(
+      join(root, "checkout/dist/lib/ingestion", framingPath)
+    ).href;
+    const script = `
+      let input; let frame; const chunks = [];
+      try {
+        const executor = await import(${JSON.stringify(entry)});
+        const framing = await import(${JSON.stringify(framing)});
+        if (executor.recoveryGmailThirdStartInstallerVersion !== 1 || framing.recoveryGmailThirdStartFramingVersion !== 1) throw Error('RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME');
+        let size = 0;
+        for await (const chunk of process.stdin) { if ((size += chunk.length) > ${maxThirdSelectedLoadStartFrameBytes}) throw Error('INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START_FRAME'); chunks.push(chunk); }
+        frame = Buffer.concat(chunks, size);
+        input = framing.decodeThirdSelectedLoadStartFrame(frame);
+        for (const chunk of chunks) chunk.fill(0);
+        console.log(JSON.stringify(await executor.installRecoveredGmailThirdSelectedLoadStart(input)));
+      } catch (error) {
+        console.error(JSON.stringify({loadError:error instanceof Error && /^[A-Z0-9_]{1,80}$/.test(error.message) ? error.message : '${errorCode}'}));
+        process.exitCode = 1;
+      } finally {
+        input?.input.family.prior.recoveryKey.fill(0);
+        input?.input.family.admission.fill(0);
+        input?.input.admission.fill(0);
+        input?.executionBaseline.fill(0);
+        frame?.fill(0);
+        for (const chunk of chunks) chunk.fill(0);
+      }
+    `;
+    const report = await invokeRetainedSelectedLoadWorker(root, script, wire);
+    const verified = observeInstalledThirdStart(input);
+    if (!verified || canonicalJson(report) !== canonicalJson(verified))
+      throw Error("RECOVERY_GMAIL_THIRD_START_REPORT_MISMATCH");
+    return verified;
+  } catch (error) {
+    throw failure(error);
+  } finally {
+    input?.input.family.prior.recoveryKey.fill(0);
+    input?.input.family.admission.fill(0);
+    input?.input.admission.fill(0);
+    input?.executionBaseline.fill(0);
     wire?.fill(0);
   }
 }
