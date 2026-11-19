@@ -24,6 +24,11 @@ import {
   writeSqliteLedger,
 } from "../../lib/ingestion/sqlite-store.js";
 import { runWeeklyImport } from "../../lib/ingestion/weekly-import-runner.js";
+import {
+  captureSteveGmailWindow,
+  readSteveGmailHandoffStatus,
+} from "../../lib/ingestion/steve-gmail-handoff.js";
+import { loadRetainedSteveEmailSources } from "../../lib/ingestion/steve-email-load.js";
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
 import type { WeeklyRunState } from "../../lib/ingestion/weekly-run-state.js";
 import type { WeeklyCandidateBuildOptions } from "../../lib/ingestion/weekly-candidate-runner.js";
@@ -302,10 +307,10 @@ describe("weekly candidate stages with real sealed bundles", () => {
       });
     return { ...native, validated, candidate, run };
   }
-  async function publicationFixture() {
+  async function publicationFixture(retainedRunId?: string) {
     const validated = await runWeeklyImport({
       root,
-      source,
+      ...(retainedRunId ? { runId: retainedRunId } : { source }),
       stopAfter: "validate",
       freezeCutoffEpochMs: cutoff,
       candidateBuild: { ...build, purpose: "release" },
@@ -1175,6 +1180,153 @@ describe("weekly candidate stages with real sealed bundles", () => {
     expect(catalogDigest()).toBe(before);
   });
 
+  it("carries an authenticated retained Gmail source through local publication and acknowledgement", async () => {
+    const accountId = "synthetic-publication@example.invalid";
+    const messageId = "a1";
+    const receivedAt = observedAt - 60_000;
+    const text =
+      "THE LIST\nfunk-punk-thrash-ska Upcoming shows of Interest October 9, 2026\noct 23 fri Fixture Band at Test Room, Oakland a/a $20 8pm\nPlease feel free to forward The List on to your friends.\n";
+    const headers: Array<[string, string]> = [
+      ["From", "Steve Fixture <skoepke@stevelist.com>"],
+      ["Sender", "noreply@sp.eocampaign1.com"],
+      ["Date", "Fri, 09 Oct 2026 12:59:00 -0700"],
+      ["Subject", "Steve's List 10/09/2026"],
+      ["Message-ID", "<a1@fixture.invalid>"],
+      [
+        "Authentication-Results",
+        "mx.google.com; dkim=pass header.i=@sp.eocampaign1.com; spf=pass smtp.mailfrom=bounce@sp.eocampaign1.com",
+      ],
+      [
+        "DKIM-Signature",
+        "v=1; a=rsa-sha256; d=sp.eocampaign1.com; s=fixture; h=from:sender:subject:date; bh=c3ludGhldGlj; b=c3ludGhldGlj",
+      ],
+    ];
+    const body = Buffer.from(text.replace(/\r?\n/g, "\r\n"));
+    const raw = Buffer.from(
+      [
+        ...headers.map(([name, value]) => `${name}: ${value}`),
+        "MIME-Version: 1.0",
+        "Content-Type: text/plain; charset=UTF-8",
+        "Content-Transfer-Encoding: 7bit",
+        "",
+        body.toString(),
+      ].join("\r\n")
+    );
+    const calls: string[] = [];
+    const fetcher: typeof fetch = async (request) => {
+      const url = new URL(String(request));
+      if (url.origin !== "https://gmail.googleapis.com")
+        throw Error("UNEXPECTED_SYNTHETIC_ENDPOINT");
+      calls.push(url.pathname);
+      let data: unknown;
+      if (url.pathname.endsWith("/profile")) data = { emailAddress: accountId };
+      else if (url.pathname.endsWith("/messages"))
+        data = { messages: [{ id: messageId }] };
+      else if (url.pathname.endsWith("/messages/a1"))
+        data =
+          url.searchParams.get("format") === "RAW"
+            ? { id: messageId, raw: raw.toString("base64url") }
+            : {
+                id: messageId,
+                internalDate: String(receivedAt),
+                payload: {
+                  mimeType: "text/plain",
+                  filename: "",
+                  headers: headers.map(([name, value]) => ({ name, value })),
+                  body: { size: body.length, data: body.toString("base64url") },
+                },
+              };
+      else throw Error("UNEXPECTED_SYNTHETIC_ENDPOINT");
+      return new Response(JSON.stringify(data), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    };
+    const clock = vi.spyOn(Date, "now").mockReturnValue(observedAt);
+    let captured: Awaited<ReturnType<typeof captureSteveGmailWindow>>;
+    try {
+      captured = await captureSteveGmailWindow({
+        operatorDirectory: home,
+        expectedAccountId: accountId,
+        expectedEditionId: source.editionId,
+        startEpochMs: receivedAt - 1000,
+        endEpochMs: observedAt + 1,
+        getAccessToken: async () => "synthetic-token",
+        fetcher,
+      });
+    } finally {
+      clock.mockRestore();
+    }
+    expect(captured.status).toBe("captured");
+    expect(captured.receipts).toHaveLength(1);
+    expect(captured.receipts[0]!.disposition).toBe("ready");
+    expect(calls.some((path) => path.endsWith("/messages/a1"))).toBe(true);
+    const loaded = await loadRetainedSteveEmailSources({
+      root,
+      operatorDirectory: home,
+      accountId,
+      expectedEditionId: source.editionId,
+    });
+    expect(loaded.counts.loaded).toBe(1);
+    expect(loaded.entries).toHaveLength(1);
+    expect(loaded.entries[0]).toMatchObject({
+      receiptId: captured.receipts[0]!.receiptId,
+      disposition: "loaded",
+    });
+    const runId = loaded.entries[0]!.runId!;
+    const afterLoad = readSqliteLedger(sqlitePath);
+    expect(afterLoad.runs).toHaveLength(1);
+    expect(afterLoad.events).toHaveLength(1);
+    expect(
+      readSteveGmailHandoffStatus({
+        operatorDirectory: home,
+        expectedAccountId: accountId,
+        expectedEditionId: source.editionId,
+      }).batches[0]
+    ).toMatchObject({
+      batchId: captured.batchIds[0],
+      status: "complete",
+      loadPendingCount: 0,
+    });
+    const f = await publicationFixture(runId);
+    expect(f.validated.runId).toBe(runId);
+    const pending = await f.run("acknowledge");
+    expect(
+      pending.stages.find((stage) => stage.stage === "verify")!.status
+    ).toBe("pending");
+    expect(f.requests.filter(({ method }) => method === "POST")).toHaveLength(
+      1
+    );
+    f.finishNative();
+    const completed = await f.run("acknowledge");
+    expect(completed.runId).toBe(runId);
+    expect(completed.stages.every(({ status }) => status === "succeeded")).toBe(
+      true
+    );
+    expect(
+      JSON.parse(
+        readFileSync(join(root, "data/ingestion/weekly-editions.json"), "utf8")
+      ).publishedCutoffEpochMs
+    ).toBe(cutoff);
+    const controlHead = f.store.read().head;
+    expect(await f.run("acknowledge")).toEqual(completed);
+    expect(f.store.read().head).toBe(controlHead);
+    expect(f.requests.filter(({ method }) => method === "POST")).toHaveLength(
+      1
+    );
+    expect(f.retainedWrites()).toBe(1);
+    expect(readSqliteLedger(sqlitePath)).toEqual(afterLoad);
+    expect(
+      (
+        await loadRetainedSteveEmailSources({
+          root,
+          operatorDirectory: home,
+          accountId,
+          expectedEditionId: source.editionId,
+        })
+      ).entries
+    ).toEqual(loaded.entries);
+  }, 180_000);
   it("retains the sealed weekly payload, claims and dispatches once, then resumes native verification and acknowledgement", async () => {
     const f = await publicationFixture(),
       before = catalogDigest();

@@ -107,6 +107,22 @@ Sol high owns architecture, ambiguous identities, transaction/concurrency/cutoff
 | #9 Tests                 | Collected/omitted-suite inventory, isolated fixture/setup fixes and uncovered-behavior reports.          |
 | #40 Architecture         | Old/current module crosswalks, dependency and contract-test inventory; Sol high decides recommendations. |
 
+## Retained mailbox rehearsal
+
+The local rehearsal begins with synthetic Gmail RAW and FULL responses and
+uses the ordinary private capture and retained-source loader. It carries
+the exact recorded weekly run into publication acknowledgement using
+disposable SQLite and a local Git control store. The fixture verifies one
+catalog import and one synthetic dispatch. Once its verification evidence
+is available, acknowledgement records the exact cutoff. A replay preserves
+the catalog, control head, cutoff and signed handoff identity.
+
+The selected rehearsal passed with four controls covering sealed candidate
+dispatch, uncertain dispatch, manual CLI resume and an actual process stop
+after catalog commit. The deployment and build inputs are simulated. Preview
+and production Pages verification, browser/cache checks, restart under the
+chosen scheduler and the first two scheduled editions remain acceptance work.
+
 ## Deferred decisions and activation gates
 
 - Initial runtime (operator decision October 17): this Windows machine, until replacement hardware or a cloud account is selected. Keep implementation portable. Host availability, secure source credentials, scheduling/restart behavior and activation rehearsals still require implementation and verification.
