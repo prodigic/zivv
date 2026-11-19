@@ -546,3 +546,12 @@ an absent intent, a partial directory or the exact installed bytes while
 rechecking the original generation-three family and unchanged live catalog
 and journal. An unrelated file or directory refuses the observation. The
 ordinary second-load path still requires its exact inventory.
+
+Before third execution, the start-evidence builder requires its exact settled
+admission and the released generation-three catalog and journal. The v3
+baseline signs the intended start time, prepared receipt, two-load prefix and
+complete physical inventory. It binds the projected predecessor inventory and
+the installed third admission separately. Authentication reads the original
+signature first and compares every field against the current host. This
+checkpoint prepares detached evidence and does not install a baseline or
+start an import.

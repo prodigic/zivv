@@ -27,6 +27,11 @@ import {
 } from "../../lib/ingestion/recovery-gmail-selected-load-third-admission.js";
 import { runOperatorRecoveryGmailThirdSelectedLoadInstallation } from "../../lib/ingestion/recovery-gmail-selected-load-launcher.js";
 import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-next-replay.js";
+import {
+  prepareThirdSelectedLoadExecutionBaseline,
+  authenticateThirdSelectedLoadExecutionBaseline,
+} from "../../lib/ingestion/recovery-gmail-selected-load-third-start.js";
+import { signSelectedThirdLoadExecutionBaseline } from "../../lib/ingestion/recovery-gmail-execution-baseline.js";
 
 vi.setConfig({ testTimeout: 1_200_000 });
 
@@ -696,6 +701,10 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       third: thirdSelector,
       admission: thirdAdmission,
     };
+    const startedAt = Date.now();
+    expect(() =>
+      prepareThirdSelectedLoadExecutionBaseline(installInput, startedAt)
+    ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START");
     const preparedReceiptPath = join(root, "prepared-runtime.json");
     const originalPreparation = readFileSync(preparedReceiptPath);
     try {
@@ -746,6 +755,69 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
     expect(
       await runOperatorRecoveryGmailThirdSelectedLoadInstallation(installInput)
     ).toEqual(installedThird);
+    const startBytes = prepareThirdSelectedLoadExecutionBaseline(
+      installInput,
+      startedAt
+    );
+    const startEvidence = authenticateThirdSelectedLoadExecutionBaseline(
+      installInput,
+      startBytes
+    );
+    expect(startEvidence).toMatchObject({
+      runId: thirdInspection.runId,
+      generation: 3,
+      startedAtEpochMs: startedAt,
+      admissionSha256: digest(thirdAdmission),
+      completedPrefixSha256: thirdInspection.completedPrefixSha256,
+      preparedReceiptSha256: digest(originalPreparation),
+      catalogSha256: thirdInspection.catalogSha256,
+      journalSha256: thirdInspection.journalSha256,
+      predecessorInventorySha256: thirdInspection.inventorySha256,
+    });
+    expect(startEvidence.physicalSnapshotSha256).toBe(
+      digest(canonicalJson(startEvidence.entries))
+    );
+    const tailPrefix = `recovery-gmail-load/${thirdInspection.runId}`;
+    const predecessorEntries = startEvidence.entries.filter(
+      ({ path }) => path !== tailPrefix && !path.startsWith(tailPrefix + "/")
+    );
+    expect(digest(canonicalJson(predecessorEntries))).toBe(
+      startEvidence.predecessorInventorySha256
+    );
+    expect(
+      startEvidence.entries.filter(
+        ({ path }) => path === tailPrefix || path.startsWith(tailPrefix + "/")
+      )
+    ).toEqual([
+      { path: tailPrefix, kind: "directory" },
+      {
+        path: tailPrefix + "/admission.json",
+        kind: "file",
+        size: thirdAdmission.length,
+        sha256: digest(thirdAdmission),
+      },
+      { path: tailPrefix + "/stages", kind: "directory" },
+      { path: tailPrefix + "/stages/admission", kind: "directory" },
+    ]);
+    expect(
+      prepareThirdSelectedLoadExecutionBaseline(installInput, startedAt)
+    ).toEqual(startBytes);
+    const alteredCatalogBaseline = signSelectedThirdLoadExecutionBaseline(
+      {
+        ...startEvidence,
+        catalogSha256:
+          startEvidence.catalogSha256 === "0".repeat(64)
+            ? "1".repeat(64)
+            : "0".repeat(64),
+      },
+      family.prior.recoveryKey
+    );
+    expect(() =>
+      authenticateThirdSelectedLoadExecutionBaseline(
+        installInput,
+        alteredCatalogBaseline
+      )
+    ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START");
     const thirdTarget = join(thirdDirectory, "admission.json");
     const candidate = join(
       thirdDirectory,
@@ -761,6 +833,12 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
     ).toEqual(installedThird);
     expect(existsSync(candidate)).toBe(false);
     expect(lstatSync(thirdTarget).ino).toBe(initialIdentity.ino);
+    expect(
+      prepareThirdSelectedLoadExecutionBaseline(installInput, startedAt)
+    ).toEqual(startBytes);
+    expect(
+      authenticateThirdSelectedLoadExecutionBaseline(installInput, startBytes)
+    ).toEqual(startEvidence);
     linkSync(thirdTarget, candidate);
     expect(lstatSync(thirdTarget).nlink).toBe(2);
     expect(
@@ -769,6 +847,12 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
     expect(existsSync(candidate)).toBe(false);
     expect(lstatSync(thirdTarget).nlink).toBe(1);
     expect(lstatSync(thirdTarget).ino).toBe(initialIdentity.ino);
+    expect(
+      prepareThirdSelectedLoadExecutionBaseline(installInput, startedAt)
+    ).toEqual(startBytes);
+    expect(
+      authenticateThirdSelectedLoadExecutionBaseline(installInput, startBytes)
+    ).toEqual(startEvidence);
     expect(
       success("install-third-selected-load", [
         ...withAdmission,
@@ -782,6 +866,9 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       thirdAdmission
     );
     expect(existsSync(join(thirdDirectory, "load-result.json"))).toBe(false);
+    expect(existsSync(join(thirdDirectory, "execution-baseline.json"))).toBe(
+      false
+    );
     expect(() =>
       readNextSelectedLoadCompletionEvidence(
         family.prior,
