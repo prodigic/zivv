@@ -2,6 +2,7 @@ import {
   copyRecoveryGmailSelectedReceiptSelector,
   type RecoveryGmailSelectedReceiptSelector,
 } from "./recovery-gmail-capture-admission-proof.js";
+import type { SelectedLoadAdmissionTail } from "./recovery-gmail-selected-load-admission-tail.js";
 import { planCapturedLoadAfterPredecessor } from "./recovery-gmail-selected-load-captured-plan.js";
 import type { RecoveryGmailNextSelectedLoadFrameInput } from "./recovery-gmail-selected-load-next-framing.js";
 import { readNextSelectedLoadCompletionEvidence } from "./recovery-gmail-selected-load-next-replay.js";
@@ -18,7 +19,8 @@ function invalid(): never {
  */
 export function readThirdSelectedLoadAdmissionEvidence(
   family: RecoveryGmailNextSelectedLoadFrameInput,
-  third: RecoveryGmailSelectedReceiptSelector
+  third: RecoveryGmailSelectedReceiptSelector,
+  installedTail?: SelectedLoadAdmissionTail
 ) {
   let key: Buffer | undefined;
   try {
@@ -33,7 +35,8 @@ export function readThirdSelectedLoadAdmissionEvidence(
     const completed = readNextSelectedLoadCompletionEvidence(
       family.prior,
       second,
-      family.admission
+      family.admission,
+      installedTail
     );
     const {
       report,
@@ -102,6 +105,7 @@ export function readThirdSelectedLoadAdmissionEvidence(
     };
     return {
       report: reportCommitments,
+      thirdAdmissionPresence: completed.thirdAdmissionPresence,
       firstSelector: completed.effective.originalBaseline.selector,
       secondSelector: completed.effective.proof.selection.selector,
       secondAdmissionSha256: report.admissionSha256,

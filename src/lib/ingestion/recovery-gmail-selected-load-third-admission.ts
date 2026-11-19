@@ -1,11 +1,13 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
 import type { RecoveryGmailNextSelectedLoadFrameInput } from "./recovery-gmail-selected-load-next-framing.js";
+import {
+  checkedThirdSelectedLoadAdmission,
+  encodeThirdSelectedLoadAdmission,
+  verifyThirdSelectedLoadAdmissionRecord,
+} from "./recovery-gmail-selected-load-third-admission-format.js";
 import { readThirdSelectedLoadAdmissionEvidence } from "./recovery-gmail-selected-load-third-inspection.js";
 import { canonicalJson } from "./sqlite-store.js";
-
-const domain = "zivv-recovery-gmail-selected-load-admission/v3\0";
-const maximum = 64 * 1024;
+import { sha256 } from "./steve-preflight.js";
 
 function invalid(): never {
   throw Error("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_ADMISSION");
@@ -14,9 +16,14 @@ function invalid(): never {
 function payload(
   family: RecoveryGmailNextSelectedLoadFrameInput,
   third: RecoveryGmailSelectedReceiptSelector,
-  admittedAtEpochMs: number
+  admittedAtEpochMs: number,
+  installedTail?: { runId: string; bytes: Buffer }
 ) {
-  const evidence = readThirdSelectedLoadAdmissionEvidence(family, third);
+  const evidence = readThirdSelectedLoadAdmissionEvidence(
+    family,
+    third,
+    installedTail
+  );
   const {
     status: _status,
     earliestAdmissionEpochMs,
@@ -28,7 +35,7 @@ function payload(
     admittedAtEpochMs > Date.now()
   )
     return invalid();
-  return {
+  const body = {
     kind: "zivv-recovery-gmail-selected-load-admission" as const,
     version: 3 as const,
     stopAfter: "load" as const,
@@ -44,48 +51,7 @@ function payload(
     source: evidence.source,
     runtimeIdentitySha256: evidence.runtimeIdentitySha256,
   };
-}
-
-function signature(value: unknown, key: Buffer): Buffer {
-  if (!Buffer.isBuffer(key) || key.length !== 32) return invalid();
-  return createHmac("sha256", key)
-    .update(domain)
-    .update(canonicalJson(value))
-    .digest();
-}
-
-function serialize(value: unknown): Buffer {
-  return Buffer.from(canonicalJson(value) + "\n");
-}
-
-function checkedBytes(bytes: Buffer): Buffer {
-  if (!Buffer.isBuffer(bytes) || bytes.length === 0 || bytes.length > maximum)
-    return invalid();
-  return bytes;
-}
-
-function read(bytes: Buffer, key: Buffer) {
-  const parsed: unknown = JSON.parse(
-    new TextDecoder("utf-8", { fatal: true }).decode(checkedBytes(bytes))
-  );
-  if (
-    !parsed ||
-    typeof parsed !== "object" ||
-    Array.isArray(parsed) ||
-    !bytes.equals(serialize(parsed))
-  )
-    return invalid();
-  const { signature: saved, ...body } = parsed as Record<string, unknown>;
-  if (
-    body.version !== 3 ||
-    typeof body.admittedAtEpochMs !== "number" ||
-    typeof saved !== "string" ||
-    saved.length !== 64 ||
-    !/^[a-f0-9]{64}$/.test(saved) ||
-    !timingSafeEqual(Buffer.from(saved, "hex"), signature(body, key))
-  )
-    return invalid();
-  return { body, admittedAtEpochMs: body.admittedAtEpochMs };
+  return { body, thirdAdmissionPresence: evidence.thirdAdmissionPresence };
 }
 
 /** Authenticate a detached third admission and reprove its exact live prefix. */
@@ -95,11 +61,11 @@ export function authenticateRecoveryGmailThirdSelectedLoadAdmission(
   admission: Buffer
 ) {
   try {
-    const { body, admittedAtEpochMs } = read(
+    const { body, admittedAtEpochMs } = verifyThirdSelectedLoadAdmissionRecord(
       admission,
       family.prior.recoveryKey
     );
-    const expected = payload(family, third, admittedAtEpochMs);
+    const { body: expected } = payload(family, third, admittedAtEpochMs);
     if (canonicalJson(expected) !== canonicalJson(body)) return invalid();
     return expected;
   } catch {
@@ -117,7 +83,9 @@ export function createRecoveryGmailThirdSelectedLoadAdmission(
 ): Buffer {
   try {
     if (retainedAdmission !== undefined) {
-      const bytes = Buffer.from(checkedBytes(retainedAdmission));
+      const bytes = Buffer.from(
+        checkedThirdSelectedLoadAdmission(retainedAdmission)
+      );
       const verified = authenticateRecoveryGmailThirdSelectedLoadAdmission(
         family,
         third,
@@ -126,13 +94,54 @@ export function createRecoveryGmailThirdSelectedLoadAdmission(
       if (verified.admittedAtEpochMs !== admittedAtEpochMs) return invalid();
       return bytes;
     }
-    const body = payload(family, third, admittedAtEpochMs);
-    return checkedBytes(
-      serialize({
-        ...body,
-        signature: signature(body, family.prior.recoveryKey).toString("hex"),
-      })
+    const { body } = payload(family, third, admittedAtEpochMs);
+    return encodeThirdSelectedLoadAdmission(body, family.prior.recoveryKey);
+  } catch {
+    return invalid();
+  }
+}
+
+/**
+ * Verify an exact fixed third-admission prefix without adopting its files.
+ * The signed identity is checked before projecting out only this admission.
+ */
+export function inspectInstalledRecoveryGmailThirdSelectedLoadAdmission(
+  family: RecoveryGmailNextSelectedLoadFrameInput,
+  third: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer
+) {
+  try {
+    const bytes = Buffer.from(checkedThirdSelectedLoadAdmission(admission));
+    const { body, admittedAtEpochMs } = verifyThirdSelectedLoadAdmissionRecord(
+      bytes,
+      family.prior.recoveryKey
     );
+    const runId = body.runId;
+    if (
+      typeof runId !== "string" ||
+      runId.length !== 64 ||
+      !/^[a-f0-9]{64}$/.test(runId)
+    )
+      return invalid();
+    const { body: expected, thirdAdmissionPresence: presence } = payload(
+      family,
+      third,
+      admittedAtEpochMs,
+      { runId, bytes }
+    );
+    if (!presence || canonicalJson(expected) !== canonicalJson(body))
+      return invalid();
+    return {
+      status: "third-load-admission-observed" as const,
+      presence,
+      runId,
+      admissionSha256: sha256(bytes),
+      completedPrefixSha256: expected.completedPrefixSha256,
+      activationAllowed: false as const,
+      captureAllowed: false as const,
+      loadAllowed: false as const,
+      freezeAllowed: false as const,
+    };
   } catch {
     return invalid();
   }

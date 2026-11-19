@@ -1,5 +1,10 @@
 import { resolve } from "node:path";
 import type { RecoveryGmailSelectedReceiptSelector } from "./recovery-gmail-capture-admission-proof.js";
+import {
+  observeSelectedLoadAdmissionTail,
+  selectedLoadAdmissionTailPaths,
+  type SelectedLoadAdmissionTail,
+} from "./recovery-gmail-selected-load-admission-tail.js";
 import { verifySelectedNextLoadExecutionBaseline } from "./recovery-gmail-execution-baseline.js";
 import type { RecoveryGmailSelectedLoadFrameInput } from "./recovery-gmail-selected-load-framing.js";
 import {
@@ -7,7 +12,9 @@ import {
   readNextSelectedLoadAdmissionRunId,
 } from "./recovery-gmail-selected-load-next-admission.js";
 import { readSelectedLoadEntry } from "./recovery-gmail-selected-load-physical-reader.js";
+import { verifyThirdSelectedLoadAdmissionRecord } from "./recovery-gmail-selected-load-third-admission-format.js";
 import { openPreparedRuntimeForAdmission } from "./recovery-runtime.js";
+import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
 
 function fail(): never {
@@ -19,7 +26,8 @@ function fail(): never {
 export function readNextSelectedLoadFamily(
   input: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
-  admission: Buffer
+  admission: Buffer,
+  thirdTail?: SelectedLoadAdmissionTail
 ) {
   const { selector: _selector, recoveryKey: key, ...host } = input;
   const opened = openPreparedRuntimeForAdmission({
@@ -27,7 +35,37 @@ export function readNextSelectedLoadFamily(
     recoveryKey: key,
   });
   const root = resolve(host.destination);
-  const entries = opened.inventoryGmailSelectedLoadExecution();
+  if (thirdTail) {
+    const { body } = verifyThirdSelectedLoadAdmissionRecord(
+      thirdTail.bytes,
+      key
+    );
+    if (
+      body.runId !== thirdTail.runId ||
+      body.archiveSha256 !== sha256(input.archive) ||
+      body.retirementReceiptSha256 !== sha256(input.retirementReceipt) ||
+      body.preparedReceiptSha256 !== opened.receiptSha256 ||
+      body.secondAdmissionSha256 !== sha256(admission) ||
+      canonicalJson(body.firstSelector) !== canonicalJson(input.selector) ||
+      canonicalJson(body.secondSelector) !== canonicalJson(next)
+    )
+      return fail();
+  }
+  const allEntries = opened.inventoryGmailSelectedLoadExecution();
+  const projection = thirdTail
+    ? observeSelectedLoadAdmissionTail(root, allEntries, thirdTail)
+    : undefined;
+  const entries = projection?.predecessorEntries ?? allEntries;
+  const tailBase = thirdTail
+    ? selectedLoadAdmissionTailPaths(root, thirdTail.runId).base
+    : undefined;
+  const thirdAdmissionPresence = projection
+    ? projection.observed.target && !projection.observed.candidate
+      ? ("installed" as const)
+      : allEntries.some(({ path }) => path === tailBase)
+        ? ("staging" as const)
+        : ("absent" as const)
+    : undefined;
   const byPath = new Map(entries.map((entry) => [entry.path, entry]));
   if (byPath.size !== entries.length) return fail();
   const read = (path: string, limit: number) =>
@@ -65,6 +103,8 @@ export function readNextSelectedLoadFamily(
     opened,
     root,
     entries,
+    allEntries,
+    thirdAdmissionPresence,
     read,
     loadPath,
     runId,

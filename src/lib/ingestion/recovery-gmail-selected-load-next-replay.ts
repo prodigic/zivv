@@ -35,6 +35,7 @@ import {
   type RecoveryGmailSelectedLoadFrameInput,
 } from "./recovery-gmail-selected-load-framing.js";
 import { selectedLoadBackupPath } from "./recovery-gmail-selected-load-historical-predecessor.js";
+import type { SelectedLoadAdmissionTail } from "./recovery-gmail-selected-load-admission-tail.js";
 import { readNextSelectedLoadFamily } from "./recovery-gmail-selected-load-next-family.js";
 import { verifySelectedLoadResult } from "./recovery-gmail-selected-result-proof.js";
 import type { RecoveryRuntimeEntry } from "./recovery-runtime.js";
@@ -247,7 +248,8 @@ function verifyCompletedNextResume(input: {
 export function readNextSelectedLoadCompletionEvidence(
   supplied: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
-  signedAdmission: Buffer
+  signedAdmission: Buffer,
+  thirdTail?: SelectedLoadAdmissionTail
 ) {
   let wire: Buffer | undefined,
     input: RecoveryGmailSelectedLoadFrameInput | undefined;
@@ -258,11 +260,18 @@ export function readNextSelectedLoadCompletionEvidence(
     wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
     const key = input.recoveryKey;
-    const family = readNextSelectedLoadFamily(input, next, admission);
+    const family = readNextSelectedLoadFamily(
+      input,
+      next,
+      admission,
+      thirdTail
+    );
     const {
       opened,
       root,
       entries,
+      allEntries,
+      thirdAdmissionPresence,
       read,
       loadPath,
       runId,
@@ -500,7 +509,7 @@ export function readNextSelectedLoadCompletionEvidence(
     });
     if (
       result.resultSha256 !== completion.fields.resultSha256 ||
-      canonicalJson(entries) !==
+      canonicalJson(allEntries) !==
         canonicalJson(opened.inventoryGmailSelectedLoadExecution()) ||
       canonicalJson(catalog) !==
         canonicalJson(readCanonicalSqliteLedgerReadOnly(catalogPath)) ||
@@ -550,6 +559,7 @@ export function readNextSelectedLoadCompletionEvidence(
           }
         : {}),
       physicalEntries: entries,
+      ...(thirdAdmissionPresence ? { thirdAdmissionPresence } : {}),
       observedCatalog: catalog,
       observedJournal,
     };
