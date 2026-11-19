@@ -52,6 +52,8 @@ function privateInput(path, limit) {
 const selectedLoadCommands = [
   "inspect-selected-load",
   "install-selected-load",
+  "execute-selected-load",
+  "resume-selected-load",
   "inspect-selected-load-interruption",
 ];
 
@@ -75,10 +77,33 @@ async function runSelectedLoadCommand(command, input, selectorFile) {
     throw Error("INVALID_RECOVERY_GMAIL_SELECTED_LOAD_SELECTOR");
   }
   const selected = { ...input, selector };
-  if (command === "install-selected-load") {
-    const { resumeOperatorRecoveryGmailSelectedLoadEvidence } =
+  if (
+    command === "install-selected-load" ||
+    command === "execute-selected-load" ||
+    command === "resume-selected-load"
+  ) {
+    const launcher =
       await import("../dist/lib/ingestion/recovery-gmail-selected-load-launcher.js");
-    return resumeOperatorRecoveryGmailSelectedLoadEvidence(selected);
+    try {
+      if (command === "install-selected-load")
+        return await launcher.resumeOperatorRecoveryGmailSelectedLoadEvidence(
+          selected
+        );
+      if (command === "execute-selected-load")
+        return await launcher.executeOperatorRecoveryGmailSelectedLoad(
+          selected
+        );
+      return await launcher.resumeOperatorRecoveryGmailSelectedLoad(selected);
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message === "RECOVERY_GMAIL_SELECTED_LOAD_EXECUTION_FAILED" &&
+        error.cause instanceof Error &&
+        /^[A-Z][A-Z0-9_]{2,79}$/.test(error.cause.message)
+      )
+        throw Error(error.cause.message);
+      throw error;
+    }
   }
   if (command === "inspect-selected-load-interruption") {
     const { inspectSelectedLoadInterruption } =

@@ -157,6 +157,14 @@ it("loads the exact ready source through the normal runner in a genuine retained
     expect(JSON.parse(beforeInstall.stderr.trim()).error).toBe(
       "RECOVERY_GMAIL_SELECTED_LOAD_NOT_INSTALLED"
     );
+    const executeBeforeInstall = cli("execute-selected-load");
+    expect(executeBeforeInstall.status).toBe(1);
+    expect(executeBeforeInstall.stdout).toBe("");
+    expect(readFileSync(join(root, "operator/ledger.sqlite"))).toEqual(
+      beforeCliLedger
+    );
+    expect(journalFiles()).toEqual(beforeCliJournal);
+    expect(existsSync(join(root, "recovery-gmail-load"))).toBe(false);
     const firstInstall = cli("install-selected-load");
     expect(firstInstall.status).toBe(0);
     const firstInstallReport = JSON.parse(firstInstall.stdout.trim()) as Record<
@@ -262,29 +270,31 @@ it("loads the exact ready source through the normal runner in a genuine retained
       )
     ).toBe(false);
     console.error("SELECTED_SOURCE_LOAD execute", Date.now());
-    const child = run();
-    if (child.status !== 0)
-      console.error(
-        "SELECTED_SOURCE_LOAD diagnostic",
-        child.status,
-        child.error?.message,
-        child.stderr
-      );
+    const child = cli("execute-selected-load");
     expect(child.status).toBe(0);
     const report = JSON.parse(child.stdout.trim()) as {
+      command: string;
+      status: string;
+      activationAllowed: boolean;
+      captureAllowed: boolean;
+      loadAllowed: boolean;
       runId: string;
       ledgerRevision: string;
       generation: number;
-      accepted: number;
       resultSha256: string;
+      admissionSha256: string;
     };
-    expect(report).toMatchObject({
+    expect(report).toEqual({
+      command: "execute-selected-load",
       status: "selected-load-complete",
       activationAllowed: false,
       captureAllowed: false,
       loadAllowed: false,
+      runId: installed.runId,
+      ledgerRevision: expect.any(String),
       generation: 2,
-      accepted: 1,
+      resultSha256: expect.any(String),
+      admissionSha256: installed.admissionSha256,
     });
     expect(report.runId).toBe(installed.runId);
     const ledger = readSqliteLedgerReadOnly(
@@ -464,17 +474,12 @@ it("loads the exact ready source through the normal runner in a genuine retained
         observedAtEpochMs: expect.any(Number),
       },
     });
-    const sealedReplay = run([], true);
-    if (sealedReplay.status !== 0)
-      console.error(
-        "SELECTED_SOURCE_LOAD replay diagnostic",
-        sealedReplay.stderr
-      );
+    const sealedReplay = cli("resume-selected-load");
     expect(sealedReplay.status).toBe(0);
-    expect(JSON.parse(sealedReplay.stdout)).toMatchObject({
+    expect(JSON.parse(sealedReplay.stdout)).toEqual({
+      ...report,
+      command: "resume-selected-load",
       status: "selected-load-resumed",
-      resultSha256: report.resultSha256,
-      generation: 2,
     });
     expect(
       openPreparedRuntimeForAdmission(
