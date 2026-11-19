@@ -29,9 +29,14 @@ import {
   verifyOperatorRetirementEvidence,
   encryptOperatorRecovery,
   observeRetiredOperatorRecoveryCheckpoint,
+  inspectRetiredOperatorLeaseFence,
 } from "../../lib/ingestion/operator-recovery.js";
 import { verifyOperatorRetirementReceipt } from "../../lib/ingestion/operator-installation.js";
-import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
+import {
+  WeeklyRunJournal,
+  readWeeklyJournalRecoverySnapshotReadOnly,
+  validateWeeklyJournalRecoverySnapshot,
+} from "../../lib/ingestion/weekly-run-journal.js";
 import { runWeeklyImport } from "../../lib/ingestion/weekly-import-runner.js";
 import { captureSteveEmail } from "../../lib/ingestion/steve-email-intake.js";
 import { sha256 } from "../../lib/ingestion/steve-preflight.js";
@@ -104,6 +109,101 @@ describe("cooperative operator retirement with a final encrypted checkpoint", ()
     if (!within.startsWith("zivv-retire-test-") || within.startsWith(".."))
       throw new Error("Unsafe fixture cleanup");
     rmSync(base, { recursive: true, force: true });
+  });
+
+  it("observes only the exact released retired production fence", async () => {
+    const retired = await retireAndCaptureOperatorRecovery({ root, out });
+    const archive = readFileSync(out);
+    const input = {
+      root,
+      archive,
+      retirementReceipt: retired.retirementReceipt,
+      recoveryKey: key,
+    };
+    const snapshot = () =>
+      readWeeklyJournalRecoverySnapshotReadOnly(
+        join(operator, "weekly-runs.sqlite")
+      );
+    const before = snapshot();
+    const current = validateWeeklyJournalRecoverySnapshot(before);
+    const archived = validateWeeklyJournalRecoverySnapshot(
+      Buffer.from(retired.checkpoint.journal, "base64")
+    );
+    const row = current.ownership.find((item) => item.scope === scope)!;
+    const saved = archived.ownership.find((item) => item.scope === scope)!;
+    expect(row).toMatchObject({
+      owner: saved.owner,
+      fence: saved.fence,
+      expiresAtEpochMs: 0,
+    });
+    const observed = inspectRetiredOperatorLeaseFence(input);
+    expect(observed).toEqual({
+      status: "retired-operator-fence-observed",
+      activationAllowed: false,
+      fence: saved.fence,
+      archiveSha256: sha256(archive),
+      checkpointSha256: sha256(canonicalJson(retired.checkpoint)),
+      retirementReceiptSha256: sha256(retired.retirementReceipt),
+      ledgerRevision: retired.checkpoint.ledgerRevision,
+      journalSha256: sha256(before),
+    });
+    expect(JSON.stringify(observed)).not.toContain(root);
+    expect(JSON.stringify(observed)).not.toContain(operator);
+    expect(snapshot()).toEqual(before);
+
+    const setRow = (owner: string, fence: number, expires: number) => {
+      const db = new DatabaseSync(join(operator, "weekly-runs.sqlite"));
+      try {
+        db.prepare(
+          "UPDATE ownership SET owner=?, fence=?, expires_at=? WHERE scope=?"
+        ).run(owner, fence, expires, scope);
+      } finally {
+        db.close();
+      }
+    };
+    for (const [owner, fence, expires] of [
+      ["different-synthetic-owner", row.fence, 0],
+      [row.owner, row.fence + 1, 0],
+      [row.owner, row.fence, 1],
+    ] as const) {
+      try {
+        setRow(owner, fence, expires);
+        expect(() => inspectRetiredOperatorLeaseFence(input)).toThrow(
+          "RETIRED_OPERATOR_FENCE_UNVERIFIED"
+        );
+        expect(verifyOperatorRetirementEvidence(input).checkpoint).toEqual(
+          retired.checkpoint
+        );
+      } finally {
+        setRow(row.owner, row.fence, row.expiresAtEpochMs);
+      }
+      expect(snapshot()).toEqual(before);
+      expect(inspectRetiredOperatorLeaseFence(input)).toEqual(observed);
+    }
+    const marker = join(operator, "operator-retired.json");
+    const markerBytes = readFileSync(marker);
+    try {
+      writeFileSync(marker, "synthetic changed marker");
+      expect(() => inspectRetiredOperatorLeaseFence(input)).toThrow(
+        "RETIRED_OPERATOR_FENCE_UNVERIFIED"
+      );
+      expect(verifyOperatorRetirementEvidence(input).checkpoint).toEqual(
+        retired.checkpoint
+      );
+    } finally {
+      writeFileSync(marker, markerBytes);
+    }
+    expect(() =>
+      inspectRetiredOperatorLeaseFence({
+        ...input,
+        root: join(base, "unavailable"),
+      })
+    ).toThrow("RETIRED_OPERATOR_FENCE_UNVERIFIED");
+    expect(() =>
+      inspectRetiredOperatorLeaseFence({ ...input, root: operator })
+    ).toThrow("RETIRED_OPERATOR_FENCE_UNVERIFIED");
+    expect(snapshot()).toEqual(before);
+    expect(inspectRetiredOperatorLeaseFence(input)).toEqual(observed);
   });
 
   it("observes the final physical state after retirement without reopening writer authority", async () => {

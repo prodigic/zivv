@@ -867,19 +867,30 @@ export function verifyOperatorRetirementEvidence(input: {
   return { checkpoint, receipt };
 }
 
-/**
- * Recheck a fenced installation's physical catalog, journal, files and runtime.
- * This grants no writer lease, activation or permission to publish a handoff.
- * Read-only SQLite may create WAL/SHM sidecars; logical content remains unchanged.
- */
-export function observeRetiredOperatorRecoveryCheckpoint(input: {
+type RetiredOperatorObservationInput = {
   root: string;
   archive: Buffer;
   retirementReceipt: Buffer;
   recoveryKey: Buffer;
   npmCli?: string;
-}): OperatorRecoveryCheckpoint {
+};
+
+/**
+ * Recheck a fenced installation's physical catalog, journal, files and runtime.
+ * This grants no writer lease, activation or permission to publish a handoff.
+ * Read-only SQLite may create WAL/SHM sidecars; logical content remains unchanged.
+ */
+export function observeRetiredOperatorRecoveryCheckpoint(
+  input: RetiredOperatorObservationInput
+): OperatorRecoveryCheckpoint {
   const { checkpoint } = verifyOperatorRetirementEvidence(input);
+  return observeRetiredOperatorCheckpoint(input, checkpoint);
+}
+
+function observeRetiredOperatorCheckpoint(
+  input: RetiredOperatorObservationInput,
+  checkpoint: OperatorRecoveryCheckpoint
+): OperatorRecoveryCheckpoint {
   const checkout = realpathSync(input.root);
   const location = projectLedgerLocation(checkout);
   const operator = resolvePrivateCandidateDirectory(location.directory);
@@ -950,6 +961,46 @@ export function observeRetiredOperatorRecoveryCheckpoint(input: {
   if (checkpoint.runtime.bootstrapNpm && input.npmCli !== undefined)
     verifyNpmExecutionTool(checkpoint.runtime.bootstrapNpm, input.npmCli);
   return actual;
+}
+
+/** Observe the exact released lease on the still-available retired installation. */
+export function inspectRetiredOperatorLeaseFence(
+  input: RetiredOperatorObservationInput
+) {
+  try {
+    const { checkpoint, receipt } = verifyOperatorRetirementEvidence(input);
+    const actual = observeRetiredOperatorCheckpoint(input, checkpoint);
+    const archivedJournal = validateWeeklyJournalRecoverySnapshot(
+      Buffer.from(checkpoint.journal, "base64")
+    );
+    const actualBytes = Buffer.from(actual.journal, "base64");
+    const actualJournal = validateWeeklyJournalRecoverySnapshot(actualBytes);
+    const captured = archivedJournal.ownership.find(
+      (row) => row.scope === scope
+    );
+    const observed = actualJournal.ownership.find((row) => row.scope === scope);
+    if (
+      !captured ||
+      !observed ||
+      captured.expiresAtEpochMs === 0 ||
+      captured.owner !== observed.owner ||
+      captured.fence !== observed.fence ||
+      observed.expiresAtEpochMs !== 0
+    )
+      throw Error("RETIRED_OPERATOR_FENCE_UNVERIFIED");
+    return {
+      status: "retired-operator-fence-observed" as const,
+      activationAllowed: false as const,
+      fence: observed.fence,
+      archiveSha256: receipt.archiveSha256,
+      checkpointSha256: receipt.checkpointSha256,
+      retirementReceiptSha256: sha256(input.retirementReceipt),
+      ledgerRevision: receipt.ledgerRevision,
+      journalSha256: sha256(actualBytes),
+    };
+  } catch {
+    throw Error("RETIRED_OPERATOR_FENCE_UNVERIFIED");
+  }
 }
 
 /** Persist a final backup and fence this cooperating installation under both writer locks. */
