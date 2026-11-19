@@ -18,12 +18,14 @@ function payload(
   family: RecoveryGmailNextSelectedLoadFrameInput,
   third: RecoveryGmailSelectedReceiptSelector,
   admittedAtEpochMs: number,
-  installedTail?: SelectedThirdLoadEvidenceTail
+  installedTail?: SelectedThirdLoadEvidenceTail,
+  historical = false
 ) {
   const evidence = readThirdSelectedLoadAdmissionEvidence(
     family,
     third,
-    installedTail
+    installedTail,
+    historical
   );
   const {
     status: _status,
@@ -134,11 +136,29 @@ export function readThirdSelectedLoadAdmissionWithStartBaseline(
   );
 }
 
+/** Re-derive the signed third plan from already settled predecessor history.
+ * The returned plan supplies no present catalog or writer permission. */
+export function readThirdSelectedLoadAdmissionFromHistory(
+  family: RecoveryGmailNextSelectedLoadFrameInput,
+  third: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer,
+  executionBaseline: Buffer
+) {
+  return readThirdSelectedLoadAdmissionPrefix(
+    family,
+    third,
+    admission,
+    executionBaseline,
+    true
+  );
+}
+
 function readThirdSelectedLoadAdmissionPrefix(
   family: RecoveryGmailNextSelectedLoadFrameInput,
   third: RecoveryGmailSelectedReceiptSelector,
   admission: Buffer,
-  executionBaseline?: Buffer
+  executionBaseline?: Buffer,
+  historical = false
 ) {
   try {
     const bytes = Buffer.from(checkedThirdSelectedLoadAdmission(admission));
@@ -158,11 +178,17 @@ function readThirdSelectedLoadAdmissionPrefix(
       thirdAdmissionPresence: presence,
       thirdStartPresence,
       effective,
-    } = payload(family, third, admittedAtEpochMs, {
-      runId,
-      bytes,
-      executionBaseline,
-    });
+    } = payload(
+      family,
+      third,
+      admittedAtEpochMs,
+      {
+        runId,
+        bytes,
+        executionBaseline,
+      },
+      historical
+    );
     if (!presence || canonicalJson(expected) !== canonicalJson(body))
       return invalid();
     return {

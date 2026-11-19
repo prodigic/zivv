@@ -583,3 +583,16 @@ The returned catalog and released journal are historical. This witness leaves
 the current SQL and shared backup untouched. Re-derive the third plan and
 check the full live generation-four delta before authorizing execution or
 claiming settlement.
+
+The historical plan path replays the full second-load catalog, run and
+settlement verification against this witness. It then re-derives the same
+third receipt and import report from the original authenticated capture
+family. The complete v3 admission and signed start must equal the re-derived
+values, including the exact source digest, expected report, original start
+time and ordered predecessor commitments. The result identifies itself as
+historical evidence that still requires a live delta proof.
+
+The native fixture verifies this path with a changed shared backup. It
+preserves that backup and proves the third receipt, run identity, pre-effect
+catalog and journal from signed evidence. Substituting a prior receipt
+refuses. There is no generation-four execution or settlement in this path.

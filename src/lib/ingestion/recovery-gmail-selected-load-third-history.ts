@@ -157,7 +157,7 @@ export function readThirdSelectedLoadPredecessorHistory(
       execution.generation + 1 !== baseline.generation
     )
       return invalid();
-    const { record } = readNextSelectedLoadAdmissionForReplay(
+    const { record, effective } = readNextSelectedLoadAdmissionForReplay(
       family.prior,
       family.next,
       family.admission,
@@ -217,6 +217,23 @@ export function readThirdSelectedLoadPredecessorHistory(
       predecessorEntries: entries,
       completedPrefixSha256,
       liveDeltaRequired: true as const,
+      family: {
+        opened,
+        root,
+        entries,
+        allEntries,
+        beforeThirdStartEntries: baseline.entries,
+        thirdAdmissionPresence: "installed" as const,
+        thirdStartPresence: "installed" as const,
+        read,
+        loadPath: prefix,
+        runId,
+        executionBytes,
+        execution,
+        record,
+        effective,
+        admissionSha256,
+      },
     };
   } catch {
     return invalid();
