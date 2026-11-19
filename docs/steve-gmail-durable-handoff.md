@@ -184,6 +184,9 @@ expired scan reports `GMAIL_FRESH_SCAN_DEADLINE` without returning a partial
 capture or a missing-source observation. The next explicit poll can recheck
 after inspection of the failure.
 
+For process-level supervision of one explicit poll on Windows, see the
+[Windows Job runner runbook](windows-friday-job-runner.md).
+
 ## Recovery boundary still requiring implementation
 
 The current operator recovery inventory rejects the new `email-acquisition`

@@ -69,6 +69,22 @@ try {
     if (!isAbsolute(directory)) throw Error("GMAIL_CREDENTIAL_STORAGE_UNSAFE");
     await provision(directory);
     console.log(JSON.stringify({ status: "credential-provisioned" }));
+  } else if (command === "poll-friday-supervised") {
+    const raw = options(args, ["--worker-budget-ms"])("--worker-budget-ms");
+    const deadlineMs = Number(raw);
+    if (!/^[1-9][0-9]{0,5}$/.test(raw) || deadlineMs > 600_000)
+      throw Error("INVALID_FRIDAY_GMAIL_WORKER_BUDGET");
+    if (process.stdin.isTTY) throw Error("INVALID_FRIDAY_GMAIL_WORKER_INPUT");
+    const { readFridayGmailWorkerInput, pollFridayGmailInWindowsJob } =
+      await import("../dist/lib/ingestion/steve-gmail-friday-supervised.js");
+    const frame = await readFridayGmailWorkerInput(process.stdin);
+    try {
+      console.log(
+        JSON.stringify(await pollFridayGmailInWindowsJob(frame, deadlineMs))
+      );
+    } finally {
+      frame.fill(0);
+    }
   } else if (command === "poll" || command === "poll-friday") {
     const get = options(args, [
       "--credential-dir",

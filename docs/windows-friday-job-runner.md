@@ -48,3 +48,43 @@ Node worker through the runner. The host verifies the installed evidence before
 returning success. Missing build support refuses before a retained process starts.
 The other retained launchers and scheduler-context
 rehearsal remain separate integration work.
+
+## One explicitly supervised mailbox poll
+
+After building the reviewed checkout with `npm run build:etl`, provide a private
+UTF-8 JSON file with the two absolute directories, confirmed mailbox account,
+Friday edition and canonical UTC scan start. Keep the configuration outside the
+repository. The frame holds no access token, refresh token or message body.
+
+```json
+{
+  "credentialDirectory": "C:\\private\\zivv-gmail",
+  "operatorDirectory": "C:\\private\\zivv-operator",
+  "expectedAccountId": "<confirmed-mailbox>",
+  "expectedEditionId": "2026-11-20",
+  "scanStartsAt": "2026-11-19T08:00:00.000Z"
+}
+```
+
+```powershell
+Get-Content -LiteralPath "$privatePollConfig" -Raw -Encoding utf8 |
+  node scripts/steve-gmail.js poll-friday-supervised --worker-budget-ms $workerBudgetMs
+```
+
+Choose and review the worker budget for this host before each rollout. The
+command requires an explicit integer from 1 to 600000 milliseconds. That budget
+covers the full worker process and its descendants, including credential
+refresh, the fresh search, local handoff and in-process retries. The search
+also has its own read budget. Monday midnight Pacific remains the deadline for
+starting another capture. The supervisor emits a bounded result without
+mailbox identity, paths, secrets, or receipt bodies.
+
+A confirmed stop proves that the job was reaped. A stopped or unconfirmed
+result can still leave a durable batch, or a refresh-token rotation that needs
+inspection. Check the private handoff and credential state before relying on
+a subsequent invocation. If the provider revoked the old token before the
+replacement was committed, follow the existing private credential renewal
+procedure. The parent does not rerun the job automatically.
+
+The regular `poll`, `poll-friday`, and manual import commands remain available.
+This entry point registers no scheduled task.
