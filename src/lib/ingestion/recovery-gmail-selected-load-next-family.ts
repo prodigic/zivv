@@ -11,13 +11,12 @@ import {
   readNextSelectedLoadAdmissionRunId,
 } from "./recovery-gmail-selected-load-next-admission.js";
 import { readSelectedLoadEntry } from "./recovery-gmail-selected-load-physical-reader.js";
-import { verifyThirdSelectedLoadAdmissionRecord } from "./recovery-gmail-selected-load-third-admission-format.js";
+import { verifyThirdSelectedLoadAdmissionForHost } from "./recovery-gmail-selected-load-third-admission-format.js";
 import {
   observeThirdSelectedLoadStartTail,
   type SelectedThirdLoadEvidenceTail,
 } from "./recovery-gmail-selected-load-third-start-tail.js";
 import { openPreparedRuntimeForAdmission } from "./recovery-runtime.js";
-import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
 
 function fail(): never {
@@ -39,20 +38,12 @@ export function readNextSelectedLoadFamily(
   });
   const root = resolve(host.destination);
   if (thirdTail) {
-    const { body } = verifyThirdSelectedLoadAdmissionRecord(
+    verifyThirdSelectedLoadAdmissionForHost(
+      { prior: input, next, admission },
+      thirdTail.runId,
       thirdTail.bytes,
-      key
+      opened.receiptSha256
     );
-    if (
-      body.runId !== thirdTail.runId ||
-      body.archiveSha256 !== sha256(input.archive) ||
-      body.retirementReceiptSha256 !== sha256(input.retirementReceipt) ||
-      body.preparedReceiptSha256 !== opened.receiptSha256 ||
-      body.secondAdmissionSha256 !== sha256(admission) ||
-      canonicalJson(body.firstSelector) !== canonicalJson(input.selector) ||
-      canonicalJson(body.secondSelector) !== canonicalJson(next)
-    )
-      return fail();
   }
   const allEntries = opened.inventoryGmailSelectedLoadExecution();
   const start =

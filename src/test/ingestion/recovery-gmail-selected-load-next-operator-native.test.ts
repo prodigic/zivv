@@ -11,7 +11,7 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { expect, it, vi } from "vitest";
 import {
   canonicalJson,
@@ -32,6 +32,7 @@ import {
   inspectInstalledThirdSelectedLoadExecutionBaseline,
   authenticateThirdSelectedLoadExecutionBaseline,
 } from "../../lib/ingestion/recovery-gmail-selected-load-third-start.js";
+import { readThirdSelectedLoadPredecessorHistory } from "../../lib/ingestion/recovery-gmail-selected-load-third-history.js";
 import { signSelectedThirdLoadExecutionBaseline } from "../../lib/ingestion/recovery-gmail-execution-baseline.js";
 
 vi.setConfig({ testTimeout: 1_200_000 });
@@ -908,6 +909,58 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
     expect(readFileSync(baselineCandidate)).toEqual(startBytes);
     unlinkSync(baselineCandidate);
     expect(observe().presence).toBe("installed");
+    const replacementBackup = Buffer.from(
+      "Synthetic later encrypted-backup stand-in"
+    );
+    writeFileSync(installerBackupPath, replacementBackup);
+    try {
+      const witness = readThirdSelectedLoadPredecessorHistory(
+        installInput,
+        startBytes
+      );
+      expect(witness.liveDeltaRequired).toBe(true);
+      expect(witness.completedPrefixSha256).toBe(
+        thirdInspection.completedPrefixSha256
+      );
+      expect(witness.history.catalog).toEqual(catalog);
+      expect(witness.history.journal).toEqual(journal);
+      expect(witness.history.snapshot).toEqual(backupBeforeThirdInstall);
+      expect(witness.history.resultSha256).toBe(digest(resultBytes));
+      expect(witness.history.loadAllowed).toBe(false);
+      expect(readFileSync(installerBackupPath)).toEqual(replacementBackup);
+      expect(observe).toThrow(
+        "INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START"
+      );
+      expect(() =>
+        readThirdSelectedLoadPredecessorHistory(
+          installInput,
+          alteredCatalogBaseline
+        )
+      ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_PREDECESSOR_HISTORY");
+      const fixedAdmissionStage = join(thirdDirectory, "stages", "admission");
+      rmdirSync(fixedAdmissionStage);
+      try {
+        expect(() =>
+          readThirdSelectedLoadPredecessorHistory(installInput, startBytes)
+        ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_PREDECESSOR_HISTORY");
+      } finally {
+        mkdirSync(fixedAdmissionStage);
+      }
+      const unexpectedSibling = join(dirname(resultFile), "unexpected");
+      writeFileSync(unexpectedSibling, "keep predecessor evidence");
+      try {
+        expect(() =>
+          readThirdSelectedLoadPredecessorHistory(installInput, startBytes)
+        ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_PREDECESSOR_HISTORY");
+        expect(readFileSync(unexpectedSibling, "utf8")).toBe(
+          "keep predecessor evidence"
+        );
+      } finally {
+        unlinkSync(unexpectedSibling);
+      }
+    } finally {
+      writeFileSync(installerBackupPath, backupBeforeThirdInstall);
+    }
     expect(() =>
       authenticateThirdSelectedLoadExecutionBaseline(installInput, startBytes)
     ).toThrow();

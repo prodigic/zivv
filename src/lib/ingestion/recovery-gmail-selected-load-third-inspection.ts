@@ -2,6 +2,7 @@ import {
   copyRecoveryGmailSelectedReceiptSelector,
   type RecoveryGmailSelectedReceiptSelector,
 } from "./recovery-gmail-capture-admission-proof.js";
+import { digestThirdSelectedLoadCompletedPrefix } from "./recovery-gmail-selected-load-third-admission-format.js";
 import type { SelectedThirdLoadEvidenceTail } from "./recovery-gmail-selected-load-third-start-tail.js";
 import { planCapturedLoadAfterPredecessor } from "./recovery-gmail-selected-load-captured-plan.js";
 import type { RecoveryGmailNextSelectedLoadFrameInput } from "./recovery-gmail-selected-load-next-framing.js";
@@ -74,23 +75,20 @@ export function readThirdSelectedLoadAdmissionEvidence(
     });
     const journalSha256 = sha256(observedJournal);
     const inventorySha256 = sha256(canonicalJson(physicalEntries));
-    const completedPrefixSha256 = sha256(
-      canonicalJson({
-        domain: "zivv-recovery-gmail-selected-load-prefix/v1",
-        firstLoadFamilySha256: completionIdentity.priorFamilySha256,
-        second: {
-          runId: report.runId,
-          admissionSha256: report.admissionSha256,
-          executionBaselineSha256: completionIdentity.executionBaselineSha256,
-          historyManifestSha256: completionIdentity.historyManifestSha256,
-          resultSha256: report.resultSha256,
-        },
-        catalogSha256: report.ledgerRevision,
-        generation: report.generation,
-        journalSha256,
-        inventorySha256,
-      })
-    );
+    const completedPrefixSha256 = digestThirdSelectedLoadCompletedPrefix({
+      firstLoadFamilySha256: completionIdentity.priorFamilySha256,
+      second: {
+        runId: report.runId,
+        admissionSha256: report.admissionSha256,
+        executionBaselineSha256: completionIdentity.executionBaselineSha256,
+        historyManifestSha256: completionIdentity.historyManifestSha256,
+        resultSha256: report.resultSha256,
+      },
+      catalogSha256: report.ledgerRevision,
+      generation: report.generation,
+      journalSha256,
+      inventorySha256,
+    });
     const reportCommitments = {
       status: "third-selected-load-inspected" as const,
       previousRunId: report.runId,
