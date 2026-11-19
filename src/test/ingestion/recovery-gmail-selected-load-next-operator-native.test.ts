@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { expect, it, vi } from "vitest";
@@ -193,6 +194,101 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
       journal
     );
+    expect(readFileSync(admissionFile)).toEqual(bytes);
+
+    const composedArgs = [
+      ...withAdmission,
+      "--cutoff",
+      new Date().toISOString(),
+    ];
+    const audit = success("inspect-composed-gmail-obligations", composedArgs);
+    expect(audit).toMatchObject({
+      status: "composed-gmail-obligations-inspected",
+      generation: 3,
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+      blockingBatchCount: expect.any(Number),
+    });
+    const batches = audit.batches as Array<{
+      batchId: string;
+      firstSavedAtEpochMs: number;
+      messages: Array<{
+        messageSha256: string;
+        status: string;
+        receiptId?: string;
+        loadRunIds?: string[];
+      }>;
+    }>;
+    const messageHash = (id: string) =>
+      createHash("sha256").update(id).digest("hex");
+    const messages = batches.flatMap((batch) => batch.messages);
+    expect(
+      messages.filter((message) => message.status === "loaded")
+    ).toHaveLength(2);
+    expect(messages).toContainEqual(
+      expect.objectContaining({
+        messageSha256: messageHash(first.messageId),
+        status: "loaded",
+        receiptId: first.receiptId,
+        loadRunIds: [firstResult.runId],
+      })
+    );
+    expect(messages).toContainEqual(
+      expect.objectContaining({
+        messageSha256: messageHash(ready.receipt.messageId),
+        status: "loaded",
+        receiptId: ready.receipt.receiptId,
+        loadRunIds: [loaded.runId],
+      })
+    );
+    expect(messages).toContainEqual({
+      messageSha256: messageHash("b1"),
+      status: "capture-pending",
+    });
+    expect(audit.blockingBatchCount).toBeGreaterThan(0);
+    const earliest = Math.min(
+      ...batches.map((batch) => batch.firstSavedAtEpochMs)
+    );
+    expect(Number.isSafeInteger(earliest)).toBe(true);
+    const boundary = success("inspect-composed-gmail-obligations", [
+      ...withAdmission,
+      "--cutoff",
+      new Date(earliest).toISOString(),
+    ]);
+    expect(boundary).toMatchObject({
+      status: "composed-gmail-obligations-inspected",
+      cutoffEpochMs: earliest,
+      blockingBatchCount: 0,
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+    });
+    expect(boundary.batches).toEqual(batches);
+
+    const resultFile = join(
+      root,
+      "recovery-gmail-load",
+      String(loaded.runId),
+      "load-result.json"
+    );
+    const resultBytes = readFileSync(resultFile);
+    const badAudit = run("inspect-composed-gmail-obligations", [
+      ...nextArgs,
+      "--admission-file",
+      tampered,
+      "--cutoff",
+      new Date().toISOString(),
+    ]);
+    expect(badAudit.status).toBe(1);
+    expect(badAudit.stdout).toBe("");
+    expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
+    expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
+      journal
+    );
+    expect(readFileSync(resultFile)).toEqual(resultBytes);
     expect(readFileSync(admissionFile)).toEqual(bytes);
     preserve = false;
   } finally {
