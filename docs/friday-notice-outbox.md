@@ -14,3 +14,14 @@ Separately verified, matching acknowledgement -> sent receipt
 - Notice records contain only the bounded notice fields, the local attempt ID, and an optional digest of the verified acknowledgement. The later delivery adapter is responsible for provider idempotency, private identity and credentials, validated receipt evidence, and deciding whether an old pending notice is still actionable.
 
 The isolated tests use private temporary databases and simulated acknowledgements. Independently hosted monitoring, persistent off-host recovery, verified release notices, and external delivery are separate #37 work.
+
+The delivery adapter prepares credentials and the message before claiming. A
+preparation failure leaves the intent pending. After a claim commits, it may
+invoke its provider once. If that call fails or loses its response, later
+invocations only look up a receipt for the same outbox key and attempt ID.
+They never issue a second send for an unresolved claim. A confirmed receipt
+must bind the exact key, attempt ID, and digest before the outbox records it.
+
+The adapter has no concrete mail provider. Its isolated rehearsal simulates an
+accepted delivery with a lost reply, reopens the database, and reconciles the
+existing delivery exactly once.
