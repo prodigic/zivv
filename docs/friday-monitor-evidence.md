@@ -12,7 +12,7 @@ The planner leaves `weekly:run-import` and the manual acquisition and publicatio
 A separate verified-release inspection prepares evidence for one success notice
 per edition. It checks the native acknowledgement at its canonical control
 ancestor, the exact candidate and its live verification, and the matching
-published cutoff and membership in the weekly ledger. Current production control
+published cutoff and membership in the weekly ledger. The verified manifest binds the frozen weekly edition separately from the site dataset version. Current production control
 must be idle on that release. During another rollout, or after rollback or a
 newer publication, the inspector refuses to announce a stale release.
 

@@ -111,7 +111,20 @@ function controlStore(root: string) {
     validateTransition: validatePromotionAppend,
   });
 }
+const siteDatasetVersion = "2026-10-10T01:00:00.000Z";
+function fixtureManifest(weekly: WeeklyEditionLedger): Buffer {
+  const { status: _status, ...edition } = weekly.editions[0]!;
+  return Buffer.from(
+    canonicalJson({
+      datasetVersion: siteDatasetVersion,
+      weeklyEdition: edition,
+    })
+  );
+}
 function candidateFor(weekly: Buffer): ReleaseCandidate {
+  const manifest = fixtureManifest(
+    parseWeeklyEditionLedger(JSON.parse(weekly.toString("utf8")))
+  );
   const configuration = CANDIDATE_CONFIG_FILES.map((path) => ({
     path,
     sha256: path === "ingestion/weekly-editions.json" ? hash(weekly) : null,
@@ -127,12 +140,16 @@ function candidateFor(weekly: Buffer): ReleaseCandidate {
     editionId: "2026-10-09",
     cutoffEpochMs: cutoff,
     membershipSha256: hash(canonicalJson([101])),
-    datasetVersion: "2026-10-09T21:00:00.000Z",
-    manifestSha256: "3".repeat(64),
+    datasetVersion: siteDatasetVersion,
+    manifestSha256: hash(manifest),
     applicationBuildSha256: "4".repeat(64),
     applicationProvenanceSha256: "6".repeat(64),
     files: [
-      { path: "data/manifest.json", size: 5, sha256: "3".repeat(64) },
+      {
+        path: "data/manifest.json",
+        size: manifest.length,
+        sha256: hash(manifest),
+      },
       { path: "index.html", size: 10, sha256: "5".repeat(64) },
     ],
   };
@@ -437,6 +454,7 @@ describe("verified weekly acknowledgement with native control and private journa
       inspectFridayVerifiedRelease({
         state: f.state,
         candidate,
+        manifest: fixtureManifest(weekly()),
         weeklyLedger: weekly(),
         store: f.store,
       })
@@ -454,7 +472,16 @@ describe("verified weekly acknowledgement with native control and private journa
     const beforeState = f.journal.loadOwned(completed.runId, f.lease);
     const append = vi.fn(f.store.compareAndAppend);
     const store = { ...f.store, compareAndAppend: append };
-    const args = { state: completed, candidate, weeklyLedger: weekly(), store };
+    const args = {
+      state: completed,
+      candidate,
+      manifest: fixtureManifest(weekly()),
+      weeklyLedger: weekly(),
+      store,
+    };
+    expect(args.weeklyLedger.editions[0]!.datasetVersion).not.toBe(
+      f.candidate.datasetVersion
+    );
     const observed = inspectFridayVerifiedRelease(args);
     expect(observed).toEqual({
       status: "verified-release",
@@ -469,6 +496,9 @@ describe("verified weekly acknowledgement with native control and private journa
     });
     expect(inspectFridayVerifiedRelease(args)).toEqual(observed);
 
+    expect(() =>
+      inspectFridayVerifiedRelease({ ...args, manifest: Buffer.from("{}") })
+    ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
     const membership = structuredClone(args.weeklyLedger);
     membership.editions[0]!.eventIds = [102];
     expect(() =>

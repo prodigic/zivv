@@ -13,6 +13,7 @@ import { parseWeeklyRunState } from "./weekly-run-state.js";
 interface FridayVerifiedReleaseInput {
   state: unknown;
   candidate: Buffer;
+  manifest: Buffer;
   weeklyLedger: unknown;
   store: Pick<PromotionControlStore, "ref" | "readAt" | "read">;
 }
@@ -63,11 +64,26 @@ export function inspectFridayVerifiedRelease(
       edition?.status !== "published" ||
       weekly.publishedCutoffEpochMs !== candidate.cutoffEpochMs ||
       edition.endEpochMs !== candidate.cutoffEpochMs ||
-      edition.datasetVersion !== candidate.datasetVersion ||
       sha256(canonicalJson(edition.eventIds)) !== candidate.membershipSha256
     )
       return invalid();
 
+    if (sha256(input.manifest) !== candidate.manifestSha256) return invalid();
+    const manifest = JSON.parse(
+      new TextDecoder("utf-8", { fatal: true }).decode(input.manifest)
+    ) as { datasetVersion?: unknown; weeklyEdition?: unknown };
+    if (
+      manifest.datasetVersion !== candidate.datasetVersion ||
+      canonicalJson(manifest.weeklyEdition) !==
+        canonicalJson({
+          editionId: edition.editionId,
+          startEpochMs: edition.startEpochMs,
+          endEpochMs: edition.endEpochMs,
+          eventIds: edition.eventIds.map(Number),
+          datasetVersion: edition.datasetVersion,
+        })
+    )
+      return invalid();
     const completed = input.store.readAt(evidence.controlHead);
     if (completed.head !== evidence.controlHead || !completed.bytes)
       return invalid();
