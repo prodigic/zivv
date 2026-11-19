@@ -25,7 +25,10 @@ import {
   authenticateRecoveryGmailThirdSelectedLoadAdmission,
   inspectInstalledRecoveryGmailThirdSelectedLoadAdmission,
 } from "../../lib/ingestion/recovery-gmail-selected-load-third-admission.js";
-import { runOperatorRecoveryGmailThirdSelectedLoadInstallation } from "../../lib/ingestion/recovery-gmail-selected-load-launcher.js";
+import {
+  runOperatorRecoveryGmailThirdSelectedLoadInstallation,
+  runOperatorRecoveryGmailThirdStartInstallation,
+} from "../../lib/ingestion/recovery-gmail-selected-load-launcher.js";
 import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-next-replay.js";
 import {
   prepareThirdSelectedLoadExecutionBaseline,
@@ -988,6 +991,72 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
     unlinkSync(baselinePath);
     rmdirSync(baselineStage);
     expect(observe().presence).toBe("absent");
+    const installStart = { input: installInput, executionBaseline: startBytes };
+    const installedStart = {
+      status: "third-load-start-installed",
+      runId: thirdInspection.runId,
+      executionBaselineSha256: digest(startBytes),
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+    };
+    const startFile = join(fixture.base, "third-start-detached.json");
+    const startArgs = [
+      ...withAdmission,
+      "--third-selector-file",
+      thirdSelectorFile,
+      "--third-admission-file",
+      thirdAdmissionFile,
+      "--third-execution-baseline-file",
+      startFile,
+    ];
+    const detached = success("prepare-third-selected-load-start", startArgs);
+    expect(detached).toMatchObject({
+      status: "third-load-start-prepared",
+      runId: thirdInspection.runId,
+      loadAllowed: false,
+    });
+    expect(success("prepare-third-selected-load-start", startArgs)).toEqual(
+      detached
+    );
+    expect(observe().presence).toBe("absent");
+    const exactStartFile = join(fixture.base, "third-start-exact.json");
+    writeFileSync(exactStartFile, startBytes);
+    const exactStartArgs = [...startArgs.slice(0, -1), exactStartFile];
+    expect(
+      success("install-third-selected-load-start", exactStartArgs)
+    ).toEqual({
+      ...installedStart,
+      command: "install-third-selected-load-start",
+    });
+    expect(observe().presence).toBe("installed");
+    expect(
+      await runOperatorRecoveryGmailThirdStartInstallation(installStart)
+    ).toEqual(installedStart);
+    const identity = lstatSync(baselinePath);
+    renameSync(baselinePath, baselineCandidate);
+    expect(observe().presence).toBe("staging");
+    expect(
+      await runOperatorRecoveryGmailThirdStartInstallation(installStart)
+    ).toEqual(installedStart);
+    expect(lstatSync(baselinePath).ino).toBe(identity.ino);
+    expect(existsSync(baselineCandidate)).toBe(false);
+    linkSync(baselinePath, baselineCandidate);
+    expect(lstatSync(baselinePath).nlink).toBe(2);
+    expect(
+      await runOperatorRecoveryGmailThirdStartInstallation(installStart)
+    ).toEqual(installedStart);
+    expect(lstatSync(baselinePath).nlink).toBe(1);
+    expect(lstatSync(baselinePath).ino).toBe(identity.ino);
+    await expect(
+      runOperatorRecoveryGmailThirdStartInstallation({
+        input: installInput,
+        executionBaseline: alteredCatalogBaseline,
+      })
+    ).rejects.toThrow();
+    expect(readFileSync(baselinePath)).toEqual(startBytes);
+    expect(existsSync(join(thirdDirectory, "load-result.json"))).toBe(false);
     expect(readCanonicalSqliteLedgerReadOnly(catalogPath)).toEqual(catalog);
     expect(readWeeklyJournalRecoverySnapshotReadOnly(journalPath)).toEqual(
       journal

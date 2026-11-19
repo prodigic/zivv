@@ -88,6 +88,13 @@ import {
   decodeRecoveryGmailSelectedLoadFrame,
 } from "./recovery-gmail-selected-load-framing.js";
 import { readThirdSelectedLoadAdmissionForInstallation } from "./recovery-gmail-selected-load-third-admission.js";
+import { readThirdSelectedLoadStartForInstallation } from "./recovery-gmail-selected-load-third-start.js";
+import { observeThirdSelectedLoadStartTail } from "./recovery-gmail-selected-load-third-start-tail.js";
+import {
+  decodeThirdSelectedLoadStartFrame,
+  encodeThirdSelectedLoadStartFrame,
+  type RecoveryGmailThirdSelectedLoadStartFrameInput,
+} from "./recovery-gmail-selected-load-third-start-framing.js";
 import {
   decodeRecoveryGmailThirdSelectedLoadFrame,
   encodeRecoveryGmailThirdSelectedLoadFrame,
@@ -127,6 +134,7 @@ import { sha256 } from "./steve-preflight.js";
 
 export const recoveryGmailSelectedLoadExecutorVersion = 1;
 export const recoveryGmailThirdSelectedLoadInstallerVersion = 1;
+export const recoveryGmailThirdStartInstallerVersion = 1;
 const production = "prodigic/zivv/production";
 const sqlFiles = /^operator\/(?:ledger|weekly-runs)\.sqlite(?:-wal|-shm)?$/;
 const keyName =
@@ -154,7 +162,7 @@ interface Scope {
     | "completion-before-intent"
     | "completion-intent-partial";
   evidenceGuard?: boolean;
-  nextAdmission?: { target: string; stage: string; bytes: Buffer };
+  fixedEvidence?: { target: string; stage: string; bytes: Buffer };
   successor?: { path: string };
   incompleteSnapshot?: {
     path: string;
@@ -710,18 +718,19 @@ export function selectedGmailLoadFile(
   if (!scope) return false;
   scope.assertCurrent();
   const absolute = resolve(path);
-  if (scope.nextAdmission) {
+  if (scope.fixedEvidence) {
     if (scope.phase !== "evidence" || !scope.evidenceGuard) return fail();
-    const { target, stage, bytes: expected } = scope.nextAdmission;
+    const { target, stage, bytes: expected } = scope.fixedEvidence;
     if (effect === "directory") {
       if (!scope.directories.has(absolute)) return fail();
       return true;
     }
+    const name = basename(absolute);
+    const targetName = basename(target);
     const candidate =
       dirname(absolute) === stage &&
-      /^admission\.json(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.test(
-        basename(absolute)
-      );
+      name.startsWith(targetName + ".") &&
+      /^(?:\.\d+\.[a-f0-9]{16}\.tmp){1,2}$/.test(name.slice(targetName.length));
     if (
       (!candidate && absolute !== target) ||
       !bytes?.equals(expected) ||
@@ -2315,20 +2324,24 @@ type SelectedLoadAdmissionInstallationEvidence = Pick<
 >;
 
 /** Mutate only the exact signed admission files while both local stores are guarded. */
-async function installSelectedLoadAdmissionWithGuards(
+async function installSelectedLoadFixedEvidenceWithGuards(
   runtime: RecoveryRuntimeInput,
   tail: SelectedLoadAdmissionTail,
   effective: SelectedLoadAdmissionInstallationEvidence,
-  preparedReceiptSha256?: string
+  preparedReceiptSha256?: string,
+  executionBaseline?: Buffer
 ): Promise<void> {
-  const { bytes } = tail;
+  const bytes = executionBaseline ?? tail.bytes;
   let scope: Scope | undefined;
   try {
     const destination = resolve(runtime.destination);
-    const { directory, stage, target } = selectedLoadAdmissionTailPaths(
-      destination,
-      tail.runId
-    );
+    const paths = selectedLoadAdmissionTailPaths(destination, tail.runId);
+    const { directory, base } = paths;
+    const target = executionBaseline
+      ? join(directory, "execution-baseline.json")
+      : paths.target;
+    const stage = executionBaseline ? target + "-stage" : paths.stage;
+    const stageRelative = base + "/execution-baseline.json-stage";
     const root = join(destination, "checkout"),
       operator = join(destination, "operator"),
       journalPath = join(operator, "weekly-runs.sqlite"),
@@ -2352,27 +2365,47 @@ async function installSelectedLoadAdmissionWithGuards(
       opened.receiptSha256 !== preparedReceiptSha256
     )
       return fail();
-    const before = observeSelectedLoadAdmissionTail(
-      destination,
-      effective.entries,
-      tail
+    const initialEntries = opened.inventoryGmailSelectedLoadExecution();
+    const observe = (entries: RecoveryRuntimeEntry[]) => {
+      if (!executionBaseline)
+        return observeSelectedLoadAdmissionTail(destination, entries, tail);
+      const start = observeThirdSelectedLoadStartTail(
+        destination,
+        entries,
+        tail,
+        executionBaseline,
+        runtime.recoveryKey
+      );
+      return {
+        predecessorEntries: start.beforeStart,
+        observed: start.observed,
+      };
+    };
+    const before = observe(initialEntries);
+    same(
+      executionBaseline ? before.predecessorEntries : initialEntries,
+      effective.entries
     );
     const initial = new Map(
       before.predecessorEntries.map((entry) => [entry.path, entry])
     );
     if (initial.size !== before.predecessorEntries.length) return fail();
 
-    const directories = new Set([directory, dirname(stage), stage]);
+    const directories = new Set(
+      executionBaseline
+        ? [directory, stage]
+        : [directory, dirname(stage), stage]
+    );
     const transients = new Map<string, Buffer>();
     if (before.observed.candidate)
       transients.set(before.observed.candidate.path, bytes);
-    const admissionSha256 = sha256(tail.bytes);
+    const evidenceSha256 = sha256(bytes);
     const startedAt = Date.now();
     scope = {
       active: true,
       phase: "evidence",
       evidenceGuard: true,
-      nextAdmission: { target, stage, bytes },
+      fixedEvidence: { target, stage, bytes },
       deadline: startedAt + 180000,
       startedAt,
       root,
@@ -2413,15 +2446,19 @@ async function installSelectedLoadAdmissionWithGuards(
         const predecessor: RecoveryRuntimeEntry[] = [];
         for (const entry of entries) {
           const path = join(destination, entry.path);
-          if (path !== directory && !entry.path.startsWith(tailPrefix))
-            predecessor.push(entry);
+          const withinEvidence = executionBaseline
+            ? path === target ||
+              path === stage ||
+              entry.path.startsWith(stageRelative + "/")
+            : path === directory || entry.path.startsWith(tailPrefix);
+          if (!withinEvidence) predecessor.push(entry);
           else if (entry.kind === "directory" && directories.has(path))
             continue;
           else if (
             entry.kind !== "file" ||
             (path !== target && !transients.has(path)) ||
             (!(
-              entry.size === bytes.length && entry.sha256 === admissionSha256
+              entry.size === bytes.length && entry.sha256 === evidenceSha256
             ) &&
               !(entry.size === 0 && writing && transients.has(path)))
           )
@@ -2449,26 +2486,21 @@ async function installSelectedLoadAdmissionWithGuards(
             // Both transactions already prove the exact admitted SQL state.
             // Use a fresh full enumeration instead of opening another catalog transaction.
             const entries = opened.inventoryGmailSelectedLoadExecution();
-            same(entries, effective.entries);
-            const locked = observeSelectedLoadAdmissionTail(
-              destination,
-              entries,
-              tail
-            );
+            same(entries, initialEntries);
+            const locked = observe(entries);
             same(locked.observed, before.observed);
             scope!.assertCurrent();
             writing = true;
             try {
-              if (!existsSync(directory)) secureOperatorDirectory(directory);
+              if (!executionBaseline && !existsSync(directory))
+                secureOperatorDirectory(directory);
               installRecoveryIntent(target, bytes, stage);
             } finally {
               writing = false;
             }
             scope!.assertCurrent();
-            const settled = observeSelectedLoadAdmissionTail(
-              destination,
-              opened.inventoryGmailSelectedLoadExecution(),
-              tail
+            const settled = observe(
+              opened.inventoryGmailSelectedLoadExecution()
             );
             if (!settled.observed.target || settled.observed.candidate) fail();
           }
@@ -2515,7 +2547,7 @@ export async function installRecoveredGmailNextSelectedLoadAdmission(
     assertRetainedSelectedLoadExecutor(runtime.destination);
     const { record, tail, effective } =
       readNextSelectedLoadAdmissionForInstallation(input, next, bytes);
-    await installSelectedLoadAdmissionWithGuards(runtime, tail, effective);
+    await installSelectedLoadFixedEvidenceWithGuards(runtime, tail, effective);
     return {
       status: "next-load-admission-installed" as const,
       runId: record.runId,
@@ -2550,7 +2582,7 @@ export async function installRecoveredGmailThirdSelectedLoadAdmission(
         input.third,
         input.admission
       );
-    await installSelectedLoadAdmissionWithGuards(
+    await installSelectedLoadFixedEvidenceWithGuards(
       runtime,
       tail,
       effective,
@@ -2570,6 +2602,47 @@ export async function installRecoveredGmailThirdSelectedLoadAdmission(
     input?.family.prior.recoveryKey.fill(0);
     input?.family.admission.fill(0);
     input?.admission.fill(0);
+    wire.fill(0);
+  }
+}
+
+/** Install authenticated start evidence only. Catalog, journal and hold stay pinned. */
+export async function installRecoveredGmailThirdSelectedLoadStart(
+  supplied: RecoveryGmailThirdSelectedLoadStartFrameInput
+) {
+  assertNoSelectedGmailLoadExecution();
+  assertNoSelectedLoadInstallation();
+  assertNoRecoveredGmailCapture();
+  const wire = encodeThirdSelectedLoadStartFrame(supplied);
+  let decoded: RecoveryGmailThirdSelectedLoadStartFrameInput | undefined;
+  try {
+    decoded = decodeThirdSelectedLoadStartFrame(wire);
+    const { input, executionBaseline } = decoded;
+    const { selector: _selector, ...runtime } = input.family.prior;
+    assertRetainedSelectedLoadExecutor(runtime.destination);
+    const { baseline, tail, effective } =
+      readThirdSelectedLoadStartForInstallation(input, executionBaseline);
+    await installSelectedLoadFixedEvidenceWithGuards(
+      runtime,
+      tail,
+      effective,
+      baseline.preparedReceiptSha256,
+      executionBaseline
+    );
+    return {
+      status: "third-load-start-installed" as const,
+      runId: baseline.runId,
+      executionBaselineSha256: sha256(executionBaseline),
+      activationAllowed: false as const,
+      captureAllowed: false as const,
+      loadAllowed: false as const,
+      freezeAllowed: false as const,
+    };
+  } finally {
+    decoded?.input.family.prior.recoveryKey.fill(0);
+    decoded?.input.family.admission.fill(0);
+    decoded?.input.admission.fill(0);
+    decoded?.executionBaseline.fill(0);
     wire.fill(0);
   }
 }

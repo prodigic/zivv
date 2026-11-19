@@ -60,7 +60,7 @@ function observeStart(
     startedAtEpochMs,
     entries: effective.entries,
   };
-  return { baseline, presence: thirdStartPresence };
+  return { baseline, presence: thirdStartPresence, prefix };
 }
 
 /** Bind a detached pre-effect baseline to the exact installed third admission.
@@ -101,8 +101,8 @@ export function authenticateThirdSelectedLoadExecutionBaseline(
   }
 }
 
-/** Verify an exact start tail without installing it or opening a writer. */
-export function inspectInstalledThirdSelectedLoadExecutionBaseline(
+/** Re-derive exact evidence that can be installed by the separately guarded worker. */
+export function readThirdSelectedLoadStartForInstallation(
   input: RecoveryGmailThirdSelectedLoadFrameInput,
   bytes: Buffer
 ) {
@@ -111,24 +111,36 @@ export function inspectInstalledThirdSelectedLoadExecutionBaseline(
       bytes,
       input.family.prior.recoveryKey
     );
-    const { baseline, presence } = observeStart(
+    const { baseline, presence, prefix } = observeStart(
       input,
       retained.startedAtEpochMs,
       bytes
     );
     if (!presence || canonicalJson(retained) !== canonicalJson(baseline))
       return invalid();
-    return {
-      status: "third-load-start-observed" as const,
-      presence,
-      runId: baseline.runId,
-      executionBaselineSha256: sha256(bytes),
-      activationAllowed: false as const,
-      captureAllowed: false as const,
-      loadAllowed: false as const,
-      freezeAllowed: false as const,
-    };
+    return { ...prefix, baseline, presence };
   } catch {
     return invalid();
   }
+}
+
+/** Verify an exact start tail without installing it or opening a writer. */
+export function inspectInstalledThirdSelectedLoadExecutionBaseline(
+  input: RecoveryGmailThirdSelectedLoadFrameInput,
+  bytes: Buffer
+) {
+  const { baseline, presence } = readThirdSelectedLoadStartForInstallation(
+    input,
+    bytes
+  );
+  return {
+    status: "third-load-start-observed" as const,
+    presence,
+    runId: baseline.runId,
+    executionBaselineSha256: sha256(bytes),
+    activationAllowed: false as const,
+    captureAllowed: false as const,
+    loadAllowed: false as const,
+    freezeAllowed: false as const,
+  };
 }
