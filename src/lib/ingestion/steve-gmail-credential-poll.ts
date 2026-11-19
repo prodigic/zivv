@@ -18,19 +18,29 @@ function inside(parent: string, child: string): boolean {
   );
 }
 
-/** Poll through the existing handoff; only fresh Gmail reads unlock credentials. */
-export function captureSteveGmailWindowWithWindowsCredentials({
-  credentialDirectory,
-  ...input
-}: CaptureInput & { credentialDirectory: string }) {
-  const operatorDirectory = resolve(input.operatorDirectory);
-  const credentialPath = resolve(credentialDirectory);
+/** Resolve separate private homes before any credential or operator access. */
+export function resolveSeparateGmailStorage(
+  operator: string,
+  credential: string
+) {
+  const operatorDirectory = resolve(operator);
+  const credentialPath = resolve(credential);
   if (
     inside(operatorDirectory, credentialPath) ||
     inside(credentialPath, operatorDirectory)
   )
     throw Error("GMAIL_CREDENTIAL_STORAGE_UNSAFE");
-
+  return { operatorDirectory, credentialPath };
+}
+/** Poll through the existing handoff; only fresh Gmail reads unlock credentials. */
+export function captureSteveGmailWindowWithWindowsCredentials({
+  credentialDirectory,
+  ...input
+}: CaptureInput & { credentialDirectory: string }) {
+  const { operatorDirectory, credentialPath } = resolveSeparateGmailStorage(
+    input.operatorDirectory,
+    credentialDirectory
+  );
   return captureSteveGmailWindow({
     ...input,
     operatorDirectory,
