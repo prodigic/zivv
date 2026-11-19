@@ -17,3 +17,13 @@ independent missed-start notice requires a separate source that can observe
 the expected run when the Windows host is unavailable. A completed journal
 stage still needs the verified-release and published-state checks before a
 success notification.
+
+A fresh named-run observation can also plan attention for a blocked, failed
+or interrupted stage once its production lease becomes inactive. A blocked
+stage calls for review. A failed stage calls for checking its retained
+failure before resuming. A running stage with an inactive lease calls for
+reconciliation before retrying. The plan uses a stable edition, run and
+revision key with a closed reason and action. An active lease, stale
+observation, missing run, pending stage or completed run produces no
+stage alert. The observation identifies local journal state and lease status.
+The independent missed-start source remains separate.

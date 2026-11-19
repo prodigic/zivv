@@ -11,6 +11,7 @@ import {
   transitionWeeklyRun,
 } from "../../lib/ingestion/weekly-run-state.js";
 import { inspectFridayRunObservation } from "../../lib/ingestion/friday-run-observation.js";
+import { planFridayRunAttention } from "../../lib/ingestion/friday-run-attention.js";
 
 const prefix = "zivv-friday-observation-";
 const roots: string[] = [];
@@ -22,7 +23,13 @@ const source = {
   importObservedAtEpochMs: 1000,
 };
 function fixture(
-  mode: "empty" | "active" | "released" | "failed" | "blocked" = "active"
+  mode:
+    | "empty"
+    | "active"
+    | "released"
+    | "failed"
+    | "blocked"
+    | "running" = "active"
 ) {
   const root = mkdtempSync(join(tmpdir(), prefix));
   roots.push(root);
@@ -69,6 +76,13 @@ function fixture(
           2000
         ),
         3,
+        lease
+      );
+    }
+    if (mode === "running") {
+      journal.save(
+        transitionWeeklyRun(state, 0, "acquire", { status: "running" }, 2000),
+        0,
         lease
       );
     }
@@ -211,5 +225,95 @@ describe("Friday run observation", () => {
     expect(() => inspect(f.bytes, "not-a-run-id")).toThrow(
       "FRIDAY_RUN_OBSERVATION_UNVERIFIED"
     );
+  });
+});
+
+describe("Friday run attention", () => {
+  function plan(
+    bytes: Buffer,
+    runId: string,
+    observedAtEpochMs = 3000,
+    nowEpochMs = 3000,
+    maxEvidenceAgeMs = 0
+  ) {
+    return planFridayRunAttention({
+      journal: bytes,
+      editionId: source.editionId,
+      runId,
+      observedAtEpochMs,
+      nowEpochMs,
+      maxEvidenceAgeMs,
+    });
+  }
+
+  it("plans closed actions for inactive blocked, failed, and interrupted runs without exposing private data", () => {
+    for (const [mode, revision, stage, stageStatus, reasonCode, action] of [
+      [
+        "blocked",
+        4,
+        "prepare",
+        "blocked",
+        "PREFLIGHT_REVIEW_REQUIRED",
+        "review-stage",
+      ],
+      [
+        "failed",
+        2,
+        "acquire",
+        "failed",
+        "WEEKLY_STAGE_FAILED",
+        "inspect-failure-and-resume",
+      ],
+      [
+        "running",
+        1,
+        "acquire",
+        "running",
+        "WEEKLY_STAGE_LEASE_INACTIVE",
+        "reconcile-interrupted-stage",
+      ],
+    ] as const) {
+      const f = fixture(mode);
+      const before = Buffer.from(f.bytes);
+      const result = plan(f.bytes, f.state.runId);
+      expect(result).toEqual({
+        schemaVersion: 1,
+        key: expect.stringMatching(/^friday\/2026-10-16\/stage\/[a-f0-9]{64}$/),
+        kind: "run-attention",
+        editionId: source.editionId,
+        runId: f.state.runId,
+        revision,
+        stage,
+        stageStatus,
+        reasonCode,
+        action,
+      });
+      expect(JSON.stringify(result)).not.toContain(source.deliveryId);
+      expect(JSON.stringify(result)).not.toContain("SYNTHETIC_PRIVATE_FAILURE");
+      expect(f.bytes).toEqual(before);
+      expect(plan(f.bytes, f.state.runId, 3001, 3002, 1)).toEqual(result);
+      expect(plan(f.bytes, f.state.runId, 2999, 2999)).toBeNull();
+    }
+  });
+
+  it("omits absent and pending runs and enforces the freshness window", () => {
+    const pending = fixture("released");
+    expect(plan(pending.bytes, pending.state.runId)).toBeNull();
+    expect(plan(pending.bytes, "f".repeat(64))).toBeNull();
+    const failed = fixture("failed");
+    expect(
+      plan(failed.bytes, failed.state.runId, 3000, 3010, 10)
+    ).not.toBeNull();
+    expect(plan(failed.bytes, failed.state.runId, 3000, 3011, 10)).toBeNull();
+    for (const [observed, now, age] of [
+      [3001, 3000, 10],
+      [3000, 3000, -1],
+      [3000, NaN, 0],
+      [3000, 3000, 0.5],
+    ]) {
+      expect(() =>
+        plan(failed.bytes, failed.state.runId, observed, now, age)
+      ).toThrow("INVALID_FRIDAY_RUN_ATTENTION_WINDOW");
+    }
   });
 });
