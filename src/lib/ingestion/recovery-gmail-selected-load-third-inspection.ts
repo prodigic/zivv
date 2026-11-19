@@ -16,7 +16,7 @@ function invalid(): never {
  * Prove the completed first and second loads and plan one distinct retained
  * capture against their observed ledger. Return only the read-only commitments.
  */
-export function inspectThirdRecoveryGmailSelectedLoad(
+export function readThirdSelectedLoadAdmissionEvidence(
   family: RecoveryGmailNextSelectedLoadFrameInput,
   third: RecoveryGmailSelectedReceiptSelector
 ) {
@@ -79,7 +79,7 @@ export function inspectThirdRecoveryGmailSelectedLoad(
         inventorySha256,
       })
     );
-    return {
+    const reportCommitments = {
       status: "third-selected-load-inspected" as const,
       previousRunId: report.runId,
       completedPrefixSha256,
@@ -100,9 +100,29 @@ export function inspectThirdRecoveryGmailSelectedLoad(
       loadAllowed: false as const,
       freezeAllowed: false as const,
     };
+    return {
+      report: reportCommitments,
+      firstSelector: completed.effective.originalBaseline.selector,
+      secondSelector: completed.effective.proof.selection.selector,
+      secondAdmissionSha256: report.admissionSha256,
+      selector: planned.proof.selection.selector,
+      source: planned.proof.source,
+      runtimeIdentitySha256: planned.proof.runtimeIdentitySha256,
+      archiveSha256: completionIdentity.archiveSha256,
+      retirementReceiptSha256: completionIdentity.retirementReceiptSha256,
+      preparedReceiptSha256: completionIdentity.preparedReceiptSha256,
+    };
   } catch {
     return invalid();
   } finally {
     key?.fill(0);
   }
+}
+
+/** Report the independent observation while retaining the private selector and source. */
+export function inspectThirdRecoveryGmailSelectedLoad(
+  family: RecoveryGmailNextSelectedLoadFrameInput,
+  third: RecoveryGmailSelectedReceiptSelector
+) {
+  return readThirdSelectedLoadAdmissionEvidence(family, third).report;
 }

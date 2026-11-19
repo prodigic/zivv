@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import {
   existsSync,
   mkdirSync,
@@ -16,6 +16,10 @@ import {
 import { readWeeklyJournalRecoverySnapshotReadOnly } from "../../lib/ingestion/weekly-run-journal.js";
 import { createRecoveryGmailCaptureRuntimeFixture } from "./fixtures/recovery-gmail-capture-runtime-fixture.js";
 import { inspectThirdRecoveryGmailSelectedLoad } from "../../lib/ingestion/recovery-gmail-selected-load-third-inspection.js";
+import {
+  createRecoveryGmailThirdSelectedLoadAdmission,
+  authenticateRecoveryGmailThirdSelectedLoadAdmission,
+} from "../../lib/ingestion/recovery-gmail-selected-load-third-admission.js";
 import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/recovery-gmail-selected-load-next-replay.js";
 
 vi.setConfig({ testTimeout: 1_200_000 });
@@ -388,6 +392,142 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
         thirdSelector
       )
     ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
+    const admittedAt = Date.now();
+    const thirdAdmission = createRecoveryGmailThirdSelectedLoadAdmission(
+      family,
+      thirdSelector,
+      admittedAt
+    );
+    const decodedAdmission = JSON.parse(
+      thirdAdmission.toString("utf8")
+    ) as Record<string, unknown>;
+    const { signature, ...signedBody } = decodedAdmission;
+    expect(thirdAdmission).toEqual(
+      Buffer.from(canonicalJson(decodedAdmission) + "\n")
+    );
+    expect(signature).toBe(
+      createHmac("sha256", family.prior.recoveryKey)
+        .update("zivv-recovery-gmail-selected-load-admission/v3\0")
+        .update(canonicalJson(signedBody))
+        .digest("hex")
+    );
+    expect(signedBody).toMatchObject({
+      kind: "zivv-recovery-gmail-selected-load-admission",
+      version: 3,
+      stopAfter: "load",
+      admittedAtEpochMs: admittedAt,
+      completedPrefixSha256: thirdInspection.completedPrefixSha256,
+      previousRunId: loaded.runId,
+      runId: thirdInspection.runId,
+      generation: 3,
+      archiveSha256: digest(family.prior.archive),
+      retirementReceiptSha256: digest(family.prior.retirementReceipt),
+      secondAdmissionSha256: digest(bytes),
+      firstSelector,
+      secondSelector: nextSelector,
+      selector: thirdSelector,
+      source: {
+        editionId: third.receipt.editionId,
+        deliveryId: third.receipt.deliveryId,
+        rawSha256: third.receipt.sourceSha256,
+        importObservedAtEpochMs: third.receipt.firstObservedAtEpochMs,
+      },
+      physicalValidationRequired: true,
+      activationAllowed: false,
+      captureAllowed: false,
+      loadAllowed: false,
+      freezeAllowed: false,
+    });
+    expect(
+      authenticateRecoveryGmailThirdSelectedLoadAdmission(
+        family,
+        thirdSelector,
+        thirdAdmission
+      )
+    ).toEqual(signedBody);
+    const retry = createRecoveryGmailThirdSelectedLoadAdmission(
+      family,
+      thirdSelector,
+      admittedAt,
+      thirdAdmission
+    );
+    expect(retry).toEqual(thirdAdmission);
+    expect(retry).not.toBe(thirdAdmission);
+    expect(Date.now()).toBeGreaterThan(admittedAt);
+    const invalidThirdAdmission =
+      "INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_ADMISSION";
+    const tooEarly = Math.max(0, thirdInspection.earliestAdmissionEpochMs - 1);
+    expect(tooEarly).toBeLessThan(thirdInspection.earliestAdmissionEpochMs);
+    expect(() =>
+      createRecoveryGmailThirdSelectedLoadAdmission(
+        family,
+        thirdSelector,
+        tooEarly
+      )
+    ).toThrow(invalidThirdAdmission);
+    expect(() =>
+      createRecoveryGmailThirdSelectedLoadAdmission(
+        family,
+        thirdSelector,
+        Date.now() + 60_000
+      )
+    ).toThrow(invalidThirdAdmission);
+    expect(() =>
+      createRecoveryGmailThirdSelectedLoadAdmission(
+        family,
+        thirdSelector,
+        admittedAt + 1,
+        thirdAdmission
+      )
+    ).toThrow(invalidThirdAdmission);
+    expect(() =>
+      authenticateRecoveryGmailThirdSelectedLoadAdmission(
+        {
+          ...family,
+          prior: { ...family.prior, recoveryKey: Buffer.alloc(32, 99) },
+        },
+        thirdSelector,
+        thirdAdmission
+      )
+    ).toThrow(invalidThirdAdmission);
+    expect(() =>
+      authenticateRecoveryGmailThirdSelectedLoadAdmission(
+        family,
+        firstSelector,
+        thirdAdmission
+      )
+    ).toThrow(invalidThirdAdmission);
+    expect(() =>
+      authenticateRecoveryGmailThirdSelectedLoadAdmission(
+        { ...family, admission: altered },
+        thirdSelector,
+        thirdAdmission
+      )
+    ).toThrow(invalidThirdAdmission);
+    const badSignature = {
+      ...decodedAdmission,
+      signature: "0".repeat(64) === signature ? "1".repeat(64) : "0".repeat(64),
+    };
+    for (const corrupt of [
+      Buffer.from(canonicalJson(badSignature) + "\n"),
+      Buffer.from(
+        canonicalJson({
+          ...decodedAdmission,
+          signature: String(signature) + "\n",
+        }) + "\n"
+      ),
+      Buffer.from("\ufeff" + thirdAdmission.toString("utf8")),
+      Buffer.concat([thirdAdmission, Buffer.from("\n")]),
+      Buffer.from(JSON.stringify(decodedAdmission, null, 2) + "\n"),
+    ])
+      expect(() =>
+        authenticateRecoveryGmailThirdSelectedLoadAdmission(
+          family,
+          thirdSelector,
+          corrupt
+        )
+      ).toThrow(invalidThirdAdmission);
+
     const thirdDirectory = join(
       root,
       "recovery-gmail-load",
@@ -401,6 +541,13 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       expect(() =>
         inspectThirdRecoveryGmailSelectedLoad(family, thirdSelector)
       ).toThrow("INVALID_THIRD_RECOVERY_GMAIL_SELECTED_LOAD_INSPECTION");
+      expect(() =>
+        authenticateRecoveryGmailThirdSelectedLoadAdmission(
+          family,
+          thirdSelector,
+          thirdAdmission
+        )
+      ).toThrow(invalidThirdAdmission);
     } finally {
       rmdirSync(foreignDirectory);
     }
