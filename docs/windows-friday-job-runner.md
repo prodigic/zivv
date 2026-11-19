@@ -96,3 +96,22 @@ credential access. A second worker at Monday midnight returns the review
 boundary without running capture. Both preserve the signed batch. The
 rehearsal uses a controlled clock and a forbidden network adapter. A real
 Windows restart and a scheduled run remain separate acceptance steps.
+
+## Plan a recurring mailbox wake
+
+After building the reviewed checkout, inspect the edition and UTC boundaries
+for the current wake without credentials or a mailbox request.
+
+```powershell
+node scripts/steve-gmail.js plan-friday-wake --early-scan-days 1
+```
+
+The operator supplies zero to four Pacific calendar days before Friday.
+The example opens the search at Thursday midnight. The selected edition
+stays current through Sunday. At Monday midnight the plan moves to the
+next edition and its own opening instant. Earlier editions still require
+the existing retained-evidence and review paths for unresolved work.
+The plan reports the existing Friday publication and missing-source
+boundaries. A periodic caller must still use the supervised poll, retain
+evidence and follow the existing load and publication controls. The command
+neither registers a task nor invokes a worker.

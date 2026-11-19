@@ -5,6 +5,7 @@ import { pollFridayGmailWithWindowsCredentials } from "../dist/lib/ingestion/ste
 import {
   fridayDeliveryTimes,
   parseCutoffEpochMs,
+  planFridayMailboxWake,
 } from "../dist/lib/ingestion/weekly.js";
 import { provisionWindowsGmailCredentials } from "../dist/lib/ingestion/windows-gmail-credentials.js";
 
@@ -133,6 +134,11 @@ try {
     if (!isAbsolute(directory)) throw Error("GMAIL_CREDENTIAL_STORAGE_UNSAFE");
     await provision(directory);
     console.log(JSON.stringify({ status: "credential-provisioned" }));
+  } else if (command === "plan-friday-wake") {
+    const raw = options(args, ["--early-scan-days"])("--early-scan-days");
+    if (raw.length !== 1 || !/^[0-4]$/.test(raw))
+      throw Error("INVALID_FRIDAY_GMAIL_WAKE_LEAD");
+    console.log(JSON.stringify(planFridayMailboxWake(Date.now(), Number(raw))));
   } else if (command === "poll-friday-supervised") {
     const raw = options(args, ["--worker-budget-ms"])("--worker-budget-ms");
     const deadlineMs = Number(raw);

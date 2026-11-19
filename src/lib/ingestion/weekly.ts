@@ -578,6 +578,46 @@ export function formatLosAngelesDate(epochMs: number): string {
 
 export const localDateForEpochMs = formatLosAngelesDate;
 
+/** Select one mailbox edition for a periodic wake using the Pacific calendar. */
+export function planFridayMailboxWake(
+  nowEpochMs: number,
+  earlyScanDays: number
+) {
+  if (
+    !Number.isInteger(earlyScanDays) ||
+    earlyScanDays < 0 ||
+    earlyScanDays > 4
+  ) {
+    throw new WeeklyEditionError("INVALID_WINDOW", "Invalid Friday scan lead");
+  }
+  const today = formatLosAngelesDate(nowEpochMs);
+  const weekday = new Date(
+    utcEpochForParts({
+      ...parseLocalDate(today),
+      hour: 12,
+      minute: 0,
+      second: 0,
+    })
+  ).getUTCDay();
+  const editionId = addLocalCalendarDays(
+    today,
+    weekday === 0 ? -2 : 5 - weekday
+  );
+  const scanStartsAtEpochMs = localDateStartEpochMs(
+    addLocalCalendarDays(editionId, -earlyScanDays)
+  );
+  const boundaries = fridayDeliveryTimes(editionId);
+  return {
+    editionId,
+    status:
+      nowEpochMs < scanStartsAtEpochMs
+        ? ("not-open" as const)
+        : ("poll-window-open" as const),
+    scanStartsAtEpochMs,
+    ...boundaries,
+  };
+}
+
 export interface WeeklyEditionWindow {
   startEpochMs: number;
   endEpochMs: number;
