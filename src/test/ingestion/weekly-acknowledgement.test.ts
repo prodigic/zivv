@@ -17,6 +17,7 @@ import { DatabaseSync } from "node:sqlite";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { acknowledgeVerifiedWeeklyRelease } from "../../lib/ingestion/weekly-acknowledgement.js";
 import { inspectFridayVerifiedRelease } from "../../lib/ingestion/friday-verified-release.js";
+import { inspectFridayVerifiedReleaseCoverage } from "../../lib/ingestion/friday-release-coverage.js";
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
 import {
   createWeeklyRunState,
@@ -111,6 +112,66 @@ function controlStore(root: string) {
     validateTransition: validatePromotionAppend,
   });
 }
+const coverageFiles = new Map<string, Buffer>([
+  [
+    "data/events-2026-10.json",
+    Buffer.from(
+      canonicalJson({
+        chunkId: "2026-10",
+        events: [
+          { id: 101, artistIds: [1, 2], headlinerArtistId: 1, venueId: 7 },
+          { id: 999, artistIds: [3], headlinerArtistId: 3, venueId: 8 },
+        ],
+      })
+    ),
+  ],
+  [
+    "data/artists.json",
+    Buffer.from(
+      canonicalJson([
+        {
+          id: 1,
+          links: [{ kind: "website", url: "https://artist.example/" }],
+          vibe: {
+            summary: "A synthetic review summary",
+            reviews: [{ url: "https://review.example/" }],
+          },
+        },
+        {
+          id: 2,
+          links: [{ kind: "website", url: "javascript:alert(1)" }],
+          vibe: { reviews: [{ url: "javascript:alert(1)" }] },
+        },
+        { id: 3, links: [], vibe: { reviews: [] } },
+      ])
+    ),
+  ],
+  [
+    "data/venues.json",
+    Buffer.from(
+      canonicalJson([
+        { id: 7 },
+        {
+          id: 8,
+          mapLocation: {
+            latitude: 37.8,
+            longitude: -122.3,
+            precision: "address",
+            sourceUrl: "https://maps.example/",
+          },
+        },
+      ])
+    ),
+  ],
+]);
+const coverageFileInfo = (path: string) => {
+  const bytes = coverageFiles.get("data/" + path)!;
+  return {
+    filename: path,
+    size: bytes.length,
+    checksum: "sha256-" + hash(bytes),
+  };
+};
 const siteDatasetVersion = "2026-10-10T01:00:00.000Z";
 function fixtureManifest(weekly: WeeklyEditionLedger): Buffer {
   const { status: _status, ...edition } = weekly.editions[0]!;
@@ -118,6 +179,17 @@ function fixtureManifest(weekly: WeeklyEditionLedger): Buffer {
     canonicalJson({
       datasetVersion: siteDatasetVersion,
       weeklyEdition: edition,
+      chunks: {
+        events: [
+          {
+            ...coverageFileInfo("events-2026-10.json"),
+            chunkId: "2026-10",
+            eventCount: 2,
+          },
+        ],
+        artists: coverageFileInfo("artists.json"),
+        venues: coverageFileInfo("venues.json"),
+      },
     })
   );
 }
@@ -145,11 +217,27 @@ function candidateFor(weekly: Buffer): ReleaseCandidate {
     applicationBuildSha256: "4".repeat(64),
     applicationProvenanceSha256: "6".repeat(64),
     files: [
+      ...[...coverageFiles]
+        .filter(([path]) => path < "data/manifest.json")
+        .map(([path, bytes]) => ({
+          path,
+          size: bytes.length,
+          sha256: hash(bytes),
+        }))
+        .sort((a, b) => a.path.localeCompare(b.path)),
       {
         path: "data/manifest.json",
         size: manifest.length,
         sha256: hash(manifest),
       },
+      ...[...coverageFiles]
+        .filter(([path]) => path > "data/manifest.json")
+        .map(([path, bytes]) => ({
+          path,
+          size: bytes.length,
+          sha256: hash(bytes),
+        }))
+        .sort((a, b) => a.path.localeCompare(b.path)),
       { path: "index.html", size: 10, sha256: "5".repeat(64) },
     ],
   };
@@ -495,6 +583,47 @@ describe("verified weekly acknowledgement with native control and private journa
       deduplicationKey: "friday/2026-10-09/published",
     });
     expect(inspectFridayVerifiedRelease(args)).toEqual(observed);
+    const coverageArgs = {
+      ...args,
+      publicFiles: new Map([
+        ...coverageFiles,
+        ["data/manifest.json", args.manifest],
+      ]),
+    };
+    const covered = inspectFridayVerifiedReleaseCoverage(coverageArgs);
+    expect(covered).toEqual({
+      ...observed,
+      coverage: {
+        missingShowArtwork: 1,
+        distinctArtists: 2,
+        artistsWithoutLinks: 1,
+        artistsWithoutReviews: 1,
+        distinctVenues: 1,
+        venuesWithoutMapLocation: 1,
+      },
+    });
+    const missingFiles = new Map(coverageArgs.publicFiles);
+    missingFiles.delete("data/artists.json");
+    expect(() =>
+      inspectFridayVerifiedReleaseCoverage({
+        ...coverageArgs,
+        publicFiles: missingFiles,
+      })
+    ).toThrow("FRIDAY_PUBLICATION_COVERAGE_UNVERIFIED");
+    const alteredFiles = new Map(coverageArgs.publicFiles);
+    alteredFiles.set("data/venues.json", Buffer.from("[]"));
+    expect(() =>
+      inspectFridayVerifiedReleaseCoverage({
+        ...coverageArgs,
+        publicFiles: alteredFiles,
+      })
+    ).toThrow("FRIDAY_PUBLICATION_COVERAGE_UNVERIFIED");
+    expect(() =>
+      inspectFridayVerifiedReleaseCoverage({
+        ...coverageArgs,
+        store: { ...store, read: () => f.store.readAt(f.deployedHead) },
+      })
+    ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
 
     expect(() =>
       inspectFridayVerifiedRelease({ ...args, manifest: Buffer.from("{}") })
