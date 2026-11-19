@@ -612,3 +612,23 @@ backup and released signed settlement before accepting success. It can
 return that already-settled proof without starting another worker. An
 interrupted third execution requires a separate, verified recovery path.
 The CLI exposes no freeze, publication, scheduler or activation options.
+
+### Install the third start evidence
+
+`prepare-third-selected-load-start` writes an exact private baseline outside
+the prepared host. `install-third-selected-load-start` consumes that
+baseline through the closed retained Windows worker. Both take the existing
+prepared host, archive and retirement inputs, three selectors and the signed
+second and third admissions. Supply the baseline path in
+`--third-execution-baseline-file`.
+
+The installer pins the prepared receipt and rechecks the catalog and weekly
+journal under both private store transactions. It writes only the fixed
+baseline and its stage. It can finish an exact flushed candidate or its linked
+transition, preserving the settled predecessor evidence and ownership fence.
+The parent independently reads the exact installed baseline before returning.
+No third catalog effect or publication is part of this command.
+
+The Windows job helper observes both empty job accounting and the root process
+handle within the same deadline. A brief gap between the two observations
+does not establish an exit. An invalid handle or deadline still fails closed.

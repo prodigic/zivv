@@ -89,5 +89,5 @@ export function observeThirdSelectedLoadStartTail(
       : stagePresent
         ? ("staging" as const)
         : ("absent" as const);
-  return { beforeStart, presence };
+  return { beforeStart, presence, observed };
 }
