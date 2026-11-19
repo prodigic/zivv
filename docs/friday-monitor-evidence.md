@@ -20,3 +20,11 @@ The inspection returns the verified live link, exact count of additions, and
 edition-scoped deduplication key. It performs no promotion append, ledger write,
 or send. A later adapter must still attach the relevant coverage gaps and
 reconcile delivery.
+
+The optional coverage summary reads the exact retained manifest, event chunks,
+artist records and venue records listed in the verified candidate inventory.
+It counts shows without artwork, distinct artists missing a usable link or
+cited listening note, and distinct venues missing a map location. The frozen
+edition supplies membership. The summary reports counts only and ignores
+entities that appear exclusively outside that membership. Missing or changed
+artifact bytes make coverage unavailable.
