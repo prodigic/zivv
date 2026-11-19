@@ -236,3 +236,65 @@ it("refuses an unsafe journaling mode and corrupt persisted notice", () => {
     "INVALID_FRIDAY_NOTICE_OUTBOX"
   );
 });
+
+it("upgrades an existing alert outbox idempotently without changing pending, unknown or sent claims", () => {
+  const { path, db, store } = fixture();
+  const make = (
+    editionId: string,
+    deadline: number
+  ): FridayMonitorEvaluation => ({
+    editionId,
+    nowEpochMs: deadline,
+    maxEvidenceAgeMs: 0,
+    evidence: {
+      kind: "mailbox-scan",
+      status: "absent",
+      scannedThroughEpochMs: deadline,
+    },
+  });
+  const pending = store.record(evaluation())!;
+  const unknownNotice = store.record(
+    make("2026-10-23", Date.parse("2026-10-24T01:00:00Z"))
+  )!;
+  const sentNotice = store.record(
+    make("2026-10-16", Date.parse("2026-10-17T01:00:00Z"))
+  )!;
+  const unknown = store.claim(unknownNotice.notice.key)!;
+  const sentClaim = store.claim(sentNotice.notice.key)!;
+  const sent = store.confirmSent(
+    sentNotice.notice.key,
+    sentClaim.attemptId!,
+    receipt
+  );
+  expect(db.prepare("PRAGMA user_version").get()?.user_version).toBe(1);
+  store.enablePublicationNotices();
+  store.enablePublicationNotices();
+  expect(db.prepare("PRAGMA user_version").get()?.user_version).toBe(2);
+  const reopened = new FridayNoticeOutbox(open(path));
+  reopened.enablePublicationNotices();
+  expect(reopened.inspect(pending.notice.key)).toEqual(pending);
+  expect(reopened.inspect(unknown.notice.key)).toEqual(unknown);
+  expect(reopened.inspect(sent.notice.key)).toEqual(sent);
+  expect(reopened.claim(unknown.notice.key)).toBeNull();
+  expect(reopened.claim(sent.notice.key)).toBeNull();
+});
+
+it("refuses to upgrade or reopen a corrupted versioned schema", () => {
+  const { path, db, store } = fixture();
+  db.exec("CREATE TABLE foreign_fixture(value TEXT) STRICT");
+  expect(() => store.enablePublicationNotices()).toThrow(
+    "INVALID_FRIDAY_NOTICE_OUTBOX"
+  );
+  expect(() => new FridayNoticeOutbox(open(path))).toThrow(
+    "INVALID_FRIDAY_NOTICE_OUTBOX"
+  );
+  const other = fixture();
+  other.store.enablePublicationNotices();
+  other.db.exec("CREATE TABLE foreign_fixture(value TEXT) STRICT");
+  expect(() => other.store.enablePublicationNotices()).toThrow(
+    "INVALID_FRIDAY_NOTICE_OUTBOX"
+  );
+  expect(() => new FridayNoticeOutbox(open(other.path))).toThrow(
+    "INVALID_FRIDAY_NOTICE_OUTBOX"
+  );
+});

@@ -17,6 +17,7 @@ import { DatabaseSync } from "node:sqlite";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { acknowledgeVerifiedWeeklyRelease } from "../../lib/ingestion/weekly-acknowledgement.js";
 import { inspectFridayVerifiedRelease } from "../../lib/ingestion/friday-verified-release.js";
+import { FridayNoticeOutbox } from "../../lib/ingestion/friday-notice-outbox.js";
 import { WeeklyRunJournal } from "../../lib/ingestion/weekly-run-journal.js";
 import {
   createWeeklyRunState,
@@ -495,6 +496,91 @@ describe("verified weekly acknowledgement with native control and private journa
       deduplicationKey: "friday/2026-10-09/published",
     });
     expect(inspectFridayVerifiedRelease(args)).toEqual(observed);
+
+    const outboxPath = join(dirname(f.root), "publication-outbox.sqlite");
+    const outboxDb = new DatabaseSync(outboxPath);
+    const peerDb = new DatabaseSync(outboxPath);
+    try {
+      const outbox = FridayNoticeOutbox.initialize(outboxDb);
+      outbox.enablePublicationNotices();
+      const preAck = { ...args, state: f.state };
+      expect(outbox.recordVerifiedPublication(preAck)).toBeNull();
+      const pending = outbox.recordVerifiedPublication(args)!;
+      expect(pending).toEqual({
+        notice: observed,
+        status: "pending",
+        attemptId: null,
+        receiptSha256: null,
+      });
+      expect(outbox.recordVerifiedPublication(args)).toEqual(pending);
+      const key = observed!.deduplicationKey;
+      expect(() =>
+        outbox.claimPublication(key, () => ({
+          ...args,
+          manifest: Buffer.from("{}"),
+        }))
+      ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
+      expect(outbox.inspectPublication(key)).toEqual(pending);
+      expect(() =>
+        outbox.claimPublication(key, () => ({
+          ...args,
+          store: { ...store, read: () => f.store.readAt(f.deployedHead) },
+        }))
+      ).toThrow("INVALID_FRIDAY_VERIFIED_RELEASE");
+      expect(outbox.inspectPublication(key)).toEqual(pending);
+      const peer = new FridayNoticeOutbox(peerDb);
+      const readEvidence = vi.fn(() => args);
+      const claimed = outbox.claimPublication(key, readEvidence)!;
+      expect(claimed).toMatchObject({
+        notice: observed,
+        status: "delivery-unknown",
+        attemptId: expect.stringMatching(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+        ),
+        receiptSha256: null,
+      });
+      expect(readEvidence).toHaveBeenCalledTimes(1);
+      const shouldNotRead = vi.fn(() => args);
+      expect(peer.claimPublication(key, shouldNotRead)).toBeNull();
+      expect(shouldNotRead).not.toHaveBeenCalled();
+      expect(peer.inspectPublication(key)).toEqual(claimed);
+      const receiptSha256 = "a".repeat(64);
+      expect(() =>
+        peer.confirmPublicationSent(key, "bad-attempt", receiptSha256)
+      ).toThrow("INVALID_FRIDAY_NOTICE_OUTBOX");
+      const sent = peer.confirmPublicationSent(
+        key,
+        claimed.attemptId!,
+        receiptSha256
+      );
+      expect(sent).toEqual({ ...claimed, status: "sent", receiptSha256 });
+      expect(
+        outbox.confirmPublicationSent(key, claimed.attemptId!, receiptSha256)
+      ).toEqual(sent);
+      expect(() =>
+        outbox.confirmPublicationSent(key, claimed.attemptId!, "b".repeat(64))
+      ).toThrow("INVALID_FRIDAY_NOTICE_OUTBOX");
+      const reopenedDb = new DatabaseSync(outboxPath);
+      try {
+        const reopened = new FridayNoticeOutbox(reopenedDb);
+        expect(reopened.inspectPublication(key)).toEqual(sent);
+        expect(
+          reopened.confirmPublicationSent(
+            key,
+            claimed.attemptId!,
+            receiptSha256
+          )
+        ).toEqual(sent);
+      } finally {
+        reopenedDb.close();
+      }
+      expect(outbox.recordVerifiedPublication(args)).toEqual(sent);
+      expect(outbox.claimPublication(key, shouldNotRead)).toBeNull();
+      expect(shouldNotRead).not.toHaveBeenCalled();
+    } finally {
+      peerDb.close();
+      outboxDb.close();
+    }
 
     expect(() =>
       inspectFridayVerifiedRelease({ ...args, manifest: Buffer.from("{}") })
