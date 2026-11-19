@@ -8,3 +8,12 @@ The monitor planner creates a deduplication key and a fixed notice payload from 
 - Repeated evidence for the same edition, notice kind, and due time produces the same payload and key. The payload contains only those fields and a schema version.
 
 The planner leaves `weekly:run-import` and the manual acquisition and publication path unchanged. It needs an authenticated evidence adapter, a durable notification store and an independent watcher before use. Delivery also needs private credentials and a way to reconcile a send whose result is unknown. Successful-release notices require separate live-and-recorded publication evidence.
+
+A separate stage observer reads an exact named run from a canonical private
+journal snapshot. It reports the first unfinished stage, its known safe
+failure code, the shared production lease state at observation time, and retained identifiers
+where available. A missing local run row remains a local observation. An
+independent missed-start notice requires a separate source that can observe
+the expected run when the Windows host is unavailable. A completed journal
+stage still needs the verified-release and published-state checks before a
+success notification.
