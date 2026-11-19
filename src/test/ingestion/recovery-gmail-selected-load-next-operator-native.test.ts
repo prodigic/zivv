@@ -30,6 +30,7 @@ import { readNextSelectedLoadCompletionEvidence } from "../../lib/ingestion/reco
 import {
   prepareThirdSelectedLoadExecutionBaseline,
   inspectInstalledThirdSelectedLoadExecutionBaseline,
+  readThirdSelectedLoadPlanFromHistory,
   authenticateThirdSelectedLoadExecutionBaseline,
 } from "../../lib/ingestion/recovery-gmail-selected-load-third-start.js";
 import { readThirdSelectedLoadPredecessorHistory } from "../../lib/ingestion/recovery-gmail-selected-load-third-history.js";
@@ -927,6 +928,37 @@ it("prepares, installs, loads and replays one distinct retained receipt through 
       expect(witness.history.snapshot).toEqual(backupBeforeThirdInstall);
       expect(witness.history.resultSha256).toBe(digest(resultBytes));
       expect(witness.history.loadAllowed).toBe(false);
+      const recovered = readThirdSelectedLoadPlanFromHistory(
+        installInput,
+        startBytes
+      );
+      expect(recovered).toMatchObject({
+        historicalOnly: true,
+        liveDeltaRequired: true,
+      });
+      expect(recovered.baseline).toEqual(startEvidence);
+      expect(recovered.record).toMatchObject({
+        runId: thirdInspection.runId,
+        importRunId: thirdInspection.importRunId,
+        completedPrefixSha256: thirdInspection.completedPrefixSha256,
+        reportSha256: thirdInspection.reportSha256,
+        loadAllowed: false,
+        freezeAllowed: false,
+      });
+      expect(recovered.effective.plan.receipt.reportSha256).toBe(
+        thirdInspection.reportSha256
+      );
+      expect(digest(recovered.effective.raw)).toBe(
+        recovered.effective.proof.source.rawSha256
+      );
+      expect(recovered.effective.catalog).toEqual(catalog);
+      expect(recovered.effective.journal).toEqual(journal);
+      expect(() =>
+        readThirdSelectedLoadPlanFromHistory(
+          { ...installInput, third: family.next },
+          startBytes
+        )
+      ).toThrow("INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START");
       expect(readFileSync(installerBackupPath)).toEqual(replacementBackup);
       expect(observe).toThrow(
         "INVALID_RECOVERY_GMAIL_THIRD_SELECTED_LOAD_START"

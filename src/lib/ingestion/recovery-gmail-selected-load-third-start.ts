@@ -5,6 +5,7 @@ import {
 } from "./recovery-gmail-execution-baseline.js";
 import {
   readThirdSelectedLoadAdmissionForInstallation,
+  readThirdSelectedLoadAdmissionFromHistory,
   readThirdSelectedLoadAdmissionWithStartBaseline,
 } from "./recovery-gmail-selected-load-third-admission.js";
 import type { RecoveryGmailThirdSelectedLoadFrameInput } from "./recovery-gmail-selected-load-third-framing.js";
@@ -39,6 +40,13 @@ function observeStart(
           input.admission,
           executionBaseline
         );
+  return buildStartEvidence(prefix, startedAtEpochMs);
+}
+
+function buildStartEvidence(
+  prefix: ReturnType<typeof readThirdSelectedLoadAdmissionForInstallation>,
+  startedAtEpochMs: number
+) {
   const { record, effective, presence, tail, thirdStartPresence } = prefix;
   if (
     presence !== "installed" ||
@@ -127,6 +135,44 @@ export function inspectInstalledThirdSelectedLoadExecutionBaseline(
       captureAllowed: false as const,
       loadAllowed: false as const,
       freezeAllowed: false as const,
+    };
+  } catch {
+    return invalid();
+  }
+}
+
+/** Private historical plan evidence. A later caller still needs a full live
+ * generation-four delta proof before calling this load settled. */
+export function readThirdSelectedLoadPlanFromHistory(
+  input: RecoveryGmailThirdSelectedLoadFrameInput,
+  bytes: Buffer
+) {
+  try {
+    const retained = verifySelectedThirdLoadExecutionBaseline(
+      bytes,
+      input.family.prior.recoveryKey
+    );
+    const prefix = readThirdSelectedLoadAdmissionFromHistory(
+      input.family,
+      input.third,
+      input.admission,
+      bytes
+    );
+    const { baseline, presence } = buildStartEvidence(
+      prefix,
+      retained.startedAtEpochMs
+    );
+    if (
+      presence !== "installed" ||
+      canonicalJson(retained) !== canonicalJson(baseline)
+    )
+      return invalid();
+    return {
+      baseline,
+      record: prefix.record,
+      effective: prefix.effective,
+      historicalOnly: true as const,
+      liveDeltaRequired: true as const,
     };
   } catch {
     return invalid();

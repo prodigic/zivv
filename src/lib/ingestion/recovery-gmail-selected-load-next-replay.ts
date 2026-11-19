@@ -35,6 +35,7 @@ import {
   type RecoveryGmailSelectedLoadFrameInput,
 } from "./recovery-gmail-selected-load-framing.js";
 import { selectedLoadBackupPath } from "./recovery-gmail-selected-load-historical-predecessor.js";
+import { readThirdSelectedLoadPredecessorHistory } from "./recovery-gmail-selected-load-third-history.js";
 import type { SelectedThirdLoadEvidenceTail } from "./recovery-gmail-selected-load-third-start-tail.js";
 import { readNextSelectedLoadFamily } from "./recovery-gmail-selected-load-next-family.js";
 import { verifySelectedLoadResult } from "./recovery-gmail-selected-result-proof.js";
@@ -243,13 +244,20 @@ function verifyCompletedNextResume(input: {
   };
 }
 
+interface ThirdStartHistoryRequest {
+  selector: RecoveryGmailSelectedReceiptSelector;
+  admission: Buffer;
+  executionBaseline: Buffer;
+}
+
 /** Authenticate the second load's completed journal and its exact signed file
  * prefix. This detached observation supplies no writer permission. */
 function readNextSelectedLoadCompletion(
   supplied: RecoveryGmailSelectedLoadFrameInput,
   next: RecoveryGmailSelectedReceiptSelector,
   signedAdmission: Buffer,
-  thirdTail?: SelectedThirdLoadEvidenceTail
+  thirdTail?: SelectedThirdLoadEvidenceTail,
+  historical?: ThirdStartHistoryRequest
 ) {
   let wire: Buffer | undefined,
     input: RecoveryGmailSelectedLoadFrameInput | undefined;
@@ -260,12 +268,19 @@ function readNextSelectedLoadCompletion(
     wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
     const key = input.recoveryKey;
-    const family = readNextSelectedLoadFamily(
-      input,
-      next,
-      admission,
-      thirdTail
-    );
+    const witness = historical
+      ? readThirdSelectedLoadPredecessorHistory(
+          {
+            family: { prior: input, next, admission },
+            third: historical.selector,
+            admission: historical.admission,
+          },
+          historical.executionBaseline
+        )
+      : undefined;
+    const family =
+      witness?.family ??
+      readNextSelectedLoadFamily(input, next, admission, thirdTail);
     const {
       opened,
       root,
@@ -285,8 +300,11 @@ function readNextSelectedLoadCompletion(
     } = family;
     const catalogPath = join(root, "operator/ledger.sqlite");
     const journalPath = join(root, "operator/weekly-runs.sqlite");
-    const catalog = readCanonicalSqliteLedgerReadOnly(catalogPath);
+    const catalog =
+      witness?.history.catalog ??
+      readCanonicalSqliteLedgerReadOnly(catalogPath);
     const observedJournal =
+      witness?.history.journal ??
       readWeeklyJournalRecoverySnapshotReadOnly(journalPath);
     if (catalog.generation !== execution.generation + 1) return fail();
     const { plan, proof, raw } = effective;
@@ -336,7 +354,9 @@ function readNextSelectedLoadCompletion(
           ...projectSelectedLoadReleasedJournal(observedJournal),
           guardedJournal: observedJournal,
         };
-    const snapshot = read(selectedLoadBackupPath, 512 * 1024 * 1024);
+    const snapshot =
+      witness?.history.snapshot ??
+      read(selectedLoadBackupPath, 512 * 1024 * 1024);
     if (
       canonicalJson(decryptLedgerSnapshot(snapshot, key)) !==
       canonicalJson(catalog.ledger)
@@ -513,15 +533,27 @@ function readNextSelectedLoadCompletion(
       result.resultSha256 !== completion.fields.resultSha256 ||
       canonicalJson(allEntries) !==
         canonicalJson(opened.inventoryGmailSelectedLoadExecution()) ||
-      canonicalJson(catalog) !==
-        canonicalJson(readCanonicalSqliteLedgerReadOnly(catalogPath)) ||
-      !observedJournal.equals(
-        readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
-      )
+      (!witness &&
+        (canonicalJson(catalog) !==
+          canonicalJson(readCanonicalSqliteLedgerReadOnly(catalogPath)) ||
+          !observedJournal.equals(
+            readWeeklyJournalRecoverySnapshotReadOnly(journalPath)
+          )))
     )
       return fail();
     const lease = observeSelectedLoadLease(owner.expiresAtEpochMs);
+    if (
+      witness &&
+      (prefix.next ||
+        completion.state !== "settled" ||
+        lease.status !== "released" ||
+        result.resultSha256 !== witness.history.resultSha256 ||
+        completion.fields.historyManifestSha256 !==
+          witness.history.historyManifestSha256)
+    )
+      return fail();
     return {
+      ...(witness ? { historicalOnly: true as const } : {}),
       report: {
         status: prefix.next
           ? ("completion-pending" as const)
@@ -592,6 +624,23 @@ export function readNextSelectedLoadCompletionBeforeThirdAdmission(
   tail: SelectedThirdLoadEvidenceTail
 ) {
   return readNextSelectedLoadCompletion(prior, next, admission, tail);
+}
+
+/** Reprove the completed second load against its authenticated historical view.
+ * This path supplies no present catalog or writer permission. */
+export function readNextSelectedLoadCompletionFromThirdHistory(
+  prior: RecoveryGmailSelectedLoadFrameInput,
+  next: RecoveryGmailSelectedReceiptSelector,
+  admission: Buffer,
+  historical: ThirdStartHistoryRequest
+) {
+  return readNextSelectedLoadCompletion(
+    prior,
+    next,
+    admission,
+    undefined,
+    historical
+  );
 }
 
 export function inspectNextSelectedLoadCompletion(

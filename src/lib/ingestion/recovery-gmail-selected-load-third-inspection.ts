@@ -9,6 +9,7 @@ import type { RecoveryGmailNextSelectedLoadFrameInput } from "./recovery-gmail-s
 import {
   readNextSelectedLoadCompletionBeforeThirdAdmission,
   readNextSelectedLoadCompletionEvidence,
+  readNextSelectedLoadCompletionFromThirdHistory,
 } from "./recovery-gmail-selected-load-next-replay.js";
 import { canonicalJson } from "./sqlite-store.js";
 import { sha256 } from "./steve-preflight.js";
@@ -24,7 +25,8 @@ function invalid(): never {
 export function readThirdSelectedLoadAdmissionEvidence(
   family: RecoveryGmailNextSelectedLoadFrameInput,
   third: RecoveryGmailSelectedReceiptSelector,
-  installedTail?: SelectedThirdLoadEvidenceTail
+  installedTail?: SelectedThirdLoadEvidenceTail,
+  historical = false
 ) {
   let key: Buffer | undefined;
   try {
@@ -36,18 +38,31 @@ export function readThirdSelectedLoadAdmissionEvidence(
     if ([first.receiptId, second.receiptId].includes(selector.receiptId))
       return invalid();
 
-    const completed = installedTail
-      ? readNextSelectedLoadCompletionBeforeThirdAdmission(
-          family.prior,
-          second,
-          family.admission,
-          installedTail
-        )
-      : readNextSelectedLoadCompletionEvidence(
-          family.prior,
-          second,
-          family.admission
-        );
+    if (historical && !installedTail?.executionBaseline) return invalid();
+    const completed =
+      historical && installedTail?.executionBaseline
+        ? readNextSelectedLoadCompletionFromThirdHistory(
+            family.prior,
+            second,
+            family.admission,
+            {
+              selector,
+              admission: installedTail.bytes,
+              executionBaseline: installedTail.executionBaseline,
+            }
+          )
+        : installedTail
+          ? readNextSelectedLoadCompletionBeforeThirdAdmission(
+              family.prior,
+              second,
+              family.admission,
+              installedTail
+            )
+          : readNextSelectedLoadCompletionEvidence(
+              family.prior,
+              second,
+              family.admission
+            );
     const {
       report,
       observedCatalog,
@@ -58,6 +73,7 @@ export function readThirdSelectedLoadAdmissionEvidence(
     if (
       report.status !== "selected-load-complete" ||
       report.lease.status !== "released" ||
+      historical !== (completed.historicalOnly === true) ||
       observedCatalog.generation !== 3 ||
       !completionIdentity
     )
