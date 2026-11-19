@@ -14,6 +14,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   captureSteveGmailWindow,
@@ -22,6 +23,9 @@ import {
   replaySteveGmailBatch,
 } from "../../lib/ingestion/steve-gmail-handoff.js";
 import { captureSteveGmailWindowWithWindowsCredentials } from "../../lib/ingestion/steve-gmail-credential-poll.js";
+import { superviseFridayGmailPoll } from "../../lib/ingestion/steve-gmail-friday-poll.js";
+import { runRecoveryWorkerProcess } from "../../lib/ingestion/recovery-worker-process.js";
+import { withRecoveryWindowsJobRunner } from "../../lib/ingestion/recovery-windows-job-runner.js";
 import {
   provisionWindowsGmailCredentials,
   withWindowsGmailCredentials,
@@ -382,6 +386,215 @@ describe("durable Steve Gmail handoff", () => {
     expect(fetcher).not.toHaveBeenCalled();
   });
 
+  it("replays a retained signed batch after a missed wake before the Monday cutoff", async () => {
+    const { root, operatorDirectory } = fixture();
+    const fridayMidnight = Date.parse("2026-10-16T07:00:00.000Z");
+    const mondayMidnight = Date.parse("2026-10-19T07:00:00.000Z");
+    const selected = {
+      ...input(operatorDirectory, [message("a1")]),
+      startEpochMs: fridayMidnight,
+      endEpochMs: observedAt + 1,
+    };
+    const first = await captureSteveGmailWindow(selected);
+    expect(first.status).toBe("captured");
+    const batchPath = join(
+      operatorDirectory,
+      "email-acquisition",
+      "batches",
+      `${first.batchIds[0]}.json`
+    );
+    const batchBytes = readFileSync(batchPath);
+    const capturePath = join(
+      operatorDirectory,
+      "email-intake",
+      sha256(accountId),
+      "messages",
+      sha256("a1"),
+      "capture.json"
+    );
+    unlinkSync(capturePath);
+    const credentialDirectory = join(root, "missing-credentials");
+    const fetcher = vi.fn(async () => {
+      throw Error("UNEXPECTED_REMOTE_POLL");
+    });
+    const wake = observedAt + 60_000;
+    vi.mocked(Date.now).mockReturnValue(wake);
+    const capture = vi.fn(
+      (window: {
+        startEpochMs: number;
+        endEpochMs: number;
+        requireStableMailboxForMissing: true;
+      }) =>
+        captureSteveGmailWindowWithWindowsCredentials({
+          operatorDirectory,
+          credentialDirectory,
+          expectedAccountId: accountId,
+          expectedEditionId: editionId,
+          fetcher,
+          ...window,
+        })
+    );
+    const pollInput = { editionId, scanStartsAtEpochMs: fridayMidnight };
+    const wait = vi.fn(async (_delay: number) => {});
+    const resumed = await superviseFridayGmailPoll(pollInput, {
+      clock: () => wake,
+      wait,
+      capture,
+    });
+    expect(resumed).toEqual({
+      status: "captured",
+      editionId,
+      attempts: 1,
+      batch: { ...first, replayed: true },
+    });
+    expect(capture).toHaveBeenCalledExactlyOnceWith({
+      startEpochMs: fridayMidnight,
+      endEpochMs: wake + 1,
+      requireStableMailboxForMissing: true,
+    });
+    expect(existsSync(capturePath)).toBe(true);
+    expect(existsSync(credentialDirectory)).toBe(false);
+    expect(fetcher).not.toHaveBeenCalled();
+    expect(wait).not.toHaveBeenCalled();
+    expect(readFileSync(batchPath)).toEqual(batchBytes);
+    capture.mockClear();
+    expect(
+      await superviseFridayGmailPoll(pollInput, {
+        clock: () => mondayMidnight,
+        wait,
+        capture,
+      })
+    ).toEqual({
+      status: "closed-for-review",
+      editionId,
+      reviewAtEpochMs: mondayMidnight,
+    });
+    expect(capture).not.toHaveBeenCalled();
+    expect(readFileSync(batchPath)).toEqual(batchBytes);
+  });
+  it.skipIf(process.platform !== "win32")(
+    "replays a signed pending batch in a fresh Windows job worker after a missed wake",
+    async () => {
+      const { root, operatorDirectory } = fixture();
+      const start = Date.parse("2026-10-16T07:00:00.000Z");
+      const cutoff = Date.parse("2026-10-19T07:00:00.000Z");
+      const first = await captureSteveGmailWindow({
+        ...input(operatorDirectory, [message("a1")]),
+        startEpochMs: start,
+        endEpochMs: observedAt + 1,
+      });
+      expect(first.status).toBe("captured");
+      const batchPath = join(
+        operatorDirectory,
+        "email-acquisition",
+        "batches",
+        `${first.batchIds[0]}.json`
+      );
+      const batchBytes = readFileSync(batchPath);
+      const capturePath = join(
+        operatorDirectory,
+        "email-intake",
+        sha256(accountId),
+        "messages",
+        sha256("a1"),
+        "capture.json"
+      );
+      unlinkSync(capturePath);
+      const credentialDirectory = join(root, "missing-credentials");
+      const supervisorUrl = pathToFileURL(
+        resolve("dist/lib/ingestion/steve-gmail-friday-poll.js")
+      ).href;
+      const captureUrl = pathToFileURL(
+        resolve("dist/lib/ingestion/steve-gmail-credential-poll.js")
+      ).href;
+      const worker = `
+      const chunks = []; let size = 0;
+      for await (const chunk of process.stdin) { size += chunk.length; if (size > 16384) throw Error('FRAME_TOO_LARGE'); chunks.push(chunk); }
+      const frame = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+      const { superviseFridayGmailPoll } = await import(${JSON.stringify(supervisorUrl)});
+      const { captureSteveGmailWindowWithWindowsCredentials } = await import(${JSON.stringify(captureUrl)});
+      Date.now = () => frame.now;
+      let calls = 0;
+      const result = await superviseFridayGmailPoll({ editionId: frame.editionId, scanStartsAtEpochMs: frame.start }, {
+        clock: () => frame.now,
+        wait: async () => { throw Error('UNEXPECTED_WAIT'); },
+        capture: (window) => { calls++; return captureSteveGmailWindowWithWindowsCredentials({
+          operatorDirectory: frame.operatorDirectory, credentialDirectory: frame.credentialDirectory,
+          expectedAccountId: frame.accountId, expectedEditionId: frame.editionId,
+          fetcher: async () => { throw Error('UNEXPECTED_REMOTE_POLL'); }, ...window,
+        }); },
+      });
+      process.stdout.write(JSON.stringify({ result, calls }));
+    `;
+      const env: NodeJS.ProcessEnv = {};
+      for (const name of [
+        "SystemRoot",
+        "WINDIR",
+        "PATH",
+        "TEMP",
+        "TMP",
+        "USERPROFILE",
+        "LOCALAPPDATA",
+        "APPDATA",
+      ]) {
+        if (process.env[name] !== undefined) env[name] = process.env[name];
+      }
+      const frame = {
+        operatorDirectory,
+        credentialDirectory,
+        accountId,
+        editionId,
+        start,
+      };
+      await withRecoveryWindowsJobRunner(async (jobRunner) => {
+        const runWorker = async (now: number) => {
+          const result = await runRecoveryWorkerProcess({
+            cwd: resolve("."),
+            env,
+            nodeArgs: ["--input-type=module", "-e", worker],
+            input: Buffer.from(JSON.stringify({ ...frame, now })),
+            deadlineMs: 60_000,
+            jobRunner,
+          });
+          expect(result.status).toBe("exited");
+          if (result.status !== "exited")
+            throw Error("SYNTHETIC_WORKER_NOT_EXITED");
+          expect(result.code).toBe(0);
+          expect(result.signal).toBeNull();
+          expect(result.stderr.toString()).toBe("");
+          return JSON.parse(result.stdout.toString()) as {
+            result: unknown;
+            calls: number;
+          };
+        };
+        const wake = await runWorker(observedAt + 60_000);
+        expect(wake).toEqual({
+          calls: 1,
+          result: {
+            status: "captured",
+            editionId,
+            attempts: 1,
+            batch: { ...first, replayed: true },
+          },
+        });
+        expect(existsSync(capturePath)).toBe(true);
+        expect(readFileSync(batchPath)).toEqual(batchBytes);
+        expect(existsSync(credentialDirectory)).toBe(false);
+        const monday = await runWorker(cutoff);
+        expect(monday).toEqual({
+          calls: 0,
+          result: {
+            status: "closed-for-review",
+            editionId,
+            reviewAtEpochMs: cutoff,
+          },
+        });
+        expect(readFileSync(batchPath)).toEqual(batchBytes);
+        expect(existsSync(credentialDirectory)).toBe(false);
+      });
+    },
+    180_000
+  );
   it("continues polling after a completed capture-only batch", async () => {
     const { operatorDirectory } = fixture();
     const first = await captureSteveGmailWindow(
