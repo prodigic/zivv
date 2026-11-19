@@ -210,5 +210,14 @@ uses the authenticated retained worker, then rechecks the exact evidence on the
 host. An identical installation retry returns the verified existing report.
 After a load attempt has durable execution evidence, the interruption command
 independently reports the proven state and lease without applying effects.
-Keep the installation quarantined. The load execution and replay commands
-require their separately reviewed launcher.
+Use `execute-selected-load` after exact first-load evidence has been installed.
+The authenticated retained executor selects the stored receipt and applies its
+bounded load. Use `resume-selected-load` to resolve an interrupted attempt or
+replay its durable result. Both commands accept the same private arguments.
+The host independently validates the exact completed journal and catalog, signed
+result and released lease before reporting the first load as complete.
+
+A stopped worker can leave a durable attempt. Inspect that attempt before
+retrying after an unconfirmed stop or a lost response. Keep the installation
+quarantined. A second selected receipt requires its own signed successor
+admission and launcher.

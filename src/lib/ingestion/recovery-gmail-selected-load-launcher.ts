@@ -3,7 +3,11 @@ import { spawn } from "node:child_process";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { verifyOperatorRetirementEvidence } from "./operator-recovery.js";
-import { canonicalJson } from "./sqlite-store.js";
+import { canonicalJson, ledgerDigest } from "./sqlite-store.js";
+import {
+  readSelectedLoadInterruptionEvidence,
+  type SelectedLoadInterruptionEvidence,
+} from "./recovery-gmail-selected-load-interruption-inspection.js";
 import {
   decodeRecoveryGmailSelectedLoadFrame,
   encodeRecoveryGmailSelectedLoadFrame,
@@ -20,6 +24,45 @@ const errorCode = "RECOVERY_GMAIL_SELECTED_LOAD_EXECUTION_FAILED";
 type Report = ReturnType<
   typeof inspectInstalledRecoveryGmailSelectedLoadEvidence
 >;
+type Operation = "install" | "execute" | "resume";
+type CompletionReport = {
+  status: "selected-load-complete" | "selected-load-resumed";
+  activationAllowed: false;
+  captureAllowed: false;
+  loadAllowed: false;
+  runId: string;
+  ledgerRevision: string;
+  generation: number;
+  resultSha256: string;
+  admissionSha256: string;
+};
+
+function completedReport(
+  evidence: SelectedLoadInterruptionEvidence,
+  operation: "execute" | "resume"
+): CompletionReport {
+  if (
+    evidence.report.status !== "completed" ||
+    evidence.report.lease.status !== "released" ||
+    !evidence.completedResultSha256
+  )
+    throw Error("RECOVERY_GMAIL_SELECTED_LOAD_COMPLETION_NOT_VERIFIED");
+  return {
+    status:
+      operation === "execute"
+        ? "selected-load-complete"
+        : "selected-load-resumed",
+    activationAllowed: false,
+    captureAllowed: false,
+    loadAllowed: false,
+    runId: evidence.report.runId,
+    ledgerRevision: ledgerDigest(evidence.observedCatalog.ledger),
+    generation: evidence.observedCatalog.generation,
+    resultSha256: evidence.completedResultSha256,
+    admissionSha256: evidence.admissionSha256,
+  };
+}
+
 function failure(error: unknown): Error {
   const detail =
     error instanceof Error &&
@@ -37,7 +80,7 @@ function failure(error: unknown): Error {
 export function resumeOperatorRecoveryGmailSelectedLoadEvidence(
   input: RecoveryGmailSelectedLoadInstallationInput
 ): Promise<Report> {
-  return launch(input);
+  return launch(input, "install");
 }
 /** Fixed interruption points only. No alternate executor, callback or process arguments. */
 export function resumeOperatorRecoveryGmailSelectedLoadEvidenceForTest(
@@ -52,12 +95,36 @@ export function resumeOperatorRecoveryGmailSelectedLoadEvidenceForTest(
     return Promise.reject(
       failure(Error("INVALID_RECOVERY_GMAIL_SELECTED_LOAD_INTERRUPTION"))
     );
-  return launch(input, point);
+  return launch(input, "install", point);
 }
+/** Execute only the installed first selected load in the authenticated retained worker. */
+export function executeOperatorRecoveryGmailSelectedLoad(
+  input: RecoveryGmailSelectedLoadInstallationInput
+): Promise<CompletionReport> {
+  return launch(input, "execute");
+}
+
+/** Reconcile only this first load, reusing a completed durable result when available. */
+export function resumeOperatorRecoveryGmailSelectedLoad(
+  input: RecoveryGmailSelectedLoadInstallationInput
+): Promise<CompletionReport> {
+  return launch(input, "resume");
+}
+
+function launch(
+  input: RecoveryGmailSelectedLoadInstallationInput,
+  operation: "install",
+  point?: RecoveryGmailSelectedLoadInstallationInterruption
+): Promise<Report>;
+function launch(
+  input: RecoveryGmailSelectedLoadInstallationInput,
+  operation: "execute" | "resume"
+): Promise<CompletionReport>;
 async function launch(
   supplied: RecoveryGmailSelectedLoadInstallationInput,
+  operation: Operation,
   point?: RecoveryGmailSelectedLoadInstallationInterruption
-): Promise<Report> {
+): Promise<Report | CompletionReport> {
   let wire: Buffer | undefined;
   let input:
     | ReturnType<typeof decodeRecoveryGmailSelectedLoadFrame>
@@ -66,11 +133,27 @@ async function launch(
     wire = encodeRecoveryGmailSelectedLoadFrame(supplied);
     input = decodeRecoveryGmailSelectedLoadFrame(wire);
     const checkpoint = verifyOperatorRetirementEvidence(input).checkpoint;
+    const coordinator =
+      operation === "install"
+        ? {
+            file: "recovery-gmail-selected-load-installation.js",
+            versionName: "recoveryGmailSelectedLoadInstallationVersion",
+            version: 2,
+            method: point
+              ? "installRecoveryGmailSelectedLoadEvidenceForTest"
+              : "installRecoveryGmailSelectedLoadEvidence",
+          }
+        : {
+            file: "recovery-gmail-selected-load-executor.js",
+            versionName: "recoveryGmailSelectedLoadExecutorVersion",
+            version: 1,
+            method:
+              operation === "execute"
+                ? "executeRecoveredGmailSelectedLoad"
+                : "resumeRecoveredGmailSelectedLoad",
+          };
     for (const [path, marker] of [
-      [
-        "recovery-gmail-selected-load-installation.js",
-        "recoveryGmailSelectedLoadInstallationVersion = 2",
-      ],
+      [coordinator.file, coordinator.versionName + " = " + coordinator.version],
       [
         "recovery-gmail-selected-load-framing.js",
         "recoveryGmailSelectedLoadFramingVersion = 1",
@@ -86,21 +169,30 @@ async function launch(
         )
       )
         throw Error("RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME");
-    try {
-      return inspectInstalledRecoveryGmailSelectedLoadEvidence(input);
-    } catch (error) {
-      if (
-        !(error instanceof Error) ||
-        error.message !== "RECOVERY_GMAIL_SELECTED_LOAD_NOT_INSTALLED"
-      )
-        throw error;
+
+    if (operation === "install") {
+      try {
+        return inspectInstalledRecoveryGmailSelectedLoadEvidence(input);
+      } catch (error) {
+        if (
+          !(error instanceof Error) ||
+          error.message !== "RECOVERY_GMAIL_SELECTED_LOAD_NOT_INSTALLED"
+        )
+          throw error;
+      }
+    } else if (operation === "execute") {
+      inspectInstalledRecoveryGmailSelectedLoadEvidence(input);
+    } else {
+      const before = readSelectedLoadInterruptionEvidence(input);
+      if (before.report.lease.status === "active")
+        throw Error("RECOVERY_GMAIL_SELECTED_LOAD_LEASE_ACTIVE");
+      if (before.report.status === "completed")
+        return completedReport(before, operation);
     }
+
     const root = resolve(input.destination);
     const entry = pathToFileURL(
-      join(
-        root,
-        "checkout/dist/lib/ingestion/recovery-gmail-selected-load-installation.js"
-      )
+      join(root, "checkout/dist/lib/ingestion", coordinator.file)
     ).href;
     const framing = pathToFileURL(
       join(
@@ -109,20 +201,20 @@ async function launch(
       )
     ).href;
     const script = `
-      let input; let frame;
+      let input; let frame; const chunks=[];
       try {
         const coordinator = await import(${JSON.stringify(entry)});
         const framing = await import(${JSON.stringify(framing)});
-        if (coordinator.recoveryGmailSelectedLoadInstallationVersion !== 2 || framing.recoveryGmailSelectedLoadFramingVersion !== 1) throw Error('RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME');
-        let size=0; const chunks=[];
+        if (coordinator[${JSON.stringify(coordinator.versionName)}] !== ${coordinator.version} || framing.recoveryGmailSelectedLoadFramingVersion !== 1) throw Error('RECOVERY_GMAIL_SELECTED_LOAD_UNSUPPORTED_RUNTIME');
+        let size=0;
         for await(const chunk of process.stdin) { if ((size+=chunk.length)>${MAX_RECOVERY_GMAIL_SELECTED_LOAD_FRAME_BYTES}) throw Error('INVALID_RECOVERY_GMAIL_SELECTED_LOAD_FRAME'); chunks.push(chunk); }
         frame=Buffer.concat(chunks,size); input=framing.decodeRecoveryGmailSelectedLoadFrame(frame);
         for(const chunk of chunks) chunk.fill(0);
-        const report=coordinator.${point ? "installRecoveryGmailSelectedLoadEvidenceForTest" : "installRecoveryGmailSelectedLoadEvidence"}(input${point ? "," + JSON.stringify(point) : ""});
+        const report=await coordinator[${JSON.stringify(coordinator.method)}](input${point ? "," + JSON.stringify(point) : ""});
         console.log(JSON.stringify(report));
       } catch(error) {
         console.error(JSON.stringify({loadError:error instanceof Error && /^[A-Z0-9_]{1,80}$/.test(error.message) ? error.message : '${errorCode}'})); process.exitCode=1;
-      } finally { input?.recoveryKey.fill(0); frame?.fill(0); }
+      } finally { input?.recoveryKey.fill(0); frame?.fill(0); for (const chunk of chunks) chunk.fill(0); }
     `;
     const env: NodeJS.ProcessEnv = {};
     for (const name of [
@@ -320,8 +412,26 @@ async function launch(
       process.platform === "win32"
         ? await withRecoveryWindowsJobRunner(run)
         : await run();
-    const completed = inspectInstalledRecoveryGmailSelectedLoadEvidence(input);
-    if (canonicalJson(report) !== canonicalJson(completed))
+    if (operation === "install") {
+      const completed =
+        inspectInstalledRecoveryGmailSelectedLoadEvidence(input);
+      if (canonicalJson(report) !== canonicalJson(completed))
+        throw Error(errorCode);
+      return completed;
+    }
+    const completed = completedReport(
+      readSelectedLoadInterruptionEvidence(input),
+      operation
+    );
+    if (!report || typeof report !== "object" || Array.isArray(report))
+      throw Error(errorCode);
+    const { accepted, ...reported } = report as Record<string, unknown>;
+    if (
+      typeof accepted !== "number" ||
+      !Number.isSafeInteger(accepted) ||
+      accepted < 0 ||
+      canonicalJson(reported) !== canonicalJson(completed)
+    )
       throw Error(errorCode);
     return completed;
   } catch (error) {
