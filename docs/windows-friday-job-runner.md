@@ -143,3 +143,9 @@ the existing private writer controls. Reconcile a lost worker outcome before
 rerunning. Use the offline load command when the source has already been
 retained and the provider is unavailable. Freeze, publication, alerting, task
 registration and operating-system restart acceptance remain separate steps.
+
+A confirmed empty mailbox result can include the verified scanned-through
+instant when this edition also has no retained receipt or signed handoff.
+A missing result with retained material keeps its load outcome and withholds
+this evidence. Use the monitor freshness and Friday 18:00 gates when
+consuming it. This command sends no notification.

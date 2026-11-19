@@ -28,6 +28,11 @@ import {
 import { CURRENT_STEVE_IMPORTER } from "../../lib/ingestion/steve-import-review.js";
 import { runFridayMailboxWake } from "../../lib/ingestion/steve-gmail-friday-wake.js";
 import {
+  captureSteveGmailWindow,
+  readSteveGmailHandoffStatus,
+} from "../../lib/ingestion/steve-gmail-handoff.js";
+import { planFridayMonitorNotice } from "../../lib/ingestion/friday-monitor-evidence.js";
+import {
   readWeeklyJournalRecoverySnapshotReadOnly,
   validateWeeklyJournalRecoverySnapshot,
 } from "../../lib/ingestion/weekly-run-journal.js";
@@ -489,6 +494,217 @@ describe("local load of retained Steve email receipts", () => {
       false
     );
   }, 60_000);
+  it("forwards verified empty mailbox evidence at the exact missing-source deadline", async () => {
+    const { root, base, operatorDirectory } = fixture();
+    vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
+    await initializeLedger(operatorDirectory);
+    const config = Buffer.from(
+      JSON.stringify({
+        operatorDirectory,
+        credentialDirectory: join(base, "credentials"),
+        expectedAccountId: accountId,
+        earlyScanDays: 0,
+      })
+    );
+    const due = Date.parse("2026-10-17T01:00:00.000Z");
+    const wake = async (now: number, scannedThroughEpochMs: number) =>
+      runFridayMailboxWake(root, config, 5000, {
+        clock: () => now,
+        poll: async () => ({
+          status: "missing",
+          editionId,
+          attempts: 1,
+          mailboxEvidence: {
+            kind: "mailbox-scan",
+            status: "absent",
+            scannedThroughEpochMs,
+          },
+        }),
+      });
+    const exact = await wake(due, due);
+    expect(exact).toMatchObject({
+      status: "no-retained-source",
+      mailboxStatus: "missing",
+      missingSourceEvidence: {
+        kind: "mailbox-scan",
+        status: "absent",
+        scannedThroughEpochMs: due,
+      },
+    });
+    if (!("missingSourceEvidence" in exact) || !exact.missingSourceEvidence)
+      throw Error("MISSING_FIXTURE_EVIDENCE");
+    expect(
+      planFridayMonitorNotice({
+        editionId,
+        nowEpochMs: due,
+        maxEvidenceAgeMs: 0,
+        evidence: exact.missingSourceEvidence,
+      })
+    ).toEqual({
+      schemaVersion: 1,
+      key: `friday/${editionId}/missing-source/${due}`,
+      editionId,
+      kind: "missing-source",
+      dueAtEpochMs: due,
+    });
+    const early = await wake(due - 1, due - 1);
+    if (!("missingSourceEvidence" in early) || !early.missingSourceEvidence)
+      throw Error("MISSING_FIXTURE_EVIDENCE");
+    expect(
+      planFridayMonitorNotice({
+        editionId,
+        nowEpochMs: due - 1,
+        maxEvidenceAgeMs: 0,
+        evidence: early.missingSourceEvidence,
+      })
+    ).toBeNull();
+    await expect(wake(due, due + 1)).rejects.toThrow(
+      "FRIDAY_GMAIL_WORKER_REPORT_UNVERIFIED"
+    );
+  });
+
+  it.each(["ready", "review-required"] as const)(
+    "suppresses missing evidence for retained %s sources",
+    async (mode) => {
+      const { root, base, operatorDirectory } = fixture();
+      vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
+      await initializeLedger(operatorDirectory);
+      await capture(operatorDirectory, "a1");
+      if (mode === "review-required") {
+        const review = await capture(
+          operatorDirectory,
+          "a2",
+          editionText.replace("Fixture Band", "Other Fixture Band")
+        );
+        expect(review.disposition).toBe("review-required");
+      }
+      const due = Date.parse("2026-10-17T01:00:00.000Z");
+      const result = await runFridayMailboxWake(
+        root,
+        Buffer.from(
+          JSON.stringify({
+            operatorDirectory,
+            credentialDirectory: join(base, "credentials"),
+            expectedAccountId: accountId,
+            earlyScanDays: 0,
+          })
+        ),
+        5000,
+        {
+          clock: () => due,
+          poll: async () => ({
+            status: "missing",
+            editionId,
+            attempts: 1,
+            mailboxEvidence: {
+              kind: "mailbox-scan",
+              status: "absent",
+              scannedThroughEpochMs: due,
+            },
+          }),
+        }
+      );
+      expect(result).toMatchObject({
+        mailboxStatus: "missing",
+        status: mode === "ready" ? "loaded" : "attention-required",
+      });
+      expect(result).not.toHaveProperty("missingSourceEvidence");
+    },
+    60_000
+  );
+
+  it("withholds missing evidence when a signed batch still awaits capture", async () => {
+    const { root, base, operatorDirectory } = fixture();
+    vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
+    await initializeLedger(operatorDirectory);
+    const { rawMessage, fullMessage } = syntheticMessage("a1");
+    const wrongBody = Buffer.from(
+      editionText
+        .replace("Fixture Band", "Different Band")
+        .replace(/\r?\n/g, "\r\n")
+    );
+    const fetcher: typeof fetch = async (request) => {
+      const url = new URL(String(request));
+      if (url.origin !== "https://gmail.googleapis.com")
+        throw Error("UNEXPECTED_SYNTHETIC_ENDPOINT");
+      if (url.pathname.endsWith("/profile"))
+        return Response.json({ emailAddress: accountId });
+      if (url.pathname.endsWith("/messages"))
+        return Response.json({ messages: [{ id: "a1" }] });
+      if (!url.pathname.endsWith("/messages/a1"))
+        throw Error("UNEXPECTED_SYNTHETIC_ENDPOINT");
+      return Response.json(
+        url.searchParams.get("format") === "RAW"
+          ? rawMessage
+          : {
+              id: "a1",
+              internalDate: fullMessage.internal_date,
+              payload: {
+                mimeType: "text/plain",
+                filename: "",
+                headers: fullMessage.payload.headers,
+                body: {
+                  size: wrongBody.length,
+                  data: wrongBody.toString("base64url"),
+                },
+              },
+            }
+      );
+    };
+    const receivedAt = Number(fullMessage.internal_date);
+    const scope = {
+      operatorDirectory,
+      expectedAccountId: accountId,
+      expectedEditionId: editionId,
+    };
+    await expect(
+      captureSteveGmailWindow({
+        ...scope,
+        startEpochMs: receivedAt - 1000,
+        endEpochMs: observedAt + 1,
+        getAccessToken: async () => "synthetic-token",
+        fetcher,
+      })
+    ).rejects.toThrow("GMAIL_MIME_TEXT_MISMATCH");
+    expect(readSteveGmailHandoffStatus(scope).batches).toMatchObject([
+      { status: "capture-pending" },
+    ]);
+    const due = Date.parse("2026-10-17T01:00:00.000Z");
+    const outcome = await runFridayMailboxWake(
+      root,
+      Buffer.from(
+        JSON.stringify({
+          operatorDirectory,
+          credentialDirectory: join(base, "credentials"),
+          expectedAccountId: accountId,
+          earlyScanDays: 0,
+        })
+      ),
+      5000,
+      {
+        clock: () => due,
+        poll: async () => ({
+          status: "missing",
+          editionId,
+          attempts: 1,
+          mailboxEvidence: {
+            kind: "mailbox-scan",
+            status: "absent",
+            scannedThroughEpochMs: due,
+          },
+        }),
+      }
+    );
+    expect(outcome).toMatchObject({
+      status: "no-retained-source",
+      mailboxStatus: "missing",
+    });
+    expect(outcome).not.toHaveProperty("missingSourceEvidence");
+    expect(readSteveGmailHandoffStatus(scope).batches).toMatchObject([
+      { status: "capture-pending" },
+    ]);
+  }, 60_000);
+
   it("withholds review-required receipts and never creates a load run for them", async () => {
     const { root, operatorDirectory } = fixture();
     vi.stubEnv("ZIVV_LEDGER_HOME", operatorDirectory);
