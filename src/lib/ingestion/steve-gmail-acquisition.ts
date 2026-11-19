@@ -19,6 +19,7 @@ export interface SteveGmailWindow {
   getAccessToken: () => Promise<string>;
   fetcher?: typeof fetch;
   requireStableMailboxForMissing?: boolean;
+  freshScanTimeoutMs?: number;
 }
 
 export type SteveGmailWindowResult =
@@ -54,24 +55,51 @@ async function discardBody(response: Response): Promise<void> {
   }
 }
 
+interface FreshScanDeadline {
+  signal: AbortSignal;
+  expiresAt: number;
+}
+
+function freshScanExpired(deadline?: FreshScanDeadline): boolean {
+  return (
+    deadline !== undefined &&
+    (deadline.signal.aborted || performance.now() >= deadline.expiresAt)
+  );
+}
+
+function assertFreshScanOpen(deadline?: FreshScanDeadline): void {
+  if (freshScanExpired(deadline)) fail("GMAIL_FRESH_SCAN_DEADLINE");
+}
+
 async function readJson(
   fetcher: typeof fetch,
   url: string,
-  token: string
+  token: string,
+  deadline?: FreshScanDeadline
 ): Promise<unknown> {
+  assertFreshScanOpen(deadline);
+  const perRequest = AbortSignal.timeout(30_000);
   let response: Response;
   try {
     response = await fetcher(url, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       redirect: "error",
-      signal: AbortSignal.timeout(30_000),
+      signal: deadline
+        ? AbortSignal.any([perRequest, deadline.signal])
+        : perRequest,
     });
   } catch {
+    assertFreshScanOpen(deadline);
     return fail("GMAIL_TRANSPORT_FAILED");
+  }
+  if (freshScanExpired(deadline)) {
+    await discardBody(response);
+    assertFreshScanOpen(deadline);
   }
   if (!response.ok) {
     await discardBody(response);
+    assertFreshScanOpen(deadline);
     return fail(statusCode(response.status));
   }
   const length = response.headers.get("content-length");
@@ -80,6 +108,7 @@ async function readJson(
     (!/^\d+$/.test(length) || Number(length) > maxResponseBytes)
   ) {
     await discardBody(response);
+    assertFreshScanOpen(deadline);
     return fail("GMAIL_RESPONSE_TOO_LARGE");
   }
   if (!response.body) return fail("GMAIL_RESPONSE_INVALID");
@@ -89,7 +118,9 @@ async function readJson(
   let tooLarge = false;
   try {
     while (true) {
+      assertFreshScanOpen(deadline);
       const next = await reader.read();
+      assertFreshScanOpen(deadline);
       if (next.done) break;
       total += next.value.byteLength;
       if (total > maxResponseBytes) {
@@ -100,7 +131,10 @@ async function readJson(
       chunks.push(next.value);
     }
   } catch {
+    assertFreshScanOpen(deadline);
     if (!tooLarge) return fail("GMAIL_RESPONSE_INVALID");
+  } finally {
+    reader.releaseLock();
   }
   if (tooLarge) return fail("GMAIL_RESPONSE_TOO_LARGE");
   const bytes = new Uint8Array(total);
@@ -109,11 +143,17 @@ async function readJson(
     bytes.set(chunk, offset);
     offset += chunk.byteLength;
   }
+  let result: unknown;
   try {
-    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    result = JSON.parse(
+      new TextDecoder("utf-8", { fatal: true }).decode(bytes)
+    );
   } catch {
+    assertFreshScanOpen(deadline);
     return fail("GMAIL_RESPONSE_INVALID");
   }
+  assertFreshScanOpen(deadline);
+  return result;
 }
 
 function object(value: unknown): Record<string, unknown> {
@@ -170,6 +210,12 @@ export async function readSteveGmailWindow(
   const requireStable = input.requireStableMailboxForMissing === true;
   if (requireStable && input.endEpochMs - 1 > Date.now())
     return fail("GMAIL_WINDOW_NOT_OBSERVED");
+  const timeout = input.freshScanTimeoutMs;
+  if (
+    timeout !== undefined &&
+    (!Number.isInteger(timeout) || timeout < 1 || timeout > 2_147_483_647)
+  )
+    return fail("INVALID_GMAIL_FRESH_SCAN_BUDGET");
   let token: string;
   try {
     token = validToken(await input.getAccessToken());
@@ -177,8 +223,21 @@ export async function readSteveGmailWindow(
     if (error instanceof GmailOAuthError) throw error;
     return fail("GMAIL_AUTH_REQUIRED");
   }
+  // Token refresh and any durable rotation complete before the fresh GET budget.
+  const deadline =
+    timeout === undefined
+      ? undefined
+      : {
+          expiresAt: performance.now() + timeout,
+          signal: AbortSignal.timeout(timeout),
+        };
   const fetcher = input.fetcher ?? fetch;
-  const profileBefore = await readJson(fetcher, `${apiRoot}/profile`, token);
+  const profileBefore = await readJson(
+    fetcher,
+    `${apiRoot}/profile`,
+    token,
+    deadline
+  );
   const accountId = assertSteveGmailAccount(
     input.expectedAccountId,
     profileBefore
@@ -194,7 +253,12 @@ export async function readSteveGmailWindow(
     const params = new URLSearchParams({ q: query, maxResults: "100" });
     if (nextToken) params.set("pageToken", nextToken);
     const listed = object(
-      await readJson(fetcher, `${apiRoot}/messages?${params.toString()}`, token)
+      await readJson(
+        fetcher,
+        `${apiRoot}/messages?${params.toString()}`,
+        token,
+        deadline
+      )
     );
     if (
       typeof listed.resultSizeEstimate === "number" &&
@@ -224,12 +288,14 @@ export async function readSteveGmailWindow(
     const fullMessage = await readJson(
       fetcher,
       `${apiRoot}/messages/${encodedId}?format=FULL`,
-      token
+      token,
+      deadline
     );
     const rawMessage = await readJson(
       fetcher,
       `${apiRoot}/messages/${encodedId}?format=RAW`,
-      token
+      token,
+      deadline
     );
     const snapshot = projectSteveGmailSnapshot({
       expectedAccountId: accountId,
@@ -248,7 +314,12 @@ export async function readSteveGmailWindow(
     if (snapshotBytes > maxSnapshotsBytes) return fail("GMAIL_WINDOW_LIMIT");
     snapshots.push(snapshot);
   }
-  const profileAfter = await readJson(fetcher, `${apiRoot}/profile`, token);
+  const profileAfter = await readJson(
+    fetcher,
+    `${apiRoot}/profile`,
+    token,
+    deadline
+  );
   assertSteveGmailAccount(input.expectedAccountId, profileAfter);
   if (requireStable && snapshots.length === 0) {
     if (input.endEpochMs - 1 > Date.now())
@@ -263,6 +334,7 @@ export async function readSteveGmailWindow(
       left.fullMessage.internal_date - right.fullMessage.internal_date ||
       left.rawMessage.id.localeCompare(right.rawMessage.id)
   );
+  assertFreshScanOpen(deadline);
   return snapshots.length
     ? { status: "found", snapshots }
     : { status: "missing", snapshots: [] };

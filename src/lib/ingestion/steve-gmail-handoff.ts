@@ -1228,6 +1228,7 @@ export async function captureSteveGmailWindow(input: {
   getAccessToken?: () => Promise<string>;
   fetcher?: typeof fetch;
   requireStableMailboxForMissing?: boolean;
+  freshScanTimeoutMs?: number;
   correctionOfByMessageId?: Record<string, string>;
 }): Promise<SteveGmailBatchResult> {
   try {
@@ -1249,6 +1250,9 @@ export async function captureSteveGmailWindow(input: {
         input.getAccessToken ??
         (() => Promise.reject(new Error("GMAIL_AUTH_REQUIRED"))),
       ...(input.fetcher ? { fetcher: input.fetcher } : {}),
+      ...(input.freshScanTimeoutMs === undefined
+        ? {}
+        : { freshScanTimeoutMs: input.freshScanTimeoutMs }),
       ...(input.requireStableMailboxForMissing
         ? { requireStableMailboxForMissing: true }
         : {}),

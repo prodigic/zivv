@@ -19,6 +19,7 @@ interface FridayGmailPollDependencies {
 }
 
 const retryDelaysMs = [2_000, 8_000];
+const freshScanTimeoutMs = 60_000;
 const retryableFailures = new Set([
   "GMAIL_RETRYABLE_FAILURE",
   "GMAIL_TRANSPORT_FAILED",
@@ -136,7 +137,10 @@ export async function superviseFridayGmailPoll(
 
 type WindowsFridayGmailPollInput = Omit<
   Parameters<typeof captureSteveGmailWindowWithWindowsCredentials>[0],
-  "startEpochMs" | "endEpochMs" | "requireStableMailboxForMissing"
+  | "startEpochMs"
+  | "endEpochMs"
+  | "requireStableMailboxForMissing"
+  | "freshScanTimeoutMs"
 > & { scanStartsAtEpochMs: number };
 
 /** Use exact durable handoff and private OAuth for one explicitly named edition. */
@@ -150,7 +154,11 @@ export function pollFridayGmailWithWindowsCredentials({
       clock: Date.now,
       wait,
       capture: (window) =>
-        captureSteveGmailWindowWithWindowsCredentials({ ...input, ...window }),
+        captureSteveGmailWindowWithWindowsCredentials({
+          ...input,
+          ...window,
+          freshScanTimeoutMs,
+        }),
     }
   );
 }
