@@ -1,10 +1,54 @@
 {
   "chunkId": "2027-08",
   "dateRange": {
-    "startEpochMs": 1818072000000,
-    "endEpochMs": 1818331200000
+    "startEpochMs": 1817899200000,
+    "endEpochMs": 1819627200000
   },
   "events": [
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1598647497
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-08-10",
+      "dateEpochMs": 1817899200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1598647497,
+      "id": 1293674513,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-08-10-kpop-demon-hunters-the-arena",
+      "sourceLineNumber": 950,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:9c407529d6664393",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 1887679738,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1817951400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 1887679738,
+      "venueType": "major"
+    },
     {
       "addedDateProvenance": "observed",
       "ageRestriction": "all-ages",
@@ -26,7 +70,7 @@
       "priceMin": 67.75,
       "provenanceConflicts": [],
       "slug": "2027-08-12-red-clay-strays-the-greek-theater",
-      "sourceLineNumber": 942,
+      "sourceLineNumber": 951,
       "sources": [
         {
           "canonicalUrl": null,
@@ -36,8 +80,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 474218142,
           "session": null,
           "sourceId": "steveslist"
@@ -86,7 +130,7 @@
         }
       ],
       "slug": "2027-08-15-slipknot-golden-gate-park",
-      "sourceLineNumber": 943,
+      "sourceLineNumber": 952,
       "sources": [
         {
           "canonicalUrl": null,
@@ -96,8 +140,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1306836772,
           "session": null,
           "sourceId": "steveslist"
@@ -135,7 +179,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-08-15-fall-out-boy-the-giants-ballpark",
-      "sourceLineNumber": 944,
+      "sourceLineNumber": 953,
       "sources": [
         {
           "canonicalUrl": null,
@@ -145,8 +189,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1140492065,
           "session": null,
           "sourceId": "steveslist"
@@ -160,6 +204,235 @@
       "updatedAtEpochMs": 1794618360551,
       "venueId": 1140492065,
       "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        985325188
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-08-27",
+      "dateEpochMs": 1819368000000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 985325188,
+      "id": 2098192096,
+      "isFree": false,
+      "priceMax": 44,
+      "priceMin": 40,
+      "provenanceConflicts": [],
+      "slug": "2027-08-27-osees-the-chapel",
+      "sourceLineNumber": 954,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:94b8c29564b33479",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 680116887,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1819425600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 680116887,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        985325188
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-08-28",
+      "dateEpochMs": 1819454400000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 985325188,
+      "id": 1592633471,
+      "isFree": false,
+      "priceMax": 44,
+      "priceMin": 40,
+      "provenanceConflicts": [],
+      "slug": "2027-08-28-osees-the-chapel",
+      "sourceLineNumber": 955,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:edc2ae9375485a8d",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 680116887,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1819512000000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 680116887,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        985325188
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-08-29",
+      "dateEpochMs": 1819540800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 985325188,
+      "id": 1087074846,
+      "isFree": false,
+      "priceMax": 44,
+      "priceMin": 40,
+      "provenanceConflicts": [],
+      "slug": "2027-08-29-osees-the-chapel",
+      "sourceLineNumber": 956,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:64dd2b02715b85d5",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 680116887,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1819596600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 680116887,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1581683939,
+        686653625
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-08-29",
+      "dateEpochMs": 1819540800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1581683939,
+      "id": 946356075,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-08-29-jason-isbell-and-the-400-unit-the-greek-theater",
+      "sourceLineNumber": 958,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:541bd8dd070a1329",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 474218142,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1819591200000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 474218142,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        985325188
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-08-30",
+      "dateEpochMs": 1819627200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 985325188,
+      "id": 1445280312,
+      "isFree": false,
+      "priceMax": 44,
+      "priceMin": 40,
+      "provenanceConflicts": [],
+      "slug": "2027-08-30-osees-the-chapel",
+      "sourceLineNumber": 957,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:990ce11216156523",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 680116887,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1819683000000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 680116887,
+      "venueType": "club"
     }
   ]
 }
