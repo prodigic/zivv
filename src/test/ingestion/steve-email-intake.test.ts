@@ -1027,15 +1027,24 @@ describe("private Steve email acquisition", () => {
         "--expected-edition",
         "2026-10-16",
       ],
-      { encoding: "utf8", windowsHide: true, timeout: 10000 }
+      {
+        encoding: "utf8",
+        windowsHide: true,
+        timeout: 10000,
+        env: { ...process.env, ZIVV_STEVE_ARCHIVE_DIR: "" },
+      }
     );
     expect(result.error).toBeUndefined();
-    expect(result.status, result.stderr).toBe(0);
+    expect(result.status, result.stderr).toBe(2);
     const output: unknown = JSON.parse(result.stdout.trim());
     expect(output).toMatchObject({
       editionId: "2026-10-16",
       disposition: "ready",
       firstObservedAtEpochMs: observedAt,
+      archive: {
+        status: "needs-attention",
+        reason: "ARCHIVE_DIRECTORY_NOT_CONFIGURED",
+      },
     });
     expect(output).not.toHaveProperty("runId");
     expect(result.stdout).not.toContain("Synthetic Artist");
