@@ -26,7 +26,7 @@
       "priceMin": 56,
       "provenanceConflicts": [],
       "slug": "2027-06-01-hazlett-august-hall",
-      "sourceLineNumber": 932,
+      "sourceLineNumber": 933,
       "sources": [
         {
           "canonicalUrl": null,
@@ -36,8 +36,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 811075932,
           "session": null,
           "sourceId": "steveslist"
@@ -73,7 +73,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-06-04-a-perfect-circle-the-cow-palace",
-      "sourceLineNumber": 933,
+      "sourceLineNumber": 934,
       "sources": [
         {
           "canonicalUrl": null,
@@ -83,8 +83,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 850321337,
           "session": null,
           "sourceId": "steveslist"
@@ -98,6 +98,54 @@
       "updatedAtEpochMs": 1790985835628,
       "venueId": 850321337,
       "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        629129630
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-06-05",
+      "dateEpochMs": 1812196800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 629129630,
+      "id": 31548697,
+      "isFree": false,
+      "priceMax": 55.64,
+      "priceMin": 55.64,
+      "provenanceConflicts": [],
+      "slug": "2027-06-05-cg5-the-independent",
+      "sourceLineNumber": 935,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:a294081009209df6",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1812231000000,
+      "status": "confirmed",
+      "tags": [
+        "matinee"
+      ],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
     },
     {
       "addedDateProvenance": "observed",
@@ -121,7 +169,7 @@
       "priceMin": 42,
       "provenanceConflicts": [],
       "slug": "2027-06-08-matchbox-twenty-shoreline-amphitheater",
-      "sourceLineNumber": 934,
+      "sourceLineNumber": 936,
       "sources": [
         {
           "canonicalUrl": null,
@@ -131,8 +179,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1931913617,
           "session": null,
           "sourceId": "steveslist"
@@ -152,6 +200,98 @@
       "ageRestriction": "all-ages",
       "announcedAtEpochMs": null,
       "artistIds": [
+        1971476750
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-06-09",
+      "dateEpochMs": 1812542400000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1971476750,
+      "id": 807223635,
+      "isFree": false,
+      "priceMax": 39.68,
+      "priceMin": 39.68,
+      "provenanceConflicts": [],
+      "slug": "2027-06-09-nsqk-the-independent",
+      "sourceLineNumber": 937,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:c5dab587a3de9b87",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1812596400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "18+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        385396553
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-06-10",
+      "dateEpochMs": 1812628800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 385396553,
+      "id": 274500962,
+      "isFree": false,
+      "priceMax": 36.59,
+      "priceMin": 36.59,
+      "provenanceConflicts": [],
+      "slug": "2027-06-10-evan-giia-the-independent",
+      "sourceLineNumber": 938,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:c885fbea1f0af2d9",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1812686400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
         204256217
       ],
       "createdAtEpochMs": 1792198061662,
@@ -165,7 +305,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-06-11-she-past-away-the-regency-ballroom",
-      "sourceLineNumber": 935,
+      "sourceLineNumber": 939,
       "sources": [
         {
           "canonicalUrl": null,
@@ -175,8 +315,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 2133080253,
           "session": null,
           "sourceId": "steveslist"
@@ -209,7 +349,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-06-18-the-airborne-toxic-event-the-guild-theater",
-      "sourceLineNumber": 936,
+      "sourceLineNumber": 940,
       "sources": [
         {
           "canonicalUrl": null,
@@ -219,8 +359,8 @@
           "firstSeenAtEpochMs": 1789172046956,
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 112130441,
           "session": null,
           "sourceId": "steveslist"
@@ -272,7 +412,7 @@
         }
       ],
       "slug": "2027-06-19-the-airborne-toxic-event-the-guild-theater",
-      "sourceLineNumber": 937,
+      "sourceLineNumber": 941,
       "sources": [
         {
           "canonicalUrl": null,
@@ -282,8 +422,8 @@
           "firstSeenAtEpochMs": 1789172046956,
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 112130441,
           "session": null,
           "sourceId": "steveslist"
@@ -316,20 +456,41 @@
       "headlinerArtistId": 1524712937,
       "id": 1913759336,
       "isFree": false,
-      "provenanceConflicts": [],
+      "priceMax": 27.5,
+      "priceMin": 12.5,
+      "provenanceConflicts": [
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "undefined",
+          "field": "priceMax",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": 27.5,
+          "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "undefined",
+          "field": "priceMin",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": 12.5,
+          "reason": "source-update"
+        }
+      ],
       "slug": "2027-06-26-moonlight-princesses-tribute-alameda-county-fair",
-      "sourceLineNumber": 938,
+      "sourceLineNumber": 942,
       "sources": [
         {
           "canonicalUrl": null,
-          "contentHash": "fnv1a64:116aaa94c47a9774",
+          "contentHash": "fnv1a64:b52cfe67d103306e",
           "evidence": null,
           "externalEventId": null,
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1749114421,
           "session": null,
           "sourceId": "steveslist"
@@ -339,7 +500,7 @@
       "tags": [],
       "timeBasis": "instant",
       "timezone": "America/Los_Angeles",
-      "updatedAtEpochMs": 1794618360551,
+      "updatedAtEpochMs": 1795221288328,
       "venueId": 1749114421,
       "venueType": "club"
     }

@@ -2,7 +2,7 @@
   "chunkId": "2027-07",
   "dateRange": {
     "startEpochMs": 1815048000000,
-    "endEpochMs": 1815825600000
+    "endEpochMs": 1816689600000
   },
   "events": [
     {
@@ -21,20 +21,41 @@
       "headlinerArtistId": 773992940,
       "id": 1483138590,
       "isFree": false,
-      "provenanceConflicts": [],
+      "priceMax": 77,
+      "priceMin": 66,
+      "provenanceConflicts": [
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "undefined",
+          "field": "priceMax",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": 77,
+          "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "undefined",
+          "field": "priceMin",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": 66,
+          "reason": "source-update"
+        }
+      ],
       "slug": "2027-07-08-g-eazy-alameda-county-fair",
-      "sourceLineNumber": 939,
+      "sourceLineNumber": 943,
       "sources": [
         {
           "canonicalUrl": null,
-          "contentHash": "fnv1a64:618cbabc30ae3e5c",
+          "contentHash": "fnv1a64:12b25c6d3e1e1230",
           "evidence": null,
           "externalEventId": null,
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1749114421,
           "session": null,
           "sourceId": "steveslist"
@@ -44,8 +65,52 @@
       "tags": [],
       "timeBasis": "instant",
       "timezone": "America/Los_Angeles",
-      "updatedAtEpochMs": 1794618360551,
+      "updatedAtEpochMs": 1795221288328,
       "venueId": 1749114421,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "18+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        987695552
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-07-10",
+      "dateEpochMs": 1815220800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 987695552,
+      "id": 712225986,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-07-10-marsh-the-castro",
+      "sourceLineNumber": 944,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:0267bd7b7cea5a49",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 1383208152,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1815278400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 1383208152,
       "venueType": "club"
     },
     {
@@ -70,7 +135,7 @@
       "priceMin": 46.5,
       "provenanceConflicts": [],
       "slug": "2027-07-13-lizzy-mcalpine-the-warriors-stadium",
-      "sourceLineNumber": 940,
+      "sourceLineNumber": 945,
       "sources": [
         {
           "canonicalUrl": null,
@@ -80,8 +145,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 793025194,
           "session": null,
           "sourceId": "steveslist"
@@ -95,6 +160,102 @@
       "updatedAtEpochMs": 1790985835628,
       "venueId": 793025194,
       "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        436760686,
+        557038781,
+        1045759349
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-07-15",
+      "dateEpochMs": 1815652800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 436760686,
+      "id": 1494233716,
+      "isFree": false,
+      "priceMax": 73.25,
+      "priceMin": 73.25,
+      "provenanceConflicts": [],
+      "slug": "2027-07-15-durand-jones-the-indications-the-greek-theater",
+      "sourceLineNumber": 946,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:ed632c161818f3b2",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 474218142,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1815699600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 474218142,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        2113543722,
+        432894882
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-07-16",
+      "dateEpochMs": 1815739200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 2113543722,
+      "id": 98380506,
+      "isFree": false,
+      "notes": "new date",
+      "priceMax": 35.25,
+      "priceMin": 35.25,
+      "provenanceConflicts": [],
+      "slug": "2027-07-16-francisca-valenzuela-the-rickshaw-stop",
+      "sourceLineNumber": 947,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:104a542cbd51a3d6",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 31041890,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1815793200000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 31041890,
+      "venueType": "club"
     },
     {
       "addedDateProvenance": "observed",
@@ -116,7 +277,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-07-17-hum-the-warfield",
-      "sourceLineNumber": 941,
+      "sourceLineNumber": 948,
       "sources": [
         {
           "canonicalUrl": null,
@@ -126,8 +287,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1531618194,
           "session": null,
           "sourceId": "steveslist"
@@ -139,6 +300,50 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1793414101457,
       "venueId": 1531618194,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        390102840
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-07-27",
+      "dateEpochMs": 1816689600000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 390102840,
+      "id": 687722060,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-07-27-ben-folds-five-the-fox-theater",
+      "sourceLineNumber": 949,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:41e555d45599fcf3",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 631118593,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1816741800000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 631118593,
       "venueType": "major"
     }
   ]

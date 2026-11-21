@@ -25,7 +25,7 @@
       "priceMin": 87,
       "provenanceConflicts": [],
       "slug": "2027-01-01-illenium-the-civic-auditorium",
-      "sourceLineNumber": 563,
+      "sourceLineNumber": 454,
       "sources": [
         {
           "canonicalUrl": null,
@@ -35,8 +35,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1648637995,
           "session": null,
           "sourceId": "steveslist"
@@ -71,7 +71,7 @@
       "priceMin": 20.39,
       "provenanceConflicts": [],
       "slug": "2027-01-01-mike-dillon-and-punkadelic-the-ivy-room",
-      "sourceLineNumber": 562,
+      "sourceLineNumber": 453,
       "sources": [
         {
           "canonicalUrl": null,
@@ -81,8 +81,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -116,7 +116,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-02-four-tet-pier-48",
-      "sourceLineNumber": 564,
+      "sourceLineNumber": 457,
       "sources": [
         {
           "canonicalUrl": null,
@@ -126,8 +126,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 2134454631,
           "session": null,
           "sourceId": "steveslist"
@@ -141,6 +141,98 @@
       "updatedAtEpochMs": 1794017623435,
       "venueId": 2134454631,
       "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1226778989
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-02",
+      "dateEpochMs": 1798891200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1226778989,
+      "id": 2105364982,
+      "isFree": false,
+      "priceMax": 39.68,
+      "priceMin": 39.68,
+      "provenanceConflicts": [],
+      "slug": "2027-01-02-shaheri-the-independent",
+      "sourceLineNumber": 455,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:a6f92213e52d1145",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1798952400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        876735368
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-02",
+      "dateEpochMs": 1798891200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 876735368,
+      "id": 2072374320,
+      "isFree": false,
+      "priceMax": 45,
+      "priceMin": 40,
+      "provenanceConflicts": [],
+      "slug": "2027-01-02-the-dirty-dozen-brass-band-the-chapel",
+      "sourceLineNumber": 456,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:20dedfdd01df6956",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 680116887,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1798950600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 680116887,
+      "venueType": "club"
     },
     {
       "addedDateProvenance": "legacy-batch",
@@ -209,7 +301,7 @@
         }
       ],
       "slug": "2027-01-03-lord-huron-the-fox-theater",
-      "sourceLineNumber": 565,
+      "sourceLineNumber": 458,
       "sources": [
         {
           "canonicalUrl": null,
@@ -219,8 +311,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 631118593,
           "session": null,
           "sourceId": "steveslist"
@@ -236,6 +328,54 @@
       "updatedAtEpochMs": 1794017623435,
       "venueId": 631118593,
       "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1715406321,
+        457136373,
+        1810144124
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-06",
+      "dateEpochMs": 1799236800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1715406321,
+      "id": 379170704,
+      "isFree": false,
+      "priceMax": 31.44,
+      "priceMin": 31.44,
+      "provenanceConflicts": [],
+      "slug": "2027-01-06-sab-star-the-independent",
+      "sourceLineNumber": 459,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:5e8e88db6901e3a3",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1799294400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
     },
     {
       "addedDateProvenance": "observed",
@@ -257,7 +397,7 @@
       "priceMin": 28.86,
       "provenanceConflicts": [],
       "slug": "2027-01-07-top-chefs-the-independent",
-      "sourceLineNumber": 569,
+      "sourceLineNumber": 463,
       "sources": [
         {
           "canonicalUrl": null,
@@ -267,8 +407,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 515101024,
           "session": null,
           "sourceId": "steveslist"
@@ -303,7 +443,7 @@
       "priceMin": 39.38,
       "provenanceConflicts": [],
       "slug": "2027-01-07-chris-simpson-playing-the-songs-of-mineral-the-rickshaw-stop",
-      "sourceLineNumber": 567,
+      "sourceLineNumber": 461,
       "sources": [
         {
           "canonicalUrl": null,
@@ -313,8 +453,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 31041890,
           "session": null,
           "sourceId": "steveslist"
@@ -349,7 +489,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-07-the-loved-ones-record-release-the-chapel",
-      "sourceLineNumber": 568,
+      "sourceLineNumber": 462,
       "sources": [
         {
           "canonicalUrl": null,
@@ -359,8 +499,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -404,7 +544,7 @@
       "priceMin": 10,
       "provenanceConflicts": [],
       "slug": "2027-01-07-chiara-and-the-cobras-the-ivy-room",
-      "sourceLineNumber": 566,
+      "sourceLineNumber": 460,
       "sources": [
         {
           "canonicalUrl": null,
@@ -414,8 +554,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -470,7 +610,7 @@
         }
       ],
       "slug": "2027-01-08-com-truise-the-independent",
-      "sourceLineNumber": 573,
+      "sourceLineNumber": 467,
       "sources": [
         {
           "canonicalUrl": null,
@@ -480,8 +620,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 515101024,
           "session": null,
           "sourceId": "steveslist"
@@ -525,7 +665,7 @@
       "priceMin": 25,
       "provenanceConflicts": [],
       "slug": "2027-01-08-western-standard-time-ska-orchestra-the-chapel",
-      "sourceLineNumber": 572,
+      "sourceLineNumber": 466,
       "sources": [
         {
           "canonicalUrl": null,
@@ -535,8 +675,8 @@
           "firstSeenAtEpochMs": 1789172046956,
           "firstSeenRunId": "steveslist-v2-72eb54f290fa4257fec91a9aecf159e52fa9a8eef90433c80b660a3c6af21698",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -579,7 +719,7 @@
       "priceMin": 15.24,
       "provenanceConflicts": [],
       "slug": "2027-01-08-the-back-pages-the-ivy-room",
-      "sourceLineNumber": 570,
+      "sourceLineNumber": 464,
       "sources": [
         {
           "canonicalUrl": null,
@@ -589,8 +729,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -625,7 +765,7 @@
       "priceMin": 15,
       "provenanceConflicts": [],
       "slug": "2027-01-08-perennial-thee-stork-club",
-      "sourceLineNumber": 571,
+      "sourceLineNumber": 465,
       "sources": [
         {
           "canonicalUrl": null,
@@ -635,8 +775,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 873142532,
           "session": null,
           "sourceId": "steveslist"
@@ -720,7 +860,7 @@
         }
       ],
       "slug": "2027-01-09-anna-von-hausswolff-the-great-american-music-hall",
-      "sourceLineNumber": 575,
+      "sourceLineNumber": 470,
       "sources": [
         {
           "canonicalUrl": null,
@@ -730,8 +870,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 463728167,
           "session": null,
           "sourceId": "steveslist"
@@ -775,7 +915,7 @@
       "priceMin": 32,
       "provenanceConflicts": [],
       "slug": "2027-01-09-swirlies-the-chapel",
-      "sourceLineNumber": 574,
+      "sourceLineNumber": 469,
       "sources": [
         {
           "canonicalUrl": null,
@@ -785,8 +925,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -826,7 +966,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-09-super-greens-the-rickshaw-stop",
-      "sourceLineNumber": 576,
+      "sourceLineNumber": 471,
       "sources": [
         {
           "canonicalUrl": null,
@@ -836,8 +976,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 31041890,
           "session": null,
           "sourceId": "steveslist"
@@ -874,7 +1014,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-09-dopethrone-the-ritz",
-      "sourceLineNumber": 577,
+      "sourceLineNumber": 473,
       "sources": [
         {
           "canonicalUrl": null,
@@ -884,8 +1024,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1253820046,
           "session": null,
           "sourceId": "steveslist"
@@ -898,6 +1038,104 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1792803818000,
       "venueId": 1253820046,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1900075046,
+        2023014768,
+        1261861178,
+        1993767118
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-09",
+      "dateEpochMs": 1799496000000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1900075046,
+      "id": 1415071208,
+      "isFree": false,
+      "notes": "Tori's Birthday",
+      "priceMax": 10,
+      "priceMin": 5,
+      "provenanceConflicts": [],
+      "slug": "2027-01-09-hellbound-pound-revolution-cafe",
+      "sourceLineNumber": 468,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:3faef30ce866d849",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 1241927296,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1799553600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 1241927296,
+      "venueType": "diy"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "21+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        2049993912,
+        84092977,
+        918064955
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-09",
+      "dateEpochMs": 1799496000000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 2049993912,
+      "id": 1912797676,
+      "isFree": false,
+      "priceMax": 34.01,
+      "priceMin": 34.01,
+      "provenanceConflicts": [],
+      "slug": "2027-01-09-scott-pemberton-the-independent",
+      "sourceLineNumber": 472,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:9b60417cec649083",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1799557200000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
       "venueType": "club"
     },
     {
@@ -922,7 +1160,7 @@
       "priceMin": 25,
       "provenanceConflicts": [],
       "slug": "2027-01-10-nora-brown-the-chapel",
-      "sourceLineNumber": 579,
+      "sourceLineNumber": 475,
       "sources": [
         {
           "canonicalUrl": null,
@@ -932,8 +1170,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -976,7 +1214,7 @@
       "priceMin": 27,
       "provenanceConflicts": [],
       "slug": "2027-01-10-mustard-plug-the-ivy-room",
-      "sourceLineNumber": 578,
+      "sourceLineNumber": 474,
       "sources": [
         {
           "canonicalUrl": null,
@@ -986,8 +1224,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -1020,7 +1258,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-10-willy-porter-hopmonk",
-      "sourceLineNumber": 580,
+      "sourceLineNumber": 476,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1030,8 +1268,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1811398338,
           "session": null,
           "sourceId": "steveslist"
@@ -1066,7 +1304,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-11-wonho-the-fillmore",
-      "sourceLineNumber": 581,
+      "sourceLineNumber": 477,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1076,8 +1314,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -1114,7 +1352,7 @@
       "priceMin": 94.15,
       "provenanceConflicts": [],
       "slug": "2027-01-12-cake-the-fox-theater",
-      "sourceLineNumber": 582,
+      "sourceLineNumber": 478,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1124,8 +1362,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 631118593,
           "session": null,
           "sourceId": "steveslist"
@@ -1224,7 +1462,7 @@
         }
       ],
       "slug": "2027-01-13-the-briefs-the-ivy-room",
-      "sourceLineNumber": 584,
+      "sourceLineNumber": 480,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1234,8 +1472,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -1270,7 +1508,7 @@
       "priceMin": 60.4,
       "provenanceConflicts": [],
       "slug": "2027-01-13-aj-mclean-august-hall",
-      "sourceLineNumber": 585,
+      "sourceLineNumber": 481,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1280,8 +1518,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 811075932,
           "session": null,
           "sourceId": "steveslist"
@@ -1318,7 +1556,7 @@
       "priceMin": 94.15,
       "provenanceConflicts": [],
       "slug": "2027-01-13-cake-the-fox-theater",
-      "sourceLineNumber": 583,
+      "sourceLineNumber": 479,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1328,8 +1566,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 631118593,
           "session": null,
           "sourceId": "steveslist"
@@ -1343,6 +1581,52 @@
       "updatedAtEpochMs": 1793414101457,
       "venueId": 631118593,
       "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "21+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        306439144,
+        1559704883
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-13",
+      "dateEpochMs": 1799841600000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 306439144,
+      "id": 1614843477,
+      "isFree": false,
+      "priceMax": 66.97,
+      "priceMin": 66.97,
+      "provenanceConflicts": [],
+      "slug": "2027-01-13-karl-densons-afrosonic-the-independent",
+      "sourceLineNumber": 482,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:c8f6785a9b9ec971",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
     },
     {
       "addedDateProvenance": "observed",
@@ -1365,7 +1649,7 @@
       "priceMin": 39.5,
       "provenanceConflicts": [],
       "slug": "2027-01-14-lsd-and-the-search-for-god-the-great-american-music-hall",
-      "sourceLineNumber": 587,
+      "sourceLineNumber": 484,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1375,8 +1659,8 @@
           "firstSeenAtEpochMs": 1789777368000,
           "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 463728167,
           "session": null,
           "sourceId": "steveslist"
@@ -1418,7 +1702,7 @@
       "priceMin": 36.15,
       "provenanceConflicts": [],
       "slug": "2027-01-14-peter-antoniou-the-uptown-theater",
-      "sourceLineNumber": 588,
+      "sourceLineNumber": 486,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1428,8 +1712,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1711400117,
           "session": null,
           "sourceId": "steveslist"
@@ -1467,7 +1751,7 @@
       "priceMin": 59.61,
       "provenanceConflicts": [],
       "slug": "2027-01-14-sisterm-nancy-moes-alley",
-      "sourceLineNumber": 590,
+      "sourceLineNumber": 488,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1477,8 +1761,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1002839764,
           "session": null,
           "sourceId": "steveslist"
@@ -1532,7 +1816,7 @@
         }
       ],
       "slug": "2027-01-14-the-briefs-the-ritz",
-      "sourceLineNumber": 589,
+      "sourceLineNumber": 487,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1542,8 +1826,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1253820046,
           "session": null,
           "sourceId": "steveslist"
@@ -1580,7 +1864,7 @@
       "priceMin": 12,
       "provenanceConflicts": [],
       "slug": "2027-01-14-three-towers-thee-stork-club",
-      "sourceLineNumber": 586,
+      "sourceLineNumber": 483,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1590,8 +1874,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 873142532,
           "session": null,
           "sourceId": "steveslist"
@@ -1604,6 +1888,55 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1794618360551,
       "venueId": 873142532,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        963733414,
+        240683648,
+        1543488463,
+        881848249
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-14",
+      "dateEpochMs": 1799928000000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 963733414,
+      "id": 794195300,
+      "isFree": false,
+      "priceMax": 31.44,
+      "priceMin": 31.44,
+      "provenanceConflicts": [],
+      "slug": "2027-01-14-mayday-mae-the-independent",
+      "sourceLineNumber": 485,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:08511944921921f2",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1799985600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
       "venueType": "club"
     },
     {
@@ -1647,7 +1980,7 @@
         }
       ],
       "slug": "2027-01-15-book-of-love-the-chapel",
-      "sourceLineNumber": 594,
+      "sourceLineNumber": 492,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1657,8 +1990,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -1702,7 +2035,7 @@
       "priceMin": 64.75,
       "provenanceConflicts": [],
       "slug": "2027-01-15-sts9-the-castro",
-      "sourceLineNumber": 598,
+      "sourceLineNumber": 496,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1712,8 +2045,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1383208152,
           "session": null,
           "sourceId": "steveslist"
@@ -1755,7 +2088,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-15-seb-lowe-rickshaw-stop",
-      "sourceLineNumber": 595,
+      "sourceLineNumber": 493,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1765,8 +2098,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 31041890,
           "session": null,
           "sourceId": "steveslist"
@@ -1802,7 +2135,7 @@
       "priceMin": 50.49,
       "provenanceConflicts": [],
       "slug": "2027-01-15-sister-nancy-the-independent",
-      "sourceLineNumber": 599,
+      "sourceLineNumber": 497,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1812,8 +2145,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 515101024,
           "session": null,
           "sourceId": "steveslist"
@@ -1852,7 +2185,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-15-mph-the-regency-ballroom",
-      "sourceLineNumber": 597,
+      "sourceLineNumber": 495,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1862,8 +2195,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 2133080253,
           "session": null,
           "sourceId": "steveslist"
@@ -1905,7 +2238,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-15-the-first-church-of-the-sacred-silversexual-great-american-music-hall",
-      "sourceLineNumber": 596,
+      "sourceLineNumber": 494,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1915,8 +2248,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 463728167,
           "session": null,
           "sourceId": "steveslist"
@@ -1955,7 +2288,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-15-lowdown-brass-band-the-knot-club",
-      "sourceLineNumber": 591,
+      "sourceLineNumber": 489,
       "sources": [
         {
           "canonicalUrl": null,
@@ -1965,8 +2298,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 747776193,
           "session": null,
           "sourceId": "steveslist"
@@ -1999,7 +2332,7 @@
       "notes": "seated",
       "provenanceConflicts": [],
       "slug": "2027-01-15-grace-and-mamrie-comedy-this-might-get-weird-the-cornerstone",
-      "sourceLineNumber": 592,
+      "sourceLineNumber": 490,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2009,8 +2342,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1393740940,
           "session": null,
           "sourceId": "steveslist"
@@ -2047,7 +2380,7 @@
       "priceMin": 47.22,
       "provenanceConflicts": [],
       "slug": "2027-01-15-pepper-the-uc-theater",
-      "sourceLineNumber": 593,
+      "sourceLineNumber": 491,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2057,8 +2390,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 2093769319,
           "session": null,
           "sourceId": "steveslist"
@@ -2143,7 +2476,7 @@
         }
       ],
       "slug": "2027-01-16-book-of-love-the-chapel",
-      "sourceLineNumber": 604,
+      "sourceLineNumber": 502,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2153,8 +2486,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -2198,7 +2531,7 @@
       "priceMin": 64.75,
       "provenanceConflicts": [],
       "slug": "2027-01-16-sts9-the-castro",
-      "sourceLineNumber": 606,
+      "sourceLineNumber": 504,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2208,8 +2541,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1383208152,
           "session": null,
           "sourceId": "steveslist"
@@ -2243,7 +2576,7 @@
       "notes": "fully seated",
       "provenanceConflicts": [],
       "slug": "2027-01-16-arturo-vaca-the-cornerstone",
-      "sourceLineNumber": 600,
+      "sourceLineNumber": 498,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2253,8 +2586,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1393740940,
           "session": null,
           "sourceId": "steveslist"
@@ -2290,7 +2623,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-16-the-first-church-of-the-sacred-silversexual-great-american-music-hall",
-      "sourceLineNumber": 605,
+      "sourceLineNumber": 503,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2300,8 +2633,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 463728167,
           "session": null,
           "sourceId": "steveslist"
@@ -2340,7 +2673,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-16-tapers-choice-the-independent",
-      "sourceLineNumber": 607,
+      "sourceLineNumber": 505,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2350,8 +2683,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 515101024,
           "session": null,
           "sourceId": "steveslist"
@@ -2386,7 +2719,7 @@
       "priceMin": 25.73,
       "provenanceConflicts": [],
       "slug": "2027-01-16-red-not-chili-peppers-the-ritz",
-      "sourceLineNumber": 608,
+      "sourceLineNumber": 507,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2396,8 +2729,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1253820046,
           "session": null,
           "sourceId": "steveslist"
@@ -2433,7 +2766,7 @@
       "priceMin": 50,
       "provenanceConflicts": [],
       "slug": "2027-01-16-greensky-bluegrass-the-fox-theater",
-      "sourceLineNumber": 601,
+      "sourceLineNumber": 499,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2443,8 +2776,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 631118593,
           "session": null,
           "sourceId": "steveslist"
@@ -2480,7 +2813,7 @@
       "priceMin": 21.42,
       "provenanceConflicts": [],
       "slug": "2027-01-16-van-goat-the-ivy-room",
-      "sourceLineNumber": 602,
+      "sourceLineNumber": 500,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2490,8 +2823,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -2527,7 +2860,7 @@
       "priceMin": 12,
       "provenanceConflicts": [],
       "slug": "2027-01-16-dread-spire-thee-stork-club",
-      "sourceLineNumber": 603,
+      "sourceLineNumber": 501,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2537,8 +2870,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 873142532,
           "session": null,
           "sourceId": "steveslist"
@@ -2558,6 +2891,52 @@
       "ageRestriction": "all-ages",
       "announcedAtEpochMs": null,
       "artistIds": [
+        1781340649
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-16",
+      "dateEpochMs": 1800100800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1781340649,
+      "id": 1065548512,
+      "isFree": false,
+      "priceMax": 25,
+      "priceMin": 25,
+      "provenanceConflicts": [],
+      "slug": "2027-01-16-amigo-world-guitar-show-marin-exhibit-hall",
+      "sourceLineNumber": 506,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:1c56d5f13beaee99",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 649025789,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800122400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 649025789,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "18+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
         203490783
       ],
       "createdAtEpochMs": 1788566700000,
@@ -2569,31 +2948,82 @@
       "headlinerArtistId": 203490783,
       "id": 618156064,
       "isFree": false,
-      "notes": "must purchase with Castro Teater tickets",
-      "provenanceConflicts": [],
+      "notes": "sold out",
+      "provenanceConflicts": [
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "all-ages",
+          "field": "ageRestriction",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": "18+",
+          "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "must purchase with Castro Teater tickets",
+          "field": "notes",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": "sold out",
+          "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "undefined",
+          "field": "startTimeEpochMs",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": 1800244800000,
+          "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "confirmed",
+          "field": "status",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": "sold-out",
+          "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": [],
+          "field": "tags",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": [
+            "sold-out"
+          ],
+          "reason": "source-update"
+        }
+      ],
       "slug": "2027-01-17-sts9-rave-spell-set-the-independent",
-      "sourceLineNumber": 615,
+      "sourceLineNumber": 516,
       "sources": [
         {
           "canonicalUrl": null,
-          "contentHash": "fnv1a64:1beaf8c41ca5edd8",
+          "contentHash": "fnv1a64:b9a82101b93ac9ea",
           "evidence": null,
           "externalEventId": null,
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 515101024,
           "session": null,
           "sourceId": "steveslist"
         }
       ],
-      "status": "confirmed",
-      "tags": [],
+      "startTimeEpochMs": 1800244800000,
+      "status": "sold-out",
+      "tags": [
+        "sold-out"
+      ],
       "timeBasis": "instant",
       "timezone": "America/Los_Angeles",
-      "updatedAtEpochMs": 1788566700000,
+      "updatedAtEpochMs": 1795221288328,
       "venueId": 515101024,
       "venueType": "club"
     },
@@ -2661,7 +3091,7 @@
       "priceMin": 43.5,
       "provenanceConflicts": [],
       "slug": "2027-01-17-dogs-in-a-pile-the-fillmore",
-      "sourceLineNumber": 613,
+      "sourceLineNumber": 513,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2671,8 +3101,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -2706,7 +3136,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-17-greensky-bluegrass-the-fox-theater",
-      "sourceLineNumber": 611,
+      "sourceLineNumber": 511,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2716,8 +3146,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 631118593,
           "session": null,
           "sourceId": "steveslist"
@@ -2765,7 +3195,7 @@
         }
       ],
       "slug": "2027-01-17-the-rock-and-roll-playhouse-play-music-for-kids-the-cornerstone",
-      "sourceLineNumber": 609,
+      "sourceLineNumber": 509,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2775,8 +3205,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1393740940,
           "session": null,
           "sourceId": "steveslist"
@@ -2811,7 +3241,7 @@
       "priceMin": 29.84,
       "provenanceConflicts": [],
       "slug": "2027-01-17-zoso-tribute-the-cornerstone",
-      "sourceLineNumber": 610,
+      "sourceLineNumber": 510,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2821,8 +3251,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1393740940,
           "session": null,
           "sourceId": "steveslist"
@@ -2859,7 +3289,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-17-andres-miguel-cervantes-the-ivy-room",
-      "sourceLineNumber": 612,
+      "sourceLineNumber": 512,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2869,8 +3299,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -2907,7 +3337,7 @@
       "priceMin": 45,
       "provenanceConflicts": [],
       "slug": "2027-01-17-thomas-lennon-friends-great-american-music-hall",
-      "sourceLineNumber": 614,
+      "sourceLineNumber": 514,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2917,8 +3347,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 463728167,
           "session": null,
           "sourceId": "steveslist"
@@ -2931,6 +3361,146 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1794618360551,
       "venueId": 463728167,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1433562160,
+        1971791933,
+        692279834,
+        998458662,
+        572953283
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-17",
+      "dateEpochMs": 1800187200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1433562160,
+      "id": 1647324773,
+      "isFree": false,
+      "priceMax": 20,
+      "priceMin": 15,
+      "provenanceConflicts": [],
+      "slug": "2027-01-17-field-of-flames-924-gilman-street",
+      "sourceLineNumber": 508,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:8a0e1552da94a7c8",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 888749966,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800243000000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 888749966,
+      "venueType": "diy"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        746827641
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-17",
+      "dateEpochMs": 1800187200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 746827641,
+      "id": 1817760734,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-01-17-george-michael-the-castro",
+      "sourceLineNumber": 515,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:fe55a5fe87253447",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 1383208152,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800239400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 1383208152,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1781340649
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-17",
+      "dateEpochMs": 1800187200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1781340649,
+      "id": 40854591,
+      "isFree": false,
+      "priceMax": 25,
+      "priceMin": 25,
+      "provenanceConflicts": [],
+      "slug": "2027-01-17-amigo-world-guitar-show-marin-exhibit-hall",
+      "sourceLineNumber": 517,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:9840d5e2e1ae9d92",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 649025789,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800208800000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 649025789,
       "venueType": "major"
     },
     {
@@ -2953,7 +3523,7 @@
       "priceMin": 29.79,
       "provenanceConflicts": [],
       "slug": "2027-01-18-tara-clerkin-trio-the-rickshaw-stop",
-      "sourceLineNumber": 616,
+      "sourceLineNumber": 518,
       "sources": [
         {
           "canonicalUrl": null,
@@ -2963,8 +3533,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 31041890,
           "session": null,
           "sourceId": "steveslist"
@@ -2999,7 +3569,7 @@
       "priceMin": 23.5,
       "provenanceConflicts": [],
       "slug": "2027-01-19-true-widow-the-great-american-music-hall",
-      "sourceLineNumber": 617,
+      "sourceLineNumber": 519,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3009,8 +3579,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 463728167,
           "session": null,
           "sourceId": "steveslist"
@@ -3118,7 +3688,7 @@
         }
       ],
       "slug": "2027-01-20-dj-meredith-marka-the-castro",
-      "sourceLineNumber": 619,
+      "sourceLineNumber": 521,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3128,8 +3698,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1383208152,
           "session": null,
           "sourceId": "steveslist"
@@ -3166,7 +3736,7 @@
       "priceMin": 15,
       "provenanceConflicts": [],
       "slug": "2027-01-20-bow-and-arrow-thee-stork-club",
-      "sourceLineNumber": 618,
+      "sourceLineNumber": 520,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3176,8 +3746,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 873142532,
           "session": null,
           "sourceId": "steveslist"
@@ -3190,6 +3760,50 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1794618360551,
       "venueId": 873142532,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1829500672
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-20",
+      "dateEpochMs": 1800446400000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1829500672,
+      "id": 944050983,
+      "isFree": false,
+      "provenanceConflicts": [],
+      "slug": "2027-01-20-josh-conway-the-independent",
+      "sourceLineNumber": 522,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:5ecff0207fa28f5a",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800504000000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
       "venueType": "club"
     },
     {
@@ -3233,7 +3847,7 @@
         }
       ],
       "slug": "2027-01-21-beth-hart-uptown-theater",
-      "sourceLineNumber": 622,
+      "sourceLineNumber": 528,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3243,8 +3857,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1711400117,
           "session": null,
           "sourceId": "steveslist"
@@ -3279,7 +3893,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-21-alleycvt-the-warfield",
-      "sourceLineNumber": 621,
+      "sourceLineNumber": 524,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3289,8 +3903,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1531618194,
           "session": null,
           "sourceId": "steveslist"
@@ -3371,7 +3985,7 @@
       "priceMin": 15,
       "provenanceConflicts": [],
       "slug": "2027-01-21-local-news-legend-924-gilman-street",
-      "sourceLineNumber": 620,
+      "sourceLineNumber": 523,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3381,8 +3995,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 888749966,
           "session": null,
           "sourceId": "steveslist"
@@ -3395,6 +4009,147 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1793414101457,
       "venueId": 888749966,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1888596970
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-21",
+      "dateEpochMs": 1800532800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1888596970,
+      "id": 1101851837,
+      "isFree": false,
+      "priceMax": 35,
+      "priceMin": 35,
+      "provenanceConflicts": [],
+      "slug": "2027-01-21-jenny-yang-great-american-music-hall",
+      "sourceLineNumber": 525,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:ca3180536bc80afa",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 463728167,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800588600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 463728167,
+      "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "21+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1656376636,
+        1765855326,
+        1691592200,
+        773479129
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-21",
+      "dateEpochMs": 1800532800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1656376636,
+      "id": 1026473132,
+      "isFree": false,
+      "priceMax": 10,
+      "priceMin": 10,
+      "provenanceConflicts": [],
+      "slug": "2027-01-21-heartless-folk-the-eagle",
+      "sourceLineNumber": 526,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:e9c483c61391315a",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 321425008,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800590400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 321425008,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "21+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1289980141
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-21",
+      "dateEpochMs": 1800532800000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1289980141,
+      "id": 100783687,
+      "isFree": false,
+      "priceMax": 39.68,
+      "priceMin": 39.68,
+      "provenanceConflicts": [],
+      "slug": "2027-01-21-the-stinkfoot-orchestra-the-independent",
+      "sourceLineNumber": 527,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:503bc4bcf23cb782",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800590400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
       "venueType": "club"
     },
     {
@@ -3416,7 +4171,7 @@
       "notes": "under 16 with adult",
       "provenanceConflicts": [],
       "slug": "2027-01-22-our-house-tribute-the-uptown-theater",
-      "sourceLineNumber": 628,
+      "sourceLineNumber": 535,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3426,8 +4181,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1711400117,
           "session": null,
           "sourceId": "steveslist"
@@ -3462,7 +4217,7 @@
       "priceMin": 56.25,
       "provenanceConflicts": [],
       "slug": "2027-01-22-fakemink-the-fox-theater",
-      "sourceLineNumber": 623,
+      "sourceLineNumber": 529,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3472,8 +4227,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 631118593,
           "session": null,
           "sourceId": "steveslist"
@@ -3506,7 +4261,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-22-fruition-the-chapel",
-      "sourceLineNumber": 626,
+      "sourceLineNumber": 532,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3516,8 +4271,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -3556,7 +4311,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-22-swimming-paul-regency-ballroom",
-      "sourceLineNumber": 627,
+      "sourceLineNumber": 533,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3566,8 +4321,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 2133080253,
           "session": null,
           "sourceId": "steveslist"
@@ -3605,7 +4360,7 @@
       "priceMin": 21.42,
       "provenanceConflicts": [],
       "slug": "2027-01-22-jumpstarteded-plowhardws-the-ivy-roomm",
-      "sourceLineNumber": 624,
+      "sourceLineNumber": 530,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3615,8 +4370,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1030994212,
           "session": null,
           "sourceId": "steveslist"
@@ -3653,7 +4408,7 @@
       "priceMin": 15,
       "provenanceConflicts": [],
       "slug": "2027-01-22-frightwig-thee-stork-club",
-      "sourceLineNumber": 625,
+      "sourceLineNumber": 531,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3663,8 +4418,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 873142532,
           "session": null,
           "sourceId": "steveslist"
@@ -3677,6 +4432,52 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1794618360551,
       "venueId": 873142532,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1841263975
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-22",
+      "dateEpochMs": 1800619200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1841263975,
+      "id": 1885973886,
+      "isFree": false,
+      "priceMax": 44.83,
+      "priceMin": 44.83,
+      "provenanceConflicts": [],
+      "slug": "2027-01-22-the-brothers-comatose-the-independent",
+      "sourceLineNumber": 534,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:8769bdb42cd2cd3b",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800680400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
       "venueType": "club"
     },
     {
@@ -3718,7 +4519,7 @@
         }
       ],
       "slug": "2027-01-23-pete-floyd-tribute-the-chapel",
-      "sourceLineNumber": 632,
+      "sourceLineNumber": 539,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3728,8 +4529,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -3762,7 +4563,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-23-don-carlos-the-cornerstone",
-      "sourceLineNumber": 630,
+      "sourceLineNumber": 537,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3772,8 +4573,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1393740940,
           "session": null,
           "sourceId": "steveslist"
@@ -3808,7 +4609,7 @@
       "priceMin": 26.94,
       "provenanceConflicts": [],
       "slug": "2027-01-23-late-for-the-train-hopmonk",
-      "sourceLineNumber": 636,
+      "sourceLineNumber": 545,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3818,8 +4619,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 183693907,
           "session": null,
           "sourceId": "steveslist"
@@ -3852,7 +4653,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-23-fruition-felton-music-hall",
-      "sourceLineNumber": 638,
+      "sourceLineNumber": 547,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3862,8 +4663,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 992774973,
           "session": null,
           "sourceId": "steveslist"
@@ -3897,7 +4698,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-23-portugal-the-man-the-castro",
-      "sourceLineNumber": 633,
+      "sourceLineNumber": 540,
       "sources": [
         {
           "canonicalUrl": null,
@@ -3907,8 +4708,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1383208152,
           "session": null,
           "sourceId": "steveslist"
@@ -4063,7 +4864,7 @@
         }
       ],
       "slug": "2027-01-23-tape-b-the-civic-auditorium",
-      "sourceLineNumber": 635,
+      "sourceLineNumber": 543,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4073,8 +4874,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1648637995,
           "session": null,
           "sourceId": "steveslist"
@@ -4109,7 +4910,7 @@
       "priceMin": 30.87,
       "provenanceConflicts": [],
       "slug": "2027-01-23-koo-koo-the-cornerstone",
-      "sourceLineNumber": 629,
+      "sourceLineNumber": 536,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4119,8 +4920,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1393740940,
           "session": null,
           "sourceId": "steveslist"
@@ -4161,7 +4962,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-23-chaos-fiction-the-ivy-room",
-      "sourceLineNumber": 631,
+      "sourceLineNumber": 538,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4171,8 +4972,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -4205,7 +5006,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-23-paco-versailles-the-fillmore",
-      "sourceLineNumber": 634,
+      "sourceLineNumber": 541,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4215,8 +5016,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -4252,7 +5053,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-23-juicebox-tribute-the-ritz",
-      "sourceLineNumber": 637,
+      "sourceLineNumber": 546,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4262,8 +5063,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1253820046,
           "session": null,
           "sourceId": "steveslist"
@@ -4277,6 +5078,100 @@
       "updatedAtEpochMs": 1794618360551,
       "venueId": 1253820046,
       "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1841263975
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-23",
+      "dateEpochMs": 1800705600000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1841263975,
+      "id": 1535173949,
+      "isFree": false,
+      "priceMax": 44.83,
+      "priceMin": 44.83,
+      "provenanceConflicts": [],
+      "slug": "2027-01-23-the-brothers-comatose-the-independent",
+      "sourceLineNumber": 542,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:7798911c6e57d682",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800766800000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1456450872,
+        1776373316,
+        950244474
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-23",
+      "dateEpochMs": 1800705600000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1456450872,
+      "id": 1143489906,
+      "isFree": false,
+      "priceMax": 25.9,
+      "priceMin": 25.9,
+      "provenanceConflicts": [],
+      "slug": "2027-01-23-teenage-bottlerocket-the-phoenix-theater",
+      "sourceLineNumber": 544,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:9a2ce3191b2fb1f9",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 1375571612,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1800763200000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 1375571612,
+      "venueType": "major"
     },
     {
       "addedDateProvenance": "observed",
@@ -4431,7 +5326,7 @@
         }
       ],
       "slug": "2027-01-24-tesseract-the-fillmore",
-      "sourceLineNumber": 641,
+      "sourceLineNumber": 550,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4441,8 +5336,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -4479,7 +5374,7 @@
       "priceMin": 18.33,
       "provenanceConflicts": [],
       "slug": "2027-01-24-gold-band-the-ivy-room",
-      "sourceLineNumber": 639,
+      "sourceLineNumber": 548,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4489,8 +5384,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -4528,7 +5423,7 @@
       "priceMin": 12,
       "provenanceConflicts": [],
       "slug": "2027-01-24-malaphor-thee-stork-club",
-      "sourceLineNumber": 640,
+      "sourceLineNumber": 549,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4538,8 +5433,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 873142532,
           "session": null,
           "sourceId": "steveslist"
@@ -4574,7 +5469,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-25-super-sometimes-924-gilman-street",
-      "sourceLineNumber": 642,
+      "sourceLineNumber": 551,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4584,8 +5479,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 888749966,
           "session": null,
           "sourceId": "steveslist"
@@ -4619,7 +5514,7 @@
       "priceMin": 39.8,
       "provenanceConflicts": [],
       "slug": "2027-01-25-bad-suns-august-hall",
-      "sourceLineNumber": 643,
+      "sourceLineNumber": 552,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4629,8 +5524,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 811075932,
           "session": null,
           "sourceId": "steveslist"
@@ -4661,31 +5556,64 @@
       "headlinerArtistId": 1619825715,
       "id": 1440614768,
       "isFree": false,
-      "provenanceConflicts": [],
+      "notes": "sold out",
+      "provenanceConflicts": [
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "undefined",
+          "field": "notes",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": "sold out",
+          "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "confirmed",
+          "field": "status",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": "sold-out",
+          "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": [],
+          "field": "tags",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": [
+            "sold-out"
+          ],
+          "reason": "source-update"
+        }
+      ],
       "slug": "2027-01-25-bebel-gilberto-bimbos-365-club",
-      "sourceLineNumber": 644,
+      "sourceLineNumber": 553,
       "sources": [
         {
           "canonicalUrl": null,
-          "contentHash": "fnv1a64:b531b28728e55304",
+          "contentHash": "fnv1a64:ff0cccc182671b4c",
           "evidence": null,
           "externalEventId": null,
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 697962111,
           "session": null,
           "sourceId": "steveslist"
         }
       ],
       "startTimeEpochMs": 1800936000000,
-      "status": "confirmed",
-      "tags": [],
+      "status": "sold-out",
+      "tags": [
+        "sold-out"
+      ],
       "timeBasis": "instant",
       "timezone": "America/Los_Angeles",
-      "updatedAtEpochMs": 1794017623435,
+      "updatedAtEpochMs": 1795221288328,
       "venueId": 697962111,
       "venueType": "club"
     },
@@ -4740,7 +5668,7 @@
         }
       ],
       "slug": "2027-01-26-bad-suns-august-hall",
-      "sourceLineNumber": 646,
+      "sourceLineNumber": 555,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4750,8 +5678,8 @@
           "firstSeenAtEpochMs": 1789777368000,
           "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 811075932,
           "session": null,
           "sourceId": "steveslist"
@@ -4789,7 +5717,7 @@
       "priceMin": 28.3,
       "provenanceConflicts": [],
       "slug": "2027-01-26-youth-fountain-cafe-du-nord",
-      "sourceLineNumber": 647,
+      "sourceLineNumber": 556,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4799,8 +5727,8 @@
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1550837691,
           "session": null,
           "sourceId": "steveslist"
@@ -4835,7 +5763,7 @@
       "priceMin": 34.01,
       "provenanceConflicts": [],
       "slug": "2027-01-26-the-flatliners-the-independent",
-      "sourceLineNumber": 648,
+      "sourceLineNumber": 557,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4845,8 +5773,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 515101024,
           "session": null,
           "sourceId": "steveslist"
@@ -4881,7 +5809,7 @@
       "priceMin": 18,
       "provenanceConflicts": [],
       "slug": "2027-01-26-death-valley-girls-thee-stork-club",
-      "sourceLineNumber": 645,
+      "sourceLineNumber": 554,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4891,8 +5819,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 873142532,
           "session": null,
           "sourceId": "steveslist"
@@ -4946,7 +5874,7 @@
         }
       ],
       "slug": "2027-01-27-ibeyi-the-fillmore",
-      "sourceLineNumber": 649,
+      "sourceLineNumber": 558,
       "sources": [
         {
           "canonicalUrl": null,
@@ -4956,8 +5884,8 @@
           "firstSeenAtEpochMs": 1790381132084,
           "firstSeenRunId": "steveslist-v2-fc127bf4aa8b39becb09f32b5bb15b3ac152f5fc9f7eb72c3582c430675b287f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -4993,7 +5921,7 @@
       "priceMin": 37.82,
       "provenanceConflicts": [],
       "slug": "2027-01-27-satsang-hopmonk",
-      "sourceLineNumber": 650,
+      "sourceLineNumber": 561,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5003,8 +5931,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1811398338,
           "session": null,
           "sourceId": "steveslist"
@@ -5059,7 +5987,7 @@
         }
       ],
       "slug": "2027-01-27-youth-fountain-the-catalyst",
-      "sourceLineNumber": 651,
+      "sourceLineNumber": 562,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5069,8 +5997,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1080825327,
           "session": null,
           "sourceId": "steveslist"
@@ -5084,6 +6012,98 @@
       "updatedAtEpochMs": 1791595464839,
       "venueId": 1080825327,
       "venueType": "major"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1431954895
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-27",
+      "dateEpochMs": 1801051200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1431954895,
+      "id": 1514286639,
+      "isFree": false,
+      "priceMax": 31.44,
+      "priceMin": 31.44,
+      "provenanceConflicts": [],
+      "slug": "2027-01-27-mollie-elizabeth-the-independent",
+      "sourceLineNumber": 559,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:1bf1dc82d9fa220c",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1801108800000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "21+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        423142760
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-27",
+      "dateEpochMs": 1801051200000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 423142760,
+      "id": 1217555729,
+      "isFree": false,
+      "priceMax": 28.3,
+      "priceMin": 28.3,
+      "provenanceConflicts": [],
+      "slug": "2027-01-27-jon-bryant-cafe-du-nord",
+      "sourceLineNumber": 560,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:18ca45874199e303",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 1550837691,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1801108800000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 1550837691,
+      "venueType": "club"
     },
     {
       "addedDateProvenance": "legacy-batch",
@@ -5124,7 +6144,7 @@
         }
       ],
       "slug": "2027-01-28-the-california-honeydrops-the-fillmore",
-      "sourceLineNumber": 653,
+      "sourceLineNumber": 565,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5134,8 +6154,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -5174,7 +6194,7 @@
       "priceMin": 36.01,
       "provenanceConflicts": [],
       "slug": "2027-01-28-laurie-lewis-hopmonk",
-      "sourceLineNumber": 654,
+      "sourceLineNumber": 568,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5184,8 +6204,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1811398338,
           "session": null,
           "sourceId": "steveslist"
@@ -5218,7 +6238,7 @@
       "headlinerArtistId": 1567037421,
       "id": 1335152972,
       "isFree": false,
-      "notes": "sold out; Michaela Cancer Benefit; Fifteen lineup: Jeff, John, Chris",
+      "notes": "sold out; Michaela Cancer Benefit; Fifteen lineup: Jeff; John; Chris",
       "priceMax": 25,
       "priceMin": 20,
       "provenanceConflicts": [
@@ -5283,21 +6303,30 @@
             "sold-out"
           ],
           "reason": "source-update"
+        },
+        {
+          "detectedAtEpochMs": 1795221288328,
+          "existingSource": "steveslist:steveslist",
+          "existingValue": "sold out; Michaela Cancer Benefit; Fifteen lineup: Jeff, John, Chris",
+          "field": "notes",
+          "incomingSource": "steveslist:steveslist",
+          "incomingValue": "sold out; Michaela Cancer Benefit; Fifteen lineup: Jeff; John; Chris",
+          "reason": "source-update"
         }
       ],
       "slug": "2027-01-28-fifteen-jeff-rickshaw-stop",
-      "sourceLineNumber": 652,
+      "sourceLineNumber": 564,
       "sources": [
         {
           "canonicalUrl": null,
-          "contentHash": "fnv1a64:c92b68b5ef5fec16",
+          "contentHash": "fnv1a64:cff83df816fca34e",
           "evidence": null,
           "externalEventId": null,
           "firstSeenAtEpochMs": 1793414101457,
           "firstSeenRunId": "steveslist-v6-98457a72c5fac3e8cf6fa9fbb8776b0b060058f3dd260b44dd0435b2b3c25538",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 31041890,
           "session": null,
           "sourceId": "steveslist"
@@ -5310,9 +6339,150 @@
       ],
       "timeBasis": "instant",
       "timezone": "America/Los_Angeles",
-      "updatedAtEpochMs": 1794017623435,
+      "updatedAtEpochMs": 1795221288328,
       "venueId": 31041890,
       "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1971299254,
+        382298775,
+        1196497108
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-28",
+      "dateEpochMs": 1801137600000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1971299254,
+      "id": 331175043,
+      "isFree": false,
+      "priceMax": 25,
+      "priceMin": 20,
+      "provenanceConflicts": [],
+      "slug": "2027-01-28-trha-924-gilman-street",
+      "sourceLineNumber": 563,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:e2f6b5fc810351bf",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 888749966,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1801193400000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 888749966,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1006125174,
+        11084480
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-28",
+      "dateEpochMs": 1801137600000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1006125174,
+      "id": 1797571799,
+      "isFree": false,
+      "priceMax": 34.01,
+      "priceMin": 34.01,
+      "provenanceConflicts": [],
+      "slug": "2027-01-28-city-of-the-sun-the-independent",
+      "sourceLineNumber": 566,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:5b2c572f6c77dbe7",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1801195200000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        482104626
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-28",
+      "dateEpochMs": 1801137600000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 482104626,
+      "id": 2054822316,
+      "isFree": false,
+      "priceMax": 40,
+      "priceMin": 40,
+      "provenanceConflicts": [],
+      "slug": "2027-01-28-demi-adejuyigbe-comedian-the-great-american-music-hall",
+      "sourceLineNumber": 567,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:0994e5f9dacf7ba1",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 463728167,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1801191600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 463728167,
+      "venueType": "major"
     },
     {
       "addedDateProvenance": "legacy-batch",
@@ -5354,7 +6524,7 @@
         }
       ],
       "slug": "2027-01-29-the-california-honeydrops-the-fillmore",
-      "sourceLineNumber": 656,
+      "sourceLineNumber": 570,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5364,8 +6534,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -5399,7 +6569,7 @@
       "notes": "under 16 with adult",
       "provenanceConflicts": [],
       "slug": "2027-01-29-pete-holmes-the-uptown-theater",
-      "sourceLineNumber": 658,
+      "sourceLineNumber": 574,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5409,8 +6579,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1711400117,
           "session": null,
           "sourceId": "steveslist"
@@ -5445,7 +6615,7 @@
       "priceMin": 33,
       "provenanceConflicts": [],
       "slug": "2027-01-29-ty-segall-the-chapel",
-      "sourceLineNumber": 657,
+      "sourceLineNumber": 571,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5455,8 +6625,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -5492,7 +6662,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-29-fifteen-rickshaw-stop",
-      "sourceLineNumber": 655,
+      "sourceLineNumber": 569,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5502,8 +6672,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 31041890,
           "session": null,
           "sourceId": "steveslist"
@@ -5516,6 +6686,99 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1794618360551,
       "venueId": 31041890,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "21+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        827610908,
+        1490450285
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-29",
+      "dateEpochMs": 1801224000000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 827610908,
+      "id": 800546238,
+      "isFree": false,
+      "priceMax": 41.74,
+      "priceMin": 41.74,
+      "provenanceConflicts": [],
+      "slug": "2027-01-29-jim-e-brown-the-independent",
+      "sourceLineNumber": 572,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:8b64a4654bec3843",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 515101024,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1801285200000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 515101024,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "21+",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1300514492
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-29",
+      "dateEpochMs": 1801224000000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1300514492,
+      "id": 878129025,
+      "isFree": false,
+      "priceMax": 36.4,
+      "priceMin": 36.4,
+      "provenanceConflicts": [],
+      "slug": "2027-01-29-super-diamond-bimbos-365-club",
+      "sourceLineNumber": 573,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:9505585798dc1f6c",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 697962111,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1801281600000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 697962111,
       "venueType": "club"
     },
     {
@@ -5557,7 +6820,7 @@
         }
       ],
       "slug": "2027-01-30-the-california-honeydrops-the-fillmore",
-      "sourceLineNumber": 661,
+      "sourceLineNumber": 577,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5567,8 +6830,8 @@
           "firstSeenAtEpochMs": 1788566700000,
           "firstSeenRunId": "steveslist-v2-ff083fa277163b7c1c14d780f4d4986e14a22b8485c03915d669cf83b93b1bd8",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1136597428,
           "session": null,
           "sourceId": "steveslist"
@@ -5601,7 +6864,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-30-madds-buckley-the-cornerstone",
-      "sourceLineNumber": 659,
+      "sourceLineNumber": 575,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5611,8 +6874,8 @@
           "firstSeenAtEpochMs": 1790985835628,
           "firstSeenRunId": "steveslist-v4-46c6f710d388e8d1d73414ff3b168da9f9f67fdd0e4094bf6d70ce4165443407",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1393740940,
           "session": null,
           "sourceId": "steveslist"
@@ -5645,7 +6908,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-30-keller-williams-moes-alley",
-      "sourceLineNumber": 666,
+      "sourceLineNumber": 582,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5655,8 +6918,8 @@
           "firstSeenAtEpochMs": 1791595464839,
           "firstSeenRunId": "steveslist-v4-9836108df422f7b83ed8fbc02f1c52416fdd94a67503c0c51d1dd5d758fccc8f",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1002839764,
           "session": null,
           "sourceId": "steveslist"
@@ -5691,7 +6954,7 @@
       "priceMin": 33,
       "provenanceConflicts": [],
       "slug": "2027-01-30-ty-segall-the-chapel",
-      "sourceLineNumber": 662,
+      "sourceLineNumber": 578,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5701,8 +6964,8 @@
           "firstSeenAtEpochMs": 1792198061662,
           "firstSeenRunId": "steveslist-v5-20ebe38d804852bf813b2e6608ab407fb00af5d2edd2d1c6b51bff6fe67e640a",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 680116887,
           "session": null,
           "sourceId": "steveslist"
@@ -5738,7 +7001,7 @@
       "priceMin": 60.1,
       "provenanceConflicts": [],
       "slug": "2027-01-30-stamptown-the-castro",
-      "sourceLineNumber": 664,
+      "sourceLineNumber": 580,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5748,8 +7011,8 @@
           "firstSeenAtEpochMs": 1792803818000,
           "firstSeenRunId": "steveslist-v6-a7b5c7ccf8916924541f0af41a632b918205d9f4f321248d583b05ee7454cbd3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1383208152,
           "session": null,
           "sourceId": "steveslist"
@@ -5832,7 +7095,7 @@
       "priceMin": 45,
       "provenanceConflicts": [],
       "slug": "2027-01-30-the-red-room-orchestra-play-the-works-of-david-lynch-the-great-american-music-hall",
-      "sourceLineNumber": 663,
+      "sourceLineNumber": 579,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5842,8 +7105,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 463728167,
           "session": null,
           "sourceId": "steveslist"
@@ -5877,7 +7140,7 @@
       "isFree": false,
       "provenanceConflicts": [],
       "slug": "2027-01-30-37-houses-hotel-utah",
-      "sourceLineNumber": 665,
+      "sourceLineNumber": 581,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5887,8 +7150,8 @@
           "firstSeenAtEpochMs": 1794618360551,
           "firstSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1558756676,
           "session": null,
           "sourceId": "steveslist"
@@ -5900,6 +7163,53 @@
       "timezone": "America/Los_Angeles",
       "updatedAtEpochMs": 1794618360551,
       "venueId": 1558756676,
+      "venueType": "club"
+    },
+    {
+      "addedDateProvenance": "observed",
+      "ageRestriction": "all-ages",
+      "announcedAtEpochMs": null,
+      "artistIds": [
+        1542520681,
+        1655648473
+      ],
+      "createdAtEpochMs": 1795221288328,
+      "date": "2027-01-30",
+      "dateEpochMs": 1801310400000,
+      "firstImportRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+      "firstImportedBy": "steveslist",
+      "firstObservedAtEpochMs": 1795221288328,
+      "headlinerArtistId": 1542520681,
+      "id": 1598680373,
+      "isFree": false,
+      "priceMax": 15,
+      "priceMin": 15,
+      "provenanceConflicts": [],
+      "slug": "2027-01-30-joe-peters-slow-train-up-the-crek-radio",
+      "sourceLineNumber": 576,
+      "sources": [
+        {
+          "canonicalUrl": null,
+          "contentHash": "fnv1a64:bb9700d153ae9d65",
+          "evidence": null,
+          "externalEventId": null,
+          "firstSeenAtEpochMs": 1795221288328,
+          "firstSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "kind": "steveslist",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
+          "originalVenueId": 700630136,
+          "session": null,
+          "sourceId": "steveslist"
+        }
+      ],
+      "startTimeEpochMs": 1801360800000,
+      "status": "confirmed",
+      "tags": [],
+      "timeBasis": "instant",
+      "timezone": "America/Los_Angeles",
+      "updatedAtEpochMs": 1795221288328,
+      "venueId": 700630136,
       "venueType": "club"
     },
     {
@@ -5922,7 +7232,7 @@
       "priceMin": 24.72,
       "provenanceConflicts": [],
       "slug": "2027-01-31-elephant-stone-kilowatt",
-      "sourceLineNumber": 669,
+      "sourceLineNumber": 584,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5932,8 +7242,8 @@
           "firstSeenAtEpochMs": 1789777368000,
           "firstSeenRunId": "steveslist-v2-5d62e19ea17d8d9e9ae241866b063176a68d55992281b3c8f3f1f97e4910cbf9",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1433810567,
           "session": null,
           "sourceId": "steveslist"
@@ -5975,7 +7285,7 @@
       "priceMin": 20,
       "provenanceConflicts": [],
       "slug": "2027-01-31-shake-it-booty-band-the-ivy-room",
-      "sourceLineNumber": 667,
+      "sourceLineNumber": 583,
       "sources": [
         {
           "canonicalUrl": null,
@@ -5985,8 +7295,8 @@
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 1689618485,
           "session": null,
           "sourceId": "steveslist"
@@ -6023,18 +7333,18 @@
       "priceMin": 34.01,
       "provenanceConflicts": [],
       "slug": "2027-01-31-winona-fghter-the-indpendent",
-      "sourceLineNumber": 668,
+      "sourceLineNumber": 585,
       "sources": [
         {
           "canonicalUrl": null,
-          "contentHash": "fnv1a64:d0f63dc06acf737a",
+          "contentHash": "fnv1a64:e088b37929cefb6e",
           "evidence": null,
           "externalEventId": null,
           "firstSeenAtEpochMs": 1794017623435,
           "firstSeenRunId": "steveslist-v6-8f7ce8b66f68a811962c01714b9a385eb0b4b2368919d43d88efcd5ab2651c57",
           "kind": "steveslist",
-          "lastSeenAtEpochMs": 1794618360551,
-          "lastSeenRunId": "steveslist-v7-81fc379950eaac3cd294c0fc23d9042013d744b7055873c3a4e5f061bc8013c3",
+          "lastSeenAtEpochMs": 1795221288328,
+          "lastSeenRunId": "steveslist-v7-c7cb671b39dc78a431162f55513e67eb6aa513465756a98e2e9091fe09bf564f",
           "originalVenueId": 515101024,
           "session": null,
           "sourceId": "steveslist"
