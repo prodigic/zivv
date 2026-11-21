@@ -1,3 +1,4 @@
+import { reconstructSelectedLoadIntentBaseline } from "../../lib/ingestion/recovery-gmail-selected-intent-baseline.js";
 import { reconstructSelectedLoadAcquiredIntentJournal } from "../../lib/ingestion/recovery-gmail-selected-acquired-intent-journal.js";
 import { observeSelectedLoadCompletedJournal } from "../../lib/ingestion/recovery-gmail-selected-completed-journal.js";
 import { expect, it, vi } from "vitest";
@@ -298,6 +299,41 @@ it("proves the committed first-attempt journal and rejects unrelated or missing 
         intent,
       })
     ).toThrow();
+    // Synthetic successor that reused the original unacquired fence. Result
+    // and file authentication remain independent obligations of the caller.
+    const effectiveSuccessor = {
+      successorSha256: "f".repeat(64),
+      sequence: 1,
+      journalSha256: intent.journalSha256,
+      previousOwner: intent.previousOwner,
+      fence: intent.fence,
+      owner: intent.owner,
+      startedAtEpochMs: intent.deadlineEpochMs,
+      deadlineEpochMs: intent.deadlineEpochMs + 180000,
+    };
+    expect(
+      observeSelectedLoadCompletedJournal(encode(resumed), effectiveSuccessor)
+        .lease.status
+    ).toBe("released");
+    const successorJournal = reconstructSelectedLoadResumeJournal({
+      completedJournal: encode(resumed),
+      intent: effectiveSuccessor,
+      runId: state.runId,
+    });
+    expect(
+      reconstructSelectedLoadIntentBaseline({
+        observedJournal: successorJournal,
+        initial: intent,
+        latest: effectiveSuccessor,
+      }).baselineJournal.equals(encode(next))
+    ).toBe(true);
+    expect(() =>
+      reconstructSelectedLoadResumeJournal({
+        completedJournal: encode(resumed),
+        intent: { ...effectiveSuccessor, fence: effectiveSuccessor.fence + 1 },
+        runId: state.runId,
+      })
+    ).toThrow();
     const reconstructed = reconstructSelectedLoadResumeJournal({
       completedJournal: encode(resumed),
       intent,
@@ -331,9 +367,12 @@ it("proves the committed first-attempt journal and rejects unrelated or missing 
     expired.ownership.find(
       (item) => item.scope === "prodigic/zivv/production"
     )!.expiresAtEpochMs = now - 1;
+    expect(() =>
+      observeSelectedLoadCompletedJournal(encode(expired), intent)
+    ).toThrow();
     const observedExpired = observeSelectedLoadCompletedJournal(
       encode(expired),
-      intent
+      { ...intent, startedAtEpochMs: now - 20000 }
     );
     expect(observedExpired.lease.status).toBe("expired");
     expect(observedExpired.releasedJournal.equals(encode(resumed))).toBe(true);

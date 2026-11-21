@@ -8,7 +8,10 @@ import type { SelectedLoadResumeIntent } from "./recovery-gmail-selected-resume-
  * authenticated result before treating the normalized journal as evidence. */
 export function observeSelectedLoadCompletedJournal(
   bytes: Buffer,
-  intent: SelectedLoadResumeIntent
+  intent: Pick<
+    SelectedLoadResumeIntent,
+    "owner" | "fence" | "startedAtEpochMs" | "deadlineEpochMs"
+  >
 ) {
   const fail = (): never => {
     throw Error("INVALID_SELECTED_LOAD_COMPLETED_JOURNAL");
@@ -21,6 +24,8 @@ export function observeSelectedLoadCompletedJournal(
     !owner ||
     owner.owner !== intent.owner ||
     owner.fence !== intent.fence ||
+    (owner.expiresAtEpochMs !== 0 &&
+      owner.expiresAtEpochMs < intent.startedAtEpochMs) ||
     owner.expiresAtEpochMs > intent.deadlineEpochMs
   )
     return fail();
