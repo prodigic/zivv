@@ -81,6 +81,41 @@ The current importer reports unresolved reconciliation but can commit accepted s
 
 `npm run validate` is a legacy validator that reads `data/latest.txt`, writes error files and can update aliases; it is not read-only. `npm run merge` combines ledger import with updates to legacy text archives/venue stubs. Do not blindly chain `merge` after the explicit import route; choose and document the intended path. Preserve these commands until verified replacements exist.
 
+### Early local newsletter delivery
+
+Once the reviewed import, frozen weekly edition and ETL export are ready, run the
+preview command before starting the public release checks. Use the ledger digest
+from the committed import receipt or `ledger:status`. Install Chromium ahead of
+the Friday window with `npx playwright install chromium`, or set
+`ZIVV_NEWSLETTER_CHROMIUM` to the path of an installed Chromium browser.
+
+```text
+npm run --silent weekly:preview-newsletter -- <edition-id> <ledger-revision>
+```
+
+The command checks the manifest against the frozen edition and verifies the
+exported data hashes. It starts or reuses a loopback-only preview of the exact
+manifest, opens `/newsletter/sfmusic` in a fresh browser and returns JSON with the
+preview URL, manifest hash, email subject and formatted HTML. Keep this result in
+private operator storage or pass it directly to the mail connector. The optional
+third argument selects the first preview port if 5174 is unavailable.
+
+1. Verify the connected Gmail profile is the Zivv account and use the
+   operator-confirmed recipient. Use the command's subject and full `text/html`
+   body. The loopback link is for the Zivv computer. The listings in the email
+   are available from any device.
+2. Check the private edition receipt and Gmail Sent for the same edition and
+   recipient before sending. Use one active delivery for an edition. If the send
+   result is uncertain, inspect Sent before retrying. Retain the confirmed
+   Gmail message ID, recipient, edition and manifest hash in private operator
+   storage. An archive or Pages retry does not send a second confirmation.
+3. Report local delivery separately from public verification. If delivery fails,
+   retain the rendered newsletter and any send result and retry that step from
+   the existing export. The import receipt and frozen membership remain the
+   inputs to the retry.
+
+### Public release
+
 Inspect changed files and manifest checksums/references, run applicable tests/build checks, commit only approved public output/configuration/encrypted backup, and publish through the currently maintained GitHub Pages path. GitHub preview/promotion remains #43. Wait for deployment and verify the actual candidate before acknowledging:
 
 ```text

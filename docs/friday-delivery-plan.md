@@ -11,8 +11,9 @@ This is the approved delivery contract and implementation sequence. Recording it
 - Preserve exact private sources, stable IDs/slugs, source observations, redirects, original first-added dates and frozen weekly membership. Known programming-only rows and exact duplicates may be excluded with explicit row accounting. Unresolved core artist/venue/date data blocks the edition; do not silently drop shows.
 - Missing optional photos, posters, reviews, links or maps does not block valid show publication. Withhold incorrect/ambiguous metadata. Reapply existing reviewed metadata and persist new research tasks. Unattended AI research remains disabled until runtime and research budget are selected.
 - Publish only an exact validated candidate whose export and encrypted backup agree with its authoritative ledger revision. Advance the publication cutoff only after live verification. A successful import, build or push alone is not publication success.
+- As soon as the reviewed import is committed and the frozen edition exports locally, start the SF Music preview from those exact bytes and email the full formatted newsletter to the agreed operator address. Send this confirmation before staging, CI, or Pages deployment. Use the verified Zivv Gmail account and deduplicate by edition and recipient.
 - If live verification fails, restore the previous verified public release and alert the operator. Retain the newer private ledger, source history and import receipts for diagnosis; public rollback is not database rollback.
-- Send deduplicated actionable failures and one concise success receipt per edition to an agreed email destination. Success receipts include the live link, counts and remaining gaps. Independent monitoring must detect a runner that never starts.
+- Send deduplicated actionable failure alerts to an agreed destination. The SF Music email is the weekly confirmation and carries the listings so the operator can read them away from the Zivv computer. Record public release verification separately. Independent monitoring must detect a runner that never starts.
 
 ## Architecture and ownership
 
@@ -24,6 +25,7 @@ Acquire and preserve exact private source
   -> Transactionally load authoritative SQLite
   -> Prepare frozen weekly edition; apply reviewed metadata
   -> Export static JSON and matching encrypted recovery snapshot
+     -> Start verified local SF Music preview and email the formatted newsletter
   -> Validate exact candidate
   -> Deploy to GitHub Pages
   -> Verify live dataset, routes and ordinary cached/fresh clients
@@ -31,6 +33,8 @@ Acquire and preserve exact private source
 ```
 
 Each stage has explicit inputs, outputs, receipts, revision identifiers, transitions and retry behavior. A committed import survives a failed publication; retries resume the remaining work without importing twice. Define edition correction semantics, including newly announced shows after membership is frozen, before automating them. No additions may disappear between editions. Keep weekly edition state, metadata/configuration, candidate artifacts and encrypted recovery material traceable alongside the ledger revision.
+
+For the manual path, follow the [local delivery step](weekly-stage-contracts.md#early-local-newsletter-delivery) immediately after ETL.
 
 GitHub remains authoritative for code, issues and reviews. GitHub Pages hosts the public site. The public prodigic/zivv-test repository is an artifact-only preview destination, approved by the operator on October 14, 2026. Automation may publish validated data updates; application code changes require review. Keep SQLite authoritative and static JSON as the browser delivery boundary. Review useful parts of the August experiment in #40; a database/framework migration is not required for this plan. #42 records the stage contracts; #43 covers GitHub Pages preview and future domain cutover.
 
