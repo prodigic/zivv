@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   analyze-commits:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       should-release: ${{ steps.analyze.outputs.should-release }}
       version-bump: ${{ steps.analyze.outputs.version-bump }}
@@ -188,7 +188,7 @@ jobs:
 
   release:
     needs: analyze-commits
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: needs.analyze-commits.outputs.should-release == 'true'
 
     env:
@@ -292,7 +292,7 @@ jobs:
 
   notify:
     needs: [analyze-commits, release]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: needs.analyze-commits.outputs.should-release == 'true'
 
     steps:
