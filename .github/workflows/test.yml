@@ -17,7 +17,7 @@ permissions:
 jobs:
   unit-tests:
     name: Unit & Component Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -61,7 +61,7 @@ jobs:
 
   e2e-tests:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -110,7 +110,7 @@ jobs:
 
   performance-tests:
     name: Performance Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -147,7 +147,7 @@ jobs:
 
   lint-and-format:
     name: Lint and Format Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -173,7 +173,7 @@ jobs:
 
   build-test:
     name: Build Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -199,7 +199,7 @@ jobs:
 
   ingestion-tests:
     name: Ingestion Tests (Node / SQLite / Git fixtures)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -218,7 +218,7 @@ jobs:
 
   workflow-validation:
     name: Workflow Validation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -242,7 +242,7 @@ jobs:
 
   test-summary:
     name: Test Summary
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       [
         unit-tests,
