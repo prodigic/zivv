@@ -11,6 +11,10 @@ import {
   type WeeklyImportProgress,
 } from "./weekly-import-runner.js";
 import type { WeeklyRunState } from "./weekly-run-state.js";
+import {
+  archiveRetainedSteveEmails,
+  type SteveArchiveResult,
+} from "./steve-text-archive.js";
 
 export type SteveEmailLoadDisposition =
   | "loaded"
@@ -28,6 +32,7 @@ export interface SteveEmailLoadEntry {
 
 export interface SteveEmailLoadResult {
   editionId: string;
+  archive: SteveArchiveResult;
   counts: {
     ready: number;
     reviewRequired: number;
@@ -44,6 +49,7 @@ export interface LoadRetainedSteveEmailSourcesInput {
   operatorDirectory: string;
   accountId: string;
   expectedEditionId: string;
+  archiveDirectory?: string;
   onProgress?: (event: WeeklyImportProgress) => void | Promise<void>;
 }
 
@@ -135,6 +141,14 @@ export async function loadRetainedSteveEmailSources(
     return fail(runnerErrorCode(error));
   }
 
+  const archive = await archiveRetainedSteveEmails({
+    operatorDirectory: suppliedOperator,
+    accountId: input.accountId,
+    expectedEditionId: input.expectedEditionId,
+    archiveDirectory:
+      input.archiveDirectory ?? process.env.ZIVV_STEVE_ARCHIVE_DIR,
+  });
+
   const entries: SteveEmailLoadEntry[] = retained.map(({ receipt }) => ({
     receiptId: receipt.receiptId,
     disposition:
@@ -200,5 +214,5 @@ export async function loadRetainedSteveEmailSources(
       (entry) => entry.disposition === "not-processed"
     ).length,
   };
-  return { editionId: input.expectedEditionId, counts, entries };
+  return { editionId: input.expectedEditionId, archive, counts, entries };
 }

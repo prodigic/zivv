@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { captureSteveEmail } from "../dist/lib/ingestion/steve-email-intake.js";
 import { runWeeklyImport } from "../dist/lib/ingestion/weekly-import-runner.js";
 import { projectLedgerLocation } from "../dist/lib/ingestion/store-location.js";
+import { archiveRetainedSteveEmails } from "../dist/lib/ingestion/steve-text-archive.js";
 
 // Input is a private snapshot transferred programmatically from the authenticated
 // Gmail connector, not a user-uploaded EML declared authenticated by a flag.
@@ -67,6 +68,12 @@ try {
     observedAtEpochMs: envelope.observedAtEpochMs,
     correctionOf: options["correction-of"],
   });
+  const archive = await archiveRetainedSteveEmails({
+    operatorDirectory,
+    accountId: envelope.accountId,
+    expectedEditionId: options["expected-edition"],
+    archiveDirectory: process.env.ZIVV_STEVE_ARCHIVE_DIR,
+  });
   let state;
   if (options.through && result.disposition === "ready") {
     state = await runWeeklyImport({
@@ -87,6 +94,7 @@ try {
       sourceSha256: result.receipt.sourceSha256,
       firstObservedAtEpochMs: result.receipt.firstObservedAtEpochMs,
       disposition: result.disposition,
+      archive,
       runId: state?.runId,
       stages: state?.stages.map(({ stage, status, attempt, errorCode }) => ({
         stage,
@@ -96,7 +104,8 @@ try {
       })),
     })
   );
-  if (result.disposition !== "ready") process.exitCode = 2;
+  if (result.disposition !== "ready" || archive.status === "needs-attention")
+    process.exitCode = 2;
 } catch (error) {
   const code =
     error instanceof Error && /^[A-Z_]{1,64}$/.test(error.message)
